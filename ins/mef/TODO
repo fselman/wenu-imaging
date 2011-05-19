@@ -1,0 +1,60 @@
+-Reading from a PAF file recipe parameters,
+and instrument parameters.
+
+-Proper identification of recipes:
+
+	REC MEF BIAS
+	REC MEF BPM
+	REC MEF OVERSCAN
+	REC MEF DOMEFF
+	REC MEF SKYFF
+	REC MEF MASTERFF
+
+-Clean up: using qfits as far as possible
+
+-Proper handling of writing to files:
+see the pixdump example and modify/integrate
+into a routine to dump headers and pixels
+to MEF files.
+
+-Further separation into header creation and
+file writing
+
+-Find proper way to deal with command line options,
+and decide on weather we will have a single large
+pipe-like processing, or many atomic units.
+
+-Add option to use a "normalized" flat, that is, 
+a flat that only takes out the pixel-to-pixel
+variations.
+
+-Write man page
+
+-Test parameterers for BPM creation
+
+-Test Flat field creation and write script
+to monitor stability of flatfield for 
+keyband pixels:
+
+	Dome/Dome
+	Sky/Sky
+	Dome/Sky
+
+- Currently we can not choose how the 1s and 0s
+ of the BPM file are to be interpreted.
+ The only way to change this option is
+ to edit in mefp_lib.c the routine
+ mef_image_filter_flat: either keep or
+ remove the "!" the selection line.
+
+- Add a linearity correction section
+
+- Add a shutter error correction section
+
+- Add proper WCS keyword handling
+
+- Add registering/warping routine
+
+- Create a few coulour pictures
+
+- Test with OmegaCAM data.

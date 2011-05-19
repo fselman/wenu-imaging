@@ -1,0 +1,9 @@
+CC      = gcc
+CFLAGS  = -m32 -O3
+RELOC   = -fPIC -DPIC
+SHARED  = -shared
+LFLAGS  = 
+DYNSUF  = so
+STRIP   = strip
+TARGETS = static
+prefix  = /usr/local

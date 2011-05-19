@@ -1,0 +1,245 @@
+PAF.HDR.START                                    ;         # start of header
+PAF.TYPE                                         "Instrument/reduction description";
+PAF.ID                                           "";
+PAF.NAME                                         "wfi.paf";
+PAF.DESC                                         "Description of WFI for MEFPP";
+PAF.CRTE.NAME                                    "";
+PAF.CRTE.DAYTIM                                  "";
+PAF.LCHG.NAME                                    "";
+PAF.LCHG.DAYTIM                                  "";
+PAF.CHCK.CHECKSUM                                "";
+PAF.HDR.END                                      ;         # end of header
+#
+MEF.ORIGIN                                    "ESO";
+MEF.TELESCOPE                                    "MPI 2.2-m";
+MEF.INSTRUMENT                                    "WFI";
+MEF.RECIPE.KEY                                    "HIERARCH ESO REC";
+#
+MEF.DPR.CATG.KEY                           "HIERARCH ESO DPR CATG";
+MEF.DPR.CATG.COMMENT                           "product frame category";
+MEF.DPR.TYPE.KEY                           "HIERARCH ESO DPR TYPE";
+MEF.DPR.TYPE.COMMENT                           "product frame type";
+#
+MEF.USE.PRESCAN                                    0;
+MEF.PRESCAN.X.KEY                           "HIERARCH ESO REC FLAT PRSCX";
+MEF.PRESCAN.X.COMMENT                           "Prescan xmin xmax";
+MEF.PRESCAN.X.MIN.CHIP1                           5;
+MEF.PRESCAN.X.MAX.CHIP1                          48;
+MEF.PRESCAN.X.MIN.CHIP2                 5;
+MEF.PRESCAN.X.MAX.CHIP2                 48;
+MEF.PRESCAN.X.MIN.CHIP3                 5;
+MEF.PRESCAN.X.MAX.CHIP3                 48;
+MEF.PRESCAN.X.MIN.CHIP4                 5;
+MEF.PRESCAN.X.MAX.CHIP4                 48;
+MEF.PRESCAN.X.MIN.CHIP5                 2100;
+MEF.PRESCAN.X.MAX.CHIP5                 2142;
+MEF.PRESCAN.X.MIN.CHIP6                 2100;
+MEF.PRESCAN.X.MAX.CHIP6                 2142;
+MEF.PRESCAN.X.MIN.CHIP7                 2100;
+MEF.PRESCAN.X.MAX.CHIP7                 2142;
+MEF.PRESCAN.X.MIN.CHIP8                 5;
+MEF.PRESCAN.X.MAX.CHIP8                 48;
+#;
+MEF.USE.OVERSCAN                           1;
+MEF.OVERSCAN.X.KEY                           "HIERARCH ESO REC FLAT OVSCX";
+MEF.OVERSCAN.X.COMMENT                           "Overscan xmin xmax";
+MEF.OVERSCAN.X.MIN.CHIP1                  2100;
+MEF.OVERSCAN.X.MAX.CHIP1                  2142;
+MEF.OVERSCAN.X.MIN.CHIP2                2100;
+MEF.OVERSCAN.X.MAX.CHIP2                2142;
+MEF.OVERSCAN.X.MIN.CHIP3                2100;
+MEF.OVERSCAN.X.MAX.CHIP3                2142;
+MEF.OVERSCAN.X.MIN.CHIP4                2100;
+MEF.OVERSCAN.X.MAX.CHIP4                2142;
+MEF.OVERSCAN.X.MIN.CHIP5                5;
+MEF.OVERSCAN.X.MAX.CHIP5                48;
+MEF.OVERSCAN.X.MIN.CHIP6                5;
+MEF.OVERSCAN.X.MAX.CHIP6                48;
+MEF.OVERSCAN.X.MIN.CHIP7                5;
+MEF.OVERSCAN.X.MAX.CHIP7                48;
+MEF.OVERSCAN.X.MIN.CHIP8                2100;
+MEF.OVERSCAN.X.MAX.CHIP8                2142;
+#
+MEF.CRVAL1.CHIP1                           1;
+MEF.CRVAL2.CHIP1                           1;
+MEF.CRPIX1.CHIP1                           49;
+MEF.CRPIX2.CHIP1                           -4158;
+MEF.CRVAL1.CHIP2                        1;
+MEF.CRVAL2.CHIP2                        1;
+MEF.CRPIX1.CHIP2                        -2094;
+MEF.CRPIX2.CHIP2                        -4158;
+MEF.CRVAL1.CHIP3                        1;
+MEF.CRVAL2.CHIP3                        1;
+MEF.CRPIX1.CHIP3                        -4236;
+MEF.CRPIX2.CHIP3                        -4158;
+MEF.CRVAL1.CHIP4                        1;
+MEF.CRVAL2.CHIP4                        1;
+MEF.CRPIX1.CHIP4                        -6378;
+MEF.CRPIX2.CHIP4                        -4158;
+MEF.CRVAL1.CHIP5                        1;
+MEF.CRVAL2.CHIP5                        1;
+MEF.CRPIX1.CHIP5                        -6378;
+MEF.CRPIX2.CHIP5                        1;
+MEF.CRVAL1.CHIP6                        1;
+MEF.CRVAL2.CHIP6                        1;
+MEF.CRPIX1.CHIP6                        -4236;
+MEF.CRPIX2.CHIP6                        1;
+MEF.CRVAL1.CHIP7                        1;
+MEF.CRVAL2.CHIP7                        1;
+MEF.CRPIX1.CHIP7                        -2094;
+MEF.CRPIX2.CHIP7                        1;
+MEF.CRVAL1.CHIP8                        1;
+MEF.CRVAL2.CHIP8                        1;
+MEF.CRPIX1.CHIP8                        49;
+MEF.CRPIX2.CHIP8                        1;
+#
+MEF.SCANREJ.KEY                                    "HIERARCH ESO REC FLAT RJOVSC";
+MEF.SCANREJ.COMMENT                           "Rejection min max";
+MEF.SCANREJ.MIN                                    10;
+MEF.SCANREJ.MAX                                    10;
+#
+WFI.CROP.X.MIN                           55;
+WFI.CROP.X.MAX                           2090;
+WFI.CROP.Y.MIN                           35;
+WFI.CROP.Y.MAX                           4120;
+#
+MEF.REFPIX.X                                    4101;
+MEF.REFPIX.Y                                    3950;
+#
+MEF.TRIMREG.KEY                                    "HIERARCH ESO REC FLAT TRIM";
+MEF.TRIMREG.COMMENT                           "xmin xmax ymin ymax";
+#
+MEF.CROP.X.MIN.CHIP1                           51;
+MEF.CROP.X.MAX.CHIP1                           2094;
+MEF.CROP.Y.MIN.CHIP1                           31;
+MEF.CROP.Y.MAX.CHIP1                           4127;
+MEF.CROP.X.MIN.CHIP2                    51;
+MEF.CROP.X.MAX.CHIP2                    2094;
+MEF.CROP.Y.MIN.CHIP2                    31;
+MEF.CROP.Y.MAX.CHIP2                    4127;
+MEF.CROP.X.MIN.CHIP3                    51;
+MEF.CROP.X.MAX.CHIP3                    2094;
+MEF.CROP.Y.MIN.CHIP3                    31;
+MEF.CROP.Y.MAX.CHIP3                    4127;
+MEF.CROP.X.MIN.CHIP4                    51;
+MEF.CROP.X.MAX.CHIP4                    2094;
+MEF.CROP.Y.MIN.CHIP4                    31;
+MEF.CROP.Y.MAX.CHIP4                    4127;
+MEF.CROP.X.MIN.CHIP5                    49;
+MEF.CROP.X.MAX.CHIP5                    2092;
+MEF.CROP.Y.MIN.CHIP5                    2;
+MEF.CROP.Y.MAX.CHIP5                    4098;
+MEF.CROP.X.MIN.CHIP6                    49;
+MEF.CROP.X.MAX.CHIP6                    2092;
+MEF.CROP.Y.MIN.CHIP6                    2;
+MEF.CROP.Y.MAX.CHIP6                    4098;
+MEF.CROP.X.MIN.CHIP7                    49;
+MEF.CROP.X.MAX.CHIP7                    2092;
+MEF.CROP.Y.MIN.CHIP7                    2;
+MEF.CROP.Y.MAX.CHIP7                    4098;
+MEF.CROP.X.MIN.CHIP8                    51;
+MEF.CROP.X.MAX.CHIP8                    2094;
+MEF.CROP.Y.MIN.CHIP8                    2;
+MEF.CROP.Y.MAX.CHIP8                    4098;
+#
+MEF.NCHIPS                                    8;
+#
+MEF.SATLEVEL                                    65534;
+MEF.SATMAX                                    0.05;
+#
+MEF.CCD.RON.KEY                                    "RDNOISE";
+MEF.CCD.RON.I.KEY                             "HIERARCH ESO DET OUT%d RON";
+MEF.CCD.RON.COMMENT                           "Read out noise";
+MEF.CCD.RON.CHIP1                           5.1;
+MEF.CCD.RON.CHIP2                       5.4;
+MEF.CCD.RON.CHIP3                       5.3;
+MEF.CCD.RON.CHIP4                       4.8;
+MEF.CCD.RON.CHIP5                       5.2;
+MEF.CCD.RON.CHIP6                       5.4;
+MEF.CCD.RON.CHIP7                       5.0;
+MEF.CCD.RON.CHIP8                       4.9;
+#
+MEF.CCD.GAIN.KEY                           "GAIN";
+MEF.CCD.GAIN.I.KEY                            "HIERARCH ESO DET OUT%d GAIN";
+MEF.CCD.GAIN.COMMENT                           "CCD gain";
+MEF.CCD.GAIN.CHIP1                           2.0;
+MEF.CCD.GAIN.CHIP2                      2.1;
+MEF.CCD.GAIN.CHIP3                      2.3;
+MEF.CCD.GAIN.CHIP4                      2.0;
+MEF.CCD.GAIN.CHIP5                      2.1;
+MEF.CCD.GAIN.CHIP6                      2.1;
+MEF.CCD.GAIN.CHIP7                      2.2;
+MEF.CCD.GAIN.CHIP8                      2.2;
+#
+MEF.BIAS.FRAME.I.KEY                           "HIERARCH ESO REC BIAS";
+MEF.BIAS.FRAME.I.COMMENT                  "Input bias frame";
+MEF.MASTER.BIAS.KEY                           "HIERARCH ESO REC FLAT MBIAS";
+MEF.MASTER.BIAS.COMMENT                           "Master bias used";
+MEF.BIAS.NAME.O                                    "WFI_MB";
+MEF.BIAS.FRAMETHR.LO                           0;
+MEF.BIAS.FRAMETHR.HI                           1000;
+MEF.BIAS.KAPPA1                                    2.0;
+MEF.BIAS.FRAMENUM.MIN                           3;
+#
+MEF.BPM.NAME.O                                    "WFI_BPM";
+MEF.BPM.PROPFLAG.KEY                           "HIERARCH ESO REC BPM PROPFLAG";
+MEF.BPM.PROPFLAG.COMMENT                  "proportional flag for BPM creation";
+MEF.BPM.PROPFLAG                           0;
+MEF.BPM.LGAINTHR.KEY                           "HIERARCH ESO REC BPM LGAINTHR";
+MEF.BPM.LGAINTHR.COMMENT                  "low gain threshold for BPM creation";
+MEF.BPM.LGAINTHR                           0.6;
+MEF.BPM.HGAINTHR.KEY                    "HIERARCH ESO REC BPM HGAINTHR";
+MEF.BPM.HGAINTHR.COMMENT                  "high gain threshold for BPM creation";
+MEF.BPM.HGAINTHR                           1.4;
+#
+MEF.DOMEFF.FRAME.I.KEY                           "HIERARCH ESO REC FLAT DOME";
+MEF.DOMEFF.FRAME.I.COMMENT                  "Input dome frame";
+MEF.DOMEFF.NAME.O                        "WFI_DOMEFF";
+MEF.DOMEFF.FRAMETHR.LO.KEY                  "HIERARCH ESO REC FLAT LFRATHD";
+MEF.DOMEFF.FRAMETHR.LO.COMMENT                  "low frame threshold for dome";
+MEF.DOMEFF.FRAMETHR.LO                           10000;
+MEF.DOMEFF.FRAMETHR.HI.KEY                  "HIERARCH ESO REC FLAT HFRATHD";
+MEF.DOMEFF.FRAMETHR.HI.COMMENT                  "high frame threshold for dome";
+MEF.DOMEFF.FRAMETHR.HI                           45000;
+MEF.DOMEFF.FRAMENUM.MIN.KEY                  "HIERARCH ESO REC FLAT MINFRAD";
+MEF.DOMEFF.FRAMENUM.MIN.COMMENT                  "minimum number of frames for dome flat";
+MEF.DOMEFF.FRAMENUM.MIN                           5;
+#
+MEF.SKYFF.FRAME.I.KEY                           "HIERARCH ESO REC FLAT SKY";
+MEF.SKYFF.FRAME.I.COMMENT                  "Input sky frame";
+MEF.SKYFF.NAME.O                         "WFI_SKYFF";
+MEF.SKYFF.FRAMETHR.LO.KEY                  "HIERARCH ESO REC FLAT LFRATHS";
+MEF.SKYFF.FRAMETHR.LO.COMMENT                  "low frame threshold for sky";
+MEF.SKYFF.FRAMETHR.LO                     10000;
+MEF.SKYFF.FRAMETHR.HI.KEY                  "HIERARCH ESO REC FLAT HFRATHS";
+MEF.SKYFF.FRAMETHR.HI.COMMENT                  "high frame threshold for sky";
+MEF.SKYFF.FRAMETHR.HI                     45000;
+MEF.SKYFF.FRAMENUM.MIN.KEY                  "HIERARCH ESO REC FLAT MINFRAS";
+MEF.SKYFF.FRAMENUM.MIN.COMMENT                  "minimum number of frames for sky flat";
+MEF.SKYFF.FRAMENUM.MIN                    5;
+#
+MEF.FF.DEFAULTNAME                        "WFI_MFF";
+#
+MEF.FILTER.KEY                                    "HIERARCH ESO INS FILT1 NAME";
+#
+MEF.BINX.KEY                                    "HIERARCH ESO DET WIN1 BINX";
+MEF.BINY.KEY                                    "HIERARCH ESO DET WIN1 BINY";
+#
+MEF.PIXREJ.SIGMA.LO.KEY                           "HIERARCH ESO REC FLAT LPIXSIG";
+MEF.PIXREJ.SIGMA.LO.COMMENT                  "low sigma for pixel rejection";
+MEF.PIXREJ.SIGMA.LO                           3.0;
+MEF.PIXREJ.SIGMA.HI.KEY                      "HIERARCH ESO REC FLAT HPIXSIG";
+MEF.PIXREJ.SIGMA.HI.COMMENT                  "high sigma for pixel rejection";
+MEF.PIXREJ.SIGMA.HI                           3.0;
+#
+MEF.MEDIAN.REG.KEY                           "HIERARCH ESO REC FLAT MREGDEF";
+MEF.MEDIAN.REG.COMMENT                           "Region for median computation";
+MEF.MEDIAN.REG.X1                           500;
+MEF.MEDIAN.REG.X2                           1500;
+MEF.MEDIAN.REG.Y1                           1500;
+MEF.MEDIAN.REG.Y2                           2500;
+#
+MEF.KERN.HSIZE.KEY                           "HIERARCH ESO REC FLAT KERNS";
+MEF.KERN.HSIZE.COMMENT                           "Smoothing kernel size";
+MEF.KERN.HSIZE                                    4;
+#_oOo_
