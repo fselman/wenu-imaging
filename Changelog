@@ -1,3 +1,9 @@
+2011-05-20	fselman		mefpp-1.5
+	- working on clone of version in Bitbucket
+	repository. This version has major modifications
+	to the WCS sectin. It should be given relatively
+	good astrometry for WFI at PA=0 degrees.
+
 2011-04-29	fselman		mefpp-1.4
 
 	- Added split function. A set of MEF files

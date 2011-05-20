@@ -25,6 +25,89 @@ t              Y###############@   by the free software foundation.  See
          ~=__      __=~
              ~~~~~~
 
+_______________________________________________________________________________
+
+
+MEF File Reduction recipes
+
+F. Selman, Paranal 20 May 2011
+(F. Selman, La Silla 17 February 2005)
+
+The recipes found in this package use the originals
+written by N. Devillard as starting point.
+
+They have been extensively modified to work with
+WFI MEF files directly, both as input and output.
+I decided to keep the images allways within a
+MEF file which is their logical place, at least
+in the context of a primary processing. For example,
+the flat field routines now keep track of the
+median in each of the extension and save the value
+in the respective BSCALE keywords. This save us
+from the need to do a gain harmonization of
+the chips later on, as the flat field give us
+that directly if we take the precaution of
+normalizing the flat field frames with a single
+number for all the extensions. Thus, the user
+shoudl work in ADUs until after the frames have
+been flat fielded.
+
+The basic modus operandi is to go extension by 
+extension applying the already proven eclipse
+routines. 
+
+Version 1.5 of these recipes deal correctly
+with the following issues:
+
+- Input and output to MEF files
+- Proper treatment of overscan correction,
+  subtracting a line rather than a single
+  number, as the overscan varies with y.
+- Proper treatment of the BSCALE and BZERO
+  keywords.
+- Proper treatment of the CRVALi, and CRPIXi
+  keywords, specially after trimming. The
+  WFI headers can be corrected.
+- Reading instrument configuration from
+PAF file.
+
+These recipes are intended as efficient and
+simple to use, voiding the complexities of
+a pipeline.
+
+These recipes should allow the users to do the
+initial pre-processing of their data correctly.
+
+Version 2.0 should handle correctly the following:
+
+TBD: 
+     - Creation of a wfi_ccube version to manipulate
+       MEF files.
+     - Creation of a wfi_peak version to extract info
+       on objects in the images
+     - Determination/refinement of WCS and inclution
+	in headers
+
+
+F. Selman	2011-05-20
+
+REAME FROM ORIGINAL VERSION:
+
+The recipes found in this directory have been written in the context of the
+BeoWFI project, aimed at providing a data reduction facility for the WFI
+instrument based on a Beowulf cluster.
+
+The recipe functionalities are drawn from the eclipse library. The recipe
+code has been written by N. Devillard, based on inputs from Aniello Grado,
+Andreas Wicenec, Stefan Bogun, Miguel Albrecht, Peter Quinn. The Beowulf
+demonstration cluster at ESO is maintained by Dieter Suchar and Andreas
+Wicenec.
+
+N. Devillard
+Wed Oct 25 13:14:02 CEST 2000
+
+--------------------------------------------------
+
     Installation
     ------------
 
