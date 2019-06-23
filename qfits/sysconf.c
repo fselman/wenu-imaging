@@ -343,7 +343,7 @@ void make_config_make()
 
 		case COMPILER_CC:
 		fprintf(sysc, "CC      = cc\n");
-		fprintf(sysc, "CFLAGS  = ");
+		fprintf(sysc, "CFLAGS  = -g ");
         if (config.xmemory_mode == 0) {
             fprintf(sysc, "-DXMEMORY_MODE=%d ", config.xmemory_mode) ;
             fprintf(sysc, "-DXMEMORY_MAXPTRS=1 ") ;
@@ -468,7 +468,7 @@ void make_config_make()
 
 		case COMPILER_GCC:	
         	fprintf(sysc, "CC      = gcc\n");
-		fprintf(sysc, "CFLAGS  = -m32 ");
+		fprintf(sysc, "CFLAGS  = -g ");
 
         if (config.xmemory_mode == 0) {
             fprintf(sysc, "-DXMEMORY_MODE=%d ", config.xmemory_mode) ;

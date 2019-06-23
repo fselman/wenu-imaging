@@ -29,7 +29,7 @@ MV      = mv
 
 SUFFIXES = .o .c .h .a .so .sl
 
-COMPILE.c=$(CC) $(CFLAGS) $(IFLAGS) -c
+COMPILE.c=$(CC) $(CFLAGS) $(IFLAGS) -c 
 LINK.c=$(CC) $(CFLAGS) $(IFLAGS) $(LDFLAGS)
 
 .c:
@@ -38,7 +38,7 @@ LINK.c=$(CC) $(CFLAGS) $(IFLAGS) $(LDFLAGS)
 	@(echo "compiling $< ...")
 	@($(COMPILE.c) -o $@ $<)
 
-COMPF  = $(CFLAGS) $(IFLAGS)
+COMPF  = $(CFLAGS) $(IFLAGS) -g
 LINKF  = $(LDFLAGS) $(LDLIBS)
 
 

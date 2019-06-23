@@ -72,7 +72,7 @@
    problematic.
  */
 #ifndef XMEMORY_MAXPTRS
-#define XMEMORY_MAXPTRS     200000
+#define XMEMORY_MAXPTRS     2000000
 #endif
 
 /** Identify true RAM memory */

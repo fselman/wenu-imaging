@@ -1,3 +1,14 @@
+2019-06-22	fselman		mefpp-1.6
+
+	- converted to 64 bits
+	- made it work for bpm creation and reading
+	- in chapman2:
+        - five OMEGACAM frames get reduced in 1m49s
+        - reduction of calibrations without BPM 
+        creation: 3m 46s
+        - reduction of calibrations with BPM
+        creation: 27m 53s
+
 2011-05-20	fselman		mefpp-1.5
 	- working on clone of version in Bitbucket
 	repository. This version has major modifications

@@ -361,14 +361,14 @@ int mef_engine(mef_bb * bb)
 	/* Further  validate the data sets for consistency */
 
 	/* First the calibrating frames ... */
-           /*
-           if (mef_valid_subset(bb,"bpm")) {
-                e_error("Inconsistent data set. Either invalid FITS files,");
-                e_error("multiple filters, or multiple binning factors in the data set.");
-                mef_bb_del(bb);
-                return -1;
-           }
-           */
+           
+           //if (mef_valid_subset(bb,"bpm")) {
+           //     e_error("Inconsistent data set. Either invalid FITS files,");
+           //     e_error("multiple filters, or multiple binning factors in the data set.");
+           //     mef_bb_del(bb);
+           //     return -1;
+           //}
+          
 
            if (mef_valid_subset(bb,"bias")) {
                 e_error("Inconsistent data set. Either invalid FITS files,");

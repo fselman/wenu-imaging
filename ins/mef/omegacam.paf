@@ -514,6 +514,7 @@ MEF.BIAS.FRAMETHR.HI                    1000;
 MEF.BIAS.KAPPA1                          2.0;
 MEF.BIAS.FRAMENUM.MIN                    3;
 #   
+MEF.BPM.NAME                            "OMEGACAM_BPM";
 MEF.BPM.NAME.O                          "OMEGACAM_BPM";
 MEF.BPM.PROPFLAG.KEY                    "HIERARCH ESO REC BPM PROPFLAG";
 MEF.BPM.PROPFLAG.COMMENT                "proportional flag for BPM creation";

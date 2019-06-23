@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -D_ECLIPSE_ -m32 -O3
+CFLAGS  = -D_ECLIPSE_ -g -O3
 FTRACE  =
 RELOC   = -fpic
 SHARED  = -shared
@@ -7,4 +7,4 @@ LFLAGS  =
 LDLIBSLOCAL =
 DYNSUF  = so
 STRIP   = strip
-QFITSDIR= /Users/fselman/compu/eso/mefpp-1.4/qfits
+QFITSDIR= /home/fselman/omegacam/mefpp/qfits

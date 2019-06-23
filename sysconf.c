@@ -361,7 +361,7 @@ void make_config_make()
 
 		case COMPILER_CC:
 		fprintf(sysc, "CC      = cc\n");
-        fprintf(sysc, "CFLAGS  = -D_ECLIPSE_ ");
+        fprintf(sysc, "CFLAGS  = -D_ECLIPSE_ -g ");
 		switch (config.local_os) {
 			case os_hp08:
 			case os_hp09:
@@ -466,7 +466,7 @@ void make_config_make()
 
 		case COMPILER_GCC:	
         fprintf(sysc, "CC      = gcc\n");
-        fprintf(sysc, "CFLAGS  = -D_ECLIPSE_ -m32 ");
+        fprintf(sysc, "CFLAGS  = -D_ECLIPSE_ -g ");
 		if (config.with_threads) {
 			fprintf(sysc, "-pthread ");
 		}

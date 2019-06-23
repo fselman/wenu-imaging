@@ -15,7 +15,6 @@
 #endif
 
 
-#define CPU_X86         386
 
-#define OS_DARWIN       1
+#define OS_LINUX        1
 #endif
