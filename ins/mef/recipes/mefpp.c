@@ -57,7 +57,7 @@ Description	:	MEF flat-field creation recipe, from WFI by
 #define OPT_SPLIT		3100
 
 
-static char recipe_version[] = "$Revision: 1.4.0 $";
+static char recipe_version[] = "$Revision: 1.6.0 $";
 
 static void usage(char *pname) ;
 static char prog_desc[] = "MEF master calibration frames creation" ;

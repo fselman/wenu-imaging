@@ -6,4 +6,4 @@ LFLAGS  =
 DYNSUF  = so
 STRIP   = strip
 TARGETS = static
-prefix  = /home/fselman/omegacam/mefpp
+prefix  = /usr/local

@@ -1,0 +1,7 @@
+pymefpp:
+
+- currently the association of sky (at least) is associating wrong filters. Fix.
+- Clean up the classes to use a single Exposure class
+- Merge partition_science and partition_calibrations into partition_data
+- clean log messages. Define my_print with time stamp.
+- properly receive outpt messages from executable and print them with time stamp

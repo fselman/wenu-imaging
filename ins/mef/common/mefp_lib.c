@@ -1561,7 +1561,21 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	   sprintf(cval,"%dx%d",atoi(bb->binx_val),atoi(bb->biny_val));
 	   bb->bias_partition = strdup(cval);
 	} else {
+	   /* We trim spaced to the right of the zFilter variable */
+	   int index = -1;
+           int iii = 0;
+           while(zFilter[iii] != '\0')
+                {
+                if(zFilter[iii] != ' ' && zFilter[iii] != '\t' && zFilter[iii] != '\n')
+                {
+                    index= iii;
+                    }
+                iii++;
+                }
+           zFilter[index + 1] = '\0';
+
 	   sprintf(cval,"%s_%dx%d",zFilter,atoi(bb->binx_val),atoi(bb->biny_val));
+
 	   bb->data_partition = strdup(cval);
 	   bb->flat_partition = strdup(cval);
 	}
@@ -2196,9 +2210,9 @@ qfits_header *mef_header_mainsubset(mef_bb *bb, image_t *flat)
 	/*
 	 * we will some keywords from the primary headers
 	 */
-	if (bb->name_bias != NULL) {
-           if ( (fh_ref = mef_header_primary(bb->name_bias)) == NULL) {
-                e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_sky);
+	if (bb->name_mf != NULL) {
+           if ( (fh_ref = mef_header_primary(bb->name_mf)) == NULL) {
+                e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_mf);
                 return NULL;
            }
         } else if (bb->name_sky != NULL) {
@@ -2206,15 +2220,15 @@ qfits_header *mef_header_mainsubset(mef_bb *bb, image_t *flat)
 		e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_sky);
 		return NULL;
 	   }
-	} else if (bb->name_mf != NULL) {
-           if ( (fh_ref = mef_header_primary(bb->name_mf)) == NULL) {
-                e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_mf);
+	} else if (bb->name_bias != NULL) {
+           if ( (fh_ref = mef_header_primary(bb->name_bias)) == NULL) {
+                e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_bias);
                 return NULL;
            }
 	} else {
 	  e_error("mef_header_mainsubset: can not read reference fits file primary headers");
           return NULL; 
-	}
+	  }
 
 	fh_main_subset = qfits_header_default();
 	/* BITPIX */
@@ -2284,6 +2298,15 @@ char *strtrim_right( register char *p, register c)
         len = strlen( p);
     }
     return( p);
+}
+
+char * rtrim(char * s) {
+    int l = strlen(s);
+
+    while(isspace(s[l - 1])) --l;
+    while(* s && isspace(* s)) ++s, --l;
+
+    return strndup(s, l);
 }
 
 
