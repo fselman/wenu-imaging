@@ -58,8 +58,9 @@ typedef struct _mef_bb_ {
 	char		*origin ;
 	char		*telescope ;
 	char		*instrument ;
-	
+
 	/* Input/Output file names */
+	char	*	name_paf ;
 	char    *       name_bias ;
 	char    *       name_bias_o ;
 	char	*	name_bpm ;

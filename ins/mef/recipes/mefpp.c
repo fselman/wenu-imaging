@@ -31,6 +31,7 @@ Description	:	MEF flat-field creation recipe, from WFI by
 
 #define OPT_XTNUM		1000
 #define OPT_NOVERIFY            1002
+#define OPT_PAFNAME             1003
 #define OPT_BIASNAME		1005
 #define OPT_BIASSUB		1007
 #define OPT_BIASSAVE		1008
@@ -74,6 +75,7 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 {
 	int             c ;
 	int         display_params ;
+	char * pafname ;
 	mef_bb*   bb ;
 
 	display_params = 0 ;
@@ -89,6 +91,8 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 			{"version",         0, 0, OPT_VERSION},
 
 			{"noverify",	    0, 0, OPT_NOVERIFY},
+
+                        {"pafname",        0, 0, OPT_PAFNAME},
 
 			{"xtnum",           1, 0, OPT_XTNUM},
 
@@ -161,6 +165,10 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 			case OPT_NOVERIFY:
 				bb->noverify = 1;
 				break ;
+
+                        case OPT_PAFNAME:
+                                bb->name_paf = strdup(optarg);
+                                break ;
 
 				/* Local option: extension number to consider */
 			case OPT_XTNUM:
@@ -288,6 +296,7 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 
 			default:
 				usage(argv[0]) ;
+				e_comment(0,"Using %s as PAF name",bb->name_paf);
 				break ;
 		}
 
@@ -774,21 +783,23 @@ int main(int argc, char *argv[])
 	mef_bb*	bb ;
 
 	/*printf("argc = %d\n\n",argc);*/
-	printf("\n\n\n ----------> MEFPP WFI REDUCTION ENGINE. VERSION: %s <----------\n\n\n", recipe_version);
+	printf("\n\n\n ----------> MEFPP REDUCTION ENGINE. VERSION: %s <----------\n\n\n", recipe_version);
 	if (argc == 1) {
           usage(argv[0]);
 	  return -1;
         }
 
 	/* Initialize eclipse environment */
+	printf("\nInitializing eclipse environment");
 	eclipse_init() ;
 
 	/* Get parameters for processing */
+	printf("\nLoading parameters...\n");
 	if ( (bb = mef_bb_load(argc,argv)) == NULL ) {
 	   return 0;
 	}
 
-	/* Startup WFI calibration  engine */
+	/* Startup MEF calibration  engine */
 
 	mef_engine(bb);
 	mef_bb_del(bb);
@@ -807,9 +818,10 @@ int main(int argc, char *argv[])
 usage(char *pname)
 {
 	hello_world(pname, prog_desc) ;
-	printf("use : %s [options] <WFI extension> [outname]\n", pname) ;
+	printf("use : %s [options] <MEF extension> [outname]\n", pname) ;
 	printf(
 			"options are:\n"
+			"\t--pafname <name>   Name of PAF file, full path should be given\n"
 			"\t-x or --xtnum <n>  Xtension to consider (0=all)\n"
 			"\n"
 			"\t--split	      Name of file or of framelist with files to split\n"
