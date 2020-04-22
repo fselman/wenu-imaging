@@ -7,4 +7,4 @@ LFLAGS  =
 LDLIBSLOCAL =
 DYNSUF  = so
 STRIP   = strip
-QFITSDIR= /home/fselman/omegacam/mefpp-1.6/qfits
+QFITSDIR= /home/fselman/omegacam/mefpp/qfits

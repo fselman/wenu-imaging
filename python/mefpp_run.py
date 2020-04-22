@@ -123,7 +123,7 @@ def runCmd( str_cmd, basepath, p_shell=True ):
         #blocking the child process.(Python Ref.doc)
 
         (stdoutdata, stderrdata) = p.communicate()
-        err = stdoutdata.decode('ascii') + " " + stderrdata.decode('ascii')
+        err = stdoutdata.decode('utf-8') + " " + stderrdata.decode('utf-8')
 
         # IMPORTANT: Next checking (only available when shell=True) not always detect all kind of errors !!
         if err.count('WARNING: Significant inaccuracy'):
@@ -134,10 +134,10 @@ def runCmd( str_cmd, basepath, p_shell=True ):
           or err.count('Segmentation fault') or err.count("command not found") \
           or err.count("No such file or directory")):
             print("An error happened while running command --> %s \n"%(err,))
-            print(stderrdata.decode('ascii'))
+            print(stderrdata.decode('utf8'))
             return 1 # ERROR
         else:
-            print(stdoutdata.decode('ascii'))
+            print(stdoutdata.decode('utf8'))
             return 0 # NO ERROR
             os.chdir(cwd)
     except Exception:
