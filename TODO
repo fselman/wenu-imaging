@@ -1,7 +1,14 @@
 pymefpp:
 
-- currently the association of sky (at least) is associating wrong filters. Fix.
+- clean over all workflow
+- test NB_659 with calibrator data. PNs?
+- Add functionality for: u_SDSS, g_SDSS, i_SDSS, z_SDSS
+- Add colour equation in zp calculation. Refer to colour=0
+- Add linearity correction
+- Add ZP field variation correction
+
+- Done. currently the association of sky (at least) is associating wrong filters. Fix.
 - Clean up the classes to use a single Exposure class
-- Merge partition_science and partition_calibrations into partition_data
-- clean log messages. Define my_print with time stamp.
+- Done. Merge partition_science and partition_calibrations into partition_data
+- Done with logging message in  zp notebook. Needs to propagate to other modules. clean log messages. Define my_print with time stamp.
 - properly receive outpt messages from executable and print them with time stamp
