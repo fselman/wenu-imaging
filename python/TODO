@@ -1,0 +1,7 @@
+- convert all notebools to a library plus a small notebook to call.
+- pymefpp_solve: Modify sextractor in the solve library to permit modification of some parameters.
+- pymefpp_run: Add QC parameters to save quality parameters
+- pymefpp_run: Use mode to determine sky level in each of the frames
+- pymefpp_run: Normalize by exposure time and add a MEFPP keyword to keep track of 
+  original exposure time and the saturation level.
+- pymefpp_run: change to counts using the average gain.
