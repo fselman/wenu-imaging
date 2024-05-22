@@ -656,7 +656,7 @@ int mef_engine(mef_bb * bb)
 			image_del(bias);
 			image_del(flat_combined);
 			cube_del(prep);
-			return;
+			return -1; /* FSE 2024-05-20 */
 		   }
 		} else {
 		   e_comment(1, "saturation check skipped (on request)");

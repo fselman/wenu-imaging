@@ -31,8 +31,9 @@
 #define MAXSTRSZ    512
 #define PATHSZ      1024
 
-#define MACROS_FILE	"config.make"
+#define MACROS_FILE"config.make"
 #define HEADER_FILE "config.h"
+#define PREFIX_DEFAULT "/opt/local/eclipse"
 
 #define COMPILER_AUTO	0
 #define COMPILER_CC	1
@@ -73,6 +74,8 @@ static struct {
     int		with_trace ;
     /* Compile with threads */
     int		with_threads ;
+    /* Prefix for installation */
+    char *      prefix ;
     /* Prefix for qfits install */
     char	qfits_path[MAXSTRSZ] ;
 
@@ -82,6 +85,7 @@ static struct {
 static char * qfits_places[] = {
     "./qfits",
     "/usr",
+    "/opt/local/qfits5",
     "/usr/local",
     "/opt/qfits",
     "../qfits",
@@ -588,6 +592,12 @@ void make_config_make()
     }
     strcpy(config.qfits_path, config_abspath(config.qfits_path));
 	fprintf(sysc, "QFITSDIR= %s\n", config.qfits_path);
+
+        /* PREFIX */
+        fprintf(sysc, "prefix  = %s\n",
+            config.prefix ? config.prefix : PREFIX_DEFAULT);
+        printf("setting installation prefix as: [%s]\n",
+                        config.prefix ? config.prefix : PREFIX_DEFAULT);
     
 	fclose(sysc);
 }
@@ -761,8 +771,9 @@ int main(argc, argv)
 	config.debug_compile = 0;
 	config.lint_compile  = 0 ;
 	config.compiler      = COMPILER_AUTO ;
+        config.prefix        = NULL ;
 	config.with_threads  = 0 ;
-	config.with_trace 	 = 0 ;
+	config.with_trace    = 0 ;
     config.qfits_path[0] = 0 ;
 
     memset(config.sysname, 0, MAXSTRSZ);

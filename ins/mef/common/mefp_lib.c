@@ -2835,7 +2835,7 @@ void save_mef_hdrdump(image_t *image,char *filename,qfits_header *fh,int bpp)
 	qd.filename = filename ;
 	qd.npix = image->lx*image->ly;
 #ifdef DOUBLEPIX
-	qd.ptype = PTYPE_DOUBLE
+	qd.ptype = PTYPE_DOUBLE;
 	qd.dbuf  = image->data ;
 #else
 	qd.ptype = PTYPE_FLOAT;

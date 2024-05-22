@@ -84,14 +84,14 @@ common/mefp_lib.o:	common/mefp_lib.c common/wfi.h
 # ************* MEF recipes
 #
 
-MEFBINS =		$(BINDIR)/mefpp
+MEFBINS = $(BINDIR)/mefpp
 
 mef:	$(MEFBINS)
 
 
 $(BINDIR)/mefpp:	recipes/mefpp.c common/mefp_lib.o
-	@(echo "compiling $@ ...")
-	@($(CC) $(COMPF) -o $(BINDIR)/mefpp recipes/mefpp.c \
-	$(OBJ_MEFCOM) $(LINKF))
+	echo "compiling $@ ..."
+	$(CC) $(COMPF) -o $(BINDIR)/mefpp recipes/mefpp.c \
+	$(OBJ_MEFCOM) $(LINKF)
 
 # end of file
