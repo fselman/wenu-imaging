@@ -25,7 +25,7 @@ RRM     = rm -rf
 CP      = cp
 MV      = mv
 
-BINDIR = ../../bin
+BINDIR = ../bin
 
 #
 # Redefinition of implicit rules
@@ -298,3 +298,5 @@ $(BINDIR)/qextract:
 	cp -f $(QFITSDIR)/bin/qextract $(BINDIR) ; \
 	else (true) fi)
 
+$(BINDIR)/:
+	mkdir -p $@

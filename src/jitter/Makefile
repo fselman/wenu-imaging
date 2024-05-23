@@ -26,7 +26,7 @@ RRM     = rm -rf
 CP      = cp
 MV      = mv
 
-BINDIR = ../../bin
+BINDIR = ../bin
 
 #
 # Redefinition of implicit rules

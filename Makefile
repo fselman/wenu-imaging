@@ -1,7 +1,7 @@
 
 include ./config.make
 
-BINDIR = ./bin
+BINDIR = ./src/bin
 
 CP      = cp -r
 RM = rm -rf
@@ -108,18 +108,28 @@ clean veryclean:
 install:
 	echo "Installing eclipse and mefpp in " $(prefix)
 	mkdir -p $(prefix)
-	mkdir -p $(prefix)/lib
-	mkdir -p $(prefix)/include
 	mkdir -p $(prefix)/bin
-
 	@(if test -f $(BINDIR)/3color ; then\
 	($(CP) $(BINDIR)/* $(prefix)/bin/.); \
 	else (true) fi)
 
-	@(if test -f $(BINDIR)/../src/include/ansiterm.h ; then\
-	($(CP) $(BINDIR)/../src/include/*.h $(prefix)/include/.); \
+	mkdir -p $(prefix)/include
+	@(if test -f $(BINDIR)/../include/ansiterm.h ; then\
+	($(CP) $(BINDIR)/../include/*.h $(prefix)/include/.); \
 	else (true) fi)
 
-	@(if test -f $(BINDIR)/../src/lib/libeclipse.a ; then\
-	($(CP) $(BINDIR)/../src/lib/libeclipse.a $(prefix)/lib/.); \
+	mkdir -p $(prefix)/lib
+	@(if test -f $(BINDIR)/../lib/libeclipse.a ; then\
+	($(CP) $(BINDIR)/../lib/libeclipse.a $(prefix)/lib/.); \
 	else (true) fi)
+
+	mkdir -p $(prefix)/config
+	@(if test -f $(BINDIR)/../../ins/mef/omegacam.paf ; then\
+	($(CP) $(BINDIR)/../../ins/mef/*.paf $(prefix)/config/.); \
+	else (true) fi)
+
+	mkdir -p $(prefix)/static_cal
+	@(if test -f $(BINDIR)/../../ins/mef/static_cal/OMEGACAM_BPM_01.fits ; then\
+	($(CP) $(BINDIR)/../../ins/mef/static_cal/*.fits* $(prefix)/static_cal/.); \
+	else (true) fi)
+

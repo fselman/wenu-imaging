@@ -72,6 +72,7 @@ clean:
 veryclean:
 	@(echo "cleaning object files and libraries...")
 	@($(RM) */*.o */*/*.o ./lib/*.a ./lib/*.s*)
+	@(rm -r ./bin/*)
 	@(cd ./main ; $(MAKE) veryclean ; cd ..)
 	@(cd ./jitter ; $(MAKE) veryclean ; cd ..)
 

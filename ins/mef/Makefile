@@ -47,7 +47,7 @@ LINKF  = $(LDFLAGS) $(LDLIBS)
 # Eclipse directories
 #
 
-BINDIR = ../../bin
+BINDIR = ../../src/bin
 
 
 # Load compilation options (valid for all compiled sources hereafter) 
