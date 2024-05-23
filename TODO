@@ -1,4 +1,16 @@
-pymefpp:
+mefpp:
+
+- install to prefix directory. Done.
+- Separate qfits5 from eclipse. Done.
+- Put mef commands in the command line commands in src/Makefile
+- check e_setup to use the prefix installation as defaulty during setup
+- unzip the WFI BPM and recover the method used to create them.
+- test functionality of mefpp
+- copy scripts to prefix in src/Makefile
+- create a version tested in mac
+- test in Linux and create version that works in both environments
+
+pymefpp: This is outdated after pycavi so it will be removed soon.
 
 - clean over all workflow
 - test NB_659 with calibrator data. PNs?
