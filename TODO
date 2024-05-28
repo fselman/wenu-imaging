@@ -1,0 +1,6 @@
+- Verify functioning of WCS solution. Currently on a Mac is not producing the proper shift. It applies same solution to all frames. Perhaps it is writing initial guess and not final solution. CHECK.
+- add configuration for installation directory
+- add configuration for where index files are
+- add chapter on installation of astrometry.net and use of index files for OCAM and WFI
+- add configuration files for astromatic software location
+- V2: modify for proper working on WFI images

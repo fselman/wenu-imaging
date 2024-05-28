@@ -530,7 +530,7 @@ def associateMFF(part, scipart):
 
 def mefpp_reduce_bpm(mefpp_dir, calib_dir):
     # here we reduce the bpm frames which for now is only a cp operation
-    bpm_files_list = [mefpp_dir + '/ins/mef/static_cal/' + 'OMEGACAM_BPM_%02d.fits' % i for i in range(1, 33)]
+    bpm_files_list = [mefpp_dir + '/static_cal/' + 'OMEGACAM_BPM_%02d.fits' % i for i in range(1, 33)]
     for file in bpm_files_list:
         # print(file)
         shutil.copy(file, calib_dir + '/bpm/')
@@ -554,8 +554,8 @@ def mefpp_reduce_bias(mefpp_dir, bias_part_list):
             mefpp_paf_exists = True
 
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/ins/mef/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/ins/mef/omegacam.paf', basepath + '/mefpp.paf')
+            if Path(mefpp_dir + '/config/mefpp.paf').exists():
+                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
                 if Path(basepath + '/mefpp.paf').exists():
                     mefpp_paf_exists = True
                 else:
@@ -616,8 +616,8 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list):
             mefpp_paf_exists = True
 
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/ins/mef/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/ins/mef/omegacam.paf', basepath + '/mefpp.paf')
+            if Path(mefpp_dir + '/config/mefpp.paf').exists():
+                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
                 if Path(basepath + '/mefpp.paf').exists():
                     mefpp_paf_exists = True
                 else:
@@ -678,8 +678,8 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list):
             mefpp_paf_exists = True
 
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/ins/mef/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/ins/mef/omegacam.paf', basepath + '/mefpp.paf')
+            if Path(mefpp_dir + '/config/mefpp.paf').exists():
+                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
                 if Path(basepath + '/mefpp.paf').exists():
                     mefpp_paf_exists = True
                 else:
@@ -755,8 +755,8 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list):
             mefpp_paf_exists = True
 
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/ins/mef/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/ins/mef/omegacam.paf', basepath + '/mefpp.paf')
+            if Path(mefpp_dir + '/config/mefpp.paf').exists():
+                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
                 if Path(basepath + '/mefpp.paf').exists():
                     mefpp_paf_exists = True
                 else:

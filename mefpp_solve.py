@@ -25,7 +25,7 @@ def solvefield(file_name):
     crpix2 = hdu_header["CRPIX2"]
 
     pos_pars = "--ra " + "%3.6f" % crval1 + " --dec " + "%3.6f" % crval2 + " --radius=1.0 "
-    scale_pars = " --scale-low 0.02 --scale-high 0.25 --overwrite"
+    scale_pars = " --scale-units arcsecperpix --scale-low 0.14 --scale-high 0.26 --overwrite"
     wcs_pars = " --crpix-x " + "%5d" % crpix1 + " --crpix-y " + "%5d" % crpix2 + " --no-tweak "
     solve_command_pars = " -D " + dir_name + " " + pos_pars + scale_pars + wcs_pars + "--no-plots --new-fits " + \
                          file_name[:-5] + "_newwcs.fits " + file_name
@@ -36,7 +36,7 @@ def solvefield(file_name):
                           "\n      --new-fits " + file_name[:-5] + "_newwcs.fits " + \
                           "\n      " + file_name
     logging.debug("solvefield: {0}".format(solve_command_print))
-    os.system("/usr/local/astrometry/bin/solve-field " + solve_command_pars)
+    os.system("/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars)
 
 
 def run_solve_field(argv: str, cpu_count: int):
@@ -97,7 +97,9 @@ def run_solve_field(argv: str, cpu_count: int):
         pool = multiprocessing.Pool(processes=1)
     num_tasks = len(processlist)
     logging.debug("run_solve_field: number of tasks: {:02d}".format(num_tasks))
-    pool.imap_unordered(solvefield, list_of_filenames)
+    #pool.imap_unordered(solvefield, list_of_filenames)
+    result = pool.map_async(solvefield, list_of_filenames)
+    result.wait()
 
     pool.close()
     logging.info("solve_field: ------------ done ----------")
@@ -196,6 +198,7 @@ def create_wcs_frame(argv, mode="continue"):
     for ext_name in extension_name_list:
         ext_file_name = ext_name.replace("#", "_")
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
+        logging.debug("create_wcs_frame: testing if solve field directory exists: {0}".format(solve_field_dir_name))
         if os.path.isdir(solve_field_dir_name):
             logging.debug("create_wcs_frame: solve field directory exists: {0}".format(solve_field_dir_name))
         else:
@@ -205,10 +208,10 @@ def create_wcs_frame(argv, mode="continue"):
 
         wcs_file = solve_field_dir_name + "/" + ext_file_name + ".wcs"
         if os.path.isfile(wcs_file):
-            logging.debug("create_wcs_frame: WCS file exists: {0}".format(wcs_file))
+            logging.info("create_wcs_frame: WCS file exists: {0}".format(wcs_file))
             wcs_fits = solve_field_dir_name + "/" + ext_file_name + "_newwcs.fits"
         else:
-            logging.debug("*** create_wcs_frame: **WCS file does not exists: {0}".format(wcs_file))
+            logging.info("*** create_wcs_frame: **WCS file does not exists: {0}".format(wcs_file))
             # if the solved CCD does not exist, then skipped, effectively removing it from the final mosaic
             # later we should add the possibility to average or ignore it
             if mode == "remove":
@@ -216,6 +219,7 @@ def create_wcs_frame(argv, mode="continue"):
             elif mode == "continue":
                 wcs_fits = solve_field_dir_name + "/" + ext_file_name + ".fits"
 
+        print("wcs_fits: {}".format(wcs_fits))
         image_hdu = fits.ImageHDU(data=fits.getdata(wcs_fits), header=fits.getheader(wcs_fits))
         new_hdul.append(image_hdu)
 
