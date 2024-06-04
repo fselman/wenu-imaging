@@ -114,7 +114,8 @@ class SExtractor:
         if input_param is None:
             self.write_default_param()
         else:
-            self.write_input_file(input_param, self.dir_name + "/sex_default.param")
+            self.write_input_file(input_param, self.sex_dir + "/sex_default.param")
+            #self.write_input_file(input_param, self.dir_name + "/sex_default.param")
         self.write_default_nnw()
         self.write_default_conv()
         if input_config is None:
@@ -124,6 +125,9 @@ class SExtractor:
 
     def write_input_file(self, input_dict, savename):
         """Given an input file as dictionary, write insted of the default value"""
+        #os.chmod(savename, 0o755)
+        logging.info("self.dirname: {0}".format(self.dir_name))
+        logging.info("savename: {0}".format(savename))
         with open(savename, "w") as f:
             for key in input_dict:
                 print("{} {}".format(key, input_dict[key]), file=f)
@@ -306,7 +310,7 @@ XML_NAME         sex.xml        # Filename for XML output
         # TO DO : the code should be able to detect which version of sextractor and changed the code accordingly
         try:
             logging.debug("run_sextractor: on file {0}".format(self.fits_name))
-            p = subprocess.Popen(["/usr/bin/source-extractor", self.fits_name, '-c', 'default.sex'],
+            p = subprocess.Popen(["/opt/local/bin/source-extractor", self.fits_name, '-c', 'default.sex'],
                                  stdout=logoutput, stderr=logoutput, universal_newlines=True)
         except subprocess.CalledProcessError as e:
             logging.info(e.output)
@@ -632,7 +636,7 @@ class Scamp:
         # -- Finding scamp program and its version
         # first look for 'scamp'
 
-        candidates = ['scamp']
+        candidates = ['/opt/local/scamp/bin/scamp', 'scamp']
 
         if path:
             candidates = [path]
@@ -1153,7 +1157,7 @@ class SWarp(object):
         # -- Finding SWARP program and its version
         # first look for 'swarp'
 
-        candidates = ['swarp', "SWarp"]
+        candidates = ['/opt/local/bin/swarp', 'swarp', "SWarp"]
 
         if path:
             candidates = [path]

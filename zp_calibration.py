@@ -46,17 +46,18 @@ class ZPCalibration:
         """
 
         self.frame = frame.split("/")[-1]  # the frame name
-        self.basedir = "/".join(frame.split("/")[:-1])  # the directory where the image is (Swarp dir)
-        self.calibrationdir = "../Calibration_dir"  # the calibration directory where everything will go
+        self.basedir = "/".join(frame.split("/")[:-2])  # the directory where Swarp dir is
+        self.swarpdir = self.basedir+"/Swarp_dir"
+        self.calibrationdir = self.basedir+"/Calibration_dir"  # the calibration directory where everything will go
 
         logging.info("ZPCalibration: basedir: %s" % self.basedir)
         logging.info("Attempting to create the calibration folder")
 
         # This part just check we are in correct folder, and if not it will do the chdir
         self.originaldir = None
-        if self.basedir != os.getcwd():
+        if self.swarpdir != os.getcwd():
             self.originaldir = os.getcwd()
-            os.chdir(self.basedir)
+            os.chdir(self.swarpdir)
 
         # creates the calibration folder, from here an on, paths are relatives to basedir
         if not os.path.isdir(self.calibrationdir):
@@ -67,7 +68,7 @@ class ZPCalibration:
 
         # read the list of images using in SWarp to get the child paths
         self.parents_list = []
-        with open(self.frame[:-5] + ".list", "r") as f:
+        with open(self.frame[:-11] + ".list", "r") as f:
             lines = f.readlines()
         for line in lines:
             self.parents_list.append(line[:-1])  # remove the \n character at the end of the line
@@ -240,7 +241,7 @@ class ZPCalibration:
         # create a symbolic link to the updated image in the Calibration dir
         logging.info("Creating symbolic link to the updated frame")
         logging.info("{} -> {}".format(self.frame, self.calibrationdir + "/" + self.frame))
-        os.symlink(self.basedir + "/" + self.frame, self.calibrationdir + "/" + self.frame)
+        os.symlink(self.swarpdir + "/" + self.frame, self.calibrationdir + "/" + self.frame)
 
         logging.info("ZPCalibration: all done. Celebrate with a cup of coffe :)")
 
