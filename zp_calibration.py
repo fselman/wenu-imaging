@@ -46,9 +46,9 @@ class ZPCalibration:
         """
 
         self.frame = frame.split("/")[-1]  # the frame name
-        self.basedir = "/".join(frame.split("/")[:-2])  # the directory where Swarp dir is
-        self.swarpdir = self.basedir+"/Swarp_dir"
-        self.calibrationdir = self.basedir+"/Calibration_dir"  # the calibration directory where everything will go
+        self.basedir = "/".join(frame.split("/")[:-2])+'/'  # the directory where Swarp dir is
+        self.swarpdir = self.basedir+"/Swarp_dir/"
+        self.calibrationdir = self.basedir+"/Calibration_dir/"  # the calibration directory where everything will go
 
         logging.info("ZPCalibration: basedir: %s" % self.basedir)
         logging.info("Attempting to create the calibration folder")
