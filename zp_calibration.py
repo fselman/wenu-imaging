@@ -118,10 +118,13 @@ class ZPCalibration:
         self.calibrator = calibrator  # Name of calibrator, for now only skymapper
         self.skymapper_file = None
         self.query_str = None
+        self.sdss_file = None
         if self.calibrator == "Skymapper":
             self.df = self.get_skymapper_df()
+        elif self.calibrator == "SDSS":
+            self.df = self.get_sdss_df()
         else:
-            logging.info("Sorry, but for the moment only Skymapper is available as calibrator.")
+            logging.info("Sorry, but for the moment only Skymapper and SDSS are available as calibrator.")
             logging.info("Finishing the run")
             return
 
@@ -420,7 +423,10 @@ class ZPCalibration:
 
     def do_phot(self):
         """
-        perform aperture photometry on the observed frame based on the position of the stars in the SM catalogue
+        perform aperture photometry on the observed frame based on the position 
+        of the stars in the reference catalogue, either SkyMapper or SDSS.
+        Output: appends a column with the raw magnitudes measured in each reference
+        catalogue position.
         """
         logging.info("do_phot: doing aperture photometry on frame.")
         phot_table = aperture_photometry(self.data, self.aperture, wcs=self.wcs, method="exact")
