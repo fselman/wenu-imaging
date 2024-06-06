@@ -1,4 +1,8 @@
 - Verify functioning of WCS solution. Currently on a Mac is not producing the proper shift. It applies same solution to all frames. Perhaps it is writing initial guess and not final solution. CHECK.
+- debug
+- add SDSS as a possible catalogue. DONE.
+- Add possibility to remove files before swarping.
+- Clean atmospheric extinction subroutine.
 - add configuration for installation directory
 - add configuration for where index files are
 - add chapter on installation of astrometry.net and use of index files for OCAM and WFI
