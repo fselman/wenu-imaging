@@ -13,6 +13,7 @@ from scipy.optimize import minimize
 from astropy.stats import sigma_clipped_stats
 from astropy.coordinates import SkyCoord, get_moon, EarthLocation, AltAz
 from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
+from astroquery.sdss import SDSS
 
 
 class ZPCalibration:
@@ -22,7 +23,7 @@ class ZPCalibration:
     # current available filters to work with
     _available_filters = ["r_SDSS", "NB_659"]
 
-    def __init__(self, frame, calibrator, mag_min, mag_max, ap_radius, ap_sky_r1, ap_sky_r2):
+    def __init__(self, frame, mag_min, mag_max, ap_radius, ap_sky_r1, ap_sky_r2, query_calibrator, query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0):
         """
         Class to manage the calibration of images from instrumental units (adu/s or e-/s) into proper physical units
         (erg/s/cm2/arcsec2).
@@ -31,8 +32,6 @@ class ZPCalibration:
         ----------
         frame: str
             the absolute path to the single image frame to be calibrated.
-        calibrator: str
-            From which calibrator (server) download data for comparison. Currently only "Skymapper" is available.
         mag_min: float
             Maximum magnitude value to be considered during the estimation of the zero point.
         mag_max: float
@@ -43,6 +42,14 @@ class ZPCalibration:
             Inner radius, in arcsecs, for the annulus to estimate background around stars.
         ap_sky_r2: float
             Outer radius, in arcsecs, for the annulus to estimate background around stars.
+        query_calibrator: str
+            From which calibrator (server) download data for comparison. Currently "Skymapper" and "SDSS" are available.
+        query_radius: float
+            Radius around center for query to photometric catalogue table. Should minimally be sqrt of half width.
+        query_min_mag: float
+            Magnitud of brighter star to retrieve from photometric catalogue.
+        query_max_mag: float
+            Magnitude of fainter star to retrieve from photometric catalogue.
         """
 
         self.frame = frame.split("/")[-1]  # the frame name
@@ -115,13 +122,20 @@ class ZPCalibration:
 
         # we load the df with the calibrator data
         # we need positions and magnitudes
-        self.calibrator = calibrator  # Name of calibrator, for now only skymapper
+        self.query_calibrator = query_calibrator  # Name of calibrator, for now skymapper or sdss
+
+        # some parameter for the calibrator query
+        # defaults: query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0
+        self.query_radius = query_radius
+        self.query_min_mag = query_min_mag
+        self.query_max_mag = query_max_mag
+
         self.skymapper_file = None
         self.query_str = None
         self.sdss_file = None
-        if self.calibrator == "Skymapper":
+        if self.query_calibrator.lower() == "skymapper":
             self.df = self.get_skymapper_df()
-        elif self.calibrator == "SDSS":
+        elif self.query_calibrator.lower() == "sdss":
             self.df = self.get_sdss_df()
         else:
             logging.info("Sorry, but for the moment only Skymapper and SDSS are available as calibrator.")
@@ -330,35 +344,37 @@ class ZPCalibration:
 
     def get_skymapper_df(self):
         """Read tke skymapper catalogue to get magnitudes of star in frame."""
-        logging.info('get_skymapper: querying skymapper and creating pandas data frame with magnitudes.')
+        logging.info('get_skymapper_df: querying skymapper and creating pandas data frame with magnitudes.')
 
         self.query_str = "http://skymapper.anu.edu.au/sm-cone/public/query?RA=" + str(self.crval1) + "&DEC=" + \
                          str(self.crval2) + "&SR=0.70&VERB=3&RESPONSEFORMAT=CSV"
-        logging.info('get_skymapper: {0}'.format(self.query_str))
+        logging.info('get_skymapper_df: {0}'.format(self.query_str))
 
         # doing the query if not already saved to file
         # if this is a csv, why not read it with pandas?
+        # Answer: because this script writes it.
+        #
         skymapper_raw = self.calibrationdir + "/skymapper_query_result_{}.csv".format(self.object)
         skymapper_clean = skymapper_raw[:-4] + "_clean.csv"
         if os.path.isfile(skymapper_clean):
-            logging.info("get_skymapper: clean catalogue found. Reading it.")
+            logging.info("get_skymapper_df: clean catalogue found. Reading it.")
             skymapper_df = pd.read_csv(skymapper_clean)
         else:
             if os.path.isfile(skymapper_raw):
-                logging.info("get_skymapper: Raw Skymapper file found. Reading it.")
+                logging.info("get_skymapper_df: Raw Skymapper file found. Reading it.")
                 skymapper_df = pd.read_csv(skymapper_raw)
             else:
-                logging.info("get_skymapper: Skymapper file does not exist. Downloading it.")
+                logging.info("get_skymapper_df: Skymapper file does not exist. Downloading it.")
                 with urllib.request.urlopen(self.query_str) as f:
                     charset = f.headers.get_content_charset()
                     line_list = f.read().decode(charset).split('\r\n')
 
                 # and here we write to file
-                logging.info("get_skymapper: Saving {0}".format(self.skymapper_file))
+                logging.info("get_skymapper_df: Saving {0}".format(self.skymapper_file))
                 with open(skymapper_raw, "w") as f:
                     for aline in line_list:
                         print(aline, file=f)
-                logging.info('get_skymapper: Done.')
+                logging.info('get_skymapper_df: Done.')
                 skymapper_df = pd.read_csv(skymapper_raw)
 
             # we clean the df by selecting the data with flag and nimaflags == 0.
@@ -404,6 +420,81 @@ class ZPCalibration:
             df[filter_sdss] = np.around(sdss_mags[filter_sdss], 4)
 
         return df
+
+    def get_sdss_df(self):
+        """Read tke sdss catalogue to get magnitudes of star in frame."""
+        logging.info('get_sdss_df: querying SDSS and creating pandas data frame with magnitudes.')
+
+        half_width_ra = 0.7
+        half_width_dec = 0.7
+        query="""SELECT
+objid,ra,dec,flags,psfMag_u,Err_u,psfMag_g,Err_g,psfMag_r,Err_r,psfMag_i,Err_i,psfMag_z,Err_z,clean
+FROM STAR
+WHERE
+ra BETWEEN {0} and {1} AND dec BETWEEN {2} and {3} and flags != 0
+AND
+psfMag_u BETWEEN 9 AND 19.6
+AND
+psfMag_g BETWEEN 9 AND 19.6
+AND
+clean=1
+""".format(self.crval1-half_width_ra, self.crval1+half_width_ra, self.crval2-half_width_dec, self.crval2+half_width_dec)
+
+        sdss_astropy_table = SDSS.query_sql(query)
+        if sdss_astropy_table is not None:
+            sdss_df = sdss_astropy_table.to_pandas()
+            sdss_df = sdss_df.rename(columns={'ra': 'raj2000', 'dec': 'dej2000', \
+                                              'psfMag_u': 'u_psf', 'Err_u': 'e_u_psf', \
+                                              'psfMag_g': 'g_psf', 'Err_g': 'e_g_psf', \
+                                              'psfMag_r': 'r_psf', 'Err_r': 'e_r_psf', \
+                                              'psfMag_i': 'i_psf', 'Err_i': 'e_i_psf', \
+                                              'psfMag_z': 'z_psf', 'Err_z': 'e_z_psf', \
+                                              'flags': 'class_star'})
+
+            clean_flags = (sdss_df["u_psf"].to_numpy() > -9999) & \
+                          (sdss_df["g_psf"].to_numpy() > -9999) & \
+                          (sdss_df["r_psf"].to_numpy() > -9999) & \
+                          (sdss_df["i_psf"].to_numpy() > -9999) & \
+                          (sdss_df["z_psf"].to_numpy() > -9999)
+            print(len(sdss_df))
+            sdss_df = sdss_df[clean_flags]
+            sdss_df['u_SDSS'] = sdss_df['u_psf']
+            sdss_df['g_SDSS'] = sdss_df['g_psf']
+            sdss_df['r_SDSS'] = sdss_df['r_psf']
+            sdss_df['i_SDSS'] = sdss_df['i_psf']
+            sdss_df['z_SDSS'] = sdss_df['z_psf']
+            sdss_df['class_star'] = sdss_df['class_star']*0.0 + 0.99
+
+            # now some rounding
+
+            sdss_df['raj2000'] = sdss_df['raj2000'].round(6)
+            sdss_df['dej2000'] = sdss_df['dej2000'].round(6)
+            sdss_df['u_psf'] = sdss_df['u_psf'].round(3)
+            sdss_df['e_u_psf'] = sdss_df['e_u_psf'].round(3)
+            sdss_df['g_psf'] = sdss_df['g_psf'].round(3)
+            sdss_df['e_g_psf'] = sdss_df['e_g_psf'].round(3)
+            sdss_df['r_psf'] = sdss_df['r_psf'].round(3)
+            sdss_df['e_r_psf'] = sdss_df['e_r_psf'].round(3)
+            sdss_df['i_psf'] = sdss_df['i_psf'].round(3)
+            sdss_df['e_i_psf'] = sdss_df['e_i_psf'].round(3)
+            sdss_df['z_psf'] = sdss_df['z_psf'].round(3)
+            sdss_df['e_z_psf'] = sdss_df['e_z_psf'].round(3)
+            sdss_df['u_SDSS'] = sdss_df['u_SDSS'].round(3)
+            sdss_df['g_SDSS'] = sdss_df['g_SDSS'].round(3)
+            sdss_df['r_SDSS'] = sdss_df['r_SDSS'].round(3)
+            sdss_df['i_SDSS'] = sdss_df['i_SDSS'].round(3)
+            sdss_df['z_SDSS'] = sdss_df['z_SDSS'].round(3)
+
+            print(len(sdss_df))
+
+            # we write the csv file for further data checks
+            sdss_raw = self.calibrationdir + "/sdss_query_result_{}.csv".format(self.object)
+            sdss_clean = sdss_raw[:-4] + "_clean.csv"
+            sdss_df.to_csv(sdss_clean, index=False)
+            return sdss_df
+        else:
+            print('SDSS query returned no results.')
+            return None
 
     def define_apertures_from_df(self):
         """

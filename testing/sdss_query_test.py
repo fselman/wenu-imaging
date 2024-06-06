@@ -5,14 +5,16 @@ crval2 = 1.183058352428E+01
 half_width_ra = 0.5
 half_width_dec = 0.5
 query="""SELECT 
-objid,ra,dec,flags,psfMag_u,Err_u,psfMag_g,Err_g,psfMag_r,Err_r,psfMag_i,Err_i,psfMag_z,Err_z
+objid,ra,dec,flags,psfMag_u,Err_u,psfMag_g,Err_g,psfMag_r,Err_r,psfMag_i,Err_i,psfMag_z,Err_z,clean
 FROM STAR
 WHERE
 ra BETWEEN {0} and {1} AND dec BETWEEN {2} and {3} and flags != 0
 AND 
-psfMag_u BETWEEN 9 AND 18.6
+psfMag_u BETWEEN 9 AND 19.6
 AND
-psfMag_g BETWEEN 9 AND 18.6
+psfMag_g BETWEEN 9 AND 19.6
+AND
+clean=1
 """.format(crval1-half_width_ra, crval1+half_width_ra, crval2-half_width_dec, crval2+half_width_dec)
 
 sdss_astropy_table = SDSS.query_sql(query)
