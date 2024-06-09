@@ -14,14 +14,14 @@ from astropy.stats import sigma_clipped_stats
 from astropy.coordinates import SkyCoord, get_moon, EarthLocation, AltAz
 from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
 from astroquery.sdss import SDSS
-
+import pycavi_tools
 
 class ZPCalibration:
     """A class to contain a pandas dataframe with the data
     to calibrate frame and the zero points needed for the calibration."""
 
     # current available filters to work with
-    _available_filters = ["r_SDSS", "NB_659"]
+    _available_filters = ["g_SDSS", "r_SDSS", "NB_659"]
 
     def __init__(self, frame, mag_min, mag_max, ap_radius, ap_sky_r1, ap_sky_r2, query_calibrator, query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0):
         """
@@ -181,7 +181,7 @@ class ZPCalibration:
         self.extinctionCoeff = self.get_extinction_coeff()
 
         self.zp = self.get_zp_from_df()
-        logging.info('ZPCalibration: zp: {0} to go from ADUs in orig files to mags'.format(self.zp))
+        logging.info('ZPCalibration: zp: {0} to go from ADUs in orig files to mags - ESO health check values'.format(self.zp))
 
         # original zphc:
         # self.zphc = self.zp + 2.5 * np.log10(self.avg_gain / self.avg_exptime) + \
@@ -347,7 +347,7 @@ class ZPCalibration:
         logging.info('get_skymapper_df: querying skymapper and creating pandas data frame with magnitudes.')
 
         self.query_str = "http://skymapper.anu.edu.au/sm-cone/public/query?RA=" + str(self.crval1) + "&DEC=" + \
-                         str(self.crval2) + "&SR=0.70&VERB=3&RESPONSEFORMAT=CSV"
+                         str(self.crval2) + "&SR=" + str(self.query_radius) + "&VERB=3&RESPONSEFORMAT=CSV"
         logging.info('get_skymapper_df: {0}'.format(self.query_str))
 
         # doing the query if not already saved to file
@@ -425,22 +425,22 @@ class ZPCalibration:
         """Read tke sdss catalogue to get magnitudes of star in frame."""
         logging.info('get_sdss_df: querying SDSS and creating pandas data frame with magnitudes.')
 
-        half_width_ra = 0.7
-        half_width_dec = 0.7
+        half_width_ra = self.query_radius
+        half_width_dec = self.query_radius
         query="""SELECT
-objid,ra,dec,flags,psfMag_u,Err_u,psfMag_g,Err_g,psfMag_r,Err_r,psfMag_i,Err_i,psfMag_z,Err_z,clean
-FROM STAR
-WHERE
-ra BETWEEN {0} and {1} AND dec BETWEEN {2} and {3} and flags != 0
-AND
-psfMag_u BETWEEN 9 AND 19.6
-AND
-psfMag_g BETWEEN 9 AND 19.6
-AND
-clean=1
+                    objid,ra,dec,flags,psfMag_u,Err_u,psfMag_g,Err_g,psfMag_r,Err_r,psfMag_i,Err_i,psfMag_z,Err_z,clean
+                FROM STAR
+                WHERE
+                    ra BETWEEN {0} and {1} AND dec BETWEEN {2} and {3} and flags != 0
+                AND
+                    psfMag_u BETWEEN 9 AND 19.6
+                AND
+                    psfMag_g BETWEEN 9 AND 19.6
+                AND
+                    clean=1
 """.format(self.crval1-half_width_ra, self.crval1+half_width_ra, self.crval2-half_width_dec, self.crval2+half_width_dec)
 
-        sdss_astropy_table = SDSS.query_sql(query)
+        sdss_astropy_table = SDSS.query_sql(query, data_release=17)
         if sdss_astropy_table is not None:
             sdss_df = sdss_astropy_table.to_pandas()
             sdss_df = sdss_df.rename(columns={'ra': 'raj2000', 'dec': 'dej2000', \
@@ -526,31 +526,50 @@ clean=1
                 phot_table[col].info.format = "%.2f"  # for consistent table output
 
         phot_disk_area = self.aperture.to_pixel(self.wcs).area
+        logging.info("do_phot: phot_disk_area in pixels: {}".format(phot_disk_area))
 
         # from the sky_annulus object get the mask of each annulus, then uses those mask to get their corresponding
         # data from the image. Perform a sigma clipped stats to obtain the median value.
         # the median value is already in value per area, so do not need to consider the area of the annulus
+        # FSE CHECK
+
         logging.info("do_phot: estimating backgrounds.")
         annulus_masks = self.sky_annulus.to_pixel(self.wcs).to_mask(method='center')
+        logging.info("do_phot: number of objects: {}".format(len(annulus_masks)))
         bkg_median = np.empty(len(annulus_masks))
         bkg_median[:] = np.nan
         for i in range(len(annulus_masks)):
             mask = annulus_masks[i]
             annulus_data = mask.multiply(self.data)
+            #pycavi_tools.pycavi_qc_plot_hist(annulus_data, label='annulus_data values {}'.format(i), nbins=20, x_range="8-deciles", figname=None)
             if annulus_data is not None:  # if we have data we use it
-                annulus_data_1d = annulus_data[mask.data > 0]
-                _, median_sigclip, _ = sigma_clipped_stats(annulus_data_1d)
+                annulus_data_1d = annulus_data[mask.data > -0]
+                _, median_sigclip, _ = sigma_clipped_stats(annulus_data_1d, sigma_lower=3.0, sigma_upper=3.0)
+                #print(median_sigclip)
+                #pycavi_tools.pycavi_qc_plot_hist(annulus_data_1d, label='annulus_data values {}'.format(i), nbins=20, x_range="8-deciles", figname=None)
                 bkg_median[i] = median_sigclip
+                #print(bkg_median[i], phot_table["aperture_sum"][i])
 
         # with the bkg median value, we can subtract from the circular aperture
+        # Note that the aper_sum_bkgsub array will have invalid entries in the
+        # form of nan and 0.0 values.
         logging.info("do_phot: subtracting backgrounds.")
         aper_bkg = bkg_median * phot_disk_area
         aper_sum_bkgsub = np.array(phot_table["aperture_sum"] - aper_bkg)
+
+        #for flux_val in np.nditer(aper_sum_bkgsub):
+        #    print(flux_val)
+
+        # Checking values
+        pycavi_tools.pycavi_qc_plot_hist(aper_bkg, label='Background substracted aperture sums.', nbins=30, x_range="full", figname=None)
+        pycavi_tools.pycavi_qc_plot_hist(aper_sum_bkgsub, label='Median aperture background', nbins=30, x_range="full", figname=None)
+
         logging.info("do_phot: Adding column with raw magnitudes to data frame.")
         # during test some points have fluxes below 1, in those cases, lets set the raw magnitude up to 99
         raw_mags = np.zeros_like(aper_sum_bkgsub)
-        raw_mags[aper_sum_bkgsub > 1] = -2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 1])
-        raw_mags[aper_sum_bkgsub <= 1] = 99.0
+        # FSE CHECK: is setting to 99.0 a good flag of a bad value
+        raw_mags[aper_sum_bkgsub > 0] = -2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
+        raw_mags[aper_sum_bkgsub <= 0] = 99.0
         self.df["raw_mags_" + self.band] = np.around(raw_mags, 4)
         logging.info("do_phot: Done.")
 
@@ -616,24 +635,26 @@ clean=1
 
             clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
             interp_data = np.interp(r_minus_i[clean_color], drew_r_i_ab, drew_r_ha_ab)
+            pycavi_tools.pycavi_qc_plot_hist(r_minus_raw, label='r_SDSS - raw NB_659.', nbins=30, x_range="full")
 
             # use scipy minimize to find the zero point through least square minimization
             # do a sigma clipping before reach a zero point value.
-            zp = sigma_clip(r_minus_raw[clean_color], interp_data)
+            zp = -sigma_clip(r_minus_raw[clean_color], interp_data)
 
         else:
 
-            sm_mags = self.df[self.band].to_numpy()
+            std_mags = self.df[self.band].to_numpy()
 
             # clean nans and infinites
-            clean_nan = ~np.isnan(sm_mags) & ~np.isnan(raw)
+            clean_nan = ~np.isnan(std_mags) & ~np.isnan(raw)
             clean_infinites = ~np.isinf(raw)
-            clean_mag = (sm_mags >= self.mag_min) & (sm_mags <= self.mag_max) & (raw < 0)
+            clean_mag = (std_mags >= self.mag_min) & (std_mags <= self.mag_max) & (raw < 0)
 
             raw = raw[clean_nan & clean_mag & clean_infinites]
-            sm_mags = sm_mags[clean_nan & clean_mag & clean_infinites]
+            std_mags = std_mags[clean_nan & clean_mag & clean_infinites]
 
-            zp = sigma_clip(raw, sm_mags)
+            zp = sigma_clip(raw, std_mags)
+            logging.info('df zero point: {}'.format(zp))
 
         return zp
 
@@ -680,23 +701,41 @@ clean=1
     def get_extinction_coeff(self):
         """
         Atmospheric extinction coefficients.
-        Only r_sdss for the moment
-        TBF
-        I dont even know where these values come from :c
         """
-        ext_coeffi = {"u_SDSS": 0.000,
-                      "g_SDSS": 0.000,
-                      "r_SDSS": 0.101,
-                      "NB_659": 0.000,
-                      "i_SDSS": 0.000,
-                      "z_SDSS": 0.000,
-                      "B_JOHN": 0.000,
-                      "V_JOHN": 0.000}
 
-        if self.band in ext_coeffi.keys():
-            return ext_coeffi[self.band]
-        else:
-            raise Exception("get_extinction_coeff: unrecognized filter pass band %s" % self.band)
+        lmbd = self.get_pivot_wavelength()
+        return self.paranal_extinction_curve(lmbd)
+
+    def paranal_extinction_curve(self, lambd):
+        """Patat et al. 2011 A&A 527, A91 Table B.1
+        https://ui.adsabs.harvard.edu/abs/2011A%26A...527A..91P/abstract
+        """
+        extinction_table = np.array([[3325, 0.686, 0.021], [3375, 0.606, 0.009], [3425, 0.581, 0.007],
+            [3475, 0.552, 0.007], [3525, 0.526, 0.006], [3575, 0.504, 0.006], [3625, 0.478, 0.006],
+            [3675, 0.456, 0.006], [3725, 0.430, 0.006], [3775, 0.409, 0.005], [3825, 0.386, 0.006],
+            [3875, 0.378, 0.006], [3925, 0.363, 0.005], [3975, 0.345, 0.004], [4025, 0.330, 0.004],
+            [4075, 0.316, 0.004], [4125, 0.298, 0.004], [4175, 0.285, 0.004], [4225, 0.274, 0.004],
+            [4275, 0.265, 0.004], [4325, 0.253, 0.004], [4375, 0.241, 0.003], [4425, 0.229, 0.003],
+            [4475, 0.221, 0.003], [4525, 0.212, 0.003], [4575, 0.204, 0.003], [4625, 0.198, 0.003],
+            [4675, 0.190, 0.003], [4725, 0.185, 0.003], [4775, 0.182, 0.003], [4825, 0.176, 0.003],
+            [4875, 0.169, 0.003], [4825, 0.176, 0.003], [4925, 0.162, 0.003], [4975, 0.157, 0.003],
+            [5025, 0.156, 0.003], [5075, 0.153, 0.003], [5125, 0.146, 0.003], [5175, 0.143, 0.003],
+            [5225, 0.141, 0.003], [5275, 0.139, 0.003], [5325, 0.139, 0.002], [5375, 0.134, 0.002],
+            [5425, 0.133, 0.002], [5475, 0.131, 0.002], [5525, 0.129, 0.002], [5575, 0.127, 0.002],
+            [5625, 0.128, 0.002], [5675, 0.130, 0.002], [5725, 0.134, 0.002], [5775, 0.132, 0.002],
+            [5825, 0.124, 0.002], [5875, 0.122, 0.003], [5925, 0.125, 0.003], [5975, 0.122, 0.003],
+            [6025, 0.117, 0.002], [6075, 0.115, 0.002], [6125, 0.108, 0.002], [6175, 0.104, 0.002],
+            [6225, 0.102, 0.002], [6275, 0.099, 0.002], [6325, 0.095, 0.002], [6375, 0.092, 0.002],
+            [6425, 0.085, 0.002], [6475, 0.086, 0.003], [6525, 0.083, 0.003], [6575, 0.081, 0.002],
+            [6625, 0.076, 0.002], [6675, 0.072, 0.002], [6725, 0.068, 0.002], [6775, 0.064, 0.002],
+            [7060, 0.064, 0.003], [7450, 0.048, 0.002], [7940, 0.042, 0.003], [8500, 0.032, 0.001],
+            [8675, 0.030, 0.001], [8850, 0.029, 0.001], [10000, 0.022, 0.001]])
+
+        #interp_data = np.interp(r_minus_i[clean_color], drew_r_i_ab, drew_r_ha_ab)
+        wavelength = extinction_table[:,0]
+        extinct = extinction_table[:,1]
+        extinct_err = extinction_table[:,2]
+        return np.interp(lambd, wavelength, extinct)
 
     def get_physical_units_zp(self):
         """
@@ -911,20 +950,43 @@ clean=1
             hdr = hdul[0].header
             hdata = hdul[0].data
 
+            # FSE CHECK: before writting new keywords we read the "HIERARCH MEFPP QC ADU2DN"
+            #            keyword if it exists, we will need it at the end.
+            if "HIERARCH MEFPP QC ADU2DN" not in hdr.keys():
+                old_convFactor_ADU_DN = 1.0
+            else:
+                old_convFactor_ADU_DN = hdr["HIERARCH MEFPP QC ADU2DN"]
+
+            # FSE CHECK: we should use update better so as not to create duplicate entries.
             # we start with the selected headers that will go close to the beginning
-            hdr.insert("EQUINOX", ("BUNIT", self.keyword["HIERARCH MEFPP QC BUNIT"],
-                                   self.comment["HIERARCH MEFPP QC BUNIT"]))
-            hdr.insert("EQUINOX", ("MAGZP", self.keyword["HIERARCH MEFPP QC MAGZP"],
-                                   self.comment["HIERARCH MEFPP QC MAGZP"]))
-            hdr.insert("EQUINOX", ("MAGSKY", self.keyword["HIERARCH MEFPP QC MAGSKY"],
-                                   self.comment["HIERARCH MEFPP QC MAGSKY"]))
-            hdr["EXPTIME"] = (self.total_exptime, "Total exposure time (s)")
+            hdr.update(BUNIT=self.keyword["HIERARCH MEFPP QC BUNIT"],
+                                   comment=self.comment["HIERARCH MEFPP QC BUNIT"])
+            hdr.update(MAGZP=self.keyword["HIERARCH MEFPP QC MAGZP"],
+                                   comment=self.comment["HIERARCH MEFPP QC MAGZP"])
+
+            hdr.update(MAGSKY=self.keyword["HIERARCH MEFPP QC MAGSKY"],
+                                   comment=self.comment["HIERARCH MEFPP QC MAGSKY"])
+
+            hdr.update({"HIERARCH MEFPP TOTEXP": self.total_exptime}, 
+                                   comment="Total exposure time (s)")
+            #hdr["EXPTIME"] = (self.total_exptime, "Total exposure time (s)")
             # we continue with the full set of keywords near the end
+            #        for zcard in cards:
+            #zkey = zcard[0]
+            #zval = zcard[1]
+            #zcomment = zcard[2]
             cards_to_add = self.mefpp_header_cards
             for acard in cards_to_add:
-                hdr.append(acard)
+                zkey = acard[0]
+                zval = acard[1]
+                zcomment = acard[2]
+                hdr.update({zkey: zval}, comment=zcomment)
 
             # we finally rewrite the data array
-            hdata *= self.convFactor_ADU_DN
+            # FSE CHECK: this should not be done if reprocessing the file. If that is
+            # the case we must read the currently written convFactor_ADU_DN and then
+            # multiply the data by the ratio of the new over the old one.
+            #
+            hdata = hdata*self.convFactor_ADU_DN/old_convFactor_ADU_DN
 
         logging.info("update_frame: Image updated correctly")
