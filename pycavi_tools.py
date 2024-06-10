@@ -4,8 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+import tkinter as tk
+from tkinter import ttk
+from tkinter import filedialog
+
 # Configuration resources
-def create_pycavi_config():
+def create_pycavi_config(raw_data_dir=None, project_dir=None):
     """Function to create configuration file.
     The configuration file is read by all notebooks,
     and have the information on where the different files
@@ -13,21 +17,40 @@ def create_pycavi_config():
     config = configparser.ConfigParser()
 
     # Add sections and key-value pairs
+    #    'debug_mode': debug_mode,
+    #    'log_level': log_level,
+    #    'raw_data_dir': raw_dir,
+    #    'project_dir': project_dir,
+    #    'reduced_calib_dir': reduced_calib_dir,
+    #    'reduced_science_dir': reduced_science_dir,
+    #    'project_logs_dir': project_logs_dir,
+    #    'sex_dir_name': sex_dir_name,
+    #    'scamp_dir_name': scamp_dir_name,
+    #    'swarp_dir_name': swarp_dir_name,
+    #    'cal_dir_name': cal_dir_name}
     config['General'] = {'debug': True, 'log_level': 'info'}
-    raw_dir = '/data/raw_files_dir/'
-    root_dir = os.getcwd()
-    project_dir = root_dir+'/NewProject/'   # below project_dir notebook X will create calib and science subdirectories
-                                            # under each science subdirectory a <target> subdirectory will be created.
-                                            # Under the <target> subdirectory notebook X will create filter subdirectories
-                                            # Under <target> subdirectory notebook X will create the sex, scamp, swarp, and cal subdirectories.
+    config['Provenance'] = {'Observatory': 'Paranal', 
+                            'Telescope': 'VST', 
+                            'Instrument': 'OmegaCam',
+                            'FilePrefix': 'OMEGA'}
+    if project_dir is not None:
+            reduced_calib_dir = project_dir+'/calib/' # Directory tree with reduced calibration files + soft links to raw calibrations
+            reduced_science_dir = project_dir+'/science/' # Directory tree with reduced science frames + soft links to reduced calibrations.
+            project_logs_dir = project_dir+'/logs/' # Directory containing logs created by running the reduction
+    else:
+        reduced_calib_dir = None
+        reduced_science_dir = None
+        project_logs_dir = None
     sex_dir_name = 'Sextractor_dir'     # will be created by notebook X below the target directory
     scamp_dir_name = 'Scamp_dir'         # will be created by notebook X below the target directory
     swarp_dir_name = 'Swarp_dir'        # will be created by notebook X below the target directory
     cal_dir_name = 'Calibration_dir'    # will be created by notebook X below the target directory
 
-    config['Directories'] = {'raw_dir': raw_dir,
-                             'root_dir': root_dir, 
+    config['Directories'] = {'raw_data_dir': raw_data_dir,
                              'project_dir': project_dir, 
+                             'reduced_calib_dir': reduced_calib_dir,
+                             'reduced_science_dir': reduced_science_dir,
+                             'project_logs_dir': project_logs_dir,
                              'sex_dir_name': sex_dir_name,
                              'scamp_dir_name': scamp_dir_name,
                              'swarp_dir_name': swarp_dir_name,
@@ -38,8 +61,12 @@ def create_pycavi_config():
     with open('./config/pycavi.cfg', 'w') as configfile:
         config.write(configfile)
 
-def read_pycavi_config():
+def read_pycavi_config(project_dir=None):
     """Function to read configuration file."""
+    if project_dir is None:
+        print('No root directory for project specified.')
+        return None
+
     # Create a ConfigParser object
     config = configparser.ConfigParser()
 
@@ -49,9 +76,15 @@ def read_pycavi_config():
     # Access values from the configuration file
     debug_mode = config.getboolean('General', 'debug')
     log_level = config.get('General', 'log_level')
-    raw_dir = config.get('Directories', 'raw_dir')
-    root_dir = config.get('Directories', 'root_dir')
+    observatory = config.get('Provenance', 'Observatory')
+    telescope = config.get('Provenance', 'Telescope')
+    instrument = config.get('Provenance', 'Instrument')
+    file_prefix = config.get('Provenance', 'FilePrefix')
+    raw_data_dir = config.get('Directories', 'raw_data_dir')
     project_dir = config.get('Directories', 'project_dir')
+    reduced_calib_dir = config.get('Directories', 'reduced_calib_dir')
+    reduced_science_dir = config.get('Directories', 'reduced_science_dir')
+    project_logs_dir = config.get('Directories', 'project_logs_dir')
     sex_dir_name = config.get('Directories', 'sex_dir_name')
     scamp_dir_name = config.get('Directories', 'scamp_dir_name')
     swarp_dir_name = config.get('Directories', 'swarp_dir_name')
@@ -61,9 +94,15 @@ def read_pycavi_config():
     config_values = {
         'debug_mode': debug_mode,
         'log_level': log_level,
-        'raw_dir': raw_dir,
-        'root_dir': root_dir,
+        'observatory': observatory,
+        'telescope': telescope,
+        'instrument': instrument,
+        'file_prefix': file_prefix,
+        'raw_data_dir': raw_data_dir,
         'project_dir': project_dir,
+        'reduced_calib_dir': reduced_calib_dir,
+        'reduced_science_dir': reduced_science_dir,
+        'project_logs_dir': project_logs_dir,
         'sex_dir_name': sex_dir_name,
         'scamp_dir_name': scamp_dir_name,
         'swarp_dir_name': swarp_dir_name,
@@ -71,48 +110,61 @@ def read_pycavi_config():
 
     return config_values
 
+# tkinter widget tools 
+
 class ProjectInfo:
     """Class for entry window to aid in the configuration file creation."""
-    def __init__(self, root):
-        self.root = root
+    def __init__(self):
+        self.popup = tk.Tk()
+        self.popup.transient()
+
         super(ProjectInfo, self).__init__()
         self.widgets={}
 
         # First row, column 0, the root directory for project
-        self.selected_dir_label = tk.Label(root, text="No directory selected")
-        self.selected_dir_label.grid(column=0, row=0)
+        self.raw_dir_label = tk.Label(self.popup, text="No directory containing raw data selected")
+        self.raw_dir_label.grid(column=1, row=0)
 
         # First row, column 1, the button to navigate to directory
-        select_button = tk.Button(root, text="Select root directory", command=self.select_directory)
-        select_button.grid(column=1, row=0)
+        select_button = tk.Button(self.popup, text="Select raw data directory", command=self.select_raw_directory)
+        select_button.grid(column=0, row=0)
 
-        # Second row, column 0, the name of the project subdirectory
-        project_subdir_label = ttk.Label(root, text="Project subdirectory name:")
-        project_subdir_label.grid(column=0, row=1)
 
-        # Second row column 1
+        # Second row, column 0, the root directory for project
+        self.project_root_dir_label = tk.Label(self.popup, text="No root directory for project selected")
+        self.project_root_dir_label.grid(column=1, row=1)
+
+        # Second row, column 1, the button to navigate to directory
+        select_button = tk.Button(self.popup, text="Select root directory", command=self.select_project_root_directory)
+        select_button.grid(column=0, row=1)
+
+        # Third row, column 0, the name of the project subdirectory
+        project_subdir_label = ttk.Label(self.popup, text="Project subdirectory name:")
+        project_subdir_label.grid(column=0, row=2)
+
+        # Third row column 1
         self.project_subdir = tk.StringVar()
-        project_subdir_entry = ttk.Entry(root, textvariable=self.project_subdir)
-        project_subdir_entry.grid(column=1, row=1)
+        project_subdir_entry = ttk.Entry(self.popup, textvariable=self.project_subdir)
+        project_subdir_entry.grid(column=1, row=2)
 
-        #def read_info():
-        #    """ callback when the read info button clicked
-        #    """
-        #    self.project_subdir.get()
-        #    msg = f'You entered root directory: {self.select_directory} and project dir: {self.project_subdir.get()}'
-        #    tk.messagebox.showinfo(
-        #        title='Information',
-        #        message=msg
-        #    )
+        # Fourth row the Enter command
+        enter_button = ttk.Button (self.popup, text = "Enter", command=self.close_window)
+        enter_button.grid(columnspan=2)
 
-        # entry info button
-        #read_info_button = ttk.Button(root, text="Enter info and close window", command=read_info)
-        #read_info_button.grid(row=2,columnspan=2, pady=10)
+        self.popup.mainloop()
 
-    def select_directory(self):
-        self.directory = filedialog.askdirectory()
-        if self.directory:
-            self.selected_dir_label.config(text=self.directory)
+    def select_raw_directory(self):
+        self.raw_data_directory = filedialog.askdirectory()
+        if self.raw_data_directory:
+            self.raw_dir_label.config(text=self.raw_data_directory)
+
+    def select_project_root_directory(self):
+        self.project_root_directory = filedialog.askdirectory()
+        if self.project_root_directory:
+            self.project_root_dir_label.config(text=self.project_root_directory)
+
+    def close_window (self):
+        self.popup.destroy()
 
 
 
