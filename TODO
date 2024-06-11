@@ -4,7 +4,7 @@
 - Add possibility to remove files before swarping. Done.
 - Clean atmospheric extinction subroutine. Done.
 - Add configuration for project_directory automatically determined in all notebooks. Done
-- Debug offset in zp according to plots in notebook 7.
+- Debug offset in zp according to plots in notebook 7. WIP.
 - Add instrument configuration: extensions, DPR keywords, filters.
 - add configuration for installation directory
 - check zp values against ESO HC. We seem to be high, also in the AB magnitudes.

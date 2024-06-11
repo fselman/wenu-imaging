@@ -191,14 +191,17 @@ class ZPCalibration:
 
         # correct gain from ADU to e/s
         # correct by airmass and extinction
-        logging.info('ZPCalibration: zphc: {:.3f} to go from e/s to std mags.'.format(self.zphc))
+        logging.info('ZPCalibration: zphc: {:.3f} to go from e/s to std mags below atmosphere.'.format(self.zphc))
 
         self.zp2 = self.get_physical_units_zp()
-        logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to std mags'.format(self.zp2))
+        logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to AB mags'.format(self.zp2))
 
-        self.magzp = self.zp2 + 2.5 * np.log10(self.filterWidth) + 2.5 * np.log10(10 ** 15) \
-            + 2.5 * np.log10(1.0 / self.plate_scale ** 2)  # DN in 10**(-15)erg/s/cm**2/asec**2
+        #self.magzp = self.zp2 + 2.5 * np.log10(self.filterWidth) + 2.5 * np.log10(10 ** 15) \
+        #    + 2.5 * np.log10(1.0 / self.plate_scale ** 2)  # DN in 10**(-15)erg/s/cm**2/asec**2
+        # self.magzp = self.zp2 +  2.5 * np.log10(10 ** 15)
+        self.magzp = self.zp2 + 2.5 * np.log10(self.filterWidth) + 2.5 * np.log10(10 ** 15)
         logging.info('ZPCalibration: magzp: {:.3f} (from DN to AB mags)'.format(self.magzp))
+        logging.info('ZPCalibration:               (DN in 10**(-15)erg/s/cm**2/asec**2)')
 
         # We get the conversion factor to Flambda in erg/s/cm^2/Angstrom
         # Imaging data should provide physical units of erg/s/cm^2/arcsec^2
@@ -356,6 +359,7 @@ class ZPCalibration:
         #
         skymapper_raw = self.calibrationdir + "/skymapper_query_result_{}.csv".format(self.object)
         skymapper_clean = skymapper_raw[:-4] + "_clean.csv"
+        self.phot_cal_file = skymapper_clean
         if os.path.isfile(skymapper_clean):
             logging.info("get_skymapper_df: clean catalogue found. Reading it.")
             skymapper_df = pd.read_csv(skymapper_clean)
@@ -490,6 +494,7 @@ class ZPCalibration:
             # we write the csv file for further data checks
             sdss_raw = self.calibrationdir + "/sdss_query_result_{}.csv".format(self.object)
             sdss_clean = sdss_raw[:-4] + "_clean.csv"
+            self.phot_cal_file = sdss_clean
             sdss_df.to_csv(sdss_clean, index=False)
             return sdss_df
         else:
@@ -575,7 +580,7 @@ class ZPCalibration:
 
     def get_zp_from_df(self):
         """
-        Compute the zero point by comparing the raw magnitudes with Skymapper mags.
+        Compute the zero point by comparing the raw magnitudes with the calibrator std mags.
         Filter dependent.
 
         In case of the NB_659 filter, It uses the color dependence of r_SDSS-NB_659 and r_SDSS-i_SDSS to compute
@@ -739,8 +744,17 @@ class ZPCalibration:
 
     def get_physical_units_zp(self):
         """
-        Returns the zero point to add to -2.5log(flux)
+        Returns the zero point to add to -2.5log(flux [erg/s/cm^2/A)
         to get the AB magnitudes in band self.band from calibrated frame.
+
+        Reference: Oke, J.B. 1974, ApJS, 27, 21 
+        Formula in paper: m(AB) = -2.5 log(f) - 48.60
+        
+                            where f is in erg sec^-1 cm^-2 Hz^-1
+
+        NB: pivot wavelength should be given in same length units as f_lambda.
+            The constant 3.34x10^(-19) includes 1/c and the conversion from
+            Angstroms to cm.
         """
         return -2.5 * np.log10(3.34 * 10 ** (-19)) - 5.0 * np.log10(self.get_pivot_wavelength()) - 48.60
 
@@ -921,6 +935,9 @@ class ZPCalibration:
                  ["HIERARCH MEFPP QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
                  ["HIERARCH MEFPP QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
                  ["HIERARCH MEFPP QC PHO SKYR2", self.sky_annulus_r2, "Sky annulus r2 ap phot"],
+                 ["HIERARCH MEFPP QC PHO MAGMAX", self.mag_max, "max mag for photometric calibrators (faintest)"],
+                 ["HIERARCH MEFPP QC PHO MAGMIN", self.mag_min, "min mag for photometric calibrators (brightest)"],
+                 ["HIERARCH MEFPP QC PHO CALFILE", self.phot_cal_file.split('/')[-1], "cal file"],
                  ["HIERARCH MEFPP QC MAGZP", self.magzp, "ZP to AB magnitudes in BAND"],
                  ["HIERARCH MEFPP QC AVGAIRM", self.avg_airmass, "Average airmass of ancestor frames"],
                  ["HIERARCH MEFPP QC AVGGAIN", self.avg_gain, "Average gain of ancestor frames"]
