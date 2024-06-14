@@ -227,7 +227,7 @@ class ZPCalibration:
 
         # proper imaging fluxes needs erg/s/cm**2
         #
-        self.bunit = 'erg/s/cm**2/arcsec**2'  # The DN will be in these units.
+        self.bunit = 'erg/s/cm**2'  # The DN will be in these units.
 
         # ----- Determining sky levels for Swarp input frames -------
         #
@@ -868,7 +868,9 @@ class ZPCalibration:
             if "MEFPP QC DN2FLAM" not in hdr.keys():
                 old_factor = 1.0
             else:
-                old_factor = hdr["HIERARCH MEFPP QC DN2FLAM"]
+                old_factor = hdr["MEFPP QC DN2FLAM"]
+
+            logging.info('old_factor: {}'.format(old_factor))
 
             # FSE CHECK: we should use update better so as not to create duplicate entries.
             # we start with the selected headers that will go close to the beginning
@@ -897,6 +899,26 @@ class ZPCalibration:
 
             # we finally rewrite the data array
             #
-            hdata = hdata*self.factor_dn_to_flambda/old_factor
+            logging.info('update_frame: multipliying data by {}'.format(self.factor_dn_to_flambda))
+            data_1d = hdul[0].section[10000:10100,10000:10100].flatten()
+            print('update_frame: before update <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
+            pycavi_tools.pycavi_qc_plot_hist(data_1d, 
+                                             label='Pixel value distribution BEFORE applying factor_dn_to flambda.', 
+                                             nbins=30, x_range="8-deciles", figname=None)
+            factor = self.factor_dn_to_flambda/old_factor
+            hdr.update(BSCALE=factor,
+                                   comment="scale factor to apply to data")
+            hdr.update(BZERO=0.0,
+                                   comment="num,erical offset to apply to data")
+            hdul.flush()
+
+        # we check the data values
+        with fits.open(self.frame, mode="readonly", output_verify="ignore") as hdul:
+            hdr = hdul[0].header
+            data_1d = hdul[0].section[10000:10100,10000:10100].flatten()
+            print('update_frame: before update <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
+            pycavi_tools.pycavi_qc_plot_hist(data_1d,
+                                             label='Pixel value distribution AFTER applying factor_dn_to flambda.',
+                                             nbins=30, x_range="8-deciles", figname=None)
 
         logging.info("update_frame: Image updated correctly")

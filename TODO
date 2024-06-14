@@ -8,6 +8,11 @@
     - Cleaned code
     - Better but still debugging.
     - Cannot yet the 10**(-15) reflected in the numbers reported by SAOIMAGE or sextractor..
+    - DONE!!!!
+        - I fixed issue writing the convertion factor to BSCALE.
+        astropy.io.fits is not very simple when it comes to dealing
+        with the scaling of the data. Best way seems to be use those keywords.
+        STILL TO DO: handle reprocessing by properly handle the old_bscale and new bscale 
 - Add instrument configuration: extensions, DPR keywords, filters.
 - add configuration for installation directory
 - check zp values against ESO HC. We seem to be high, also in the AB magnitudes.
