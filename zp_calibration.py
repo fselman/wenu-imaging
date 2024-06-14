@@ -21,9 +21,12 @@ class ZPCalibration:
     to calibrate frame and the zero points needed for the calibration."""
 
     # current available filters to work with
-    _available_filters = ["g_SDSS", "r_SDSS", "NB_659"]
+    _available_filters = ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS", "z_SDSS",  "NB_659"]
 
-    def __init__(self, frame, mag_min, mag_max, ap_radius, ap_sky_r1, ap_sky_r2, query_calibrator, query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0):
+    def __init__(self, frame, swarp_dir, calibration_dir, observatory,
+                 mag_min, mag_max, 
+                 ap_radius, ap_sky_r1, ap_sky_r2, 
+                 query_calibrator, query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0):
         """
         Class to manage the calibration of images from instrumental units (adu/s or e-/s) into proper physical units
         (erg/s/cm2/arcsec2).
@@ -32,6 +35,10 @@ class ZPCalibration:
         ----------
         frame: str
             the absolute path to the single image frame to be calibrated.
+        swarp_dir: str
+            the absolute path to the swarp directory where the swarped image is located
+        calibration_dir: str
+            the absolute path to the calibration folder where the calibration catalogues will be saved.
         mag_min: float
             Maximum magnitude value to be considered during the estimation of the zero point.
         mag_max: float
@@ -52,98 +59,43 @@ class ZPCalibration:
             Magnitude of fainter star to retrieve from photometric catalogue.
         """
 
+        # ---------------- variables based on parameters passed to the class ----------------
+
+        # Mosaic frame name and needed directories
         self.frame = frame.split("/")[-1]  # the frame name
-        self.basedir = "/".join(frame.split("/")[:-2])+'/'  # the directory where Swarp dir is
-        self.swarpdir = self.basedir+"/Swarp_dir/"
-        self.calibrationdir = self.basedir+"/Calibration_dir/"  # the calibration directory where everything will go
 
-        logging.info("ZPCalibration: basedir: %s" % self.basedir)
-        logging.info("Attempting to create the calibration folder")
-
-        # This part just check we are in correct folder, and if not it will do the chdir
+        # we define swarp dir and position script there
+        self.swarpdir = swarp_dir
         self.originaldir = None
         if self.swarpdir != os.getcwd():
             self.originaldir = os.getcwd()
             os.chdir(self.swarpdir)
 
-        # creates the calibration folder, from here an on, paths are relatives to basedir
+        # creates the calibration folder
+        self.calibrationdir = calibration_dir 
         if not os.path.isdir(self.calibrationdir):
             os.mkdir(self.calibrationdir)
             logging.info("Folder created successfully")
         else:
             logging.info("Folder already exists")
 
-        # read the list of images using in SWarp to get the child paths
-        self.parents_list = []
-        with open(self.frame[:-11] + ".list", "r") as f:
-            lines = f.readlines()
-        for line in lines:
-            self.parents_list.append(line[:-1])  # remove the \n character at the end of the line
+        # check if the symbolic link already exists, that means the calibration of that frame was already done.
+        if os.path.islink(self.calibrationdir + "/" + self.frame):
+            logging.info("Calibration on frame {} already completed. Leaving the class".format(self.frame))
+            if self.originaldir is not None:
+                os.chdir(self.originaldir)
+            return
 
-        # open image and read
-        logging.info('ZPCalibration: init: reading frame')
-        self.data, self.hdu = fits.getdata(self.frame, header=True)
+        # Provenance
+        self.observatory = observatory
 
-        # we get observing passband from title first, if not there, then looks in the header
-        self.band = None
-        for possible_filter in ZPCalibration._available_filters:
-            if possible_filter in self.frame:
-                self.band = possible_filter
-        if self.band is None:
-            self.band = self.get_key_from_header("FILTER").strip()
-
-        self.object = self.get_key_from_header("OBJECT").strip().replace(" ", "_")
-
-        # get wcs
-        logging.info('ZPCalibration: init: loading wcs info from frame')
-        self.wcs = WCS(self.hdu)
-
-        # plate scale
-        cdi_j = np.array(self.get_key_from_header(['CD1_1', 'CD1_2', 'CD2_1', 'CD2_2']))
-        self.sx = np.sqrt(cdi_j[0] ** 2 + cdi_j[1] ** 2) * 3600.0
-        self.sy = np.sqrt(cdi_j[2] ** 2 + cdi_j[3] ** 2) * 3600.0
-        self.plate_scale = (self.sx + self.sy) / 2.0  # plate scale in arcseconds
-        logging.info("ZPCalibration: plate_scale: %6.3f (sx: %6.3f - sy: %6.3f) arcsec/pix" % (
-            self.plate_scale, self.sx, self.sy))
-
-        # get average gain from first frame used by Swarp
-        self.avg_gain = self.get_avg_gain_from_frame()
-
-        # get avg airmass from frames used to build Swarp
-        self.avg_airmass = self.get_avg_airmass_from_frame()
-
-        # orig sky level pos
-        self.avg_exptime, self.total_exptime = self.get_avg_exptime_from_frames()
-
-        # coordinates of the center of the field
-        self.crval1, self.crval2 = self.get_key_from_header(["CRVAL1", "CRVAL2"])
-        self.crval1 = float(self.crval1)
-        self.crval2 = float(self.crval2)
-
-        # we load the df with the calibrator data
-        # we need positions and magnitudes
-        self.query_calibrator = query_calibrator  # Name of calibrator, for now skymapper or sdss
-
-        # some parameter for the calibrator query
-        # defaults: query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0
+        # variables needed to do the photometric calibration
+        #
+        self.query_calibrator = query_calibrator
         self.query_radius = query_radius
         self.query_min_mag = query_min_mag
         self.query_max_mag = query_max_mag
 
-        self.skymapper_file = None
-        self.query_str = None
-        self.sdss_file = None
-        if self.query_calibrator.lower() == "skymapper":
-            self.df = self.get_skymapper_df()
-        elif self.query_calibrator.lower() == "sdss":
-            self.df = self.get_sdss_df()
-        else:
-            logging.info("Sorry, but for the moment only Skymapper and SDSS are available as calibrator.")
-            logging.info("Finishing the run")
-            return
-
-        # information needed to do the photometric calibration
-        #
         self.mag_min = mag_min  # brightest magnitude to do calibartipn
         self.mag_max = mag_max  # fainter magnitude to do calibration
 
@@ -155,74 +107,131 @@ class ZPCalibration:
         # some variables not yet determined
         self.aperture = None
         self.sky_annulus = None
-        self.convFactor_ADU_Flambda = None
+        self.factor_dn_to_flambda = None
 
-        # creates the aperture objects
-        self.define_apertures_from_df()
+        # --------------------------- data from swarp mosaic image ---------------------------
 
-        # check if the symbolic link already exists, that means the calibration of that frame was already done.
-        if os.path.islink(self.calibrationdir + "/" + self.frame):
-            logging.info("Calibration on frame {} already completed. Leaving the class".format(self.frame))
-            if self.originaldir is not None:
-                os.chdir(self.originaldir)
+        # open Swarp mosaic and read data and headers
+        logging.info('ZPCalibration: init: reading frame')
+        self.data, self.hdu = fits.getdata(self.frame, header=True)
+
+        # we get observing passband from title first, if not there, then looks in the header
+        self.band = None
+        for possible_filter in ZPCalibration._available_filters:
+            if possible_filter in self.frame:
+                self.band = possible_filter
+        if self.band is None:
+            self.band = paycavi_tools.keys_from_header(self.hdu, "FILTER").strip()
+
+        self.object = pycavi_tools.keys_from_header(self.hdu, "OBJECT").strip().replace(" ", "_")
+
+        # coordinates of the center of the field of the Swarp mosaic
+        self.crval1, self.crval2 = pycavi_tools.keys_from_header(self.hdu, ["CRVAL1", "CRVAL2"])
+        self.crval1 = float(self.crval1)
+        self.crval2 = float(self.crval2)
+
+        # plate scale from Swarp mosaic
+        cdi_j = np.array(pycavi_tools.keys_from_header(self.hdu, ['CD1_1', 'CD1_2', 'CD2_1', 'CD2_2']))
+        self.sx = np.sqrt(cdi_j[0] ** 2 + cdi_j[1] ** 2) * 3600.0
+        self.sy = np.sqrt(cdi_j[2] ** 2 + cdi_j[3] ** 2) * 3600.0
+        self.plate_scale = (self.sx + self.sy) / 2.0  # plate scale in arcseconds
+        logging.info("ZPCalibration: plate_scale: %6.3f (sx: %6.3f - sy: %6.3f) arcsec/pix" % (
+            self.plate_scale, self.sx, self.sy))
+
+        # get wcs from Swarp mosaic
+        logging.info('ZPCalibration: init: loading wcs info from frame')
+        self.wcs = WCS(self.hdu)
+
+        # ------------------  data from scamp images used to build the swarp molsaic ---------------------
+
+        # read the list of images using in SWarp to get the child paths
+        self.parents_list = []
+        with open(self.frame[:-11] + ".list", "r") as f:
+            lines = f.readlines()
+        for line in lines:
+            self.parents_list.append(line[:-1])  # remove the \n character at the end of the line
+
+        # get average gain over extensions from first frame used by Swarp
+        self.avg_gain = self.get_avg_gain_from_frame()
+
+        # get avg airmass from frame list used to build Swarp mosaic
+        self.avg_airmass = self.get_avg_airmass_from_frame()
+
+        # orig sky level pos
+        self.avg_exptime, self.total_exptime = self.get_avg_exptime_from_frames()
+
+        # We read the catlogue to be used for the photometric calibration
+
+        self.query_str = None
+        if self.query_calibrator.lower() == "skymapper":
+            self.df = self.get_skymapper_df()
+        elif self.query_calibrator.lower() == "sdss":
+            self.df = self.get_sdss_df()
+        else:
+            logging.info("Sorry, but for the moment only Skymapper and SDSS are available as calibrator.")
+            logging.info("Finishing the run")
             return
 
-        # we are ready to run aperture photometry in the frame based on SM catalogue
+        # creates the aperture objects
+        #
+        # this call fills the variables:
+        # self.positions  = SkyCoord
+        # self.aperture    = SkyCircularAperture
+        # self.sky_annulus = SkyCircularAnnulus
+        #                                     
+        self.calibrators_apertures()
+
+        # run aperture photometry in swarp frame using calibrators apertures
+        # this call adds collumn  ["raw_mags_" + self.band] to df
+        #
         self.do_phot()  # first run to get raw magnitudes and convertion factors
 
         # here we get the zero points:
-        #    zp: to go from ADUs in orig files to magnitudes
+        #    zp: to go from DNs in orig files to magnitudes
         #  zphc: to go from e/s to std magnitudes. To compare with Health Check values.
         #   zp2: to go from Flambda (in erg/s/cm**2/Angstrom) to std magnitudes
         # magzp: to go from DNs (in erg/s/cm**2 to std magnitudes)
         #
-        self.filterWidth = self.get_filter_width()
-        self.filterPivotWavelength = self.get_pivot_wavelength()
-        self.extinctionCoeff = self.get_extinction_coeff()
+        self.filter_width = pycavi_tools.filter_width(self.band)
+        self.plambda = pycavi_tools.plambda(self.band)
+        self.extinctionCoeff = pycavi_tools.extinction_coeff(self.plambda, self.observatory)
 
+        # zero point to convert raw magnitudes in Swarp frame to standard magnitudes
         self.zp = self.get_zp_from_df()
         logging.info('ZPCalibration: zp: {0} to go from ADUs in orig files to mags - ESO health check values'.format(self.zp))
 
-        # original zphc:
-        # self.zphc = self.zp + 2.5 * np.log10(self.avg_gain / self.avg_exptime) + \
-        #            self.extinctionCoeff * self.avg_airmass
-        # frames are already in e-/s, so the conversion gain/exp_time is not needed
+        # zp as calculated by ESO Health Check script. Uses e/s and airmass = 1.0, not above atmosphere
+        # frames were converted to e-/s in notebook 3's mefpp_normalize_science function.
+        # These will be used for our QC.
+        #
         self.zphc = self.zp + self.extinctionCoeff * self.avg_airmass
-
-        # correct gain from ADU to e/s
-        # correct by airmass and extinction
         logging.info('ZPCalibration: zphc: {:.3f} to go from e/s to std mags below atmosphere.'.format(self.zphc))
 
-        self.zp2 = self.get_physical_units_zp()
+        # zero point to go from Flambda to standard AB magnitudes via Oke's
+        # formula but instead of Fnu we use Flambda and the pivot wavelength.
+        #
+        self.zp2 = pycavi_tools.Flambda_zp(self.band)
+        logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to std mags above atmosphere.'.format(self.zp2))
+
+        # Imaging data should provide physical units of erg/s/cm^2. So we must
+        # multiply DN by this factor
+        self.factor_dn_to_flambda = 10 ** ((self.zp2 - self.zp) / 2.5)
+        if self.zp2 is None:
+            raise Exception("ZPCalibration: call to Flambda_zp returned None. Filter not in allowed list?")
         logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to AB mags'.format(self.zp2))
+        
+        # conversion factor to multiply mosaic DN to get Flambda in erg/s/cm2
+        self.magzp = self.zp2 # the zero point value to use with the mosaic data
+        logging.info('ZPCalibration: zp2: {:.3f} (from swarp mosaic DN to AB mags)'.format(self.zp2))
+        logging.info('ZPCalibration:               (mosaic DN in erg/s/cm**2)')
 
-        #self.magzp = self.zp2 + 2.5 * np.log10(self.filterWidth) + 2.5 * np.log10(10 ** 15) \
-        #    + 2.5 * np.log10(1.0 / self.plate_scale ** 2)  # DN in 10**(-15)erg/s/cm**2/asec**2
-        # self.magzp = self.zp2 +  2.5 * np.log10(10 ** 15)
-        self.magzp = self.zp2 + 2.5 * np.log10(self.filterWidth) + 2.5 * np.log10(10 ** 15)
-        logging.info('ZPCalibration: magzp: {:.3f} (from DN to AB mags)'.format(self.magzp))
-        logging.info('ZPCalibration:               (DN in 10**(-15)erg/s/cm**2/asec**2)')
-
-        # We get the conversion factor to Flambda in erg/s/cm^2/Angstrom
-        # Imaging data should provide physical units of erg/s/cm^2/arcsec^2
-        # We multiply by 10**15 to have numbers closer to 1 for usual objects
-        # Note that the magzp was adjusted similarly
+        # proper imaging fluxes needs erg/s/cm**2
         #
-        self.convFactor_ADU_Flambda = 10 ** ((self.zp2 - self.zp) / 2.5)
-        self.convFactor_ADU_DN = 10 ** 15 * self.convFactor_ADU_Flambda * self.filterWidth / self.plate_scale ** 2
-
-        # the DN units once we multiply by self.convFactor_ADU_Flambda
-        # These are the units required to convert to AB magnitudes by simply
-        # integrating over circular area around stars.
-        # It also gives the proper mags/arcsec*2 values by integrating
-        # over sky area.
-        # But proper imaging fluxes needs erg/s/cm**2
-        #
-        self.bunit = '10**(-15)*erg/s/cm**2/arcsec**2'  # The DN will be in these units.
+        self.bunit = 'erg/s/cm**2/arcsec**2'  # The DN will be in these units.
 
         # ----- Determining sky levels for Swarp input frames -------
         #
-        # get sky levels in physical units. Note I multiplied by filterWidth (not so the DNs)
+        # get sky levels in physical units. Note I multiplied by filter_width (not so the DNs)
         # so the units will be erg/s/cm**2
         #
 
@@ -232,15 +241,15 @@ class ZPCalibration:
         self.orig_skies_adu = self.get_orig_sky_levels()
         self.orig_skies_phys = copy.deepcopy(self.orig_skies_adu)
         self.orig_skies_phys.update(
-            (x, y * self.convFactor_ADU_Flambda * self.filterWidth) for x, y in self.orig_skies_phys.items())
+            (x, y * self.factor_dn_to_flambda ) for x, y in self.orig_skies_phys.items())
 
         sky_mean_list = []
         sky_std_list = []
         for key in self.orig_skies_phys:
             sky_mean_list.append(self.orig_skies_phys[key][0])
             sky_std_list.append(self.orig_skies_phys[key][1])
-        self.mean_sky = np.mean(sky_mean_list)
-        self.std_sky = np.mean(sky_std_list)
+        self.mean_sky = np.nanmean(sky_mean_list)
+        self.std_sky = np.nanmean(sky_std_list)
         self.magsky = self.get_mag_sky()
 
         # we get the std deviation of the sky from the data itself
@@ -264,23 +273,6 @@ class ZPCalibration:
         os.symlink(self.swarpdir + "/" + self.frame, self.calibrationdir + "/" + self.frame)
 
         logging.info("ZPCalibration: all done. Celebrate with a cup of coffe :)")
-
-    def get_key_from_header(self, keys):
-        """
-        returns the value stored in the frame hdu headers
-
-        Parameters
-        ----------
-        keys: str or list
-            the key, a single value if a str is passed, or a list of keys to select from the headers.
-        """
-        if type(keys) == str:
-            return self.hdu[keys]
-        elif type(keys) == list:
-            returned_values = []
-            for key in keys:
-                returned_values.append(self.hdu[key])
-            return returned_values
 
     def get_avg_gain_from_frame(self):
         """
@@ -374,7 +366,7 @@ class ZPCalibration:
                     line_list = f.read().decode(charset).split('\r\n')
 
                 # and here we write to file
-                logging.info("get_skymapper_df: Saving {0}".format(self.skymapper_file))
+                logging.info("get_skymapper_df: Saving {0}".format(skymapper_raw.split('/')[-1]))
                 with open(skymapper_raw, "w") as f:
                     for aline in line_list:
                         print(aline, file=f)
@@ -501,7 +493,7 @@ class ZPCalibration:
             print('SDSS query returned no results.')
             return None
 
-    def define_apertures_from_df(self):
+    def calibrators_apertures(self):
         """
         Read the ra and dec values from the df and returns the aperture and annulus objects from
         SkyCircularAperture and SkyCircularAnnulus from photutils.
@@ -512,9 +504,9 @@ class ZPCalibration:
 
         # Define positions and apertures
         logging.info("do_phot: creating aperture object")
-        positions = SkyCoord(ra=ra, dec=dec, frame="icrs")
-        self.aperture = SkyCircularAperture(positions, r=self.ap_radius * u.arcsec)
-        self.sky_annulus = SkyCircularAnnulus(positions, self.sky_annulus_r1 * u.arcsec,
+        self.positions = SkyCoord(ra=ra, dec=dec, frame="icrs")
+        self.aperture = SkyCircularAperture(self.positions, r=self.ap_radius * u.arcsec)
+        self.sky_annulus = SkyCircularAnnulus(self.positions, self.sky_annulus_r1 * u.arcsec,
                                               self.sky_annulus_r2 * u.arcsec)
 
     def do_phot(self):
@@ -644,7 +636,7 @@ class ZPCalibration:
 
             # use scipy minimize to find the zero point through least square minimization
             # do a sigma clipping before reach a zero point value.
-            zp = -sigma_clip(r_minus_raw[clean_color], interp_data)
+            zp = sigma_clip(r_minus_raw[clean_color], interp_data)
 
         else:
 
@@ -662,101 +654,6 @@ class ZPCalibration:
             logging.info('df zero point: {}'.format(zp))
 
         return zp
-
-    def get_filter_width(self):
-        """
-        Filter widths for OmegaCam band passes.
-        From the SVO filter services.
-        http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=browse&gname=Paranal&gname2=OmegaCAM&asttype=
-        """
-        effective_width = {"u_SDSS": 482.5,
-                           "g_SDSS": 1203.3,
-                           "r_SDSS": 1354.3,
-                           "NB_659": 103.8,  # This is the VPHAS+ filter
-                           "i_SDSS": 1463.7,
-                           "z_SDSS": 864.5,
-                           "B_JOHN": 866.6,  # This is the Bessell B isophotal mag
-                           "V_JOHN": 908.1}  # This is the Bessel V isophotal mag
-
-        if self.band in effective_width.keys():
-            return effective_width[self.band]
-        else:
-            raise Exception("get_filter_width: unrecognized filter pass band %s" % self.band)
-
-    def get_pivot_wavelength(self):
-        """
-        Returns the pivot wavelength.
-        From the SVO filter services.
-        http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=browse&gname=Paranal&gname2=OmegaCAM&asttype=
-        """
-        pivot_wave = {"u_SDSS": 3569.6,
-                      "g_SDSS": 4712.0,
-                      "r_SDSS": 6286.0,
-                      "NB_659": 6588.6,
-                      "i_SDSS": 7555.1,
-                      "z_SDSS": 8888.6,
-                      "B_JOHN": 4404.3,
-                      "V_JOHN": 5505.2}
-
-        if self.band in pivot_wave.keys():
-            return pivot_wave[self.band]
-        else:
-            raise Exception("getPivotWavelength: unrecognized filter pass band %s" % self.band)
-
-    def get_extinction_coeff(self):
-        """
-        Atmospheric extinction coefficients.
-        """
-
-        lmbd = self.get_pivot_wavelength()
-        return self.paranal_extinction_curve(lmbd)
-
-    def paranal_extinction_curve(self, lambd):
-        """Patat et al. 2011 A&A 527, A91 Table B.1
-        https://ui.adsabs.harvard.edu/abs/2011A%26A...527A..91P/abstract
-        """
-        extinction_table = np.array([[3325, 0.686, 0.021], [3375, 0.606, 0.009], [3425, 0.581, 0.007],
-            [3475, 0.552, 0.007], [3525, 0.526, 0.006], [3575, 0.504, 0.006], [3625, 0.478, 0.006],
-            [3675, 0.456, 0.006], [3725, 0.430, 0.006], [3775, 0.409, 0.005], [3825, 0.386, 0.006],
-            [3875, 0.378, 0.006], [3925, 0.363, 0.005], [3975, 0.345, 0.004], [4025, 0.330, 0.004],
-            [4075, 0.316, 0.004], [4125, 0.298, 0.004], [4175, 0.285, 0.004], [4225, 0.274, 0.004],
-            [4275, 0.265, 0.004], [4325, 0.253, 0.004], [4375, 0.241, 0.003], [4425, 0.229, 0.003],
-            [4475, 0.221, 0.003], [4525, 0.212, 0.003], [4575, 0.204, 0.003], [4625, 0.198, 0.003],
-            [4675, 0.190, 0.003], [4725, 0.185, 0.003], [4775, 0.182, 0.003], [4825, 0.176, 0.003],
-            [4875, 0.169, 0.003], [4825, 0.176, 0.003], [4925, 0.162, 0.003], [4975, 0.157, 0.003],
-            [5025, 0.156, 0.003], [5075, 0.153, 0.003], [5125, 0.146, 0.003], [5175, 0.143, 0.003],
-            [5225, 0.141, 0.003], [5275, 0.139, 0.003], [5325, 0.139, 0.002], [5375, 0.134, 0.002],
-            [5425, 0.133, 0.002], [5475, 0.131, 0.002], [5525, 0.129, 0.002], [5575, 0.127, 0.002],
-            [5625, 0.128, 0.002], [5675, 0.130, 0.002], [5725, 0.134, 0.002], [5775, 0.132, 0.002],
-            [5825, 0.124, 0.002], [5875, 0.122, 0.003], [5925, 0.125, 0.003], [5975, 0.122, 0.003],
-            [6025, 0.117, 0.002], [6075, 0.115, 0.002], [6125, 0.108, 0.002], [6175, 0.104, 0.002],
-            [6225, 0.102, 0.002], [6275, 0.099, 0.002], [6325, 0.095, 0.002], [6375, 0.092, 0.002],
-            [6425, 0.085, 0.002], [6475, 0.086, 0.003], [6525, 0.083, 0.003], [6575, 0.081, 0.002],
-            [6625, 0.076, 0.002], [6675, 0.072, 0.002], [6725, 0.068, 0.002], [6775, 0.064, 0.002],
-            [7060, 0.064, 0.003], [7450, 0.048, 0.002], [7940, 0.042, 0.003], [8500, 0.032, 0.001],
-            [8675, 0.030, 0.001], [8850, 0.029, 0.001], [10000, 0.022, 0.001]])
-
-        #interp_data = np.interp(r_minus_i[clean_color], drew_r_i_ab, drew_r_ha_ab)
-        wavelength = extinction_table[:,0]
-        extinct = extinction_table[:,1]
-        extinct_err = extinction_table[:,2]
-        return np.interp(lambd, wavelength, extinct)
-
-    def get_physical_units_zp(self):
-        """
-        Returns the zero point to add to -2.5log(flux [erg/s/cm^2/A)
-        to get the AB magnitudes in band self.band from calibrated frame.
-
-        Reference: Oke, J.B. 1974, ApJS, 27, 21 
-        Formula in paper: m(AB) = -2.5 log(f) - 48.60
-        
-                            where f is in erg sec^-1 cm^-2 Hz^-1
-
-        NB: pivot wavelength should be given in same length units as f_lambda.
-            The constant 3.34x10^(-19) includes 1/c and the conversion from
-            Angstroms to cm.
-        """
-        return -2.5 * np.log10(3.34 * 10 ** (-19)) - 5.0 * np.log10(self.get_pivot_wavelength()) - 48.60
 
     def get_orig_sky_levels(self):
         """Read original files used by Swarp to read the sky levels in ADUs."""
@@ -793,8 +690,8 @@ class ZPCalibration:
         logging.info("get_mag_sky: surface brightness of sky in magnitudes per arcsec^2")
 
         # here we have mean_sky converted to erg/s/cm2, so we need to convert back to ADUs
-        magsky = -2.5 * np.log10(self.convFactor_ADU_DN * self.mean_sky /
-                                 (self.convFactor_ADU_Flambda * self.filterWidth * self.plate_scale ** 2)) + self.magzp
+        logging.info("get_mag_sky: self.mean_sky: {}".format(self.mean_sky))
+        magsky = self.magzp - 2.5 * np.log10(self.mean_sky / self.plate_scale ** 2)
         logging.info("get_mag_sky: magsky: %6.3f mags/arcsec^2" % magsky)
         return magsky
 
@@ -805,8 +702,8 @@ class ZPCalibration:
         logging.info("get_std_dev_mag_sky: std_dev: %.3e ADUs" % std_dev)
 
         # here we have sigma directly in ADUs
-        mag_sky_std_dev = -2.5 * np.log10(self.convFactor_ADU_DN * std_dev / (self.plate_scale ** 2)) + self.magzp
-        logging.info("getStdDevMagSky: mag_sky_std_dev: %6.3f mags/arcsec^2" % mag_sky_std_dev)
+        mag_sky_std_dev = self.zphc - 2.5 * np.log10( std_dev / (self.plate_scale ** 2))
+        logging.info("mag_sky_std_dev: %6.3f mags/arcsec^2" % mag_sky_std_dev)
         return mag_sky_std_dev
 
     def get_moon_from_frames(self):
@@ -926,11 +823,10 @@ class ZPCalibration:
                  ["HIERARCH MEFPP QC SKYSTD UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYSTD"],
                  ["HIERARCH MEFPP QC ZPHC", self.zphc, "Zero point for data in e/s -- HC Plots"],
                  ["HIERARCH MEFPP QC BAND NAME", self.band, "Name of pass band"],
-                 ["HIERARCH MEFPP QC BAND WIDTH", self.filterWidth, "Width of pass band [Angstrom]"],
-                 ["HIERARCH MEFPP QC BAND WAVELENGTH", self.filterPivotWavelength, "Pivot lambda of band [Angstrom]"],
+                 ["HIERARCH MEFPP QC BAND WIDTH", self.filter_width, "Width of pass band [Angstrom]"],
+                 ["HIERARCH MEFPP QC BAND WAVELENGTH", self.plambda, "Pivot lambda of band [Angstrom]"],
                  ["HIERARCH MEFPP QC MAGSKY", self.magsky, "Sky brightness mags/arcsec^2"],
-                 ["HIERARCH MEFPP QC ADU2FLAM", self.convFactor_ADU_Flambda, "Conv. fact. ADUs to Flambda"],
-                 ["HIERARCH MEFPP QC ADU2DN", self.convFactor_ADU_DN, "Conv. fact. used ADUs to DN"],
+                 ["HIERARCH MEFPP QC DN2FLAM", self.factor_dn_to_flambda, "Conv. fact. mosaic DN to Flambda"],
                  ["HIERARCH MEFPP QC BUNIT", self.bunit, "Units of Data Numbers this frame"],
                  ["HIERARCH MEFPP QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
                  ["HIERARCH MEFPP QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
@@ -938,7 +834,7 @@ class ZPCalibration:
                  ["HIERARCH MEFPP QC PHO MAGMAX", self.mag_max, "max mag for photometric calibrators (faintest)"],
                  ["HIERARCH MEFPP QC PHO MAGMIN", self.mag_min, "min mag for photometric calibrators (brightest)"],
                  ["HIERARCH MEFPP QC PHO CALFILE", self.phot_cal_file.split('/')[-1], "cal file"],
-                 ["HIERARCH MEFPP QC MAGZP", self.magzp, "ZP to AB magnitudes in BAND"],
+                 ["HIERARCH MEFPP QC MAGZP", self.zp2, "ZP to AB magnitudes in BAND"],
                  ["HIERARCH MEFPP QC AVGAIRM", self.avg_airmass, "Average airmass of ancestor frames"],
                  ["HIERARCH MEFPP QC AVGGAIN", self.avg_gain, "Average gain of ancestor frames"]
                  ]
@@ -969,10 +865,10 @@ class ZPCalibration:
 
             # FSE CHECK: before writting new keywords we read the "HIERARCH MEFPP QC ADU2DN"
             #            keyword if it exists, we will need it at the end.
-            if "HIERARCH MEFPP QC ADU2DN" not in hdr.keys():
-                old_convFactor_ADU_DN = 1.0
+            if "MEFPP QC DN2FLAM" not in hdr.keys():
+                old_factor = 1.0
             else:
-                old_convFactor_ADU_DN = hdr["HIERARCH MEFPP QC ADU2DN"]
+                old_factor = hdr["HIERARCH MEFPP QC DN2FLAM"]
 
             # FSE CHECK: we should use update better so as not to create duplicate entries.
             # we start with the selected headers that will go close to the beginning
@@ -1000,10 +896,7 @@ class ZPCalibration:
                 hdr.update({zkey: zval}, comment=zcomment)
 
             # we finally rewrite the data array
-            # FSE CHECK: this should not be done if reprocessing the file. If that is
-            # the case we must read the currently written convFactor_ADU_DN and then
-            # multiply the data by the ratio of the new over the old one.
             #
-            hdata = hdata*self.convFactor_ADU_DN/old_convFactor_ADU_DN
+            hdata = hdata*self.factor_dn_to_flambda/old_factor
 
         logging.info("update_frame: Image updated correctly")

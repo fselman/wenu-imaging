@@ -5,6 +5,9 @@
 - Clean atmospheric extinction subroutine. Done.
 - Add configuration for project_directory automatically determined in all notebooks. Done
 - Debug offset in zp according to plots in notebook 7. WIP.
+    - Cleaned code
+    - Better but still debugging.
+    - Cannot yet the 10**(-15) reflected in the numbers reported by SAOIMAGE or sextractor..
 - Add instrument configuration: extensions, DPR keywords, filters.
 - add configuration for installation directory
 - check zp values against ESO HC. We seem to be high, also in the AB magnitudes.
