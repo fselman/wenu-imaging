@@ -13,6 +13,8 @@
         astropy.io.fits is not very simple when it comes to dealing
         with the scaling of the data. Best way seems to be use those keywords.
         STILL TO DO: handle reprocessing by properly handle the old_bscale and new bscale 
+- Clean code and add inspect configuration keyword to see data subplots.
+- Save the 07b plot with a different name than the plot created by by the 07_ plot.
 - Add instrument configuration: extensions, DPR keywords, filters.
 - add configuration for installation directory
 - check zp values against ESO HC. We seem to be high, also in the AB magnitudes.
