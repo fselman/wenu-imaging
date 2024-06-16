@@ -4,7 +4,8 @@
 - Add possibility to remove files before swarping. Done.
 - Clean atmospheric extinction subroutine. Done.
 - Add configuration for project_directory automatically determined in all notebooks. Done
-- Debug offset in zp according to plots in notebook 7. WIP.
+  Added tkinter input window and propagated value via file to other notebooks. Done.
+- Debug offset in zp according to plots in notebook 7. DONE.
     - Cleaned code
     - Better but still debugging.
     - Cannot yet the 10**(-15) reflected in the numbers reported by SAOIMAGE or sextractor..
@@ -16,7 +17,7 @@
 - Clean code and add inspect configuration keyword to see data subplots.
 - Save the 07b plot with a different name than the plot created by by the 07_ plot.
 - Add instrument configuration: extensions, DPR keywords, filters.
-- add configuration for installation directory
+- add configuration for installation directory. 
 - check zp values against ESO HC. We seem to be high, also in the AB magnitudes.
 - add chapter on installation of astrometry.net and use of index files for OCAM and WFI
 - add configuration files for astromatic software location

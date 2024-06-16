@@ -895,7 +895,7 @@ def mefpp_normalize_science(sci_part_list):
             apply_light_corr = False
             if image_head["HIERARCH ESO INS FILT1 NAME"] in ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS"]:
                 light_coeffs = get_lightcorrection_coeffs(image_head["HIERARCH ESO INS FILT1 NAME"])
-                apply_light_corr = True
+                apply_light_corr = False
 
             with fits.open(image_name, mode="update", output_verify="ignore") as hdul:
 

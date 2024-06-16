@@ -11,30 +11,46 @@ from tkinter import filedialog
 import astropy.constants as constants
 
 # Configuration resources
-def create_pycavi_config(raw_data_dir=None, project_dir=None):
+
+def write_pycavi_config(config):
+    """Write the config values to the project configuration file"""
+    # Write the configuration to a file
+    if config is not None:
+        Path('./config').mkdir(parents=True, exist_ok=True)
+        with open('./config/pycavi.cfg', 'w') as configfile:
+            config.write(configfile)
+
+def init_pycavi_config(raw_data_dir=None, project_dir=None):
     """Function to create configuration file.
     The configuration file is read by all notebooks,
     and have the information on where the different files
     are located."""
-    config = configparser.ConfigParser()
+    config_str = """
+[General]
+  debug = True
+  log_level = info
+[Provenance]
+  Institution = ESO
+  Observatory = Paranal
+  Telescope = VST
+  Instrument = OmegaCam
+[Data]
+  file_prefix = OMEGA
+  file_suffix = .fits
+[Directories] 
+    raw_data_dir =
+    project_dir =
+    reduced_calib_dir =
+    reduced_science_dir =
+    project_logs_dir =
+    sex_dir_name =
+    scamp_dir_name =
+    swarp_dir_name =
+    cal_dir_name =
+"""
+    config = configparser.ConfigParser(allow_no_value=True)
+    config.read_string(config_str)
 
-    # Add sections and key-value pairs
-    #    'debug_mode': debug_mode,
-    #    'log_level': log_level,
-    #    'raw_data_dir': raw_dir,
-    #    'project_dir': project_dir,
-    #    'reduced_calib_dir': reduced_calib_dir,
-    #    'reduced_science_dir': reduced_science_dir,
-    #    'project_logs_dir': project_logs_dir,
-    #    'sex_dir_name': sex_dir_name,
-    #    'scamp_dir_name': scamp_dir_name,
-    #    'swarp_dir_name': swarp_dir_name,
-    #    'cal_dir_name': cal_dir_name}
-    config['General'] = {'debug': True, 'log_level': 'info'}
-    config['Provenance'] = {'Observatory': 'Paranal', 
-                            'Telescope': 'VST', 
-                            'Instrument': 'OmegaCam',
-                            'FilePrefix': 'OMEGA'}
     if project_dir is not None:
             reduced_calib_dir = project_dir+'/calib/' # Directory tree with reduced calibration files + soft links to raw calibrations
             reduced_science_dir = project_dir+'/science/' # Directory tree with reduced science frames + soft links to reduced calibrations.
@@ -58,14 +74,19 @@ def create_pycavi_config(raw_data_dir=None, project_dir=None):
                              'swarp_dir_name': swarp_dir_name,
                              'cal_dir_name': cal_dir_name}
 
-    # Write the configuration to a file
-    Path('./config').mkdir(parents=True, exist_ok=True)
-    with open('./config/pycavi.cfg', 'w') as configfile:
-        config.write(configfile)
+    return config
 
-def read_pycavi_config(project_dir=None):
+def write_pycavi_config(config):
+    """Write the config values to the project configuration file"""
+    # Write the configuration to a file
+    if config is not None:
+        Path('./config').mkdir(parents=True, exist_ok=True)
+        with open('./config/pycavi.cfg', 'w') as configfile:
+            config.write(configfile)
+
+def read_pycavi_config(config_dir=None):
     """Function to read configuration file."""
-    if project_dir is None:
+    if config_dir is None:
         print('No root directory for project specified.')
         return None
 
@@ -73,15 +94,17 @@ def read_pycavi_config(project_dir=None):
     config = configparser.ConfigParser()
 
     # Read the configuration file
-    config.read('./config/pycavi.cfg')
+    config.read(config_dir+'/pycavi.cfg')
 
     # Access values from the configuration file
     debug_mode = config.getboolean('General', 'debug')
     log_level = config.get('General', 'log_level')
+    institution = config.get('Provenance', 'Institution')
     observatory = config.get('Provenance', 'Observatory')
     telescope = config.get('Provenance', 'Telescope')
     instrument = config.get('Provenance', 'Instrument')
-    file_prefix = config.get('Provenance', 'FilePrefix')
+    file_prefix = config.get('Data', 'file_prefix')
+    file_suffix = config.get('Data', 'file_suffix')
     raw_data_dir = config.get('Directories', 'raw_data_dir')
     project_dir = config.get('Directories', 'project_dir')
     reduced_calib_dir = config.get('Directories', 'reduced_calib_dir')
@@ -96,10 +119,12 @@ def read_pycavi_config(project_dir=None):
     config_values = {
         'debug_mode': debug_mode,
         'log_level': log_level,
-        'observatory': observatory,
-        'telescope': telescope,
-        'instrument': instrument,
+        'Institution': institution,
+        'Observatory': observatory,
+        'Telescope': telescope,
+        'Instrument': instrument,
         'file_prefix': file_prefix,
+        'file_sufffix': file_suffix,
         'raw_data_dir': raw_data_dir,
         'project_dir': project_dir,
         'reduced_calib_dir': reduced_calib_dir,
@@ -110,46 +135,84 @@ def read_pycavi_config(project_dir=None):
         'swarp_dir_name': swarp_dir_name,
         'cal_dir_name': cal_dir_name}
 
-    return config_values
+    return config
 
 # tkinter widget tools 
 
 class ProjectInfo:
     """Class for entry window to aid in the configuration file creation."""
-    def __init__(self):
+    def __init__(self, config_dir):
         self.popup = tk.Tk()
         self.popup.transient()
 
         super(ProjectInfo, self).__init__()
         self.widgets={}
 
-        # First row, column 0, the root directory for project
-        self.raw_dir_label = tk.Label(self.popup, text="No directory containing raw data selected")
-        self.raw_dir_label.grid(column=1, row=0)
+        # we read current values as defaults
+        self.config_dir = config_dir
+        self.config_file = config_dir+'/'+'pycavi.cfg'
 
-        # First row, column 1, the button to navigate to directory
-        select_button = tk.Button(self.popup, text="Select raw data directory", command=self.select_raw_directory)
-        select_button.grid(column=0, row=0)
+        if os.path.isfile(self.config_file):
+            self.config = read_pycavi_config(config_dir)
+            self.instrument = self.config['Provenance']['Instrument']
+            self.telescope = self.config['Provenance']['Telescope']
+            self.observatory = self.config['Provenance']['Observatory']
+            self.institution = self.config['Provenance']['Institution']
+            self.raw_data_directory = self.config['Directories']['raw_data_dir']
+            self.project_directory = self.config['Directories']['project_dir']
+        else:
+            print("No config file found.")
+            self.config = init_pycavi_config()
+            
+            self.instrument = self.config['Provenance']['instrument']
+
+            self.telescope = self.config['Provenance']['telescope']
+
+            self.observatory = self.config['Provenance']['observatory']
+
+            self.institution = self.config['Provenance']['institution']
+
+            self.raw_data_directory = self.config['Directories']['raw_data_dir']
+
+            self.project_dir = self.config['Directories']['project_dir']
 
 
-        # Second row, column 0, the root directory for project
-        self.project_root_dir_label = tk.Label(self.popup, text="No root directory for project selected")
-        self.project_root_dir_label.grid(column=1, row=1)
+        # row 0, column 0, the name of the project subdirectory
+        OPTIONS = ["OmegaCam,VST,Paranal,ESO",
+                   "WFI,2.2-m,La Silla,ESO",
+                    ] #etc
+        self.origin = tk.StringVar()
+        self.origin.set(OPTIONS[0]) # default value
+        project_origin = tk.OptionMenu(self.popup, self.origin, *OPTIONS)
+        project_origin.grid(columnspan=2)
 
-        # Second row, column 1, the button to navigate to directory
-        select_button = tk.Button(self.popup, text="Select root directory", command=self.select_project_root_directory)
-        select_button.grid(column=0, row=1)
+        # row 1, column 0, the root directory for project
+        self.raw_dir_label = tk.Label(self.popup, text=self.raw_data_directory)
+        self.raw_dir_label.grid(column=1, row=1)
 
-        # Third row, column 0, the name of the project subdirectory
-        project_subdir_label = ttk.Label(self.popup, text="Project subdirectory name:")
-        project_subdir_label.grid(column=0, row=2)
+        # row 1, column 1, the button to navigate to directory
+        select_button_raw = tk.Button(self.popup, text="Select raw data directory", command=self.select_raw_directory)
+        select_button_raw.grid(column=0, row=1)
 
-        # Third row column 1
-        self.project_subdir = tk.StringVar()
-        project_subdir_entry = ttk.Entry(self.popup, textvariable=self.project_subdir)
-        project_subdir_entry.grid(column=1, row=2)
 
-        # Fourth row the Enter command
+        # row 2, column 0, the root directory for project
+        self.project_dir_label = tk.Label(self.popup, text=self.project_dir)
+        self.project_dir_label.grid(column=1, row=2)
+
+        # row 2, column 1, the button to navigate to directory
+        select_button_root = tk.Button(self.popup, text="Select directory for project", command=self.select_project_dir)
+        select_button_root.grid(column=0, row=2)
+
+        # row 3, column 0, the name of the project subdirectory
+        #project_subdir_label = ttk.Label(self.popup, text="Project subdirectory name:")
+        #project_subdir_label.grid(column=0, row=3)
+
+        # row 3, column 1
+        #self.project_subdir = tk.StringVar()
+        #project_subdir_entry = ttk.Entry(self.popup, textvariable=self.project_subdir)
+        #project_subdir_entry.grid(column=1, row=3)
+
+        # row 4, the Enter command
         enter_button = ttk.Button (self.popup, text = "Enter", command=self.close_window)
         enter_button.grid(columnspan=2)
 
@@ -158,14 +221,32 @@ class ProjectInfo:
     def select_raw_directory(self):
         self.raw_data_directory = filedialog.askdirectory()
         if self.raw_data_directory:
+            self.config['Directories']['raw_data_dir'] = self.raw_data_directory+'/'
             self.raw_dir_label.config(text=self.raw_data_directory)
 
-    def select_project_root_directory(self):
-        self.project_root_directory = filedialog.askdirectory()
-        if self.project_root_directory:
-            self.project_root_dir_label.config(text=self.project_root_directory)
+    def select_project_dir(self):
+        self.project_dir = filedialog.askdirectory()
+        self.project_dir = self.project_dir+'/'
+        if self.project_dir:
+            self.config['Directories']['project_dir'] = self.project_dir+'/'
+            self.config['Directories']['reduced_calib_dir'] = self.project_dir +'/'+'calib'+'/'
+            self.config['Directories']['reduced_science_dir'] = self.project_dir +'/'+'science'+'/'
+            self.config['Directories']['project_logs_dir'] = self.project_dir +'/'+'logs'+'/'
+            self.project_dir_label.config(text=self.project_dir)
 
     def close_window (self):
+
+        # before leaving we need to parse the origin string
+        # "OmegaCam,VST,Paranal,ESO"
+        origin_list = self.origin.get().split(',')
+        if len(origin_list) == 4:
+            self.config['Provenance']['Instrument'] = origin_list[0]
+            self.config['Provenance']['Telescope'] = origin_list[1]
+            self.config['Provenance']['Observatory'] = origin_list[2]
+            self.config['Provenance']['Institution'] = origin_list[3]
+        else:
+            print("Problem parsing origin string from pulldown widget: {}".formatI(self.origin))
+        write_pycavi_config(self.config)
         self.popup.destroy()
 
 # FITS handling tools
