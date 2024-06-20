@@ -210,39 +210,39 @@ class ExposuresPartition:
         self.mffPartition = None
         self.mffFrame = None
 
-    def insertExposure(self, exposure):
-
+    #def insertExposure(self, exposure):
+#
         # we select the partition according to exposure dpr.type
-        if 'BIAS' in exposure.dpr_type:
-            key_str = 'bias/' + '%d' % exposure.obsid + '/' + exposure.OBstart
-        elif 'FLAT,DOME' in exposure.dpr_type:
-            key_str = 'dome/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
-        elif 'FLAT,SKY' in exposure.dpr_type:
-            key_str = 'sky/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
-        elif ('CALIB' in exposure.dpr_catg) and ('STD,ZEROPOINT' in exposure.dpr_type):
-            key_str = 'std/' + exposure.target + '_' + \
-                      exposure.filter + '/' + \
-                      exposure.OBstart
-        elif ('SCIENCE' in exposure.dpr_catg) and ('OBJECT' in exposure.dpr_type):
-            key_str = 'science/' + exposure.target + '_' + \
-                      ("%010.3f" % exposure.tel_alpha).replace('.', 'p') + '_' + \
-                      ("%09.1f" % exposure.tel_delta).replace('.', 'p').replace('-', 'm') + '/' + \
-                      exposure.filter + '/' + \
-                      exposure.OBstart
-        else:
-            print('dpr type: %s' % exposure.dpr_type, ' not classifiable.', end='\r')
-            key_str = 'unknown/' + '%s' % exposure.dpr_type
+        #if 'BIAS' in exposure.dpr_type:
+            #key_str = 'bias/' + '%d' % exposure.obsid + '/' + exposure.OBstart
+        #elif 'FLAT,DOME' in exposure.dpr_type:
+            #key_str = 'dome/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
+        #elif 'FLAT,SKY' in exposure.dpr_type:
+            #key_str = 'sky/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
+        #elif ('CALIB' in exposure.dpr_catg) and ('STD,ZEROPOINT' in exposure.dpr_type):
+            #key_str = 'std/' + exposure.target + '_' + \
+                      #exposure.filter + '/' + \
+                      #exposure.OBstart
+        #elif ('SCIENCE' in exposure.dpr_catg) and ('OBJECT' in exposure.dpr_type):
+            #key_str = 'science/' + exposure.target + '_' + \
+                      #("%010.3f" % exposure.tel_alpha).replace('.', 'p') + '_' + \
+                      #("%09.1f" % exposure.tel_delta).replace('.', 'p').replace('-', 'm') + '/' + \
+                      #exposure.filter + '/' + \
+                      #exposure.OBstart
+        #else:
+            #print('dpr type: %s' % exposure.dpr_type, ' not classifiable.', end='\r')
+            #key_str = 'unknown/' + '%s' % exposure.dpr_type
 
-        self.base_path = key_str
-        self.exposureList.append(exposure)
-        self.OBstart = exposure.OBstart
-        self.filter = exposure.filter
-        if key_str in self.partList:
-            self.partList[key_str].append(exposure)
-        else:
-            self.partList[key_str] = [exposure]
-            self.OBstartDict[key_str] = exposure.OBstart
-            self.filterDict[key_str] = exposure.filter
+        #self.base_path = key_str
+        #self.exposureList.append(exposure)
+        #self.OBstart = exposure.OBstart
+        #self.filter = exposure.filter
+        #if key_str in self.partList:
+            #self.partList[key_str].append(exposure)
+        #else:
+            #self.partList[key_str] = [exposure]
+            #self.OBstartDict[key_str] = exposure.OBstart
+            #self.filterDict[key_str] = exposure.filter
 
     def getFilter(self, filename):
         fields = filename.split('/')
@@ -292,7 +292,7 @@ class BiasPartition:
 
 def check_and_create_folder(folder_path):
     try:
-        os.makedirs(folder_path)
+        os.makedirs(folder_path, exist_ok=True)
     except Exception as e:
         print(e)
         pass
@@ -311,6 +311,20 @@ def getKeyVal(filename, key):
 
 
 def createFrameList(base_dir, list_name, frameDict):
+    """Creates file *.list and write the full link to
+    the raw files that will be reduced in that partition.
+
+    Input:
+
+        base_dir: name of directory to contain reduced calibration data
+        list_name: either bias.list, dome.list, sky.list. or science.list
+        frameDict: dictionary indexed with full subdirectory path
+                    to where the list will be writen; and with values
+                    equal to the full path to the raw files.
+    
+    Output:
+        The creation of the list files
+    """
     for aFramePartitionKey, aFramePartitionList in frameDict.items():
         subdir_str = aFramePartitionKey
 

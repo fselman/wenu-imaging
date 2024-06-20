@@ -25,7 +25,7 @@ def solvefield(file_name):
     crpix2 = hdu_header["CRPIX2"]
 
     pos_pars = "--ra " + "%3.6f" % crval1 + " --dec " + "%3.6f" % crval2 + " --radius=1.0 "
-    scale_pars = " --scale-units arcsecperpix --scale-low 0.14 --scale-high 0.26 --overwrite"
+    scale_pars = " --scale-units arcsecperpix --scale-low 0.18 --scale-high 0.24 --overwrite"
     wcs_pars = " --crpix-x " + "%5d" % crpix1 + " --crpix-y " + "%5d" % crpix2 + " --no-tweak "
     solve_command_pars = " -D " + dir_name + " " + pos_pars + scale_pars + wcs_pars + "--no-plots --new-fits " + \
                          file_name[:-5] + "_newwcs.fits " + file_name

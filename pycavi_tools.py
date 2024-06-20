@@ -34,12 +34,10 @@ def init_pycavi_config(raw_data_dir=None, project_dir=None):
   Observatory = Paranal
   Telescope = VST
   Instrument = OmegaCam
-[Data]
-  file_prefix = OMEGA
-  file_suffix = .fits
 [Directories] 
     raw_data_dir =
     project_dir =
+    static_calib_dir =
     reduced_calib_dir =
     reduced_science_dir =
     project_logs_dir =
@@ -52,10 +50,12 @@ def init_pycavi_config(raw_data_dir=None, project_dir=None):
     config.read_string(config_str)
 
     if project_dir is not None:
+            static_calib_dir = project_dir+'/static_calib/' # static calibrations go here, e.g. bpm, fringe frames, linearity curves, etc.
             reduced_calib_dir = project_dir+'/calib/' # Directory tree with reduced calibration files + soft links to raw calibrations
             reduced_science_dir = project_dir+'/science/' # Directory tree with reduced science frames + soft links to reduced calibrations.
             project_logs_dir = project_dir+'/logs/' # Directory containing logs created by running the reduction
     else:
+        static_calib_dir = None
         reduced_calib_dir = None
         reduced_science_dir = None
         project_logs_dir = None
@@ -66,6 +66,7 @@ def init_pycavi_config(raw_data_dir=None, project_dir=None):
 
     config['Directories'] = {'raw_data_dir': raw_data_dir,
                              'project_dir': project_dir, 
+                             'static_calib_dir': static_calib_dir,
                              'reduced_calib_dir': reduced_calib_dir,
                              'reduced_science_dir': reduced_science_dir,
                              'project_logs_dir': project_logs_dir,
@@ -103,10 +104,9 @@ def read_pycavi_config(config_dir=None):
     observatory = config.get('Provenance', 'Observatory')
     telescope = config.get('Provenance', 'Telescope')
     instrument = config.get('Provenance', 'Instrument')
-    file_prefix = config.get('Data', 'file_prefix')
-    file_suffix = config.get('Data', 'file_suffix')
     raw_data_dir = config.get('Directories', 'raw_data_dir')
     project_dir = config.get('Directories', 'project_dir')
+    static_calib_dir = config.get('Directories', 'static_calib_dir')
     reduced_calib_dir = config.get('Directories', 'reduced_calib_dir')
     reduced_science_dir = config.get('Directories', 'reduced_science_dir')
     project_logs_dir = config.get('Directories', 'project_logs_dir')
@@ -114,26 +114,6 @@ def read_pycavi_config(config_dir=None):
     scamp_dir_name = config.get('Directories', 'scamp_dir_name')
     swarp_dir_name = config.get('Directories', 'swarp_dir_name')
     cal_dir_name = config.get('Directories', 'cal_dir_name')
-
-    # Return a dictionary with the retrieved values
-    config_values = {
-        'debug_mode': debug_mode,
-        'log_level': log_level,
-        'Institution': institution,
-        'Observatory': observatory,
-        'Telescope': telescope,
-        'Instrument': instrument,
-        'file_prefix': file_prefix,
-        'file_sufffix': file_suffix,
-        'raw_data_dir': raw_data_dir,
-        'project_dir': project_dir,
-        'reduced_calib_dir': reduced_calib_dir,
-        'reduced_science_dir': reduced_science_dir,
-        'project_logs_dir': project_logs_dir,
-        'sex_dir_name': sex_dir_name,
-        'scamp_dir_name': scamp_dir_name,
-        'swarp_dir_name': swarp_dir_name,
-        'cal_dir_name': cal_dir_name}
 
     return config
 
@@ -158,8 +138,8 @@ class ProjectInfo:
             self.telescope = self.config['Provenance']['Telescope']
             self.observatory = self.config['Provenance']['Observatory']
             self.institution = self.config['Provenance']['Institution']
-            self.raw_data_directory = self.config['Directories']['raw_data_dir']
-            self.project_directory = self.config['Directories']['project_dir']
+            self.raw_data_dir = self.config['Directories']['raw_data_dir']
+            self.project_dir = self.config['Directories']['project_dir']
         else:
             print("No config file found.")
             self.config = init_pycavi_config()
@@ -172,7 +152,7 @@ class ProjectInfo:
 
             self.institution = self.config['Provenance']['institution']
 
-            self.raw_data_directory = self.config['Directories']['raw_data_dir']
+            self.raw_data_dir = self.config['Directories']['raw_data_dir']
 
             self.project_dir = self.config['Directories']['project_dir']
 
@@ -187,11 +167,11 @@ class ProjectInfo:
         project_origin.grid(columnspan=2)
 
         # row 1, column 0, the root directory for project
-        self.raw_dir_label = tk.Label(self.popup, text=self.raw_data_directory)
+        self.raw_dir_label = tk.Label(self.popup, text=self.raw_data_dir)
         self.raw_dir_label.grid(column=1, row=1)
 
         # row 1, column 1, the button to navigate to directory
-        select_button_raw = tk.Button(self.popup, text="Select raw data directory", command=self.select_raw_directory)
+        select_button_raw = tk.Button(self.popup, text="Select raw data directory", command=self.select_raw_dir)
         select_button_raw.grid(column=0, row=1)
 
 
@@ -218,17 +198,18 @@ class ProjectInfo:
 
         self.popup.mainloop()
 
-    def select_raw_directory(self):
-        self.raw_data_directory = filedialog.askdirectory()
-        if self.raw_data_directory:
-            self.config['Directories']['raw_data_dir'] = self.raw_data_directory+'/'
-            self.raw_dir_label.config(text=self.raw_data_directory)
+    def select_raw_dir(self):
+        self.raw_data_dir = filedialog.askdirectory()
+        if self.raw_data_dir:
+            self.config['Directories']['raw_data_dir'] = self.raw_data_dir+'/'
+            self.raw_dir_label.config(text=self.raw_data_dir)
 
     def select_project_dir(self):
         self.project_dir = filedialog.askdirectory()
         self.project_dir = self.project_dir+'/'
         if self.project_dir:
             self.config['Directories']['project_dir'] = self.project_dir+'/'
+            self.config['Directories']['static_calib_dir'] = self.project_dir +'/'+'static_calib'+'/'
             self.config['Directories']['reduced_calib_dir'] = self.project_dir +'/'+'calib'+'/'
             self.config['Directories']['reduced_science_dir'] = self.project_dir +'/'+'science'+'/'
             self.config['Directories']['project_logs_dir'] = self.project_dir +'/'+'logs'+'/'
