@@ -129,7 +129,17 @@ install:
 	else (true) fi)
 
 	mkdir -p $(prefix)/static_cal
-	@(if test -f $(BINDIR)/../../ins/mef/static_cal/OMEGACAM_BPM_01.fits ; then\
-	($(CP) $(BINDIR)/../../ins/mef/static_cal/*.fits* $(prefix)/static_cal/.); \
+	@(if test -f $(BINDIR)/../../ins/mef/static_cal/OMEGACAM_BPM_01.fits.gz ; then\
+	($(CP) $(BINDIR)/../../ins/mef/static_cal/*.fits* $(prefix)/static_cal/. ; \
+	cd $(prefix)/static_cal ; gunzip -v *.fits.gz); \
+	else (true) fi)
+
+	mkdir -p $(prefix)/man
+	@(if test -f ./man/man1/poisson.1 ; then\
+	($(CP) -r ./man/* $(prefix)/man/.); \
+	else (true) fi)
+
+	@(if test -f ./bin/e_setup; then\
+	($(CP) ./bin/* $(prefix)/bin/.); \
 	else (true) fi)
 

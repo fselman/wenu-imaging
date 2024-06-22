@@ -2,9 +2,10 @@ mefpp:
 
 - install to prefix directory. Done.
 - Separate qfits5 from eclipse. Done.
-- Put mef commands in the command line commands in src/Makefile
+- install the man pages. Done.
+- install e_setup. Done.
 - check e_setup to use the prefix installation as defaulty during setup
-- unzip the WFI BPM and recover the method used to create them.
+- unzip the WFI BPM and recover the method used to create them. Done.
 - test functionality of mefpp
 - copy scripts to prefix in src/Makefile
 - create a version tested in mac

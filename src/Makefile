@@ -178,6 +178,7 @@ eclipse: ./lib/libeclipse.a
 
 ../bin/e_setup: sysconfig/e_setup.c
 	@(echo "compiling $@ ...")
+	echo $(CC) $(CFLAGS) $(OSFLAG) -o ../bin/e_setup sysconfig/e_setup.c
 	@($(CC) $(CFLAGS) $(OSFLAG) -o ../bin/e_setup sysconfig/e_setup.c)
 
 #
