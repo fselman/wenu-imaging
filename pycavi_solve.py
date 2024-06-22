@@ -39,7 +39,7 @@ def solvefield(file_name):
     os.system("/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars)
 
 
-def run_solve_field(argv: str, cpu_count: int):
+def run_solve_field(argv: str, instrument, cpu_count: int):
     filename = argv + ".fits"
     dir_name = os.path.abspath(argv)
     try:
@@ -74,9 +74,10 @@ def run_solve_field(argv: str, cpu_count: int):
     hdu_list.close()
     logging.info("run_solve_field: processing extensions...")
 
-    list_of_extensions = ["ESO_CCD_#%2d" % (i,) for i in range(65, 97)]
+    #list_of_extensions = ["ESO_CCD_#%2d" % (i,) for i in range(65, 97)]
+    ext_name_list = instrument.valid_ext_names
     processlist = list()
-    for extension in list_of_extensions:
+    for extension in ext_name_list:
         ext_file_name = extension.replace('#', '_')
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
         if not os.path.exists(solve_field_dir_name + "/" + ext_file_name + ".wcs"):
@@ -174,7 +175,7 @@ def get_wcs_fromfile(wcs_file, ext_name):
     return thiswcs
 
 
-def create_wcs_frame(argv, mode="continue"):
+def create_wcs_frame(argv, instrument, mode="continue"):
     """Creates the <root>_pre_wcs.fits file from input
     <root>_pre.fits, the output of mefpp, by adding the
     WCS solutions found by solve-field for each extension.
@@ -193,9 +194,10 @@ def create_wcs_frame(argv, mode="continue"):
     new_hdul = fits.HDUList()
     new_hdul.append(fits.PrimaryHDU(header=hdu_primary_header))
 
-    extension_name_list = ["ESO_CCD_#%d" % i for i in range(65, 97)]
+    # extension_name_list = ["ESO_CCD_#%d" % i for i in range(65, 97)]
+    ext_name_list = instrument.valid_ext_names
 
-    for ext_name in extension_name_list:
+    for ext_name in ext_name_list:
         ext_file_name = ext_name.replace("#", "_")
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
         logging.debug("create_wcs_frame: testing if solve field directory exists: {0}".format(solve_field_dir_name))

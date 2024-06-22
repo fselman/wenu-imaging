@@ -34,54 +34,72 @@ class Instrument:
 
         #[Data]                                                                 ---  Values for OmegaCam ----
         #
-        self.file_format = config.get('Data', 'file_format')                     # Format used for files
-        self.raw_file_prefix = config.get('Data', 'raw_file_prefix')             # "OMEGA."
-        self.raw_file_suffix = config.get('Data', 'raw_file_suffix')             # ".fits"
-        self.reduced_file_prefix = config.get('Data', 'reduced_file_prefix')     # ""OMEGACAM_"
-        self.reduced_file_suffix = config.get('Data', 'reduced_file_suffix')     # ".fits"
+        self.file_format = config.get('Data', 'file_format').replace('"','')                     # Format used for files
+        self.raw_file_prefix = config.get('Data', 'raw_file_prefix').replace('"','')             # "OMEGA."
+        self.raw_file_suffix = config.get('Data', 'raw_file_suffix').replace('"','')             # ".fits"
+        self.reduced_file_prefix = config.get('Data', 'reduced_file_prefix').replace('"','')     # ""OMEGACAM_"
+        self.reduced_file_suffix = config.get('Data', 'reduced_file_suffix').replace('"','')     # ".fits"
+        self.correct_light_concentration = config.getboolean('Data', 'correct_light_concentration')   # Whether to apply concentration correction
+
+        # image section to check final swarp mosaic data in pixels
+        self.img_sec_x1 = int(config.get('Data', 'img_sec_x1'))
+        self.img_sec_x2 = int(config.get('Data', 'img_sec_x2'))
+        self.img_sec_y1 = int(config.get('Data', 'img_sec_y1'))
+        self.img_sec_y2 = int(config.get('Data', 'img_sec_y2'))
 
         # Important keywords for data reduction from primary headers
         #
         # [Primary Keywords]
-        self.inst_name_key = config.get('Primary Keywords', 'inst_name_key')      # "INSTRUME" for OCAM
+        self.inst_name_key = config.get('Primary Keywords', 'inst_name_key').replace('"','')      # "INSTRUME" for OCAM
+        self.inst_name_val = config.get('Primary Keywords', 'inst_name_val').replace('"','')      # Instrument for which data will be reduced
+
+        self.obid_key = config.get('Primary Keywords', 'obid_key')                # Observing sequence id.
+        self.obstart_key = config.get('Primary Keywords', 'obstart_key').replace('"','')          # Time that the observing sequence started.
+                                                                                  #  ob.id + ob.start uniquely identify observation execution.
+        self.dateobs_key = config.get('Primary Keywords', 'dateobs_key').replace('"','')          # Used to group according to distance in time
+                                                                                  # and to get Moon info. Uses format:
+                                                                                  #    yyyy = int(self.dateobs[0:4])
+                                                                                  #      mm = int(self.dateobs[5:7])
+                                                                                  #      dd = int(self.dateobs[8:10])
+                                                                                  #
+        self.ra_key = config.get('Primary Keywords', 'ra_key').replace('"','')                    # Keyword giving RA of pointing, unique for frame in sequence.
+        self.dec_key = config.get('Primary Keywords', 'dec_key').replace('"','')                  # Keyword giving Dec of pointing, unique for framer in sequence.
+        self.targ_alpha_key = config.get('Primary Keywords', 'targ_alpha_key').replace('"','')    # Keyword giving RA of target. Shared by all frames in a sequence.
+        self.targ_delta_key = config.get('Primary Keywords', 'targ_delta_key').replace('"','')    # Keyword giving Dec of target. Shared by all frames in a sequence.
+        self.targ_name_key = config.get('Primary Keywords', 'targ_name_key').replace('"','')      # Name of target. Will be used to name subdirectory.
+        self.tplnexp_key = config.get('Primary Keywords', 'tplnexp_key')          # Number of exposures in observing sequence
+        self.tplexpno_key = config.get('Primary Keywords', 'tplexpno_key')        # Sequential number of exposure in sequence
         self.inst_exp_key = config.get('Primary Keywords', 'inst_exp_key')        # EXPTIME FITS keyword. Mandatory.
-        self.object_key = config.get('Primary Keywords', 'object_key')            # FITS keyword identifying object observed
-        self.filt_key = config.get('Primary Keywords', 'filt_key')                # Filter FITS keyword. Mandatory.
-        self.airm_start_key = config.get('Primary Keywords', 'airm_start_key')    # Airmass at start of observation. Mandatory.
-        self.airm_end_key = config.get('Primary Keywords', 'airm_end_key')        # Airmass at end of observation. Mandatory.
+        self.object_key = config.get('Primary Keywords', 'object_key').replace('"','')            # FITS keyword identifying object observed
+        self.filt_key = config.get('Primary Keywords', 'filt_key').replace('"','')                # Filter FITS keyword. Mandatory.
+        self.airm_start_key = config.get('Primary Keywords', 'airm_start_key').replace('"','')    # Airmass at start of observation. Mandatory.
+        self.airm_end_key = config.get('Primary Keywords', 'airm_end_key').replace('"','')        # Airmass at end of observation. Mandatory.
 
         # keywords to identify the needed raw data types for calibration and science -----   OmegaCam values
         #
         #[Primary Keywords]
-        self.bias_dpr_catg_key = config.get('Primary Keywords', 'bias_dpr_catg_key')        # "HIERARCH ESO DPR CATG"
-        self.bias_dpr_catg_val = config.get('Primary Keywords', 'bias_dpr_catg_val')        # "CALIB"
-        self.bias_dpr_type_key = config.get('Primary Keywords', 'bias_dpr_type_key')        # "HIERARCH ESO DPR TYPE"
-        self.bias_dpr_type_val = config.get('Primary Keywords', 'bias_dpr_type_val')        # "BIAS"
+        self.dpr_catg_key = config.get('Primary Keywords', 'dpr_catg_key').replace('"','')        # "HIERARCH ESO DPR CATG"
+        self.dpr_type_key = config.get('Primary Keywords', 'dpr_type_key').replace('"','')        # "HIERARCH ESO DPR TYPE"
 
-        self.domeff_dpr_catg_key = config.get('Primary Keywords', 'domeff_dpr_catg_key')    # "HIERARCH ESO DPR CATG"
-        self.domeff_dpr_catg_val = config.get('Primary Keywords', 'domeff_dpr_catg_val')    # "CALIB"
-        self.domeff_dpr_type_key = config.get('Primary Keywords', 'domeff_dpr_type_key')    # "HIERARCH ESO DPR TYPE"
-        self.domeff_dpr_type_val = config.get('Primary Keywords', 'domeff_dpr_type_val')    # "FLAT,DOME"
+        self.bias_dpr_catg_val = config.get('Primary Keywords', 'bias_dpr_catg_val').replace('"','')        # "CALIB"
+        self.bias_dpr_type_val = config.get('Primary Keywords', 'bias_dpr_type_val').replace('"','')        # "BIAS"
 
-        self.skyff_dpr_catg_key = config.get('Primary Keywords', 'skyff_dpr_catg_key')      # "HIERARCH ESO DPR CATG"
-        self.skyff_dpr_catg_val = config.get('Primary Keywords', 'skyff_dpr_catg_val')      # "CALIB"
-        self.skyff_dpr_type_key = config.get('Primary Keywords', 'skyff_dpr_type_key')      # "HIERARCH ESO DPR TYPE"
-        self.skyff_dpr_type_val = config.get('Primary Keywords', 'skyff_dpr_type_val')      # "FLAT,SKY"
+        self.domeff_dpr_catg_val = config.get('Primary Keywords', 'domeff_dpr_catg_val').replace('"','')    # "CALIB"
+        self.domeff_dpr_type_val = config.get('Primary Keywords', 'domeff_dpr_type_val').replace('"','')    # "FLAT,DOME"
 
-        self.std_dpr_catg_key = config.get('Primary Keywords', 'std_dpr_catg_key')          # "HIERARCH ESO DPR CATG"
-        self.std_dpr_catg_val = config.get('Primary Keywords', 'std_dpr_catg_val')          # "CALIB"
-        self.std_dpr_type_key = config.get('Primary Keywords', 'std_dpr_type_key')          # "HIERARCH ESO DPR TYPE"
-        self.std_dpr_type_val = config.get('Primary Keywords', 'std_dpr_type_val')          # "STD,ZEROPOINT"
+        self.skyff_dpr_catg_val = config.get('Primary Keywords', 'skyff_dpr_catg_val').replace('"','')      # "CALIB"
+        self.skyff_dpr_type_val = config.get('Primary Keywords', 'skyff_dpr_type_val').replace('"','')      # "FLAT,SKY"
+
+        self.std_dpr_catg_val = config.get('Primary Keywords', 'std_dpr_catg_val').replace('"','')          # "CALIB"
+        self.std_dpr_type_val = config.get('Primary Keywords', 'std_dpr_type_val').replace('"','')          # "STD,ZEROPOINT"
     
-        self.sci_dpr_catg_key = config.get('Primary Keywords', 'sci_dpr_catg_key')          # "HIERARCH ESO DPR CATG"
-        self.sci_dpr_catg_val = config.get('Primary Keywords', 'sci_dpr_catg_val')          # "SCIENCE"
-        self.sci_dpr_type_key = config.get('Primary Keywords', 'sci_dpr_type_key')          # "HIERARCH ESO DPR TYPE"
-        self.sci_dpr_type_val = config.get('Primary Keywords', 'sci_dpr_type_val')          # "OBJECT","SKY"
+        self.sci_dpr_catg_val = config.get('Primary Keywords', 'sci_dpr_catg_val').replace('"','')          # "SCIENCE"
+        self.sci_dpr_type_val = config.get('Primary Keywords', 'sci_dpr_type_val').replace('"','')          # "OBJECT","SKY"
 
         # Detector mode keywords. Onlyframes with same detector mode can be mixed in notebooks 00 to 03
         #
-        self.det_mode_name = config.get('Primary Keywords', 'det_mode_name')      # FITS keyword. If present in config file it will be used as suffix.
-        self.det_readmode_key = config.get('Primary Keywords', 'det_readmode_key')    # readout mode FITS key. Part of suffix y previous key not present.
+        self.det_mode_name = config.get('Primary Keywords', 'det_mode_name').replace('"','')      # FITS keyword. If present in config file it will be used as suffix.
+        self.det_readmode_key = config.get('Primary Keywords', 'det_readmode_key').replace('"','')    # readout mode FITS key. Part of suffix y previous key not present.
         self.det_binx_key = config.get('Primary Keywords', 'det_binx_key')        # FITS keyword giving binning in x. For suffix.
         self.det_biny_key = config.get('Primary Keywords', 'det_biny_key')        # FITS keyword giving binning in y. For suffix.
 
@@ -95,14 +113,14 @@ class Instrument:
         ext_use_list = ["ext_{:02d}_use".format(i) for i in range(1, nextensions+1)]
         ext_gain_key_list = ["ext_{:02d}_gain_key".format(i) for i in range(1, nextensions+1)]
         self.valid_ext_names = []
-        self.valid_ext_gain_keys = []
+        self.valid_ext_gain_dict = {}    # dictionary indexed by the extension name giving keyword containing gain
         for i in range(nextensions):
             use_val = config.getboolean('Extension Keywords', ext_use_list[i])
-            name_val = config.get('Extension Keywords', ext_name_key_list[i])
-            gain_key_val = config.get('Extension Keywords', ext_gain_key_list[i])
+            name_val = config.get('Extension Keywords', ext_name_key_list[i]).replace('"','')
+            gain_key_val = config.get('Extension Keywords', ext_gain_key_list[i]).replace('"','')
             if use_val:
                 self.valid_ext_names.append(name_val)
-                self.valid_ext_gain_keys.append(gain_key_val)
+                self.valid_ext_gain_dict[name_val] = gain_key_val
             else:
                 print("Bad extension {}".format(name_val))
 
@@ -132,7 +150,7 @@ if __name__ == "__main__":
     # Print the retrieved values
     print("Number of valid extensions: {}".format(len(instrument.valid_ext_names)))
     for i in range(len(instrument.valid_ext_names)):
-        print(instrument.valid_ext_names[i], instrument.valid_ext_gain_keys[i])
+        print(instrument.valid_ext_names[i], instrument.valid_ext_gain_dict[instrument.valid_ext_names[i]])
 
 
 
@@ -143,3 +161,5 @@ if __name__ == "__main__":
         print("{}: {}".format(akey1, config[akey1]))
         for akey2 in config[akey1].keys():
             print("{}: {} {}".format(akey1, akey2, config[akey1][akey2]))
+
+    print(list(config.get('Primary Keywords', 'sci_dpr_type_val').replace('"','').split(',')))

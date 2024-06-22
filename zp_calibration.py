@@ -23,7 +23,7 @@ class ZPCalibration:
     # current available filters to work with
     _available_filters = ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS", "z_SDSS",  "NB_659"]
 
-    def __init__(self, frame, swarp_dir, calibration_dir, observatory,
+    def __init__(self, frame, swarp_dir, calibration_dir, observatory, instrument,
                  mag_min, mag_max, 
                  ap_radius, ap_sky_r1, ap_sky_r2, 
                  query_calibrator, query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0):
@@ -88,6 +88,7 @@ class ZPCalibration:
 
         # Provenance
         self.observatory = observatory
+        self.instrument = instrument
 
         # variables needed to do the photometric calibration
         #
@@ -123,7 +124,12 @@ class ZPCalibration:
         if self.band is None:
             self.band = paycavi_tools.keys_from_header(self.hdu, "FILTER").strip()
 
-        self.object = pycavi_tools.keys_from_header(self.hdu, "OBJECT").strip().replace(" ", "_")
+        # we try to get a value
+        try:
+            self.object = pycavi_tools.keys_from_header(self.hdu, instrument.object_key).strip().replace(" ", "_")
+        except:
+            logging.info("could not set object name from headers. Using 'object'.")
+            self.object = "object"
 
         # coordinates of the center of the field of the Swarp mosaic
         self.crval1, self.crval2 = pycavi_tools.keys_from_header(self.hdu, ["CRVAL1", "CRVAL2"])
@@ -281,26 +287,27 @@ class ZPCalibration:
         """
         logging.info('get_avg_gain_from_frame: reading original files used by Swarp to determine gains.')
 
-        ext_name_list = ["ESO_CCD_#%2d" % i for i in range(65, 97)]
+        #ext_name_list = ["ESO_CCD_#%2d" % i for i in range(65, 97)]
+        ext_name_list = self.instrument.valid_ext_names
         gains = {}
         for parent_image in self.parents_list:
             parent_name = parent_image.split("/")[-1]
             for extension in ext_name_list:
                 header_i = fits.getheader(parent_image, extname=extension)
-                gain_i = header_i["HIERARCH ESO DET OUT1 CONAD"]
+                gain_i = header_i[self.instrument.valid_ext_gain_dict[extension]]
                 gains[parent_name + "_" + extension] = gain_i
 
-        avg_gain = np.mean(list(gains.values()))
-        std_gain = np.std(list(gains.values()))
+        avg_gain = np.nanmean(list(gains.values()))
+        std_gain = np.nanstd(list(gains.values()))
         logging.info('get_avg_gain_from_frame: avg_gain: {:.6f}'.format(avg_gain))
 
         for key in gains.keys():
             if abs(gains[key] - avg_gain) > 3 * std_gain:
                 image_i = key.split("_")[0]
                 ext_i = key.split("_")[1]
-                logging.info("The CCD {} at frame {} deviates significantly from the avg gain value".format(
+                logging.info("get_avg_gain_from_frame: the CCD {} at frame {} deviates significantly from the avg gain value".format(
                     ext_i, image_i))
-                logging.info("with a gain value of {:.6f}".format(gains[key]))
+                logging.info("get_avg_gain_from_frame: with a gain value of {:.6f}".format(gains[key]))
 
         return avg_gain
 
@@ -311,15 +318,15 @@ class ZPCalibration:
         airmass_list = []
         for image in self.parents_list:
             hdr = fits.getheader(image)
-            airm1 = hdr['HIERARCH ESO TEL AIRM END']
-            airm0 = hdr['HIERARCH ESO TEL AIRM START']
-            airmass_list.append((airm1 + airm0) / 2)
-            logging.info("Airmass for image {} : {:.4f}".format(image.split("/")[-1], (airm1 + airm0) / 2))
-        return np.mean(airmass_list)
+            airm0 = hdr[self.instrument.airm_start_key]
+            airm1 = hdr[self.instrument.airm_end_key]
+            airmass_list.append(1.0/((1.0/airm1 + 1.0/airm0) / 2.0))
+            logging.info("get_avg_airmass_from_frame: airmass for image {} : {:.4f}".format(image.split("/")[-1], (airm1 + airm0) / 2))
+        return np.nanmean(airmass_list)
 
     def get_avg_exptime_from_frames(self):
         """
-        Read exposure time from original files used by Swarp.
+        Read exposure time from ancestor frames used by Swarp.
         Returns the average and total exposure times.
         """
         logging.info('get_avg_exptimes: read exposure time from files used by Swarp.')
@@ -327,14 +334,14 @@ class ZPCalibration:
         orig_expotime = []
         for image in self.parents_list:
             header_i = fits.getheader(image)
-            exptime = header_i["EXPTIME"]
+            exptime = header_i[self.instrument.inst_exp_key]
             orig_expotime.append(exptime)
             logging.info("Exposure time for image {} : {} seconds".format(image.split("/")[-1], exptime))
 
-        avg_exptime = np.mean(orig_expotime)
-        total_exptime = np.sum(orig_expotime)
-        logging.info("Average exposure time of frames : {:.0f}".format(avg_exptime))
-        logging.info("Total exposire time of frames : {:.0f}".format(total_exptime))
+        avg_exptime = np.nanmean(orig_expotime)
+        total_exptime = np.nansum(orig_expotime)
+        logging.info("get_avg_exptime_from_frames: average exposure time of frames : {:.0f}".format(avg_exptime))
+        logging.info("get_avg_exptime_from_frames: total exposire time of frames : {:.0f}".format(total_exptime))
         return avg_exptime, total_exptime
 
     def get_skymapper_df(self):
@@ -664,12 +671,14 @@ class ZPCalibration:
         for file_name in self.parents_list:
 
             parent_fits_name = file_name.split("/")[-1]
-            median_list_image = np.empty(32)
+            ext_name_list = self.instrument.valid_ext_names
+            median_list_image = np.empty(len(ext_name_list))
             median_list_image[:] = np.nan
-            for i in range(32):
-                extname = "ESO_CCD_#%2d" % (i + 65)
+            i = 0
+            for extname in ext_name_list:
                 data = fits.getdata(file_name, extname=extname)
                 median_list_image[i] = np.nanmedian(data)
+                i += 1
 
             sky_mean = np.nanmean(median_list_image)
             sky_std = np.nanstd(median_list_image)
@@ -722,15 +731,17 @@ class ZPCalibration:
 
             # get moon distance and FLI
             primary_header = fits.getheader(image)
-            obs_time = Time(primary_header['DATE-OBS'], format='isot')
-            ra = float(primary_header['RA']) * u.deg
-            dec = float(primary_header['DEC']) * u.deg
+            obs_time = Time(primary_header[self.instrument.dateobs_key], format='isot')
+            ra = float(primary_header[self.instrument.ra_key]) * u.deg
+            dec = float(primary_header[self.instrument.dec_key]) * u.deg
             tel_position = SkyCoord(ra=ra, dec=dec, frame='icrs')
-            logging.info("getMoonFromFrames: obs_time: %s" % obs_time.value)
-            logging.info("getMoonFromFrames: ra: %9.5f dec: %9.5f" % (ra.value, dec.value))
+            logging.info("get_moon_from_frames: DATE-OBS: %s" % self.instrument.dateobs_key)
+            logging.info("get_moon_from_frames: obs_time: %s" % obs_time.value)
+            logging.info("get_moon_from_frames: ra: %9.5f dec: %9.5f" % (ra.value, dec.value))
 
-            # getting moon info
-            paranal = EarthLocation.of_site("paranal")
+            # getting moon info  --- work a bit more to alos provide coordinates
+            paranal = EarthLocation.of_site(self.observatory.lower())
+            logging.info("get_moon_from_frames: observatory: {}".format(self.observatory.lower()))
             moon_coords = get_moon(obs_time, paranal)
 
             # moon distance to telescope pointing
@@ -913,9 +924,13 @@ class ZPCalibration:
             hdul.flush()
 
         # we check the data values
+        x1 = self.instrument.img_sec_x1
+        x2 = self.instrument.img_sec_x2
+        y1 = self.instrument.img_sec_y1
+        y2 = self.instrument.img_sec_y2
         with fits.open(self.frame, mode="readonly", output_verify="ignore") as hdul:
             hdr = hdul[0].header
-            data_1d = hdul[0].section[10000:10100,10000:10100].flatten()
+            data_1d = hdul[0].section[x1:x2,y1:y2].flatten()
             print('update_frame: before update <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
             pycavi_tools.pycavi_qc_plot_hist(data_1d,
                                              label='Pixel value distribution AFTER applying factor_dn_to flambda.',

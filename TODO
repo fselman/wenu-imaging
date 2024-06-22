@@ -14,9 +14,21 @@
         astropy.io.fits is not very simple when it comes to dealing
         with the scaling of the data. Best way seems to be use those keywords.
         STILL TO DO: handle reprocessing by properly handle the old_bscale and new bscale 
-- Clean code and add inspect configuration keyword to see data subplots.
 - Save the 07b plot with a different name than the plot created by by the 07_ plot. Done.
-- Add instrument configuration: extensions, DPR keywords, filters. WIP.
+
+PENDING:
+
+- Add instrument configuration: extensions, DPR keywords, filters. WIP. Almost done. What remains:
+    - copying omegacam.paf or wfi.paf into mefpp.paf depending on instrument.
+    - dealing with product name strings in product files.
+    - dealing with prefix and suffix
+    - dealing with the det mode suffix.
+    - adding PRO.CATG fits key to files.
+    - adding QC keys to files
+    - testing with actual WFI data+debug
+    - final debug with larger OCAM data set
+
+- Clean code and add inspect configuration keyword to see data subplots.
 - add configuration for installation directory. 
 - check zp values against ESO HC. We seem to be high, also in the AB magnitudes.
 - add chapter on installation of astrometry.net and use of index files for OCAM and WFI

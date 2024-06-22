@@ -13,9 +13,30 @@ from astropy.io import fits
 
 
 class PartitionsTree:
-    distanceCriteria = 3.0  # distance below which exposures are grouped
+    distanceCriteria = 3.0  # distance in degrees below which exposures are grouped
 
-    def __init__(self):
+    def __init__(self, raw_data_dir, static_cal_dir, reduced_cal_dir, reduced_science_dir, log_dir, instrument):
+
+        # we get some info from the instrument configuration file
+        self.instrument = instrument
+        file_prefix = instrument.config.get('Data', 'raw_file_prefix')
+        file_suffix = instrument.config.get('Data', 'raw_file_suffix')
+
+        # we search for all raw files
+        print("argument for glob.glob: {}".format(raw_data_dir + "/**/"+file_prefix+"*"+file_suffix))
+        listing = glob.glob(raw_data_dir + "/**/"+file_prefix+"*"+file_suffix, recursive=True)
+        print("number of raw files found: {}".format(len(listing)))
+
+        # we create folders
+        #
+        # the bad pixel map, being static, is handled a bit differently
+        check_and_create_folder(static_cal_dir+'/bpm')
+        Path(static_cal_dir+'bpm'+'/bpm.list').touch()
+        Path(static_cal_dir+'bpm'+'/toreduce_bpm').touch()
+
+        check_and_create_folder(reduced_cal_dir)
+        check_and_create_folder(reduced_science_dir)
+        check_and_create_folder(log_dir)
 
         self.partList = {}
         self.OBstartDict = {}
@@ -24,28 +45,84 @@ class PartitionsTree:
         self.domeDict = {}
         self.skyDict = {}
 
+        # we fill the dictionaries of observation types
+        i_exposure = 0
+        for file_name in listing:
+
+            i_exposure+= 1
+            exposure = Exposure(file_name, instrument)
+            self.insertExposure(exposure)
+            self.biasDict = {k:v for (k,v) in self.partList.items() if 'bias/' in k}
+            self.domeDict = {k:v for (k,v) in self.partList.items() if 'dome/' in k}
+            self.skyDict = {k:v for (k,v) in self.partList.items() if 'sky/' in k}
+            self.stdDict = {k:v for (k,v) in self.partList.items() if 'std/' in k}
+            self.sciDict = {k:v for (k,v) in self.partList.items() if 'science/' in k}
+            if i_exposure%10:
+                Total = len(self.biasDict) + len(self.domeDict) + \
+                        len(self.skyDict) + len(self.stdDict) +\
+                        len(self.sciDict)
+                print("BIAS:     %d" % len(self.biasDict), \
+                                "DOME:     %d" % len(self.domeDict), \
+                                "SKY:      %d" % len(self.skyDict), \
+                                "STD:      %d" % len(self.stdDict), \
+                                "SCIENCE:  %d" % len(self.sciDict), \
+                                "Total     %d" % Total, end='\r')
+
+        # finally we create the frame list, which will contain the
+        # files to be processed for each type of partition
+
+        # here we create a bias.list file in each bias partition
+        self.createFrameList(reduced_cal_dir, 'bias.list', self.biasDict)
+
+        # here we create a dome.list file in dome flat field partition
+        self.createFrameList(reduced_cal_dir, 'dome.list', self.domeDict)
+
+        # here we create a sky.list file in each sky flat field partition
+        self.createFrameList(reduced_cal_dir, 'sky.list', self.skyDict)
+
+        # here we create a sky.list file in each sky flat field partition
+        self.createFrameList(reduced_science_dir, 'std.list', self.stdDict)
+
+        # here we create a science.list file in each science partition
+        self.createFrameList(reduced_science_dir, 'science.list', self.sciDict)
+
     def insertExposure(self, exposure):
+        """
+            Inserts exposure instance to the partition list dictionary,
+            which is indexed by a string representing the subdirectories
+            to where the frame will be saved. The subdirectory path is
+            of the form
+
+                bias/<ob.id>/<ob.start>                     for biases
+                <expo type>/<ob.id>/<filter>/<ob.start>     for type dome or sky flats
+                std/<target>/<filter>/<ob.start>            for standard star exposures
+                science/<target>_<ra>_<dec>/<filter>/<ob.start> for science and associated sky
+                unknown/<dpr.type>                          for any other exposure
+
+        """
 
         # we select the partition according to exposure dpr.type
-        if 'BIAS' in exposure.dpr_type:
+        if exposure.is_bias:
             key_str = 'bias/' + '%d' % exposure.obsid + '/' + exposure.OBstart
-        elif 'FLAT,DOME' in exposure.dpr_type:
+        elif exposure.is_domeff:
             key_str = 'dome/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
-        elif 'FLAT,SKY' in exposure.dpr_type:
+        elif exposure.is_skyff:
             key_str = 'sky/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
-        elif ('CALIB' in exposure.dpr_catg) and ('STD,ZEROPOINT' in exposure.dpr_type):
+        elif exposure.is_std:
             key_str = 'std/' + exposure.target + '_' + \
                       exposure.filter + '/' + \
                       exposure.OBstart
-        elif ('SCIENCE' in exposure.dpr_catg) and ('OBJECT' in exposure.dpr_type):
+        elif exposure.is_science:
             key_str = 'science/' + exposure.target + '_' + \
                       ("%010.3f" % exposure.tel_alpha).replace('.', 'p') + '_' + \
                       ("%09.1f" % exposure.tel_delta).replace('.', 'p').replace('-', 'm') + '/' + \
                       exposure.filter + '/' + \
                       exposure.OBstart
-        else:
+        elif exposure.is_unknown:
             logging.info("dpr type: {exposure.dpr_type} not classifiable.")
             key_str = 'unknown/' + '%s' % exposure.dpr_type
+        else:
+            raise Exception("insertExposure: dpr type: {exposure.dpr_type} not classified. SHOULD NEVER REACH THIS POINT.")
 
         if key_str in self.partList:
             self.partList[key_str].append(exposure)
@@ -53,6 +130,41 @@ class PartitionsTree:
             self.partList[key_str] = [exposure]
             self.OBstartDict[key_str] = exposure.OBstart
             self.filterDict[key_str] = exposure.filter
+
+    def createFrameList(self, base_dir, list_name, frameDict):
+        """Creates file *.list and write the full link to
+        the raw files that will be reduced in that partition.
+
+        Input:
+
+            base_dir: name of directory to contain reduced calibration data
+            list_name: either bias.list, dome.list, sky.list. or science.list
+            frameDict: dictionary indexed with full subdirectory path
+                        to where the list will be writen; and with values
+                        equal to the full path to the raw files.
+    
+        Output:
+            The creation of the list files
+        """
+        for aFramePartitionKey, aFramePartitionList in frameDict.items():
+            subdir_str = aFramePartitionKey
+
+            check_and_create_folder(base_dir + aFramePartitionKey)
+
+            # we erase the list if it exists. This ensure that
+            # we can run script any time.
+            with open(base_dir + aFramePartitionKey + '/' + list_name, 'w') as f:
+                pass
+
+            for aFrame in aFramePartitionList:
+                logging.info("{0} -- {1}".format(subdir_str, aFrame.filename))
+                check_and_create_folder(base_dir + '/' + subdir_str)
+
+                try:
+                    with open(base_dir + '/' + subdir_str + '/' + list_name, 'a') as f:
+                        print(aFrame.filename, file=f)
+                except:
+                    raise Exception('could not change directory to: ' + base_dir + '/' + subdir_str)
 
     def getDistance(self, partition, observation):
         ra = 0.0
@@ -93,29 +205,60 @@ class PartitionsTree:
 
 
 class Exposure:
-
-    def __init__(self, filename):
+    """
+        Class to create an exposure instance using the instrument configuration for calssification.
+    """
+    def __init__(self, filename, instrument):
 
         self.filename = filename
         with fits.open(filename) as hdu_list:
             primary_header = hdu_list[0].header
-            self.dpr_catg = self.getKeyVal(primary_header, 'HIERARCH ESO DPR CATG')
-            self.dpr_type = self.getKeyVal(primary_header, 'HIERARCH ESO DPR TYPE')
-            self.obsid = self.getKeyVal(primary_header, 'HIERARCH ESO OBS ID')
-            self.OBstart = self.getKeyVal(primary_header, 'HIERARCH ESO OBS START')
-            self.dateobs = self.getKeyVal(primary_header, 'DATE-OBS')
-            self.tplnexp = self.getKeyVal(primary_header, 'HIERARCH ESO TPL NEXP')
-            self.tplexpno = self.getKeyVal(primary_header, 'HIERARCH ESO TPL EXPNO')
-            self.filter = self.getKeyVal(primary_header, 'HIERARCH ESO INS FILT1 NAME')
-            self.exptime = self.getKeyVal(primary_header, 'EXPTIME')
+            self.dpr_catg = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'dpr_catg_key').replace('"',''))
+            self.dpr_type = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'dpr_type_key').replace('"',''))
+            self.obsid = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'obid_key').replace('"',''))
+            self.OBstart = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'obstart_key').replace('"',''))
+            self.dateobs = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'dateobs_key').replace('"',''))
+            self.tplnexp = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'tplnexp_key').replace('"',''))
+            self.tplexpno = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'tplexpno_key').replace('"',''))
+            self.filter = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'filt_key').replace('"',''))
+            self.exptime = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'inst_exp_key').replace('"',''))
 
-            if (self.dpr_catg == 'SCIENCE' and self.dpr_type == 'OBJECT') or \
-                    (self.dpr_catg == 'CALIB' and self.dpr_type == 'STD,ZEROPOINT'):
-                self.ra = self.getKeyVal(primary_header, 'RA')
-                self.dec = self.getKeyVal(primary_header, 'DEC')
-                self.tel_alpha = self.getKeyVal(primary_header, 'HIERARCH ESO TEL TARG ALPHA')
-                self.tel_delta = self.getKeyVal(primary_header, 'HIERARCH ESO TEL TARG DELTA')
-                self.target = self.getKeyVal(primary_header, 'HIERARCH ESO OBS TARG NAME').replace(' ', '_')
+            # here we classify the exposure
+            self.is_bias = False
+            if instrument.config.get('Primary Keywords', 'bias_dpr_catg_val').replace('"','') in self.dpr_catg and \
+                    instrument.config.get('Primary Keywords', 'bias_dpr_type_val').replace('"','') in self.dpr_type:
+                self.is_bias = True
+
+            self.is_domeff = False
+            if instrument.config.get('Primary Keywords', 'domeff_dpr_catg_val').replace('"','') in self.dpr_catg and \
+                    instrument.config.get('Primary Keywords', 'domeff_dpr_type_val').replace('"','') in self.dpr_type:
+                self.is_domeff = True
+
+            self.is_skyff = False
+            if instrument.config.get('Primary Keywords', 'skyff_dpr_catg_val').replace('"','') in self.dpr_catg and \
+                    instrument.config.get('Primary Keywords', 'skyff_dpr_type_val').replace('"','') in self.dpr_type:
+                self.is_skyff = True
+
+            self.is_std = False
+            if instrument.config.get('Primary Keywords', 'std_dpr_catg_val').replace('"','') in self.dpr_catg and \
+                    instrument.config.get('Primary Keywords', 'std_dpr_type_val').replace('"','') in self.dpr_type:
+                self.is_std = True
+
+            self.is_science = False
+            if instrument.config.get('Primary Keywords', 'sci_dpr_catg_val').replace('"','') in self.dpr_catg:
+                sci_dpr_type_val_list = list(instrument.config.get('Primary Keywords', 'sci_dpr_type_val').replace('"',''))
+                for atype in sci_dpr_type_val_list:
+                    if atype in self.dpr_catg:
+                        self.is_science = True
+
+            # here we add sky position info if science or std
+            if (self.is_std or self.is_science):
+                self.ra = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'ra_key').replace('"',''))
+                self.dec = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'dec_key').replace('"',''))
+                self.tel_alpha = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'targ_alpha_key').replace('"',''))
+                self.tel_delta = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'targ_delta_key').replace('"',''))
+                print()
+                self.target = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'targ_name_key').replace('"','')).replace(' ', '_')
 
                 # we add the FLI
                 yyyy = int(self.dateobs[0:4])
@@ -127,6 +270,11 @@ class Exposure:
                 else:
                     fli = 2.0 * (1 - fli)
                 self.fli = fli
+
+            # if we cannot classify we explicitly set to unknown
+            self.is_unknown = False
+            if not (self.is_bias or self.is_domeff or self.is_skyff or self.is_std or self.is_science):
+                self.is_unknown = True
 
     def get_phase_on_day(self, year, month, day):
         """Returns a floating-point number from 0-1. where 0=new, 0.5=full, 1=new"""
@@ -308,41 +456,6 @@ def getKeyVal(filename, key):
         primary_header = hdu_list[0].header
         val = primary_header[key]
         return val
-
-
-def createFrameList(base_dir, list_name, frameDict):
-    """Creates file *.list and write the full link to
-    the raw files that will be reduced in that partition.
-
-    Input:
-
-        base_dir: name of directory to contain reduced calibration data
-        list_name: either bias.list, dome.list, sky.list. or science.list
-        frameDict: dictionary indexed with full subdirectory path
-                    to where the list will be writen; and with values
-                    equal to the full path to the raw files.
-    
-    Output:
-        The creation of the list files
-    """
-    for aFramePartitionKey, aFramePartitionList in frameDict.items():
-        subdir_str = aFramePartitionKey
-
-        check_and_create_folder(base_dir + aFramePartitionKey)
-
-        with open(base_dir + aFramePartitionKey + '/' + list_name, 'w') as f:
-            pass
-
-        for aFrame in aFramePartitionList:
-            logging.info("{0} -- {1}".format(subdir_str, aFrame.filename))
-            check_and_create_folder(base_dir + '/' + subdir_str)
-
-            try:
-                with open(base_dir + '/' + subdir_str + '/' + list_name, 'a') as f:
-                    print(aFrame.filename, file=f)
-            except:
-                raise Exception('could not change directory to: ' + base_dir + '/' + subdir_str)
-
 
 def get_partition(path_list):
     list_type = path_list.split("/")[-1]
@@ -828,12 +941,16 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list):
             print('skipping reduction')
 
 
-def get_lightcorrection_coeffs(image_band: str):
+def get_lightcorrection_coeffs(image_band: str, instrument):
     """
     Return the coefficients for light correction of the images.
     Values from the OmegaCam manual v109.1
     Valid for sloan u, g, r and i
     """
+    # We check if we have the appropriate coefficients
+    if instrument.inst_name_val is not "OMEGACAM":
+        return None
+
     # coefficients corresponding to xx, xy and yy
     lightcorrection_coeffs = {
         "u_SDSS": [1.6153389e-9, 1.9320844e-10, 1.4650246e-9],
@@ -845,43 +962,47 @@ def get_lightcorrection_coeffs(image_band: str):
     return lightcorrection_coeffs[image_band]
 
 
-def apply_light_correction(light_correction_coeffs, ccd_data, ccd_header):
+def apply_light_correction(light_correction_coeffs, ccd_data, ccd_header, instrument):
     """
     Apply the light correction to a given ccd within the mosaic, given the light correction coefficients
     """
-    # pixels corresponding to the center of the image
-    # values corresponding to OmegaCam HIERARCH ESO DET WIN1 NX and HIERARCH ESO DET WIN1 NY headers
-    # for x and y number of pixels respectively
-    x_center = 17152 // 2 + 0.5
-    y_center = 16800 // 2 + 0.5
+    if "OMEGACAM" not in  instrument.inst_name_val:
+        return None
+    else:
+        # pixels corresponding to the center of the image
+        # values corresponding to OmegaCam HIERARCH ESO DET WIN1 NX and HIERARCH ESO DET WIN1 NY headers
+        # for x and y number of pixels respectively
+        x_center = 17152 // 2 + 0.5
+        y_center = 16800 // 2 + 0.5
 
-    # the position of the first pixel in the ccd with respect the whole mosaic is given by
-    # the header "HIERARCH ESO DET OUT1 X" and "HIERARCH ESO DET OUT1 Y".
+        # the position of the first pixel in the ccd with respect the whole mosaic is given by
+        # the header "HIERARCH ESO DET OUT1 X" and "HIERARCH ESO DET OUT1 Y".
 
-    x_1_ccd = ccd_header["HIERARCH ESO DET OUT1 X"]
-    y_1_ccd = ccd_header["HIERARCH ESO DET OUT1 Y"]
+        x_1_ccd = ccd_header["HIERARCH ESO DET OUT1 X"]
+        y_1_ccd = ccd_header["HIERARCH ESO DET OUT1 Y"]
 
-    n, m = np.shape(ccd_data)
-    ccd_x = np.arange(m) + x_1_ccd - x_center
-    ccd_y = np.arange(n) + y_1_ccd - y_center
+        n, m = np.shape(ccd_data)
+        ccd_x = np.arange(m) + x_1_ccd - x_center
+        ccd_y = np.arange(n) + y_1_ccd - y_center
 
-    # now combine the ccd_x and ccd_y array using meshgrid, then for each entry in this array compute
-    # the respective value of light correction
-    ccd_x_, ccd_y_ = np.meshgrid(ccd_x, ccd_y)
-    ccd_xy = np.vstack((ccd_x_.flatten(), ccd_y_.flatten())).T
+        # now combine the ccd_x and ccd_y array using meshgrid, then for each entry in this array compute
+        # the respective value of light correction
+        ccd_x_, ccd_y_ = np.meshgrid(ccd_x, ccd_y)
+        ccd_xy = np.vstack((ccd_x_.flatten(), ccd_y_.flatten())).T
 
-    delta_mag = light_correction_coeffs[0] * ccd_xy[:, 0] * ccd_xy[:, 0] + \
-                light_correction_coeffs[1] * ccd_xy[:, 0] * ccd_xy[:, 1] + \
-                light_correction_coeffs[2] * ccd_xy[:, 1] * ccd_xy[:, 1]
+        delta_mag = light_correction_coeffs[0] * ccd_xy[:, 0] * ccd_xy[:, 0] + \
+                    light_correction_coeffs[1] * ccd_xy[:, 0] * ccd_xy[:, 1] + \
+                    light_correction_coeffs[2] * ccd_xy[:, 1] * ccd_xy[:, 1]
 
-    # delta_mag = -2.5 log10(F/F_0), from which one obtain F = F_0 * 10^(-delta_mag/2.5)
-    # but we want to increase the flux where delta_mag is gt zero to compensate light correction effect
-    # so it becomes F = F_0 * 10^(delta_mag/2.5)
+        # delta_mag = -2.5 log10(F/F_0), from which one obtain F = F_0 * 10^(-delta_mag/2.5)
+        # but we want to increase the flux where delta_mag is gt zero to compensate light correction effect
+        # so it becomes F = F_0 * 10^(delta_mag/2.5)
+    
+        ccd_data *= np.power(10, delta_mag.reshape(n, m) / 2.5)
+        return 0
 
-    ccd_data *= np.power(10, delta_mag.reshape(n, m) / 2.5)
 
-
-def mefpp_normalize_science(sci_part_list):
+def mefpp_normalize_science(sci_part_list, instrument):
     """
     Convert images from raw adu to e-/s units by multiplying by the avg gain and dividing by the exptime.
     In case of u,g,r and i_SDSS filters, It also applies the light correction.
@@ -892,38 +1013,83 @@ def mefpp_normalize_science(sci_part_list):
         basepath = sci_part.base_path
         data_path = glob.glob(basepath + '/*_pre.fits')
 
-        ext_name_list = ["ESO_CCD_#%2d" % i for i in range(65, 97)]
+        ext_name_list = instrument.valid_ext_names
+        gain_name_dict = instrument.valid_ext_gain_dict
+        #ext_name_list = ["ESO_CCD_#%2d" % i for i in range(65, 97)]
 
         for image_name in data_path:
 
             # read all the ccd headers to store the avg gain value
             avg_gain = 0
 
+            jj = 0
             for ext_name in ext_name_list:
                 ext_head = fits.getheader(image_name, extname=ext_name)
-                gain = ext_head['HIERARCH ESO DET OUT1 CONAD']
+                gain = ext_head[gain_name_dict[ext_name]]
                 avg_gain += gain
-            avg_gain /= 32
+                jj+=1
+            avg_gain /= instrument.next_valid
+            if jj != instrument.next_valid:
+                raise Exception("number of valid extensions from instrument config not equal with number of use=True values in same file")
 
             image_head = fits.getheader(image_name, 0)
             apply_light_corr = False
-            if image_head["HIERARCH ESO INS FILT1 NAME"] in ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS"]:
-                light_coeffs = get_lightcorrection_coeffs(image_head["HIERARCH ESO INS FILT1 NAME"])
-                apply_light_corr = False
+            if image_head[instrument.filt_key] in ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS"]:
+                light_coeffs = get_lightcorrection_coeffs(image_head[instrument.filt_key], instrument)
+                if light_coeffs is not None and instrument.correct_light_concentration:
+                    apply_light_corr = True
+                else:
+                    apply_light_corr = False
 
             with fits.open(image_name, mode="update", output_verify="ignore") as hdul:
 
-                hdr = hdul[0].header
-                hdr["BUNIT"] = ("e-/s", "units of image pixels")
-                exptime = hdr["EXPTIME"]
+                # we add some keywords in the primary headers to make
+                # astromatic notebooks independent of the instrument
+                #
+                header0 = hdul[0].header
+
+                # translate filter keyword
+                try:
+                    zfilter = header0[instrument.filt_key]
+                    logging.debug('mefpp_normalize_science: FILTER: ' + zfilter)
+                except:
+                    zfilter = 'NOT_FOUND'
+                    logging.debug('mefpp_normalize_science: failed to determine FILTER. Setting it to NOT_FOUND')
+
+                try:
+                    header0.insert('LST', ('FILTER', zfilter, 'pycavi: Filter used for observation'), after=True)
+                    logging.info('mefpp_normalize_science: Setting FILTER to ' + zfilter)
+                except:
+                    logging.debug('mefpp_normalize_science: failed to insert keyword FILTER after keyword LST')
+
+                # translate airmass keyword
+                try:
+                    airmass_start = header0[instrument.airm_start_key]
+                    airmass_end = header0[instrument.airm_end_key]
+                    airmass_obs = 1.0/((1.0/airmass_start + 1.0/airmass_end) / 2.0)
+                except:
+                    airmass_obs = 1.0
+                    logging.debug('mefpp_normalize_science: failed to determine airmass. Setting it to 1.0')
+
+                try:
+                    header0.insert('FILTER', ('AIRMASS', round(airmass_obs, 3), 'pycavi: Average airmass of frame'), after=True)
+                    logging.info('mefpp_normalize_science: Setting AIRMASS to {0:5.3f}'.format(airmass_obs))
+                except:
+                    logging.debug('mefpp_normalize_science: failed to insert keyword AIRMASS after FILTER')
+
+
+                header0["BUNIT"] = ("e-/s", "units of image pixels")
+                exptime = header0["EXPTIME"]
 
                 for ext_name in ext_name_list:
 
                     ext_data = hdul[ext_name].data
                     # apply light correction if the filter support it
                     if apply_light_corr:
-                        hdr["LIGHTCOR"] = "True"
+                        header0["LIGHTCOR"] = "True"
                         ext_head = hdul[ext_name].header
-                        apply_light_correction(light_coeffs, ext_data, ext_head)
+                        apply_light_correction(light_coeffs, ext_data, ext_head, instrument)
+                    else:
+                        header0["LIGHTCOR"] = "False"
                     ext_data *= avg_gain / exptime  # converting raw adus into e-/s
 
