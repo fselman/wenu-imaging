@@ -31,6 +31,7 @@ PENDING:
         o Prefix issues have been solved. Now we need to modify the detmode suffix. CANCEL: remove the suffix as it is not needed.
 - Clean notebook 3. It is too easy to modify vital script. Move the association part to the PartitionTree class. Leave only the run part here.
   This will make inspection of the whole data reduction tree faster as there will be no need to wait for the full reduction.
+- Do check on BPMs to ensure that proper extensions are used. Currently assuming indexing.
 - adding PRO.CATG fits key to files.
 - adding QC keys to files
 - testing with actual WFI data+debug
