@@ -28,18 +28,32 @@ class Instrument:
         self.config = config
 
         # 
-        #[Project]                                                                  Values for OmegaCam
+        #[Project]                                                                              Values for OmegaCam
         #
-        self.instrument_str = config.get('Project', 'instrument_str')               # "OCAM"
+        self.instrument_str = config.get('Project', 'instrument_str').replace('"','')           # "OCAM"
+        self.config_dir = os.getcwd()+'/'+config.get('Project', 'config_dir').replace('"','')
 
         #[Data]                                                                 ---  Values for OmegaCam ----
         #
+        self.mefpp_paf  = config.get('Data', 'mefpp_paf').replace('"','')                        # Parameter file for mefpp reduction
         self.file_format = config.get('Data', 'file_format').replace('"','')                     # Format used for files
         self.raw_file_prefix = config.get('Data', 'raw_file_prefix').replace('"','')             # "OMEGA."
         self.raw_file_suffix = config.get('Data', 'raw_file_suffix').replace('"','')             # ".fits"
         self.reduced_file_prefix = config.get('Data', 'reduced_file_prefix').replace('"','')     # ""OMEGACAM_"
         self.reduced_file_suffix = config.get('Data', 'reduced_file_suffix').replace('"','')     # ".fits"
         self.correct_light_concentration = config.getboolean('Data', 'correct_light_concentration')   # Whether to apply concentration correction
+
+        # we extract from the mefpp_paf file the product root names
+        # MEF.BIAS.NAME.O                         "OCAM_MB";
+        # MEF.BPM.NAME.O                          "OCAM_BPM";
+        # MEF.DOMEFF.NAME.O                       "OCAM_DOMEFF";
+        # MEF.SKYFF.NAME.O                        "OCAM_SKYFF";
+        # MEF.MFF.NAME.O                      	"OCAM_MFF";
+        self.bias_prefix = self.read_key_from_paf('MEF.BIAS.NAME.O')
+        self.bpm_prefix = self.read_key_from_paf('MEF.BPM.NAME.O')
+        self.domeff_prefix = self.read_key_from_paf('MEF.DOMEFF.NAME.O')
+        self.skyff_prefix = self.read_key_from_paf('MEF.SKYFF.NAME.O')
+        self.mff_prefix = self.read_key_from_paf('MEF.MFF.NAME.O')
 
         # image section to check final swarp mosaic data in pixels
         self.img_sec_x1 = int(config.get('Data', 'img_sec_x1'))
@@ -142,6 +156,28 @@ class Instrument:
         return config
 
 
+    def read_key_from_paf(self,key_str):
+        """
+        Reads the mefpp paf file to read key value.
+        Used to determine product file prefix.
+        """
+        mefpp_paf = self.config_dir+'/'+self.mefpp_paf
+        found_key = False
+        with open(mefpp_paf, 'r') as f:
+            lines = f.readlines()
+            for aline in lines:
+                fields = aline.split()
+                if key_str in fields[0]:
+                    found_key = True
+                    product_name = fields[1].strip(';').strip('"')
+                    break
+        if found_key:
+            print("{}: {}".format(key_str, product_name))
+            return product_name
+        else:
+            raise Exception("key: {} not found in {}".format(key, mefpp_paf))
+
+
 if __name__ == "__main__":
     print(" ------------------------ TESTING PYCAVI INSTRUMENT MODULE ----------------------")
 
@@ -163,3 +199,9 @@ if __name__ == "__main__":
             print("{}: {} {}".format(akey1, akey2, config[akey1][akey2]))
 
     print(list(config.get('Primary Keywords', 'sci_dpr_type_val').replace('"','').split(',')))
+
+    print("bias_prefix: {}".format(instrument.bias_prefix))
+    print("bpm_prefix: {}".format(instrument.bpm_prefix))
+    print("domeff_prefix: {}".format(instrument.domeff_prefix))
+    print("skyff_prefix: {}".format(instrument.skyff_prefix))
+    print("mff_prefix: {}".format(instrument.mff_prefix))

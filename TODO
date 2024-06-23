@@ -15,18 +15,26 @@
         with the scaling of the data. Best way seems to be use those keywords.
         STILL TO DO: handle reprocessing by properly handle the old_bscale and new bscale 
 - Save the 07b plot with a different name than the plot created by by the 07_ plot. Done.
+    - done. copying omegacam.paf or wfi.paf into mefpp.paf depending on instrument.
+    - dealing with product name strings in product files.
+        - done. this is more complicated. The names of the products appear in the
+          mefpp.paf file. They should be coordinated with those.
+        - done. test mefpp and save changes to module. I am currently somewhat confused
+          with what version I am using.
+            o Saved latest version.
 
 PENDING:
 
 - Add instrument configuration: extensions, DPR keywords, filters. WIP. Almost done. What remains:
-    - copying omegacam.paf or wfi.paf into mefpp.paf depending on instrument.
-    - dealing with product name strings in product files.
-    - dealing with prefix and suffix
-    - dealing with the det mode suffix.
-    - adding PRO.CATG fits key to files.
-    - adding QC keys to files
-    - testing with actual WFI data+debug
-    - final debug with larger OCAM data set
+        - change ESO to MEFPP in the paf file, the current package is not an ESO package.
+    - dealing with prefix and suffix. WIP.
+        o Prefix issues have been solved. Now we need to modify the detmode suffix. CANCEL: remove the suffix as it is not needed.
+- Clean notebook 3. It is too easy to modify vital script. Move the association part to the PartitionTree class. Leave only the run part here.
+  This will make inspection of the whole data reduction tree faster as there will be no need to wait for the full reduction.
+- adding PRO.CATG fits key to files.
+- adding QC keys to files
+- testing with actual WFI data+debug
+- final debug with larger OCAM data set
 
 - Clean code and add inspect configuration keyword to see data subplots.
 - add configuration for installation directory. 

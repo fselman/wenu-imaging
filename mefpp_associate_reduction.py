@@ -301,7 +301,7 @@ class Exposure:
 
 class ExposuresPartition:
 
-    def __init__(self, filename, frametype):
+    def __init__(self, filename, frametype, instrument):
 
         self.base_path = os.path.dirname(filename)
         self.frametype = frametype
@@ -322,19 +322,19 @@ class ExposuresPartition:
         self.frame = None
         if frametype == 'BPM':
             self.framelist = None
-            self.frame = self.base_path + '/OMEGACAM_BPM_01.fits'
+            self.frame = self.base_path + '/'+instrument.bpm_prefix+'_01.fits'
         elif frametype == 'BIAS':
             self.framelist = self.base_path + '/bias.list'
-            self.frame = self.base_path + '/OMEGACAM_MB_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.bias_prefix+'_1x1.fits'
         elif frametype == 'FLAT,DOME':
             self.framelist = self.base_path + '/dome.list'
-            self.frame = self.base_path + '/OMEGACAM_DOMEFF_' + self.filter + '_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.domeff_prefix+'_' + self.filter + '_1x1.fits'
         elif frametype == 'FLAT,SKY':
             self.framelist = self.base_path + '/sky.list'
-            self.frame = self.base_path + '/OMEGACAM_SKYFF_' + self.filter + '_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.skyff_prefix+'_' + self.filter + '_1x1.fits'
         elif frametype == 'MFF':
             self.framelist = self.base_path + '/mff.list'
-            self.frame = self.base_path + '/OMEGACAM_MFF_' + self.filter + '_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.mff_prefix+'_' + self.filter + '_1x1.fits'
         elif frametype == 'SCIENCE' or frametype == 'SKY':
             self.framelist = self.base_path + '/science.list'
             self.frame = None
@@ -477,14 +477,21 @@ def get_partition(path_list):
     return partitions
 
 
-def associate_bpm(partition, bpm_partitions):
+def associate_bpm(partition, bpm_partitions,instrument):
+    """
+    We link the BPM files from the static calib directory to the data
+    reduction directory.
+
+    This is dangerous as extensions are being identified by an index
+    and not by a name.
+    """
     for part in partition:
         part.bpmPartition = bpm_partitions[0]
-        for i in range(1, 33):
-            bpm_file = part.bpmPartition.base_path + "/OMEGACAM_BPM_{:02d}.fits".format(i)
+        for i in range(1, instrument.next_valid+1):
+            bpm_file = part.bpmPartition.base_path + "/"+instrument.bpm_prefix+"_{:02d}.fits".format(i)
             if not Path(bpm_file).is_file():
                 try:
-                    os.symlink(bpm_file, part.base_path + "/OMEGACAM_BPM_{:02d}.fits".format(i))
+                    os.symlink(bpm_file, part.base_path + "/"+instrument.bpm_prefix+"_{:02d}.fits".format(i))
                     pass
                 except:
                     pass
@@ -551,11 +558,14 @@ def runCmd(str_cmd, basepath, p_shell=True):
         traceback.print_exc()
 
 
-def associateBPM(part, scipart):
+def associateBPM(part, scipart, instrument):
+    """
+    Associate a BPM set to a science data reduction partition.
+    """
     have_bpm_link = True
     have_bpm = True
-    for i in range(1, 33):
-        bpm_name = part.base_path + '/OMEGACAM_BPM_%02d.fits' % (i,)
+    for i in range(1, instrument.next_valid+1):
+        bpm_name = part.base_path + '/'+instrument.bpm_prefix+'_%02d.fits' % (i,)
         if not Path(bpm_name).is_symlink():
             have_bpm_link = False
         else:
@@ -572,14 +582,14 @@ def associateBPM(part, scipart):
     if have_bpm_link:
         bpm_frame = Path(bpm_name).resolve().as_posix()
         part.bpmFrame = bpm_frame
-        part.bpmPartition = ExposuresPartition(bpm_frame, 'BPM')
+        part.bpmPartition = ExposuresPartition(bpm_frame, 'BPM', instrument)
 
 
-def associateBias(part, scipart):
+def associateBias(part, scipart, instrument):
     have_bias_link = True
     have_bias = True
 
-    bias_name = part.base_path + '/OMEGACAM_MB_1x1.fits'
+    bias_name = part.base_path + '/'+instrument.bias_prefix+'_1x1.fits'
     if not Path(bias_name).is_symlink():
         have_bias_link = False
 
@@ -592,14 +602,14 @@ def associateBias(part, scipart):
     if have_bias_link:
         bias_frame = Path(bias_name).resolve().as_posix()
         part.biasFrame = bias_frame
-        part.biasPartition = ExposuresPartition(bias_frame, 'BIAS')
+        part.biasPartition = ExposuresPartition(bias_frame, 'BIAS', instrument)
 
 
-def associateDome(part, scipart):
+def associateDome(part, scipart, instrument):
     have_dome_link = True
     have_dome = True
 
-    dome_name = part.base_path + '/OMEGACAM_DOMEFF_' + scipart.filter + '_1x1.fits'
+    dome_name = part.base_path + '/'+instrument.domeff_prefix+'_' + scipart.filter + '_1x1.fits'
     if not Path(dome_name).is_symlink():
         have_dome_link = False
 
@@ -612,10 +622,10 @@ def associateDome(part, scipart):
     if have_dome_link:
         dome_frame = Path(dome_name).resolve().as_posix()
         part.domeFrame = dome_frame
-        part.domePartition = ExposuresPartition(dome_frame, 'FLAT,DOME')
+        part.domePartition = ExposuresPartition(dome_frame, 'FLAT,DOME', instrument)
 
 
-def associateSky(part, scipart):
+def associateSky(part, scipart, instrument):
     have_sky_link = True
     have_sky = True
 
@@ -632,14 +642,14 @@ def associateSky(part, scipart):
 
     if have_sky_link or have_sky:
         sky_frame = Path(sky_name).resolve().as_posix()
-        part.skyPartition = ExposuresPartition(sky_frame, 'FLAT,SKY')
+        part.skyPartition = ExposuresPartition(sky_frame, 'FLAT,SKY', instrument)
 
 
-def associateMFF(part, scipart):
+def associateMFF(part, scipart, instrument):
     have_mff_link = True
     have_mff = True
 
-    mff_name = part.base_path + '/OMEGACAM_MFF_' + scipart.filter + '_1x1.fits'
+    mff_name = part.base_path + '/'+instrument.mff_prefix+'_' + scipart.filter + '_1x1.fits'
     if not Path(mff_name).is_symlink():
         have_mff_link = False
 
@@ -652,19 +662,50 @@ def associateMFF(part, scipart):
     if have_mff_link:
         mff_frame = Path(mff_name).resolve().as_posix()
         part.mffFrame = mff_frame
-        part.mffPartition = ExposuresPartition(mff_frame, 'MFF')
+        part.mffPartition = ExposuresPartition(mff_frame, 'MFF', instrument)
 
 
-def mefpp_reduce_bpm(mefpp_dir, calib_dir):
+# ---------------------------------- Data reduction section ------------------------------
+
+def copy_paf(mefpp_dir, basepath, instrument):
+    """
+    This routine copy the reduction configuration parameters needed by
+    the mefpp reduction engine to the directory where the reduction
+    will take place. It centralice the copying for all calibration
+    and science reductions.
+    """
+    # we prefer the locally provided parameter file, if it exists
+
+    mefpp_paf_exists = False
+    if Path(basepath + '/mefpp.paf').exists():
+        mefpp_paf_exists = True
+
+    if not mefpp_paf_exists:
+        if Path(instrument.config_dir + '/'+instrument.mefpp_paf).exists():            # locally provided mefpp paf file
+            shutil.copy(instrument.config_dir + '/'+instrument.mefpp_paf, basepath + '/mefpp.paf')
+            print("Using paf: {}".format(instrument.config_dir + '/'+instrument.mefpp_paf))
+        elif Path(mefpp_dir + '/config/'+instrument.mefpp_paf).exists():          # pycavi distribution paf file
+            print("No paf file in {}. Using user config  paf.".format(instrument.config_dir))
+            print("Using mefpp  paf.")
+            shutil.copy(mefpp_dir + '/config/'+instrument.mefpp_paf, basepath + '/mefpp.paf')
+        else:
+            print("copy_paf: could not find paf file for mefpp")
+
+    if Path(basepath + '/mefpp.paf').exists():
+        mefpp_paf_exists = True
+    
+    return mefpp_paf_exists
+
+def mefpp_reduce_bpm(mefpp_dir, calib_dir, instrument):
     # here we reduce the bpm frames which for now is only a cp operation
-    bpm_files_list = [mefpp_dir + '/static_cal/' + 'OMEGACAM_BPM_%02d.fits' % i for i in range(1, 33)]
+    bpm_files_list = [mefpp_dir + '/static_cal/' +instrument.bpm_prefix +'_%02d.fits' % i for i in range(1, instrument.next_valid+1)]
     for file in bpm_files_list:
         # print(file)
         shutil.copy(file, calib_dir + '/bpm/')
     print('mefpp_reduce_bpm: done copying BPMs')
 
 
-def mefpp_reduce_bias(mefpp_dir, bias_part_list):
+def mefpp_reduce_bias(mefpp_dir, bias_part_list, instrument):
     print('mefpp_reduce_bias: length of bias partition list: %d' % len(set(bias_part_list)))
     for bias_part in set(bias_part_list):
 
@@ -676,30 +717,26 @@ def mefpp_reduce_bias(mefpp_dir, bias_part_list):
         if Path(bias_list).exists():
             bias_list_exists = True
 
-        mefpp_paf_exists = False
-        if Path(basepath + '/mefpp.paf').exists():
-            mefpp_paf_exists = True
-
+        # copying appropriate parameter file, paf file, to basepath directory
+        mefpp_paf_exists = copy_paf(mefpp_dir, basepath, instrument)
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/config/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
-                if Path(basepath + '/mefpp.paf').exists():
-                    mefpp_paf_exists = True
-                else:
-                    raise Exception('mefpp_reduce_bias: could not create mefpp file.')
-            else:
-                pass
+            raise Exception("mefpp_reduce_bias: could not find or copy mefpp.paf to bias basepath.")
 
-        bpm_files_list = glob.glob(basepath + '/OMEGACAM_BPM_??.fits', recursive=False)
+        # checking for the presence of bpm files
+        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
         bpm_exists = True
         for bpm_file in bpm_files_list:
             if not Path(bpm_file).exists():
                 bpm_exists = bpm_exists and False
 
+        # checking to see if bias was already reduced
+        #
         bias_already_reduced = False
-        if Path(basepath + '/OMEGACAM_MB_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
             bias_already_reduced = True
 
+        # we produce the master bias here if not already done
+        #
         if (not bias_already_reduced) and (bias_list_exists and mefpp_paf_exists and bpm_exists):
             print('\n\n', basepath.split()[-1], bias_list_exists, mefpp_paf_exists, bpm_exists, bias_already_reduced)
             # os.chdir(basepath)
@@ -727,7 +764,7 @@ def mefpp_reduce_bias(mefpp_dir, bias_part_list):
             print('bpm_exists: ', bpm_exists)
 
 
-def mefpp_reduce_dome(mefpp_dir, dome_part_list):
+def mefpp_reduce_dome(mefpp_dir, dome_part_list, instrument):
     print('mefpp_reduce_dome: length of dome partition list: %d' % len(set(dome_part_list)))
     for dome_part in dome_part_list:
 
@@ -738,21 +775,12 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list):
         if Path(dome_list).exists():
             dome_list_exists = True
 
-        mefpp_paf_exists = False
-        if Path(basepath + '/mefpp.paf').exists():
-            mefpp_paf_exists = True
-
+        # copying appropriate parameter file, paf file, to basepath directory
+        mefpp_paf_exists = copy_paf(mefpp_dir, basepath, instrument)
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/config/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
-                if Path(basepath + '/mefpp.paf').exists():
-                    mefpp_paf_exists = True
-                else:
-                    raise Exception('Could not create mefpp file.')
-            else:
-                pass
+            raise Exception("mefpp_reduce_dome: could not find or copy mefpp.paf to dome basepath.")
 
-        bpm_files_list = glob.glob(basepath + '/OMEGACAM_BPM_??.fits', recursive=False)
+        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
         bpm_exists = True
         for bpm_file in bpm_files_list:
             if not Path(bpm_file).exists():
@@ -760,13 +788,13 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list):
 
         # here we check the presence of the required master bias frame
         mb_exists = False
-        if Path(basepath + '/OMEGACAM_MB_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
             mb_exists = True
         else:
             pass
 
         dome_already_reduced = False
-        if Path(basepath + '/OMEGACAM_DOMEFF_' + dome_part.filter + '_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.domeff_prefix+'_' + dome_part.filter + '_1x1.fits').exists():
             dome_already_reduced = True
 
         print(basepath.split()[-1], dome_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, dome_already_reduced)
@@ -775,7 +803,7 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list):
             print(basepath.split()[-1], dome_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, dome_already_reduced)
             # os.chdir(basepath)
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/OMEGACAM_MB_1x1.fits ' + \
+                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
                            ' --dome ' + dome_list + \
                            ' --domesave > ' + basepath + '/mefpp.log'
             print(command_line)
@@ -789,7 +817,7 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list):
             print('skipping dome reduction')
 
 
-def mefpp_reduce_sky(mefpp_dir, sky_part_list):
+def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
     print('mefpp_reduce_sky: length of sky partition list: %d' % len(set(sky_part_list)))
     for sky_part in set(sky_part_list):
 
@@ -800,21 +828,12 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list):
         if Path(sky_list).exists():
             sky_list_exists = True
 
-        mefpp_paf_exists = False
-        if Path(basepath + '/mefpp.paf').exists():
-            mefpp_paf_exists = True
-
+        # copying appropriate parameter file, paf file, to basepath directory
+        mefpp_paf_exists = copy_paf(mefpp_dir, basepath, instrument)
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/config/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
-                if Path(basepath + '/mefpp.paf').exists():
-                    mefpp_paf_exists = True
-                else:
-                    raise Exception('Could not create mefpp file.')
-            else:
-                pass
+            raise Exception("mefpp_reduce_sky: could not find or copy mefpp.paf to skyff basepath.")
 
-        bpm_files_list = glob.glob(basepath + '/OMEGACAM_BPM_??.fits', recursive=False)
+        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
         bpm_exists = True
         for bpm_file in bpm_files_list:
             if not Path(bpm_file).exists():
@@ -822,14 +841,14 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list):
 
         # here we check the presence of the required master bias frame
         mb_exists = False
-        if Path(basepath + '/OMEGACAM_MB_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
             mb_exists = True
         else:
             pass
 
         # here we check for the required dome ff
         domeff_exists = False
-        domeff_name = basepath + '/OMEGACAM_DOMEFF_' + sky_part.filter + '_1x1.fits'
+        domeff_name = basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits'
         if Path(domeff_name).exists():
             print(domeff_name + ' exists')
             domeff_exists = True
@@ -838,7 +857,7 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list):
             pass
 
         sky_already_reduced = False
-        skyff_name = basepath + '/OMEGACAM_SKYFF_' + sky_part.filter + '_1x1.fits'
+        skyff_name = basepath + '/'+instrument.skyff_prefix+'_' + sky_part.filter + '_1x1.fits'
         if Path(skyff_name).exists():
             print(skyff_name + ' exists')
             sky_already_reduced = True
@@ -853,8 +872,8 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list):
             print(basepath.split()[-1], sky_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, domeff_exists,
                   sky_already_reduced)
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/OMEGACAM_MB_1x1.fits ' + \
-                           ' --dome ' + basepath + '/OMEGACAM_DOMEFF_' + sky_part.filter + '_1x1.fits ' + \
+                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
+                           ' --dome ' + basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits ' + \
                            ' --sky ' + sky_list + ' --skysave ' + \
                            '  > ' + basepath + '/mefpp.log'
             print('\n', command_line)
@@ -867,7 +886,7 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list):
             print('skipping sky reduction')
 
 
-def mefpp_reduce_science(mefpp_dir, sci_part_list):
+def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
     for sci_part in set(sci_part_list):
 
         basepath = sci_part.base_path
@@ -877,21 +896,12 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list):
         if Path(sci_list).exists():
             sci_list_exists = True
 
-        mefpp_paf_exists = False
-        if Path(basepath + '/mefpp.paf').exists():
-            mefpp_paf_exists = True
-
+        # copying appropriate parameter file, paf file, to basepath directory
+        mefpp_paf_exists = copy_paf(mefpp_dir, basepath, instrument)
         if not mefpp_paf_exists:
-            if Path(mefpp_dir + '/config/mefpp.paf').exists():
-                shutil.copy(mefpp_dir + '/config/omegacam.paf', basepath + '/mefpp.paf')
-                if Path(basepath + '/mefpp.paf').exists():
-                    mefpp_paf_exists = True
-                else:
-                    raise Exception('Could not create mefpp file.')
-            else:
-                pass
+            raise Exception("mefpp_reduce_science: could not find or copy mefpp.paf to science basepath.")
 
-        bpm_files_list = glob.glob(basepath + '/OMEGACAM_BPM_??.fits', recursive=False)
+        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
         bpm_exists = True
         for bpm_file in bpm_files_list:
             if not Path(bpm_file).exists():
@@ -899,14 +909,14 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list):
 
         # here we check the presence of the required master bias frame
         mb_exists = False
-        if Path(basepath + '/OMEGACAM_MB_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
             mb_exists = True
         else:
             pass
 
         # here we check for the required master ff
         mff_exists = False
-        mff_name = basepath + '/OMEGACAM_MFF_' + sci_part.filter + '_1x1.fits'
+        mff_name = basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits'
         if Path(mff_name).exists():
             print(mff_name + ' exists')
             mff_exists = True
@@ -927,8 +937,8 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list):
                 sci_list = content[0]
 
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/OMEGACAM_MB_1x1.fits ' + \
-                           ' --mff ' + basepath + '/OMEGACAM_MFF_' + sci_part.filter + '_1x1.fits ' + \
+                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
+                           ' --mff ' + basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits ' + \
                            ' --science ' + sci_list + \
                            '  > ' + basepath + '/mefpp.log'
             print('\n', command_line)
@@ -948,7 +958,7 @@ def get_lightcorrection_coeffs(image_band: str, instrument):
     Valid for sloan u, g, r and i
     """
     # We check if we have the appropriate coefficients
-    if instrument.inst_name_val is not "OMEGACAM":
+    if "OMEGACAM" not in instrument.inst_name_val:
         return None
 
     # coefficients corresponding to xx, xy and yy
