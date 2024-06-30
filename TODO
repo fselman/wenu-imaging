@@ -22,24 +22,35 @@
         - done. test mefpp and save changes to module. I am currently somewhat confused
           with what version I am using.
             o Saved latest version.
+- Add instrument configuration: extensions, DPR keywords, filters. WIP. Almost done. What remains:
+        - change ESO to MEFPP in the paf file, the current package is not an ESO package. DONE.
 
 PENDING:
 
-- Add instrument configuration: extensions, DPR keywords, filters. WIP. Almost done. What remains:
-        - change ESO to MEFPP in the paf file, the current package is not an ESO package.
-    - dealing with prefix and suffix. WIP.
-        o Prefix issues have been solved. Now we need to modify the detmode suffix. CANCEL: remove the suffix as it is not needed.
 - Clean notebook 3. It is too easy to modify vital script. Move the association part to the PartitionTree class. Leave only the run part here.
   This will make inspection of the whole data reduction tree faster as there will be no need to wait for the full reduction.
-- Do check on BPMs to ensure that proper extensions are used. Currently assuming indexing.
-- adding PRO.CATG fits key to files.
+    o First, split the cells into a part the create all subdirectories and file links, and another one that run the notebook. 
+    o Second, split the actual notebook in two notebooks.
+    o Finally, move the code of the first notebook to the PartitionTree class.
+ 
+- dealing with prefix and suffix. WIP.
+    o Prefix issues have been solved. Now we need to modify the detmode suffix. CANCEL: remove the suffix as it is not needed.
 - adding QC keys to files
 - testing with actual WFI data+debug
 - final debug with larger OCAM data set
 
 - Clean code and add inspect configuration keyword to see data subplots.
+
+
 - add configuration for installation directory. 
 - check zp values against ESO HC. We seem to be high, also in the AB magnitudes.
 - add chapter on installation of astrometry.net and use of index files for OCAM and WFI
 - add configuration files for astromatic software location
-- V2: modify for proper working on WFI images
+
+For Version 2.0
+---------------
+
+- Do check on BPMs to ensure that proper extensions are used. Currently assuming indexing.
+    o FITS headers almost empty. Not a hint of what softare creted them, but more worrysome, they do not contain information about to which extension they c
+orrespond. For V2 we have to fix this.
+- adding PRO.CATG fits key to files. For V2.

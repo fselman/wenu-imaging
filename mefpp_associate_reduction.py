@@ -38,12 +38,17 @@ class PartitionsTree:
         check_and_create_folder(reduced_science_dir)
         check_and_create_folder(log_dir)
 
+        # dictionaries indexed by partition path containing list of partitions
         self.partList = {}
-        self.OBstartDict = {}
-        self.filterDict = {}
         self.biasDict = {}
         self.domeDict = {}
         self.skyDict = {}
+        self.stdDict = {}
+        self.sciDict = {}
+
+        # auxiliary dictionary that help in the partitioning
+        self.OBstartDict = {}
+        self.filterDict = {}
 
         # we fill the dictionaries of observation types
         i_exposure = 0
@@ -52,6 +57,12 @@ class PartitionsTree:
             i_exposure+= 1
             exposure = Exposure(file_name, instrument)
             self.insertExposure(exposure)
+
+            # We update the dictionaries depending on the exposure type. Note that
+            # the call to insertExposure will create the new partition if it does not
+            # exists, otherwise it will append the exposure to an existing partition
+            # corresponding to that type of exposure.
+            #
             self.biasDict = {k:v for (k,v) in self.partList.items() if 'bias/' in k}
             self.domeDict = {k:v for (k,v) in self.partList.items() if 'dome/' in k}
             self.skyDict = {k:v for (k,v) in self.partList.items() if 'sky/' in k}
@@ -68,23 +79,114 @@ class PartitionsTree:
                                 "SCIENCE:  %d" % len(self.sciDict), \
                                 "Total     %d" % Total, end='\r')
 
-        # finally we create the frame list, which will contain the
-        # files to be processed for each type of partition
+        # ------------------- CREATION OF PARTITIONS ------------------
+        #
+        # Up to this point the whole partitioning is in memory. 
+        # Now each partition will be created in disk: 
+        #   o each partition, encoded in the dictionary key, is
+        #     a relative path to the location of the corresponding
+        #     virtual master product. The listing of raw files needed
+        #     to create the master product will be written there.
+        #
+        #   o the value associated to the key, is the list of raw
+        #     frames in that partition.
+        #
+        # After these associations all partitions will have been
+        # instanced to disk as a directory path to the listing
+        # of raw frames. No association between them yet.
 
         # here we create a bias.list file in each bias partition
-        self.createFrameList(reduced_cal_dir, 'bias.list', self.biasDict)
+        self.instantiatePartitionToDisk(reduced_cal_dir, 'bias.list', self.biasDict)
 
         # here we create a dome.list file in dome flat field partition
-        self.createFrameList(reduced_cal_dir, 'dome.list', self.domeDict)
+        self.instantiatePartitionToDisk(reduced_cal_dir, 'dome.list', self.domeDict)
 
         # here we create a sky.list file in each sky flat field partition
-        self.createFrameList(reduced_cal_dir, 'sky.list', self.skyDict)
+        self.instantiatePartitionToDisk(reduced_cal_dir, 'sky.list', self.skyDict)
 
         # here we create a sky.list file in each sky flat field partition
-        self.createFrameList(reduced_science_dir, 'std.list', self.stdDict)
+        self.instantiatePartitionToDisk(reduced_science_dir, 'std.list', self.stdDict)
 
         # here we create a science.list file in each science partition
-        self.createFrameList(reduced_science_dir, 'science.list', self.sciDict)
+        self.instantiatePartitionToDisk(reduced_science_dir, 'science.list', self.sciDict)
+
+        # --------------- We create the lists of partitions --------------
+        #
+        # Note that here we read the partitions actually created in disk.
+        # In the future we could compare these lists with what was in memory.
+        #
+
+        # - bpm - 
+        bpm_list = glob.glob(static_cal_dir+'**/bpm.list', recursive=True)
+        logging.info('number of bpm partitions: {0}'.format(len(bpm_list)))
+        self.bpm_partitions = []
+        for bpm_file in bpm_list:
+            self.bpm_partitions.append(BiasPartition(bpm_file))
+
+        for part in self.bpm_partitions:
+            logging.info(part.OBstart)
+
+        # - bias
+        bias_list = glob.glob(reduced_cal_dir+'**/bias.list', recursive=True)
+        print('number of bias partitions: ', len(bias_list))
+        self.bias_partitions = []
+        for bias_file in bias_list:
+            self.bias_partitions.append(BiasPartition(bias_file))
+    
+        for part in self.bias_partitions:
+            print(part.OBstart)
+
+        # - dome
+        dome_list = glob.glob(reduced_cal_dir+'**/dome.list', recursive=True)
+        print('number of dome partitions: ', len(dome_list))
+        self.dome_partitions = []
+        for dome_file in dome_list:
+            self.dome_partitions.append(SciencePartition(dome_file))
+    
+        for part in self.dome_partitions:
+            print(part.OBstart, part.filter)
+
+        # - sky
+        sky_list = glob.glob(reduced_cal_dir+'**/sky.list', recursive=True)
+        print('number of sky partitions: ', len(sky_list))
+        self.sky_partitions = []
+        for sky_file in sky_list:
+            self.sky_partitions.append(SciencePartition(sky_file))
+
+        for part in self.sky_partitions:
+            print(part.OBstart, part.filter)
+
+        # - std
+        std_list = glob.glob(reduced_science_dir+'**/std.list', recursive=True)
+        print('number of standard stars partitions: ', len(std_list))
+        self.std_partitions = []
+        for std_file in std_list:
+            self.std_partitions.append(SciencePartition(std_file))
+
+        for part in self.std_partitions:
+            print(part.OBstart, part.filter)
+
+        # - science
+        science_list = glob.glob(reduced_science_dir+'**/science.list', recursive=True)
+        print('number of science partitions: ', len(science_list))
+        self.sci_partitions = []
+        for science_file in science_list:
+            self.sci_partitions.append(SciencePartition(science_file))
+
+        for part in self.sci_partitions:
+            print(part.OBstart, part.filter)
+
+        # ------------------- DEPENDENCY TREE CREATION --------------------
+        #
+        # Here we create the virtual calibration products. These products are the names
+        # of the master calibration products symbolically linked to the partition
+        # containing the list of raw data needed to create that master calibration product.
+        # The actual master products will be created by the notebook that runs
+        # the mefpp engine in each of those partition, in order: first the bpms, which
+        # just create symbolic links to the static calibrtion bpm partition. Then the
+        # biases needed for dome, sky, and science. Then the master flat field which requires
+        # the master bias, master dome, and master sky products. Finally the std and science
+        # treated the same way.
 
     def insertExposure(self, exposure):
         """
@@ -109,7 +211,7 @@ class PartitionsTree:
         elif exposure.is_skyff:
             key_str = 'sky/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
         elif exposure.is_std:
-            key_str = 'std/' + exposure.target + '_' + \
+            key_str = 'std/' + exposure.target + '/' + \
                       exposure.filter + '/' + \
                       exposure.OBstart
         elif exposure.is_science:
@@ -131,7 +233,7 @@ class PartitionsTree:
             self.OBstartDict[key_str] = exposure.OBstart
             self.filterDict[key_str] = exposure.filter
 
-    def createFrameList(self, base_dir, list_name, frameDict):
+    def instantiatePartitionToDisk(self, base_dir, list_name, frameDict):
         """Creates file *.list and write the full link to
         the raw files that will be reduced in that partition.
 
@@ -317,7 +419,7 @@ class ExposuresPartition:
         if frametype != 'BPM':
             self.OBstart = self.getOBstart(filename)
 
-        # we construct the names according to file type
+        # we construct the names of master calibration products according to file type
         self.framelist = None
         self.frame = None
         if frametype == 'BPM':
@@ -335,6 +437,9 @@ class ExposuresPartition:
         elif frametype == 'MFF':
             self.framelist = self.base_path + '/mff.list'
             self.frame = self.base_path + '/'+instrument.mff_prefix+'_' + self.filter + '_1x1.fits'
+        elif frametype == 'STD':
+            self.framelist = self.base_path + '/std.list'
+            self.frame = None
         elif frametype == 'SCIENCE' or frametype == 'SKY':
             self.framelist = self.base_path + '/science.list'
             self.frame = None
@@ -357,40 +462,6 @@ class ExposuresPartition:
 
         self.mffPartition = None
         self.mffFrame = None
-
-    #def insertExposure(self, exposure):
-#
-        # we select the partition according to exposure dpr.type
-        #if 'BIAS' in exposure.dpr_type:
-            #key_str = 'bias/' + '%d' % exposure.obsid + '/' + exposure.OBstart
-        #elif 'FLAT,DOME' in exposure.dpr_type:
-            #key_str = 'dome/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
-        #elif 'FLAT,SKY' in exposure.dpr_type:
-            #key_str = 'sky/' + '%d' % exposure.obsid + '/' + exposure.filter + '/' + exposure.OBstart
-        #elif ('CALIB' in exposure.dpr_catg) and ('STD,ZEROPOINT' in exposure.dpr_type):
-            #key_str = 'std/' + exposure.target + '_' + \
-                      #exposure.filter + '/' + \
-                      #exposure.OBstart
-        #elif ('SCIENCE' in exposure.dpr_catg) and ('OBJECT' in exposure.dpr_type):
-            #key_str = 'science/' + exposure.target + '_' + \
-                      #("%010.3f" % exposure.tel_alpha).replace('.', 'p') + '_' + \
-                      #("%09.1f" % exposure.tel_delta).replace('.', 'p').replace('-', 'm') + '/' + \
-                      #exposure.filter + '/' + \
-                      #exposure.OBstart
-        #else:
-            #print('dpr type: %s' % exposure.dpr_type, ' not classifiable.', end='\r')
-            #key_str = 'unknown/' + '%s' % exposure.dpr_type
-
-        #self.base_path = key_str
-        #self.exposureList.append(exposure)
-        #self.OBstart = exposure.OBstart
-        #self.filter = exposure.filter
-        #if key_str in self.partList:
-            #self.partList[key_str].append(exposure)
-        #else:
-            #self.partList[key_str] = [exposure]
-            #self.OBstartDict[key_str] = exposure.OBstart
-            #self.filterDict[key_str] = exposure.filter
 
     def getFilter(self, filename):
         fields = filename.split('/')
@@ -896,6 +967,11 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
         if Path(sci_list).exists():
             sci_list_exists = True
 
+        else:                                   # we treat the standard stars exactly as the science
+            sci_list = basepath + '/std.list'
+            if Path(sci_list).exists():
+                sci_list_exists = True
+
         # copying appropriate parameter file, paf file, to basepath directory
         mefpp_paf_exists = copy_paf(mefpp_dir, basepath, instrument)
         if not mefpp_paf_exists:
@@ -933,8 +1009,8 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
             f = open(sci_list, 'r')
             content = f.readlines()
             f.close()
-            if len(content) == 1:
-                sci_list = content[0]
+            #if len(content) == 1:
+            #    sci_list = content[0]
 
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
                            ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \

@@ -122,13 +122,13 @@ class Instrument:
         #
         #[Extension Keywords]
         #
-        nextensions = int(config.get('Extension Keywords', 'nextensions'))
-        ext_name_key_list = ["ext_{:02d}_name".format(i) for i in range(1, nextensions+1)]
-        ext_use_list = ["ext_{:02d}_use".format(i) for i in range(1, nextensions+1)]
-        ext_gain_key_list = ["ext_{:02d}_gain_key".format(i) for i in range(1, nextensions+1)]
+        self.nextensions = int(config.get('Extension Keywords', 'nextensions'))
+        ext_name_key_list = ["ext_{:02d}_name".format(i) for i in range(1, self.nextensions+1)]
+        ext_use_list = ["ext_{:02d}_use".format(i) for i in range(1, self.nextensions+1)]
+        ext_gain_key_list = ["ext_{:02d}_gain_key".format(i) for i in range(1, self.nextensions+1)]
         self.valid_ext_names = []
         self.valid_ext_gain_dict = {}    # dictionary indexed by the extension name giving keyword containing gain
-        for i in range(nextensions):
+        for i in range(self.nextensions):
             use_val = config.getboolean('Extension Keywords', ext_use_list[i])
             name_val = config.get('Extension Keywords', ext_name_key_list[i]).replace('"','')
             gain_key_val = config.get('Extension Keywords', ext_gain_key_list[i]).replace('"','')

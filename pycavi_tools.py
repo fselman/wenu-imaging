@@ -39,6 +39,7 @@ def init_pycavi_config(raw_data_dir=None, project_dir=None):
     project_dir =
     static_calib_dir =
     reduced_calib_dir =
+    reduced_std_dir =
     reduced_science_dir =
     project_logs_dir =
     sex_dir_name =
@@ -52,11 +53,13 @@ def init_pycavi_config(raw_data_dir=None, project_dir=None):
     if project_dir is not None:
             static_calib_dir = project_dir+'/static_calib/' # static calibrations go here, e.g. bpm, fringe frames, linearity curves, etc.
             reduced_calib_dir = project_dir+'/calib/' # Directory tree with reduced calibration files + soft links to raw calibrations
+            reduced_std_dir = project_dir+'/std/'       # Directory tree with reduced standard star observations
             reduced_science_dir = project_dir+'/science/' # Directory tree with reduced science frames + soft links to reduced calibrations.
             project_logs_dir = project_dir+'/logs/' # Directory containing logs created by running the reduction
     else:
         static_calib_dir = None
         reduced_calib_dir = None
+        reduced_std_dir = None
         reduced_science_dir = None
         project_logs_dir = None
     sex_dir_name = 'Sextractor_dir'     # will be created by notebook X below the target directory
@@ -68,6 +71,7 @@ def init_pycavi_config(raw_data_dir=None, project_dir=None):
                              'project_dir': project_dir, 
                              'static_calib_dir': static_calib_dir,
                              'reduced_calib_dir': reduced_calib_dir,
+                             'reduced_std_dir': reduced_std_dir,
                              'reduced_science_dir': reduced_science_dir,
                              'project_logs_dir': project_logs_dir,
                              'sex_dir_name': sex_dir_name,
@@ -108,6 +112,7 @@ def read_pycavi_config(config_dir=None):
     project_dir = config.get('Directories', 'project_dir')
     static_calib_dir = config.get('Directories', 'static_calib_dir')
     reduced_calib_dir = config.get('Directories', 'reduced_calib_dir')
+    reduced_std_dir = config.get('Directories', 'reduced_std_dir')
     reduced_science_dir = config.get('Directories', 'reduced_science_dir')
     project_logs_dir = config.get('Directories', 'project_logs_dir')
     sex_dir_name = config.get('Directories', 'sex_dir_name')
@@ -211,6 +216,7 @@ class ProjectInfo:
             self.config['Directories']['project_dir'] = self.project_dir+'/'
             self.config['Directories']['static_calib_dir'] = self.project_dir +'/'+'static_calib'+'/'
             self.config['Directories']['reduced_calib_dir'] = self.project_dir +'/'+'calib'+'/'
+            self.config['Directories']['reduced_std_dir'] = self.project_dir +'/'+'std'+'/'
             self.config['Directories']['reduced_science_dir'] = self.project_dir +'/'+'science'+'/'
             self.config['Directories']['project_logs_dir'] = self.project_dir +'/'+'logs'+'/'
             self.project_dir_label.config(text=self.project_dir)
