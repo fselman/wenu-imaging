@@ -187,6 +187,160 @@ class PartitionsTree:
         # biases needed for dome, sky, and science. Then the master flat field which requires
         # the master bias, master dome, and master sky products. Finally the std and science
         # treated the same way.
+        #
+        # exposurePartition = mar.PartitionsTree(raw_data_dir, static_cal_dir, reduced_cal_dir, reduced_science_dir, log_dir, instrument)
+        # bpm_partitions = exposurePartition.bpm_partitions
+        # bias_partitions = exposurePartition.bias_partitions
+        # dome_partitions = exposurePartition.dome_partitions
+        # sky_partitions = exposurePartition.sky_partitions
+        # std_partitions = exposurePartition.std_partitions
+        # sci_partitions = exposurePartition.sci_partitions
+        #
+        # We associate a bpm partition to each science frame and create symbolic link in
+        # corresponding directory
+        self.link_bpm(self.sci_partitions,  instrument, part_type='sci')
+        self.link_bpm(self.dome_partitions, instrument, part_type='dome')
+        self.link_bpm(self.sky_partitions,  instrument, part_type='sky')
+        self.link_bpm(self.std_partitions,  instrument, part_type='std')
+        self.link_bpm(self.bias_partitions, instrument, part_type='bias')
+
+        # We select the closests in time calibration products. 
+        # The following operations are done only on memory.
+
+        # select and attach bias partition to science partitions
+        self.select_nearest_calib(self.sci_partitions, self.bias_partitions, calpart_type='bias', ndays_max=10)
+        self.select_nearest_calib(self.std_partitions, self.bias_partitions, calpart_type='bias', ndays_max=10)
+
+        # select and attach sky partition to science partitions
+        # Note that this also links the master flat
+        self.select_nearest_calib(self.sci_partitions, self.sky_partitions, calpart_type='sky', ndays_max=30)
+        self.select_nearest_calib(self.std_partitions, self.sky_partitions, calpart_type='sky', ndays_max=30)
+
+        # select and attach bias and dome partitions to sky partitions
+        self.select_nearest_calib(self.sky_partitions, self.bias_partitions, calpart_type='bias', ndays_max=30)
+        self.select_nearest_calib(self.sky_partitions, self.dome_partitions, calpart_type='dome', ndays_max=30)
+
+        # select and attach bias partitions to dome partitions
+        self.select_nearest_calib(self.dome_partitions, self.bias_partitions, calpart_type='bias', ndays_max=30)
+
+        # at this point we have the biases and mff for each science frame.
+        # Now we create virtual calibration products as a symbolic link.
+        #
+        self.link_virtual_products(self.sci_partitions, partition_type='sci', calpart_type='bias')
+        self.link_virtual_products(self.std_partitions, partition_type='std', calpart_type='bias')
+
+        self.link_virtual_products(self.sci_partitions, partition_type='sci', calpart_type='mff')
+        self.link_virtual_products(self.std_partitions, partition_type='std', calpart_type='mff')
+
+        self.link_virtual_products(self.sky_partitions, partition_type='sky', calpart_type='bias')
+        self.link_virtual_products(self.sky_partitions, partition_type='sky', calpart_type='dome')
+        self.link_virtual_products(self.dome_partitions, partition_type='dome', calpart_type='bias')
+
+
+    def link_bpm(self, partitions, instrument, part_type='sci'):
+        """
+        Creates symbolic links in all partitions in list partitions, to the
+        corresponding master BPM file in the static calibration directory.
+
+        Note that the BPM files needs to exists before creating the symbolic links.
+        """
+        for part in partitions:
+            part.bpmPartition = self.bpm_partitions[0]
+            #print((part.bpmPartition).base_path)
+            #print(instrument.bpm_prefix+'*'+instrument.reduced_file_suffix)
+            for i in range(1, instrument.nextensions+1):
+                bpm_file = (part.bpmPartition).base_path+'/'+instrument.bpm_prefix+'_%02d.fits'%(i,)
+                local_bpm_filename = part.base_path+'/'+instrument.bpm_prefix+'_%02d.fits'%(i,)
+                if not Path(bpm_file).is_file():
+                    try:
+                        os.symlink(bpm_file, local_bpm_filename)
+                        print("create symbolic link from : {}".format(local_bpm_filename))
+                        print("                       to : {}".format(bpm_file))
+                        Path((part.bpmPartition).base_path+'/toreduce_'+part_type).touch()
+                        pass
+                    except FileExistsError:
+                        pass
+                    except Exception as e:
+                        print(e)
+                        pass
+                
+                else:
+                    print("symbolic link exists from : {}".format(local_bpm_filename))
+                    print("                       to : {}".format(bpm_file))
+
+
+    def select_nearest_calib(self, partitions, cal_partitions, calpart_type='bias', ndays_max=10):
+        """
+        Select the calibration nearest in time. For dome, sky flats, std, and sci we
+        match the filter.
+
+        This function does the linking only in memory. The command link needs to be
+        invoqued afterward.
+        """
+        for part in partitions:
+            # here we look for the closest in time bias partition
+            zdate = part.OBstart
+
+            # we find the bias closest in time
+            calBestDeltaT = 3600.*24.*ndays_max
+            for cal_part in cal_partitions:
+                if 'bias' not in calpart_type:
+                    if part.filter != cal_part.filter:
+                        continue
+                cal_date = cal_part.OBstart
+                deltaT = timeDistance(zdate, cal_date)
+                #print(sci_date, bias_date, deltaT)
+                if deltaT < calBestDeltaT:
+                    calBestDeltaT = deltaT
+                    if 'bias' in calpart_type:
+                        part.biasPartition = cal_part
+                    elif 'dome' in calpart_type:
+                        part.domePartition = cal_part
+                    elif 'sky' in calpart_type:
+                        part.skyPartition = cal_part
+                        part.mffPartition = cal_part
+                if hasattr(cal_part, 'filter'):
+                    print(f'partition: {part.filter} {part.OBstart}\n    {calpart_type}: {cal_part.OBstart} {cal_part.filter} {round(calBestDeltaT/3600.0/24., 3)}')
+                else:
+                    print(f'partition: {part.filter} {part.OBstart}\n    {calpart_type}: {cal_part.OBstart} {round(calBestDeltaT/3600.0/24., 3)}')
+
+
+    def link_virtual_products(self, partitions, partition_type='sci', calpart_type='bias'):
+        """
+        Link in each partition of type partition_type, a master calibration product, of type calpart_type.
+        Each partition in the partitions list must have an associated calibratipn partition of the type.
+        After running this procedure all the master calibration products needed for the reduction
+        of the partition will be virtual products, that is, broken links to the calibration partition.
+        The link will not be broken once the reduction processes is run the calibration partitition.
+        """
+        for part in partitions:
+            if 'bias' in calpart_type:
+                prefix = self.instrument.bias_prefix
+                base_path = (part.biasPartition).base_path
+                mcal = (part.biasPartition).base_path+'/'+prefix+'_1x1.fits'
+                mcal_link = part.base_path+'/'+prefix+'_1x1.fits'
+            if 'mff' in calpart_type:
+                prefix = self.instrument.mff_prefix
+                base_path = (part.mffPartition).base_path
+                mcal = (part.mffPartition).base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
+                mcal_link = part.base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
+            if 'dome' in calpart_type:
+                prefix = self.instrument.domeff_prefix
+                base_path = (part.domePartition).base_path
+                mcal = (part.domePartition).base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
+                mcal_link = part.base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
+
+            if not Path(mcal_link).is_symlink():
+                try:
+                    os.symlink(mcal, mcal_link)
+                except FileExistsError:
+                    pass
+                except Exception as e:
+                    print(e)
+                    pass
+                Path(base_path+'/toreduce_'+partition_type).touch()
+                print(mcal)
+
 
     def insertExposure(self, exposure):
         """
