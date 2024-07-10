@@ -317,18 +317,18 @@ class PartitionsTree:
             if 'bias' in calpart_type:
                 prefix = self.instrument.bias_prefix
                 base_path = (part.biasPartition).base_path
-                mcal = (part.biasPartition).base_path+'/'+prefix+'_1x1.fits'
-                mcal_link = part.base_path+'/'+prefix+'_1x1.fits'
+                mcal = (part.biasPartition).base_path+'/'+prefix+'.fits'
+                mcal_link = part.base_path+'/'+prefix+'.fits'
             if 'mff' in calpart_type:
                 prefix = self.instrument.mff_prefix
                 base_path = (part.mffPartition).base_path
-                mcal = (part.mffPartition).base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
-                mcal_link = part.base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
+                mcal = (part.mffPartition).base_path+'/'+prefix+'_'+part.filter+'.fits'
+                mcal_link = part.base_path+'/'+prefix+'_'+part.filter+'.fits'
             if 'dome' in calpart_type:
                 prefix = self.instrument.domeff_prefix
                 base_path = (part.domePartition).base_path
-                mcal = (part.domePartition).base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
-                mcal_link = part.base_path+'/'+prefix+'_'+part.filter+'_1x1.fits'
+                mcal = (part.domePartition).base_path+'/'+prefix+'_'+part.filter+'.fits'
+                mcal_link = part.base_path+'/'+prefix+'_'+part.filter+'.fits'
 
             if not Path(mcal_link).is_symlink():
                 try:
@@ -581,16 +581,16 @@ class ExposuresPartition:
             self.frame = self.base_path + '/'+instrument.bpm_prefix+'_01.fits'
         elif frametype == 'BIAS':
             self.framelist = self.base_path + '/bias.list'
-            self.frame = self.base_path + '/'+instrument.bias_prefix+'_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.bias_prefix+'.fits'
         elif frametype == 'FLAT,DOME':
             self.framelist = self.base_path + '/dome.list'
-            self.frame = self.base_path + '/'+instrument.domeff_prefix+'_' + self.filter + '_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.domeff_prefix+'_' + self.filter + '.fits'
         elif frametype == 'FLAT,SKY':
             self.framelist = self.base_path + '/sky.list'
-            self.frame = self.base_path + '/'+instrument.skyff_prefix+'_' + self.filter + '_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.skyff_prefix+'_' + self.filter + '.fits'
         elif frametype == 'MFF':
             self.framelist = self.base_path + '/mff.list'
-            self.frame = self.base_path + '/'+instrument.mff_prefix+'_' + self.filter + '_1x1.fits'
+            self.frame = self.base_path + '/'+instrument.mff_prefix+'_' + self.filter + '.fits'
         elif frametype == 'STD':
             self.framelist = self.base_path + '/std.list'
             self.frame = None
@@ -814,7 +814,7 @@ def associateBias(part, scipart, instrument):
     have_bias_link = True
     have_bias = True
 
-    bias_name = part.base_path + '/'+instrument.bias_prefix+'_1x1.fits'
+    bias_name = part.base_path + '/'+instrument.bias_prefix+'.fits'
     if not Path(bias_name).is_symlink():
         have_bias_link = False
 
@@ -834,7 +834,7 @@ def associateDome(part, scipart, instrument):
     have_dome_link = True
     have_dome = True
 
-    dome_name = part.base_path + '/'+instrument.domeff_prefix+'_' + scipart.filter + '_1x1.fits'
+    dome_name = part.base_path + '/'+instrument.domeff_prefix+'_' + scipart.filter + '.fits'
     if not Path(dome_name).is_symlink():
         have_dome_link = False
 
@@ -854,7 +854,7 @@ def associateSky(part, scipart, instrument):
     have_sky_link = True
     have_sky = True
 
-    # sky_name = part.base_path+'/OMEGACAM_SKYFF_'+scipart.filter+'_1x1.fits'
+    # sky_name = part.base_path+'/OMEGACAM_SKYFF_'+scipart.filter+'.fits'
     sky_name = part.base_path + '/sky.list'
     if not Path(sky_name).is_symlink():
         have_sky_link = False
@@ -874,7 +874,7 @@ def associateMFF(part, scipart, instrument):
     have_mff_link = True
     have_mff = True
 
-    mff_name = part.base_path + '/'+instrument.mff_prefix+'_' + scipart.filter + '_1x1.fits'
+    mff_name = part.base_path + '/'+instrument.mff_prefix+'_' + scipart.filter + '.fits'
     if not Path(mff_name).is_symlink():
         have_mff_link = False
 
@@ -957,7 +957,7 @@ def mefpp_reduce_bias(mefpp_dir, bias_part_list, instrument):
         # checking to see if bias was already reduced
         #
         bias_already_reduced = False
-        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'.fits').exists():
             bias_already_reduced = True
 
         # we produce the master bias here if not already done
@@ -1013,13 +1013,13 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list, instrument):
 
         # here we check the presence of the required master bias frame
         mb_exists = False
-        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'.fits').exists():
             mb_exists = True
         else:
             pass
 
         dome_already_reduced = False
-        if Path(basepath + '/'+instrument.domeff_prefix+'_' + dome_part.filter + '_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.domeff_prefix+'_' + dome_part.filter + '.fits').exists():
             dome_already_reduced = True
 
         print(basepath.split()[-1], dome_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, dome_already_reduced)
@@ -1028,7 +1028,7 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list, instrument):
             print(basepath.split()[-1], dome_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, dome_already_reduced)
             # os.chdir(basepath)
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
+                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'.fits ' + \
                            ' --dome ' + dome_list + \
                            ' --domesave > ' + basepath + '/mefpp.log'
             print(command_line)
@@ -1066,14 +1066,14 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
 
         # here we check the presence of the required master bias frame
         mb_exists = False
-        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'.fits').exists():
             mb_exists = True
         else:
             pass
 
         # here we check for the required dome ff
         domeff_exists = False
-        domeff_name = basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits'
+        domeff_name = basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '.fits'
         if Path(domeff_name).exists():
             print(domeff_name + ' exists')
             domeff_exists = True
@@ -1082,7 +1082,7 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
             pass
 
         sky_already_reduced = False
-        skyff_name = basepath + '/'+instrument.skyff_prefix+'_' + sky_part.filter + '_1x1.fits'
+        skyff_name = basepath + '/'+instrument.skyff_prefix+'_' + sky_part.filter + '.fits'
         if Path(skyff_name).exists():
             print(skyff_name + ' exists')
             sky_already_reduced = True
@@ -1097,8 +1097,8 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
             print(basepath.split()[-1], sky_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, domeff_exists,
                   sky_already_reduced)
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
-                           ' --dome ' + basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits ' + \
+                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'.fits ' + \
+                           ' --dome ' + basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '.fits ' + \
                            ' --sky ' + sky_list + ' --skysave ' + \
                            '  > ' + basepath + '/mefpp.log'
             print('\n', command_line)
@@ -1139,14 +1139,14 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
 
         # here we check the presence of the required master bias frame
         mb_exists = False
-        if Path(basepath + '/'+instrument.bias_prefix+'_1x1.fits').exists():
+        if Path(basepath + '/'+instrument.bias_prefix+'.fits').exists():
             mb_exists = True
         else:
             pass
 
         # here we check for the required master ff
         mff_exists = False
-        mff_name = basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits'
+        mff_name = basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '.fits'
         if Path(mff_name).exists():
             print(mff_name + ' exists')
             mff_exists = True
@@ -1167,8 +1167,8 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
             #    sci_list = content[0]
 
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
-                           ' --mff ' + basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits ' + \
+                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'.fits ' + \
+                           ' --mff ' + basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '.fits ' + \
                            ' --science ' + sci_list + \
                            '  > ' + basepath + '/mefpp.log'
             print('\n', command_line)

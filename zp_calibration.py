@@ -127,6 +127,7 @@ class ZPCalibration:
         # we try to get a value
         try:
             self.object = pycavi_tools.keys_from_header(self.hdu, instrument.object_key).strip().replace(" ", "_")
+            print("OBJECT: {}".format(self.object))
         except:
             logging.info("could not set object name from headers. Using 'object'.")
             self.object = "object"

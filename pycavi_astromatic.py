@@ -101,7 +101,7 @@ class SExtractor:
 
     def __init__(self, filename_abspath, sex_dir_path, input_param=None, input_config=None):
         """
-        Simple class to run sextractor over a OMEGA.*_pre_wcs.fits image, the output from solve_field.
+        Simple class to run sextractor over a <INSTRUME>.*_pre_wcs.fits image, the output from solve_field.
         filename : the path to the wcs mosaic image
         """
         self.fits_name = filename_abspath.split("/")[-1]  # name of the fits image input to sextractor
@@ -791,41 +791,6 @@ class Scamp:
         logging.info('write_scamp_ahead_file: dir_name: {0}'.format(self.fits))
         hdu_list = fits.open(self.dir + "/" + self.fits)
 
-# ---------------------------------- START OF TO BE REMOVED -------------------------------------
-
-        ## before writing the headers we add a few keywords in 8-char format
-        #header0 = hdu_list[0].header
-
-        ## translate filter keyword
-        #try:
-            #zfilter = header0['HIERARCH ESO INS FILT1 NAME']
-            #logging.debug('write_scamp_ahead_file: FILTER: ' + zfilter)
-        #except:
-            #zfilter = 'NOT_FOUND'
-            #logging.debug('write_scamp_ahead_file: failed to determine FILTER. Setting it to NOT_FOUND')
-
-        #try:
-            #header0.insert('LST', ('FILTER', zfilter, 'pymefpp: Filter used for observation'), after=True)
-            #logging.info('write_scamp_ahead_file: Setting FILTER to ' + zfilter)
-        #except:
-            #logging.debug('write_scamp_ahead_file: failed to insert keyword FILTER after keyword LST')
-
-        # translate airmass keyword
-        #try:
-            #airmass_start = header0['HIERARCH ESO TEL AIRM START']
-            #airmass_end = header0['HIERARCH ESO TEL AIRM END']
-            #airmass_obs = 1.0/((1.0/airmass_start + 1.0/airmass_end) / 2.0)
-        #except:
-            #airmass_obs = 1.0
-            #logging.debug('write_scamp_ahead_file: failed to determine airmass. Setting it to 1.0')
-
-        #try:
-            #header0.insert('FILTER', ('AIRMASS', airmass_obs, 'mefpp_scamp: Average airmass of frame'), after=True)
-            #logging.info('write_scamp_ahead_file: Setting AIRMASS to {0:5.3f}'.format(airmass_obs))
-        #except:
-            #logging.debug('write_scamp_ahead_file: failed to insert keyword AIRMASS after FILTER')
-
-# ---------------------------------- END OF TO BE REMOVED ---------------------------------
 
         # this should be selectable whether to update the FITS file
         # or to create a separate wcs.ahead file
