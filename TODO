@@ -38,6 +38,7 @@ PENDING:
 ========
 
 - testing with actual WFI data+debug
+- fix logging, change papi_astromatic runCmd for run_command with logfile.
 - adding QC keys to files
     - Now that Scamp runs with the SAME_CRVAL mosaic type key we could plot
       the CRPIX and CDi_j keys for each chip as a QC check.
