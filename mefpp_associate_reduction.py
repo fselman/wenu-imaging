@@ -476,7 +476,7 @@ class Exposure:
             self.dateobs = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'dateobs_key').replace('"',''))
             self.tplnexp = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'tplnexp_key').replace('"',''))
             self.tplexpno = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'tplexpno_key').replace('"',''))
-            self.filter = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'filt_key').replace('"',''))
+            self.filter = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'filt_key').replace('"','')).replace('#','n').replace('/','s')
             self.exptime = self.getKeyVal(primary_header, instrument.config.get('Primary Keywords', 'inst_exp_key').replace('"',''))
 
             # here we classify the exposure
