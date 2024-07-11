@@ -1,0 +1,4 @@
+This folder contains csv files containingg tables of
+WFI calibrations requested from the ESO archive
+on 2024-07-11. Some of these csv files do not 
+go far back enough to retrieve the earlier observations.
