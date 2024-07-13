@@ -219,7 +219,7 @@ MEF.SKYFF.FRAMETHR.HI.COMMENT                  "high frame threshold for sky";
 MEF.SKYFF.FRAMETHR.HI                     45000;
 MEF.SKYFF.FRAMENUM.MIN.KEY                  "HIERARCH ESO REC FLAT MINFRAS";
 MEF.SKYFF.FRAMENUM.MIN.COMMENT                  "minimum number of frames for sky flat";
-MEF.SKYFF.FRAMENUM.MIN                    5;
+MEF.SKYFF.FRAMENUM.MIN                    3;
 #
 MEF.MFF.NAME                        "WFI_MFF";
 MEF.MFF.NAME.O                        "WFI_MFF";

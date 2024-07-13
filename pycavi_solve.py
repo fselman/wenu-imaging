@@ -7,7 +7,18 @@ from astropy.io import fits
 
 
 def solvefield(file_name):
-    dir_name = file_name[:-30] + "_solve_field"
+    """
+    Run command solve-field in directory dir_name. Note that the
+    dir_name is obtained from the file name assuming a fixed
+    length! Very bad!
+    """
+    #dir_name = file_name[:-30] + "_solve_field"
+    print('\n\n\n******************')
+    print(file_name)
+    idx_dir = file_name.rfind('/')
+    dir_name = file_name[:idx_dir+1]
+    print('Directory Name:     ', dir_name)
+    print('******************\n\n\n')
     logging.debug("solvefield: mef file: {0}".format(dir_name[:-24] + ".fits"))
     logging.debug("file_name: {0}".format(file_name))
     logging.debug("dir_name: {0}".format(dir_name))
@@ -25,7 +36,7 @@ def solvefield(file_name):
     crpix2 = hdu_header["CRPIX2"]
 
     pos_pars = "--ra " + "%3.6f" % crval1 + " --dec " + "%3.6f" % crval2 + " --radius=1.0 "
-    scale_pars = " --scale-units arcsecperpix --scale-low 0.18 --scale-high 0.24 --overwrite"
+    scale_pars = " --scale-units arcsecperpix --scale-low 0.18 --scale-high 0.35 --overwrite"
     wcs_pars = " --crpix-x " + "%5d" % crpix1 + " --crpix-y " + "%5d" % crpix2 + " --no-tweak "
     solve_command_pars = " -D " + dir_name + " " + pos_pars + scale_pars + wcs_pars + "--no-plots --new-fits " + \
                          file_name[:-5] + "_newwcs.fits " + file_name
@@ -54,9 +65,12 @@ def run_solve_field(argv: str, instrument, cpu_count: int):
     # check if the fits image corresponding to an extension exists. If this is the case, then skipped to the next
     hdu_list = fits.open(filename)
     list_of_filenames = []
-    for an_hdu in hdu_list[1:]:
+    ext_name_list = instrument.valid_ext_names
 
-        ext_file_name = an_hdu.header["EXTNAME"].replace('#', '_')
+    for an_ext_name in ext_name_list:
+
+        an_hdu = hdu_list[an_ext_name]
+        ext_file_name = an_ext_name.replace('#', '_')
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
 
         fits_savename = solve_field_dir_name + "/" + ext_file_name + ".fits"

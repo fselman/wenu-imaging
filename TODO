@@ -37,7 +37,8 @@
 PENDING:
 ========
 
-- testing with actual WFI data+debug
+- DONE up to and including solve_field. testing with actual WFI data+debug
+- suffix 1x1 should be reinserted. It is created by mefpp. I have hardcoded it for the time.
 - fix logging, change papi_astromatic runCmd for run_command with logfile.
 - adding QC keys to files
     - Now that Scamp runs with the SAME_CRVAL mosaic type key we could plot
