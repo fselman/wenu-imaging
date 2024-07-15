@@ -31,7 +31,7 @@ class Instrument:
         #[Project]                                                                              Values for OmegaCam
         #
         self.instrument_str = config.get('Project', 'instrument_str').replace('"','')           # "OCAM"
-        self.config_dir = os.getcwd()+'/'+config.get('Project', 'config_dir').replace('"','')
+        self.config_dir = config_dir #+'/'+config.get('Project', 'config_dir').replace('"','')
 
         #[Data]                                                                 ---  Values for OmegaCam ----
         #

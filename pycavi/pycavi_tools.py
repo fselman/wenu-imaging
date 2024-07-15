@@ -12,14 +12,6 @@ import astropy.constants as constants
 
 # Configuration resources
 
-def write_pycavi_config(config):
-    """Write the config values to the project configuration file"""
-    # Write the configuration to a file
-    if config is not None:
-        Path('./config').mkdir(parents=True, exist_ok=True)
-        with open('./config/pycavi.cfg', 'w') as configfile:
-            config.write(configfile)
-
 def init_pycavi_config(raw_data_dir=None, project_dir=None):
     """Function to create configuration file.
     The configuration file is read by all notebooks,
@@ -81,12 +73,15 @@ def init_pycavi_config(raw_data_dir=None, project_dir=None):
 
     return config
 
-def write_pycavi_config(config):
+def write_pycavi_config(config, config_dir=None):
     """Write the config values to the project configuration file"""
+    if config_dir is None:
+        print('No root directory for project specified.')
+        return None
     # Write the configuration to a file
     if config is not None:
-        Path('./config').mkdir(parents=True, exist_ok=True)
-        with open('./config/pycavi.cfg', 'w') as configfile:
+        Path(config_dir).mkdir(parents=True, exist_ok=True)
+        with open(config_dir+'/pycavi.cfg', 'w') as configfile:
             config.write(configfile)
 
 def read_pycavi_config(config_dir=None):
@@ -233,7 +228,7 @@ class ProjectInfo:
             self.config['Provenance']['Institution'] = origin_list[3]
         else:
             print("Problem parsing origin string from pulldown widget: {}".formatI(self.origin))
-        write_pycavi_config(self.config)
+        write_pycavi_config(self.config, self.config_dir)
         self.popup.destroy()
 
 # FITS handling tools

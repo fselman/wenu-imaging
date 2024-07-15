@@ -1,9 +1,62 @@
 import os
+import glob
 import logging
 import numpy as np
 import multiprocessing
 from textwrap import wrap
 from astropy.io import fits
+
+def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_astrometry: bool = False):
+    """
+    Run astrometry over a given observation directory.
+    For each _pre_wcs fits image within the folder, it will create an independent fits image for each extension,
+    for which later will be run astrometry net to create a wcs solution.
+    Tested with the 4100 and 5200 astromatric indexes series.
+    Be careful with the space, because many new fits images will be created.
+
+    cpu_count: number of processors when calling the multiprocessing
+    redo_astrometry: it will look if the final _wcs.fits mosaic exists. If redo_astrometry is False will not create
+                     a new one. If True will created again an overwrite the previous one.
+
+    create_wcs_frame accepts two different modes when dealing with failed CCDs: the continue mode in which it will
+    copy the original, unsolved CCD into the new mosaic together with the rest of solved CCDs. The other available
+    option is remove, in which the unsolved CCDs will not be included in the final mosaic, composed only by solved
+    CCDs.
+    """
+
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s:%(levelname)s:%(message)s",
+                        handlers=[
+                            logging.FileHandler(observation_dir + "/pymeffpp_solve.log"),
+                            logging.StreamHandler()])
+
+    os.chdir(observation_dir)
+    logging.info('current directory: {0}'.format(os.getcwd()))
+    list_to_solve = glob.glob(instrument.raw_file_prefix+'*_pre.fits')
+    print(instrument.raw_file_prefix+'*_pre.fits')
+
+    if len(list_to_solve) == 0:
+        logging.info("No images to solve, skipping directory")
+        return
+
+    i = 0
+    for file_name in list_to_solve:
+        i += 1
+        logging.info("solving image {0:02d}/{1:02d}: {2}".format(i, len(list_to_solve), file_name[:-5] + '.fits', ))
+        # if wcs image exist, continue to the next
+        # this must be more flexible, allowing the option to redo the astrometry if the user wants to.
+        mosaic_wcs = observation_dir + "/" + file_name[:-5] + "/" + file_name[:-5] + "_wcs.fits"
+        if (os.path.isfile(mosaic_wcs) and not redo_astrometry):
+            logging.info("wcs image already exist, skipping to the next image")
+            continue
+
+        # Solving
+        logging.info("\n\n\nSolving field {0}".format(file_name[:-5]))
+        run_solve_field(file_name[:-5], instrument, cpu_count=cpu_count)
+
+        # Creating WCS file
+        logging.info("Creating wcs mosaic file {0}\n\n\n".format(file_name))
+        create_wcs_frame(os.path.abspath(file_name), instrument, mode="continue")
 
 
 def solvefield(file_name):
