@@ -7,6 +7,14 @@ Mefpp flow
 ##########
 
 The main flow of mefpp is as follow:
+	* Download data:  science with calibration files from the ESO archive.
+
+	* Select calibrations (optional): if the data is from WFI, then select the calibration files for the chosen science files.
+
+	* Verify quality of calibrations (optional): for WFI calibrations do a minimal check on the downloaded calibrations.
+
+	* Agregate calibrations (optional): for WFI data you might need to aggregate sky flats from more than one execution sequence.
+
 	* Reduction of data: 
 			It associates the raw images according to obs-date, filter, object and type (science, bias, flat). For calibration frames, it creates the master frames before applying them to the science images. The end product of this first part are reduced science images ready to work with them.
 			The jupyter notebooks 01_pymefpp_partition_data, 02_pymefpp_associate and 03_pymefpp_run are the ones dedicated to this task. They must be run in the right order (1,2 and 3). 
