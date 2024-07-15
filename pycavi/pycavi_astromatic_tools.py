@@ -200,7 +200,8 @@ def select_observations(image, observation, filt):
 
 def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
     """
-    Returns a dictionary, indexed by <target>/<filter> with the list of all files for that combination
+    Returns a dictionary, indexed by <target>/<filter> with the list of all
+    Scamp output files of the form *_wcs.head for that combination
     of targets and filters.
     """
     observations = []
@@ -238,8 +239,10 @@ def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
                 swarp_lists_dict[observation + "/" + filter_] = list_of_filtered_images
     return swarp_lists_dict
 
-def run_swarp(swarp_dir, frame_list):
-    swarp = SWarp(swarp_dir)
+def run_swarp(swarp_dir_path, frame_list_name, special_pars=None):
+    """Run swarp on the output of scamp for a given observation and filter."""
+    os.chdir(swarp_dir_path)
+    swarp = SWarp(swarp_dir_path)
 
     # creates the swap and resamp folders
     if not os.path.isdir("./resamp"):
@@ -247,18 +250,29 @@ def run_swarp(swarp_dir, frame_list):
     if not os.path.isdir("./swap"):
         os.mkdir("./swap")
 
-    # updates some SWarp parameters
-    swarp.config["IMAGEOUT_NAME"] = frame_list[:-5] + ".coadd.fits"
-    swarp.config["WEIGHTOUT_NAME"] = frame_list[:-5] + ".weight.fits"
-    swarp.config["RESAMPLE_DIR"] = "./resamp"
-    swarp.config["VMEM_DIR"] = "./swap"
-    swarp.config["COPY_KEYWORDS"] = "OBJECT,RA,DEC,OBJECT,PIXSCALE,ROT-RTA,INSTRUME,FILTER,TELESCOPE"
-
-    if "NB_659" in frame_list:
-        swarp.config["SUBTRACT_BACK"] = "N"
+    # change some parameters from default
+    # we tune some parameters
+    if special_pars is not None:
+        for key, val in special_pars.items():
+            if key in special_pars.keys():
+                logging.info("swarp.config[{}] = {}".format(key, val))
+                swarp.config[key] = val
+            else:
+                logging.info("**** Wrong key passed to swarp: {}".format(key))
 
     logging.info("Running Swarp on framelist")
-    swarp.run('@'+ frame_list, updateconfig=True, clean=False)
+    swarp.run('@'+ frame_list_name, updateconfig=True, clean=False)
+
+    # update the headers of the swarped image
+    observation = images_list[0].split("/")[-5]
+    filter_ = images_list[0].split("/")[-4]
+    swarp_observation = swarp_dir_path+'/'+observation
+    swarp_filter = filter_
+    logging.info("run_swarp: {0}  swarp_filter: {1}".format(swarp_observation, swarp_filter))
+    swarp_coadded_image = special_pars["IMAGEOUT_NAME"]
+    header_reference_image = images_list[0][:-5]+'.fits'
+    logging.info("\nrun_swarp: updating headers of image: {0}\nwith headers from {1}".format(swarp_coadded_image, header_reference_image))
+    update_headers(swarp_coadded_image, header_reference_image)
 
 
 def update_headers(swarped_image, reference_image):
@@ -278,51 +292,47 @@ def update_headers(swarped_image, reference_image):
         hdr["DEC"] = hdr["CRVAL2"]
 
 
-def prepare_swarp(science_dir, images_list):
+def prepare_to_swarp(images_list, swarp_dir_path, special_pars):
     """
-    Run swarp on the output of scamp for a given observation and filter.
     Creates the Swarp directories where the swarped image and the logfiles
     will be stored (unique to observation).
+    Creates in the swarp directory the file listing all the scamp .head files
+    that will be swarped.
+
+    Returns the name of the file listing the .head files if succesful. Otherwise
+    it reurns None.
     """
     #print(images_list[0])
-    observation = images_list[0].split("/")[-5]
-    filter_ = images_list[0].split("/")[-4]
+    frame_list_name = images_list[0]
+    print("frame_list_name: {}".format(frame_list_name))
+    observation = frame_list_name.split("/")[-5]
+    filter_ = frame_list_name.split("/")[-4]
     logging.info("filter_: {}".format(filter_))
-    swarp_dir = science_dir + observation + "/Swarp_dir/"
     logging_string = "\n          - observation: {0}".format(observation) + \
                     "\n          - filter_: {0}".format(filter_) + \
-                    "\n          - swarp_dir: {0}".format(swarp_dir) + \
+                    "\n          - swarp_dir: {0}".format(swarp_dir_path) + \
                     "\n          - image_list[0]: {0}".format(images_list[0])
     logging.info(logging_string)
 
     logging.info("Attempting to create the SWarp folder..")
-    if not os.path.isdir(swarp_dir):
-        os.mkdir(swarp_dir)
+    if not os.path.isdir(swarp_dir_path):
+        os.mkdir(swarp_dir_path)
         logging.info("Folder created")
     else:
         logging.info("Folder already exists")
 
     current_dir = os.getcwd()
-    os.chdir(swarp_dir)
+    os.chdir(swarp_dir_path)
 
     # we create the list with images to swarp
-    with open(observation + "_" + filter_ + ".list", "w") as f:
+    with open(frame_list_name, "w") as f:
         for image in images_list:
             f.write(image[:-5]+".fits\n")
-
-    # now we can run swarp
-    run_swarp(swarp_dir, observation + "_" + filter_ + ".list")
-
-    # update the headers of the swarped image
-    swarp_observation = swarp_dir+'/'+observation
-    swarp_filter = filter_
-    logging.info("swarp_observation: {0}  swarp_filter: {1}".format(swarp_observation, swarp_filter))
-    swarp_coadded_image = swarp_observation + "_" + swarp_filter + ".coadd.fits"
-    header_reference_image = images_list[0][:-5]+'.fits'
-    logging.info("\nUpdating headers of image: {0}\nwith headers from {1}".format(swarp_coadded_image, header_reference_image))
-    update_headers(swarp_coadded_image, header_reference_image)
+        return frame_list_name
 
     # back to the original folder
     os.chdir(current_dir)
+
+    return None
 
 # --------------------------------------- _oOo_ ------------------------------------------
