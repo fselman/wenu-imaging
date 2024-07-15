@@ -34,10 +34,12 @@
 - DONE. dealing with prefix and suffix.
     o Prefix issues have been solved. Now we need to modify the detmode suffix. CANCEL: remove the suffix as it is not needed.
 
+- DONE up to and including swarp. testing with actual WFI data+debug
+
 PENDING:
 ========
 
-- DONE up to and including solve_field. testing with actual WFI data+debug
+- To run ZPCal we need to introduce color equations for the transformation between SDSS magnitudes and the WFI set. Investigate.
 - suffix 1x1 should be reinserted. It is created by mefpp. I have hardcoded it for the time.
 - fix logging, change papi_astromatic runCmd for run_command with logfile.
 - adding QC keys to files

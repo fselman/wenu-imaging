@@ -1,2 +1,1 @@
-- mefpp cannot reduce a science partition whose list consists of a single frame.
-    - workaround: rewrite and duplicate the line
+- SOLVED. mefpp cannot reduce a science partition whose list consists of a single frame.
