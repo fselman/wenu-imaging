@@ -14,7 +14,7 @@ from astropy.stats import sigma_clipped_stats
 from astropy.coordinates import SkyCoord, get_moon, EarthLocation, AltAz
 from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
 from astroquery.sdss import SDSS
-import pycavi_tools
+from pycavi import pycavi_tools
 
 class ZPCalibration:
     """A class to contain a pandas dataframe with the data
