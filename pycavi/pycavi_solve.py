@@ -7,7 +7,18 @@ from astropy.io import fits
 
 
 def solvefield(file_name):
-    dir_name = file_name[:-30] + "_solve_field"
+    """
+    Run command solve-field in directory dir_name. Note that the
+    dir_name is obtained from the file name assuming a fixed
+    length! Very bad!
+    """
+    #dir_name = file_name[:-30] + "_solve_field"
+    print('\n\n\n******************')
+    print(file_name)
+    idx_dir = file_name.rfind('/')
+    dir_name = file_name[:idx_dir+1]
+    print('Directory Name:     ', dir_name)
+    print('******************\n\n\n')
     logging.debug("solvefield: mef file: {0}".format(dir_name[:-24] + ".fits"))
     logging.debug("file_name: {0}".format(file_name))
     logging.debug("dir_name: {0}".format(dir_name))
@@ -25,7 +36,7 @@ def solvefield(file_name):
     crpix2 = hdu_header["CRPIX2"]
 
     pos_pars = "--ra " + "%3.6f" % crval1 + " --dec " + "%3.6f" % crval2 + " --radius=1.0 "
-    scale_pars = " --scale-low 0.02 --scale-high 0.25 --overwrite"
+    scale_pars = " --scale-units arcsecperpix --scale-low 0.18 --scale-high 0.35 --overwrite"
     wcs_pars = " --crpix-x " + "%5d" % crpix1 + " --crpix-y " + "%5d" % crpix2 + " --no-tweak "
     solve_command_pars = " -D " + dir_name + " " + pos_pars + scale_pars + wcs_pars + "--no-plots --new-fits " + \
                          file_name[:-5] + "_newwcs.fits " + file_name
@@ -36,10 +47,10 @@ def solvefield(file_name):
                           "\n      --new-fits " + file_name[:-5] + "_newwcs.fits " + \
                           "\n      " + file_name
     logging.debug("solvefield: {0}".format(solve_command_print))
-    os.system("/usr/local/astrometry/bin/solve-field " + solve_command_pars)
+    os.system("/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars)
 
 
-def run_solve_field(argv: str, cpu_count: int):
+def run_solve_field(argv: str, instrument, cpu_count: int):
     filename = argv + ".fits"
     dir_name = os.path.abspath(argv)
     try:
@@ -54,9 +65,12 @@ def run_solve_field(argv: str, cpu_count: int):
     # check if the fits image corresponding to an extension exists. If this is the case, then skipped to the next
     hdu_list = fits.open(filename)
     list_of_filenames = []
-    for an_hdu in hdu_list[1:]:
+    ext_name_list = instrument.valid_ext_names
 
-        ext_file_name = an_hdu.header["EXTNAME"].replace('#', '_')
+    for an_ext_name in ext_name_list:
+
+        an_hdu = hdu_list[an_ext_name]
+        ext_file_name = an_ext_name.replace('#', '_')
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
 
         fits_savename = solve_field_dir_name + "/" + ext_file_name + ".fits"
@@ -74,9 +88,10 @@ def run_solve_field(argv: str, cpu_count: int):
     hdu_list.close()
     logging.info("run_solve_field: processing extensions...")
 
-    list_of_extensions = ["ESO_CCD_#%2d" % (i,) for i in range(65, 97)]
+    #list_of_extensions = ["ESO_CCD_#%2d" % (i,) for i in range(65, 97)]
+    ext_name_list = instrument.valid_ext_names
     processlist = list()
-    for extension in list_of_extensions:
+    for extension in ext_name_list:
         ext_file_name = extension.replace('#', '_')
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
         if not os.path.exists(solve_field_dir_name + "/" + ext_file_name + ".wcs"):
@@ -97,7 +112,9 @@ def run_solve_field(argv: str, cpu_count: int):
         pool = multiprocessing.Pool(processes=1)
     num_tasks = len(processlist)
     logging.debug("run_solve_field: number of tasks: {:02d}".format(num_tasks))
-    pool.imap_unordered(solvefield, list_of_filenames)
+    #pool.imap_unordered(solvefield, list_of_filenames)
+    result = pool.map_async(solvefield, list_of_filenames)
+    result.wait()
 
     pool.close()
     logging.info("solve_field: ------------ done ----------")
@@ -172,7 +189,7 @@ def get_wcs_fromfile(wcs_file, ext_name):
     return thiswcs
 
 
-def create_wcs_frame(argv, mode="continue"):
+def create_wcs_frame(argv, instrument, mode="continue"):
     """Creates the <root>_pre_wcs.fits file from input
     <root>_pre.fits, the output of mefpp, by adding the
     WCS solutions found by solve-field for each extension.
@@ -191,11 +208,13 @@ def create_wcs_frame(argv, mode="continue"):
     new_hdul = fits.HDUList()
     new_hdul.append(fits.PrimaryHDU(header=hdu_primary_header))
 
-    extension_name_list = ["ESO_CCD_#%d" % i for i in range(65, 97)]
+    # extension_name_list = ["ESO_CCD_#%d" % i for i in range(65, 97)]
+    ext_name_list = instrument.valid_ext_names
 
-    for ext_name in extension_name_list:
+    for ext_name in ext_name_list:
         ext_file_name = ext_name.replace("#", "_")
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
+        logging.debug("create_wcs_frame: testing if solve field directory exists: {0}".format(solve_field_dir_name))
         if os.path.isdir(solve_field_dir_name):
             logging.debug("create_wcs_frame: solve field directory exists: {0}".format(solve_field_dir_name))
         else:
@@ -205,10 +224,10 @@ def create_wcs_frame(argv, mode="continue"):
 
         wcs_file = solve_field_dir_name + "/" + ext_file_name + ".wcs"
         if os.path.isfile(wcs_file):
-            logging.debug("create_wcs_frame: WCS file exists: {0}".format(wcs_file))
+            logging.info("create_wcs_frame: WCS file exists: {0}".format(wcs_file))
             wcs_fits = solve_field_dir_name + "/" + ext_file_name + "_newwcs.fits"
         else:
-            logging.debug("*** create_wcs_frame: **WCS file does not exists: {0}".format(wcs_file))
+            logging.info("*** create_wcs_frame: **WCS file does not exists: {0}".format(wcs_file))
             # if the solved CCD does not exist, then skipped, effectively removing it from the final mosaic
             # later we should add the possibility to average or ignore it
             if mode == "remove":
@@ -216,6 +235,7 @@ def create_wcs_frame(argv, mode="continue"):
             elif mode == "continue":
                 wcs_fits = solve_field_dir_name + "/" + ext_file_name + ".fits"
 
+        print("wcs_fits: {}".format(wcs_fits))
         image_hdu = fits.ImageHDU(data=fits.getdata(wcs_fits), header=fits.getheader(wcs_fits))
         new_hdul.append(image_hdu)
 
