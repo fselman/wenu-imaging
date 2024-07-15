@@ -39,7 +39,9 @@
 PENDING:
 ========
 
+- Separate Swarp into a prepaper and run utilities and permit the update of some keys in the main notebook a la scamp notebook.
 - To run ZPCal we need to introduce color equations for the transformation between SDSS magnitudes and the WFI set. Investigate.
+    - Should investigate how to estimate zeropoints for all filters. Spain's web pages data for synthetic phot?
 - suffix 1x1 should be reinserted. It is created by mefpp. I have hardcoded it for the time.
 - fix logging, change papi_astromatic runCmd for run_command with logfile.
 - adding QC keys to files
