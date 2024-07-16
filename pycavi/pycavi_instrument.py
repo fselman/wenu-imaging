@@ -23,14 +23,14 @@ class Instrument:
                         from VST/Paranal and WFI from 2.2-m/La Silla.
 
     """
-    def __init__(self, config_dir, instrument='ocam'):
+    def __init__(self, config_dir, instrument='omegacam'):
         config = self.read_instrument_config(config_dir, instrument)
         self.config = config
 
         # 
         #[Project]                                                                              Values for OmegaCam
         #
-        self.instrument_str = config.get('Project', 'instrument_str').replace('"','')           # "OCAM"
+        self.instrument_str = config.get('Project', 'instrument_str').replace('"','')
         self.config_dir = config_dir #+'/'+config.get('Project', 'config_dir').replace('"','')
 
         #[Data]                                                                 ---  Values for OmegaCam ----
@@ -141,7 +141,7 @@ class Instrument:
         self.next_valid = len(self.valid_ext_names)
 
 
-    def read_instrument_config(self, config_dir=None, instrument='ocam'):
+    def read_instrument_config(self, config_dir=None, instrument='omegacam'):
         """Function to read configuration file."""
         if config_dir is None:
             print('No root directory for project specified.')
@@ -181,7 +181,7 @@ class Instrument:
 if __name__ == "__main__":
     print(" ------------------------ TESTING PYCAVI INSTRUMENT MODULE ----------------------")
 
-    instrument = Instrument(config_dir='./config/', instrument='ocam')
+    instrument = Instrument(config_dir='./config/', instrument='omegacam')
 
     # Print the retrieved values
     print("Number of valid extensions: {}".format(len(instrument.valid_ext_names)))
