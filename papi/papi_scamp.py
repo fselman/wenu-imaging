@@ -546,12 +546,14 @@ class SCAMP:
         #print commandline
 
         rcode = runCmd(commandline)
-        
+
         if (rcode==1):
             #print "ERROR!!!"
-            raise SCAMP_Exception("SCAMP command [%s] failed." % str(commandline))
+            SCAMP_Exception("SCAMP command [%s] failed." % str(commandline))
         elif (rcode==2):
-            raise SCAMP_AccuracyException("SCAMP Warning/error: Significant inaccuracy likely to occur in projection.\n%s" %commandline)
+            SCAMP_AccuracyException("SCAMP Warning/error: Significant inaccuracy likely to occur in projection.\n%s" %commandline)
+        elif (rcode==3):
+            SCAMP_Exception("image magick convert issues -- check astromatic")
             
         if clean:
             self.clean()
@@ -622,8 +624,14 @@ def runCmd( str_cmd, p_shell=True ):
     #print(err.decode("utf-8"))
 
     # IMPORTANT: Next checking (only available when shell=True) not always detect all kind of errors !!
-    if err.count(b'WARNING: Significant inaccuracy'):
+    if err.count(b'convert: missing required argument  @ error'):
+        print("convert not properly working - no plots generated")
+        return 3
+    elif err.count(b'WARNING: Significant inaccuracy'):
         print("Canno't get accuracy astrometric calibration")
+        exception_file = 'SCAMP_EXCEPTION_2.log'
+        with open(exception_file, 'a') as f:
+            f.write(err.decode('utf-8'))
         return 2
     elif (err.count(b'ERROR ') or err.count(b'error ') or err.count(b"Error ")\
       or err.count(b'*Error*')\
@@ -632,7 +640,10 @@ def runCmd( str_cmd, p_shell=True ):
       or err.count(b"No such file or directory")
       or err.count(b'WARNING: Not enough matched detections') # SCAMP
       or err.count(b'WARNING: Significant inaccuracy likely to occur in projection')): #SCAMP
-        print("An error happened while running command --> %s \n"%err)
+        #print("An error happened while running command --> %s \n"%err)
+        exception_file = 'SCAMP_EXCEPTION_1.log'
+        with open(exception_file, 'a') as f:
+            f.write(err.decode('utf-8'))
         return 1 # ERROR
     else:
         return 0 # NO ERROR

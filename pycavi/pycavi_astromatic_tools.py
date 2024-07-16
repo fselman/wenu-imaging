@@ -264,13 +264,18 @@ def run_swarp(swarp_dir_path, frame_list_name, special_pars=None):
     swarp.run('@'+ frame_list_name, updateconfig=True, clean=False)
 
     # update the headers of the swarped image
-    observation = images_list[0].split("/")[-5]
-    filter_ = images_list[0].split("/")[-4]
-    swarp_observation = swarp_dir_path+'/'+observation
-    swarp_filter = filter_
-    logging.info("run_swarp: {0}  swarp_filter: {1}".format(swarp_observation, swarp_filter))
+    # The reference header image is the first image
+    with open(frame_list_name, "r") as f:
+        lines_ = f.readlines()
+        first_image = lines_[0][:-1]
+
+    #observation = images_list[0].split("/")[-5]
+    #filter_ = images_list[0].split("/")[-4]
+    #swarp_observation = swarp_dir_path+'/'+observation
+    #swarp_filter = filter_
+    #logging.info("run_swarp: swarp_observation: {0}  swarp_filter: {1}".format(swarp_observation, swarp_filter))
     swarp_coadded_image = special_pars["IMAGEOUT_NAME"]
-    header_reference_image = images_list[0][:-5]+'.fits'
+    header_reference_image = first_image[:-5]+'.fits'
     logging.info("\nrun_swarp: updating headers of image: {0}\nwith headers from {1}".format(swarp_coadded_image, header_reference_image))
     update_headers(swarp_coadded_image, header_reference_image)
 
@@ -303,15 +308,15 @@ def prepare_to_swarp(images_list, swarp_dir_path, special_pars):
     it reurns None.
     """
     #print(images_list[0])
-    frame_list_name = images_list[0]
-    print("frame_list_name: {}".format(frame_list_name))
-    observation = frame_list_name.split("/")[-5]
-    filter_ = frame_list_name.split("/")[-4]
+    first_image_path = images_list[0]
+    print("first_image_path: {}".format(first_image_path))
+    observation = first_image_path.split("/")[-5]
+    filter_ = first_image_path.split("/")[-4]
     logging.info("filter_: {}".format(filter_))
     logging_string = "\n          - observation: {0}".format(observation) + \
                     "\n          - filter_: {0}".format(filter_) + \
                     "\n          - swarp_dir: {0}".format(swarp_dir_path) + \
-                    "\n          - image_list[0]: {0}".format(images_list[0])
+                    "\n          - first_image_path: {0}".format(first_image_path)
     logging.info(logging_string)
 
     logging.info("Attempting to create the SWarp folder..")
@@ -325,6 +330,10 @@ def prepare_to_swarp(images_list, swarp_dir_path, special_pars):
     os.chdir(swarp_dir_path)
 
     # we create the list with images to swarp
+    frame_list_name = first_image_path.split("/")[-1][:-5]+'.list'  # we extract the framelist name from the first image in the list
+    current_dir = os.getcwd()
+    os.chdir(swarp_dir_path)
+    logging.info("Creating frame list to swarp in directory: {}".format(os.getcwd()))
     with open(frame_list_name, "w") as f:
         for image in images_list:
             f.write(image[:-5]+".fits\n")

@@ -1327,6 +1327,8 @@ def mefpp_normalize_science(sci_part_list, instrument):
                 header0["BUNIT"] = ("e-/s", "units of image pixels")
                 exptime = header0["EXPTIME"]
 
+                # we also update the saturation key TBD
+
                 for ext_name in ext_name_list:
 
                     ext_data = hdul[ext_name].data
