@@ -43,6 +43,11 @@ PENDING:
 
 - Fix error handling in Scamp. Should separate different error types and write an exception file when there are important issues, such as
   not accurate solution.
+    o currently the solve step can fails silently
+- Notebook 1 fails without proper information when calibration data is incomplete:
+    o catch failures, display them appropriately, and continue with next partition
+    o leave a touched file informing that it is a failed calibration with info on what is missing
+- Create a monitor script that summarizes the product directory:m user should know what is going on!
 - To run ZPCal we need to introduce color equations for the transformation between SDSS magnitudes and the WFI set. Investigate.
     - Should investigate how to estimate zeropoints for all filters. Spain's web pages data for synthetic phot?
 - mefpp: science products are missing the processing keywords
