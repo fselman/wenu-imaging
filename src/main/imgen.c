@@ -575,7 +575,7 @@ int main(int argc, char *argv[])
                 }
                 double3_del(polygon);
             }
-            pixelmap_dump(pixelmap_out, outname);
+            pixelmap_dump(pixelmap_out, outname, NULL);
             pixelmap_del(pixelmap_out);
             break;
 
@@ -745,7 +745,7 @@ int main(int argc, char *argv[])
                 e_error("in disk map generation: aborting");
                 return -1;
             }
-            pixelmap_dump(pixelmap_out, outname);
+            pixelmap_dump(pixelmap_out, outname, NULL);
             pixelmap_del(pixelmap_out);
             break;
 
@@ -757,7 +757,7 @@ int main(int argc, char *argv[])
                 e_error("in disk map generation: aborting");
                 return -1;
             }
-            pixelmap_dump(pixelmap_out, outname);
+            pixelmap_dump(pixelmap_out, outname, NULL);
             pixelmap_del(pixelmap_out);
             break;
 

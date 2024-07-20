@@ -999,9 +999,9 @@ cube_t * mef_cube_framelist_load(framelist *flist, int xtnum)
 	    e_comment(1, "mef_cube_framelist_load: Checking consistency");
 	    }
 
-	/* Check consistency */
+	/* Check consistency - FSE 2024-06-29: force to always read from list by setting single_frames=0. original was 1 */
 	err=0 ;
-	single_frames = 1;
+	single_frames = 0;
 	for (i=1 ; i<flist->n ; i++) {
 		/* Check that all files have the same number of extensions */
 		if (exts[i]!=exts[0]) {
@@ -1636,7 +1636,11 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 	image_t **results;
 	image_t	*norm_gain;
 	pixelmap *bp_map;
+    framelist *flist;
+    qfits_header *fhdr_extra ;
+    int i;
 	char 	cval[80];
+    char    cval_prev[80];
 	
 
         e_comment(1,"loading BPM cube");
@@ -1656,6 +1660,8 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             cube_del(cube_in);
             return NULL;
         }
+
+        /* iproc/detector.c */
         e_comment(1,"regression analysis of BPM cube");
         if (bb->bpm_proportional_flag) results = cube_create_gainmap_proportional(cube_in);
         else results = cube_create_gainmap_robust(cube_in);
@@ -1681,10 +1687,82 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
         } else {
             e_comment(1,"total pixels:%d        good pixels: %d        bad pixels: %d",
                          bp_map->lx*bp_map->ly, bp_map->ngoodpix, bp_map->lx*bp_map->ly - bp_map->ngoodpix);
+
+            /* now we add a few headers to the file */
+            fhdr_extra = qfits_header_default();
+
+            sprintf(cval, "%d", BPP_8_UNSIGNED);
+            qfits_header_add(fhdr_extra, "BITPIX", cval, "bits per pixel", NULL);
+            e_comment(1, "BITPIX added");
+
+            sprintf(cval, "2");
+            qfits_header_add(fhdr_extra, "NAXIS", cval, "single image", NULL);
+
+            sprintf(cval, "%d", bp_map->lx) ;
+            qfits_header_add(fhdr_extra, "NAXIS1", cval, "x axis", NULL);
+
+            sprintf(cval, "%d", bp_map->ly) ;
+            qfits_header_add(fhdr_extra, "NAXIS2", cval, "y axis", NULL);
+
+            /* REC.FLAT.PRSCX */
+            sprintf(cval, "'%d %d'", (((bb->ccd)+(bb->xtnum-1))->prescan_x)[0],
+                 (((bb->ccd)+(bb->xtnum-1))->prescan_x)[1]);
+            qfits_header_add(fhdr_extra, bb->prescan_x_key, cval, bb->prescan_x_comment, NULL);
+
+            /* REC.FLAT.OVSCX */
+            sprintf(cval, "'%d %d'", (((bb->ccd)+(bb->xtnum-1))->overscan_x)[0],
+                 (((bb->ccd)+(bb->xtnum-1))->overscan_x)[1]);
+            qfits_header_add(fhdr_extra, bb->overscan_x_key, cval, bb->overscan_x_comment, NULL);
+
+            /* REC.FLAT.RJOVSC */
+            sprintf(cval, "'%d %d'", bb->scanrej[0], bb->scanrej[1]);
+            qfits_header_add(fhdr_extra, bb->scanrej_key, cval, bb->scanrej_comment, NULL);
+
+            /* REC.BIAS.TRIM */
+            sprintf(cval, "'%d %d %d %d'",
+                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[0],
+                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[1],
+                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[2],
+                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[3]) ;
+            qfits_header_add(fhdr_extra, bb->trimreg_key, cval, bb->trimreg_comment, NULL);
+
+            /* MEF.BPM.PROPFLAG */
+            sprintf(cval, "%d", bb->bpm_proportional_flag);
+            qfits_header_add(fhdr_extra,"HIERARCH ESO BPM PROPFLAG", cval, "Proportional flag", NULL);
+
+            /* MEF.BPM.LGAINTHR */
+            sprintf(cval, "%f",  bb->bpm_gainthr_lo);
+            qfits_header_add(fhdr_extra,"HIERARCH ESO BPM LGAINTHR", cval, "Low gain threshold", NULL);
+
+            /* MEF.BPM.HGAINTHR */
+            sprintf(cval, "%f",  bb->bpm_gainthr_hi);
+            qfits_header_add(fhdr_extra,"HIERARCH ESO BPM HGAINTHR", cval, "High gain threshold", NULL);
+
+            /* We add the list of frames used to determine the BPM */
+            flist = framelist_load(bb->name_bpm);
+            sprintf(cval_prev,"NAXIS2");
+            for (i=0 ; i<flist->n ; i++) {
+                sprintf(cval,"HIERARCH ESO BPM FRAME%02d", i+1);
+                e_comment(1, "mef_build_bpm: adding key %s",cval);
+                qfits_header_add_after(fhdr_extra,cval_prev, cval, flist->name[i], "Frame used for BPM creation.",NULL);
+                sprintf(cval_prev, cval);
+                if (debug_active() >= 1) {
+                    e_comment(1, "mef_build_bpm: using frame %s",flist->name[i]);
+                    }   
+            }
+            qfits_header_consoledump(fhdr_extra);
+
+            sprintf(cval, "%d", bp_map->ngoodpix);
+            qfits_header_add(fhdr_extra, "HIERARCH ESO BPM QC NGOODPIX", cval, "y axis", NULL);
+
+            sprintf(cval, "%d", bp_map->lx*bp_map->ly - bp_map->ngoodpix);
+            qfits_header_add(fhdr_extra, "HIERARCH ESO BPM QC NBADPIX", cval, "y axis", NULL);
+            e_comment(1, "Extra headers struct for BPM created");
+
+
             sprintf(cval,"%s_%02d.fits",bb->name_bpm_o,bb->xtnum);
             e_comment(1,"saving bad pixel map [%s]",cval);
-            pixelmap_dump(bp_map,cval);
-            /* now we add a few headers to the file */
+            pixelmap_dump(bp_map,cval, fhdr_extra);
             e_comment(1,"done");
         }
         if (norm_gain != NULL) image_del(norm_gain);

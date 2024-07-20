@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
 		if (file_exists(pixmapname)) {
 			e_warning("overwriting file [%s]", pixmapname) ;
 		}
-		pixelmap_dump(bad_pixelmap, pixmapname) ;
+		pixelmap_dump(bad_pixelmap, pixmapname, NULL) ;
 		pixelmap_del(bad_pixelmap) ;
 	} else {
 		/* This part takes care of bad pixel cleaning */

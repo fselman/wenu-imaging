@@ -115,10 +115,13 @@ int pixelmap_getbytesize(pixelmap * map)
 void pixelmap_del(pixelmap * p)
 {
     if (p == NULL) return ;
+    e_comment(1, "before free p->data");
     if (p->data != NULL) {
         free(p->data) ;
     }
+    e_comment(1, "before free p");
     free(p) ;
+    e_comment(1, "after free p");
     return ;
 }
 
@@ -221,7 +224,7 @@ void pixelmap_update(pixelmap * p1, pixelmap * p2)
   is minimal.
  */
 /*----------------------------------------------------------------------------*/
-void pixelmap_dump(pixelmap * p, char *	filename)
+void pixelmap_dump(pixelmap * p, char *	filename, qfits_header *   fextra)
 {
     FILE       	*	out ;
     qfits_header*	fh ;
@@ -229,19 +232,26 @@ void pixelmap_dump(pixelmap * p, char *	filename)
 					written ;
 	char			cval[80];
 
+    e_comment(1, "In pixelmap_dump...");
 	if (p==NULL || filename==NULL) return ;
 
     /* Create a simple FITS header  */
-	fh = qfits_header_default();
-	
-	sprintf(cval, "%d", BPP_8_UNSIGNED);
-	qfits_header_add(fh, "BITPIX", cval, "bits per pixel", NULL);
-	sprintf(cval, "2");
-	qfits_header_add(fh, "NAXIS", cval, "single image", NULL);
-	sprintf(cval, "%d", p->lx) ;
-	qfits_header_add(fh, "NAXIS1", cval, "x axis", NULL);
-	sprintf(cval, "%d", p->ly) ;
-	qfits_header_add(fh, "NAXIS2", cval, "y axis", NULL);
+    if (fextra == NULL) {
+	    fh = qfits_header_default(); 
+        sprintf(cval, "%d", BPP_8_UNSIGNED);
+        qfits_header_add(fh, "BITPIX", cval, "bits per pixel", NULL);
+        e_comment(1, "BITPIX added");
+        sprintf(cval, "2");
+        qfits_header_add(fh, "NAXIS", cval, "single image", NULL);
+        sprintf(cval, "%d", p->lx) ;
+        qfits_header_add(fh, "NAXIS1", cval, "x axis", NULL);
+        sprintf(cval, "%d", p->ly) ;
+        qfits_header_add(fh, "NAXIS2", cval, "y axis", NULL);
+        sprintf(cval, "%d", p->ngoodpix);
+    } else {
+        fh = fextra;
+        qfits_header_consoledump(fh);
+    }
 
     /* Now output data  */
 	if (!strcmp(filename, "STDOUT")) {

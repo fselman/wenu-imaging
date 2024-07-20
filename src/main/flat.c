@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
 		} else {
 			e_comment(0, "saving bad pixel map");
 			sprintf(full_nm, "%s_badpix.fits", nm_out);
-			pixelmap_dump(bp_map, full_nm) ;
+			pixelmap_dump(bp_map, full_nm, NULL) ;
 			pixelmap_del(bp_map) ;
 		}
 	}

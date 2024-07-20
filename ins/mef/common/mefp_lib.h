@@ -286,4 +286,5 @@ void	 	save_mef_hdrdump(image_t *,char *,qfits_header *,int);
 image_t 	*mef_build_cal(mef_bb *, char *);
 image_t 	*mef_ff_combine(mef_bb *, image_t *, image_t *, image_t *,pixelmap *);
 image_t		*mef_image_filter_flat(image_t *,int kern_size,pixelmap *);
+pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias);
 #endif

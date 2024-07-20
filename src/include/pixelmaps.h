@@ -161,7 +161,8 @@ void pixelmap_update(pixelmap * p1, pixelmap * p2) ;
  */
 /*----------------------------------------------------------------------------*/
 /* <python> */
-void pixelmap_dump(pixelmap * p, char * filename) ;
+/*void pixelmap_dump(pixelmap * p, char * filename) ;*/
+void pixelmap_dump(pixelmap * p, char * filename, qfits_header *   fextra);
 /* </python> */
 
 /*----------------------------------------------------------------------------*/

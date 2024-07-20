@@ -45,7 +45,11 @@
   slope is fit, and the gain factor is stored into this first image.
 
   The second image contains the y-intercepts of the slope fit. It is usually 
-  good to check it out in case of failures.
+  good to check it out in case of failures. 
+  
+  FSE 2024-07-19: cube_create_gainmap_proportional
+  below assumes 0 intercept. The intercept image could be used to estimate
+  shutter errors when needed, e.g. when analyzing linearity sequences.
 
   The third image contains the sum of squared errors for each fit.
 

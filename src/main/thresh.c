@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
                 e_error("thresholding failed : aborting") ;
                 return -1 ;
             }
-            pixelmap_dump(pixmap_out, name_o) ;
+            pixelmap_dump(pixmap_out, name_o, NULL) ;
             pixelmap_del(pixmap_out) ;
             break ;
 

@@ -194,11 +194,13 @@ cube_t * cube_load_strings(char ** filenames, int nfiles)
 	}
 
 	/* If there is a single file, outsource the job to cube_load_fits() */
+    /* FSE 2024-06-29: disable this case.
 	if (nfiles==1) {
 		if (filenames[0] == NULL) return NULL ;
 		loaded_cube = cube_load_fits(filenames[0]) ;
 		return loaded_cube ;
 	}
+    */
 
     /* Initialize a qfitsloader object per input file. */
     ql = malloc(nfiles * sizeof(qfitsloader));

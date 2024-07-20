@@ -336,6 +336,7 @@ int mef_engine(mef_bb * bb)
 	int		p;
 	char		name_o[FILENAMESZ];
 	char		cval[80];
+    char        cval2[80];
 
 	/* if we request spliting we just do that */
 	if (bb->name_split != NULL) {
@@ -505,18 +506,22 @@ int mef_engine(mef_bb * bb)
 		part++ ;
 		e_comment(0,"---> [%d/%d] Part %d in %d: BPM construction/reading",xts[j],nxts,part,ALGPARTS);
 		sprintf(cval,"%s_%02d.fits",bb->name_bpm,xts[j]);
-		e_comment(0,"     reding file %s",cval);
 		if (is_fits_file(cval) == 1) {
 		    e_comment(1,"reading bad pixel map [%s]",cval);
 		    bp_map = pixelmap_load(cval);
 		    e_comment(1,"done");
 		} else {
-		    bp_map = (pixelmap *) mef_build_bpm(bb,bias);
+            sprintf(cval,"%02d",xts[j]);
+            e_comment(1,"# ------------- BUILDING BAD PIXEL MASK %s --------------", cval);
+            bp_map = (pixelmap *) mef_build_bpm(bb,bias);
 		    if (bp_map == NULL) {
-			e_error("in BPM production: aborting");
-			if (bias != NULL) image_del(bias);
-			return -1;
-		    }
+			    e_error("in BPM production: aborting");
+			    if (bias != NULL) image_del(bias);
+			        return -1;
+		    } else {
+                e_comment(1,"BPM created");
+                e_comment(1,"BPM with axes %d %d created%", bp_map->lx, bp_map->ly);
+            }
 		}
 
 		/*
@@ -723,6 +728,12 @@ int mef_engine(mef_bb * bb)
 		       /*...and that we have real*4 data */
 		       sprintf(cval,"%d", BPP_DEFAULT);
 		       qfits_header_mod(fh,"BITPIX",cval, "Bits per pixel");
+
+               sprintf(cval, "%7.1f", bb->sat_level);
+               qfits_header_add_after(fh,"ARCFILE", "SATLEVEL", cval, "Original saturation level of frame", NULL);
+               sprintf(cval, "%5.3f", bb->sat_max);
+               qfits_header_add_after(fh,"SATLEVEL", "SATNMAX", cval, "Max fraction of pixel saturated", NULL);
+
 		       save_mef_hdrdump(NULL,name_o,fh,BPP_DEFAULT);
 		       qfits_header_destroy(fh);
 		    }
@@ -742,6 +753,43 @@ int mef_engine(mef_bb * bb)
 		    qfits_header_mod(fh,"BZERO","0.0","pixel=FITS*BSCALE+BZERO");
 		    qfits_header_mod(fh, "BSCALE", "1.0", "pixel=FITS*BSCALE+BZERO");
 		    e_comment(1, "done");
+
+            /* here we add the header keys giving the prescan, overscan and trim regions*/
+            /* REC.FLAT.PRSCX */
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->prescan_x)[0]);
+            sprintf(cval2, "%s X1", bb->prescan_x_key);
+            qfits_header_add(fh, cval2, cval, bb->prescan_x_comment, NULL);
+
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->prescan_x)[1]);
+            sprintf(cval2, "%s X2", bb->prescan_x_key);
+            qfits_header_add(fh, cval2, cval, bb->prescan_x_comment, NULL);
+
+            /* REC.FLAT.OVSCX */
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->overscan_x)[0]);
+            sprintf(cval2, "%s X1", bb->overscan_x_key);
+            qfits_header_add(fh, cval2, cval, bb->overscan_x_comment, NULL);
+
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->overscan_x)[1]);
+            sprintf(cval2, "%s X2", bb->overscan_x_key);
+            qfits_header_add(fh, cval2, cval, bb->overscan_x_comment, NULL);
+
+            /* REC.BIAS.TRIM */
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[0]);
+            sprintf(cval2, "%s XMIN", bb->trimreg_key);
+            qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
+
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[1]);
+            sprintf(cval2, "%s XMAX", bb->trimreg_key);
+            qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
+
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[2]);
+            sprintf(cval2, "%s YMIN", bb->trimreg_key);
+            qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
+
+            sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[3]);
+            sprintf(cval2, "%s YMAX", bb->trimreg_key);
+            qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
+
 		    e_comment(1, "dumping extension headers and pixel data of extension %d calibrated %s frame",
 				    xts[j],bb->science_frame_name[p]);
 		    save_mef_hdrdump(prep->plane[p],name_o,fh,BPP_DEFAULT);
@@ -756,10 +804,12 @@ int mef_engine(mef_bb * bb)
 	    if (bias != NULL) {
 		e_comment(1, "deallocating bias memory");
 		image_del(bias);
+        e_comment(1, "done.");
 	    }
 	    if (bp_map != NULL) {
 		e_comment(1, "deallocating bp_map  memory");
 		pixelmap_del(bp_map);
+        e_comment(1, "done.");
 	    }
 	    if (flat_combined != NULL) {
 		e_comment(1, "deallocating flat_combined memory");
