@@ -1,14 +1,38 @@
 mefpp:
 
+- TBD: make the changes to mefpp.paf and bb struct
+       to make de relevant parameters below configurable.
+- Add ESO Phase 3 keywords relevant to mefpp:
+    o PROCATG set to SCIENCE.IMAGE
+    o FILTER set to HIERARCH ESO INS FILT1 NAME
+        o configure in mefpp.paf
+    o RADESYS set to value of RADECSYS
+        o configure in mefpp.paf
+    o TIMESYS set to UTC explicitly
+        o configure in mefpp.paf?
+    o PROG_ID set to HIERARCH ESO OBS PROG ID
+        o configure in mefpp.paf
+    o OBSTECH set to HIERARCH ESO DPR TECH
+        o configure in mefpp.paf
+    o FLUXCAL set to UNCALIBRATED
+    o PROCSOFT set to Pycavi-mefpp
+    o OBID1 set to HIERARCH ESO OBS ID
+        o configure in mefpp.paf
+    0 NCOMBINE set to 1 by default.
+        o configure in mefpp.paf
+    o Added MJD-END key = MJD-OBS + EXPTIME/86400.
+    o Added SATLEVEL key with value read from mefpp.paf. To be propagated and scaled. Used during processing.
+    o Added SATNMAX key, max fraction of saturated pixels allowed, with value read from mefpp.paf.
+
 - install to prefix directory. Done.
 - Separate qfits5 from eclipse. Done.
 - install the man pages. Done.
 - install e_setup. Done.
 - check e_setup to use the prefix installation as defaulty during setup
 - unzip the WFI BPM and recover the method used to create them. Done.
-- test functionality of mefpp
+- test functionality of mefpp. Done
 - copy scripts to prefix in src/Makefile
-- create a version tested in mac
+- create a version tested in mac. Done.
 - test in Linux and create version that works in both environments
 
 pymefpp: This is outdated after pycavi so it will be removed soon.

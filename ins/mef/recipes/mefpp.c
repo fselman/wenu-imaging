@@ -335,8 +335,11 @@ int mef_engine(mef_bb * bb)
 	int		zIndex ;
 	int		p;
 	char		name_o[FILENAMESZ];
+    char    *   cval_ptr;
 	char		cval[80];
     char        cval2[80];
+    float   exptime, mjdobs, mjdend;
+
 
 	/* if we request spliting we just do that */
 	if (bb->name_split != NULL) {
@@ -714,7 +717,7 @@ int mef_engine(mef_bb * bb)
 		    e_comment(1, "saving calibrated extension %d of file %s into: [%s]", \
 				    xts[j], bb->science_frame_name[p], name_o);
 		    if (bb->xtnum == 1) {
-		       /* Read FITS header from input file */
+		       /* Read PRIMARY FITS header from input file */
 		       fh = qfits_header_read(bb->science_frame_name[p]);
 		       if (fh==NULL) {
 		          e_error("reading FITS header from [%s]", bb->science_frame_name[p]);
@@ -729,8 +732,71 @@ int mef_engine(mef_bb * bb)
 		       sprintf(cval,"%d", BPP_DEFAULT);
 		       qfits_header_mod(fh,"BITPIX",cval, "Bits per pixel");
 
+               /* Keys needed for ESO Phase 3 */
+
+               /* Program identification key -- from mefpp.paf */
+               cval_ptr = qfits_header_getstr(fh, "HIERARCH ESO OBS PROG ID");
+               if (cval_ptr!=NULL) {
+                   qfits_header_add_after(fh, "PI-COI","PROG_ID", cval_ptr, "Program identification", NULL);
+               }
+               
+               /* Observation identification */
+               cval_ptr = qfits_header_getstr(fh, "HIERARCH ESO OBS ID");
+               if (cval_ptr!=NULL) {
+                   qfits_header_add_after(fh, "PROG_ID","OBID1", cval_ptr, "Observation block ID", NULL);
+               }
+
+               /* Number of images combined - only 1 during the pre-processing stage */
+               if (cval_ptr!=NULL) {
+                   qfits_header_add_after(fh, "OBID1","NCOMBINE", "1", "Number of observations combined", NULL);
+               }
+
+               /* OBSTECH key -- from mefpp.paf */
+               cval_ptr = qfits_header_getstr(fh, "HIERARCH ESO DPR TECH");
+               if (cval_ptr!=NULL) {
+                   qfits_header_add_after(fh, "INSTRUME","OBSTECH", cval_ptr, "Observation technique", NULL);
+               }
+
+               /* a simple calculation of MJD-END. */
+               exptime = atof(qfits_header_getstr(fh, "EXPTIME"));
+               mjdobs = atof(qfits_header_getstr(fh, "MJD-OBS"));
+               mjdend = mjdobs + exptime/86400.;
+               sprintf(cval, "%.8f", mjdend);
+               qfits_header_add_after(fh, "MJD-OBS", "MJD-END", cval, "End of exposure MJD", NULL);
+
+               /* we set the time system explicitly */
+               cval_ptr = qfits_header_getstr(fh, "UTC");
+               if (cval_ptr!=NULL) {
+                   qfits_header_add_after(fh, "UTC","TIMESYS", "UTC", "Time system", NULL);
+               }
+
+               /* Processing software version */
+               sprintf(cval, "Pycavi-mefpp");
+               sprintf(cval2, "Built on eclipse-%s by N. Devillard", get_eclipse_version());
+               qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
+
+               /* Product category key */
+               qfits_header_add_after(fh,"PROCSOFT", bb->scipro_catg_key, bb->scipro_catg_val, bb->scipro_catg_comment, NULL);
+
+               /* FLUXCAL key */
+               qfits_header_add_after(fh, bb->scipro_catg_key, "FLUXCAL", "UNCALIBRATED", "Flux calibration", NULL);
+
+               /* we rename the RADECSYS key to RADESYS -- from mefpp.paf */
+               cval_ptr = qfits_header_getstr(fh, "RADECSYS");
+               if (cval_ptr!=NULL) {
+                   qfits_header_add_after(fh, "RADECSYS","RADESYS", cval_ptr, "Coordinate reference frame", NULL); 
+                   qfits_header_del(fh,"RADECSYS");
+               }
+               
+               /* we set the filter keyword according to the p3std -- from mefpp.paf */
+               cval_ptr = qfits_header_getstr(fh, "HIERARCH ESO INS FILT1 NAME");
+               if (cval_ptr!=NULL) {
+                   qfits_header_add_after(fh, "EXPTIME","FILTER", cval_ptr, "Filter name", NULL);
+               }
+
+               /* The saturation level and maximum fraction of pixels allowed to go saturated */
                sprintf(cval, "%7.1f", bb->sat_level);
-               qfits_header_add_after(fh,"ARCFILE", "SATLEVEL", cval, "Original saturation level of frame", NULL);
+               qfits_header_add_after(fh, bb->scipro_catg_key, "SATLEVEL", cval, "Original saturation level of frame", NULL);
                sprintf(cval, "%5.3f", bb->sat_max);
                qfits_header_add_after(fh,"SATLEVEL", "SATNMAX", cval, "Max fraction of pixel saturated", NULL);
 

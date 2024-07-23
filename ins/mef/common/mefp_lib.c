@@ -195,6 +195,21 @@ mef_bb * mef_bb_new(void)
 	bb->dpr_type_comment    	= strdup(charval) ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dpr_type_comment); }
 
+        sprintf(buffer,"MEF.SCIPRO.CATG.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->scipro_catg_key            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scipro_catg_key); }
+
+        sprintf(buffer,"MEF.SCIPRO.CATG.VAL");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->scipro_catg_val            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scipro_catg_val); }
+
+        sprintf(buffer,"MEF.SCIPRO.CATG.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->scipro_catg_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scipro_catg_comment); }
+
         sprintf(buffer,"MEF.USE.PRESCAN");
         ivalue = atoi(qfits_paf_query( cfgfile, buffer));
 	bb->use_prescan			= ivalue;
@@ -629,6 +644,10 @@ void mef_bb_del(mef_bb * bb)
 	if (bb->dpr_type_key)           	free(bb->dpr_type_key);
         if (bb->dpr_type_val)           	free(bb->dpr_type_val);
         if (bb->dpr_type_comment)       	free(bb->dpr_type_comment) ;
+
+    if (bb->scipro_catg_key)               free(bb->scipro_catg_key);
+        if (bb->scipro_catg_val)               free(bb->scipro_catg_val);
+        if (bb->scipro_catg_comment)           free(bb->scipro_catg_comment) ;
 	
 	if (bb->filter_key) 			free(bb->filter_key);
 	if (bb->filter_val) 			free(bb->filter_val);

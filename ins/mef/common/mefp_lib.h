@@ -95,6 +95,10 @@ typedef struct _mef_bb_ {
 	char		*dpr_type_val ;
 	char		*dpr_type_comment ;
 
+    char        *scipro_catg_key ;
+    char        *scipro_catg_val ;
+    char        *scipro_catg_comment ;
+
 	/* Frame parameters */
 	float		refpix_x ;
 	float		refpix_y ;
