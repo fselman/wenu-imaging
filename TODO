@@ -41,6 +41,7 @@
 PENDING:
 ========
 
+- the mefpp run command needs to run in the directory where the files are located. It crashes if there is very long file name
 - Fix error handling in Scamp. Should separate different error types and write an exception file when there are important issues, such as
   not accurate solution.
     o currently the solve step can fails silently

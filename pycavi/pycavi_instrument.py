@@ -166,6 +166,11 @@ class Instrument:
         with open(mefpp_paf, 'r') as f:
             lines = f.readlines()
             for aline in lines:
+                aline = aline[:-1]
+                if len(aline) == 0:
+                    continue
+                elif aline[0] == '#':
+                    continue
                 fields = aline.split()
                 if key_str in fields[0]:
                     found_key = True

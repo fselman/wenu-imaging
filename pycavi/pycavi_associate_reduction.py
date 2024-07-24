@@ -756,10 +756,11 @@ def runCmd(str_cmd, basepath, p_shell=True):
     try:
         cwd = os.getcwd()
         os.chdir(basepath)
+        my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
         print('\n---- runCmd: ', str_cmd)
         p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                             close_fds=True)
+                             close_fds=True, env=my_env)
         # Warning
         # We use communicate() rather than .stdin.write, .stdout.read or .stderr.read
         # to avoid deadlocks due to any of the other OS pipe buffers filling up and
@@ -767,7 +768,7 @@ def runCmd(str_cmd, basepath, p_shell=True):
 
         (stdoutdata, stderrdata) = p.communicate()
         err = stdoutdata.decode('utf-8') + " " + stderrdata.decode('utf-8')
-        print('debuggin: ' + err)
+        # print('debuggin: ' + err)
         # IMPORTANT: Next checking (only available when shell=True) not always detect all kind of errors !!
         if err.count('WARNING: Significant inaccuracy'):
             print("Canno't get accuracy astrometric calibration")
@@ -969,8 +970,7 @@ def mefpp_reduce_bias(mefpp_dir, bias_part_list, instrument):
             print('\n\n', basepath.split()[-1], bias_list_exists, mefpp_paf_exists, bpm_exists, bias_already_reduced)
             # os.chdir(basepath)
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           '--bias ' + bias_list + \
-                           ' --biassave > ' + basepath + '/mefpp.log'
+                           '--bias ' + bias_list + ' --biassave'
             print('basepath: ', basepath)
             print('bias_already_reduced: ', bias_already_reduced)
             print('bias_list_exists: ', bias_list_exists)
@@ -1035,8 +1035,7 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list, instrument):
             # os.chdir(basepath)
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
                            ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
-                           ' --dome ' + dome_list + \
-                           ' --domesave > ' + basepath + '/mefpp.log'
+                           ' --dome ' + dome_list + ' --domesave'
             print(command_line)
             rcode = runCmd(command_line, basepath)
             if rcode == 1:
@@ -1106,7 +1105,7 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
                            ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
                            ' --dome ' + basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits ' + \
                            ' --sky ' + sky_list + ' --skysave ' + \
-                           '  > ' + basepath + '/mefpp.log'
+                           ' --mffsave ' + basepath + '/'+instrument.mff_prefix+'_' + sky_part.filter + '_1x1.fits'
             print('\n', command_line)
             rcode = runCmd(command_line, basepath)
             if rcode == 1:
@@ -1175,8 +1174,7 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
                            ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
                            ' --mff ' + basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits ' + \
-                           ' --science ' + sci_list + \
-                           '  > ' + basepath + '/mefpp.log'
+                           ' --science ' + sci_list
             print('\n', command_line)
             rcode = runCmd(command_line, basepath)
             if rcode == 1:

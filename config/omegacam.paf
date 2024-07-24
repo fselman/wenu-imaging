@@ -19,6 +19,12 @@ MEF.DPR.CATG.KEY                           "HIERARCH ESO DPR CATG";
 MEF.DPR.CATG.COMMENT                           "product frame category";
 MEF.DPR.TYPE.KEY                           "HIERARCH ESO DPR TYPE";
 MEF.DPR.TYPE.COMMENT                           "product frame type";
+
+# ESO Phase 3 keys
+MEF.SCIPRO.CATG.KEY                   "PROCATG";
+MEF.SCIPRO.CATG.VAL                   "SCIENCE.MEFIMAGE";
+MEF.SCIPRO.CATG.COMMENT               "Preprocessed frame category for phase 3";
+
 #  
 MEF.NCHIPS                              32;
 MEF.CORRECT.REFPIXELS                    0;
