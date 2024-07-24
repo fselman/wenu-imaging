@@ -37,11 +37,14 @@
 - DONE up to and including swarp. testing with actual WFI data+debug
 - DONE. Separate Swarp into a prepaper and run utilities and permit the update of some keys in the main notebook a la scamp notebook.
 - DONE. Read in strument from pycavi.cfg for those notebooks that needs it.
+- DONE. the mefpp run command needs to run in the directory where the files are located. It crashes if there is very long file name. Done and debugged.
+- DONE. Change runCmd for run_command with logfile writing and environment passing. Done and debugged.
+- DONE. Fix bug in associate library which attempt to add FILTER keyord to file which already have one. Done and debugged.
 
 PENDING:
 ========
 
-- the mefpp run command needs to run in the directory where the files are located. It crashes if there is very long file name
+- Add renormalization of SATURATE keyword in notebook 3.
 - Fix error handling in Scamp. Should separate different error types and write an exception file when there are important issues, such as
   not accurate solution.
     o currently the solve step can fails silently

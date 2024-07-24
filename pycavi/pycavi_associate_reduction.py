@@ -725,6 +725,87 @@ def associate_bpm(partition, bpm_partitions,instrument):
                     pass
                 Path(part.bpmPartition.base_path + '/toreduce_bias').touch()
 
+# ======================================================================
+# A utility function
+# ======================================================================
+def run_commands(str_cmd, p_shell=True, my_env=None, logfile=None):
+    """
+    A wrapper to run system commands.
+
+    Parameters
+    ----------
+    str_cmd: str
+      Command string to be executed in the shell
+
+    p_shell: bool
+      If True (default), command will be executed through the shell, and all
+      cout/cerr messages will be available.
+      If False, exception is the only way to find out problems during the call.
+
+    logfile: str
+        If given will define the path of the file where the stdout and stderr will be printed.
+
+    Returns
+    -------
+      0 if some error, or 1 if all was OK
+
+    """
+
+    logging.info("run_command: Running command: {0}".format(str_cmd))
+    log_path = subprocess.PIPE if logfile is None else open(logfile, "w+")
+    univ_lines = None if logfile is None else True
+
+    try:
+        if my_env is None:
+            p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE, stdout=log_path,
+                                 stderr=log_path, close_fds=True, universal_newlines=univ_lines)
+        else:
+            p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE, stdout=log_path,
+                                 stderr=log_path, close_fds=True, universal_newlines=univ_lines, env=my_env)
+    except Exception as e:
+        logging.info("Some error while running command...")
+        print(e)
+        raise
+
+    # wait for the process to finish
+    while True:
+        if p.poll() is not None:
+            break
+
+    if logfile is not None:
+        log_path.close()
+
+    # Warning
+    # We use communicate() rather than .stdin.write, .stdout.read or .stderr.read
+    # to avoid deadlocks due to any of the other OS pipe buffers filling up and
+    # blocking the child process.(Python Ref.doc)
+
+    # modified by me (Lientur) to allow the creation of a txt logfile somewhere
+    # reads this logfile and look for the errors
+
+    if logfile is None:
+        (stdoutdata, stderrdata) = p.communicate()
+        err = stdoutdata.decode('utf-8') + " " + stderrdata.decode('utf-8')
+
+        # IMPORTANT: Next checking (only available when shell=True) not always detect all kind of errors !!
+        if (err.count('ERROR ') or err.count('error ') or err.count("Error ") \
+              or err.count('*Error*')
+              or err.count('Segmentation fault') or err.count("command not found")
+              or err.count("No such file or directory")):
+            logging.info("An error happened while running command --> {0}".format(err))
+            logging.info(stderrdata.decode("ascii"))
+            return 1  # ERROR
+        else:
+            logging.info(stdoutdata.decode('utf-8'))
+            return 0  # NO ERROR
+    else:
+        with open(logfile, "r") as f:
+            err = f.readlines()
+        for line in err:
+            if "Error" in line:
+                logging.info("An error happened while running command --> {0}".format(line[:-1]))
+                return 1
+        return 0
 
 def runCmd(str_cmd, basepath, p_shell=True):
     """
@@ -926,6 +1007,8 @@ def copy_paf(mefpp_dir, basepath, instrument):
     return mefpp_paf_exists
 
 def mefpp_reduce_bpm(mefpp_dir, calib_dir, instrument):
+    print("\n----------------------------- mefpp_reduce_bpm ------------------------------")
+    print('mefpp_reduce_bpm: In the current version a simple copy from the software datadir to static_cal dir')
     # here we reduce the bpm frames which for now is only a cp operation
     bpm_files_list = [mefpp_dir + '/static_cal/' +instrument.bpm_prefix +'_%02d.fits' % i for i in range(1, instrument.next_valid+1)]
     for file in bpm_files_list:
@@ -935,12 +1018,12 @@ def mefpp_reduce_bpm(mefpp_dir, calib_dir, instrument):
 
 
 def mefpp_reduce_bias(mefpp_dir, bias_part_list, instrument):
+    print("\n----------------------------- mefpp_reduce_bias ------------------------------")
     print('mefpp_reduce_bias: length of bias partition list: %d' % len(set(bias_part_list)))
     for bias_part in set(bias_part_list):
 
         basepath = bias_part.base_path
         bias_list = basepath + '/bias.list'
-        print('mefpp_reduce_bias: ', bias_list)
 
         bias_list_exists = False
         if Path(bias_list).exists():
@@ -966,35 +1049,37 @@ def mefpp_reduce_bias(mefpp_dir, bias_part_list, instrument):
 
         # we produce the master bias here if not already done
         #
+        print('\n\nbasepath: ', basepath)
+        print('bias_already_reduced: ', bias_already_reduced)
+        print('bias_list_exists: ', bias_list_exists)
+        print('mefpp_paf_exists: ', mefpp_paf_exists)
+        print('bpm_exists: ', bpm_exists)
+        print('bias_list: ', bias_list)
         if (not bias_already_reduced) and (bias_list_exists and mefpp_paf_exists and bpm_exists):
             print('\n\n', basepath.split()[-1], bias_list_exists, mefpp_paf_exists, bpm_exists, bias_already_reduced)
             # os.chdir(basepath)
+            #command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
+                           #'--bias ' + bias_list + ' --biassave'
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           '--bias ' + bias_list + ' --biassave'
-            print('basepath: ', basepath)
-            print('bias_already_reduced: ', bias_already_reduced)
-            print('bias_list_exists: ', bias_list_exists)
-            print('mefpp_paf_exists: ', mefpp_paf_exists)
-            print('bpm_exists: ', bpm_exists)
+                           '--bias bias.list  --biassave'
             print('\n', command_line)
-            print('\nbias_list: ', bias_list)
-            rcode = runCmd(command_line, basepath)
+            cwd = os.getcwd()
+            os.chdir(basepath)
+            my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
+            rcode =  run_commands(command_line, p_shell=True, logfile='mefpp.log', my_env=my_env)
             if rcode == 1:
                 raise Exception('Error running ' + command_line)
             else:
                 print('success running ' + command_line)
-            # os.chdir(cwd)
+            os.chdir(cwd)
         else:
-            print('basepath: ', basepath)
-            print('bias_already_reduced: ', bias_already_reduced)
-            print('bias_list_exists: ', bias_list_exists)
-            print('mefpp_paf_exists: ', mefpp_paf_exists)
-            print('bpm_exists: ', bpm_exists)
+            print('Skipping bias reduction')
 
 
 def mefpp_reduce_dome(mefpp_dir, dome_part_list, instrument):
+    print("\n----------------------------- mefpp_reduce_dome ------------------------------")
     print('mefpp_reduce_dome: length of dome partition list: %d' % len(set(dome_part_list)))
-    for dome_part in dome_part_list:
+    for dome_part in set(dome_part_list):
 
         basepath = dome_part.base_path
         dome_list = basepath + '/dome.list'
@@ -1023,31 +1108,38 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list, instrument):
 
         dome_already_reduced = False
         if Path(basepath + '/'+instrument.domeff_prefix+'_' + dome_part.filter + '_1x1.fits').exists():
-            print(instrument.domeff_prefix+'_' + dome_part.filter + '_1x1.fits exists ***')
             dome_already_reduced = True
         else:
-            print(instrument.domeff_prefix+'_' + dome_part.filter + '_1x1.fits does not exists ***')
+            pass
 
-        print(basepath.split()[-1], dome_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, dome_already_reduced)
+        print("\n\nbase_path: {}".format(basepath.split()[-1]))
+        print("dome_list_exists: {}".format(dome_list_exists))
+        print("paf exists: {}".format(mefpp_paf_exists))
+        print("bpm exists: {}".format(bpm_exists))
+        print("Master bias exists: {}".format(mb_exists))
+        print("dome already reduced: {}".format(dome_already_reduced))
 
         if (not dome_already_reduced) and (dome_list_exists and mefpp_paf_exists and bpm_exists and mb_exists):
-            print(basepath.split()[-1], dome_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, dome_already_reduced)
-            # os.chdir(basepath)
+            logging.info("\nDome not processed and all requirements available. Processing...")
+            cwd = os.getcwd()
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
-                           ' --dome ' + dome_list + ' --domesave'
-            print(command_line)
-            rcode = runCmd(command_line, basepath)
+                           ' --bias ' + instrument.bias_prefix+'_1x1.fits ' + \
+                           ' --dome dome.list  --domesave'
+            os.chdir(basepath)
+            my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
+            rcode =  run_commands(command_line, p_shell=True, logfile='mefpp.log', my_env=my_env)
+
             if rcode == 1:
                 raise Exception('Error running ' + command_line)
             else:
                 print('success running ' + command_line)
-            # os.chdir(cwd)
+            os.chdir(cwd)
         else:
             print('skipping dome reduction')
 
 
 def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
+    print("\n----------------------------- mefpp_reduce_sky (and mff)  ------------------------------")
     print('mefpp_reduce_sky: length of sky partition list: %d' % len(set(sky_part_list)))
     for sky_part in set(sky_part_list):
 
@@ -1080,43 +1172,49 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
         domeff_exists = False
         domeff_name = basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits'
         if Path(domeff_name).exists():
-            print(domeff_name + ' exists')
             domeff_exists = True
         else:
-            print(domeff_name + ' does not exist')
             pass
 
         sky_already_reduced = False
         skyff_name = basepath + '/'+instrument.skyff_prefix+'_' + sky_part.filter + '_1x1.fits'
         if Path(skyff_name).exists():
-            print(skyff_name + ' exists')
             sky_already_reduced = True
         else:
-            print(skyff_name + ' does not exist')
+            pass
 
-        print(basepath.split()[-1], sky_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, domeff_exists,
-              sky_already_reduced)
+        print("\n\nbase_path: {}".format(basepath.split()[-1]))
+        print("paf exists: {}".format(mefpp_paf_exists))
+        print("bpm exists: {}".format(bpm_exists))
+        print("Master bias exists: {}".format(mb_exists))
+        print("domeff_exists: {}".format(domeff_exists))
+        print("sky already reduced: {}".format(sky_already_reduced))
 
         if (not sky_already_reduced) and (
                 sky_list_exists and mefpp_paf_exists and bpm_exists and mb_exists and domeff_exists):
-            print(basepath.split()[-1], sky_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, domeff_exists,
-                  sky_already_reduced)
+            cwd = os.getcwd()
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
-                           ' --dome ' + basepath + '/'+instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits ' + \
-                           ' --sky ' + sky_list + ' --skysave ' + \
-                           ' --mffsave ' + basepath + '/'+instrument.mff_prefix+'_' + sky_part.filter + '_1x1.fits'
+                           ' --bias ' + instrument.bias_prefix+'_1x1.fits ' + \
+                           ' --dome ' + instrument.domeff_prefix+'_' + sky_part.filter + '_1x1.fits ' + \
+                           ' --sky sky.list  --skysave ' + \
+                           ' --mffsave ' + instrument.mff_prefix
             print('\n', command_line)
-            rcode = runCmd(command_line, basepath)
+            os.chdir(basepath)
+            my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
+            rcode =  run_commands(command_line, p_shell=True, logfile='mefpp.log', my_env=my_env)
+
             if rcode == 1:
                 raise Exception('Error running ' + command_line)
             else:
                 print('success running ' + command_line)
+            os.chdir(cwd)
         else:
             print('skipping sky reduction')
 
 
 def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
+    print("\n----------------------------- mefpp_reduce_science ------------------------------")
+    print('mefpp_reduce_science: length of science partition list: %d' % len(set(sci_part_list)))
     for sci_part in set(sci_part_list):
 
         basepath = sci_part.base_path
@@ -1153,34 +1251,35 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
         mff_exists = False
         mff_name = basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits'
         if Path(mff_name).exists():
-            print(mff_name + ' exists')
             mff_exists = True
         else:
-            print(mff_name + ' does not exist')
             pass
 
         print(basepath.split()[-1], sci_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, mff_exists)
+        print("\n\nbase_path: {}".format(basepath.split()[-1]))
+        print("paf exists: {}".format(mefpp_paf_exists))
+        print("bpm exists: {}".format(bpm_exists))
+        print("Master bias exists: {}".format(mb_exists))
+        print("Master flat field exists: {}".format(mff_exists))
+        print("sci list exists: {}".format(sci_list_exists))
 
         if True and (sci_list_exists and mefpp_paf_exists and bpm_exists and mb_exists and mff_exists):
-            print(basepath.split()[-1], sci_list_exists, mefpp_paf_exists, bpm_exists, mb_exists, mff_exists)
 
-            # check if sci_list has one line. If it does replace sci_list with the name of the science image
-            f = open(sci_list, 'r')
-            content = f.readlines()
-            f.close()
-            #if len(content) == 1:
-            #    sci_list = content[0]
-
+            cwd = os.getcwd()
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
-                           ' --bias ' + basepath + '/'+instrument.bias_prefix+'_1x1.fits ' + \
-                           ' --mff ' + basepath + '/'+instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits ' + \
-                           ' --science ' + sci_list
+                           ' --bias ' + instrument.bias_prefix+'_1x1.fits ' + \
+                           ' --mff ' + instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits ' + \
+                           ' --science science.list '
             print('\n', command_line)
-            rcode = runCmd(command_line, basepath)
+            os.chdir(basepath)
+            my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
+            rcode =  run_commands(command_line, p_shell=True, logfile='mefpp.log', my_env=my_env)
+
             if rcode == 1:
                 raise Exception('Error running ' + command_line)
             else:
                 print('success running ' + command_line)
+            os.chdir(cwd)
         else:
             print('skipping reduction')
 
@@ -1293,18 +1392,18 @@ def mefpp_normalize_science(sci_part_list, instrument):
                 header0 = hdul[0].header
 
                 # translate filter keyword
+                zfilter = 'NOT_FOUND'
                 try:
                     zfilter = header0[instrument.filt_key]
-                    logging.debug('mefpp_normalize_science: FILTER: ' + zfilter)
                 except:
-                    zfilter = 'NOT_FOUND'
                     logging.debug('mefpp_normalize_science: failed to determine FILTER. Setting it to NOT_FOUND')
 
-                try:
-                    header0.insert('LST', ('FILTER', zfilter, 'pycavi: Filter used for observation'), after=True)
-                    logging.info('mefpp_normalize_science: Setting FILTER to ' + zfilter)
-                except:
-                    logging.debug('mefpp_normalize_science: failed to insert keyword FILTER after keyword LST')
+                if 'FILTER' not in header0.keys():
+                    try:
+                        header0.insert('LST', ('FILTER', zfilter, 'pycavi: Filter used for observation'), after=True)
+                        logging.info('mefpp_normalize_science: Setting FITS key FILTER to ' + zfilter)
+                    except:
+                        logging.debug('mefpp_normalize_science: failed to insert keyword FILTER after keyword LST')
 
                 # translate airmass keyword
                 try:
