@@ -1,8 +1,6 @@
 mefpp:
 
-- TBD: make the changes to mefpp.paf and bb struct
-       to make de relevant parameters below configurable.
-- Add ESO Phase 3 keywords relevant to mefpp:
+- DONE. Add ESO Phase 3 keywords relevant to mefpp:
     o PROCATG set to SCIENCE.IMAGE
     o FILTER set to HIERARCH ESO INS FILT1 NAME
         o configure in mefpp.paf

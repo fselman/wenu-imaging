@@ -58,7 +58,7 @@ Description	:	MEF flat-field creation recipe, from WFI by
 #define OPT_SPLIT		3100
 
 
-static char recipe_version[] = "$Revision: 1.6.0 $";
+static char recipe_version[] = "mefpp-2.0.0";
 
 static void usage(char *pname) ;
 static char prog_desc[] = "MEF master calibration frames creation" ;
@@ -440,21 +440,47 @@ int mef_engine(mef_bb * bb)
 	 * later on.
 	 */
 	bb->bias_median  = (float *) malloc(nxts*sizeof(float));
+    bb->bias_stdev   =  (float *)  malloc(nxts*sizeof(float));
 	bb->bias_nplanes =   (int *) malloc(nxts*sizeof(int));
+    bb->bias_scan_median = (float *)  malloc(nxts*sizeof(float));
+    bb->bias_scan_stdev = (float *)  malloc(nxts*sizeof(float));
+
 	bb->dome_median  = (float *) malloc(nxts*sizeof(float));
+    bb->dome_stdev   =  (float *) malloc(nxts*sizeof(float));
 	bb->dome_nplanes =   (int *) malloc(nxts*sizeof(int));
+    bb->dome_scan_median = (float *)  malloc(nxts*sizeof(float));
+    bb->dome_scan_stdev = (float *)  malloc(nxts*sizeof(float));
+
 	bb->sky_median   = (float *) malloc(nxts*sizeof(float));
+    bb->sky_stdev    = (float *) malloc(nxts*sizeof(float));
 	bb->sky_nplanes  =   (int *) malloc(nxts*sizeof(int));
+    bb->sky_scan_median = (float *)  malloc(nxts*sizeof(float));
+    bb->sky_scan_stdev = (float *)  malloc(nxts*sizeof(float));
+
 	bb->flat_median  = (float *) malloc(nxts*sizeof(float));
+    bb->flat_stdev   = (float *) malloc(nxts*sizeof(float));
 
 	for (j=0 ; j<nxts ; j++) {
 		bb->bias_median[j] 	= 0.0;
+        bb->bias_stdev[j]  = 0.0;
 		bb->bias_nplanes[j] 	= 0;
+        bb->bias_scan_median[j] = 0.0;
+        bb->bias_scan_stdev[j] = 0.0;
+
 		bb->dome_median[j] 	= 0.0;
+        bb->dome_stdev[j] = 0.0;
+        bb->dome_scan_median[j]  = 0.0;
+        bb->dome_scan_stdev[j] = 0.0;
 		bb->dome_nplanes[j] 	= 0;
+
 		bb->sky_median[j]  	= 0.0;
+        bb->sky_stdev[j] = 0.0;
 		bb->sky_nplanes[j]  	= 0;
+        bb->sky_scan_median[j]  = 0.0;
+        bb->sky_scan_stdev[j] = 0.0;
+
 		bb->flat_median[j] 	= 0.0;
+        bb->flat_stdev[j]  = 0.0;
 	}
 
 
@@ -487,9 +513,22 @@ int mef_engine(mef_bb * bb)
 		if (is_fits_file(bb->name_bias) == 1) {
 		    bias = mef_load_ext(bb->name_bias,bb->xtnum);
 		    bb->bias_median[zIndex] = image_getmedian(bias);
+            bb->bias_stdev[zIndex] = image_getstdev(bias);
 		    bb->bias_nplanes[zIndex] = 1;
-		    e_comment(1,"bias median value: %f",bb->bias_median[zIndex]);
+		    e_comment(1,"bias median value: %f   bias std dev value: %f",bb->bias_median[zIndex], bb->bias_stdev[zIndex]);
 		} else {
+
+           /* Load frame names for error messages */
+            flist = framelist_load(bb->name_bias);
+            bb->bias_nframes = flist->n ;
+            bb->bias_frame_name = malloc(flist->n * sizeof(char*));
+            for (i=0 ; i<flist->n ; i++) {
+                bb->bias_frame_name[i] = strdup(flist->name[i]);
+                e_comment(1,"Frame %d: %s",i,bb->bias_frame_name[i]);
+             }
+             framelist_del(flist); 
+
+
 		    bias = mef_build_cal(bb, "bias");
 		    e_comment(1,"back in the grid");
 		    if (bias==NULL) {
@@ -533,13 +572,26 @@ int mef_engine(mef_bb * bb)
 		if (bb->name_dome != NULL) {
 		    part++ ;
 		    if (is_fits_file(bb->name_mf) != 1) {
-		       e_comment(0,"---> [%d/%d] Part %d in %d: Dome flat construction",xts[j],nxts,part,ALGPARTS);
 		       if (is_fits_file(bb->name_dome)) {
+                   e_comment(0,"---> [%d/%d] Part %d in %d: Skypping dome flat construction, reading it",xts[j],nxts,part,ALGPARTS);
 		           flat_dome = mef_load_ext(bb->name_dome,bb->xtnum);
 		           bb->dome_median[zIndex] = image_getmedian(flat_dome);
                            bb->dome_nplanes[zIndex] = 1;
 		           e_comment(1,"dome median value: %f",bb->dome_median[zIndex]);
-                       } else {
+               } else {
+
+                   e_comment(0,"---> [%d/%d] Part %d in %d: Dome flat construction",xts[j],nxts,part,ALGPARTS);
+
+                   /* Load frame names for error messages */
+                    flist = framelist_load(bb->name_dome);
+                    bb->dome_nframes = flist->n ;
+                    bb->dome_frame_name = malloc(flist->n * sizeof(char*));
+                    for (i=0 ; i<flist->n ; i++) {
+                        bb->dome_frame_name[i] = strdup(flist->name[i]);
+                        e_comment(1,"Frame %d: %s",i,bb->dome_frame_name[i]);
+                    }
+                    framelist_del(flist);
+
 		           flat_dome = mef_build_cal(bb, "dome");
 		           if (flat_dome==NULL) {
 		   	       e_error("in dome flat production: aborting");
@@ -553,7 +605,7 @@ int mef_engine(mef_bb * bb)
 
 		       }
 		    } else {
-		       e_comment(0,"---> [%d/%d] Part %d in %d: skipping dome flat construction",xts[j],nxts,part,ALGPARTS);
+		       e_comment(0,"---> [%d/%d] Part %d in %d: skipping dome flat construction. We have the MFF.",xts[j],nxts,part,ALGPARTS);
 		    }
 		}
 
@@ -565,12 +617,25 @@ int mef_engine(mef_bb * bb)
 		    if (is_fits_file(bb->name_mf) != 1) {
 		       if (is_fits_file(bb->name_sky)) {
 		           e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction",xts[j],nxts,part,ALGPARTS);
+
 		           flat_sky = mef_load_ext(bb->name_sky,bb->xtnum);
 		           bb->sky_median[zIndex] = image_getmedian(flat_sky);
                            bb->sky_nplanes[zIndex] = 1;
 		           e_comment(1,"sky median value: %f",bb->sky_median[zIndex]);
-                       } else {
+               } else {
 		           e_comment(0,"---> [%d/%d] Part %d in %d: Sky flat construction",xts[j],nxts,part,ALGPARTS);
+
+                   /* Load frame names for error messages */
+                    flist = framelist_load(bb->name_sky);
+                    bb->sky_nframes = flist->n ;
+                    bb->sky_frame_name = malloc(flist->n * sizeof(char*));
+                    for (i=0 ; i<flist->n ; i++) {
+                        bb->sky_frame_name[i] = strdup(flist->name[i]);
+                        e_comment(1,"Frame %d: %s",i,bb->sky_frame_name[i]);
+                    }
+                    framelist_del(flist);
+
+
 		           flat_sky = mef_build_cal(bb, "sky");
 		           if (flat_sky==NULL) {
 			       e_error("in sky flat production: aborting");
@@ -585,7 +650,7 @@ int mef_engine(mef_bb * bb)
 
 		       }
 		    } else {
-		       e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction",xts[j],nxts,part,ALGPARTS);
+		       e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction. We have the MFF.",xts[j],nxts,part,ALGPARTS);
 		    }
 		}
 
@@ -639,12 +704,12 @@ int mef_engine(mef_bb * bb)
 
 		/* Load frame names for error messages */
 		if (is_fits_file(bb->science_name_i)==1) {
-	            bb->np = 1 ;
+	            bb->science_nframes = 1 ;
 	            bb->science_frame_name = malloc(sizeof(char*));
 	            bb->science_frame_name[0] = strdup(bb->science_name_i);
 	        } else {
                     flist = framelist_load(bb->science_name_i);
-                    bb->np = flist->n ;
+                    bb->science_nframes = flist->n ;
                     bb->science_frame_name = malloc(flist->n * sizeof(char*));
                     for (i=0 ; i<flist->n ; i++) {
                        bb->science_frame_name[i] = strdup(flist->name[i]);
@@ -673,7 +738,7 @@ int mef_engine(mef_bb * bb)
 		/* Overscan/prescan correction and trimming */
 		part++;
 		e_comment(0, "--> [%d/%d] Part %d of %d: applying overscan/prescan/trimming", xts[j], nxts, part, ALGPARTS);
-		mef_cube_overscan_correction(prep,bb);
+		mef_cube_overscan_correction(prep,bb, "science");
 
 		/* Bias correction */
 
@@ -732,7 +797,7 @@ int mef_engine(mef_bb * bb)
 		       sprintf(cval,"%d", BPP_DEFAULT);
 		       qfits_header_mod(fh,"BITPIX",cval, "Bits per pixel");
 
-               /* Keys needed for ESO Phase 3 */
+               /* Keys needed for ESO Phase3 */
 
                /* Program identification key -- from mefpp.paf */
                cval_ptr = qfits_header_getstr(fh, "HIERARCH ESO OBS PROG ID");
@@ -841,19 +906,19 @@ int mef_engine(mef_bb * bb)
 
             /* REC.BIAS.TRIM */
             sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[0]);
-            sprintf(cval2, "%s XMIN", bb->trimreg_key);
+            sprintf(cval2, "%s X1", bb->trimreg_key);
             qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
 
             sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[1]);
-            sprintf(cval2, "%s XMAX", bb->trimreg_key);
+            sprintf(cval2, "%s X2", bb->trimreg_key);
             qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
 
             sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[2]);
-            sprintf(cval2, "%s YMIN", bb->trimreg_key);
+            sprintf(cval2, "%s Y1", bb->trimreg_key);
             qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
 
             sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[3]);
-            sprintf(cval2, "%s YMAX", bb->trimreg_key);
+            sprintf(cval2, "%s Y2", bb->trimreg_key);
             qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
 
 		    e_comment(1, "dumping extension headers and pixel data of extension %d calibrated %s frame",
