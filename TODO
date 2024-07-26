@@ -40,21 +40,23 @@
 - DONE. the mefpp run command needs to run in the directory where the files are located. It crashes if there is very long file name. Done and debugged.
 - DONE. Change runCmd for run_command with logfile writing and environment passing. Done and debugged.
 - DONE. Fix bug in associate library which attempt to add FILTER keyord to file which already have one. Done and debugged.
+- DONE. Add renormalization of SATURATE keyword in notebook 3.
+- DONE. Add ONEADU keyword translating the 1ADU value in a raw frame to e/s.
+- DONE. Store in a HIERARCH key the original SATLEVEL key rom the raw frame (tipically 65534).
+- DONE. mefpp: science products are missing the processing keywords.
 
 PENDING:
 ========
 
-- Add renormalization of SATURATE keyword in notebook 3.
 - Fix error handling in Scamp. Should separate different error types and write an exception file when there are important issues, such as
   not accurate solution.
     o currently the solve step can fails silently
 - Notebook 1 fails without proper information when calibration data is incomplete:
     o catch failures, display them appropriately, and continue with next partition
     o leave a touched file informing that it is a failed calibration with info on what is missing
-- Create a monitor script that summarizes the product directory:m user should know what is going on!
+- Create a monitor script that summarizes the product directory: user should know what is going on!
 - To run ZPCal we need to introduce color equations for the transformation between SDSS magnitudes and the WFI set. Investigate.
     - Should investigate how to estimate zeropoints for all filters. Spain's web pages data for synthetic phot?
-- mefpp: science products are missing the processing keywords
 - suffix 1x1 should be reinserted. It is created by mefpp. I have hardcoded it for the time.
 - fix logging, change papi_astromatic runCmd for run_command with logfile.
 - adding QC keys to files

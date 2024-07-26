@@ -10,10 +10,10 @@ PAF.LCHG.DAYTIM                                  "";
 PAF.CHCK.CHECKSUM                                "";
 PAF.HDR.END                                      ;         # end of header
 #
-MEF.ORIGIN                             "ESO";
+MEF.ORIGIN                             "ESO-LASILLA";
 MEF.TELESCOPE                          "MPI 2.2-m";
 MEF.INSTRUMENT                         "WFI";
-MEF.RECIPE.KEY                        "HIERARCH MEFPP REC";
+MEF.RECIPE.KEY                        "HIERARCH ESO MPP";
 #
 MEF.DPR.CATG.KEY                      "HIERARCH ESO DPR CATG";
 MEF.DPR.CATG.COMMENT                  "product frame category";
@@ -28,7 +28,7 @@ MEF.SCIPRO.CATG.COMMENT               "Preprocessed frame category for phase 3";
 MEF.CORRECT.REFPIXELS                  1;
 #
 MEF.USE.PRESCAN                        0;
-MEF.PRESCAN.X.KEY                      "HIERARCH MEFPP REC FLAT PRSCX";
+MEF.PRESCAN.X.KEY                      "HIERARCH ESO MPP PRSCX";
 MEF.PRESCAN.X.COMMENT                  "Prescan xmin xmax";
 MEF.PRESCAN.X.MIN.CHIP1                 5;
 MEF.PRESCAN.X.MAX.CHIP1                48;
@@ -48,7 +48,7 @@ MEF.PRESCAN.X.MIN.CHIP8                 5;
 MEF.PRESCAN.X.MAX.CHIP8                 48;
 #;
 MEF.USE.OVERSCAN                        1;
-MEF.OVERSCAN.X.KEY                      "HIERARCH MEFPP REC FLAT OVSCX";
+MEF.OVERSCAN.X.KEY                      "HIERARCH ESO MPP OVSCX";
 MEF.OVERSCAN.X.COMMENT                  "Overscan xmin xmax";
 MEF.OVERSCAN.X.MIN.CHIP1                2100;
 MEF.OVERSCAN.X.MAX.CHIP1                2142;
@@ -103,7 +103,7 @@ MEF.CRVAL2.CHIP8                           3950;
 MEF.CRPIX1.CHIP8                           4188;
 MEF.CRPIX2.CHIP8                           3967;
 #
-MEF.SCANREJ.KEY                           "HIERARCH MEFPP REC FLAT RJOVSC";
+MEF.SCANREJ.KEY                           "HIERARCH ESO MPP RJOVSC";
 MEF.SCANREJ.COMMENT                       "Rejection min max";
 MEF.SCANREJ.MIN                            10;
 MEF.SCANREJ.MAX                            10;
@@ -113,7 +113,7 @@ MEF.CROP.X.MAX                           2090;
 MEF.CROP.Y.MIN                           35;
 MEF.CROP.Y.MAX                           4120;
 #
-MEF.TRIMREG.KEY                           "HIERARCH MEFPP REC FLAT TRIM";
+MEF.TRIMREG.KEY                           "HIERARCH ESO MPP TRIM";
 MEF.TRIMREG.COMMENT                      "xmin xmax ymin ymax";
 #
 MEF.CROP.X.MIN.CHIP1                      51;
@@ -178,9 +178,9 @@ MEF.CCD.GAIN.CHIP6                      2.1;
 MEF.CCD.GAIN.CHIP7                      2.2;
 MEF.CCD.GAIN.CHIP8                      2.2;
 #
-MEF.BIAS.FRAME.I.KEY                   "HIERARCH MEFPP REC BIAS";
+MEF.BIAS.FRAME.I.KEY                   "HIERARCH ESO MPP BIAS";
 MEF.BIAS.FRAME.I.COMMENT               "Input bias frame";
-MEF.MASTER.BIAS.KEY                    "HIERARCH MEFPP REC FLAT MBIAS";
+MEF.MASTER.BIAS.KEY                    "HIERARCH ESO MPP MBIAS";
 MEF.MASTER.BIAS.COMMENT                "Master bias used";
 MEF.BIAS.NAME.O                        "WFI_MB";
 MEF.BIAS.FRAMETHR.LO                    0;
@@ -190,39 +190,39 @@ MEF.BIAS.FRAMENUM.MIN                   3;
 #
 MEF.BPM.NAME                            "WFI_BPM";
 MEF.BPM.NAME.O                          "WFI_BPM";
-MEF.BPM.PROPFLAG.KEY                    "HIERARCH MEFPP REC BPM PROPFLAG";
+MEF.BPM.PROPFLAG.KEY                    "HIERARCH ESO MPP BPM PROPFLAG";
 MEF.BPM.PROPFLAG.COMMENT                 "proportional flag for BPM creation";
 MEF.BPM.PROPFLAG                          0;
-MEF.BPM.LGAINTHR.KEY                      "HIERARCH MEFPP REC BPM LGAINTHR";
+MEF.BPM.LGAINTHR.KEY                      "HIERARCH ESO MPP BPM LGAINTHR";
 MEF.BPM.LGAINTHR.COMMENT                 "low gain threshold for BPM creation";
 MEF.BPM.LGAINTHR                          0.6;
-MEF.BPM.HGAINTHR.KEY                    "HIERARCH MEFPP REC BPM HGAINTHR";
+MEF.BPM.HGAINTHR.KEY                    "HIERARCH ESO MPP BPM HGAINTHR";
 MEF.BPM.HGAINTHR.COMMENT                 "high gain threshold for BPM creation";
 MEF.BPM.HGAINTHR                          1.4;
 #
-MEF.DOMEFF.FRAME.I.KEY                   "HIERARCH MEFPP REC FLAT DOME";
+MEF.DOMEFF.FRAME.I.KEY                   "HIERARCH ESO MPP FLAT DOME";
 MEF.DOMEFF.FRAME.I.COMMENT               "Input dome frame";
 MEF.DOMEFF.NAME.O                        "WFI_DOMEFF";
-MEF.DOMEFF.FRAMETHR.LO.KEY                "HIERARCH MEFPP REC FLAT LFRATHD";
+MEF.DOMEFF.FRAMETHR.LO.KEY                "HIERARCH ESO MPP FLAT LFRATHD";
 MEF.DOMEFF.FRAMETHR.LO.COMMENT            "low frame threshold for dome";
 MEF.DOMEFF.FRAMETHR.LO                    10000;
-MEF.DOMEFF.FRAMETHR.HI.KEY                "HIERARCH MEFPP REC FLAT HFRATHD";
+MEF.DOMEFF.FRAMETHR.HI.KEY                "HIERARCH ESO MPP FLAT HFRATHD";
 MEF.DOMEFF.FRAMETHR.HI.COMMENT            "high frame threshold for dome";
 MEF.DOMEFF.FRAMETHR.HI                    45000;
-MEF.DOMEFF.FRAMENUM.MIN.KEY               "HIERARCH MEFPP REC FLAT MINFRAD";
+MEF.DOMEFF.FRAMENUM.MIN.KEY               "HIERARCH ESO MPP FLAT MINFRAD";
 MEF.DOMEFF.FRAMENUM.MIN.COMMENT           "minimum number of frames for dome flat";
 MEF.DOMEFF.FRAMENUM.MIN                   3;
 #
-MEF.SKYFF.FRAME.I.KEY                     "HIERARCH MEFPP REC FLAT SKY";
+MEF.SKYFF.FRAME.I.KEY                     "HIERARCH ESO MPP FLAT SKY";
 MEF.SKYFF.FRAME.I.COMMENT                 "Input sky frame";
 MEF.SKYFF.NAME.O                         "WFI_SKYFF";
-MEF.SKYFF.FRAMETHR.LO.KEY                 "HIERARCH MEFPP REC FLAT LFRATHS";
+MEF.SKYFF.FRAMETHR.LO.KEY                 "HIERARCH ESO MPP FLAT SKY LFRATHS";
 MEF.SKYFF.FRAMETHR.LO.COMMENT             "low frame threshold for sky";
 MEF.SKYFF.FRAMETHR.LO                     10000;
-MEF.SKYFF.FRAMETHR.HI.KEY                 "HIERARCH MEFPP REC FLAT HFRATHS";
+MEF.SKYFF.FRAMETHR.HI.KEY                 "HIERARCH ESO MPP FLAT SKY HFRATHS";
 MEF.SKYFF.FRAMETHR.HI.COMMENT             "high frame threshold for sky";
 MEF.SKYFF.FRAMETHR.HI                     45000;
-MEF.SKYFF.FRAMENUM.MIN.KEY                "HIERARCH MEFPP FLAT MINFRAS";
+MEF.SKYFF.FRAMENUM.MIN.KEY                "HIERARCH ESO MPP FLAT SKY MINFRAS";
 MEF.SKYFF.FRAMENUM.MIN.COMMENT            "minimum number of frames for sky flat";
 MEF.SKYFF.FRAMENUM.MIN                    3;
 #
@@ -234,14 +234,14 @@ MEF.FILTER.KEY                            "HIERARCH ESO INS FILT1 NAME";
 MEF.BINX.KEY                               "HIERARCH ESO DET WIN1 BINX";
 MEF.BINY.KEY                               "HIERARCH ESO DET WIN1 BINY";
 #
-MEF.PIXREJ.SIGMA.LO.KEY                      "HIERARCH MEFPP REC FLAT LPIXSIG";
+MEF.PIXREJ.SIGMA.LO.KEY                      "HIERARCH ESO MPP FLAT LPIXSIG";
 MEF.PIXREJ.SIGMA.LO.COMMENT                  "low sigma for pixel rejection";
 MEF.PIXREJ.SIGMA.LO                           3.0;
-MEF.PIXREJ.SIGMA.HI.KEY                      "HIERARCH MEFPP REC FLAT HPIXSIG";
+MEF.PIXREJ.SIGMA.HI.KEY                      "HIERARCH ESO MPP FLAT HPIXSIG";
 MEF.PIXREJ.SIGMA.HI.COMMENT                  "high sigma for pixel rejection";
 MEF.PIXREJ.SIGMA.HI                           3.0;
 #
-MEF.MEDIAN.REG.KEY                          "HIERARCH MEFPP REC FLAT MREGDEF";
+MEF.MEDIAN.REG.KEY                          "HIERARCH ESO MPP FLAT MREGDEF";
 MEF.MEDIAN.REG.COMMENT                      "Region for median computation";
 MEF.MEDIAN.REG.X1                           500;
 MEF.MEDIAN.REG.X2                           1500;
@@ -250,5 +250,5 @@ MEF.MEDIAN.REG.Y2                           2500;
 #
 MEF.KERN.HSIZE.KEY                           "HIERARCH MEFPP REC FLAT KERNS";
 MEF.KERN.HSIZE.COMMENT                       "Smoothing kernel size";
-MEF.KERN.HSIZE                                4;
+MEF.KERN.HSIZE                                7;
 #_oOo_

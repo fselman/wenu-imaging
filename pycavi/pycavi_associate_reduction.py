@@ -1345,10 +1345,10 @@ def apply_light_correction(light_correction_coeffs, ccd_data, ccd_header, instru
         return 0
 
 
-def mefpp_normalize_science(sci_part_list, instrument):
+def mefpp_normalize_science(sci_part_list, instrument, apply_light_corr=False):
     """
     Convert images from raw adu to e-/s units by multiplying by the avg gain and dividing by the exptime.
-    In case of u,g,r and i_SDSS filters, It also applies the light correction.
+    In case of u,g,r and i_SDSS filters, It can also apply the light correction if requested.
     """
     for sci_part in set(sci_part_list):
         # average gain for the image, then divide all image by this avg
@@ -1376,8 +1376,7 @@ def mefpp_normalize_science(sci_part_list, instrument):
                 raise Exception("number of valid extensions from instrument config not equal with number of use=True values in same file")
 
             image_head = fits.getheader(image_name, 0)
-            apply_light_corr = False
-            if image_head[instrument.filt_key] in ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS"]:
+            if apply_light_correction and  image_head[instrument.filt_key] in ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS"]:
                 light_coeffs = get_lightcorrection_coeffs(image_head[instrument.filt_key], instrument)
                 if light_coeffs is not None and instrument.correct_light_concentration:
                     apply_light_corr = True
@@ -1431,10 +1430,25 @@ def mefpp_normalize_science(sci_part_list, instrument):
                     ext_data = hdul[ext_name].data
                     # apply light correction if the filter support it
                     if apply_light_corr:
-                        header0["LIGHTCOR"] = "True"
+                        header0["HIERARCH ESO PYCAVI LIGHTCOR"] = "True"
                         ext_head = hdul[ext_name].header
                         apply_light_correction(light_coeffs, ext_data, ext_head, instrument)
                     else:
-                        header0["LIGHTCOR"] = "False"
+                        header0["HIERARCH ESO PYCAVI LIGHTCOR"] = "False"
                     ext_data *= avg_gain / exptime  # converting raw adus into e-/s
 
+                # we update the SATLEVEL key necessary for downstream processing
+
+                if 'SATLEVEL' in header0.keys():
+                    try:
+                        satlevel = header0["SATLEVEL"]
+                        header0["HIERARCH ESO PYCAVI ORIGSAT"] = (satlevel, "Original saturation level in raw frames")
+                        satlevel *= avg_gain / exptime
+                        header0["SATLEVEL"] = (satlevel, "Saturation level of frame in [e/s]")
+                        header0.insert("SATLEVEL", ("ONEADU", avg_gain / exptime, "e/s corresponding to 1 [ADU]"), after=True)
+                    except:
+                        logging.info('mefpp_normalize_science: could not update SATLEVEL key')
+                else:
+                    logging.info('mefpp_normalize_science: no SATLEVEL key in primary header')
+
+#_oOo_
