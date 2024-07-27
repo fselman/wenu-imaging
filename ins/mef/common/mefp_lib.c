@@ -2516,7 +2516,117 @@ char * rtrim(char * s) {
     return strndup(s, l);
 }
 
+/*
+ * build and return ESO Phase3 headers
+ */
+qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_ref)
+{
+    qfits_header*fh_phase3 ;
+    framelist   *fnames ;
+    char        cval[80] ;
+    char        cval2[80] ;
+    char        *getval ;
+    int     i ;
 
+        /* Check entries */
+    if (bb==NULL) {
+         e_error("mef_header_eclipse: NULL bb pointer");
+         return NULL ;
+    }
+    if (!what || !*what) {
+        e_error("mef_header_eclipse: NULL what pointer");
+        return NULL;
+    }
+
+
+
+    /* first the headers common to all frames */
+
+    fh_phase3 = qfits_header_default();
+    qfits_header_add(fh_phase3, "PHASE3", "ESOPHASE3", "ESO Phase3", NULL);
+
+    if (!strcmp(what,"science")) {
+        sprintf(cval, "%s", bb->phase3_procatg_key);
+        qfits_header_add(fh_phase3, cval, "SCIENCE,MEFIMAGE", "ESO Phase3 product category.", NULL);
+    } else if (!strcmp(what,"combined")) {
+        sprintf(cval, "%s", bb->phase3_procatg_key);
+        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_FLAT", "ESO Phase3 product category.", NULL);
+    } else if (!strcmp(what,"sky")) {
+        sprintf(cval, "%s", bb->phase3_procatg_key);
+        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_SKY_FLAT", "ESO Phase3 product category.", NULL);
+    } else if (!strcmp(what,"dome")) {
+        sprintf(cval, "%s", bb->phase3_procatg_key);
+        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_DOME_FLAT", "ESO Phase3 product category.", NULL);
+    } else if (!strcmp(what,"bias")) {
+        sprintf(cval, "%s", bb->phase3_procatg_key);
+        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_BIAS", "ESO Phase3 product category.", NULL);
+    } else {
+        e_error("mef_header_phase3: unknown frame type [%s]",what);
+        return NULL;
+    }
+
+    /* Program identification key -- from mefpp.paf */
+    cval_ptr = qfits_header_getstr(fh_ref, "HIERARCH ESO OBS PROG ID");
+    if (cval_ptr!=NULL) {
+        qfits_header_add_after(fh_phase3, "PI-COI","PROG_ID", cval_ptr, "Program identification", NULL);
+    }
+
+    /* Observation identification */
+    cval_ptr = qfits_header_getstr(fh_ref, "HIERARCH ESO OBS ID");
+    if (cval_ptr!=NULL) {
+        qfits_header_add_after(fh_phase3, "PROG_ID","OBID1", cval_ptr, "Observation block ID", NULL);
+    }
+
+    /* Number of images combined - only 1 during the pre-processing stage */
+    if (cval_ptr!=NULL) {
+        qfits_header_add_after(fh_phase3, "OBID1","NCOMBINE", "1", "Number of observations combined", NULL);
+    }
+
+    /* OBSTECH key -- from mefpp.paf */
+    cval_ptr = qfits_header_getstr(fh_ref, "HIERARCH ESO DPR TECH");
+    if (cval_ptr!=NULL) {
+        qfits_header_add_after(fh_phase3, "INSTRUME","OBSTECH", cval_ptr, "Observation technique", NULL);
+    }
+
+    /* a simple calculation of MJD-END. */
+    exptime = atof(qfits_header_getstr(fh_ref, "EXPTIME"));
+    mjdobs = atof(qfits_header_getstr(fh_ref, "MJD-OBS"));
+    mjdend = mjdobs + exptime/86400.;
+    sprintf(cval, "%.8f", mjdend);
+    qfits_header_add_after(fh_phase3, "MJD-OBS", "MJD-END", cval, "End of exposure MJD", NULL);
+
+    /* we set the time system explicitly */
+    cval_ptr = qfits_header_getstr(fh_ref, "UTC");
+    if (cval_ptr!=NULL) {
+        qfits_header_add_after(fh_phase3, "UTC","TIMESYS", "UTC", "Time system", NULL);
+    }
+
+    /* Processing software version */
+    sprintf(cval, "Pycavi-mefpp");
+    sprintf(cval2, "Built on eclipse-%s by N. Devillard", get_eclipse_version());
+    qfits_header_add_after(fh_phase3, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
+
+    /* Product category key */
+    qfits_header_add_after(fh_phase3,"PROCSOFT", bb->scipro_catg_key, bb->scipro_catg_val, bb->scipro_catg_comment, NULL);
+
+    if (!strcmp(what,"science")) {
+            sprintf(cval, "%s", bb->phase3_procatg_key);
+            qfits_header_add(fh_phase3, cval, "SCIENCE,MEFIMAGE", "ESO Phase3 product category.", NULL);
+        }
+
+        /* FLUXCAL key */
+        qfits_header_add_after(fh_phase3, bb->scipro_catg_key, "FLUXCAL", "UNCALIBRATED", "Flux calibration", NULL);
+
+        /* we rename the RADECSYS key to RADESYS -- from mefpp.paf */
+        cval_ptr = qfits_header_getstr(fh_ref, "RADECSYS");
+        if (cval_ptr!=NULL) {
+            qfits_header_add_after(fh_phase3, "RADECSYS","RADESYS", cval_ptr, "Coordinate reference frame", NULL);
+            qfits_header_del(fh_phase3,"RADECSYS");
+        }
+    }
+
+    return fh_phase3;
+}
 
 /*
  * build and return the ECLIPSE subheader
@@ -2969,7 +3079,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	/*
 	 * *************************** ECLIPSE HEADERS *********************************
 	 */
-	e_comment(1,"reading eclipse headers");
+	e_comment(1,"preparing eclipse headers");
 	if ( (fh_eclipse = mef_header_eclipse(bb,what)) == NULL ) {
 		e_error("can not get ECLIPSE headers");
 		return;

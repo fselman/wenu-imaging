@@ -1,0 +1,109 @@
+
+
+
+bb->phase3_procatg_key	“PROCATG”
+PHASE3.PROCATG.KEY               `     "PROCATG";
+PHASE3.PROCATG.VAL.SCIENCE             "SCIENCE.MEFIMAGE";
+PHASE3.PROCATG.VAL.BIAS                "CALIB.MASTER_BIAS";
+PHASE3.PROCATG.VAL.DOMEFF              "CALIB.MASTER_DOME_FLAT";
+PHASE3.PROCATG.VAL.SKYFF               "CALIB.MASTER_SKY_FLAT";
+PHASE3.PROCATG.VAL.MFF                 "CALIB.MASTER_FLAT";
+PHASE3.PROCATG.COMMENT                 "Phase3 product category”;
+
+bb->phase3_procatg_val	“SCIENCE,MEFIMAGE”,
+			“CALIB,MASTER_FLAT”,
+			“CALIB,MASTER_SKY_FLAT”,
+			“CALIB,MASTER_DOME_FLAT”,
+			“CALIB,MASTER_BIAS”
+bb->phase3_procatg_comment “Phase3 product category”
+
+
+—————————————————————————
+PHASE3.PROGID.KEY.NAME                  "PROG_ID";
+PHASE3.PROGID.HDRKEY                    "HIERARCH ESO OBS PROG ID”;
+PHASE3.PROGID.COMMENT                   "Phase3 observation id.”;
+
+bb->phase3_progid_key			“PROG_ID”
+bb->phase3_progid_val			header(“HIERARCH ESO OBS PROG ID”)
+bb->phase3_progid_comment		“Phase3 program id.”
+
+—————————————————————————
+PHASE3.OBID.KEY.NAME                    "OBID1";
+PHASE3.OBID.HDRKEY                      "HIERARCH ESO OBS ID”;
+PHASE3.OBID.COMMENT                     "Phase3 observation id.”;
+
+bb->phase3_obid_key			“OBID1
+bb->phase3_obid_val			header(“HIERARCH ESO OBS ID”)
+bb->phase3_obid_comment			“Phase3 observation id.”
+
+—————————————————————————
+
+PHASE3.NCOMBINE.KEY.NAME                "NCOMBINE";
+PHASE3.NCOMBINE.COMMENT                 "Phase3 number of observations combined.";
+
+b->phase3_ncombine_key			“NCOMBINE”
+bb->phase3_ncombine_val			calculated(frames)
+bb->phase3_ncombine_comment		“Phase3 number of observations combined.”
+
+—————————————————————————
+
+PHASE3.OBSTECH.KEY.NAME                 "OBSTECH";
+PHASE3.OBSTECH.HDRKEY                   "HIERARCH ESO DPR TECH”;
+PHASE3.OBSTECH.COMMENT                  "Observation technique.”;
+
+bb->phase3_obstech_key			“OBSTECH”
+bb->phase3_obstech_val			header(“HIERARCH ESO DPR TECH”)
+bb->phase3_obstech_comment		“Observation technique.”
+
+—————————————————————————
+PHASE3.MJDEND.KEY.NAME                  "MJD-END";
+PHASE3.MJDEND.HDRKEY                    "”;
+PHASE3.MJDEND.COMMENT                   "Phase3 MJD at the end of exposure.”;
+
+bb->phase3_mjdend_key			“MJD-END”
+bb->phase3_mjdend_val			calculated(mjdobs+exptime/86400)
+bb->phase3_mjdend_comment		“Phase3 MJD at end of exposure.”
+
+—————————————————————————
+
+PHASE3.PROCSOFT.KEY.NAME                "PROCSOFT";
+PHASE3.PROCSOFT.HDRKEY                  "”;
+PHASE3.PROCSOFT.COMMENT                 "Branch form ECLIPSE by N. Devillar”;
+
+bb->phase3_mjdobs_key			“PROCSOFT”
+bb->phase3_mjdobs_val			calculated(“Pycavi-mefpp-%s”, get_mefpp_version())
+bb->phase3_mjdobs_comment		calculated("Built on eclipse-%s by N. Devillard", get_eclipse_version())
+
+—————————————————————————
+PHASE3.TIMESYS.KEY.NAME                 "TIMESYS";
+PHASE3.TIMESYS.HDRKEY                   "”;
+PHASE3.TIMESYS.VAL                      "UTC";
+PHASE3.TIMESYS.COMMENT                  "Phase3 standard of time.”;
+
+bb->phase3_timesys_key			“TIMESYS”
+bb->phase3_timesys_val			“UTC”
+bb->phase3_timesys_comment		“Time system.”
+
+
+—————————————————————————
+PHASE3.FLUXCAL.KEY.NAME                 "FLUXCAL";
+PHASE3.FLUXCAL.HDRKEY                   "”;
+PHASE3.FLUXCAL.VAL                      "UNCALIBRATED";
+PHASE3.FLUXCAL.COMMENT                  "Phase3 flux calibration: ABSOLUTE or UNCALIBRATED.”;
+
+bb->phase3_fluxcal_key			“FLUXCAL”
+bb->phase3_fluxcal_val			“UNCALIBRATED”
+bb->phase3_fluxcal_comment		“Flux calibration.”
+
+—————————————————————————
+PHASE3.RADESYS.KEY.NAME                 "RADESYS";
+PHASE3.RADESYS.HDRKEY                   "RADECSYS”;
+PHASE3.RADESYS.COMMENT                  "Phase3 coordinate reference frame.”;
+
+bb->phase3_radesys_key			“RADESYS”
+bb->phase3_radesys_val			header(“RADECSYS”)
+bb->phase3_progid_comment		“Coordinate reference frame.”
+							(eliminate “RADECSYS” afterward)
+
+
+
