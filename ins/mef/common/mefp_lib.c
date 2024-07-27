@@ -1308,21 +1308,27 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
         zIndex = bb->xtnum-1;
     }
     if (!strcmp(what, "bias")) {
-        bb->bias_scan_median[zIndex] = medval ;
-        bb->bias_scan_stdev[zIndex] = stdev_val ;
-        e_comment(1, "%s[%d]  --  overscan medval: %f stdev_val: %f", get_basename(bb->bias_frame_name[nplane]), bb->xtnum, medval, stdev_val);
+        bb->bias_scan_median[nplane] = medval ;
+        bb->bias_scan_stdev[nplane] = stdev_val ;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->bias_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
     }
 
     if (!strcmp(what, "dome")) {
-        bb->dome_scan_median[zIndex] = medval ;
-        bb->dome_scan_stdev[zIndex] = stdev_val ;
-        e_comment(1, "%s[%d]  --  overscan medval: %f stdev_val: %f", get_basename(bb->dome_frame_name[nplane]), bb->xtnum, medval, stdev_val);
+        bb->dome_scan_median[nplane] = medval ;
+        bb->dome_scan_stdev[nplane] = stdev_val ;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->dome_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
     }
 
     if (!strcmp(what, "sky")) {
-        bb->sky_scan_median[zIndex] = medval ;
-        bb->sky_scan_stdev[zIndex] = stdev_val ;
-        e_comment(1, "%s[%d]  --  overscan medval: %f stdev_val: %f", get_basename(bb->sky_frame_name[nplane]), bb->xtnum, medval, stdev_val);
+        bb->sky_scan_median[nplane] = medval ;
+        bb->sky_scan_stdev[nplane] = stdev_val ;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->sky_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
+    }
+
+    if (!strcmp(what, "science")) {
+        bb->science_scan_median[nplane] = medval ;
+        bb->science_scan_stdev[nplane] = stdev_val ;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->science_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
     }
 
 	/* Bring coordinates back to FITS convention */
@@ -1849,6 +1855,7 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 	double		lo_thr, hi_thr ;
 	int		minframe ;
 	double		avg, avg1, sig1, kappa1 ;
+    float      zmedian, zstdev;
 	int		i, j, p ;
 	int	 *	valid ;
 	double		*all_means ;
@@ -1906,6 +1913,15 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 		cube_del(i_cube);
 		return NULL ;
 	}
+
+    /* we correct overscan and trim the cube */
+    /* we do it before removing bad planes from
+     * cube so we have the full input list represented.
+     */
+    e_comment(1, "applying overscan/prescan/trimming correction");
+    mef_cube_overscan_correction(i_cube,bb, what);
+    e_comment(1, "Done.");
+
 	/* Compute average value for each frame, keep those in interval */
 	all_means = malloc(i_cube->np*sizeof(double));
 	nval = 0 ;
@@ -1935,6 +1951,17 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 
 		lo_thr = avg1 - kappa1*sig1 ;
 		hi_thr = avg1 +  kappa1*sig1 ;
+
+        /* fill array for QC keywords */
+        if (bb->nxts == 1) {    /* if we work in only one extension */
+                zIndex = 0;
+            } else {                        /* we are working in all the extensions */
+                zIndex = bb->xtnum-1;
+            }
+        bb->bias_avg1[zIndex] = avg1;
+        bb->bias_sig1[zIndex] = sig1;
+        bb->bias_framethr_lo[zIndex] = lo_thr;
+        bb->bias_framethr_hi[zIndex] = hi_thr;
 
 		e_comment(1, "frame rejection setup:");
 		e_comment(1, "average: %g", avg1);
@@ -1974,11 +2001,13 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 	}
 	free(valid);
 
-	/* Apply prescan/overscan/trimming correction */
+	/* Apply prescan/overscan/trimming correction 
 
 	e_comment(1, "applying overscan/prescan/trimming correction");
 	mef_cube_overscan_correction(i_cube,bb, what);
 	e_comment(1, "Done.");
+
+    *************************************************/
 
 	/*
 	 * If we are building the BIAS frame, we are almost done.
@@ -2003,7 +2032,7 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 		bb->bias_median[zIndex] = image_getmedian(stacked);
         bb->bias_stdev[zIndex] = image_getstdev(stacked);
 		bb->bias_nplanes[zIndex] = nval;
-         e_comment(1, "bias median: %f -- bias stdev: %f -- bias nplanes: %d", bb->bias_median[zIndex], bb->bias_stdev[zIndex], bb->bias_nplanes[zIndex]);
+        e_comment(1, "bias median: %f -- bias stdev: %f -- bias nplanes: %d", bb->bias_median[zIndex], bb->bias_stdev[zIndex], bb->bias_nplanes[zIndex]);
 		return stacked;
 	}
 
@@ -2016,13 +2045,28 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 	frame_median = 0.0;
     frame_variance = 0.0;
 	frame_nplanes = 0;
+    if (bb->nxts == 1) {    /* if we work in only one extension */
+        zIndex = 0;
+    } else {                        /* we are working in all the extensions */
+        zIndex = bb->xtnum-1;
+    }
 	for (p=0 ; p<i_cube->np ; p++) {
 		compute_status("clip rejection on frame", p, i_cube->np, 1);
 		cur_p = i_cube->plane[p] ;
 
 		avg = image_getmean(cur_p);
+        zmedian = image_getmedian(cur_p);
+        zstdev = image_getstdev(cur_p);
 		sigma = sqrt(pow(((bb->ccd)+(bb->xtnum-1))->ron/((bb->ccd)+(bb->xtnum-1))->gain, 2.0) +
 				(avg / ((bb->ccd)+(bb->xtnum-1))->gain));
+
+        /* here we store the average and sigma values for QC */
+        bb->individual_frame_avg[p] = avg;
+        bb->individual_frame_median[p] = zmedian;
+        bb->individual_frame_sigma[p] = zstdev;
+        e_comment(1, "frame median: %f -- frame stdev: %f -- frame nplanes: %d", zmedian, zstdev, i_cube->np);
+        e_comment(1, "frame median: %f -- frame stdev: %f -- frame nplanes: %d", bb->individual_frame_median[p], bb->individual_frame_sigma[p], i_cube->np);
+
 		lo_thr = avg - bb->pixrej_lo * sigma ;
 		hi_thr = avg + bb->pixrej_hi * sigma ;
 		e_comment(1, "rejection interval");
@@ -2534,7 +2578,8 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	     return NULL;
 	}
 
-	if (!strcmp(what,"combined") || !strcmp(what,"bias")) {
+    /* Add bias frames used to master bias product */
+	if (!strcmp(what,"bias")) {
 	    /* Add REC.BIASi */
 
 	    if ( (fnames = framelist_load(bb->name_bias)) == NULL) {
@@ -2556,7 +2601,19 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	    }
 	}
 
-	if (!strcmp(what,"combined") || !strcmp(what,"dome")) {
+    /* Add the master bias to all flat products */
+    if (!strcmp(what,"combined") || !strcmp(what,"sky") || !strcmp(what,"dome")) {
+        /* REC.FLAT.MBIAS */
+        if (bb->name_bias!=NULL) {
+            qfits_header_add(fh_eclipse, bb->master_bias_key, get_basename(bb->name_bias), bb->master_bias_comment, NULL);
+        } else {
+            qfits_header_add(fh_eclipse, bb->master_bias_key, "none", bb->master_bias_comment, NULL);
+        }
+   }
+
+    /* Add raw dome frame list to dome flat field */
+    /* Also add processing parameters */
+	if (!strcmp(what,"dome")) {
 	    /* Add REC.FLAT.DOMEi */
 
 	    if ( (fnames = framelist_load(bb->name_dome)) == NULL) {
@@ -2570,13 +2627,13 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
             }
 
 	    if (fnames!=NULL) {
-		for (i=0 ; i<fnames->n ; i++) {
-			sprintf(cval, "%s%03d", bb->domeff_frame_i_key, i+1);
-			qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->domeff_frame_i_comment, NULL);
-		}
-		framelist_del(fnames);
+		    for (i=0 ; i<fnames->n ; i++) {
+			    sprintf(cval, "%s%03d", bb->domeff_frame_i_key, i+1);
+			    qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->domeff_frame_i_comment, NULL);
+		    }
+		    framelist_del(fnames);
 	    } else {
-		e_warning("mef_header_eclipse: cannot read dome list [%s]: no output in header",
+		    e_warning("mef_header_eclipse: cannot read dome list [%s]: no output in header",
 				bb->name_dome);
 	    }
 
@@ -2596,8 +2653,40 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 
 	}
 
+    /* To combined only add the master dome and sky used. */
+    if (!strcmp(what,"combined")) {
+        /* Add REC.FLAT.DOMEi */
 
-	if (!strcmp(what,"combined") || !strcmp(what,"sky")) {
+        if ( (fnames = framelist_load(bb->name_dome)) == NULL) {
+             if (is_fits_file(bb->name_dome)) {
+                   fnames = framelist_new(1);
+                   fnames->name[0] = strdup(bb->name_dome);
+                 } else {
+                    e_error("mef_header_eclipse: %s is not a framelist or a FITS file. Aborting", bb->name_dome);
+                    return NULL ;
+                 }
+            }
+
+        if (fnames!=NULL) {
+            for (i=0 ; i<fnames->n ; i++) {
+                sprintf(cval, "%s", bb->domeff_frame_i_key);
+                qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->domeff_frame_i_comment, NULL);
+            }
+            framelist_del(fnames);
+        } else {
+            e_warning("mef_header_eclipse: cannot read dome list [%s]: no output in header",
+                bb->name_dome);
+        }
+
+        sprintf(cval, "%s",bb->skyff_frame_i_key);
+        qfits_header_add(fh_eclipse, cval, mef_get_output_filename(bb,"sky"), bb->skyff_frame_i_comment, NULL);
+    }
+
+
+    /* To the master sky add the list of sky frames used.
+     * and the processing parameters.
+     */
+	if (!strcmp(what,"sky") ) {
 	    /* Add REC.FLAT.SKYi */
 	    if ( (fnames = framelist_load(bb->name_sky)) == NULL) {
                  if (is_fits_file(bb->name_sky)) {
@@ -2610,16 +2699,15 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
             }
 
 	    if (fnames!=NULL) {
-		for (i=0 ; i<fnames->n ; i++) {
-			sprintf(cval, "%s%03d",bb->skyff_frame_i_key, i+1);
-			qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->skyff_frame_i_comment, NULL);
-		}
-		framelist_del(fnames);
+		    for (i=0 ; i<fnames->n ; i++) {
+			    sprintf(cval, "%s%03d",bb->skyff_frame_i_key, i+1);
+			    qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->skyff_frame_i_comment, NULL);
+		    }
+		    framelist_del(fnames);
 	    } else {
-		e_warning("mef_header_eclipse: cannot read sky list [%s]: no output in header",
+		    e_warning("mef_header_eclipse: cannot read sky list [%s]: no output in header",
 				bb->name_sky);
 	    }
-
 
 	    /*
 	     * REC.FLAT.LFRATHS
@@ -2634,15 +2722,40 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 
 	    sprintf(cval, "%d", bb->sky_minframe);
 	    qfits_header_add(fh_eclipse, bb->sky_minframe_key, cval, bb->sky_minframe_comment, NULL);
+
+        /* REC.FLAT.KERNS */
+        sprintf(cval, "%d", bb->kern_hsize);
+        qfits_header_add(fh_eclipse, bb->kern_hsize_key, cval, bb->kern_hsize_comment, NULL);
 	}
 
 	if (!strcmp(what,"combined") || !strcmp(what,"sky") || !strcmp(what,"dome")) {
-	    /* REC.FLAT.MBIAS */
-	    if (bb->name_bias!=NULL) {
-		qfits_header_add(fh_eclipse, bb->master_bias_key, get_basename(bb->name_bias), bb->master_bias_comment, NULL);
-	    } else {
-		qfits_header_add(fh_eclipse, bb->master_bias_key, "none", bb->master_bias_comment, NULL);
-	    }
+
+        /* REC.FLAT.LPIXSIG */
+        sprintf(cval, "%f", bb->pixrej_lo);
+        qfits_header_add(fh_eclipse, bb->pixrej_lo_key, cval, bb->pixrej_lo_comment, NULL);
+
+        /* REC.FLAT.HPIXSIG */
+        sprintf(cval, "%f", bb->pixrej_hi);
+        qfits_header_add(fh_eclipse,  bb->pixrej_hi_key, cval, bb->pixrej_hi_comment, NULL);
+
+        /* REC.FLAT.MREGDEF Region for median computation */
+
+        sprintf(cval, "%d", bb->median_reg[0]);
+        sprintf(cval2, "%s X1", bb->median_reg_key);
+        qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
+
+        sprintf(cval, "%d", bb->median_reg[1]);
+        sprintf(cval2, "%s X2", bb->median_reg_key);
+        qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
+
+        sprintf(cval, "%d", bb->median_reg[2]);
+        sprintf(cval2, "%s Y1", bb->median_reg_key);
+        qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
+
+        sprintf(cval, "%d", bb->median_reg[3]);
+        sprintf(cval2, "%s Y2", bb->median_reg_key);
+        qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
+
 	}
 
     /* We add keyword that describe the overscan subtraction and trimming */
@@ -2693,37 +2806,6 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	/* REC.FLAT.GAIN */
         sprintf(cval, "%f", ((bb->ccd)+(bb->xtnum-1))->gain);
         qfits_header_add(fh_eclipse, bb->ccd_gain_key, cval, bb->ccd_gain_comment, NULL);
-
-	/* REC.FLAT.LPIXSIG */
-	sprintf(cval, "%f", bb->pixrej_lo);
-	qfits_header_add(fh_eclipse, bb->pixrej_lo_key, cval, bb->pixrej_lo_comment, NULL);
-
-	/* REC.FLAT.HPIXSIG */
-	sprintf(cval, "%f", bb->pixrej_hi);
-	qfits_header_add(fh_eclipse,  bb->pixrej_hi_key, cval, bb->pixrej_hi_comment, NULL);
-
-	/* REC.FLAT.MREGDEF Region for median computation */
-
-    sprintf(cval, "%d", bb->median_reg[0]);
-    sprintf(cval2, "%s X1", bb->median_reg_key);
-    qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
-
-    sprintf(cval, "%d", bb->median_reg[1]);
-    sprintf(cval2, "%s X2", bb->median_reg_key);
-    qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
-
-    sprintf(cval, "%d", bb->median_reg[2]);
-    sprintf(cval2, "%s Y1", bb->median_reg_key);
-    qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
-
-    sprintf(cval, "%d", bb->median_reg[3]);
-    sprintf(cval2, "%s Y2", bb->median_reg_key);
-    qfits_header_add(fh_eclipse, cval2, cval, bb->median_reg_comment, NULL);
-
-	/* REC.FLAT.KERNS */
-	sprintf(cval, "%d", bb->kern_hsize);
-	qfits_header_add(fh_eclipse, bb->kern_hsize_key, cval, bb->kern_hsize_comment, NULL);
-
 
 	return fh_eclipse;
 
@@ -2821,6 +2903,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	qfitsdumper	qd ;
 	FILE		*out ;
 	char		cval[80] ;
+    char        cval2[80] ;
 	char		*getval ;
 	int		i ;
 	char		*first_name ;
@@ -2983,11 +3066,40 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	qfits_header_mod(fh_extension, "BSCALE", "1.0", "pixel=FITS*BSCALE+BZERO");
 
     if (!strcmp(what, "bias")) {
-        sprintf(cval, "%f", bb->bias_scan_median[bb->xtnum-1]);
-        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC SCAN MEDIAN", cval, "Median value of scan pixels.", NULL);
+        sprintf(cval,"%s AVG1", bb->bias_frame_i_key);
+        sprintf(cval2, "%f", bb->bias_avg1[zIndex]);
+        qfits_header_add(fh_extension, cval, cval2, "Average of frame combination.", NULL);
 
-        sprintf(cval, "%f", bb->bias_scan_stdev[bb->xtnum-1]);
-        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC SCAN STDEV", cval, "Std deviation of scan pixels.", NULL);
+        sprintf(cval,"%s KAPPA1", bb->bias_frame_i_key);
+        sprintf(cval2, "%f", bb->bias_kappa1);
+        qfits_header_add(fh_extension, cval, cval2, "Input kappa1 parameter for rejection.", NULL);
+
+        sprintf(cval,"%s SIG1", bb->bias_frame_i_key);
+        sprintf(cval2, "%f", bb->bias_sig1[zIndex]);
+        qfits_header_add(fh_extension, cval, cval2, "Sigma of frame combination.", NULL);
+
+        sprintf(cval,"%s FRMTHRLO", bb->bias_frame_i_key);
+        sprintf(cval2, "%f", bb->bias_framethr_lo[zIndex]);
+        qfits_header_add(fh_extension, cval, cval2, "Calculated low threshold.", NULL);
+
+        sprintf(cval,"%s FRMTHRHI", bb->bias_frame_i_key);
+        sprintf(cval2, "%f", bb->bias_framethr_hi[zIndex]);
+        qfits_header_add(fh_extension, cval, cval2, "Calculated high threshold.", NULL);
+
+        e_comment(1, "bias_nframes: %d", bb->bias_nframes);
+        for (i=0 ; i<bb->bias_nframes ; i++) {
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN MEDIAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->bias_scan_median[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Median value of scan pixels frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN STDEV", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->bias_scan_stdev[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Std deviation of scan pixels frame i.", NULL);
+        }
 
         sprintf(cval, "%f", bb->bias_median[bb->xtnum-1]);
         qfits_header_add(fh_extension, "HIERARCH ESO MPP QC FRMEDIAN", cval, "Median of pixel values.", NULL);
@@ -2997,11 +3109,38 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
     }
 
     if (!strcmp(what, "dome")) {
-        sprintf(cval, "%f", bb->dome_scan_median[bb->xtnum-1]);
-        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC SCAN MEDIAN", cval, "Median value of scan pixels.", NULL);
+        e_comment(1, "dome_nframes: %d", bb->dome_nframes);
+        for (i=0 ; i<bb->dome_nframes ; i++) {
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN MEDIAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->dome_scan_median[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Median value of scan pixels frame i.", NULL);
 
-        sprintf(cval, "%f", bb->dome_scan_stdev[bb->xtnum-1]);
-        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC SCAN STDEV", cval, "Std deviation of scan pixels.", NULL);
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN STDEV", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->dome_scan_stdev[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Std deviation of scan pixels frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d MEAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_avg[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Mean of frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d MEDIAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_median[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Median of frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d STDEV", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_sigma[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Std dev of frame i.", NULL);
+        }
 
         sprintf(cval, "%f", bb->dome_median[bb->xtnum-1]);
         qfits_header_add(fh_extension, "HIERARCH ESO MPP QC FRMEDIAN", cval, "Median of pixel values.", NULL);
@@ -3011,11 +3150,38 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
     }
 
     if (!strcmp(what, "sky")) {
-        sprintf(cval, "%f", bb->sky_scan_median[bb->xtnum-1]);
-        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC SCAN MEDIAN", cval, "Median value of scan pixels.", NULL);
+        e_comment(1, "sky_nframes: %d", bb->sky_nframes);
+        for (i=0 ; i<bb->sky_nframes ; i++) {
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN MEDIAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->sky_scan_median[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Median value of scan pixels frame i.", NULL);
 
-        sprintf(cval, "%f", bb->sky_scan_stdev[bb->xtnum-1]);
-        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC SCAN STDEV", cval, "Std deviation of scan pixels.", NULL);
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN STDEV", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->sky_scan_stdev[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Std deviation of scan pixels frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d MEAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_avg[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Mean of frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d MEDIAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_median[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Median of frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d STDEV", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_sigma[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Std dev of frame i.", NULL);
+        }
 
         sprintf(cval, "%f", bb->sky_median[bb->xtnum-1]);
         qfits_header_add(fh_extension, "HIERARCH ESO MPP QC FRMEDIAN", cval, "Median of pixel values.", NULL);
@@ -3023,6 +3189,41 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
         sprintf(cval, "%f", bb->sky_stdev[bb->xtnum-1]);
         qfits_header_add(fh_extension, "HIERARCH ESO MPP QC FRSTDEV", cval, "Stdev of pixel values.", NULL);
     }
+
+    if (!strcmp(what, "science")) {
+        e_comment(1, "science_nframes: %d", bb->science_nframes);
+        for (i=0 ; i<bb->science_nframes ; i++) {
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN MEDIAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->science_scan_median[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Median value of scan pixels frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d SCAN STDEV", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->science_scan_stdev[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Std deviation of scan pixels frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d MEAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_avg[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Mean of frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d MEDIAN", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_median[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Median of frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC FRAME%03d STDEV", i+1);
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->individual_frame_sigma[i]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh_extension, cval, cval2, "Std dev of frame i.", NULL);
+        }
+     }
 
 	/*
 	if (!strcmp(what, "bias")) {

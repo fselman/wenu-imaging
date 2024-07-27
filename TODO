@@ -1,5 +1,50 @@
 mefpp:
 
+- master calibration and science names:
+    o MCDP: MEFPP Calibration Data Product
+    o MSDP: MEFPP Science Data Product
+
+    o names should be: MSDP.OCAM.<iso date and time>.fits
+      with a link from current output name.
+
+- Add PROCATG to calibration products:
+    o MASTER_BIAS
+    o MASTER_DOME_FLAT
+    o MASTER_SKY_FLAT
+    o MASTER_FLAT   
+
+- Done. Add QC keywords:
+    o scan median and stddev to bias, dome, sky and science frames
+    o input frame median and stdev to bias, dome, sky, and science frames
+    o stacked frame median and stdev to bias, dome and sky
+        o IMPORTANT: we should add this to the MFF
+    o clean order of QC frames
+- Done. Rationalize input frame list:
+    o master bias should have:
+        o input raw bias
+        o list of processing parameters
+        o list of QC keywords
+    o dome flat should have:
+        o input master bias
+        o list of input raw dome frames
+        o list of processing parameters
+        o list of QC keywords
+    o master sky should have:
+        o master bias
+        o list of input raw frames
+        o list of processing parameters
+        o list of QC keywords
+    o master flat field
+        o master bias
+        o master dome
+        o master sky
+        o list of QC keywords -- TBD
+    o reduced science frames should have:
+        o master bias
+        o master flat field
+        o list of processing parameters
+        o list of QC keywords
+
 - DONE. Add ESO Phase 3 keywords relevant to mefpp:
     o PROCATG set to SCIENCE.IMAGE
     o FILTER set to HIERARCH ESO INS FILT1 NAME

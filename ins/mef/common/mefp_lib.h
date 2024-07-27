@@ -123,8 +123,10 @@ typedef struct _mef_bb_ {
 	char	*master_bias_key ;
 	char	*master_bias_comment ;
 	int	    bias_subtract ;
-	double	bias_framethr_lo ;
-	double	bias_framethr_hi ;
+	float	*bias_framethr_lo ;
+	float	*bias_framethr_hi ;
+    float   *bias_avg1;
+    float   *bias_sig1;
 	double	bias_kappa1 ;
 	int		bias_minframe ;
 	int		bias_save ;
@@ -146,7 +148,7 @@ typedef struct _mef_bb_ {
 	char		*domeff_frame_i_comment ;
 	
 	char        *dome_framethr_lo_key ;
-        char    *dome_framethr_lo_comment ;
+    char    *dome_framethr_lo_comment ;
 	double       dome_framethr_lo ;
 
 	char        *dome_framethr_hi_key ;
@@ -242,6 +244,11 @@ typedef struct _mef_bb_ {
 	/* science frames to be reduced parameters */
 	char		*science_name_i ;
 	char		**science_frame_name ;
+    float       *science_scan_median ;  /* median of overscan of science frames for each extension */
+    float       *science_scan_stdev ;
+    double      *individual_frame_avg ; /* array to contain avg values of input frames of a given extension */
+    double      *individual_frame_median ;
+    double      *individual_frame_sigma ;
 	int		    science_nframes ;
 
 	/* saturation level threshold and max acceptable %age */

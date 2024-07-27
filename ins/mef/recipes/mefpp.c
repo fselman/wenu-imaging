@@ -339,6 +339,8 @@ int mef_engine(mef_bb * bb)
 	char		cval[80];
     char        cval2[80];
     float   exptime, mjdobs, mjdend;
+    float   science_median, science_stdev;
+    int     science_nplanes;
 
 
 	/* if we request spliting we just do that */
@@ -442,20 +444,18 @@ int mef_engine(mef_bb * bb)
 	bb->bias_median  = (float *) malloc(nxts*sizeof(float));
     bb->bias_stdev   =  (float *)  malloc(nxts*sizeof(float));
 	bb->bias_nplanes =   (int *) malloc(nxts*sizeof(int));
-    bb->bias_scan_median = (float *)  malloc(nxts*sizeof(float));
-    bb->bias_scan_stdev = (float *)  malloc(nxts*sizeof(float));
+    bb->bias_framethr_lo  =  (float *)  malloc(nxts*sizeof(float));
+    bb->bias_framethr_hi  =  (float *)  malloc(nxts*sizeof(float));
+    bb->bias_avg1  =  (float *)  malloc(nxts*sizeof(float));
+    bb->bias_sig1  =  (float *)  malloc(nxts*sizeof(float));
 
 	bb->dome_median  = (float *) malloc(nxts*sizeof(float));
     bb->dome_stdev   =  (float *) malloc(nxts*sizeof(float));
 	bb->dome_nplanes =   (int *) malloc(nxts*sizeof(int));
-    bb->dome_scan_median = (float *)  malloc(nxts*sizeof(float));
-    bb->dome_scan_stdev = (float *)  malloc(nxts*sizeof(float));
 
 	bb->sky_median   = (float *) malloc(nxts*sizeof(float));
     bb->sky_stdev    = (float *) malloc(nxts*sizeof(float));
 	bb->sky_nplanes  =   (int *) malloc(nxts*sizeof(int));
-    bb->sky_scan_median = (float *)  malloc(nxts*sizeof(float));
-    bb->sky_scan_stdev = (float *)  malloc(nxts*sizeof(float));
 
 	bb->flat_median  = (float *) malloc(nxts*sizeof(float));
     bb->flat_stdev   = (float *) malloc(nxts*sizeof(float));
@@ -463,21 +463,18 @@ int mef_engine(mef_bb * bb)
 	for (j=0 ; j<nxts ; j++) {
 		bb->bias_median[j] 	= 0.0;
         bb->bias_stdev[j]  = 0.0;
+        bb->bias_framethr_lo[j]  = 0.0;
+        bb->bias_framethr_hi[j]  = 0.0;
+        bb->bias_avg1[j]  = 0.0;
+        bb->bias_sig1[j]  = 0.0;
 		bb->bias_nplanes[j] 	= 0;
-        bb->bias_scan_median[j] = 0.0;
-        bb->bias_scan_stdev[j] = 0.0;
 
 		bb->dome_median[j] 	= 0.0;
         bb->dome_stdev[j] = 0.0;
-        bb->dome_scan_median[j]  = 0.0;
-        bb->dome_scan_stdev[j] = 0.0;
-		bb->dome_nplanes[j] 	= 0;
 
 		bb->sky_median[j]  	= 0.0;
         bb->sky_stdev[j] = 0.0;
 		bb->sky_nplanes[j]  	= 0;
-        bb->sky_scan_median[j]  = 0.0;
-        bb->sky_scan_stdev[j] = 0.0;
 
 		bb->flat_median[j] 	= 0.0;
         bb->flat_stdev[j]  = 0.0;
@@ -522,8 +519,12 @@ int mef_engine(mef_bb * bb)
             flist = framelist_load(bb->name_bias);
             bb->bias_nframes = flist->n ;
             bb->bias_frame_name = malloc(flist->n * sizeof(char*));
+            bb->bias_scan_median = (float *)  malloc(flist->n*sizeof(float));
+            bb->bias_scan_stdev = (float *)  malloc(flist->n*sizeof(float));
             for (i=0 ; i<flist->n ; i++) {
                 bb->bias_frame_name[i] = strdup(flist->name[i]);
+                bb->bias_scan_median[i] = 0.0;
+                bb->bias_scan_stdev[i] = 0.0;
                 e_comment(1,"Frame %d: %s",i,bb->bias_frame_name[i]);
              }
              framelist_del(flist); 
@@ -586,8 +587,18 @@ int mef_engine(mef_bb * bb)
                     flist = framelist_load(bb->name_dome);
                     bb->dome_nframes = flist->n ;
                     bb->dome_frame_name = malloc(flist->n * sizeof(char*));
+                    bb->dome_scan_median = (float *)  malloc(flist->n*sizeof(float));
+                    bb->dome_scan_stdev = (float *)  malloc(flist->n*sizeof(float));
+                    bb->individual_frame_avg = (double *) malloc(flist->n*sizeof(double));
+                    bb->individual_frame_median = (double *) malloc(flist->n*sizeof(double));
+                    bb->individual_frame_sigma = (double *) malloc(flist->n*sizeof(double));
                     for (i=0 ; i<flist->n ; i++) {
                         bb->dome_frame_name[i] = strdup(flist->name[i]);
+                        bb->dome_scan_median[i] = 0.0;
+                        bb->dome_scan_stdev[i] = 0.0;
+                        bb->individual_frame_avg[i] = 0.0;
+                        bb->individual_frame_median[i] = 0.0;
+                        bb->individual_frame_sigma[i] = 0.0;
                         e_comment(1,"Frame %d: %s",i,bb->dome_frame_name[i]);
                     }
                     framelist_del(flist);
@@ -629,8 +640,18 @@ int mef_engine(mef_bb * bb)
                     flist = framelist_load(bb->name_sky);
                     bb->sky_nframes = flist->n ;
                     bb->sky_frame_name = malloc(flist->n * sizeof(char*));
+                    bb->sky_scan_median = (float *)  malloc(flist->n*sizeof(float));
+                    bb->sky_scan_stdev = (float *)  malloc(flist->n*sizeof(float));
+                    bb->individual_frame_avg = (double *) malloc(flist->n*sizeof(double));
+                    bb->individual_frame_median = (double *) malloc(flist->n*sizeof(double));
+                    bb->individual_frame_sigma = (double *) malloc(flist->n*sizeof(double));
                     for (i=0 ; i<flist->n ; i++) {
                         bb->sky_frame_name[i] = strdup(flist->name[i]);
+                        bb->sky_scan_median[i] = 0.0;
+                        bb->sky_scan_stdev[i] = 0.0;
+                        bb->individual_frame_avg[i] = 0.0;
+                        bb->individual_frame_median[i] = 0.0;
+                        bb->individual_frame_sigma[i] = 0.0;
                         e_comment(1,"Frame %d: %s",i,bb->sky_frame_name[i]);
                     }
                     framelist_del(flist);
@@ -711,9 +732,13 @@ int mef_engine(mef_bb * bb)
                     flist = framelist_load(bb->science_name_i);
                     bb->science_nframes = flist->n ;
                     bb->science_frame_name = malloc(flist->n * sizeof(char*));
+                    bb->science_scan_median = (float *)  malloc(flist->n*sizeof(float));
+                    bb->science_scan_stdev = (float *)  malloc(flist->n*sizeof(float));
                     for (i=0 ; i<flist->n ; i++) {
                        bb->science_frame_name[i] = strdup(flist->name[i]);
-		       e_comment(1,"Frame %d: %s",i,bb->science_frame_name[i]);
+                       bb->science_scan_median[i] = 0.0;
+                       bb->science_scan_stdev[i] = 0.0;
+		               e_comment(1,"Frame %d: %s",i,bb->science_frame_name[i]);
                     }
 	            framelist_del(flist); 
 	        }
@@ -772,15 +797,24 @@ int mef_engine(mef_bb * bb)
 		     return -1 ;
 		 }
 
+
 		 /* Save results */
 		 part++;
 		 e_comment(0, "--> [%d/%d] Part %d of %d: saving results", xts[j], nxts, part, ALGPARTS);
 		 /* Loop over planes in the input cube */
 		 for (p=0 ; p<prep->np ; p++) {
+
 		    /* Build output name */
 		    sprintf(name_o, "%s_pre.fits", get_rootname(get_basename(bb->science_frame_name[p])));
 		    e_comment(1, "saving calibrated extension %d of file %s into: [%s]", \
 				    xts[j], bb->science_frame_name[p], name_o);
+
+            /* some statistics for WC */
+            science_median = image_getmedian(prep->plane[p]);
+            science_stdev = image_getstdev(prep->plane[p]);
+            science_nplanes = prep->np;
+            e_comment(1, "science median: %f -- science stdev: %f -- science nplanes: %d", science_median, science_stdev, science_nplanes);
+
 		    if (bb->xtnum == 1) {
 		       /* Read PRIMARY FITS header from input file */
 		       fh = qfits_header_read(bb->science_frame_name[p]);
@@ -920,6 +954,25 @@ int mef_engine(mef_bb * bb)
             sprintf(cval, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[3]);
             sprintf(cval2, "%s Y2", bb->trimreg_key);
             qfits_header_add(fh, cval2, cval, bb->trimreg_comment, NULL);
+
+            /* Now we add scan qc keywords */
+            sprintf(cval,"HIERARCH ESO MPP QC SCAN MEDIAN");
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->science_scan_median[p]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh, cval, cval2, "Median value of scan pixels frame i.", NULL);
+
+            sprintf(cval,"HIERARCH ESO MPP QC SCAN STDEV");
+            e_comment(1, "key: %s", cval);
+            sprintf(cval2, "%f", bb->science_scan_stdev[p]);
+            e_comment(1, "val: %s", cval2);
+            qfits_header_add(fh, cval, cval2, "Std deviation of scan pixels frame i.", NULL);
+
+            sprintf(cval, "%f", science_median);
+            qfits_header_add(fh, "HIERARCH ESO MPP QC FRMEDIAN", cval, "Median of pixel values.", NULL);
+
+            sprintf(cval, "%f", science_stdev);
+            qfits_header_add(fh, "HIERARCH ESO MPP QC FRSTDEV", cval, "Stdev of pixel values.", NULL);
 
 		    e_comment(1, "dumping extension headers and pixel data of extension %d calibrated %s frame",
 				    xts[j],bb->science_frame_name[p]);
