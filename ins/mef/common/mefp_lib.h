@@ -95,9 +95,38 @@ typedef struct _mef_bb_ {
 	char		*dpr_type_val ;
 	char		*dpr_type_comment ;
 
-    char        *scipro_catg_key ;
-    char        *scipro_catg_val ;
-    char        *scipro_catg_comment ;
+    /* Phase3 required keys */
+    char        *phase3_procatg_keyname;
+    char        *phase3_procatg_val_bias;
+    char        *phase3_procatg_val_domeff;
+    char        *phase3_procatg_val_skyff;
+    char        *phase3_procatg_val_mff;
+    char        *phase3_procatg_val_science;
+    char        *phase3_procatg_comment;
+    char        *phase3_progid_keyname;
+    char        *phase3_progid_hdrkey;
+    char        *phase3_progid_comment;
+    char        *phase3_obid_keyname;
+    char        *phase3_obid_hdrkey;
+    char        *phase3_obid_comment;
+    char        *phase3_ncombine_keyname;
+    char        *phase3_ncombine_comment;
+    char        *phase3_obstech_keyname;
+    char        *phase3_obstech_hdrkey;
+    char        *phase3_obstech_comment;
+    char        *phase3_mjdend_keyname;
+    char        *phase3_mjdend_comment;
+    char        *phase3_procsoft_keyname;
+    char        *phase3_procsoft_comment;
+    char        *phase3_timesys_keyname;
+    char        *phase3_timesys_val;
+    char        *phase3_timesys_comment;
+    char        *phase3_fluxcal_keyname;
+    char        *phase3_fluxcal_val;
+    char        *phase3_fluxcal_comment;
+    char        *phase3_radesys_keyname;
+    char        *phase3_radesys_hdrkey;
+    char        *phase3_radesys_comment;
 
 	/* Frame parameters */
 	float		refpix_x ;

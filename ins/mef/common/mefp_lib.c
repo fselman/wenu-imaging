@@ -195,20 +195,162 @@ mef_bb * mef_bb_new(void)
 	bb->dpr_type_comment    	= strdup(charval) ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dpr_type_comment); }
 
-        sprintf(buffer,"MEF.SCIPRO.CATG.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
-    bb->scipro_catg_key            = strdup(charval) ;
-        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scipro_catg_key); }
+        /* ESO PHASE3 variables */
 
-        sprintf(buffer,"MEF.SCIPRO.CATG.VAL");
+        sprintf(buffer,"PHASE3.PROCATG.KEY.NAME");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
-    bb->scipro_catg_val            = strdup(charval) ;
-        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scipro_catg_val); }
+    bb->phase3_procatg_keyname            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procatg_keyname); }
 
-        sprintf(buffer,"MEF.SCIPRO.CATG.COMMENT");
+        sprintf(buffer,"PHASE3.PROCATG.VAL.BIAS");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
-    bb->scipro_catg_comment        = strdup(charval) ;
-        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scipro_catg_comment); }
+    bb->phase3_procatg_val_bias            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procatg_val_bias); }
+
+        sprintf(buffer,"PHASE3.PROCATG.VAL.DOMEFF");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_procatg_val_domeff            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procatg_val_domeff); }
+
+        sprintf(buffer,"PHASE3.PROCATG.VAL.SKYFF");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_procatg_val_skyff            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procatg_val_skyff); }
+
+        sprintf(buffer,"PHASE3.PROCATG.VAL.MFF");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_procatg_val_mff            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procatg_val_mff); }
+
+        sprintf(buffer,"PHASE3.PROCATG.VAL.SCIENCE");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_procatg_val_science            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procatg_val_science); }
+
+        sprintf(buffer,"PHASE3.PROCATG.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_procatg_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procatg_comment); }
+
+        sprintf(buffer,"PHASE3.PROGID.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_progid_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_progid_keyname); }
+
+        sprintf(buffer,"PHASE3.PROGID.HDRKEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_progid_hdrkey        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_progid_hdrkey); }
+
+        sprintf(buffer,"PHASE3.PROGID.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_progid_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_progid_comment); }
+
+        sprintf(buffer,"PHASE3.OBID.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_obid_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obid_keyname); }
+
+        sprintf(buffer,"PHASE3.OBID.HDRKEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_obid_hdrkey        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obid_hdrkey); }
+
+        sprintf(buffer,"PHASE3.OBID.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_obid_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obid_comment); }
+
+        sprintf(buffer,"PHASE3.NCOMBINE.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_ncombine_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_ncombine_keyname); }
+
+        sprintf(buffer,"PHASE3.NCOMBINE.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_ncombine_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_ncombine_comment); }
+
+        sprintf(buffer,"PHASE3.OBSTECH.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_obstech_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obstech_keyname); }
+
+        sprintf(buffer,"PHASE3.OBSTECH.HDRKEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_obstech_hdrkey        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obstech_hdrkey); }
+
+        sprintf(buffer,"PHASE3.OBSTECH.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_obstech_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obstech_comment); }
+
+        sprintf(buffer,"PHASE3.MJDEND.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_mjdend_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_mjdend_keyname); }
+
+        sprintf(buffer,"PHASE3.MJDEND.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_mjdend_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_mjdend_comment); }
+
+        sprintf(buffer,"PHASE3.PROCSOFT.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_procsoft_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procsoft_keyname); }
+
+        sprintf(buffer,"PHASE3.PROCSOFT.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_procsoft_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procsoft_comment); }
+
+        sprintf(buffer,"PHASE3.TIMESYS.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_timesys_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_timesys_keyname); }
+
+        sprintf(buffer,"PHASE3.TIMESYS.VAL");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_timesys_val        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_timesys_val); }
+        
+        sprintf(buffer,"PHASE3.TIMESYS.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_timesys_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_timesys_comment); }
+
+        sprintf(buffer,"PHASE3.FLUXCAL.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_fluxcal_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_fluxcal_keyname); }
+
+        sprintf(buffer,"PHASE3.FLUXCAL.VAL");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_fluxcal_val        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_fluxcal_val); }
+
+        sprintf(buffer,"PHASE3.FLUXCAL.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_fluxcal_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_fluxcal_comment); }
+
+        sprintf(buffer,"PHASE3.RADESYS.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_radesys_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_radesys_keyname); }
+
+        sprintf(buffer,"PHASE3.RADESYS.HDRKEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_radesys_hdrkey        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_radesys_hdrkey); }
+
+        sprintf(buffer,"PHASE3.RADESYS.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_radesys_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_radesys_comment); }
 
         sprintf(buffer,"MEF.USE.PRESCAN");
         ivalue = atoi(qfits_paf_query( cfgfile, buffer));
@@ -645,9 +787,13 @@ void mef_bb_del(mef_bb * bb)
         if (bb->dpr_type_val)           	free(bb->dpr_type_val);
         if (bb->dpr_type_comment)       	free(bb->dpr_type_comment) ;
 
-    if (bb->scipro_catg_key)               free(bb->scipro_catg_key);
-        if (bb->scipro_catg_val)               free(bb->scipro_catg_val);
-        if (bb->scipro_catg_comment)           free(bb->scipro_catg_comment) ;
+    if (bb->phase3_procatg_keyname)               free(bb->phase3_procatg_keyname);
+        if (bb->phase3_procatg_val_bias)               free(bb->phase3_procatg_val_bias);
+        if (bb->phase3_procatg_val_domeff)               free(bb->phase3_procatg_val_domeff);
+        if (bb->phase3_procatg_val_skyff)               free(bb->phase3_procatg_val_skyff);
+        if (bb->phase3_procatg_val_mff)               free(bb->phase3_procatg_val_mff);
+        if (bb->phase3_procatg_val_science)               free(bb->phase3_procatg_val_science);
+        if (bb->phase3_procatg_comment)           free(bb->phase3_procatg_comment) ;
 	
 	if (bb->filter_key) 			free(bb->filter_key);
 	if (bb->filter_val) 			free(bb->filter_val);
@@ -2523,9 +2669,11 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
 {
     qfits_header*fh_phase3 ;
     framelist   *fnames ;
+    char    *   cval_ptr;
     char        cval[80] ;
     char        cval2[80] ;
     char        *getval ;
+    float       exptime, mjdobs, mjdend;
     int     i ;
 
         /* Check entries */
@@ -2545,21 +2693,22 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
     fh_phase3 = qfits_header_default();
     qfits_header_add(fh_phase3, "PHASE3", "ESOPHASE3", "ESO Phase3", NULL);
 
+    sprintf(cval, "%s", bb->phase3_procatg_keyname);
     if (!strcmp(what,"science")) {
-        sprintf(cval, "%s", bb->phase3_procatg_key);
-        qfits_header_add(fh_phase3, cval, "SCIENCE,MEFIMAGE", "ESO Phase3 product category.", NULL);
+        sprintf(cval2, "%s", bb->phase3_procatg_val_science);
+        qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
     } else if (!strcmp(what,"combined")) {
-        sprintf(cval, "%s", bb->phase3_procatg_key);
-        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_FLAT", "ESO Phase3 product category.", NULL);
+        sprintf(cval2, "%s", bb->phase3_procatg_val_mff);
+        qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
     } else if (!strcmp(what,"sky")) {
-        sprintf(cval, "%s", bb->phase3_procatg_key);
-        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_SKY_FLAT", "ESO Phase3 product category.", NULL);
+        sprintf(cval2, "%s", bb->phase3_procatg_val_skyff);
+        qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
     } else if (!strcmp(what,"dome")) {
-        sprintf(cval, "%s", bb->phase3_procatg_key);
-        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_DOME_FLAT", "ESO Phase3 product category.", NULL);
+        sprintf(cval2, "%s", bb->phase3_procatg_val_domeff);
+        qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
     } else if (!strcmp(what,"bias")) {
-        sprintf(cval, "%s", bb->phase3_procatg_key);
-        qfits_header_add(fh_phase3, cval, "CALIB,MASTER_BIAS", "ESO Phase3 product category.", NULL);
+        sprintf(cval2, "%s", bb->phase3_procatg_val_bias);
+        qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
     } else {
         e_error("mef_header_phase3: unknown frame type [%s]",what);
         return NULL;
@@ -2606,16 +2755,13 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
     sprintf(cval2, "Built on eclipse-%s by N. Devillard", get_eclipse_version());
     qfits_header_add_after(fh_phase3, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
 
-    /* Product category key */
-    qfits_header_add_after(fh_phase3,"PROCSOFT", bb->scipro_catg_key, bb->scipro_catg_val, bb->scipro_catg_comment, NULL);
-
     if (!strcmp(what,"science")) {
-            sprintf(cval, "%s", bb->phase3_procatg_key);
-            qfits_header_add(fh_phase3, cval, "SCIENCE,MEFIMAGE", "ESO Phase3 product category.", NULL);
-        }
-
+        /* Product category key */
+         qfits_header_add_after(fh_phase3,"PROCSOFT", bb->phase3_procatg_keyname, 
+                                                      bb->phase3_procatg_val_science , 
+                                                      bb->phase3_procatg_comment, NULL);
         /* FLUXCAL key */
-        qfits_header_add_after(fh_phase3, bb->scipro_catg_key, "FLUXCAL", "UNCALIBRATED", "Flux calibration", NULL);
+        qfits_header_add_after(fh_phase3, bb->phase3_procatg_keyname, "FLUXCAL", "UNCALIBRATED", "Flux calibration", NULL);
 
         /* we rename the RADECSYS key to RADESYS -- from mefpp.paf */
         cval_ptr = qfits_header_getstr(fh_ref, "RADECSYS");
@@ -2930,11 +3076,11 @@ char *mef_get_input_filename(mef_bb *bb, char *what)
 	/* Check entries */
 	if (bb==NULL) {
 		e_error("mef_get_input_filename: NULL bb pointer");
-		return;
+		return NULL;
 	}
 	if (!what || !*what) {
 		e_error("mef_get_input_filename: NULL what pointer");
-		return;
+		return NULL;
 	}
 	if (!strcmp(what, "dome")) {
 		name_i = strdup(bb->name_dome) ;
@@ -2958,11 +3104,11 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
 	/* Check entries */
 	if (bb==NULL) {
 		e_error("mef_get_output_filename: NULL bb pointer");
-		return;
+		return NULL;
 	}
 	if (!what || !*what) {
 		e_error("mef_get_output_filename: NULL what pointer");
-		return;
+		return NULL;
 	}
 	if (!strcmp(what, "dome")) {
 		if (bb->flat_partition != NULL) {
@@ -3025,11 +3171,11 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	/* Check entries */
 	if (bb==NULL) {
 		e_error("mef_get_headers_for: NULL bb pointer");
-		return;
+		return NULL;
 	}
 	if (!what || !*what) {
 		e_error("mef_get_headers_for: NULL what pointer");
-		return;
+		return NULL;
 	}
 	name_i = mef_get_input_filename(bb,what);
 	e_comment(1,"name_i: %s",name_i);
@@ -3061,7 +3207,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	e_comment(1,"reading primary headers of %s",name_i);
 	if ( (fh_ref = mef_header_primary(name_i)) == NULL) {
 		e_error("mef_get_headers_for: can not read %s primary headers",name_i);
-		return;
+		return NULL;
 	}
 	e_comment(1,"Done.");
 
@@ -3072,7 +3218,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	e_comment(1,"reading extension headers of %s",name_i);
 	if ( (fh_extension = mef_header_ext(name_i,bb)) == NULL) {
 		e_error("mef_get_headers_for: can not read headers from %d extension of %s",bb->xtnum, bb->name_sky);
-		return;
+		return NULL;
 	}
 	e_comment(1,"Done.");
 
@@ -3082,7 +3228,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	e_comment(1,"preparing eclipse headers");
 	if ( (fh_eclipse = mef_header_eclipse(bb,what)) == NULL ) {
 		e_error("can not get ECLIPSE headers");
-		return;
+		return NULL;
 	}
 	e_comment(1,"Done.");
 
@@ -3151,7 +3297,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	if ( (fh_main_subset = mef_header_mainsubset(bb,zImage)) == NULL) {
 		e_error("mef_save: can not read subset from primary headers of %s",\
 				bb->name_sky);
-		return;
+		return NULL;
 	}
 
 	/* 

@@ -875,15 +875,21 @@ int mef_engine(mef_bb * bb)
                qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
 
                /* Product category key */
-               qfits_header_add_after(fh,"PROCSOFT", bb->scipro_catg_key, bb->scipro_catg_val, bb->scipro_catg_comment, NULL);
+               qfits_header_add_after(fh,"PROCSOFT", bb->phase3_procatg_keyname, 
+                                                     bb->phase3_procatg_val_science, 
+                                                     bb->phase3_procatg_comment, NULL);
 
                /* FLUXCAL key */
-               qfits_header_add_after(fh, bb->scipro_catg_key, "FLUXCAL", "UNCALIBRATED", "Flux calibration", NULL);
+               qfits_header_add_after(fh, bb->phase3_procatg_keyname, bb->phase3_fluxcal_keyname, 
+                                                                      bb->phase3_fluxcal_val, 
+                                                                      bb->phase3_fluxcal_comment, NULL);
 
                /* we rename the RADECSYS key to RADESYS -- from mefpp.paf */
                cval_ptr = qfits_header_getstr(fh, "RADECSYS");
                if (cval_ptr!=NULL) {
-                   qfits_header_add_after(fh, "RADECSYS","RADESYS", cval_ptr, "Coordinate reference frame", NULL); 
+                   qfits_header_add_after(fh, "RADECSYS", bb->phase3_radesys_keyname, 
+                                                          cval_ptr, 
+                                                          bb->phase3_radesys_comment, NULL); 
                    qfits_header_del(fh,"RADECSYS");
                }
                
@@ -895,7 +901,7 @@ int mef_engine(mef_bb * bb)
 
                /* The saturation level and maximum fraction of pixels allowed to go saturated */
                sprintf(cval, "%7.1f", bb->sat_level);
-               qfits_header_add_after(fh, bb->scipro_catg_key, "SATLEVEL", cval, "Original saturation level of frame", NULL);
+               qfits_header_add_after(fh, bb->phase3_procatg_keyname, "SATLEVEL", cval, "Original saturation level of frame", NULL);
                sprintf(cval, "%5.3f", bb->sat_max);
                qfits_header_add_after(fh,"SATLEVEL", "SATNMAX", cval, "Max fraction of pixel saturated", NULL);
 
