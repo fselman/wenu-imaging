@@ -459,6 +459,8 @@ int mef_engine(mef_bb * bb)
 
 	bb->flat_median  = (float *) malloc(nxts*sizeof(float));
     bb->flat_stdev   = (float *) malloc(nxts*sizeof(float));
+    bb->combined_flat_median  = (float *) malloc(nxts*sizeof(float));
+    bb->combined_flat_stdev   = (float *) malloc(nxts*sizeof(float));
 
 	for (j=0 ; j<nxts ; j++) {
 		bb->bias_median[j] 	= 0.0;
@@ -478,6 +480,9 @@ int mef_engine(mef_bb * bb)
 
 		bb->flat_median[j] 	= 0.0;
         bb->flat_stdev[j]  = 0.0;
+
+        bb->combined_flat_median[j]  = 0.0;
+        bb->combined_flat_stdev[j]  = 0.0;
 	}
 
 
@@ -870,7 +875,7 @@ int mef_engine(mef_bb * bb)
                }
 
                /* Processing software version */
-               sprintf(cval, "Pycavi-mefpp");
+               sprintf(cval, recipe_version);
                sprintf(cval2, "Built on eclipse-%s by N. Devillard", get_eclipse_version());
                qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
 

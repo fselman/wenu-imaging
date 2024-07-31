@@ -7,7 +7,9 @@ mefpp:
     o names should be: MSDP.OCAM.<iso date and time>.fits
       with a link from current output name.
 
-- Add PROCATG to calibration products:
+    o should be written into ORIGFILE keyword
+
+- Done. Add PROCATG to calibration products:
     o MASTER_BIAS
     o MASTER_DOME_FLAT
     o MASTER_SKY_FLAT
@@ -16,8 +18,9 @@ mefpp:
 - Done. Add QC keywords:
     o scan median and stddev to bias, dome, sky and science frames
     o input frame median and stdev to bias, dome, sky, and science frames
+        o added input frame exptime to sky master to do QC
     o stacked frame median and stdev to bias, dome and sky
-        o IMPORTANT: we should add this to the MFF
+        o Done. IMPORTANT: we should add this to the MFF
     o clean order of QC frames
 - Done. Rationalize input frame list:
     o master bias should have:

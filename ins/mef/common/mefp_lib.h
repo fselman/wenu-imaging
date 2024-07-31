@@ -121,6 +121,8 @@ typedef struct _mef_bb_ {
     char        *phase3_timesys_keyname;
     char        *phase3_timesys_val;
     char        *phase3_timesys_comment;
+    char        *phase3_filter_keyname;
+    char        *phase3_filter_comment;
     char        *phase3_fluxcal_keyname;
     char        *phase3_fluxcal_val;
     char        *phase3_fluxcal_comment;
@@ -225,6 +227,8 @@ typedef struct _mef_bb_ {
 	/* Combined flat parameters */
 	float		*flat_median ;
     float       *flat_stdev;
+    float       *combined_flat_median;
+    float       *combined_flat_stdev;
 
 	/* Pre/Over scan parameters */
 	char		*prescan_x_key ;

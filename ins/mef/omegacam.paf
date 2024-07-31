@@ -30,19 +30,19 @@ PHASE3.PROCATG.VAL.MFF                 "CALIB.MASTER_FLAT";
 PHASE3.PROCATG.COMMENT                 Phase3 product category;
 #
 PHASE3.PROGID.KEY.NAME                  "PROG_ID";
-PHASE3.PROGID.HDRKEY                    "HIERARCH ESO OBS PROG ID”;
+PHASE3.PROGID.HDRKEY                    HIERARCH ESO OBS PROG ID;
 PHASE3.PROGID.COMMENT                   Phase3 observation programme id;
 #
 PHASE3.OBID.KEY.NAME                    "OBID1";
-PHASE3.OBID.HDRKEY                      "HIERARCH ESO OBS ID”;
+PHASE3.OBID.HDRKEY                      HIERARCH ESO OBS ID;
 PHASE3.OBID.COMMENT                     Phase3 observation id;
 #
 PHASE3.NCOMBINE.KEY.NAME                "NCOMBINE";
 PHASE3.NCOMBINE.COMMENT                 Phase3 number of observations combined;
 #
 PHASE3.OBSTECH.KEY.NAME                 "OBSTECH";
-PHASE3.OBSTECH.HDRKEY                   "HIERARCH ESO DPR TECH”;
-PHASE3.OBSTECH.COMMENT                  Observation technique;
+PHASE3.OBSTECH.HDRKEY                   HIERARCH ESO DPR TECH;
+PHASE3.OBSTECH.COMMENT                  Phase3 observation technique;
 #
 PHASE3.MJDEND.KEY.NAME                  "MJD-END";
 PHASE3.MJDEND.HDRKEY                    "”;
@@ -50,12 +50,15 @@ PHASE3.MJDEND.COMMENT                   Phase3 MJD at the end of exposure;
 #
 PHASE3.PROCSOFT.KEY.NAME                "PROCSOFT";
 PHASE3.PROCSOFT.HDRKEY                  "”;
-PHASE3.PROCSOFT.COMMENT                 Branch form ECLIPSE by N. Devillar;
+PHASE3.PROCSOFT.COMMENT                 Branch from ECLIPSE by N. Devillar;
 #
 PHASE3.TIMESYS.KEY.NAME                 "TIMESYS";
 PHASE3.TIMESYS.HDRKEY                   "”;
 PHASE3.TIMESYS.VAL                      "UTC";
 PHASE3.TIMESYS.COMMENT                  Phase3 standard of time;
+#
+PHASE3.FILTER.KEY.NAME                  "FILTER";
+PHASE3.FILTER.COMMENT                   Phase3 simple filter keyword;
 #
 PHASE3.FLUXCAL.KEY.NAME                 "FLUXCAL";
 PHASE3.FLUXCAL.HDRKEY                   "”;

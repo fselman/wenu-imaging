@@ -322,6 +322,16 @@ mef_bb * mef_bb_new(void)
     bb->phase3_timesys_comment        = strdup(charval) ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_timesys_comment); }
 
+        sprintf(buffer,"PHASE3.FILTER.KEY.NAME");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_filter_keyname        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_filter_keyname); }
+
+        sprintf(buffer,"PHASE3.FILTER.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_filter_comment        = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_filter_comment); }
+
         sprintf(buffer,"PHASE3.FLUXCAL.KEY.NAME");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
     bb->phase3_fluxcal_keyname        = strdup(charval) ;
@@ -842,6 +852,8 @@ void mef_bb_del(mef_bb * bb)
 
 	if (bb->flat_median) 			free(bb->flat_median);
     if (bb->flat_stdev)            free(bb->flat_stdev);
+    if (bb->combined_flat_median)   free(bb->combined_flat_median);
+    if (bb->combined_flat_stdev)    free(bb->combined_flat_stdev);
 
 	if (bb->prescan_x_key)			free(bb->prescan_x_key);
 	if (bb->prescan_x_comment)		free(bb->prescan_x_comment);
@@ -2370,6 +2382,10 @@ image_t * mef_ff_combine(mef_bb * bb, image_t * dome, image_t * sky, image_t *bi
 	image_mul_local(smoothed, dome);
 	e_comment(1, "Done.");
 
+    /* Now we add some QC values */
+    bb->combined_flat_median[zIndex] = image_getmedian(smoothed);
+    bb->combined_flat_stdev[zIndex] = image_getstdev(smoothed);
+
 
 	return smoothed ;
 }
@@ -2674,15 +2690,15 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
     char        cval2[80] ;
     char        *getval ;
     float       exptime, mjdobs, mjdend;
-    int     i ;
+    int         i, nframes ;
 
         /* Check entries */
     if (bb==NULL) {
-         e_error("mef_header_eclipse: NULL bb pointer");
+         e_error("mef_header_esophase3: NULL bb pointer");
          return NULL ;
     }
     if (!what || !*what) {
-        e_error("mef_header_eclipse: NULL what pointer");
+        e_error("mef_header_esophase3: NULL what pointer");
         return NULL;
     }
 
@@ -2691,83 +2707,138 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
     /* first the headers common to all frames */
 
     fh_phase3 = qfits_header_default();
-    qfits_header_add(fh_phase3, "PHASE3", "ESOPHASE3", "ESO Phase3", NULL);
+    qfits_header_add(fh_phase3, "PHASE3", "ESOPHASE3", "ESO Phase3 compliant", NULL);
 
     sprintf(cval, "%s", bb->phase3_procatg_keyname);
     if (!strcmp(what,"science")) {
         sprintf(cval2, "%s", bb->phase3_procatg_val_science);
         qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
+        nframes = bb->science_nframes;
     } else if (!strcmp(what,"combined")) {
         sprintf(cval2, "%s", bb->phase3_procatg_val_mff);
         qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
+        nframes = 1;
     } else if (!strcmp(what,"sky")) {
         sprintf(cval2, "%s", bb->phase3_procatg_val_skyff);
         qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
+        nframes = bb->sky_nframes;
     } else if (!strcmp(what,"dome")) {
         sprintf(cval2, "%s", bb->phase3_procatg_val_domeff);
         qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
+        nframes = bb->dome_nframes;
     } else if (!strcmp(what,"bias")) {
         sprintf(cval2, "%s", bb->phase3_procatg_val_bias);
         qfits_header_add(fh_phase3, cval, cval2, bb->phase3_procatg_comment, NULL);
+        e_comment(1, "Adding key %s with value %s to %s frame", cval, cval2, what);
+        nframes = bb->bias_nframes;
     } else {
-        e_error("mef_header_phase3: unknown frame type [%s]",what);
+        e_error("mef_header_esophase3: unknown frame type [%s]",what);
         return NULL;
     }
 
     /* Program identification key -- from mefpp.paf */
-    cval_ptr = qfits_header_getstr(fh_ref, "HIERARCH ESO OBS PROG ID");
+    cval_ptr = qfits_header_getstr(fh_ref, bb->phase3_progid_hdrkey);
+    e_comment(1, "Adding key %s with value %s to %s frame", bb->phase3_progid_keyname, cval_ptr, what);
     if (cval_ptr!=NULL) {
-        qfits_header_add_after(fh_phase3, "PI-COI","PROG_ID", cval_ptr, "Program identification", NULL);
+        qfits_header_add_after(fh_phase3, bb->phase3_procatg_keyname, 
+                                            bb->phase3_progid_keyname, 
+                                            cval_ptr, 
+                                            bb->phase3_progid_comment, NULL);
+    } else {
+        qfits_header_add_after(fh_phase3, bb->phase3_procatg_keyname,
+                                            bb->phase3_progid_keyname,
+                                            "UNKNOWN",
+                                            bb->phase3_progid_comment, NULL);
     }
 
     /* Observation identification */
-    cval_ptr = qfits_header_getstr(fh_ref, "HIERARCH ESO OBS ID");
+    cval_ptr = qfits_header_getstr(fh_ref, bb->phase3_obid_hdrkey);
+    e_comment(1, "Adding key %s with value %s to %s frame", bb->phase3_obid_keyname, cval_ptr, what);
     if (cval_ptr!=NULL) {
-        qfits_header_add_after(fh_phase3, "PROG_ID","OBID1", cval_ptr, "Observation block ID", NULL);
+        qfits_header_add_after(fh_phase3, bb->phase3_progid_keyname, 
+                                          bb->phase3_obid_keyname, 
+                                          cval_ptr, 
+                                          bb->phase3_obid_comment, NULL);
+    } else {
+        qfits_header_add_after(fh_phase3, bb->phase3_progid_keyname, 
+                                          bb->phase3_obid_keyname, 
+                                          "UNKNOWN", 
+                                          bb->phase3_obid_comment, NULL);
     }
 
-    /* Number of images combined - only 1 during the pre-processing stage */
+    /* Number of images combined - only 1 during the pre-processing stage TBD */
+    e_comment(1, "Adding key %s with value %s to %s frame", bb->phase3_ncombine_keyname, "1", what);
+    sprintf(cval, "%d", nframes);
+    qfits_header_add_after(fh_phase3, bb->phase3_obid_keyname, 
+                                        bb->phase3_ncombine_keyname, 
+                                        cval, 
+                                        bb->phase3_ncombine_comment, NULL);
+
+    /* OBSTECH: key -- from mefpp.paf */
+    cval_ptr = qfits_header_getstr(fh_ref, bb->phase3_obstech_hdrkey);
+    e_comment(1, "Adding key %s with value %s to %s frame", bb->phase3_obstech_keyname, cval_ptr, what);
     if (cval_ptr!=NULL) {
-        qfits_header_add_after(fh_phase3, "OBID1","NCOMBINE", "1", "Number of observations combined", NULL);
+        qfits_header_add_after(fh_phase3, bb->phase3_ncombine_keyname,
+                                            bb->phase3_obstech_keyname, 
+                                            cval_ptr, 
+                                            bb->phase3_obstech_comment, NULL);
     }
 
-    /* OBSTECH key -- from mefpp.paf */
-    cval_ptr = qfits_header_getstr(fh_ref, "HIERARCH ESO DPR TECH");
+    /* FILTER: key -- from mefpp.paf */
+    cval_ptr = qfits_header_getstr(fh_ref, bb->filter_key);
+    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_filter_keyname, cval_ptr, what);
     if (cval_ptr!=NULL) {
-        qfits_header_add_after(fh_phase3, "INSTRUME","OBSTECH", cval_ptr, "Observation technique", NULL);
+        qfits_header_add_after(fh_phase3, bb->phase3_obstech_keyname,
+                                            bb->phase3_filter_keyname,
+                                            cval_ptr,
+                                            bb->phase3_filter_comment, NULL);
     }
 
-    /* a simple calculation of MJD-END. */
+    /* MJD-END: a simple calculation of MJD-END. */
     exptime = atof(qfits_header_getstr(fh_ref, "EXPTIME"));
     mjdobs = atof(qfits_header_getstr(fh_ref, "MJD-OBS"));
     mjdend = mjdobs + exptime/86400.;
     sprintf(cval, "%.8f", mjdend);
-    qfits_header_add_after(fh_phase3, "MJD-OBS", "MJD-END", cval, "End of exposure MJD", NULL);
+    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_mjdend_keyname, cval, what);
+    qfits_header_add_after(fh_phase3, bb->phase3_obstech_keyname, 
+                                        bb->phase3_mjdend_keyname, 
+                                        cval, 
+                                        bb->phase3_mjdend_comment, NULL);
 
-    /* we set the time system explicitly */
-    cval_ptr = qfits_header_getstr(fh_ref, "UTC");
-    if (cval_ptr!=NULL) {
-        qfits_header_add_after(fh_phase3, "UTC","TIMESYS", "UTC", "Time system", NULL);
-    }
+    /* TIMESYS: we set the time system explicitly */
+    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_timesys_keyname, bb->phase3_timesys_val, what);
+    qfits_header_add_after(fh_phase3, bb->phase3_mjdend_keyname, 
+                                            bb->phase3_timesys_keyname, 
+                                            bb->phase3_timesys_val, 
+                                            bb->phase3_timesys_comment, NULL);
 
     /* Processing software version */
-    sprintf(cval, "Pycavi-mefpp");
+    /* Processing software version */
+    sprintf(cval, recipe_version);
     sprintf(cval2, "Built on eclipse-%s by N. Devillard", get_eclipse_version());
-    qfits_header_add_after(fh_phase3, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
+    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_procsoft_keyname, cval, what);
+    qfits_header_add_after(fh_phase3, bb->phase3_timesys_keyname, 
+                                        bb->phase3_procsoft_keyname, 
+                                        cval, 
+                                        cval2, NULL);
 
     if (!strcmp(what,"science")) {
-        /* Product category key */
-         qfits_header_add_after(fh_phase3,"PROCSOFT", bb->phase3_procatg_keyname, 
-                                                      bb->phase3_procatg_val_science , 
-                                                      bb->phase3_procatg_comment, NULL);
         /* FLUXCAL key */
-        qfits_header_add_after(fh_phase3, bb->phase3_procatg_keyname, "FLUXCAL", "UNCALIBRATED", "Flux calibration", NULL);
+        e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_fluxcal_keyname, bb->phase3_fluxcal_val, what);
+        qfits_header_add_after(fh_phase3, bb->phase3_procsoft_keyname, 
+                                            bb->phase3_fluxcal_keyname, 
+                                            bb->phase3_fluxcal_val, 
+                                            bb->phase3_fluxcal_comment, NULL);
 
         /* we rename the RADECSYS key to RADESYS -- from mefpp.paf */
-        cval_ptr = qfits_header_getstr(fh_ref, "RADECSYS");
+        cval_ptr = qfits_header_getstr(fh_ref, bb->phase3_radesys_hdrkey);
+        e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_radesys_keyname, cval_ptr, what);
         if (cval_ptr!=NULL) {
-            qfits_header_add_after(fh_phase3, "RADECSYS","RADESYS", cval_ptr, "Coordinate reference frame", NULL);
-            qfits_header_del(fh_phase3,"RADECSYS");
+            qfits_header_add_after(fh_phase3, bb->phase3_fluxcal_keyname,
+                                                bb->phase3_radesys_keyname, 
+                                                cval_ptr, 
+                                                bb->phase3_radesys_comment, NULL);
+            qfits_header_del(fh_phase3,bb->phase3_radesys_hdrkey);
         }
     }
 
@@ -2781,7 +2852,10 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 {
 	qfits_header	*fh_eclipse ;
 	qfits_header	*fh_ref ;
+    qfits_header    *fh_sky_i;
 	framelist	*fnames ;
+    float       exptime;
+    char        *exptime_str;
 	char		cval[80] ;
     char        cval2[80] ;
 	char		*getval ;
@@ -2958,6 +3032,23 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 		    for (i=0 ; i<fnames->n ; i++) {
 			    sprintf(cval, "%s%03d",bb->skyff_frame_i_key, i+1);
 			    qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->skyff_frame_i_comment, NULL);
+
+                /* we get the exposure time for that frame */
+                e_comment(1,"reading primary headers of %s",get_basename(fnames->name[i]));
+                if ( (fh_sky_i = mef_header_primary(fnames->name[i])) == NULL) {
+                    e_error("mef_get_headers_for: can not read %s primary headers",get_basename(fnames->name[i]));
+                    return NULL;
+                }
+                e_comment(1,"Done.");
+                sprintf(cval, "%s%03d EXPTIME",bb->skyff_frame_i_key, i+1);
+                exptime_str = qfits_header_getstr(fh_sky_i, "EXPTIME");
+                if (exptime_str!=NULL) {
+                    exptime = atof(exptime_str);
+                    qfits_header_add(fh_eclipse, cval, exptime_str, "Exposure time of ski i", NULL);
+                } else {
+                    qfits_header_add(fh_eclipse, cval, "-1", "Exposure time of ski i (NULL)", NULL);
+                } 
+                qfits_header_destroy(fh_sky_i);
 		    }
 		    framelist_del(fnames);
 	    } else {
@@ -3152,10 +3243,12 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	char		*name_i ;
 	qfits_header	*fh_ref ;
 	qfits_header	*fh_main ;
+    qfits_header    *fh_phase3 ;
 	qfits_header	*fh_main_subset ;
 	qfits_header	*fh_eclipse ;
 	qfits_header	*fh_extension ;
 	qfits_header	*fh_aux ;
+    qfits_header    *fh_aux2 ;
 	qfitsdumper	qd ;
 	FILE		*out ;
 	char		cval[80] ;
@@ -3211,6 +3304,16 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	}
 	e_comment(1,"Done.");
 
+    /*
+     * *************************** ESO PHASE3 HEADERS ******************************
+    */
+    e_comment(1,"Building phase3 headers from reference.");
+    if (fh_ref != NULL) {
+        if ( (fh_phase3 = mef_header_esophase3(bb, what, fh_ref)) == NULL){
+            e_comment(1, "mef_get_headers_for: can not get phase3 headers for %s", what);    
+        }
+    }
+    e_comment(1,"Done.");
 
 	/* 
 	 * *************************** EXTENSION HEADERS FROM FRAME ********************
@@ -3240,7 +3343,8 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 		/* 
 		 * we make sure that the EXTEND keyword goes right after NAXIS
 		 */
-		fh_aux = fits_header_merge(fh_ref,fh_eclipse);
+		fh_aux2 = fits_header_merge(fh_ref,fh_phase3);
+        fh_aux = fits_header_merge(fh_aux2,fh_eclipse);
 		qfits_header_del(fh_aux,"EXTEND");
 		qfits_header_add_after(fh_aux,"NAXIS", "EXTEND","T","Extension may be present.",NULL);
 
@@ -3283,6 +3387,8 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	        qfits_header_destroy(fh_ref);
 	        qfits_header_destroy(fh_extension);
 	        qfits_header_destroy(fh_eclipse);
+            qfits_header_destroy(fh_phase3);
+            qfits_header_destroy(fh_aux2);
 		
 		e_comment(1,"Done.");
 		return fh_aux;
@@ -3444,6 +3550,19 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 
         sprintf(cval, "%f", bb->sky_stdev[bb->xtnum-1]);
         qfits_header_add(fh_extension, "HIERARCH ESO MPP QC FRSTDEV", cval, "Stdev of pixel values.", NULL);
+    }
+
+    /* Minimum QC parameters for the master flat */
+    if (!strcmp(what, "combined")) {
+
+        sprintf(cval, "%f", bb->combined_flat_median[bb->xtnum-1]);
+        e_comment(1, "Adding HIERARCH ESO MPP QC FRMEDIAN: %s", cval);
+        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC FRMEDIAN", cval, "Median of pixel values.", NULL);
+
+        sprintf(cval, "%f", bb->combined_flat_stdev[bb->xtnum-1]);
+        e_comment(1, "Adding HIERARCH ESO MPP QC FRSTDEV: %s", cval);
+        qfits_header_add(fh_extension, "HIERARCH ESO MPP QC FRSTDEV", cval, "Stdev of pixel values.", NULL);
+
     }
 
     if (!strcmp(what, "science")) {
