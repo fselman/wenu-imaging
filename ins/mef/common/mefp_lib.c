@@ -382,6 +382,7 @@ mef_bb * mef_bb_new(void)
         bb->bias_frame_i_comment   	= strdup(charval) ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bias_frame_i_comment); }
 	
+        /* FITS key to identify bias product used to produce flats and science products. */
         sprintf(buffer,"MEF.MASTER.BIAS.KEY");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
 	bb->master_bias_key		= strdup(charval) ;
@@ -407,10 +408,32 @@ mef_bb * mef_bb_new(void)
 	bb->name_bpm			= strdup(charval);
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_bpm); }
 
+        /* FITS key to identify dome product used to produce combined master flat. */
+        sprintf(buffer,"MEF.MASTER.DOME.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_dome_key     = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_dome_key); }
+
+        sprintf(buffer,"MEF.MASTER.DOME.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_dome_comment     = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_dome_comment); }
+
         sprintf(buffer,"MEF.DOMEFF.NAME.O");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
 	bb->name_dome_o			= strdup(charval) ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_dome_o); }
+
+        /* FITS keys to identify sky product used to produce combined master flat. */
+        sprintf(buffer,"MEF.MASTER.SKY.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_sky_key     = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_sky_key); }
+
+        sprintf(buffer,"MEF.MASTER.SKY.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_sky_comment     = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_sky_comment); }
 
         sprintf(buffer,"MEF.SKYFF.NAME.O");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
@@ -421,6 +444,19 @@ mef_bb * mef_bb_new(void)
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
 	bb->name_mf_o			= strdup(charval) ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_mf_o); }
+
+
+        /* FITS keys to identify master flat product used to reduce the science frames. */
+        sprintf(buffer,"MEF.MASTER.FLAT.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_flat_key         = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_flat_key); }
+
+        sprintf(buffer,"MEF.MASTER.FLAT.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_flat_comment     = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_flat_comment); }
+
 
         sprintf(buffer,"MEF.REFPIX.X");
         fvalue = atof(qfits_paf_query( cfgfile, buffer));
@@ -794,64 +830,68 @@ void mef_bb_del(mef_bb * bb)
 	if (bb->dpr_catg_comment)		free(bb->dpr_catg_comment) ;
 
 	if (bb->dpr_type_key)           	free(bb->dpr_type_key);
-        if (bb->dpr_type_val)           	free(bb->dpr_type_val);
-        if (bb->dpr_type_comment)       	free(bb->dpr_type_comment) ;
+    if (bb->dpr_type_val)           	free(bb->dpr_type_val);
+    if (bb->dpr_type_comment)       	free(bb->dpr_type_comment) ;
 
     if (bb->phase3_procatg_keyname)               free(bb->phase3_procatg_keyname);
-        if (bb->phase3_procatg_val_bias)               free(bb->phase3_procatg_val_bias);
-        if (bb->phase3_procatg_val_domeff)               free(bb->phase3_procatg_val_domeff);
-        if (bb->phase3_procatg_val_skyff)               free(bb->phase3_procatg_val_skyff);
-        if (bb->phase3_procatg_val_mff)               free(bb->phase3_procatg_val_mff);
-        if (bb->phase3_procatg_val_science)               free(bb->phase3_procatg_val_science);
-        if (bb->phase3_procatg_comment)           free(bb->phase3_procatg_comment) ;
+    if (bb->phase3_procatg_val_bias)               free(bb->phase3_procatg_val_bias);
+    if (bb->phase3_procatg_val_domeff)               free(bb->phase3_procatg_val_domeff);
+    if (bb->phase3_procatg_val_skyff)               free(bb->phase3_procatg_val_skyff);
+    if (bb->phase3_procatg_val_mff)               free(bb->phase3_procatg_val_mff);
+    if (bb->phase3_procatg_val_science)               free(bb->phase3_procatg_val_science);
+    if (bb->phase3_procatg_comment)           free(bb->phase3_procatg_comment) ;
 	
-	if (bb->filter_key) 			free(bb->filter_key);
-	if (bb->filter_val) 			free(bb->filter_val);
-	if (bb->binx_key) 			free(bb->binx_key);
-	if (bb->binx_val) 			free(bb->binx_val);
-	if (bb->biny_key) 			free(bb->biny_key);
-	if (bb->biny_val) 			free(bb->biny_val);
-	if (bb->data_partition) 		free(bb->data_partition);
-	if (bb->flat_partition) 		free(bb->flat_partition);
-	if (bb->bias_partition) 		free(bb->bias_partition);
+	if (bb->filter_key) 			    free(bb->filter_key);
+	if (bb->filter_val) 			    free(bb->filter_val);
+	if (bb->binx_key) 			        free(bb->binx_key);
+	if (bb->binx_val) 			        free(bb->binx_val);
+	if (bb->biny_key) 			        free(bb->biny_key);
+	if (bb->biny_val) 			        free(bb->biny_val);
+	if (bb->data_partition) 		    free(bb->data_partition);
+	if (bb->flat_partition) 		    free(bb->flat_partition);
+	if (bb->bias_partition) 		    free(bb->bias_partition);
 
-	if (bb->bias_frame_i_key)		free(bb->bias_frame_i_key);
+    if (bb->master_bias_key)            free(bb->master_bias_key);
+    if (bb->master_bias_comment)        free(bb->master_bias_comment);
+	if (bb->bias_frame_i_key)		    free(bb->bias_frame_i_key);
 	if (bb->bias_frame_i_comment)		free(bb->bias_frame_i_comment);
-	if (bb->master_bias_key)		free(bb->master_bias_key);
-	if (bb->master_bias_comment)		free(bb->master_bias_comment);
-	if (bb->bias_median)			free(bb->bias_median);
-    if (bb->bias_stdev)             free(bb->bias_stdev);
-	if (bb->bias_nplanes)			free(bb->bias_nplanes);
-    if (bb->bias_scan_median)       free(bb->bias_scan_median);
-    if (bb->bias_scan_stdev)       free(bb->bias_scan_stdev);
+	if (bb->bias_median)			    free(bb->bias_median);
+    if (bb->bias_stdev)                 free(bb->bias_stdev);
+	if (bb->bias_nplanes)			    free(bb->bias_nplanes);
+    if (bb->bias_scan_median)           free(bb->bias_scan_median);
+    if (bb->bias_scan_stdev)            free(bb->bias_scan_stdev);
 
-	if (bb->domeff_frame_i_key)		free(bb->domeff_frame_i_key);
+    if (bb->master_dome_key)            free(bb->master_dome_key);
+    if (bb->master_dome_comment)        free(bb->master_dome_comment);
+	if (bb->domeff_frame_i_key)		    free(bb->domeff_frame_i_key);
 	if (bb->domeff_frame_i_comment)		free(bb->domeff_frame_i_comment);
 	if (bb->dome_framethr_lo_key)		free(bb->dome_framethr_lo_key);
 	if (bb->dome_framethr_lo_comment)	free(bb->dome_framethr_lo_comment);
-	if (bb->dome_framethr_hi_key)           free(bb->dome_framethr_hi_key);
-        if (bb->dome_framethr_hi_comment)       free(bb->dome_framethr_hi_comment);
-	if (bb->dome_minframe_key)		free(bb->dome_minframe_key);
+	if (bb->dome_framethr_hi_key)       free(bb->dome_framethr_hi_key);
+    if (bb->dome_framethr_hi_comment)   free(bb->dome_framethr_hi_comment);
+	if (bb->dome_minframe_key)		    free(bb->dome_minframe_key);
 	if (bb->dome_minframe_comment)		free(bb->dome_minframe_comment);
-	if (bb->dome_median) 			free(bb->dome_median);
-    if (bb->dome_stdev)            free(bb->dome_stdev);
-	if (bb->dome_nplanes) 			free(bb->dome_nplanes);
+	if (bb->dome_median) 			    free(bb->dome_median);
+    if (bb->dome_stdev)                 free(bb->dome_stdev);
+	if (bb->dome_nplanes) 			    free(bb->dome_nplanes);
 	
-	if (bb->skyff_frame_i_key)		free(bb->skyff_frame_i_key);
+    if (bb->master_sky_key)             free(bb->master_sky_key);
+    if (bb->master_sky_comment)         free(bb->master_sky_comment);
+	if (bb->skyff_frame_i_key)		    free(bb->skyff_frame_i_key);
 	if (bb->skyff_frame_i_comment)		free(bb->skyff_frame_i_comment);
 	if (bb->sky_framethr_lo_key)		free(bb->sky_framethr_lo_key);
 	if (bb->sky_framethr_lo_comment)	free(bb->sky_framethr_lo_comment);
-	if (bb->sky_framethr_hi_key)            free(bb->sky_framethr_hi_key);
-        if (bb->sky_framethr_hi_comment)        free(bb->sky_framethr_hi_comment);
-	if (bb->sky_minframe_key)		free(bb->sky_minframe_key);
-	if (bb->sky_minframe_comment)           free(bb->sky_minframe_comment);
-	if (bb->sky_median) 			free(bb->sky_median);
-    if (bb->sky_stdev)             free(bb->sky_stdev);
-	if (bb->sky_nplanes) 			free(bb->sky_nplanes);
+	if (bb->sky_framethr_hi_key)        free(bb->sky_framethr_hi_key);
+    if (bb->sky_framethr_hi_comment)    free(bb->sky_framethr_hi_comment);
+	if (bb->sky_minframe_key)		    free(bb->sky_minframe_key);
+	if (bb->sky_minframe_comment)       free(bb->sky_minframe_comment);
+	if (bb->sky_median) 			    free(bb->sky_median);
+    if (bb->sky_stdev)                  free(bb->sky_stdev);
+	if (bb->sky_nplanes) 			    free(bb->sky_nplanes);
 
 
 	if (bb->flat_median) 			free(bb->flat_median);
-    if (bb->flat_stdev)            free(bb->flat_stdev);
+    if (bb->flat_stdev)             free(bb->flat_stdev);
     if (bb->combined_flat_median)   free(bb->combined_flat_median);
     if (bb->combined_flat_stdev)    free(bb->combined_flat_stdev);
 
@@ -2913,13 +2953,13 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	    /* Add REC.BIASi */
 
 	    if ( (fnames = framelist_load(bb->name_bias)) == NULL) {
-		 if (is_fits_file(bb->name_bias)) {
+		    if (is_fits_file(bb->name_bias)) {
 		       fnames = framelist_new(1);
 		       fnames->name[0] = strdup(bb->name_bias);
-		 } else {
+		    } else {
 		       e_error("mef_header_eclipse: %s is not a framelist or a FITS file. Aborting", bb->name_bias);
 		       return NULL ;
-		 }
+		    }
 	    }
 
 	    if (fnames!=NULL) {
@@ -2934,12 +2974,29 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
     /* Add the master bias to all flat products */
     if (!strcmp(what,"combined") || !strcmp(what,"sky") || !strcmp(what,"dome")) {
         /* REC.FLAT.MBIAS */
-        if (bb->name_bias!=NULL) {
-            qfits_header_add(fh_eclipse, bb->master_bias_key, get_basename(bb->name_bias), bb->master_bias_comment, NULL);
+        if (bb->orig_bias!=NULL) {
+            qfits_header_add(fh_eclipse, bb->master_bias_key, bb->orig_bias, bb->master_bias_comment, NULL);
         } else {
             qfits_header_add(fh_eclipse, bb->master_bias_key, "none", bb->master_bias_comment, NULL);
         }
-   }
+    }
+
+    /* Add the master dome and master sky to master flat products */
+    if (!strcmp(what,"combined")) {
+        /* REC.FLAT.MDOME */
+        if (bb->orig_dome!=NULL) {
+            qfits_header_add(fh_eclipse, bb->master_dome_key, bb->orig_dome, bb->master_dome_comment, NULL);
+        } else {
+            qfits_header_add(fh_eclipse, bb->master_dome_key, "none", bb->master_dome_comment, NULL);
+        }
+
+        /* REC.FLAT.MSKY */
+        if (bb->orig_sky!=NULL) {
+            qfits_header_add(fh_eclipse, bb->master_sky_key, bb->orig_sky, bb->master_sky_comment, NULL);
+        } else {
+            qfits_header_add(fh_eclipse, bb->master_sky_key, "none", bb->master_sky_comment, NULL);
+        }
+    }
 
     /* Add raw dome frame list to dome flat field */
     /* Also add processing parameters */
@@ -2949,7 +3006,9 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	    if ( (fnames = framelist_load(bb->name_dome)) == NULL) {
 	         if (is_fits_file(bb->name_dome)) {
 	               fnames = framelist_new(1);
-	               fnames->name[0] = strdup(bb->name_dome);
+	               /* fnames->name[0] = strdup(bb->name_dome); */
+                   fnames->name[0] = NULL;
+
                  } else {
 	                e_error("mef_header_eclipse: %s is not a framelist or a FITS file. Aborting", bb->name_dome);
 	                return NULL ;
@@ -2958,9 +3017,11 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 
 	    if (fnames!=NULL) {
 		    for (i=0 ; i<fnames->n ; i++) {
-			    sprintf(cval, "%s%03d", bb->domeff_frame_i_key, i+1);
-			    qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->domeff_frame_i_comment, NULL);
-		    }
+                if (fnames->name[i]!=NULL) {
+			        sprintf(cval, "%s%03d", bb->domeff_frame_i_key, i+1);
+			        qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->domeff_frame_i_comment, NULL);
+                }
+            }
 		    framelist_del(fnames);
 	    } else {
 		    e_warning("mef_header_eclipse: cannot read dome list [%s]: no output in header",
@@ -2989,27 +3050,27 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 
         if ( (fnames = framelist_load(bb->name_dome)) == NULL) {
              if (is_fits_file(bb->name_dome)) {
-                   fnames = framelist_new(1);
-                   fnames->name[0] = strdup(bb->name_dome);
-                 } else {
-                    e_error("mef_header_eclipse: %s is not a framelist or a FITS file. Aborting", bb->name_dome);
-                    return NULL ;
-                 }
-            }
+               fnames = framelist_new(1);
+               /* fnames->name[0] = strdup(bb->name_dome); */
+               fnames->name[0] = NULL;
+             } else {
+                e_error("mef_header_eclipse: %s is not a framelist or a FITS file. Aborting", bb->name_dome);
+                return NULL ;
+             }
+        }
 
         if (fnames!=NULL) {
             for (i=0 ; i<fnames->n ; i++) {
-                sprintf(cval, "%s", bb->domeff_frame_i_key);
-                qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->domeff_frame_i_comment, NULL);
+                if (fnames->name[i]!=NULL) {
+                    sprintf(cval, "%s", bb->domeff_frame_i_key);
+                    qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->domeff_frame_i_comment, NULL);
+                }
             }
             framelist_del(fnames);
         } else {
             e_warning("mef_header_eclipse: cannot read dome list [%s]: no output in header",
                 bb->name_dome);
         }
-
-        sprintf(cval, "%s",bb->skyff_frame_i_key);
-        qfits_header_add(fh_eclipse, cval, mef_get_output_filename(bb,"sky"), bb->skyff_frame_i_comment, NULL);
     }
 
 
@@ -3021,7 +3082,8 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	    if ( (fnames = framelist_load(bb->name_sky)) == NULL) {
                  if (is_fits_file(bb->name_sky)) {
                        fnames = framelist_new(1);
-                       fnames->name[0] = strdup(bb->name_sky);
+                       /* fnames->name[0] = strdup(bb->name_sky); */
+                       fnames->name[0] = NULL;
                  } else {
                        e_error("mef_header_eclipse: %s is not a framelist or a FITS file. Aborting", bb->name_sky);
                        return NULL ;
@@ -3030,25 +3092,27 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 
 	    if (fnames!=NULL) {
 		    for (i=0 ; i<fnames->n ; i++) {
-			    sprintf(cval, "%s%03d",bb->skyff_frame_i_key, i+1);
-			    qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->skyff_frame_i_comment, NULL);
+                if (fnames->name[i]!=NULL) {
+			        sprintf(cval, "%s%03d",bb->skyff_frame_i_key, i+1);
+			        qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->skyff_frame_i_comment, NULL);
 
-                /* we get the exposure time for that frame */
-                e_comment(1,"reading primary headers of %s",get_basename(fnames->name[i]));
-                if ( (fh_sky_i = mef_header_primary(fnames->name[i])) == NULL) {
-                    e_error("mef_get_headers_for: can not read %s primary headers",get_basename(fnames->name[i]));
-                    return NULL;
+                    /* we get the exposure time for that frame */
+                    e_comment(1,"reading primary headers of %s",get_basename(fnames->name[i]));
+                    if ( (fh_sky_i = mef_header_primary(fnames->name[i])) == NULL) {
+                        e_error("mef_header_eclipse: can not read %s primary headers",get_basename(fnames->name[i]));
+                        return NULL;
+                    }
+                    e_comment(1,"Done.");
+                    sprintf(cval, "%s%03d EXPTIME",bb->skyff_frame_i_key, i+1);
+                    exptime_str = qfits_header_getstr(fh_sky_i, "EXPTIME");
+                    if (exptime_str!=NULL) {
+                        exptime = atof(exptime_str);
+                        qfits_header_add(fh_eclipse, cval, exptime_str, "Exposure time of ski i", NULL);
+                    } else {
+                        qfits_header_add(fh_eclipse, cval, "-1", "Exposure time of ski i (NULL)", NULL);
+                    } 
+                    qfits_header_destroy(fh_sky_i);
                 }
-                e_comment(1,"Done.");
-                sprintf(cval, "%s%03d EXPTIME",bb->skyff_frame_i_key, i+1);
-                exptime_str = qfits_header_getstr(fh_sky_i, "EXPTIME");
-                if (exptime_str!=NULL) {
-                    exptime = atof(exptime_str);
-                    qfits_header_add(fh_eclipse, cval, exptime_str, "Exposure time of ski i", NULL);
-                } else {
-                    qfits_header_add(fh_eclipse, cval, "-1", "Exposure time of ski i (NULL)", NULL);
-                } 
-                qfits_header_destroy(fh_sky_i);
 		    }
 		    framelist_del(fnames);
 	    } else {
@@ -3187,6 +3251,58 @@ char *mef_get_input_filename(mef_bb *bb, char *what)
 	}
 	return name_i;
 }
+
+/*
+ * Creates a filename using an iso8601 time stamp.
+ */
+void *mef_create_orig_filename(mef_bb *bb, char *what)
+{
+    char cval[80];
+
+    /* Check entries */
+    if (bb==NULL) {
+        e_error("mef_create_orig_filename: NULL bb pointer");
+        return NULL;
+    }
+    if (!what || !*what) {
+        e_error("mef_create_orig_filename: NULL what pointer");
+        return NULL;
+    }
+
+    if (!strcmp(what, "bias")) {
+        /* The final name to use for the file is only written in the ORIGFILE key */
+        sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
+        bb->orig_bias = strdup(cval) ;
+        e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_bias);
+
+    } else if (!strcmp(what, "dome")) {
+        /* The final name to use for the file is only written in the ORIGFILE key */
+        sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
+        bb->orig_dome = strdup(cval) ;
+        e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_dome);
+
+    } else if (!strcmp(what, "sky")) {
+        /* The final name to use for the file is only written in the ORIGFILE key */
+        sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
+        bb->orig_sky = strdup(cval) ;
+        e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_sky);
+
+    } else if (!strcmp(what, "combined")) {
+        /* The final name to use for the file is only written in the ORIGFILE key */
+        sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
+        bb->orig_mff = strdup(cval) ;
+        e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_mff);
+
+    } else if (!strcmp(what, "science")) {
+        /* The final name to use for the file is only written in the ORIGFILE key */
+        sprintf(cval, "SMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
+        bb->orig_science = strdup(cval) ;
+        e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_science);
+    } else {
+        e_error("mef_create_orig_filename: unknown frame type: %s", what);
+    }
+}
+
 char *mef_get_output_filename(mef_bb *bb, char *what)
 {
 	char *name_o;
@@ -3201,6 +3317,8 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
 		e_error("mef_get_output_filename: NULL what pointer");
 		return NULL;
 	}
+
+
 	if (!strcmp(what, "dome")) {
 		if (bb->flat_partition != NULL) {
                     sprintf(cval,"%s_%s.fits",bb->name_dome_o,bb->flat_partition);
@@ -3208,6 +3326,7 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
                     sprintf(cval,"%s.fits",bb->name_dome_o);
                 }
 		name_o = strdup(cval) ;
+
 	} else if (!strcmp(what, "sky")) {
 		if (bb->flat_partition != NULL) {
                     sprintf(cval,"%s_%s.fits",bb->name_sky_o,bb->flat_partition);
@@ -3215,6 +3334,7 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
                     sprintf(cval,"%s.fits",bb->name_sky_o);
                 }
 		name_o = strdup(cval) ;
+
 	} else if (!strcmp(what, "combined")) {
 		if (bb->flat_partition != NULL) {
                     sprintf(cval,"%s_%s.fits",bb->name_mf_o,bb->flat_partition);
@@ -3222,6 +3342,7 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
 	            sprintf(cval,"%s.fits",bb->name_mf_o);
                 }
 		name_o = strdup(cval) ;
+
 	} else if (!strcmp(what, "bias")) {
 		if (bb->bias_partition != NULL) {
 		    sprintf(cval,"%s_%s.fits",bb->name_bias_o,bb->bias_partition);
@@ -3230,7 +3351,7 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
 		}
 		name_o = strdup(cval) ;
 	} else {
-		e_error("mef_get_output_filename: unknown frame type [%s] should be 'dome', 'sky', or 'combined'",what);
+		e_error("mef_get_output_filename: unknown frame type [%s] should be 'bias', 'dome', 'sky', or 'combined'",what);
 		return NULL;
 	}
 	return name_o;
@@ -3272,6 +3393,8 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	}
 	name_i = mef_get_input_filename(bb,what);
 	e_comment(1,"name_i: %s",name_i);
+
+    /* In this call we fill the orig_<cal> pointers with the proper ORIGFILE name  when created*/
 	name_o = mef_get_output_filename(bb,what);
 	e_comment(1,"name_o: %s",name_o);
 	
@@ -3348,6 +3471,22 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 		qfits_header_del(fh_aux,"EXTEND");
 		qfits_header_add_after(fh_aux,"NAXIS", "EXTEND","T","Extension may be present.",NULL);
 
+        /* Replace the value of the ORIGFILE key by the new value */
+        if (!strcmp(what, "bias")) {
+            sprintf(cval,"%s", bb->orig_bias);
+            qfits_header_mod(fh_aux, "ORIGFILE", cval, "Name for this file");
+        } else if (!strcmp(what, "dome")) {
+            sprintf(cval,"%s", bb->orig_dome);
+            qfits_header_mod(fh_aux, "ORIGFILE", cval, "Name for this file");
+        } else if (!strcmp(what, "sky")) {
+            sprintf(cval,"%s", bb->orig_sky);
+            qfits_header_mod(fh_aux, "ORIGFILE", cval, "Name for this file");
+        } else if (!strcmp(what, "combined")) {
+            sprintf(cval,"%s", bb->orig_mff);
+            qfits_header_mod(fh_aux, "ORIGFILE", cval, "Name for this file");
+        }
+
+
         /*
          * Here we delete some keys that do not belong in the primary headers
          */
@@ -3401,7 +3540,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	 * main header to the extension header
 	 */
 	if ( (fh_main_subset = mef_header_mainsubset(bb,zImage)) == NULL) {
-		e_error("mef_save: can not read subset from primary headers of %s",\
+		e_error("mef_get_headers: can not read subset from primary headers of %s",\
 				bb->name_sky);
 		return NULL;
 	}
@@ -3646,8 +3785,12 @@ void mef_save(mef_bb *bb, image_t *zImage, char *what)
 
 	e_comment(1, "saving %s [%s]",what,name_o);
 	if (bb->xtnum == 1) {
-	    /* saving primary headers */
+	    /* saving primary headers after creating the value to go into key ORIGFILE */
+        mef_create_orig_filename(bb, what);
 	    fh_aux =  mef_get_headers_for(what,bb,NULL);
+
+        e_comment(1, "Creating file %s with ORIGFILE: %s ", name_o, qfits_header_getstr(fh_aux,"ORIGFILE"));
+
 	    save_mef_hdrdump(NULL,name_o,fh_aux,BPP_DEFAULT);
  	}
 	/* saving extension headers and data */

@@ -54,6 +54,8 @@
 #define GET_SECOND(t)       (int) (((t) % 10000L) / 100)
 /** Get centi-seconds from a date in long format */
 #define GET_CENTI(t)        (int) ( (t) % 100)
+/** Get mili-seconds from a date in long format */
+#define GET_MILI(t)        (int) ( (t) % 1000)
 
 /** Make date in long format from its components */
 #define MAKE_DATE(c,y,m,d)  (long) (c) * 1000000L +                          \
@@ -260,6 +262,26 @@ char * get_datetime_iso8601(void)
             GET_HOUR(curtime),
             GET_MINUTE(curtime),
             GET_SECOND(curtime));
+    return date_iso8601 ;
+}
+
+char * get_datetimemili_iso8601(void)
+{
+    static char date_iso8601[24] ;
+    long        curdate ;
+    long        curtime ;
+
+    curdate  = date_now() ;
+    curtime  = time_now() ;
+
+    sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+            GET_CCYEAR(curdate),
+            GET_MONTH(curdate),
+            GET_DAY(curdate),
+            GET_HOUR(curtime),
+            GET_MINUTE(curtime),
+            GET_SECOND(curtime),
+            GET_MILI(curtime));
     return date_iso8601 ;
 }
 

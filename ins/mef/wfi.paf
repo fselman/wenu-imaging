@@ -1,14 +1,14 @@
-PAF.HDR.START                                    ;         # start of header
-PAF.TYPE                                         "Instrument/reduction description";
-PAF.ID                                           "";
-PAF.NAME                                         "wfi.paf";
-PAF.DESC                                         "Description of WFI for MEFPP";
-PAF.CRTE.NAME                                    "";
-PAF.CRTE.DAYTIM                                  "";
-PAF.LCHG.NAME                                    "";
-PAF.LCHG.DAYTIM                                  "";
-PAF.CHCK.CHECKSUM                                "";
-PAF.HDR.END                                      ;         # end of header
+PAF.HDR.START                         ;         # start of header
+PAF.TYPE                              "Instrument/reduction description";
+PAF.ID                                "";
+PAF.NAME                              "wfi.paf";
+PAF.DESC                              "Description of WFI for MEFPP";
+PAF.CRTE.NAME                         "F. Selman";
+PAF.CRTE.DAYTIM                       "2024-08-02T20:50:00";
+PAF.LCHG.NAME                         "";
+PAF.LCHG.DAYTIM                       "";
+PAF.CHCK.CHECKSUM                     "";
+PAF.HDR.END                           ;         # end of header
 #
 MEF.ORIGIN                             "ESO-LASILLA";
 MEF.TELESCOPE                          "MPI 2.2-m";
@@ -164,11 +164,7 @@ MEF.SCANREJ.KEY                        "HIERARCH ESO MPP RJOVSC";
 MEF.SCANREJ.COMMENT                    "Rejection min max";
 MEF.SCANREJ.MIN                         10;
 MEF.SCANREJ.MAX                         10;
-#
-MEF.CROP.X.MIN                           55;
-MEF.CROP.X.MAX                           2090;
-MEF.CROP.Y.MIN                           35;
-MEF.CROP.Y.MAX                           4120;
+
 
 # --- Define the pixels that are exposed to sky
 MEF.TRIMREG.KEY                          "HIERARCH ESO MPP TRIM";
@@ -243,6 +239,10 @@ MEF.BIAS.FRAMETHR.HI                    1000;
 MEF.BIAS.KAPPA1                         2.0;
 MEF.BIAS.FRAMENUM.MIN                   3;
 
+# Keys to identify master bias product used
+MEF.MASTER.BIAS.KEY                     "HIERARCH ESO MPP MBIAS";
+MEF.MASTER.BIAS.COMMENT                 "Master bias used";
+
 # Bad pixel mask creation parameters
 MEF.BPM.NAME                            "WFI_BPM";
 MEF.BPM.NAME.O                          "WFI_BPM";
@@ -270,6 +270,10 @@ MEF.DOMEFF.FRAMENUM.MIN.KEY               "HIERARCH ESO MPP FLAT MINFRAD";
 MEF.DOMEFF.FRAMENUM.MIN.COMMENT           "minimum number of frames for dome flat";
 MEF.DOMEFF.FRAMENUM.MIN                   3;
 
+# Keys to identify the master dome product used
+MEF.MASTER.DOME.KEY                     "HIERARCH ESO MPP MDOME";
+MEF.MASTER.DOME.COMMENT                 "Master dome used";
+
 # Sky flat field processing parameters
 MEF.SKYFF.FRAME.I.KEY                     "HIERARCH ESO MPP FLAT SKY";
 MEF.SKYFF.FRAME.I.COMMENT                 "Input sky frame";
@@ -283,6 +287,10 @@ MEF.SKYFF.FRAMETHR.HI                     45000;
 MEF.SKYFF.FRAMENUM.MIN.KEY                "HIERARCH ESO MPP FLAT SKY MINFRAS";
 MEF.SKYFF.FRAMENUM.MIN.COMMENT            "minimum number of frames for sky flat";
 MEF.SKYFF.FRAMENUM.MIN                    3;
+
+# Keys to identify the master sky product used
+MEF.MASTER.SKY.KEY                     "HIERARCH ESO MPP MSKY";
+MEF.MASTER.SKY.COMMENT                 "Master sky used";
 
 # Processing parameters for dome and sky flat creation
 MEF.PIXREJ.SIGMA.LO.KEY                    "HIERARCH ESO MPP FLAT LPIXSIG";
@@ -300,10 +308,12 @@ MEF.MEDIAN.REG.Y1                           1500;
 MEF.MEDIAN.REG.Y2                           2500;
 
 # Master flat field processing parameters
-MEF.MFF.NAME                              "WFI_MFF";
 MEF.MFF.NAME.O                            "WFI_MFF";
 MEF.KERN.HSIZE.KEY                        "HIERARCH MEFPP REC FLAT KERNS";
 MEF.KERN.HSIZE.COMMENT                    "Smoothing kernel size for sky flat";
 MEF.KERN.HSIZE                             7;
+
+MEF.MASTER.FLAT.KEY                     "HIERARCH ESO MPP MFF";
+MEF.MASTER.FLAT.COMMENT                 "Master flat field";
 #
 #_oOo_

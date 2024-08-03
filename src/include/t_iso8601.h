@@ -85,6 +85,7 @@ char * get_date_iso8601(void);
  */
 /*-------------------------------------------------------------------------*/
 char * get_datetime_iso8601(void);
+char * get_datetimemili_iso8601(void);
 
 #ifdef __cplusplus
 }

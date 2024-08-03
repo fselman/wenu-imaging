@@ -76,6 +76,7 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 	int             c ;
 	int         display_params ;
 	char * pafname ;
+    char * date_ptr;
 	mef_bb*   bb ;
 
 	display_params = 0 ;
@@ -308,6 +309,8 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 	}
 
 	if (display_params) {
+        date_ptr = get_datetime_iso8601();
+        e_comment(1,"date: %s", date_ptr);
 		mef_bb_dump(bb, stdout);
 	}
 	return bb;
@@ -513,11 +516,22 @@ int mef_engine(mef_bb * bb)
 		part++;
 		e_comment(0,"---> [%d/%d] Part %d in %d: BIAS construction/reading",xts[j],nxts,part,ALGPARTS);
 		if (is_fits_file(bb->name_bias) == 1) {
-		    bias = mef_load_ext(bb->name_bias,bb->xtnum);
-		    bb->bias_median[zIndex] = image_getmedian(bias);
+
+            /* we extract the origfile name of the file */
+            if ( (fh = mef_header_primary(bb->name_bias)) == NULL) {
+                e_error("mef_engine: can not read %s primary headers",bb->name_bias);
+                return -1;
+            }
+            bb->orig_bias = strdup(qfits_header_getstr(fh,"ORIGFILE"));
+            qfits_header_destroy(fh);
+            e_comment(1,"mef_engine: using bias FITS frame with ORIGFILE: %s", bb->orig_bias);
+
+            bias = mef_load_ext(bb->name_bias,bb->xtnum);
+            bb->bias_median[zIndex] = image_getmedian(bias);
             bb->bias_stdev[zIndex] = image_getstdev(bias);
-		    bb->bias_nplanes[zIndex] = 1;
-		    e_comment(1,"bias median value: %f   bias std dev value: %f",bb->bias_median[zIndex], bb->bias_stdev[zIndex]);
+            bb->bias_nplanes[zIndex] = 1;
+            e_comment(1,"bias median value: %f   bias std dev value: %f",bb->bias_median[zIndex], bb->bias_stdev[zIndex]);
+
 		} else {
 
            /* Load frame names for error messages */
@@ -578,17 +592,29 @@ int mef_engine(mef_bb * bb)
 		if (bb->name_dome != NULL) {
 		    part++ ;
 		    if (is_fits_file(bb->name_mf) != 1) {
-		       if (is_fits_file(bb->name_dome)) {
-                   e_comment(0,"---> [%d/%d] Part %d in %d: Skypping dome flat construction, reading it",xts[j],nxts,part,ALGPARTS);
+                if (is_fits_file(bb->name_dome)) {
+                    e_comment(0,"---> [%d/%d] Part %d in %d: Skypping dome flat construction, reading it",xts[j],nxts,part,ALGPARTS);
+
+                    /* we extract the origfile name of the file */
+                    if ( (fh = mef_header_primary(bb->name_dome)) == NULL) {
+                        e_error("mef_engine: can not read %s primary headers",bb->name_dome);
+                        return -1;
+                    }
+                    bb->orig_dome = strdup(qfits_header_getstr(fh,"ORIGFILE"));
+                    qfits_header_destroy(fh);
+                    e_comment(1,"mef_engine: using dome FITS frame with ORIGFILE: %s", bb->orig_dome);
+
+
+
 		           flat_dome = mef_load_ext(bb->name_dome,bb->xtnum);
 		           bb->dome_median[zIndex] = image_getmedian(flat_dome);
                            bb->dome_nplanes[zIndex] = 1;
 		           e_comment(1,"dome median value: %f",bb->dome_median[zIndex]);
-               } else {
+                } else {
 
-                   e_comment(0,"---> [%d/%d] Part %d in %d: Dome flat construction",xts[j],nxts,part,ALGPARTS);
+                    e_comment(0,"---> [%d/%d] Part %d in %d: Dome flat construction",xts[j],nxts,part,ALGPARTS);
 
-                   /* Load frame names for error messages */
+                    /* Load frame names for error messages */
                     flist = framelist_load(bb->name_dome);
                     bb->dome_nframes = flist->n ;
                     bb->dome_frame_name = malloc(flist->n * sizeof(char*));
@@ -608,20 +634,20 @@ int mef_engine(mef_bb * bb)
                     }
                     framelist_del(flist);
 
-		           flat_dome = mef_build_cal(bb, "dome");
-		           if (flat_dome==NULL) {
-		   	       e_error("in dome flat production: aborting");
-		   	       return -1 ;
-		           }
-		           if (bb->dome_save) {
-		   	       mef_save(bb, flat_dome, "dome");
-		           }
-		           e_comment(1,"       dome_median = %f  dome_nplanes = %d",\
-				bb->dome_median[j], bb->dome_nplanes[j]);
+		            flat_dome = mef_build_cal(bb, "dome");
+		            if (flat_dome==NULL) {
+		   	            e_error("in dome flat production: aborting");
+		   	        return -1 ;
+		            }
+		            if (bb->dome_save) {
+		   	            mef_save(bb, flat_dome, "dome");
+		            }
+		            e_comment(1,"       dome_median = %f  dome_nplanes = %d",\
+				    bb->dome_median[j], bb->dome_nplanes[j]);
 
-		       }
+		        }
 		    } else {
-		       e_comment(0,"---> [%d/%d] Part %d in %d: skipping dome flat construction. We have the MFF.",xts[j],nxts,part,ALGPARTS);
+		        e_comment(0,"---> [%d/%d] Part %d in %d: skipping dome flat construction. We have the MFF.",xts[j],nxts,part,ALGPARTS);
 		    }
 		}
 
@@ -633,6 +659,16 @@ int mef_engine(mef_bb * bb)
 		    if (is_fits_file(bb->name_mf) != 1) {
 		       if (is_fits_file(bb->name_sky)) {
 		           e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction",xts[j],nxts,part,ALGPARTS);
+
+                    /* we extract the origfile name of the file */
+                    if ( (fh = mef_header_primary(bb->name_sky)) == NULL) {
+                        e_error("mef_engine: can not read %s primary headers",bb->name_sky);
+                        return -1;
+                    }
+                    bb->orig_sky = strdup(qfits_header_getstr(fh,"ORIGFILE"));
+                    qfits_header_destroy(fh);
+                    e_comment(1,"mef_engine: using sky FITS frame with ORIGFILE: %s", bb->orig_sky);
+
 
 		           flat_sky = mef_load_ext(bb->name_sky,bb->xtnum);
 		           bb->sky_median[zIndex] = image_getmedian(flat_sky);
@@ -664,9 +700,9 @@ int mef_engine(mef_bb * bb)
 
 		           flat_sky = mef_build_cal(bb, "sky");
 		           if (flat_sky==NULL) {
-			       e_error("in sky flat production: aborting");
-			       image_del(flat_dome);
-			       return -1 ;
+			           e_error("in sky flat production: aborting");
+			           image_del(flat_dome);
+			           return -1 ;
 		           }
 		           if (bb->sky_save) {
 		   	       mef_save(bb, flat_sky, "sky");
@@ -676,7 +712,15 @@ int mef_engine(mef_bb * bb)
 
 		       }
 		    } else {
-		       e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction. We have the MFF.",xts[j],nxts,part,ALGPARTS);
+               e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction. We have the MFF.",xts[j],nxts,part,ALGPARTS);
+
+              if ( (fh = mef_header_primary(bb->name_mf)) == NULL) {
+                  e_error("mef_engine: can not read %s primary headers",bb->name_mf);
+                  return -1;
+              }
+              bb->orig_mff = strdup(qfits_header_getstr(fh,"ORIGFILE"));
+              qfits_header_destroy(fh);
+              e_comment(1,"mef_engine: using master flat FITS frame with ORIGFILE: %s", bb->orig_mff);
 		    }
 		}
 
@@ -689,6 +733,17 @@ int mef_engine(mef_bb * bb)
 		    if (is_fits_file(bb->name_mf)==1) {
 		        e_comment(0,"---> [%d/%d] Part %d in %d: skipping dome/sky combination",xts[j],nxts,part,ALGPARTS);
 		        e_comment(1,"reading master flat from file %s",bb->name_mf);
+
+                /* we extract the origfile name of the file */
+                if ( (fh = mef_header_primary(bb->name_mf)) == NULL) {
+                    e_error("mef_engine: can not read %s primary headers",bb->name_dome);
+                    return -1;
+                }
+                bb->orig_mff = strdup(qfits_header_getstr(fh,"ORIGFILE"));
+                qfits_header_destroy(fh);
+                e_comment(1,"mef_engine: using bias FITS frame with ORIGFILE: %s", bb->orig_mff);
+
+
 		        flat_combined = mef_load_ext(bb->name_mf,bb->xtnum);
 		        bb->flat_median[zIndex] = image_getmedian(flat_combined);
 		        e_comment(1,"master flat median value: %f",bb->flat_median[zIndex]);
@@ -836,6 +891,13 @@ int mef_engine(mef_bb * bb)
 		       sprintf(cval,"%d", BPP_DEFAULT);
 		       qfits_header_mod(fh,"BITPIX",cval, "Bits per pixel");
 
+               /* Here we modify the origfile key */
+               mef_create_orig_filename(bb, "science");
+               qfits_header_mod(fh, "ORIGFILE", bb->orig_science, "Original file name");
+
+               /* Ugly but with a fast computer even milisecond porosity will result in files with the same ORIGFILE name */
+               sleep(1);
+
                /* Keys needed for ESO Phase3 */
 
                /* Program identification key -- from mefpp.paf */
@@ -903,6 +965,10 @@ int mef_engine(mef_bb * bb)
                if (cval_ptr!=NULL) {
                    qfits_header_add_after(fh, "EXPTIME","FILTER", cval_ptr, "Filter name", NULL);
                }
+
+               /* We report in the header the ORIGFILE name of the master bias and flat used */
+               qfits_header_add(fh, bb->master_bias_key, bb->orig_bias, bb->master_bias_comment, NULL);
+               qfits_header_add(fh, bb->master_flat_key, bb->orig_mff, bb->master_flat_comment, NULL);
 
                /* The saturation level and maximum fraction of pixels allowed to go saturated */
                sprintf(cval, "%7.1f", bb->sat_level);

@@ -76,7 +76,7 @@ mef-common:	common/mefp_lib.o
 SRC_MEFCOM = common/mefp_lib.c
 OBJ_MEFCOM = $(SRC_MEFCOM:.c=.o)
 
-common/mefp_lib.o:	common/mefp_lib.c common/wfi.h
+common/mefp_lib.o:	common/mefp_lib.c common/mefp_lib.h
 	@(echo "compiling $@ ...")
 	($(CC) $(COMPF) -c -o common/mefp_lib.o common/mefp_lib.c)
 

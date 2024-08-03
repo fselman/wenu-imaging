@@ -63,14 +63,19 @@ typedef struct _mef_bb_ {
 	char	*	name_paf ;
 	char    *   name_bias ;
 	char    *   name_bias_o ;
+    char    *   orig_bias ;     /* Name to be written in ORIGFILE key */
 	char	*	name_bpm ;
 	char	*	name_bpm_o ;
+    char    *   orig_bpm ;      /* Name to be written in ORIGFILE key */
 	char    *   name_dome ;
 	char    *   name_dome_o ;
+    char    *   orig_dome ;     /* Name to be written in ORIGFILE key */
 	char    *   name_sky ;
 	char    *   name_sky_o ;
+    char    *   orig_sky ;      /* Name to be written in ORIGFILE key */
 	char	*	name_mf ;
 	char    *   name_mf_o ;		/* name of file to store combined flat */
+    char    *   orig_mff ;
 
 	int		noverify ;
 
@@ -175,11 +180,13 @@ typedef struct _mef_bb_ {
 	float	bpm_gainthr_hi;
 
 	/* Dome parameters */
+    char        *master_dome_key ;
+    char        *master_dome_comment ;
 	char		*domeff_frame_i_key ;
 	char		*domeff_frame_i_comment ;
 	
 	char        *dome_framethr_lo_key ;
-    char    *dome_framethr_lo_comment ;
+    char        *dome_framethr_lo_comment ;
 	double       dome_framethr_lo ;
 
 	char        *dome_framethr_hi_key ;
@@ -200,6 +207,8 @@ typedef struct _mef_bb_ {
     char        **dome_frame_name;
 
 	/* Sky parameters */
+    char        *master_sky_key ;
+    char        *master_sky_comment ;
 	char		*skyff_frame_i_key ;
 	char		*skyff_frame_i_comment ;
 	
@@ -225,6 +234,8 @@ typedef struct _mef_bb_ {
     char        **sky_frame_name;
 
 	/* Combined flat parameters */
+    char        *master_flat_key ;
+    char        *master_flat_comment ;
 	float		*flat_median ;
     float       *flat_stdev;
     float       *combined_flat_median;
@@ -275,6 +286,7 @@ typedef struct _mef_bb_ {
 	int          kern_hsize ;
 
 	/* science frames to be reduced parameters */
+    char        *orig_science ;         /* Name stored in the ORIGFILE key in primary headers */
 	char		*science_name_i ;
 	char		**science_frame_name ;
     float       *science_scan_median ;  /* median of overscan of science frames for each extension */
@@ -343,6 +355,7 @@ qfits_header 	*mef_header_eclipse(mef_bb *, char *);
 qfits_header	*fits_header_merge(qfits_header *, qfits_header *);
 char 		*mef_get_input_filename(mef_bb *bb, char *what);
 char 		*mef_get_output_filename(mef_bb *bb, char *what);
+void        *mef_create_orig_filename(mef_bb *bb, char *what);
 qfits_header	*mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage);
 void	 	mef_save(mef_bb *bb, image_t *zImage, char *what);
 void	 	save_mef_hdrdump(image_t *,char *,qfits_header *,int);

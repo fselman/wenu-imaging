@@ -4,7 +4,7 @@ PAF.ID                                     "";
 PAF.NAME                                   "omegacam.paf";
 PAF.DESC                                   "Description of OMEGACAM for MEFPP";
 PAF.CRTE.NAME                              "F. Selman";
-PAF.CRTE.DAYTIM                            "2024-07-25T10:44:00";
+PAF.CRTE.DAYTIM                            "2024-08-02T20:48:00";
 PAF.LCHG.NAME                              "";
 PAF.LCHG.DAYTIM                            "";
 PAF.CHCK.CHECKSUM                          "";
@@ -567,13 +567,15 @@ MEF.CCD.GAIN.CHIP32                     2.0;
 # Processing parameters for master bias creation
 MEF.BIAS.FRAME.I.KEY                    "HIERARCH ESO MPP BIAS";
 MEF.BIAS.FRAME.I.COMMENT                "Input bias frame";
-MEF.MASTER.BIAS.KEY                     "HIERARCH ESO MPP MBIAS";
-MEF.MASTER.BIAS.COMMENT                 "Master bias used";
 MEF.BIAS.NAME.O                         "OCAM_MB";
 MEF.BIAS.FRAMETHR.LO                     0;
 MEF.BIAS.FRAMETHR.HI                    1000;
 MEF.BIAS.KAPPA1                          2.0;
 MEF.BIAS.FRAMENUM.MIN                    3;
+
+# Keys to identify master bias product used
+MEF.MASTER.BIAS.KEY                     "HIERARCH ESO MPP MBIAS";
+MEF.MASTER.BIAS.COMMENT                 "Master bias used";
 
 # Processing parameters for bad pixel mask creation   
 MEF.BPM.NAME                            "OCAM_BPM";
@@ -597,10 +599,14 @@ MEF.DOMEFF.FRAMETHR.LO.COMMENT          "low frame threshold for dome";
 MEF.DOMEFF.FRAMETHR.LO                  10000;
 MEF.DOMEFF.FRAMETHR.HI.KEY              "HIERARCH ESO MPP FLAT DOME HFRATHD";
 MEF.DOMEFF.FRAMETHR.HI.COMMENT          "high frame threshold for dome";
-MEF.DOMEFF.FRAMETHR.HI                  45000;
+MEF.DOMEFF.FRAMETHR.HI                  55000;
 MEF.DOMEFF.FRAMENUM.MIN.KEY             "HIERARCH ESO MPP FLAT DOME MINFRAD";
 MEF.DOMEFF.FRAMENUM.MIN.COMMENT         "minimum number of frames for dome flat";
 MEF.DOMEFF.FRAMENUM.MIN                 5;
+
+# Keys to identify the master dome product used
+MEF.MASTER.DOME.KEY                     "HIERARCH ESO MPP MDOME";
+MEF.MASTER.DOME.COMMENT                 "Master dome used";
 
 # Processing parameters for sky flat field creation
 MEF.SKYFF.FRAME.I.KEY                   "HIERARCH ESO MPP FLAT SKY";
@@ -611,10 +617,14 @@ MEF.SKYFF.FRAMETHR.LO.COMMENT           "low frame threshold for sky";
 MEF.SKYFF.FRAMETHR.LO                   7000;
 MEF.SKYFF.FRAMETHR.HI.KEY               "HIERARCH ESO MPP FLAT SKY HFRATHS";
 MEF.SKYFF.FRAMETHR.HI.COMMENT           "high frame threshold for sky";
-MEF.SKYFF.FRAMETHR.HI                   45000;
+MEF.SKYFF.FRAMETHR.HI                   55000;
 MEF.SKYFF.FRAMENUM.MIN.KEY              "HIERARCH ESO MPP FLAT SKY MINFRAS";
 MEF.SKYFF.FRAMENUM.MIN.COMMENT          "minimum number of frames for sky flat";
 MEF.SKYFF.FRAMENUM.MIN                   5;
+
+# Keys to identify the master sky product used
+MEF.MASTER.SKY.KEY                     "HIERARCH ESO MPP MSKY";
+MEF.MASTER.SKY.COMMENT                 "Master sky used";
 
 # Further processing parameters for dome and sky flat field creation
 MEF.PIXREJ.SIGMA.LO.KEY                  "HIERARCH ESO MPP FLAT LPIXSIG";
@@ -636,5 +646,8 @@ MEF.MFF.NAME.O                      	"OCAM_MFF";
 MEF.KERN.HSIZE.KEY                      "HIERARCH ESO MPP FLAT KERNS";
 MEF.KERN.HSIZE.COMMENT                  "Smoothing kernel size";
 MEF.KERN.HSIZE                           7;
+
+MEF.MASTER.FLAT.KEY                     "HIERARCH ESO MPP MFF";
+MEF.MASTER.FLAT.COMMENT                 "Master flat field";
 #  
 #_oOo_   
