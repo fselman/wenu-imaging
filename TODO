@@ -1,14 +1,24 @@
 mefpp:
 
-- master calibration and science names:
-    o MCDP: MEFPP Calibration Data Product
-    o MSDP: MEFPP Science Data Product
+- IMPORTANT: clean usage message: currently gives the wrong
+  instructions.
+- IMPORTANT: update the parameter dump.
+- Create merged BPM?
+- Add switch that permits the creation of the bad pixel map
+  without needing a bias.
+- Add extension name to BPM.
+- Check extension names as processing loop over extensions proceeds.
+- Add ORIGFILE and PROCATG keys to BPM.
 
-    o names should be: MSDP.OCAM.<iso date and time>.fits
-      with a link from current output name.
+DONE LIST
+---------
+- Done. <iso date and time should include miliseconds>
+- Done. master calibration and science names:
+    o CMDP: MEFPP Calibration Data Product
+    o SMDP: MEFPP Science Data Product
 
-    o should be written into ORIGFILE keyword
-
+    o names should be: SMDP.OCAM.<iso date and time>.fits
+        o written into ORIGFILE keyword
 - Done. Add PROCATG to calibration products:
     o MASTER_BIAS
     o MASTER_DOME_FLAT

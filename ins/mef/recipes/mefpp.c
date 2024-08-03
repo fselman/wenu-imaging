@@ -942,12 +942,12 @@ int mef_engine(mef_bb * bb)
                qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
 
                /* Product category key */
-               qfits_header_add_after(fh,"PROCSOFT", bb->phase3_procatg_keyname, 
-                                                     bb->phase3_procatg_val_science, 
-                                                     bb->phase3_procatg_comment, NULL);
+               qfits_header_add_after(fh,"PROCSOFT", bb->phase3_prodcatg_keyname, 
+                                                     bb->phase3_prodcatg_val_science, 
+                                                     bb->phase3_prodcatg_comment, NULL);
 
                /* FLUXCAL key */
-               qfits_header_add_after(fh, bb->phase3_procatg_keyname, bb->phase3_fluxcal_keyname, 
+               qfits_header_add_after(fh, bb->phase3_prodcatg_keyname, bb->phase3_fluxcal_keyname, 
                                                                       bb->phase3_fluxcal_val, 
                                                                       bb->phase3_fluxcal_comment, NULL);
 
@@ -972,7 +972,7 @@ int mef_engine(mef_bb * bb)
 
                /* The saturation level and maximum fraction of pixels allowed to go saturated */
                sprintf(cval, "%7.1f", bb->sat_level);
-               qfits_header_add_after(fh, bb->phase3_procatg_keyname, "SATLEVEL", cval, "Original saturation level of frame", NULL);
+               qfits_header_add_after(fh, bb->phase3_prodcatg_keyname, "SATLEVEL", cval, "Original saturation level of frame", NULL);
                sprintf(cval, "%5.3f", bb->sat_max);
                qfits_header_add_after(fh,"SATLEVEL", "SATNMAX", cval, "Max fraction of pixel saturated", NULL);
 

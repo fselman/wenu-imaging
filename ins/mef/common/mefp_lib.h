@@ -101,13 +101,13 @@ typedef struct _mef_bb_ {
 	char		*dpr_type_comment ;
 
     /* Phase3 required keys */
-    char        *phase3_procatg_keyname;
-    char        *phase3_procatg_val_bias;
-    char        *phase3_procatg_val_domeff;
-    char        *phase3_procatg_val_skyff;
-    char        *phase3_procatg_val_mff;
-    char        *phase3_procatg_val_science;
-    char        *phase3_procatg_comment;
+    char        *phase3_prodcatg_keyname;
+    char        *phase3_prodcatg_val_bias;
+    char        *phase3_prodcatg_val_domeff;
+    char        *phase3_prodcatg_val_skyff;
+    char        *phase3_prodcatg_val_mff;
+    char        *phase3_prodcatg_val_science;
+    char        *phase3_prodcatg_comment;
     char        *phase3_progid_keyname;
     char        *phase3_progid_hdrkey;
     char        *phase3_progid_comment;
