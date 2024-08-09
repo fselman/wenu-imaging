@@ -316,7 +316,7 @@ MEF.MEDIAN.REG.Y2                           2500;
 
 # Master flat field processing parameters
 MEF.MFF.NAME.O                            "WFI_MFF";
-MEF.KERN.HSIZE.KEY                        "HIERARCH ESO MPP FLAT KERNS";
+MEF.KERN.HSIZE.KEY                        "HIERARCH MEFPP REC FLAT KERNS";
 MEF.KERN.HSIZE.COMMENT                    "Smoothing kernel size for sky flat";
 MEF.KERN.HSIZE                             7;
 

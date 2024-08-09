@@ -3,7 +3,9 @@ mefpp:
 - IMPORTANT: clean usage message: currently gives the wrong
   instructions.
 - IMPORTANT: update the parameter dump.
-- Create merged BPM?
+- DONE 2024-08-09. Test end to end with MEF BPM.
+- Create merged BPM
+    o DONE. 
     o DONE. BUT STILL NEED TO DEBUG ACTUAL USAGE. IT IS NOT PROPERLY IDENTIFYING BAD PIXELS.
 - Add switch that permits the creation of the bad pixel map
   without needing a bias.

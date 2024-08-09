@@ -538,9 +538,6 @@ int mef_engine(mef_bb * bb)
          * */
         e_comment(0,"---> BPM name reading if it exists");
         if (xts[j]==1) {
-            /* TEST
-             * sprintf(cval,"%s_%02d.fits",bb->name_bpm,xts[j]); 
-             * */
             sprintf(cval, "%s", mef_get_output_filename(bb,"bpm"));
             if (is_fits_file(cval) == 1) {
                 e_comment(1, "mef_engine: reading BPM file: %s", cval);
@@ -549,9 +546,9 @@ int mef_engine(mef_bb * bb)
                     e_error("mef_engine: cannot read headers from file %s", cval);
                     return -1;
                 }
-                e_comment(1, "mef_engine: using BPM file ORIGFILE: %s", bb->orig_bpm);
                 bb->orig_bpm = strdup(qfits_header_getstr(fh,"ORIGFILE"));
-                bb->name_bpm = cval;
+                bb->name_bpm = strdup(cval);
+                e_comment(1, "mef_engine: using BPM file %s with ORIGFILE: %s", bb->name_bpm, bb->orig_bpm);
             }
         }
 
@@ -640,35 +637,33 @@ int mef_engine(mef_bb * bb)
          * Command: /opt/local/eclipse/bin/mefpp  --bpm bpm.list 2>&1 | tee mefpp.log
          *
 		 */
-        e_comment(1, "mef_engine: enetering BPM part: name_bpm: %s", bb->name_bpm);
+        e_comment(1, "mef_engine: entering BPM part: name_bpm: %s  orig_bpm: %s", bb->name_bpm, bb->orig_bpm);
         if (bb->name_bpm != NULL) {
 		    part++ ;
 		    e_comment(0,"---> [%d/%d] Part %d in %d: BPM construction/reading",xts[j],nxts,part,ALGPARTS);
-
-            /* TEST
-		    sprintf(cval,"%s_%02d.fits",bb->name_bpm,xts[j]);
-            sprintf(cval, "test.fits");
-            */
 
 		    if (is_fits_file(bb->name_bpm) == 1) {
 
                 /* we check the extension name which for the case of simple fits files is loaded in
                 * the key ZNAME
                 */
-                if ((fh = qfits_header_read(cval)) == NULL) {
-                    e_error("mef_engine: cannot read headers from file %s", cval);
+                if ((fh = qfits_header_read(bb->name_bpm)) == NULL) {
+                    e_error("mef_engine: cannot read headers from file %s", bb->name_bpm);
                     return -1;
                 }
                 if (xts[j]==1) {
                     bb->orig_bpm = strdup(qfits_header_getstr(fh,"ORIGFILE"));
                 }
-
-                /* TEST
-                bpm_xtname = strdup(qfits_header_getstr(fh, "ZNAME"));
-                */
-                bpm_xtname = strdup(qfits_header_getstr(fh, "EXTNAME"));
-
                 qfits_header_destroy(fh);
+
+                /* we get the extension name from the extension headers */
+                if ((fh_ext = qfits_header_readext(bb->name_bpm, bb->xtnum)) == NULL) {
+                    e_error("mef_engine: cannot read headers from file %s", bb->name_bpm);
+                    return -1;
+                }
+                bpm_xtname = strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
+                qfits_header_destroy(fh_ext);
+
                 if (bb->xtname == NULL) {
                     bb->xtname = (char *)  malloc(40*sizeof(char));
                     bb->xtname = strdup(bpm_xtname);
@@ -678,12 +673,9 @@ int mef_engine(mef_bb * bb)
                 }
 
                 /* now we read the pixel map */
-		        e_comment(1,"mef_engine: reading bad pixel map [%s]",cval);
+		        e_comment(1,"mef_engine: reading bad pixel map [%s]",bb->name_bpm);
 
-                /* TEST
-		        bp_map = pixelmap_load(cval);
-                */
-                bp_map = pixelmap_loadext(cval, xts[j]);
+                bp_map = pixelmap_loadext(bb->name_bpm, xts[j]);
 		        e_comment(1,"mef_engine: done");
 		    } else {
                 sprintf(cval,"%02d",xts[j]);
@@ -1140,8 +1132,10 @@ int mef_engine(mef_bb * bb)
 		       qfits_header_del(fh,"EXTEND");
 		       qfits_header_add_after(fh,"NAXIS", "EXTEND","T","Extension may be present.",NULL);
 		       /*...and that we have real*4 data */
+
 		       sprintf(cval,"%d", BPP_DEFAULT);
 		       qfits_header_mod(fh,"BITPIX",cval, "Bits per pixel");
+
 
                /* Here we modify the origfile key */
                mef_create_orig_filename(bb, "science");
@@ -1190,7 +1184,7 @@ int mef_engine(mef_bb * bb)
 
                /* Processing software version */
                sprintf(cval, recipe_version);
-               sprintf(cval2, "Built on eclipse-%s by N. Devillard", get_eclipse_version());
+               sprintf(cval2, "Built on eclipse-%s", get_eclipse_version());
                qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
 
                /* Product category key */

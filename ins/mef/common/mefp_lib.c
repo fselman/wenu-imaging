@@ -3620,6 +3620,7 @@ void *mef_create_orig_filename(mef_bb *bb, char *what)
         return NULL;
     }
 
+    e_comment(1,"mef_create_orig_filename: bb->name_bpm: %s", bb->name_bpm);
     if (!strcmp(what, "bias")) {
         /* The final name to use for the file is only written in the ORIGFILE key */
         sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
