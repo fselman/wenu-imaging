@@ -2044,6 +2044,7 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 	char 	cval[80];
     char    cval2[80];
     char    *cval_ptr;
+    char    *zname_ptr;
     char    cval_prev[80];
 	
 
@@ -2110,7 +2111,7 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             */
 
             sprintf(cval, "%d", BPP_8_UNSIGNED);
-            qfits_header_add(fhdr_extra, "BITPIX", cval, "bits per pixel", NULL);
+            qfits_header_add_after(fhdr_extra, "SIMPLE", "BITPIX", cval, "bits per pixel", NULL);
             e_comment(1, "BITPIX added");
 
             sprintf(cval, "2");
@@ -2330,17 +2331,18 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             if (bb->xtnum==1) {
                 /* in the first extension we first write the primary headers */
                 fhdr_primary = qfits_header_copy(fhdr_extra);
-                qfits_header_add_after(fhdr_primary, "SIMPLE", "EXTEND", "T", "Extension may be present.", NULL);
+                zname_ptr =  qfits_header_getstr(fhdr_extra, "ZNAME");
+                qfits_header_add_after(fhdr_primary, "NAXIS", "EXTEND", "T", "Extension may be present.", NULL);
                 qfits_header_mod(fhdr_primary, "NAXIS", "0", "# of axes in frame");
                 qfits_header_del(fhdr_primary, "NAXIS1");
                 qfits_header_del(fhdr_primary, "NAXIS2");
+                qfits_header_del(fhdr_primary, "ZNAME");
                 pixelmap_dump(NULL,cval, fhdr_primary);
                 qfits_header_destroy(fhdr_primary);
 
                 /* then the extension header and data */
                 qfits_header_add_after(fhdr_extra, "SIMPLE", "XTENSION", "IMAGE", "Extension first keyword (see SIMPLE)", NULL);
-                cval_ptr =  qfits_header_getstr(fhdr_extra, "ZNAME");
-                qfits_header_add_after(fhdr_extra, "ZNAME", "EXTNAME", cval_ptr, "Extension first keyword (see SIMPLE)", NULL);
+                qfits_header_add_after(fhdr_extra, "NAXIS2", "EXTNAME", zname_ptr, "Extension first keyword (see SIMPLE)", NULL);
                 qfits_header_del(fhdr_extra, "ZNAME");
                 qfits_header_del(fhdr_extra, "SIMPLE");
                 qfits_header_del(fhdr_extra, "EXTEND");
@@ -2348,7 +2350,7 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             } else {
                 qfits_header_add_after(fhdr_extra, "SIMPLE", "XTENSION", "IMAGE", "Extension first keyword (see SIMPLE)", NULL);
                 cval_ptr =  qfits_header_getstr(fhdr_extra, "ZNAME");
-                qfits_header_add_after(fhdr_extra, "ZNAME", "EXTNAME", cval_ptr, "Extension first keyword (see SIMPLE)", NULL);
+                qfits_header_add_after(fhdr_extra, "NAXIS2", "EXTNAME", cval_ptr, "Extension first keyword (see SIMPLE)", NULL);
                 qfits_header_del(fhdr_extra, "ZNAME");
                 qfits_header_del(fhdr_extra, "SIMPLE");
                 qfits_header_del(fhdr_extra, "EXTEND");

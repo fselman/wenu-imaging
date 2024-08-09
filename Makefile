@@ -124,14 +124,14 @@ install:
 	else (true) fi)
 
 	mkdir -p $(prefix)/config
-	@(if test -f $(BINDIR)/../../ins/mef/omegacam.paf ; then\
-	($(CP) $(BINDIR)/../../ins/mef/*.paf $(prefix)/config/.); \
+	@(if test -f $(BINDIR)/../../ins/mef/config/omegacam.paf ; then\
+	($(CP) $(BINDIR)/../../ins/mef/config/*.paf $(prefix)/config/.); \
 	else (true) fi)
 
 	mkdir -p $(prefix)/static_cal
-	@(if test -f $(BINDIR)/../../ins/mef/static_cal/OCAM_BPM_01.fits.gz ; then\
+	@(if test -f $(BINDIR)/../../ins/mef/static_cal/OCAM_BPM_1x1.fits.fz ; then\
 	($(CP) -f $(BINDIR)/../../ins/mef/static_cal/*.fits* $(prefix)/static_cal/. ; \
-	cd $(prefix)/static_cal ; gunzip -v *.fits.gz); \
+	cd $(prefix)/static_cal ; funpack -v *.fits.fz); \
 	else (true) fi)
 
 	mkdir -p $(prefix)/man
