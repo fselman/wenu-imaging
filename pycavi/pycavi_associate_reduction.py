@@ -248,25 +248,25 @@ class PartitionsTree:
             part.bpmPartition = self.bpm_partitions[0]
             #print((part.bpmPartition).base_path)
             #print(instrument.bpm_prefix+'*'+instrument.reduced_file_suffix)
-            for i in range(1, instrument.nextensions+1):
-                bpm_file = (part.bpmPartition).base_path+'/'+instrument.bpm_prefix+'_%02d.fits'%(i,)
-                local_bpm_filename = part.base_path+'/'+instrument.bpm_prefix+'_%02d.fits'%(i,)
-                if not Path(bpm_file).is_file():
-                    try:
-                        os.symlink(bpm_file, local_bpm_filename)
-                        print("create symbolic link from : {}".format(local_bpm_filename))
-                        print("                       to : {}".format(bpm_file))
-                        Path((part.bpmPartition).base_path+'/toreduce_'+part_type).touch()
-                        pass
-                    except FileExistsError:
-                        pass
-                    except Exception as e:
-                        print(e)
-                        pass
-                
-                else:
-                    print("symbolic link exists from : {}".format(local_bpm_filename))
+
+            bpm_file = (part.bpmPartition).base_path+'/'+instrument.bpm_prefix+'_1x1.fits'
+            local_bpm_filename = part.base_path+'/'+instrument.bpm_prefix+'_1x1.fits'
+            if not Path(bpm_file).is_file():
+                try:
+                    os.symlink(bpm_file, local_bpm_filename)
+                    print("create symbolic link from : {}".format(local_bpm_filename))
                     print("                       to : {}".format(bpm_file))
+                    Path((part.bpmPartition).base_path+'/toreduce_'+part_type).touch()
+                    pass
+                except FileExistsError:
+                    pass
+                except Exception as e:
+                    print(e)
+                    pass
+                
+            else:
+                print("symbolic link exists from : {}".format(local_bpm_filename))
+                print("                       to : {}".format(bpm_file))
 
 
     def select_nearest_calib(self, partitions, cal_partitions, calpart_type='bias', ndays_max=10):
@@ -874,17 +874,17 @@ def associateBPM(part, scipart, instrument):
     """
     have_bpm_link = True
     have_bpm = True
-    for i in range(1, instrument.next_valid+1):
-        bpm_name = part.base_path + '/'+instrument.bpm_prefix+'_%02d.fits' % (i,)
-        if not Path(bpm_name).is_symlink():
-            have_bpm_link = False
-        else:
-            have_bpm_link = have_bpm_link and True
 
-        if not Path(bpm_name).exists():
-            have_bpm = False
-        else:
-            have_bpm = have_bpm and True
+    bpm_name = part.base_path + '/'+instrument.bpm_prefix+'_1x1.fits'
+    if not Path(bpm_name).is_symlink():
+        have_bpm_link = False
+    else:
+        have_bpm_link = have_bpm_link and True
+
+    if not Path(bpm_name).exists():
+        have_bpm = False
+    else:
+        have_bpm = have_bpm and True
 
     scipart.bpm_have = have_bpm
     scipart.bpm_have_link = have_bpm_link
@@ -1008,12 +1008,11 @@ def copy_paf(mefpp_dir, basepath, instrument):
 
 def mefpp_reduce_bpm(mefpp_dir, calib_dir, instrument):
     print("\n----------------------------- mefpp_reduce_bpm ------------------------------")
-    print('mefpp_reduce_bpm: In the current version a simple copy from the software datadir to static_cal dir')
+    print('mefpp_reduce_bpm: In the current version a simple copy from the software static_cal dir to project static_cal dir')
     # here we reduce the bpm frames which for now is only a cp operation
-    bpm_files_list = [mefpp_dir + '/static_cal/' +instrument.bpm_prefix +'_%02d.fits' % i for i in range(1, instrument.next_valid+1)]
-    for file in bpm_files_list:
-        # print(file)
-        shutil.copy(file, calib_dir + '/bpm/')
+    bpm_file = mefpp_dir + '/static_cal/' +instrument.bpm_prefix +'_1x1.fits'
+
+    shutil.copy(bpm_file, calib_dir + '/bpm/')
     print('mefpp_reduce_bpm: done copying BPMs')
 
 
@@ -1367,6 +1366,7 @@ def mefpp_normalize_science(sci_part_list, instrument, apply_light_corr=False):
 
             jj = 0
             for ext_name in ext_name_list:
+                #print("mefpp_normalize_science: \nimage_name: {}  \next_name: {}".format(image_name, ext_name))
                 ext_head = fits.getheader(image_name, extname=ext_name)
                 gain = ext_head[gain_name_dict[ext_name]]
                 avg_gain += gain

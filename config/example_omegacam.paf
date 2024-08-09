@@ -21,14 +21,64 @@ MEF.DPR.TYPE.KEY                           "HIERARCH ESO DPR TYPE";
 MEF.DPR.TYPE.COMMENT                       "product frame type";
 
 # ESO Phase 3 keys
-MEF.SCIPRO.CATG.KEY                   "PROCATG";
-MEF.SCIPRO.CATG.VAL                   "SCIENCE.MEFIMAGE";
-MEF.SCIPRO.CATG.COMMENT               "Preprocessed frame category for phase 3";
+PHASE3.PROCATG.KEY.NAME                "PROCATG";
+PHASE3.PROCATG.VAL.SCIENCE             "SCIENCE.MEFIMAGE";
+PHASE3.PROCATG.VAL.BIAS                "CALIB.MASTER_BIAS";
+PHASE3.PROCATG.VAL.DOMEFF              "CALIB.MASTER_DOME_FLAT";
+PHASE3.PROCATG.VAL.SKYFF               "CALIB.MASTER_SKY_FLAT";
+PHASE3.PROCATG.VAL.MFF                 "CALIB.MASTER_FLAT";
+PHASE3.PROCATG.COMMENT                 Phase3 product category;
+#
+PHASE3.PROGID.KEY.NAME                  "PROG_ID";
+PHASE3.PROGID.HDRKEY                    HIERARCH ESO OBS PROG ID;
+PHASE3.PROGID.COMMENT                   Phase3 observation programme id;
+#
+PHASE3.OBID.KEY.NAME                    "OBID1";
+PHASE3.OBID.HDRKEY                      HIERARCH ESO OBS ID;
+PHASE3.OBID.COMMENT                     Phase3 observation id;
+#
+PHASE3.NCOMBINE.KEY.NAME                "NCOMBINE";
+PHASE3.NCOMBINE.COMMENT                 Phase3 number of observations combined;
+#
+PHASE3.OBSTECH.KEY.NAME                 "OBSTECH";
+PHASE3.OBSTECH.HDRKEY                   HIERARCH ESO DPR TECH;
+PHASE3.OBSTECH.COMMENT                  Phase3 observation technique;
+#
+PHASE3.MJDEND.KEY.NAME                  "MJD-END";
+PHASE3.MJDEND.HDRKEY                    "”;
+PHASE3.MJDEND.COMMENT                   Phase3 MJD at the end of exposure;
+#
+PHASE3.PROCSOFT.KEY.NAME                "PROCSOFT";
+PHASE3.PROCSOFT.HDRKEY                  "”;
+PHASE3.PROCSOFT.COMMENT                 Branch from ECLIPSE by N. Devillar;
+#
+PHASE3.TIMESYS.KEY.NAME                 "TIMESYS";
+PHASE3.TIMESYS.HDRKEY                   "”;
+PHASE3.TIMESYS.VAL                      "UTC";
+PHASE3.TIMESYS.COMMENT                  Phase3 standard of time;
+#
+PHASE3.FILTER.KEY.NAME                  "FILTER";
+PHASE3.FILTER.COMMENT                   Phase3 simple filter keyword;
+#
+PHASE3.FLUXCAL.KEY.NAME                 "FLUXCAL";
+PHASE3.FLUXCAL.HDRKEY                   "”;
+PHASE3.FLUXCAL.VAL                      "UNCALIBRATED";
+PHASE3.FLUXCAL.COMMENT                  Phase3 flux calibration:ABSOLUTE, UNCALIBRATED;
+#
+PHASE3.RADESYS.KEY.NAME                 "RADESYS";
+PHASE3.RADESYS.HDRKEY                   "RADECSYS”;
+PHASE3.RADESYS.COMMENT                  Phase3 coordinate reference frame;
 
-#  
+# Data related keys from primary header
 MEF.NCHIPS                              32;
-MEF.CORRECT.REFPIXELS                    0;
-#  
+MEF.SATLEVEL                             65534;
+MEF.SATMAX                               0.05;
+#
+MEF.FILTER.KEY                          "HIERARCH ESO INS FILT1 NAME";
+MEF.BINX.KEY                            "HIERARCH ESO DET WIN1 BINX";
+MEF.BINY.KEY                            "HIERARCH ESO DET WIN1 BINY";
+
+# Prescan region defined for all 32 chips
 MEF.USE.PRESCAN                         0;
 MEF.PRESCAN.X.KEY                       "HIERARCH ESO MPP PRSCX";
 MEF.PRESCAN.X.COMMENT                   "Prescan xmin xmax";
@@ -166,6 +216,9 @@ MEF.OVERSCAN.X.MIN.CHIP32               5;
 MEF.OVERSCAN.X.MAX.CHIP32               48;
 #  
 #  
+
+# Correction of reference pixel is not necessary for OmegaCAM
+MEF.CORRECT.REFPIXELS                    0;
 MEF.REFPIX.X                             8590;
 MEF.REFPIX.Y                             8605;
 #  
@@ -297,12 +350,15 @@ MEF.CRVAL1.CHIP32                       0;
 MEF.CRVAL2.CHIP32                       0;
 MEF.CRPIX1.CHIP32                       -6446;
 MEF.CRPIX2.CHIP32                       -4405;
-#  
+
+# Processing parameters for scan pixels: typically reject lowest 10 and highest 10 pixels  
+# Make sure that the width of the overscan region is ide enough.
 MEF.SCANREJ.KEY                         "HIERARCH ESO MPP RJOVSC";
 MEF.SCANREJ.COMMENT                     "Rejection min max";
 MEF.SCANREJ.MIN                         10;
 MEF.SCANREJ.MAX                         10;
-#  
+
+# Region of sky exposed pixels to cut out from each chip 
 MEF.TRIMREG.KEY                          "HIERARCH ESO MPP TRIM";
 MEF.TRIMREG.COMMENT                      "xmin xmax ymin ymax";
 #  
@@ -434,10 +490,8 @@ MEF.CROP.X.MIN.CHIP32                   51;
 MEF.CROP.X.MAX.CHIP32                   2094;
 MEF.CROP.Y.MIN.CHIP32                   105;
 MEF.CROP.Y.MAX.CHIP32                   4195;
-#  
-MEF.SATLEVEL                            65534;
-MEF.SATMAX                              0.05;
-#  
+
+#   Some hardcoded CCD parameters needed for noise estimation
 MEF.CCD.RON.KEY                         "RDNOISE";
 MEF.CCD.RON.I.KEY                       "HIERARCH ESO DET OUT%d RON";
 MEF.CCD.RON.COMMENT                     "Read out noise";
@@ -509,7 +563,8 @@ MEF.CCD.GAIN.CHIP29                     2.0;
 MEF.CCD.GAIN.CHIP30                     2.0;
 MEF.CCD.GAIN.CHIP31                     2.0;
 MEF.CCD.GAIN.CHIP32                     2.0;
-#   
+
+# Processing parameters for master bias creation
 MEF.BIAS.FRAME.I.KEY                    "HIERARCH ESO MPP BIAS";
 MEF.BIAS.FRAME.I.COMMENT                "Input bias frame";
 MEF.MASTER.BIAS.KEY                     "HIERARCH ESO MPP MBIAS";
@@ -519,7 +574,8 @@ MEF.BIAS.FRAMETHR.LO                     0;
 MEF.BIAS.FRAMETHR.HI                    1000;
 MEF.BIAS.KAPPA1                          2.0;
 MEF.BIAS.FRAMENUM.MIN                    3;
-#   
+
+# Processing parameters for bad pixel mask creation   
 MEF.BPM.NAME                            "OCAM_BPM";
 MEF.BPM.NAME.O                          "OCAM_BPM";
 MEF.BPM.PROPFLAG.KEY                    "HIERARCH ESO MPP BPM PROPFLAG";
@@ -531,7 +587,8 @@ MEF.BPM.LGAINTHR                         0.5;
 MEF.BPM.HGAINTHR.KEY                    "HIERARCH ESO MPP BPM HGAINTHR";
 MEF.BPM.HGAINTHR.COMMENT                "high gain threshold for BPM creation";
 MEF.BPM.HGAINTHR                         1.5;
-#  
+
+# Processing parameters for dome flat field creation 
 MEF.DOMEFF.FRAME.I.KEY                  "HIERARCH ESO MPP FLAT DOME";
 MEF.DOMEFF.FRAME.I.COMMENT              "Input dome frame";
 MEF.DOMEFF.NAME.O                       "OCAM_DOMEFF";
@@ -544,42 +601,40 @@ MEF.DOMEFF.FRAMETHR.HI                  45000;
 MEF.DOMEFF.FRAMENUM.MIN.KEY             "HIERARCH ESO MPP FLAT DOME MINFRAD";
 MEF.DOMEFF.FRAMENUM.MIN.COMMENT         "minimum number of frames for dome flat";
 MEF.DOMEFF.FRAMENUM.MIN                 5;
-#   
+
+# Processing parameters for sky flat field creation
 MEF.SKYFF.FRAME.I.KEY                   "HIERARCH ESO MPP FLAT SKY";
 MEF.SKYFF.FRAME.I.COMMENT               "Input sky frame";
 MEF.SKYFF.NAME.O                        "OCAM_SKYFF";
 MEF.SKYFF.FRAMETHR.LO.KEY               "HIERARCH ESO MPP FLAT SKY LFRATHS";
 MEF.SKYFF.FRAMETHR.LO.COMMENT           "low frame threshold for sky";
-MEF.SKYFF.FRAMETHR.LO                   10000;
+MEF.SKYFF.FRAMETHR.LO                   7000;
 MEF.SKYFF.FRAMETHR.HI.KEY               "HIERARCH ESO MPP FLAT SKY HFRATHS";
 MEF.SKYFF.FRAMETHR.HI.COMMENT           "high frame threshold for sky";
 MEF.SKYFF.FRAMETHR.HI                   45000;
 MEF.SKYFF.FRAMENUM.MIN.KEY              "HIERARCH ESO MPP FLAT SKY MINFRAS";
 MEF.SKYFF.FRAMENUM.MIN.COMMENT          "minimum number of frames for sky flat";
 MEF.SKYFF.FRAMENUM.MIN                   5;
-#   
-MEF.MFF.NAME.O                      	"OCAM_MFF";
-#  
-MEF.FILTER.KEY                           "HIERARCH ESO INS FILT1 NAME";
-#  
-MEF.BINX.KEY                             "HIERARCH ESO DET WIN1 BINX";
-MEF.BINY.KEY                             "HIERARCH ESO DET WIN1 BINY";
-#  
+
+# Further processing parameters for dome and sky flat field creation
 MEF.PIXREJ.SIGMA.LO.KEY                  "HIERARCH ESO MPP FLAT LPIXSIG";
 MEF.PIXREJ.SIGMA.LO.COMMENT              "low sigma for pixel rejection";
 MEF.PIXREJ.SIGMA.LO                       3.0;
 MEF.PIXREJ.SIGMA.HI.KEY                  "HIERARCH ESO MPP FLAT HPIXSIG";
 MEF.PIXREJ.SIGMA.HI.COMMENT              "high sigma for pixel rejection";
 MEF.PIXREJ.SIGMA.HI                       3.0;
-#   
+#
 MEF.MEDIAN.REG.KEY                        "HIERARCH ESO MPP FLAT MREGDEF";
 MEF.MEDIAN.REG.COMMENT                    "Region for median computation";
 MEF.MEDIAN.REG.X1                         500;
 MEF.MEDIAN.REG.X2                         1500;
 MEF.MEDIAN.REG.Y1                         1500;
 MEF.MEDIAN.REG.Y2                         2500;
+
+# Processing parameters for master flat field creation  
+MEF.MFF.NAME.O                      	"OCAM_MFF";
+MEF.KERN.HSIZE.KEY                      "HIERARCH ESO MPP FLAT KERNS";
+MEF.KERN.HSIZE.COMMENT                  "Smoothing kernel size";
+MEF.KERN.HSIZE                           7;
 #  
-MEF.KERN.HSIZE.KEY                        "HIERARCH ESO MPP FLAT KERNS";
-MEF.KERN.HSIZE.COMMENT                    "Smoothing kernel size";
-MEF.KERN.HSIZE                            7;
 #_oOo_   

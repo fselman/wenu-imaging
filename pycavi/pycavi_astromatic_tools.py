@@ -297,7 +297,7 @@ def update_headers(swarped_image, reference_image):
         hdr["DEC"] = hdr["CRVAL2"]
 
 
-def prepare_to_swarp(images_list, swarp_dir_path, special_pars):
+def prepare_to_swarp(images_list, swarp_dir_path, frames_list_name, special_pars):
     """
     Creates the Swarp directories where the swarped image and the logfiles
     will be stored (unique to observation).
@@ -330,14 +330,14 @@ def prepare_to_swarp(images_list, swarp_dir_path, special_pars):
     os.chdir(swarp_dir_path)
 
     # we create the list with images to swarp
-    frame_list_name = first_image_path.split("/")[-1][:-5]+'.list'  # we extract the framelist name from the first image in the list
+    #frame_list_name = first_image_path.split("/")[-1][:-5]+'.list'  # we extract the framelist name from the first image in the list
     current_dir = os.getcwd()
     os.chdir(swarp_dir_path)
     logging.info("Creating frame list to swarp in directory: {}".format(os.getcwd()))
-    with open(frame_list_name, "w") as f:
+    with open(frames_list_name, "w") as f:
         for image in images_list:
             f.write(image[:-5]+".fits\n")
-        return frame_list_name
+        return frames_list_name
 
     # back to the original folder
     os.chdir(current_dir)

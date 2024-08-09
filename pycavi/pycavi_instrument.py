@@ -146,6 +146,7 @@ class Instrument:
         if config_dir is None:
             print('No root directory for project specified.')
             return None
+        print("config_dir: {} instrument: {}".format(config_dir, instrument))
 
         # Create a ConfigParser object
         config = configparser.ConfigParser(inline_comment_prefixes=('#'))

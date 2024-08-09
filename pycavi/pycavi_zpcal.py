@@ -773,19 +773,19 @@ class ZPCalibration:
         comment = {}
 
         # we create PRO keywords to indicate frames that went into coadd.fits
-        ancestor_frames_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d}".format(i + 1) for i in
+        ancestor_frames_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d}".format(i + 1) for i in
                                 range(len(self.orig_skies_phys))]
-        sky_mean_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} SKYMEAN".format(i + 1) for i in
+        sky_mean_keys = ["HIERARCH  ESO PYCAVI PRO ANCESTOR{:02d} SKYMEAN".format(i + 1) for i in
                          range(len(self.orig_skies_phys))]
-        sky_std_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} SKYSTD".format(i + 1) for i in
+        sky_std_keys = ["HIERARCH  ESO PYCAVI PRO ANCESTOR{:02d} SKYSTD".format(i + 1) for i in
                         range(len(self.orig_skies_phys))]
-        moon_fli_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON FLI".format(i + 1) for i in
+        moon_fli_keys = ["HIERARCH  ESO PYCAVI PRO ANCESTOR{:02d} MOON FLI".format(i + 1) for i in
                          range(len(self.orig_skies_phys))]
-        moon_distance_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON DISTANCE".format(i + 1) for i in
+        moon_distance_keys = ["HIERARCH  ESO PYCAVI PRO ANCESTOR{:02d} MOON DISTANCE".format(i + 1) for i in
                               range(len(self.orig_skies_phys))]
-        moon_alt_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON ALT".format(i + 1) for i in
+        moon_alt_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} MOON ALT".format(i + 1) for i in
                          range(len(self.orig_skies_phys))]
-        moon_az_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON AZ".format(i + 1) for i in
+        moon_az_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} MOON AZ".format(i + 1) for i in
                         range(len(self.orig_skies_phys))]
 
         i = 0
@@ -828,27 +828,27 @@ class ZPCalibration:
 
         # we report several other values important to interpret data
         #
-        cards = [["HIERARCH MEFPP PRO SKY UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units of sky mean and std"],
-                 ["HIERARCH MEFPP QC SKYMEAN", self.mean_sky, "Average sky mean and std"],
-                 ["HIERARCH MEFPP QC SKYMEAN UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYMEAN"],
-                 ["HIERARCH MEFPP QC SKYSTD", self.std_sky, "Average sky std dev"],
-                 ["HIERARCH MEFPP QC SKYSTD UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYSTD"],
-                 ["HIERARCH MEFPP QC ZPHC", self.zphc, "Zero point for data in e/s -- HC Plots"],
-                 ["HIERARCH MEFPP QC BAND NAME", self.band, "Name of pass band"],
-                 ["HIERARCH MEFPP QC BAND WIDTH", self.filter_width, "Width of pass band [Angstrom]"],
-                 ["HIERARCH MEFPP QC BAND WAVELENGTH", self.plambda, "Pivot lambda of band [Angstrom]"],
-                 ["HIERARCH MEFPP QC MAGSKY", self.magsky, "Sky brightness mags/arcsec^2"],
-                 ["HIERARCH MEFPP QC DN2FLAM", self.factor_dn_to_flambda, "Conv. fact. mosaic DN to Flambda"],
-                 ["HIERARCH MEFPP QC BUNIT", self.bunit, "Units of Data Numbers this frame"],
-                 ["HIERARCH MEFPP QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
-                 ["HIERARCH MEFPP QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
-                 ["HIERARCH MEFPP QC PHO SKYR2", self.sky_annulus_r2, "Sky annulus r2 ap phot"],
-                 ["HIERARCH MEFPP QC PHO MAGMAX", self.mag_max, "max mag for photometric calibrators (faintest)"],
-                 ["HIERARCH MEFPP QC PHO MAGMIN", self.mag_min, "min mag for photometric calibrators (brightest)"],
-                 ["HIERARCH MEFPP QC PHO CALFILE", self.phot_cal_file.split('/')[-1], "cal file"],
-                 ["HIERARCH MEFPP QC MAGZP", self.zp2, "ZP to AB magnitudes in BAND"],
-                 ["HIERARCH MEFPP QC AVGAIRM", self.avg_airmass, "Average airmass of ancestor frames"],
-                 ["HIERARCH MEFPP QC AVGGAIN", self.avg_gain, "Average gain of ancestor frames"]
+        cards = [["HIERARCH ESO PYCAVI PRO SKY UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units of sky mean and std"],
+                 ["HIERARCH ESO PYCAVI QC SKYMEAN", self.mean_sky, "Average sky mean and std"],
+                 ["HIERARCH ESO PYCAVI QC SKYMEAN UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYMEAN"],
+                 ["HIERARCH ESO PYCAVI QC SKYSTD", self.std_sky, "Average sky std dev"],
+                 ["HIERARCH ESO PYCAVI QC SKYSTD UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYSTD"],
+                 ["HIERARCH ESO PYCAVI QC ZPHC", self.zphc, "Zero point for data in e/s -- HC Plots"],
+                 ["HIERARCH ESO PYCAVI QC BAND NAME", self.band, "Name of pass band"],
+                 ["HIERARCH ESO PYCAVI QC BAND WIDTH", self.filter_width, "Width of pass band [Angstrom]"],
+                 ["HIERARCH ESO PYCAVI QC BAND WAVELENGTH", self.plambda, "Pivot lambda of band [Angstrom]"],
+                 ["HIERARCH ESO PYCAVI QC MAGSKY", self.magsky, "Sky brightness mags/arcsec^2"],
+                 ["HIERARCH ESO PYCAVI QC DN2FLAM", self.factor_dn_to_flambda, "Conv. fact. mosaic DN to Flambda"],
+                 ["HIERARCH ESO PYCAVI QC BUNIT", self.bunit, "Units of Data Numbers this frame"],
+                 ["HIERARCH ESO PYCAVI QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
+                 ["HIERARCH ESO PYCAVI QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
+                 ["HIERARCH ESO PYCAVI QC PHO SKYR2", self.sky_annulus_r2, "Sky annulus r2 ap phot"],
+                 ["HIERARCH ESO PYCAVI QC PHO MAGMAX", self.mag_max, "max mag for photometric calibrators (faintest)"],
+                 ["HIERARCH ESO PYCAVI QC PHO MAGMIN", self.mag_min, "min mag for photometric calibrators (brightest)"],
+                 ["HIERARCH ESO PYCAVI QC PHO CALFILE", self.phot_cal_file.split('/')[-1], "cal file"],
+                 ["HIERARCH ESO PYCAVI QC MAGZP", self.zp2, "ZP to AB magnitudes in BAND"],
+                 ["HIERARCH ESO PYCAVI QC AVGAIRM", self.avg_airmass, "Average airmass of ancestor frames"],
+                 ["HIERARCH ESO PYCAVI QC AVGGAIN", self.avg_gain, "Average gain of ancestor frames"]
                  ]
 
         for zcard in cards:
@@ -875,26 +875,26 @@ class ZPCalibration:
             hdr = hdul[0].header
             hdata = hdul[0].data
 
-            # FSE CHECK: before writting new keywords we read the "HIERARCH MEFPP QC ADU2DN"
+            # FSE CHECK: before writting new keywords we read the "HIERARCH ESO PYCAVI QC ADU2DN"
             #            keyword if it exists, we will need it at the end.
-            if "MEFPP QC DN2FLAM" not in hdr.keys():
+            if "PYCAVI QC DN2FLAM" not in hdr.keys():
                 old_factor = 1.0
             else:
-                old_factor = hdr["MEFPP QC DN2FLAM"]
+                old_factor = hdr["PYCAVI QC DN2FLAM"]
 
             logging.info('old_factor: {}'.format(old_factor))
 
             # FSE CHECK: we should use update better so as not to create duplicate entries.
             # we start with the selected headers that will go close to the beginning
-            hdr.update(BUNIT=self.keyword["HIERARCH MEFPP QC BUNIT"],
-                                   comment=self.comment["HIERARCH MEFPP QC BUNIT"])
-            hdr.update(MAGZP=self.keyword["HIERARCH MEFPP QC MAGZP"],
-                                   comment=self.comment["HIERARCH MEFPP QC MAGZP"])
+            hdr.update(BUNIT=self.keyword["HIERARCH ESO PYCAVI QC BUNIT"],
+                                   comment=self.comment["HIERARCH ESO PYCAVI QC BUNIT"])
+            hdr.update(MAGZP=self.keyword["HIERARCH ESO PYCAVI QC MAGZP"],
+                                   comment=self.comment["HIERARCH ESO PYCAVI QC MAGZP"])
 
-            hdr.update(MAGSKY=self.keyword["HIERARCH MEFPP QC MAGSKY"],
-                                   comment=self.comment["HIERARCH MEFPP QC MAGSKY"])
+            hdr.update(MAGSKY=self.keyword["HIERARCH ESO PYCAVI QC MAGSKY"],
+                                   comment=self.comment["HIERARCH ESO PYCAVI QC MAGSKY"])
 
-            hdr.update({"HIERARCH MEFPP TOTEXP": self.total_exptime}, 
+            hdr.update({"HIERARCH ESO PYCAVI TOTEXP": self.total_exptime}, 
                                    comment="Total exposure time (s)")
             #hdr["EXPTIME"] = (self.total_exptime, "Total exposure time (s)")
             # we continue with the full set of keywords near the end
@@ -921,7 +921,7 @@ class ZPCalibration:
             hdr.update(BSCALE=factor,
                                    comment="scale factor to apply to data")
             hdr.update(BZERO=0.0,
-                                   comment="num,erical offset to apply to data")
+                                   comment="numerical offset to apply to data")
             hdul.flush()
 
         # we check the data values
