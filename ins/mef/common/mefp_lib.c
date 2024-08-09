@@ -207,6 +207,11 @@ mef_bb * mef_bb_new(void)
     bb->phase3_prodcatg_val_bias            = strdup(charval) ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_bias); }
 
+        sprintf(buffer,"PHASE3.PRODCATG.VAL.BPM");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->phase3_prodcatg_val_bpm            = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_bpm); }
+
         sprintf(buffer,"PHASE3.PRODCATG.VAL.DOMEFF");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
     bb->phase3_prodcatg_val_domeff            = strdup(charval) ;
@@ -403,10 +408,78 @@ mef_bb * mef_bb_new(void)
 	bb->name_bpm_o			= strdup(charval);
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_bpm_o); }
 
+   /*
+    * Keys to process BPMs
+         * bb->name_bpm
+         * bb->bpm_frame_i_key
+         * bb->bpm_frame_i_comment
+         * bb->bpm_propflag_key
+         * bb->bpm_propflag_comment
+         * bb->bpm_lgainthr_key
+         * bb->bpm_lgainthr_comment
+         * bb->bpm_hgainthr_key
+         * bb->bpm_hgainthr_comment
+         * bb->bpm_frame_i_key
+         * bb->bpm_frame_i_comment
+         * bb->master_bpm_key
+         * bb->master_bpm_comment
+   */
+
         sprintf(buffer,"MEF.BPM.NAME");
         sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
 	bb->name_bpm			= strdup(charval);
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_bpm); }
+
+        sprintf(buffer,"MEF.BPM.FRAME.I.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_frame_i_key            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_frame_i_key); }
+
+        sprintf(buffer,"MEF.BPM.FRAME.I.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_frame_i_comment            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_frame_i_comment); }
+
+        sprintf(buffer,"MEF.BPM.PROPFLAG.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_propflag_key            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_propflag_key); }
+
+        sprintf(buffer,"MEF.BPM.PROPFLAG.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_propflag_comment            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_propflag_comment); }
+
+        sprintf(buffer,"MEF.BPM.LGAINTHR.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_lgainthr_key            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_lgainthr_key); }
+
+        sprintf(buffer,"MEF.BPM.LGAINTHR.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_lgainthr_comment            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_lgainthr_comment); }
+
+        sprintf(buffer,"MEF.BPM.HGAINTHR.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_hgainthr_key            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_hgainthr_key); }
+
+        sprintf(buffer,"MEF.BPM.HGAINTHR.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->bpm_hgainthr_comment            = strdup(charval);
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_hgainthr_comment); }
+
+        sprintf(buffer,"MEF.MASTER.BPM.KEY");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_bpm_key     = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_bpm_key); }
+
+        sprintf(buffer,"MEF.MASTER.BPM.COMMENT");
+        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+    bb->master_bpm_comment     = strdup(charval) ;
+        if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_bpm_comment); }
+
 
         /* FITS key to identify dome product used to produce combined master flat. */
         sprintf(buffer,"MEF.MASTER.DOME.KEY");
@@ -811,15 +884,39 @@ void mef_bb_del(mef_bb * bb)
 	if (bb->telescope)			free(bb->telescope) ;
 	if (bb->instrument)			free(bb->instrument) ;
 	if (bb->name_dome) 			free(bb->name_dome);
-	if (bb->name_dome_o) 			free(bb->name_dome_o);
+	if (bb->name_dome_o) 		free(bb->name_dome_o);
 	if (bb->name_sky) 			free(bb->name_sky);
-	if (bb->name_sky_o) 			free(bb->name_sky_o);
-	if (bb->name_mf)                        free(bb->name_mf);
+	if (bb->name_sky_o) 		free(bb->name_sky_o);
+	if (bb->name_mf)            free(bb->name_mf);
 	if (bb->name_mf_o) 			free(bb->name_mf_o);
 	if (bb->name_bias) 			free(bb->name_bias);
-	if (bb->name_bias_o) 			free(bb->name_bias_o);
-	if (bb->name_bpm)                      free(bb->name_bpm);
-	if (bb->name_bpm_o)                    free(bb->name_bpm_o);
+	if (bb->name_bias_o)        free(bb->name_bias_o);
+    if (bb->name_bpm)           free(bb->name_bpm);
+    if (bb->name_bpm_o)         free(bb->name_bpm_o);
+
+    /*
+     * bb->bpm_frame_i_key
+     * bb->bpm_frame_i_comment
+     * bb->bpm_propflag_key
+     * bb->bpm_propflag_comment
+     * bb->bpm_lgainthr_key
+     * bb->bpm_lgainthr_comment
+     * bb->bpm_hgainthr_key
+     * bb->bpm_hgainthr_comment
+     * bb->master_bpm_key
+     * bb->master_bpm_comment
+     */
+
+    if (bb->bpm_frame_i_key)                free(bb->bpm_frame_i_key);
+    if (bb->bpm_frame_i_comment)            free(bb->bpm_frame_i_comment);
+    if (bb->bpm_propflag_key)               free(bb->bpm_propflag_key);
+    if (bb->bpm_propflag_comment)           free(bb->bpm_propflag_comment);
+    if (bb->bpm_lgainthr_key)               free(bb->bpm_lgainthr_key);
+    if (bb->bpm_lgainthr_comment)           free(bb->bpm_lgainthr_comment);
+    if (bb->bpm_hgainthr_key)               free(bb->bpm_hgainthr_key);
+    if (bb->bpm_hgainthr_comment)           free(bb->bpm_hgainthr_comment);
+    if (bb->master_bpm_key)                 free(bb->master_bpm_key);
+    if (bb->master_bpm_comment)             free(bb->master_bpm_comment);
 
 	if (bb->ccd) 				free(bb->ccd);
 
@@ -850,6 +947,7 @@ void mef_bb_del(mef_bb * bb)
 	if (bb->data_partition) 		    free(bb->data_partition);
 	if (bb->flat_partition) 		    free(bb->flat_partition);
 	if (bb->bias_partition) 		    free(bb->bias_partition);
+    if (bb->bpm_partition)              free(bb->bpm_partition);
 
     if (bb->master_bias_key)            free(bb->master_bias_key);
     if (bb->master_bias_comment)        free(bb->master_bias_comment);
@@ -1727,6 +1825,7 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	char			*zFilter ;
 	int			i ;
 
+    e_comment(1, "mef_valid_subset: --------- validating %s ----------", what);
 	/* Check entries */
 	if (bb==NULL) {
 		e_error("mef_valid_subset: NULL bb pointer");
@@ -1738,9 +1837,25 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	}
 	/* Set parameters to requested frame type */
 	if (!strcmp(what, "bias")) {
+        e_comment(1, "mef_valid_subset: validating BIAS file %s", bb->name_bias);
 		name_i = bb->name_bias ;
 	} else if (!strcmp(what, "bpm")) {
-		name_i = bb->name_bpm ;
+        /* for this to work we need to validate first the bias */
+        if (is_fits_file(bb->name_bpm)) {
+            sprintf(cval, "%s", mef_get_output_filename(bb,"bpm"));
+            e_comment(1, "mef_valid_subset: validating BPM file -%s-", cval);
+            if (is_fits_file(cval) == 1) {
+                e_comment(1, "mef_valid_subset: %s is FITS file", cval);
+                name_i = cval;
+                e_comment(1, "mef_valid_subset: name_i: %s", name_i);
+            } else {
+                e_comment(1, "mef_valid_subset: %s is NOT a FITS file", cval);
+		        sprintf(name_i, bb->name_bpm) ;
+            }
+        } else {
+            e_comment(1, "mef_valid_subset: bb->name_bpm: %s is NOT a FITS file", bb->name_bpm);
+            name_i = bb->name_bpm ;
+        }
 	} else if (!strcmp(what, "dome")) {
 		name_i = bb->name_dome ;
 	} else if (!strcmp(what, "sky")) {
@@ -1755,7 +1870,9 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	if (name_i == NULL) {
 		e_comment(1,"mef_valid_subset: Nothing to validate, NULL name for %s.",what);
 		return 0;
-	}
+	} else {
+        e_comment(1,"mef_valid_subset: name_i:  %s for %s.",name_i, what);
+    }
 
 
 
@@ -1764,11 +1881,11 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	 * compare the values of the filter and binning keywords.
 	 * They must be the same for a valid dataset.
 	 */
-	e_comment(0,"\nReading (map) and validating %s frame list: %s (same filter and binning)\n",what, name_i);
+	e_comment(0,"\nmef_valid_subset: reading (map) and validating %s frame list: %s (same filter and binning)\n",what, name_i);
 
 
 	if ( (fh = mef_header_primary(name_i)) == NULL) {
-		e_error("mef_valid_subset: can not read %s primary headers",name_i);
+		e_error("mef_valid_subset: can not read %s primary headers for %s",name_i, what);
 		return -1;
 	}
 	/* here we allow for the possibility that what is passed is
@@ -1778,11 +1895,11 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	 */
 	if ( (input_frames = framelist_load(name_i)) == NULL) {
 	    if (is_fits_file(name_i)) {
-		input_frames = framelist_new(1);
-		input_frames->name[0] = strdup(name_i);
-		first_name = strdup(name_i);
+		    input_frames = framelist_new(1);
+		    input_frames->name[0] = strdup(name_i);
+		    first_name = strdup(name_i);
 	    } else {
-		e_error("mef_valid_subset: %s is not a framelist or a FITS file. Aborting", name_i);
+		    e_error("mef_valid_subset: %s is not a framelist or a FITS file. Aborting", name_i);
 		return -1 ;
 	    }
 
@@ -1830,6 +1947,10 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	if (!strcmp(what, "bias")) {
 	   sprintf(cval,"%dx%d",atoi(bb->binx_val),atoi(bb->biny_val));
 	   bb->bias_partition = strdup(cval);
+       bb->bpm_partition = strdup(cval);
+    } else if (!strcmp(what, "bpm"))  {
+       sprintf(cval,"%dx%d",atoi(bb->binx_val),atoi(bb->biny_val));
+       bb->bpm_partition = strdup(cval);
 	} else {
 	   /* We trim spaced to the right of the zFilter variable */
 	   int index = -1;
@@ -1850,7 +1971,7 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	   bb->flat_partition = strdup(cval);
 	}
 	e_comment(1,"cval: %s",cval);
-	e_comment(1,"data partition = %s   bias partition = %s\n",bb->data_partition,bb->bias_partition);
+	e_comment(1,"data partition = %s   bias partition = %s   bpm partition: %s\n",bb->data_partition,bb->bias_partition, bb->bpm_partition);
 
 	/*
 	 * here we loop over all the frames checking consistency
@@ -1914,9 +2035,15 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 	image_t	*norm_gain;
 	pixelmap *bp_map;
     framelist *flist;
-    qfits_header *fhdr_extra ;
+    qfits_header *fhdr_extra;
+    qfits_header *fhdr_primary;
+    qfits_header *fh;
+    qfits_header *fh_ext;
+    char    *   dateobs_ptr;
     int i;
 	char 	cval[80];
+    char    cval2[80];
+    char    *cval_ptr;
     char    cval_prev[80];
 	
 
@@ -1926,16 +2053,18 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
         }
         e_comment(1,"overscan correcting/trimming BPM cube");
         mef_cube_overscan_correction(cube_in, bb, "bpm");
-        if (bias == NULL) {
+        /*if (bias == NULL) {
             e_error("bias is a NULL pointer");
             cube_del(cube_in);
             return NULL;
-        }
+        }*/
         e_comment(1,"bias subtracting BPM cube");
-        if (cube_sub_im(cube_in,bias)!=0) {
-            e_error("subtracting bias to BPM cube: aborting");
-            cube_del(cube_in);
-            return NULL;
+        if (bias!=NULL) {
+            if (cube_sub_im(cube_in,bias)!=0) {
+                e_error("subtracting bias to BPM cube: aborting");
+                cube_del(cube_in);
+                return NULL;
+            }
         }
 
         /* iproc/detector.c */
@@ -1967,6 +2096,18 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 
             /* now we add a few headers to the file */
             fhdr_extra = qfits_header_default();
+            qfits_header_add(fhdr_extra, "ECLIPSE", get_eclipse_version(), "Based on Eclipse version 5.0.0 by N. Devillard", NULL);
+            e_comment(1, "ECLIPSE: %s", qfits_header_getstr(fhdr_extra, "ECLIPSE"));
+
+            /*
+            if (fhdr_extra!=NULL){
+                e_comment(1, "header console dump 1 of fhdr_extra");
+                qfits_header_consoledump(fhdr_extra);
+                e_comment(1, "done");
+            } else {
+                e_comment(1, "fhdr_extra: NULL in dump 1");
+            }
+            */
 
             sprintf(cval, "%d", BPP_8_UNSIGNED);
             qfits_header_add(fhdr_extra, "BITPIX", cval, "bits per pixel", NULL);
@@ -1981,72 +2122,249 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             sprintf(cval, "%d", bp_map->ly) ;
             qfits_header_add(fhdr_extra, "NAXIS2", cval, "y axis", NULL);
 
+            /* if this is the first extention we create a new ORIGFILE name */
+            if (bb->xtnum == 1) {
+                mef_create_orig_filename(bb, "bpm");
+                e_comment(1,"creating ORIGFILE key: %s",bb->orig_bpm);
+            }
+            qfits_header_add_after(fhdr_extra, "NAXIS2", "ORIGFILE", bb->orig_bpm, "Original file name", NULL);
+
             /* REC.FLAT.PRSCX */
-            sprintf(cval, "'%d %d'", (((bb->ccd)+(bb->xtnum-1))->prescan_x)[0],
-                 (((bb->ccd)+(bb->xtnum-1))->prescan_x)[1]);
-            qfits_header_add(fhdr_extra, bb->prescan_x_key, cval, bb->prescan_x_comment, NULL);
+            sprintf(cval, "%s X1", bb->prescan_x_key );
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->prescan_x)[0]);
+            qfits_header_add(fhdr_extra, cval, 
+                                        cval2,
+                                        bb->prescan_x_comment, NULL);
+
+            sprintf(cval, "%s X2", bb->prescan_x_key );
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->prescan_x)[1]);
+            qfits_header_add(fhdr_extra, cval,
+                                         cval2,
+                                         bb->prescan_x_comment, NULL);
 
             /* REC.FLAT.OVSCX */
-            sprintf(cval, "'%d %d'", (((bb->ccd)+(bb->xtnum-1))->overscan_x)[0],
-                 (((bb->ccd)+(bb->xtnum-1))->overscan_x)[1]);
-            qfits_header_add(fhdr_extra, bb->overscan_x_key, cval, bb->overscan_x_comment, NULL);
+            sprintf(cval, "%s X1", bb->overscan_x_key);
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->overscan_x)[0]);
+            qfits_header_add(fhdr_extra, cval,
+                                        cval2,
+                                        bb->overscan_x_comment, NULL);
+
+            sprintf(cval, "%s X2", bb->overscan_x_key);
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->overscan_x)[1]);
+            qfits_header_add(fhdr_extra, cval,
+                                        cval2,
+                                        bb->overscan_x_comment, NULL);
+
 
             /* REC.FLAT.RJOVSC */
-            sprintf(cval, "'%d %d'", bb->scanrej[0], bb->scanrej[1]);
-            qfits_header_add(fhdr_extra, bb->scanrej_key, cval, bb->scanrej_comment, NULL);
+            sprintf(cval, "%s NLOW", bb->scanrej_key);
+            sprintf(cval2, "%d", bb->scanrej[0]);
+            qfits_header_add(fhdr_extra, cval, cval2, bb->scanrej_comment, NULL);
+
+            sprintf(cval, "%s NHIGH", bb->scanrej_key);
+            sprintf(cval2, "%d", bb->scanrej[1]);
+            qfits_header_add(fhdr_extra, cval, cval2, bb->scanrej_comment, NULL);
+
+
 
             /* REC.BIAS.TRIM */
-            sprintf(cval, "'%d %d %d %d'",
-                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[0],
-                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[1],
-                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[2],
-                    (((bb->ccd)+(bb->xtnum-1))->trimreg)[3]) ;
-            qfits_header_add(fhdr_extra, bb->trimreg_key, cval, bb->trimreg_comment, NULL);
+            sprintf(cval, "%s X1", bb->trimreg_key);
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[0]);
+            qfits_header_add(fhdr_extra, cval,
+                                        cval2,
+                                        bb->trimreg_comment, NULL);
+
+            sprintf(cval, "%s X2", bb->trimreg_key);
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[1]);
+            qfits_header_add(fhdr_extra, cval,
+                                        cval2,
+                                        bb->trimreg_comment, NULL);
+
+            sprintf(cval, "%s Y1", bb->trimreg_key);
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[2]);
+            qfits_header_add(fhdr_extra, cval,
+                                        cval2,
+                                        bb->trimreg_comment, NULL);
+
+            sprintf(cval, "%s Y2", bb->trimreg_key);
+            sprintf(cval2, "%d", (((bb->ccd)+(bb->xtnum-1))->trimreg)[3]);
+            qfits_header_add(fhdr_extra, cval,
+                                        cval2,
+                                        bb->trimreg_comment, NULL);
+
+         /*
+         * bb->bpm_propflag_key
+         * bb->bpm_propflag_comment
+         * bb->bpm_lgainthr_key
+         * bb->bpm_lgainthr_comment
+         * bb->bpm_hgainthr_key
+         * bb->bpm_hgainthr_comment
+         * bb->bpm_frame_i_key
+         * bb->bpm_frame_i_comment
+         */
 
             /* MEF.BPM.PROPFLAG */
             sprintf(cval, "%d", bb->bpm_proportional_flag);
-            qfits_header_add(fhdr_extra,"HIERARCH ESO BPM PROPFLAG", cval, "Proportional flag", NULL);
+            qfits_header_add(fhdr_extra,bb->bpm_propflag_key, cval, bb->bpm_propflag_comment, NULL);
 
             /* MEF.BPM.LGAINTHR */
             sprintf(cval, "%f",  bb->bpm_gainthr_lo);
-            qfits_header_add(fhdr_extra,"HIERARCH ESO BPM LGAINTHR", cval, "Low gain threshold", NULL);
+            qfits_header_add(fhdr_extra,bb->bpm_lgainthr_key, cval, bb->bpm_lgainthr_comment, NULL);
 
             /* MEF.BPM.HGAINTHR */
             sprintf(cval, "%f",  bb->bpm_gainthr_hi);
-            qfits_header_add(fhdr_extra,"HIERARCH ESO BPM HGAINTHR", cval, "High gain threshold", NULL);
+            qfits_header_add(fhdr_extra, bb->bpm_hgainthr_key, cval, bb->bpm_hgainthr_comment, NULL);
 
             /* We add the list of frames used to determine the BPM */
             flist = framelist_load(bb->name_bpm);
             sprintf(cval_prev,"NAXIS2");
             for (i=0 ; i<flist->n ; i++) {
-                sprintf(cval,"HIERARCH ESO BPM FRAME%02d", i+1);
+                sprintf(cval,"%s FRAME%03d", bb->bpm_frame_i_key, i+1);
                 e_comment(1, "mef_build_bpm: adding key %s",cval);
-                qfits_header_add_after(fhdr_extra,cval_prev, cval, flist->name[i], "Frame used for BPM creation.",NULL);
+                qfits_header_add_after(fhdr_extra,cval_prev, cval, flist->name[i], bb->bpm_frame_i_comment,NULL);
                 sprintf(cval_prev, cval);
+
+                fh = qfits_header_read(flist->name[i]);
+                if (fh==NULL) {
+                    e_error("reading FITS header from [%s]", flist->name[i]);
+                    return NULL ;
+                }
+
+
+                /* we save DATE-OBS of the first frame */
+                /* Read PRIMARY FITS header from input file */
+                if (i==0) {
+
+                    dateobs_ptr = strdup(qfits_header_getstr(fh, "DATE-OBS"));
+                    e_comment(1, "mef_build_bpm: frame: %s --  DATE-OBS: %s in %d", flist->name[i], dateobs_ptr, bb->xtnum);
+
+                    /* We add selected FITS headers to first extention
+                     *
+                     * ORIGIN  = 'ESO     '           / European Southern Observatory
+                     * DATE    = '2003-05-30T19:14:54.605' / UT date when this file was written
+                     * MJD-OBS =       52789.80202058 / MJD start (2003-05-30T19:14:54.578)
+                     * DATE-OBS= '2003-05-30T19:14:54.577' / Date of observation
+                     * EXPTIME =               0.0086 / Total integration time
+                     * OBJECT  = 'BIAS    '           / Target description
+                     * INSTRUME= 'WFI     '           / Instrument used
+                     * OBSERVER= 'UNKNOWN '           / Name of observer
+                     * PI-COI  = 'UNKNOWN '           / Name(s) of proposer(s)
+                     * TELESCOP= 'MPI-2.2 '           / ESO Telescope Name
+                    */
+                    if (bb->xtnum == 1) {
+                        cval_ptr = strdup(qfits_header_getstr(fh, "ORIGIN"));
+                        qfits_header_add_after(fhdr_extra, "NAXIS2", "ORIGIN", cval_ptr, "European Southern Observatory", NULL);
+                         e_comment(1, "mef_build_bpm: ORIGIN: %s", qfits_header_getstr(fhdr_extra, "ORIGIN"));
+
+                        cval_ptr = strdup(qfits_header_getstr(fh, "TELESCOP"));
+                        qfits_header_add_after(fhdr_extra, "ORIGIN", "TELESCOP", cval_ptr, "European Southern Observatory", NULL);
+                        e_comment(1, "mef_build_bpm: TELESCOP: %s", qfits_header_getstr(fhdr_extra, "TELESCOP"));
+
+                        cval_ptr = strdup(qfits_header_getstr(fh, "INSTRUME"));
+                        qfits_header_add_after(fhdr_extra, "TELESCOP", "INSTRUME", cval_ptr, "European Southern Observatory", NULL);
+                        e_comment(1, "mef_build_bpm: INSTRUME: %s", qfits_header_getstr(fhdr_extra, "INSTRUME"));
+
+                        cval_ptr = strdup(qfits_header_getstr(fh, "MJD-OBS"));
+                        qfits_header_add_after(fhdr_extra, "INSTRUME", "MJD-OBS", cval_ptr, "European Southern Observatory", NULL);
+                        e_comment(1, "mef_build_bpm: MJD-OBS: %s", qfits_header_getstr(fhdr_extra, "MJD-OBS"));
+
+                        cval_ptr = strdup(qfits_header_getstr(fh, bb->binx_key));
+                        qfits_header_add_after(fhdr_extra, "MJD-OBS", bb->binx_key, cval_ptr, "Binning factor along X", NULL);
+                        e_comment(1, "mef_build_bpm: BINX: %s", qfits_header_getstr(fhdr_extra, bb->binx_key));
+
+                        cval_ptr = strdup(qfits_header_getstr(fh, bb->biny_key));
+                        qfits_header_add_after(fhdr_extra, bb->binx_key, bb->biny_key, cval_ptr, "Binning factor along Y", NULL);
+                        e_comment(1, "mef_build_bpm: BINY: %s", qfits_header_getstr(fhdr_extra, bb->biny_key));
+
+                        qfits_header_destroy(fh);
+                    }
+                    /* we read the extension name from the first frame. */
+                    fh_ext = qfits_header_readext(flist->name[i],bb->xtnum);
+                    cval_ptr =  strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
+                    qfits_header_add_after(fhdr_extra, "NAXIS2", "ZNAME", cval_ptr, "Original extension name", NULL);
+                    e_comment(1, "mef_build_bpm: ZNAME: %s", qfits_header_getstr(fhdr_extra, "ZNAME"));
+                    /*e_comment(1, "mef_build_bpm: header dump of fhdr_extra");
+                    qfits_header_consoledump(fhdr_extra);*/
+                }
+
                 if (debug_active() >= 1) {
                     e_comment(1, "mef_build_bpm: using frame %s",flist->name[i]);
                     }   
             }
-            qfits_header_consoledump(fhdr_extra);
+            e_comment(1, "mef_build_bpm: DATE-OBS: %s in xtnum: %d", dateobs_ptr, bb->xtnum);
+            /* e_comment(1, "mef_build_bpm: header dump of fhdr_extra");
+            qfits_header_consoledump(fhdr_extra);*/
+            qfits_header_add_after(fhdr_extra, "NAXIS2", "DATE-OBS", dateobs_ptr, "Date of observation of first frame", NULL);
+            e_comment(1, "mef_build_bpm: DATE-OBS: %s", qfits_header_getstr(fhdr_extra, "DATE-OBS"));
+            /*e_comment(1, "mef_build_bpm: frame: %s --  DATE-OBS: %s in %d", flist->name[i], dateobs_ptr, bb->xtnum);*/
+
+            /* Adding the prodcatg key */
+            sprintf(cval, "%s", bb->phase3_prodcatg_val_bpm);
+            qfits_header_add_after(fhdr_extra, "NAXIS2", bb->phase3_prodcatg_keyname, bb->phase3_prodcatg_val_bpm, bb->phase3_prodcatg_comment, NULL);
+            e_comment(1, "mef_build_bpm: PRODCATG: %s", qfits_header_getstr(fhdr_extra, bb->phase3_prodcatg_keyname));
 
             sprintf(cval, "%d", bp_map->ngoodpix);
-            qfits_header_add(fhdr_extra, "HIERARCH ESO MPP QC NGOODPIX", cval, "y axis", NULL);
+            qfits_header_add(fhdr_extra, "HIERARCH ESO MPP QC NGOODPIX", cval, "Number of good pixels", NULL);
 
             sprintf(cval, "%d", bp_map->lx*bp_map->ly - bp_map->ngoodpix);
-            qfits_header_add(fhdr_extra, "HIERARCH ESO MPP QC NBADPIX", cval, "y axis", NULL);
+            qfits_header_add(fhdr_extra, "HIERARCH ESO MPP QC NBADPIX", cval, "Number of bad pixels", NULL);
             e_comment(1, "Extra headers struct for BPM created");
 
+            /* Do a console dump to easily check headers */
+            qfits_header_consoledump(fhdr_extra);
 
+
+            /* TEST we remove the simple file for storage
             sprintf(cval,"%s_%02d.fits",bb->name_bpm_o,bb->xtnum);
             e_comment(1,"saving bad pixel map [%s]",cval);
             pixelmap_dump(bp_map,cval, fhdr_extra);
+            */
+
+            /* here we write to MEF file 
+             *
+             * name_bpm_o
+             *
+             * */
+            sprintf(cval, "%s", mef_get_output_filename(bb,"bpm"));
+            e_comment(1,"saving extension %d bad pixel map [%s]",bb->xtnum, cval);
+            if (bb->xtnum==1) {
+                /* in the first extension we first write the primary headers */
+                fhdr_primary = qfits_header_copy(fhdr_extra);
+                qfits_header_add_after(fhdr_primary, "SIMPLE", "EXTEND", "T", "Extension may be present.", NULL);
+                qfits_header_mod(fhdr_primary, "NAXIS", "0", "# of axes in frame");
+                qfits_header_del(fhdr_primary, "NAXIS1");
+                qfits_header_del(fhdr_primary, "NAXIS2");
+                pixelmap_dump(NULL,cval, fhdr_primary);
+                qfits_header_destroy(fhdr_primary);
+
+                /* then the extension header and data */
+                qfits_header_add_after(fhdr_extra, "SIMPLE", "XTENSION", "IMAGE", "Extension first keyword (see SIMPLE)", NULL);
+                cval_ptr =  qfits_header_getstr(fhdr_extra, "ZNAME");
+                qfits_header_add_after(fhdr_extra, "ZNAME", "EXTNAME", cval_ptr, "Extension first keyword (see SIMPLE)", NULL);
+                qfits_header_del(fhdr_extra, "ZNAME");
+                qfits_header_del(fhdr_extra, "SIMPLE");
+                qfits_header_del(fhdr_extra, "EXTEND");
+                pixelmap_dump(bp_map,cval, fhdr_extra);
+            } else {
+                qfits_header_add_after(fhdr_extra, "SIMPLE", "XTENSION", "IMAGE", "Extension first keyword (see SIMPLE)", NULL);
+                cval_ptr =  qfits_header_getstr(fhdr_extra, "ZNAME");
+                qfits_header_add_after(fhdr_extra, "ZNAME", "EXTNAME", cval_ptr, "Extension first keyword (see SIMPLE)", NULL);
+                qfits_header_del(fhdr_extra, "ZNAME");
+                qfits_header_del(fhdr_extra, "SIMPLE");
+                qfits_header_del(fhdr_extra, "EXTEND");
+                pixelmap_dump(bp_map,cval, fhdr_extra);
+            } 
             e_comment(1,"done");
+
+            /* qfits_header_destroy(fhdr_extra); */
         }
+        qfits_header_destroy(fhdr_extra);
         if (norm_gain != NULL) image_del(norm_gain);
 
 	return bp_map;
-
 }
+
+
 
 image_t * mef_build_cal(mef_bb * bb, char * what)
 {
@@ -2374,9 +2692,9 @@ image_t * mef_ff_combine(mef_bb * bb, image_t * dome, image_t * sky, image_t *bi
 	if (bb==NULL || dome==NULL || sky==NULL) return NULL ;
 
 	if ((dome->lx != sky->lx) || (dome->ly != sky->ly)) {
-	     e_error("dome and sky frames have incompatible sizes: aborting");
-	     e_error("dome is [%d %d]", dome->lx, dome->ly);
-	     e_error("sky is [%d %d]", sky->lx, sky->ly);
+	     e_error("mef_ff_combine: dome and sky frames have incompatible sizes: aborting");
+	     e_error("mef_ff_combine: dome is [%d %d]", dome->lx, dome->ly);
+	     e_error("mef_ff_combine: sky is [%d %d]", sky->lx, sky->ly);
 	     return NULL ;
 	}
 
@@ -2395,39 +2713,41 @@ image_t * mef_ff_combine(mef_bb * bb, image_t * dome, image_t * sky, image_t *bi
 	 */
 	if (bias != NULL) {
 	    if ((dome->lx != bias->lx) || (dome->ly != bias->ly)) {
-		e_error("flats and bias frames have incompatible sizes: aborting");
-		e_error("flats is [%d %d]", dome->lx, dome->ly);
-		e_error("bias is [%d %d]", bias->lx, bias->ly);
+		e_error("mef_ff_combine: flats and bias frames have incompatible sizes: aborting");
+		e_error("mef_ff_combine: flats is [%d %d]", dome->lx, dome->ly);
+		e_error("mef_ff_combine: bias is [%d %d]", bias->lx, bias->ly);
 		return NULL ;
 	    }
 
 		
-	    e_comment(1, "subtracting bias from sky frame");
+	    e_comment(1, "mef_ff_combine: subtracting bias from sky frame");
 	    image_sub_local(sky,image_cst_op(bias,bb->sky_median[0],'/')); /* bias renormalized like flats */
-	    e_comment(1, "Done.");
-	    e_comment(1, "subtracting bias from dome frame");
+	    e_comment(1, "mef_ff_combine: Done.");
+	    e_comment(1, "mef_ff_combine: subtracting bias from dome frame");
 	    image_sub_local(dome,image_cst_op(bias,bb->dome_median[0], '/'));
-	    e_comment(1, "Done.");
+	    e_comment(1, "mef_ff_combine: Done.");
 	}
 
 	/* Divide sky by dome */
-	e_comment(1, "dividing sky by dome...");
+	e_comment(1, "mef_ff_combine: dividing sky by dome...");
 	image_div_local(sky, dome);
-	e_comment(1, "Done.");
+	e_comment(1, "mef_ff_combine: Done.");
 
 	/* Smooth result */
-	e_comment(1, "applying smoothing filter...");
+	e_comment(1, "mef_ff_combine: applying smoothing filter...");
 	if (bp_map == NULL) {
-	smoothed = image_filter_flat(sky, bb->kern_hsize);
+        e_comment(1, "mef_ff_combine: no bp_map case...");
+	    smoothed = image_filter_flat(sky, bb->kern_hsize);
 	} else {
-	smoothed = mef_image_filter_flat(sky, bb->kern_hsize, bp_map);
+        e_comment(1, "mef_ff_combine: with bp_map case...");
+	    smoothed = mef_image_filter_flat(sky, bb->kern_hsize, bp_map);
 	}
-	e_comment(1, "Done.");
+	e_comment(1, "mef_ff_combine: Done.");
 
 	/* Multiply by dome */
-	e_comment(1, "multiplying smoothed sky-over-dome ratio by dome flat...");
+	e_comment(1, "mef_ff_combine: multiplying smoothed sky-over-dome ratio by dome flat...");
 	image_mul_local(smoothed, dome);
-	e_comment(1, "Done.");
+	e_comment(1, "mef_ff_combine: Done.");
 
     /* Now we add some QC values */
     bb->combined_flat_median[zIndex] = image_getmedian(smoothed);
@@ -2534,19 +2854,21 @@ qfits_header *mef_header_ext(char *filename, mef_bb *bb)
 
 	if (is_fits_file(filename)) {
 		fh = qfits_header_readext(filename,xtnum);
-		f0 = qfits_header_readext(filename,0);
+		/* f0 = qfits_header_readext(filename,0); */
+        f0 = qfits_header_read(filename);
 	} else {
 		first_name = framelist_firstname(filename);
 		if (first_name==NULL) {
-			e_error("cannot get reference FITS header from %s", filename);
-			e_error("aborting save");
+			e_error("mef_header_ext: cannot get reference FITS header from %s", filename);
+			e_error("mef_header_ext: aborting save");
 			return NULL;
 		}
 		if (is_fits_file(first_name)) {
 			fh = qfits_header_readext(first_name,xtnum);
-			f0 = qfits_header_readext(filename,0);
+			/* f0 = qfits_header_readext(filename,0); */
+            f0 = qfits_header_read(first_name);
 		} else {
-			e_error("%s is not a valid FITS file name",first_name);
+			e_error("mef_header_ext: %s is not a valid FITS file name",first_name);
 			return NULL;
 		}
 	}
@@ -2561,53 +2883,62 @@ qfits_header *mef_header_ext(char *filename, mef_bb *bb)
 	((bb->ccd)+(bb->xtnum-1))->crpix2 = atoi(qfits_header_getstr(fh,"CRPIX2"));
 	*/
 
-	/* we check if we need to correct the coordinate value of reference pixel */
+	/* 
+     * we check if we need to correct the coordinate value of reference pixel 
+     *
+     * SHOULD BE USED ONLY FOR WFI
+     *
+     * */
 
 	if ( (bb->correct_ref_pix == 1) ) {
             CRVAL1 = ((bb->ccd)+(bb->xtnum-1))->crval1;
             CRVAL2 = ((bb->ccd)+(bb->xtnum-1))->crval2;
 	    ra_char = qfits_header_getstr(f0, "RA");
 	    dec_char = qfits_header_getstr(f0, "DEC");
-            e_comment(1,"CRVAL1 = %f ---> %s",((bb->ccd)+(bb->xtnum-1))->crval1,ra_char);
+        e_comment(1,"mef_header_ext: filename: %s -- ra_char: %s  dec_char: %s", filename, ra_char, dec_char);
+        if ((ra_char!=NULL) && (dec_char!=NULL)) {
+            e_comment(1,"mef_header_ext: CRVAL1 = %f ---> %s",((bb->ccd)+(bb->xtnum-1))->crval1,ra_char);
             sprintf(cval,"%f",CRVAL1);
             qfits_header_mod(fh,"CRVAL1",ra_char,NULL);
-	    e_comment(1,"CRVAL2 = %f ---> %s",((bb->ccd)+(bb->xtnum-1))->crval2,dec_char);
+
+	        e_comment(1,"mef_header_ext: CRVAL2 = %f ---> %s",((bb->ccd)+(bb->xtnum-1))->crval2,dec_char);
             sprintf(cval,"%f",CRVAL2);
             qfits_header_mod(fh,"CRVAL2",dec_char,NULL);
-	    e_comment(1,"deleting CDELT1");
+        }
+	    e_comment(1,"mef_header_ext: deleting CDELT1");
 	    qfits_header_del(fh,"CDELT1");
-	    e_comment(1,"deleting CDELT2");
+	    e_comment(1,"mef_header_ext: deleting CDELT2");
 	    qfits_header_del(fh,"CDELT2");
-	    e_comment(1,"modifiyin CTYPE1 to RA---TAN");
+	    e_comment(1,"mef_header_ext: modifiyin CTYPE1 to RA---TAN");
 	    qfits_header_mod(fh,"CTYPE1","RA---TAN",NULL);
-	    e_comment(1,"modifiyin CTYPE1 to DEC--TAN");
+	    e_comment(1,"mef_header_ext: modifiyin CTYPE1 to DEC--TAN");
 	    qfits_header_mod(fh,"CTYPE2","DEC--TAN",NULL);
-	    e_comment(1,"adding CD1_1 = -6.61111E-05");
+	    e_comment(1,"mef_header_ext: adding CD1_1 = -6.61111E-05");
 	    qfits_header_add_after(fh,"CTYPE1","CD1_1","-6.61111E-05","WCS coordinate increment at ref point",NULL);
-	    e_comment(1,"adding CD1_2 = 0.0");
+	    e_comment(1,"mef_header_ext: adding CD1_2 = 0.0");
             qfits_header_add_after(fh,"CD1_1","CD1_2","0.0","WCS coordinate increment at ref point",NULL);
-	    e_comment(1,"adding CD2_1 = 0.0");
+	    e_comment(1,"mef_header_ext: adding CD2_1 = 0.0");
             qfits_header_add_after(fh,"CD1_2","CD2_1","0.0","WCS coordinate increment at ref point",NULL);
-	    e_comment(1,"adding CD2_2 = 6.61111E-05");
+	    e_comment(1,"mef_header_ext: adding CD2_2 = 6.61111E-05");
             qfits_header_add_after(fh,"CD2_1","CD2_2","6.61111E-05","WCS coordinate increment at ref point",NULL);
-            e_comment(1,"extension header CRVAL keywords modified as requested.");
+            e_comment(1,"mef_header_ext: extension header CRVAL keywords modified as requested.");
 	} 
 
         /* and now we correct for the croping */
         CRPIX1 = ((bb->ccd)+(bb->xtnum-1))->crpix1 - (float) (((bb->ccd)+(bb->xtnum-1))->trimreg)[0];
         CRPIX2 = ((bb->ccd)+(bb->xtnum-1))->crpix2 - (float) (((bb->ccd)+(bb->xtnum-1))->trimreg)[2];
-        e_comment(1,"CRPIX1 = %f ---> %f",((bb->ccd)+(bb->xtnum-1))->crpix1, CRPIX1);
-        e_comment(1,"CRPIX2 = %f ---> %f",((bb->ccd)+(bb->xtnum-1))->crpix2, CRPIX2);
+        e_comment(1,"mef_header_ext: CRPIX1 = %f ---> %f",((bb->ccd)+(bb->xtnum-1))->crpix1, CRPIX1);
+        e_comment(1,"mef_header_ext: CRPIX2 = %f ---> %f",((bb->ccd)+(bb->xtnum-1))->crpix2, CRPIX2);
         sprintf(cval,"%f",CRPIX1);
         qfits_header_mod(fh,"CRPIX1",cval,NULL);
         sprintf(cval,"%f",CRPIX2);
         qfits_header_mod(fh,"CRPIX2",cval,NULL);
-        e_comment(1,"CRPIX keywords modified cropping.");
+        e_comment(1,"mef_header_ext: CRPIX keywords modified cropping.");
 
         /* and finally BITPIX to BPP_DEFAULT */
 	sprintf(cval, "%d", BPP_DEFAULT);
 	qfits_header_mod(fh, "BITPIX", cval, NULL);
-	e_comment(1,"extension header BITPIX keyword modified OK.");
+	e_comment(1,"mef_header_ext: extension header BITPIX keyword modified to default %s OK.", cval);
 	return fh;
 }
 /*
@@ -2698,7 +3029,7 @@ qfits_header *mef_header_mainsubset(mef_bb *bb, image_t *flat)
 }
 
 /*----------trim (char) c from right-side of string *p------------------*/
-char *strtrim_right( register char *p, register c)
+char *strtrim_right( char *p, char c)
 {
     register char *end;
     register int len;
@@ -2862,7 +3193,7 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
     /* Processing software version */
     /* Processing software version */
     sprintf(cval, recipe_version);
-    sprintf(cval2, "Built on eclipse-%s by N. Devillard", get_eclipse_version());
+    sprintf(cval2, "Branch from wfi 1.19 by N. Devillard");
     e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_procsoft_keyname, cval, what);
     qfits_header_add_after(fh_phase3, bb->phase3_timesys_keyname, 
                                         bb->phase3_procsoft_keyname, 
@@ -2925,7 +3256,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 
 	fh_eclipse = qfits_header_default();
 	qfits_header_add(fh_eclipse, "ECLIPSE",
-			get_eclipse_version(), "Eclipse version", NULL);
+			get_eclipse_version(), "Based on Eclipse version 5.0.0 by N. Devillard", NULL);
 
 
 	
@@ -2978,13 +3309,24 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	    }
 	}
 
+    /* Add master bpm to all products */
+    if (!strcmp(what,"bias") || !strcmp(what,"combined") || !strcmp(what,"sky") || !strcmp(what,"dome")) {
+        /* REC.FLAT.MBPM */
+        if (bb->orig_bpm!=NULL) {
+            e_comment(1,"Adding FITS card: %s = %s / %s", bb->master_bpm_key, bb->orig_bpm, bb->master_bpm_comment);
+            qfits_header_add(fh_eclipse, bb->master_bpm_key, bb->orig_bpm, bb->master_bpm_comment, NULL);
+        } else {
+            qfits_header_add(fh_eclipse, bb->master_bpm_key, "unknown", bb->master_bpm_comment, NULL);
+        }
+    }
+
     /* Add the master bias to all flat products */
     if (!strcmp(what,"combined") || !strcmp(what,"sky") || !strcmp(what,"dome")) {
         /* REC.FLAT.MBIAS */
         if (bb->orig_bias!=NULL) {
             qfits_header_add(fh_eclipse, bb->master_bias_key, bb->orig_bias, bb->master_bias_comment, NULL);
         } else {
-            qfits_header_add(fh_eclipse, bb->master_bias_key, "none", bb->master_bias_comment, NULL);
+            qfits_header_add(fh_eclipse, bb->master_bias_key, "unknown", bb->master_bias_comment, NULL);
         }
     }
 
@@ -2994,14 +3336,14 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
         if (bb->orig_dome!=NULL) {
             qfits_header_add(fh_eclipse, bb->master_dome_key, bb->orig_dome, bb->master_dome_comment, NULL);
         } else {
-            qfits_header_add(fh_eclipse, bb->master_dome_key, "none", bb->master_dome_comment, NULL);
+            qfits_header_add(fh_eclipse, bb->master_dome_key, "unknown", bb->master_dome_comment, NULL);
         }
 
         /* REC.FLAT.MSKY */
         if (bb->orig_sky!=NULL) {
             qfits_header_add(fh_eclipse, bb->master_sky_key, bb->orig_sky, bb->master_sky_comment, NULL);
         } else {
-            qfits_header_add(fh_eclipse, bb->master_sky_key, "none", bb->master_sky_comment, NULL);
+            qfits_header_add(fh_eclipse, bb->master_sky_key, "unknown", bb->master_sky_comment, NULL);
         }
     }
 
@@ -3363,6 +3705,13 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
 		    sprintf(cval,"%s.fits",bb->name_bias_o);
 		}
 		name_o = strdup(cval) ;
+    } else if (!strcmp(what, "bpm")) {
+        if (bb->bpm_partition != NULL) {
+            sprintf(cval,"%s_%s.fits",bb->name_bpm_o,bb->bpm_partition);
+        } else {
+            sprintf(cval,"%s.fits",bb->name_bpm_o);
+        }
+        name_o = strdup(cval) ;
 	} else {
 		e_error("mef_get_output_filename: unknown frame type [%s] should be 'bias', 'dome', 'sky', or 'combined'",what);
 		return NULL;
@@ -3804,16 +4153,16 @@ void mef_save(mef_bb *bb, image_t *zImage, char *what)
 
         e_comment(1, "Creating file %s with ORIGFILE: %s ", name_o, qfits_header_getstr(fh_aux,"ORIGFILE"));
 
-	    save_mef_hdrdump(NULL,name_o,fh_aux,BPP_DEFAULT);
+	    mef_hdrpix_dump(NULL,name_o,fh_aux,BPP_DEFAULT);
  	}
 	/* saving extension headers and data */
    	fh_aux = mef_get_headers_for(what,bb,zImage);
-   	save_mef_hdrdump(zImage,name_o,fh_aux,BPP_DEFAULT);
+   	mef_hdrpix_dump(zImage,name_o,fh_aux,BPP_DEFAULT);
 	return;
 }
 
 
-void save_mef_hdrdump(image_t *image,char *filename,qfits_header *fh,int bpp)
+void mef_hdrpix_dump(image_t *image,char *filename,qfits_header *fh,int bpp)
 {
 	FILE		*out;
 	qfitsdumper 	qd;

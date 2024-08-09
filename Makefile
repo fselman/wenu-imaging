@@ -129,8 +129,8 @@ install:
 	else (true) fi)
 
 	mkdir -p $(prefix)/static_cal
-	@(if test -f $(BINDIR)/../../ins/mef/static_cal/OMEGACAM_BPM_01.fits.gz ; then\
-	($(CP) $(BINDIR)/../../ins/mef/static_cal/*.fits* $(prefix)/static_cal/. ; \
+	@(if test -f $(BINDIR)/../../ins/mef/static_cal/OCAM_BPM_01.fits.gz ; then\
+	($(CP) -f $(BINDIR)/../../ins/mef/static_cal/*.fits* $(prefix)/static_cal/. ; \
 	cd $(prefix)/static_cal ; gunzip -v *.fits.gz); \
 	else (true) fi)
 

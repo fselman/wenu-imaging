@@ -591,6 +591,10 @@ MEF.BPM.HGAINTHR.KEY                    "HIERARCH ESO MPP BPM HGAINTHR";
 MEF.BPM.HGAINTHR.COMMENT                "high gain threshold for BPM creation";
 MEF.BPM.HGAINTHR                         1.5;
 
+# Keys to identify master bpm product used
+MEF.MASTER.BPM.KEY                     "HIERARCH ESO MPP MBPM";
+MEF.MASTER.BPM.COMMENT                 "Master bpm used";
+
 # Processing parameters for dome flat field creation 
 MEF.DOMEFF.FRAME.I.KEY                  "HIERARCH ESO MPP FLAT DOME";
 MEF.DOMEFF.FRAME.I.COMMENT              "Input dome frame";

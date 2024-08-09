@@ -185,6 +185,25 @@ pixelmap * pixelmap_load(char * filename) ;
 
 /*----------------------------------------------------------------------------*/
 /**
+  @brief    Load a pixel map from disk into memory.
+  @param    filename    Name of the file to load.
+  @param    xtnum       Xtension number containing pixel map
+  @return   1 newly allocated pixelmap.
+
+  Loads a pixel map from a MEF FITS file into a pixelmap object. A pixel map
+  on disk can be any integer FITS image (BITPIX is 8, 16 or 32). Any
+  non-zero pixel will be read as PIXELMAP_1, any zero pixel will be read as
+  PIXELMAP_0.
+
+  The returned map must be deallocated using pixelmap_del().
+ */
+/*----------------------------------------------------------------------------*/
+/* <python> */
+pixelmap * pixelmap_loadext(char * filename, int xtnum) ;
+/* </python> */
+
+/*----------------------------------------------------------------------------*/
+/**
   @brief    Convert a pixelmap to an image object.
   @param    p   Pixel map to be promoted.
   @return   1 newly allocated image.

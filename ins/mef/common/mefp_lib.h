@@ -83,6 +83,7 @@ typedef struct _mef_bb_ {
 	int		nchips;
 	int		nxts ;		/* number of extension being processed 	*/
 	int     xtnum ;		/* extension being processed		*/
+    char    *xtname ;    /* name of extension being processed */
 	int		correct_ref_pix; /* flag indicating whether to correct CRVALi and CRPIXi */
 	
 	/* pointer to ccd structures */
@@ -103,6 +104,7 @@ typedef struct _mef_bb_ {
     /* Phase3 required keys */
     char        *phase3_prodcatg_keyname;
     char        *phase3_prodcatg_val_bias;
+    char        *phase3_prodcatg_val_bpm;
     char        *phase3_prodcatg_val_domeff;
     char        *phase3_prodcatg_val_skyff;
     char        *phase3_prodcatg_val_mff;
@@ -146,6 +148,7 @@ typedef struct _mef_bb_ {
 	char	*	biny_val ;
 	char	*	data_partition ;
 	char	*	bias_partition ;
+    char    *   bpm_partition ;
 	char	*	flat_partition ;
 
 	/* Overscan/prescan parameters */
@@ -175,6 +178,26 @@ typedef struct _mef_bb_ {
 	int		*bias_nplanes ;
 
 	/* BPM parameters */
+    /*
+     * bb->bpm_propflag_key
+     * bb->bpm_propflag_comment
+     * bb->bpm_lgainthr_key
+     * bb->bpm_lgainthr_comment
+     * bb->bpm_hgainthr_key
+     * bb->bpm_hgainthr_comment
+     * bb->bpm_frame_i_key
+     * bb->bpm_frame_i_comment
+    */
+    char    *master_bpm_key ;
+    char    *master_bpm_comment ;
+    char    *bpm_frame_i_key;
+    char    *bpm_frame_i_comment;
+    char    *bpm_propflag_key;
+    char    *bpm_propflag_comment;
+    char    *bpm_lgainthr_key;
+    char    *bpm_lgainthr_comment;
+    char    *bpm_hgainthr_key;
+    char    *bpm_hgainthr_comment;
 	int		bpm_proportional_flag;
 	float	bpm_gainthr_lo;
 	float	bpm_gainthr_hi;
@@ -358,7 +381,7 @@ char 		*mef_get_output_filename(mef_bb *bb, char *what);
 void        *mef_create_orig_filename(mef_bb *bb, char *what);
 qfits_header	*mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage);
 void	 	mef_save(mef_bb *bb, image_t *zImage, char *what);
-void	 	save_mef_hdrdump(image_t *,char *,qfits_header *,int);
+void	 	mef_hdrpix_dump(image_t *,char *,qfits_header *,int);
 image_t 	*mef_build_cal(mef_bb *, char *);
 image_t 	*mef_ff_combine(mef_bb *, image_t *, image_t *, image_t *,pixelmap *);
 image_t		*mef_image_filter_flat(image_t *,int kern_size,pixelmap *);

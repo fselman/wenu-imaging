@@ -247,6 +247,8 @@ MEF.MASTER.BIAS.COMMENT                 "Master bias used";
 # Bad pixel mask creation parameters
 MEF.BPM.NAME                            "WFI_BPM";
 MEF.BPM.NAME.O                          "WFI_BPM";
+MEF.BPM.FRAME.I.KEY                     "HIERARCH ESO MPP BPM";
+MEF.BPM.FRAME.I.COMMENT                 "Input bpm frame";
 MEF.BPM.PROPFLAG.KEY                    "HIERARCH ESO MPP BPM PROPFLAG";
 MEF.BPM.PROPFLAG.COMMENT                "proportional flag for BPM creation";
 MEF.BPM.PROPFLAG                         0;
@@ -256,6 +258,10 @@ MEF.BPM.LGAINTHR                         0.5;
 MEF.BPM.HGAINTHR.KEY                     "HIERARCH ESO MPP BPM HGAINTHR";
 MEF.BPM.HGAINTHR.COMMENT                 "high gain threshold for BPM creation";
 MEF.BPM.HGAINTHR                         2.0;
+
+# Keys to identify master bpm product used
+MEF.MASTER.BPM.KEY                     "HIERARCH ESO MPP MBPM";
+MEF.MASTER.BPM.COMMENT                 "Master bpm used";
 
 # Dome flat field processing parameters
 MEF.DOMEFF.FRAME.I.KEY                   "HIERARCH ESO MPP FLAT DOME";
@@ -310,7 +316,7 @@ MEF.MEDIAN.REG.Y2                           2500;
 
 # Master flat field processing parameters
 MEF.MFF.NAME.O                            "WFI_MFF";
-MEF.KERN.HSIZE.KEY                        "HIERARCH MEFPP REC FLAT KERNS";
+MEF.KERN.HSIZE.KEY                        "HIERARCH ESO MPP FLAT KERNS";
 MEF.KERN.HSIZE.COMMENT                    "Smoothing kernel size for sky flat";
 MEF.KERN.HSIZE                             7;
 

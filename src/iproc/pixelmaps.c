@@ -115,13 +115,10 @@ int pixelmap_getbytesize(pixelmap * map)
 void pixelmap_del(pixelmap * p)
 {
     if (p == NULL) return ;
-    e_comment(1, "before free p->data");
     if (p->data != NULL) {
         free(p->data) ;
     }
-    e_comment(1, "before free p");
     free(p) ;
-    e_comment(1, "after free p");
     return ;
 }
 
@@ -233,14 +230,17 @@ void pixelmap_dump(pixelmap * p, char *	filename, qfits_header *   fextra)
 	char			cval[80];
 
     e_comment(1, "In pixelmap_dump...");
-	if (p==NULL || filename==NULL) return ;
+	if (p==NULL || filename==NULL) {
+        e_comment(1, "pixelmap_dump: pixelmap or filename is NULL...");
+    }
 
     /* Create a simple FITS header  */
     if (fextra == NULL) {
+         e_comment(1, "pixelmap_dump: qfits_header * fextra is NULL...");
 	    fh = qfits_header_default(); 
         sprintf(cval, "%d", BPP_8_UNSIGNED);
         qfits_header_add(fh, "BITPIX", cval, "bits per pixel", NULL);
-        e_comment(1, "BITPIX added");
+        e_comment(1, "pixelmap_dump: BITPIX added");
         sprintf(cval, "2");
         qfits_header_add(fh, "NAXIS", cval, "single image", NULL);
         sprintf(cval, "%d", p->lx) ;
@@ -248,7 +248,9 @@ void pixelmap_dump(pixelmap * p, char *	filename, qfits_header *   fextra)
         sprintf(cval, "%d", p->ly) ;
         qfits_header_add(fh, "NAXIS2", cval, "y axis", NULL);
         sprintf(cval, "%d", p->ngoodpix);
+        qfits_header_consoledump(fh);
     } else {
+        e_comment(1, "pixelmap_dump: using fextra...");
         fh = fextra;
         qfits_header_consoledump(fh);
     }
@@ -257,26 +259,33 @@ void pixelmap_dump(pixelmap * p, char *	filename, qfits_header *   fextra)
 	if (!strcmp(filename, "STDOUT")) {
 		out = stdout;
 	} else {
-		out = fopen(filename, "w") ;
+        e_comment(1, "pixelmap_dump: appending pixelmap to file %s", filename);
+		out = fopen(filename, "a") ;
 	}
     if (out == NULL) {
-        e_error("cannot append dump file [%s]", filename) ;
-		qfits_header_destroy(fh);
+        e_comment(1, "pixelmap_dump: error writing to file [%s]", filename) ;
+		/* qfits_header_destroy(fh); */
         return ;
     }
 
 	qfits_header_dump(fh, out);
-	qfits_header_destroy(fh);
+	/* qfits_header_destroy(fh); */
 
-    to_write = p->lx * p->ly ; 
-    written = fwrite(p->data, sizeof(binpix), to_write, out) ;
-	if (out!=stdout)
-		fclose(out) ;
+    if (p!=NULL) {
+        to_write = p->lx * p->ly ; 
+        written = fwrite(p->data, sizeof(binpix), to_write, out) ;
+	    if (out!=stdout)
+		    fclose(out) ;
 
-    if (to_write != written) {
-        e_error("cannot write data to disk (disk full?)") ;
-        return ;
-    }   
+        if (to_write != written) {
+            e_error("pixelmap_dump: cannot write data to disk (disk full?)") ;
+            return ;
+        }   
+    } else {
+        e_comment(1, "pixelmap_dump: only primary headers written to [%s]", filename) ;
+        if (out!=stdout) fclose(out) ;
+    }
+
     qfits_zeropad(filename);
     return ;
 }
@@ -319,7 +328,18 @@ pixelmap * pixelmap_load(char * filename)
 		return NULL ;
 	}
 	
-	/* Load as a normal image */
+	/* Load as a normal image 
+     *
+     *  image_load(filename) = 
+     *              image_loadext(filename,0,0,1)
+     *    @brief    Load an image from a file.
+                @param    filename    Name of the image to load.
+                @param    xtnum       Extension to consider for load (0=main)
+                @param    pnum        Plane number in extension
+                @param    map         File mapping request flag.
+                @return   1 newly allocated image.
+     *
+     * */
 	in = image_load(filename);
 	if (in==NULL) {
 		e_error("cannot load [%s]", filename);
@@ -340,6 +360,79 @@ pixelmap * pixelmap_load(char * filename)
 		pix++;
     }
 	image_del(in);
+    return loaded_map ;
+}
+
+/*----------------------------------------------------------------------------*/
+/**
+  @brief    Load a pixel map from disk into memory.
+  @param    filename    Name of the file to load.
+  @return   1 newly allocated pixelmap.
+
+  Loads a pixel map from na extension of a FITS file into a pixelmap object.
+  A pixel map on disk can be any integer FITS image (BITPIX is 8, 16 or 32).
+  Any non-zero pixel will be read as PIXELMAP_1, any zero pixel will be read 
+  as PIXELMAP_0.
+
+  The returned map must be deallocated using pixelmap_del().
+ */
+/*----------------------------------------------------------------------------*/
+pixelmap * pixelmap_loadext(char * filename, int xtnum)
+{
+    image_t *   in ;
+    pixelmap   *    loaded_map ;
+    char        *   bitpix ;
+    register pixelvalue *   pix ;
+    int             i ;
+    int             ptype ;
+
+    if (filename == NULL) return NULL ;
+
+    /* Check out pixel type in input */
+    bitpix = qfits_query_hdr(filename, "BITPIX");
+    if (bitpix==NULL) {
+        e_error("checking BITPIX for pixelmap [%s]: aborting load", filename);
+        return NULL ;
+    }
+    ptype = atoi(bitpix);
+    if ((ptype!=8) && (ptype!=16) && (ptype!=32)) {
+        e_error("pixelmap [%s] has BITPIX=[%s], not an integer type",
+                filename, bitpix);
+        return NULL ;
+    }
+
+    /* Load as a normal image
+     *
+     *  image_load(filename) =
+     *              image_loadext(filename,0,0,1)
+     *    @brief    Load an image from a file.
+                @param    filename    Name of the image to load.
+                @param    xtnum       Extension to consider for load (0=main)
+                @param    pnum        Plane number in extension
+                @param    map         File mapping request flag.
+                @return   1 newly allocated image.
+     *
+     * */
+    in = image_loadext(filename, xtnum, 0, 1);
+    if (in==NULL) {
+        e_error("cannot load [%s]", filename);
+        return NULL ;
+    }
+    /* Allocate map     */
+    loaded_map = pixelmap_new(in->lx, in->ly) ;
+    /*
+     * Convert pixels to binary values, using the fact that all pixels
+     * are set to ONE in a default pixelmap.
+     */
+    pix = in->data ;
+    for (i=0 ; i<(in->lx * in->ly) ; i++) {
+        if ((*pix)==0) {
+            loaded_map->data[i] = PIXELMAP_0;
+            loaded_map->ngoodpix -- ;
+        }
+        pix++;
+    }
+    image_del(in);
     return loaded_map ;
 }
 

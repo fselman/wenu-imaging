@@ -4,11 +4,16 @@ mefpp:
   instructions.
 - IMPORTANT: update the parameter dump.
 - Create merged BPM?
+    o DONE. BUT STILL NEED TO DEBUG ACTUAL USAGE. IT IS NOT PROPERLY IDENTIFYING BAD PIXELS.
 - Add switch that permits the creation of the bad pixel map
   without needing a bias.
+    o DONE.
 - Add extension name to BPM.
+    o DONE.
 - Check extension names as processing loop over extensions proceeds.
+    o DONE, but no comparison yet,
 - Add ORIGFILE and PROCATG keys to BPM.
+    o DONE.
 
 DONE LIST
 ---------
