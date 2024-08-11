@@ -232,11 +232,13 @@ def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
         for filter_ in filters:
             list_to_swarp = []
             filtered_images = filter(lambda x: select_observations(x, observation, filter_), good_targets_to_swarp)
-            logging.info(observation + "/" + filter_)
+            #logging.info(observation + "/" + filter_)
 
             list_of_filtered_images = list(filtered_images)
             if list_of_filtered_images:
                 swarp_lists_dict[observation + "/" + filter_] = list_of_filtered_images
+
+    #print(swarp_lists_dict.keys())
     return swarp_lists_dict
 
 def run_swarp(swarp_dir_path, frame_list_name, special_pars=None):
