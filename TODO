@@ -1,9 +1,21 @@
-- Verify functioning of WCS solution. Currently on a Mac is not producing the proper shift. It applies same solution to all frames. Perhaps it is writing initial guess and not final solution. CHECK.
+- Calibration notebooks screw up things if run twice. Fix logic,
+  but in the meantime make it copy the Swarp file to the calibration
+  directory instead of craeting a symbolic link.
+
+- Leave only the check_calibration_frame routine in notebook 7? The current one
+  is a sannity check on the ZPCal object but it might not be needed in production.
+
+- Swarp notebook. Add simple way to choose which list of frames to swarp:
+    - create a dictionary with the tags and display it. Then swarp from the
+      dictionary based on idices.
+
+
+- DONE. Verify functioning of WCS solution. Currently on a Mac is not producing the proper shift. It applies same solution to all frames. Perhaps it is writing initial guess and not final solution. CHECK.
 - debug
-- add SDSS as a possible catalogue. DONE.
-- Add possibility to remove files before swarping. Done.
-- Clean atmospheric extinction subroutine. Done.
-- Add configuration for project_directory automatically determined in all notebooks. Done
+- DONE. add SDSS as a possible catalogue. DONE.
+- DONE. Add possibility to remove files before swarping. Done.
+- DONE. Clean atmospheric extinction subroutine. Done.
+- DONE. Add configuration for project_directory automatically determined in all notebooks. Done
   Added tkinter input window and propagated value via file to other notebooks. Done.
 - Debug offset in zp according to plots in notebook 7. DONE.
     - Cleaned code
@@ -14,7 +26,7 @@
         astropy.io.fits is not very simple when it comes to dealing
         with the scaling of the data. Best way seems to be use those keywords.
         STILL TO DO: handle reprocessing by properly handle the old_bscale and new bscale 
-- Save the 07b plot with a different name than the plot created by by the 07_ plot. Done.
+- DONE. Save the 07b plot with a different name than the plot created by by the 07_ plot. Done.
     - done. copying omegacam.paf or wfi.paf into mefpp.paf depending on instrument.
     - dealing with product name strings in product files.
         - done. this is more complicated. The names of the products appear in the
@@ -77,9 +89,9 @@ For Version 2.0
 ---------------
 
 - Do check on BPMs to ensure that proper extensions are used. Currently assuming indexing.
-    o FITS headers almost empty. Not a hint of what software creted them, but more worrysome, they do not contain information about to which extension they c
+    o FIXED. FITS headers almost empty. Not a hint of what software creted them, but more worrysome, they do not contain information about to which extension they c
 orrespond. For V2 we have to fix this.
-    - These files seems to be created with a scrip used to analyze linearity sequences. Should recover the script and clean it.
+    - DONE. These files seems to be created with a scrip used to analyze linearity sequences. Should recover the script and clean it.
 - Investigate the use of default values for CRPIXi values and distortion corrections for cases when we cannot determine a good
   astrometric solution. The SAME_CRVAL key in Scamp should help with this. Whether possible or not should be researched with
   observations at different airmasses for different filters.

@@ -494,7 +494,12 @@ def run_commands(str_cmd, p_shell=True, logfile=None):
 
     """
 
-    logging.info("runCmd: Running command: {0}".format(str_cmd))
+    logging.info("run_commands: Running command: {0}".format(str_cmd))
+
+    # for convenience we save the command in the directory where it runs
+    with open("swarp_command.txt", "w") as text_file:
+        text_file.write("{}".format(str_cmd))
+
     log_path = subprocess.PIPE if logfile is None else open(logfile, "w+")
     univ_lines = None if logfile is None else True
 
