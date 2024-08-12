@@ -1,0 +1,68 @@
+Just Logic
+++++++++++
+All of the options below involve no
+screens at all -- they are simply physical
+objects and some problems to be solved.
+
+Key Goals
+=======================
+The main goals that you
+might pursue with some of the
+options below
+are as follow:
+
+* Understand basic logic
+
+  * item 1
+
+  * item 2
+
+* Use available options
+* Apply problem solving
+* Have fun! :)
+
+or with - sign:
+
+- Understand basic logic
+- Use available options
+- Apply problem solving
+- Have fun! :)
+
+or with hash-dots:
+
+#. Understand basic logic
+
+   * item 1
+
+   * item 2
+
+#. Use available options
+
+   #. item 1
+
+   #. item 2
+
+#. Apply problem solving
+#. Have fun! :)
+
+
+
+Options
+=======
+
+
+
+CodeMaster
+----------
+
+
+Robot Turtles
+-------------
+
+
+
+Primo / Cubetto
+---------------
+
+
+

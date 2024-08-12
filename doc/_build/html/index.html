@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEFPP: Multi-Extension FITS Pre-Processing engine &mdash; MEFPP  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=d7e3758a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dependencies" href="Usage/dependencies.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            MEFPP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Usage/dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Usage/installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Usage/quick_summary.html">Quick summary for the impatient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Usage/tutorial.html">Step-by-step guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Software/description.html">Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Software/paf_file.html">The Parameter File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Software/algorithms.html">Algorithms</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">MEFPP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MEFPP: Multi-Extension FITS Pre-Processing engine</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mefpp-multi-extension-fits-pre-processing-engine">
+<h1>MEFPP: Multi-Extension FITS Pre-Processing engine<a class="headerlink" href="#mefpp-multi-extension-fits-pre-processing-engine" title="Link to this heading"></a></h1>
+<p>MEFPP is a processing software for visual images of mosaic camera.
+It is a branch of the original <code class="docutils literal notranslate"><span class="pre">wfi</span></code> recipes prepared by Nick Devillard
+for the BeoWFI project using the <a class="reference external" href="https://www.eso.org/sci/software/eclipse/">eclipse package</a>. The branch was created
+to support the WFI instrument at ESO’s La Silla Observatory while the author
+was the instrument scientist there.
+Then that branch was further modified to port those recipes to OmegaCAM once
+the author was transferred to Paranal to become the OmegaCam Instrument Scientist.
+One of the characteristic of this package is that it maintains the integrity of
+the Multi-Extension FITS files, MEF files, without splitting them into their extensions. Given the
+complexity of data management when <em>reducing</em> astronomical data it was felt that a
+factor of 8 in the number of files produced is too high a price to pay for reducing the
+complexity of the software by working with simple FITS files. For OmegaCam the
+factor is 32 making the data explosion in reduction even more extreme.</p>
+<p>Although this package could be used stand-alone it is really intended to be use
+with the package PyCAVI, developed with Lientur Celedon. That package permits
+the efficient classification, association, and reduction of mosaic data, specially
+those data received as part of a service mode program or programs. These data has
+the bad characteristics that a single target observation can be split during
+multiple nights spanning months, semesters and even years. In this case the data
+management become the main road-block to efficient work. That package take care
+of all this, and provide a most needed data visualization interface that permits
+the checking of quality control variables. This is specially important when reducing
+WFI data which never had strong support from the ESO quality control group in Garching.</p>
+<p>An example reduction session can be found in the <a class="reference internal" href="Usage/tutorial.html"><span class="doc">Tutorial</span></a> so that a user can get started quickly.
+The program can be used to create the needed calibration files and then reduce the data in one go,
+or to first produce the calibration data, and only then reduce the science data with the
+calibrations previously determined.</p>
+<p>The mefpp pre-processing engine is written in C and based on the Eclipse and qfits
+software package. It modifies extensively the Eclipse wfi package.
+The current version is based in eclipse-5.0.0, qfits-5.4.0, amd mefpp-1.5.0. Everything
+is distributed together as a tar file.</p>
+<p>Note that the <a class="reference internal" href="Usage/quick_summary.html"><span class="doc">best starting point</span></a> is
+the guide for those in a hurry.</p>
+<p>For detailed step-by-step guide
+see <a class="reference internal" href="Usage/tutorial.html#stepbysteptutorial"><span class="std std-ref">the tutorial</span></a> .</p>
+<p>An extensive description of the software cab be found at <a class="reference internal" href="Software/description.html"><span class="doc">Description</span></a>.</p>
+<section id="admonitions">
+<h2>Admonitions<a class="headerlink" href="#admonitions" title="Link to this heading"></a></h2>
+<p>Below I show examples of the use of <em>admonitions</em>:
+note, tip, warning, and danger.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>note: Many kids have problems with screen time
+and if you leave them unattended with a
+screen and they have access to things
+like YouTube or games, they may not stay
+focused on the task at hand.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>tip: Many kids have problems with screen time
+and if you leave them unattended with a
+screen and they have access to things
+like YouTube or games, they may not stay
+focused on the task at hand.</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>caution: Many kids have problems with screen time
+and if you leave them unattended with a
+screen and they have access to things
+like YouTube or games, they may not stay
+focused on the task at hand.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>danger: Many kids have problems with screen time
+and if you leave them unattended with a
+screen and they have access to things
+like YouTube or games, they may not stay
+focused on the task at hand.</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Usage/dependencies.html" class="btn btn-neutral float-right" title="Dependencies" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, T B Done.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

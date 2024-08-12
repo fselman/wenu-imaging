@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JustCode &mdash; Coding with Kids  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=d7e3758a" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Coding with Kids
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/dependencies.html">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/quick_summary.html">Quick summary for the impatient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/tutorial.html">Step-by-step guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Coding with Kids</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">JustCode</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Options/justcode.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="justcode">
+<h1>JustCode<a class="headerlink" href="#justcode" title="Link to this heading"></a></h1>
+<section id="key-goals">
+<h2>Key Goals<a class="headerlink" href="#key-goals" title="Link to this heading"></a></h2>
+</section>
+<section id="options">
+<h2>Options<a class="headerlink" href="#options" title="Link to this heading"></a></h2>
+<section id="scratch">
+<h3>Scratch<a class="headerlink" href="#scratch" title="Link to this heading"></a></h3>
+</section>
+<section id="kidsruby">
+<h3>KidsRuby<a class="headerlink" href="#kidsruby" title="Link to this heading"></a></h3>
+</section>
+<section id="python">
+<h3>Python<a class="headerlink" href="#python" title="Link to this heading"></a></h3>
+<p>Here is some code with the code-block directive:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extinction_coeff</span><span class="p">(</span><span class="n">plambda</span><span class="p">,</span> <span class="n">observatory</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Atmospheric extinction coefficients.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;paranal&#39;</span> <span class="ow">in</span> <span class="n">observatory</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">paranal_extinction_curve</span><span class="p">(</span><span class="n">plambda</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<span class="k">def</span> <span class="nf">paranal_extinction_curve</span><span class="p">(</span><span class="n">lambd</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Patat et al. 2011 A&amp;A 527, A91 Table B.1</span>
+<span class="sd">    https://ui.adsabs.harvard.edu/abs/2011A%26A...527A..91P/abstract</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">extinction_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3325</span><span class="p">,</span> <span class="mf">0.686</span><span class="p">,</span> <span class="mf">0.021</span><span class="p">],</span> <span class="p">[</span><span class="mi">3375</span><span class="p">,</span> <span class="mf">0.606</span><span class="p">,</span> <span class="mf">0.009</span><span class="p">],</span> <span class="p">[</span><span class="mi">3425</span><span class="p">,</span> <span class="mf">0.581</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">3475</span><span class="p">,</span> <span class="mf">0.552</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">],</span> <span class="p">[</span><span class="mi">3525</span><span class="p">,</span> <span class="mf">0.526</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span> <span class="p">[</span><span class="mi">3575</span><span class="p">,</span> <span class="mf">0.504</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span> <span class="p">[</span><span class="mi">3625</span><span class="p">,</span> <span class="mf">0.478</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">3675</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span> <span class="p">[</span><span class="mi">3725</span><span class="p">,</span> <span class="mf">0.430</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span> <span class="p">[</span><span class="mi">3775</span><span class="p">,</span> <span class="mf">0.409</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">],</span> <span class="p">[</span><span class="mi">3825</span><span class="p">,</span> <span class="mf">0.386</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">3875</span><span class="p">,</span> <span class="mf">0.378</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">],</span> <span class="p">[</span><span class="mi">3925</span><span class="p">,</span> <span class="mf">0.363</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">],</span> <span class="p">[</span><span class="mi">3975</span><span class="p">,</span> <span class="mf">0.345</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span> <span class="p">[</span><span class="mi">4025</span><span class="p">,</span> <span class="mf">0.330</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4075</span><span class="p">,</span> <span class="mf">0.316</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span> <span class="p">[</span><span class="mi">4125</span><span class="p">,</span> <span class="mf">0.298</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span> <span class="p">[</span><span class="mi">4175</span><span class="p">,</span> <span class="mf">0.285</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span> <span class="p">[</span><span class="mi">4225</span><span class="p">,</span> <span class="mf">0.274</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4275</span><span class="p">,</span> <span class="mf">0.265</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span> <span class="p">[</span><span class="mi">4325</span><span class="p">,</span> <span class="mf">0.253</span><span class="p">,</span> <span class="mf">0.004</span><span class="p">],</span> <span class="p">[</span><span class="mi">4375</span><span class="p">,</span> <span class="mf">0.241</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4425</span><span class="p">,</span> <span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4475</span><span class="p">,</span> <span class="mf">0.221</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4525</span><span class="p">,</span> <span class="mf">0.212</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4575</span><span class="p">,</span> <span class="mf">0.204</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4625</span><span class="p">,</span> <span class="mf">0.198</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4675</span><span class="p">,</span> <span class="mf">0.190</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4725</span><span class="p">,</span> <span class="mf">0.185</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4775</span><span class="p">,</span> <span class="mf">0.182</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4825</span><span class="p">,</span> <span class="mf">0.176</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4875</span><span class="p">,</span> <span class="mf">0.169</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4825</span><span class="p">,</span> <span class="mf">0.176</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4925</span><span class="p">,</span> <span class="mf">0.162</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">4975</span><span class="p">,</span> <span class="mf">0.157</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5025</span><span class="p">,</span> <span class="mf">0.156</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">5075</span><span class="p">,</span> <span class="mf">0.153</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">5125</span><span class="p">,</span> <span class="mf">0.146</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">5175</span><span class="p">,</span> <span class="mf">0.143</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5225</span><span class="p">,</span> <span class="mf">0.141</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">5275</span><span class="p">,</span> <span class="mf">0.139</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">5325</span><span class="p">,</span> <span class="mf">0.139</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5375</span><span class="p">,</span> <span class="mf">0.134</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5425</span><span class="p">,</span> <span class="mf">0.133</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5475</span><span class="p">,</span> <span class="mf">0.131</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5525</span><span class="p">,</span> <span class="mf">0.129</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5575</span><span class="p">,</span> <span class="mf">0.127</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5625</span><span class="p">,</span> <span class="mf">0.128</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5675</span><span class="p">,</span> <span class="mf">0.130</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5725</span><span class="p">,</span> <span class="mf">0.134</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5775</span><span class="p">,</span> <span class="mf">0.132</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5825</span><span class="p">,</span> <span class="mf">0.124</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">5875</span><span class="p">,</span> <span class="mf">0.122</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">5925</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">5975</span><span class="p">,</span> <span class="mf">0.122</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">6025</span><span class="p">,</span> <span class="mf">0.117</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6075</span><span class="p">,</span> <span class="mf">0.115</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6125</span><span class="p">,</span> <span class="mf">0.108</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6175</span><span class="p">,</span> <span class="mf">0.104</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">6225</span><span class="p">,</span> <span class="mf">0.102</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6275</span><span class="p">,</span> <span class="mf">0.099</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6325</span><span class="p">,</span> <span class="mf">0.095</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6375</span><span class="p">,</span> <span class="mf">0.092</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">6425</span><span class="p">,</span> <span class="mf">0.085</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6475</span><span class="p">,</span> <span class="mf">0.086</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">6525</span><span class="p">,</span> <span class="mf">0.083</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">6575</span><span class="p">,</span> <span class="mf">0.081</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">6625</span><span class="p">,</span> <span class="mf">0.076</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6675</span><span class="p">,</span> <span class="mf">0.072</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6725</span><span class="p">,</span> <span class="mf">0.068</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">6775</span><span class="p">,</span> <span class="mf">0.064</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">7060</span><span class="p">,</span> <span class="mf">0.064</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">7450</span><span class="p">,</span> <span class="mf">0.048</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">],</span> <span class="p">[</span><span class="mi">7940</span><span class="p">,</span> <span class="mf">0.042</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">],</span> <span class="p">[</span><span class="mi">8500</span><span class="p">,</span> <span class="mf">0.032</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">8675</span><span class="p">,</span> <span class="mf">0.030</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">],</span> <span class="p">[</span><span class="mi">8850</span><span class="p">,</span> <span class="mf">0.029</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">],</span> <span class="p">[</span><span class="mi">10000</span><span class="p">,</span> <span class="mf">0.022</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]])</span>
+
+    <span class="c1">#interp_data = np.interp(r_minus_i[clean_color], drew_r_i_ab, drew_r_ha_ab)</span>
+    <span class="n">wavelength</span> <span class="o">=</span> <span class="n">extinction_table</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">extinct</span> <span class="o">=</span> <span class="n">extinction_table</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">extinct_err</span> <span class="o">=</span> <span class="n">extinction_table</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">lambd</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">extinct</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="hopscotch">
+<h3>Hopscotch<a class="headerlink" href="#hopscotch" title="Link to this heading"></a></h3>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, M Y Self.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
