@@ -66,14 +66,26 @@ def solvefield(file_name):
     length! Very bad!
     """
     #dir_name = file_name[:-30] + "_solve_field"
-    print('\n\n\n******************')
+    print('\n\n\n****************** solvefield ***************')
     print(file_name)
-    idx_dir = file_name.rfind('/')
-    dir_name = file_name[:idx_dir+1]
-    print('Directory Name:     ', dir_name)
+    xstring = file_name.replace("//","/")
+    print(xstring)
+    idx_dir = xstring.rfind('/')
+    print(idx_dir)
+    dir_name = xstring[:idx_dir+1]
+    print("Directory Name:  {}   ".format(dir_name))
+    if dir_name[len(dir_name)-1] == '/':
+        idx_dir_name = dir_name[:-1].rfind('/')
+    else:
+        idx_dir_name = dir_name.rfind('/')
+
+    sub_dir_name = dir_name[idx_dir_name:].replace('/','')
+    print("Subdirectory Name: {}    ".format(sub_dir_name))
     print('******************\n\n\n')
+
     logging.debug("solvefield: mef file: {0}".format(dir_name[:-24] + ".fits"))
     logging.debug("file_name: {0}".format(file_name))
+    logging.debug("xstring: {0}".format(xstring))
     logging.debug("dir_name: {0}".format(dir_name))
 
     try:
@@ -100,6 +112,13 @@ def solvefield(file_name):
                           "\n      --new-fits " + file_name[:-5] + "_newwcs.fits " + \
                           "\n      " + file_name
     logging.debug("solvefield: {0}".format(solve_command_print))
+
+    # We save the command in the directory where it is running
+    command_file = dir_name+"/"+"solvefield_command_"+sub_dir_name+".txt"
+    print("command-file: {}".format(command_file))
+    with open(command_file, "w") as text_file:
+        text_file.write("{}".format("/usr/local/opt/astrometry-net/bin/solve-field "+solve_command_print))
+
     os.system("/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars)
 
 

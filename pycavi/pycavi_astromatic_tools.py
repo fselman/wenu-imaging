@@ -198,6 +198,50 @@ def select_observations(image, observation, filt):
     else:
         return False
 
+def get_scamp_lists_dict(reduced_dir, reject_observations, filters_to_scamp):
+    """
+    Returns a dictionary, indexed by <target>/<filter> with the list of all
+    solve-field wcs output files of the form *_wcs.fits for that combination
+    of targets and filters.
+    """
+    observations = []
+    filters = []
+    targets_to_scamp = []
+    list_of_solve_wcs_files = glob.glob(reduced_dir+"/**/*_pre/*_wcs.fits", recursive=True)
+    for target in list_of_solve_wcs_files:
+        targets_to_scamp.append(target)
+        observations.append(target.split("/")[-5])
+        filters.append(target.split("/")[-4])
+
+    observations = set(observations)
+
+
+    good_targets_to_scamp = []
+    for atarget in targets_to_scamp:
+        rejected = False
+        for a_reject in reject_observations:
+            #print(a_reject, atarget)
+            if a_reject in atarget:
+                logging.info('Bad observation, rejecting: {}'.format(atarget))
+                rejected = True
+        if not rejected:
+            good_targets_to_scamp.append(atarget)
+
+    scamp_lists_dict = {}
+    for observation in observations:
+        for filter_ in filters:
+            list_to_scamp = []
+            filtered_images = filter(lambda x: select_observations(x, observation, filter_), good_targets_to_scamp)
+            #logging.info(observation + "/" + filter_)
+
+            list_of_filtered_images = list(filtered_images)
+            if list_of_filtered_images:
+                scamp_lists_dict[observation + "/" + filter_] = list_of_filtered_images
+
+    #print(swarp_lists_dict.keys())
+    return scamp_lists_dict
+
+
 def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
     """
     Returns a dictionary, indexed by <target>/<filter> with the list of all

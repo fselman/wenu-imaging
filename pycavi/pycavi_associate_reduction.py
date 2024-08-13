@@ -755,6 +755,10 @@ def run_commands(str_cmd, p_shell=True, my_env=None, logfile=None):
     log_path = subprocess.PIPE if logfile is None else open(logfile, "w+")
     univ_lines = None if logfile is None else True
 
+    # We save the command in the directory where it is running
+    with open("mefpp_command.txt", "w") as text_file:
+        text_file.write("{}".format(str_cmd))
+
     try:
         if my_env is None:
             p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE, stdout=log_path,
@@ -1218,6 +1222,7 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
 
         basepath = sci_part.base_path
         sci_list = basepath + '/science.list'
+        sci_list_name = 'science.list'
 
         sci_list_exists = False
         if Path(sci_list).exists():
@@ -1227,6 +1232,7 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
             sci_list = basepath + '/std.list'
             if Path(sci_list).exists():
                 sci_list_exists = True
+                sci_list_name = 'std.list'
 
         # copying appropriate parameter file, paf file, to basepath directory
         mefpp_paf_exists = copy_paf(mefpp_dir, basepath, instrument)
@@ -1268,9 +1274,10 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
             command_line = 'nohup ' + mefpp_dir + '/bin/mefpp ' + \
                            ' --bias ' + instrument.bias_prefix+'_1x1.fits ' + \
                            ' --mff ' + instrument.mff_prefix+'_' + sci_part.filter + '_1x1.fits ' + \
-                           ' --science science.list '
+                           ' --science ' + sci_list_name
             print('\n', command_line)
             os.chdir(basepath)
+
             my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
             rcode =  run_commands(command_line, p_shell=True, logfile='mefpp.log', my_env=my_env)
 
