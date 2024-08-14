@@ -10,6 +10,8 @@ from tkinter import filedialog
 
 import astropy.constants as constants
 
+import subprocess
+
 # Configuration resources
 
 def init_pycavi_config(raw_data_dir=None, project_dir=None):
@@ -390,6 +392,120 @@ def pycavi_qc_plot_hist(array, label='x-val', nbins=30, x_range="8-deciles", fig
 
     if figname is not None:
         plt.savefig(figname)
+
+
+# Pycavi centralized run_command
+# ======================================================================
+# A utility function
+# ======================================================================
+def run_command(str_cmd, p_shell=True, my_env=None, logfile=None, cmdfile=None):
+    """
+    A wrapper to run system commands.
+
+    Parameters
+    ----------
+    str_cmd: str
+      Command string to be executed in the shell
+
+    p_shell: bool
+      If True (default), command will be executed through the shell, and all
+      cout/cerr messages will be available.
+      If False, exception is the only way to find out problems during the call.
+
+    logfile: str
+        If given will define the path of the file where the stdout and stderr will be printed.
+
+    Returns
+    -------
+      0 if some error, or 1 if all was OK
+
+    """
+
+    # Writing the command to a text file can be used for re-runnning it
+    # when solving problems.
+    print("run_command: cmdfile: {}".format(cmdfile))
+    print("run_command: logfile: {}".format(logfile))
+    print("run_command: str_cmd: {}".format(str_cmd))
+    print("run_command: cwd: {}\n\n".format(os.getcwd()))
+
+    if cmdfile is not None:
+        print("run_command: cmdfile: {}".format(cmdfile))
+        with open(cmdfile, "w") as text_file:
+            print("run_command: str_cmd writting to command file {}".format(cmdfile))
+            text_file.write("{}".format(str_cmd))
+            print("run_command: str_cmd written to command file {}".format(cmdfile))
+    else:
+        print("run_command: cmdfile is None")
+
+    print("run_command: Running command: {0}".format(str_cmd))
+
+    log_path = subprocess.PIPE if logfile is None else open(logfile, "w+")
+    print("run_command: log_path set")
+    univ_lines = None if logfile is None else True
+    print("run_command: univ_lines set")
+
+    #try:
+    print("run_command: running...")
+    if my_env is None:
+        p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE, stdout=log_path,
+                             stderr=log_path, close_fds=True, universal_newlines=univ_lines)
+    else:
+        p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE, stdout=log_path,
+                                 stderr=log_path, close_fds=True, universal_newlines=univ_lines, env=my_env)
+    print("run_command: done.")
+    #except Exception as e:
+        #logging.info("run_command: some error while running command...")
+        #print(e)
+        #raise
+
+    # wait for the process to finish
+    while True:
+        if p.poll() is not None:
+            break
+
+    if logfile is not None:
+        log_path.close()
+
+    # Warning
+    # We use communicate() rather than .stdin.write, .stdout.read or .stderr.read
+    # to avoid deadlocks due to any of the other OS pipe buffers filling up and
+    # blocking the child process.(Python Ref.doc)
+
+    # modified by me (Lientur) to allow the creation of a txt logfile somewhere
+    # reads this logfile and look for the errors
+
+    if logfile is None:
+        (stdoutdata, stderrdata) = p.communicate()
+        err = stdoutdata.decode('ascii') + " " + stderrdata.decode('ascii')
+
+        # IMPORTANT: Next checking (only available when shell=True) not always detect all kind of errors !!
+        if err.count('WARNING: Significant inaccuracy'):
+            logging.info("run_command: can not get accurate astrometric calibration")
+            return 2
+        elif (err.count('ERROR ') or err.count('error ') or err.count("Error ")
+              or err.count('*Error*')
+              or err.count('Segmentation fault') or err.count("command not found")
+              or err.count('No source found')
+              or err.count("No such file or directory")
+              or err.count('WARNING: Not enough matched detections')  # SCAMP
+              or err.count('WARNING: Significant inaccuracy likely to occur in projection')):  # SCAMP
+            logging.info("run_command: an error happened while running command --> {0}".format(err))
+            logging.info(stderrdata.decode("ascii"))
+            return 1  # ERROR
+        else:
+            logging.info(stdoutdata.decode('ascii'))
+            return 0  # NO ERROR
+
+    else:
+        with open(logfile, "r") as f:
+            err = f.readlines()
+
+        for line in err:
+            if "Error" in line:
+                logging.info("An error happened while running command --> {0}".format(line))
+                return 1
+
+        return 0
 
 
 if __name__ == "__main__":

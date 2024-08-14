@@ -1,3 +1,6 @@
+- ZPcal notebook: display all target/filters and provide
+  a way to chose which to calibrate.
+
 - Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.

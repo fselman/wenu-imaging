@@ -45,7 +45,6 @@ import builtins
 
 import sys
 import os
-import subprocess
 try:
     import exceptions
 except ImportError:
@@ -59,6 +58,7 @@ import subprocess
 
 # PAPI modules
 from papi.papi_misc_paLog import log
+from pycavi.pycavi_tools import run_command
 
 
 # ======================================================================
@@ -545,7 +545,8 @@ class SCAMP:
         
         #print commandline
 
-        rcode = runCmd(commandline)
+        rcode = run_command(commandline, p_shell=True, logfile="scamp.log", cmdfile="scamp.txt")
+        #rcode = runCmd(commandline)
 
         if (rcode==1):
             #print "ERROR!!!"

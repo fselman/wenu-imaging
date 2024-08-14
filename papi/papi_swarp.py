@@ -10,6 +10,8 @@ try:
 except ImportError:
     import builtins as exceptions
 
+from pycavi.pycavi_tools import run_command
+
 # ################
 # SWarp class start here
 # ################
@@ -311,6 +313,7 @@ class SWarp(object):
 
         self.swarp_dir = swarp_dir
         self.logfile = self.swarp_dir + "/SWarp_logfile.log"
+        self.cmdfile = self.swarp_dir + "/swarp_command.txt"
 
         self.config = (
             dict([(k, copy.deepcopy(SWarp._SW_config[k]["value"]))
@@ -446,7 +449,7 @@ class SWarp(object):
         commandline = (
                 self.program + " -c " + self.config['CONFIG_FILE'] + " " + ext_args + " " + my_files)
 
-        rcode = run_commands(commandline, logfile=self.logfile)
+        rcode = run_command(commandline, logfile=self.logfile, cmdfile=self.cmdfile)
 
         if rcode != 0:
             raise Exception("SWARP command [%s] failed." % str(commandline))
@@ -468,9 +471,9 @@ class SWarp(object):
             pass
 
 
-# ======================================================================
-# A utility function
-# ======================================================================
+# ===========================================================================
+# A utility function DEPRECATED - now we use the one provided by pycavi_tools
+# ===========================================================================
 def run_commands(str_cmd, p_shell=True, logfile=None):
     """
     A wrapper to run system commands.

@@ -2,9 +2,12 @@ import os
 import glob
 import logging
 import numpy as np
+import subprocess
 import multiprocessing
 from textwrap import wrap
 from astropy.io import fits
+
+from pycavi import pycavi_tools
 
 def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_astrometry: bool = False):
     """
@@ -67,32 +70,40 @@ def solvefield(file_name):
     """
     #dir_name = file_name[:-30] + "_solve_field"
     print('\n\n\n****************** solvefield ***************')
-    print(file_name)
-    xstring = file_name.replace("//","/")
-    print(xstring)
-    idx_dir = xstring.rfind('/')
-    print(idx_dir)
-    dir_name = xstring[:idx_dir+1]
-    print("Directory Name:  {}   ".format(dir_name))
-    if dir_name[len(dir_name)-1] == '/':
-        idx_dir_name = dir_name[:-1].rfind('/')
-    else:
-        idx_dir_name = dir_name.rfind('/')
+    dir_name = os.path.dirname(file_name)
+    sub_dir_name = os.path.basename(dir_name)
+    file_name = os.path.basename(file_name)
+    print("dir_name2: {}  \nfile_name2: {} \nsub_dir_name: {}".format(dir_name,file_name, sub_dir_name))
 
-    sub_dir_name = dir_name[idx_dir_name:].replace('/','')
-    print("Subdirectory Name: {}    ".format(sub_dir_name))
+    #xstring = file_name.replace("//","/")
+    #print(xstring)
+    #idx_dir = xstring.rfind('/')
+    #print(idx_dir)
+    #dir_name = xstring[:idx_dir+1]
+    #print("Directory Name:  {}   ".format(dir_name))
+    #if dir_name[len(dir_name)-1] == '/':
+        #idx_dir_name = dir_name[:-1].rfind('/')
+    #else:
+        #idx_dir_name = dir_name.rfind('/')
+
+    #sub_dir_name = dir_name[idx_dir_name:].replace('/','')
+    #print("Subdirectory Name: {}    ".format(sub_dir_name))
+    #print("solvefield: mef file: {0}".format(dir_name[:-24] + ".fits"))
+    #print("file_name: {0}".format(file_name))
+    #print("xstring: {0}".format(xstring))
+    #print("dir_name: {0}".format(dir_name))
+    #print('******************\n\n\n')
+
+    # Now we change to the extension directory. This will make the ptah strings much shorter.
+    cwd = os.getcwd()
+    os.chdir(dir_name)
+    print("solvefield: running solve-field in directory: {}".format(os.getcwd()))
     print('******************\n\n\n')
-
-    logging.debug("solvefield: mef file: {0}".format(dir_name[:-24] + ".fits"))
-    logging.debug("file_name: {0}".format(file_name))
-    logging.debug("xstring: {0}".format(xstring))
-    logging.debug("dir_name: {0}".format(dir_name))
-
     try:
         hdu_header = fits.getheader(file_name, ext=0)
     except Exception as e:
         print(e)
-        logging.debug("solvefield: problem extracting keys from file {0}. Aborting".format(file_name))
+        logging.info("solvefield: problem extracting keys from file {0}. Aborting".format(file_name))
         return
 
     crval1 = hdu_header["CRVAL1"]
@@ -100,26 +111,52 @@ def solvefield(file_name):
     crpix1 = hdu_header["CRPIX1"]
     crpix2 = hdu_header["CRPIX2"]
 
+    # plate scale from Swarp mosaic
+    try:
+        cdi_j = np.array(pycavi_tools.keys_from_header(hdu_header, ['CD1_1', 'CD1_2', 'CD2_1', 'CD2_2']))
+        sx = np.sqrt(cdi_j[0] ** 2 + cdi_j[1] ** 2) * 3600.0
+        sy = np.sqrt(cdi_j[2] ** 2 + cdi_j[3] ** 2) * 3600.0
+        plate_scale = (sx + sy) / 2.0  # plate scale in arcseconds
+        logging.info("solve_field: input plate_scale: %6.3f (sx: %6.3f - sy: %6.3f) arcsec/pix" % (
+            plate_scale, sx, sy))
+
+        scale_low = 0.9*plate_scale
+        scale_high = 1.1*plate_scale
+    except Exception  as e:
+        print(e)
+        scale_low=0.1
+        scale_high=0.5
+
+    logging.info("solve_field: plate scales used in call to solvefield: scale_low: {} -- scale_high: {}", scale_low, scale_high)
+
+
     pos_pars = "--ra " + "%3.6f" % crval1 + " --dec " + "%3.6f" % crval2 + " --radius=1.0 "
-    scale_pars = " --scale-units arcsecperpix --scale-low 0.18 --scale-high 0.25 --overwrite"
+    scale_pars = " --scale-units arcsecperpix --scale-low "+ "%4.2f"%scale_low + " --scale-high " + "%4.2f"%scale_high +" --overwrite"
     wcs_pars = " --crpix-x " + "%5d" % crpix1 + " --crpix-y " + "%5d" % crpix2 + " --no-tweak "
-    solve_command_pars = " -D " + dir_name + " " + pos_pars + scale_pars + wcs_pars + "--no-plots --new-fits " + \
+    #solve_command_pars = " -D " + dir_name + " " + pos_pars + scale_pars + wcs_pars + "--no-plots --new-fits " + \
+                         #file_name[:-5] + "_newwcs.fits " + file_name
+    solve_command_pars = " " + pos_pars + scale_pars + wcs_pars + "--no-plots --new-fits " + \
                          file_name[:-5] + "_newwcs.fits " + file_name
-    solve_command_print = " -D " + dir_name + \
-                          "\n       " + pos_pars + \
-                          "\n     " + scale_pars + \
-                          "\n     " + wcs_pars + \
-                          "\n      --new-fits " + file_name[:-5] + "_newwcs.fits " + \
-                          "\n      " + file_name
-    logging.debug("solvefield: {0}".format(solve_command_print))
+    #solve_command_print = " -D " + dir_name + \
+                          #"\n       " + pos_pars + \
+                          #"\n     " + scale_pars + \
+                          #"\n     " + wcs_pars + \
+                          #"\n      --new-fits " + file_name[:-5] + "_newwcs.fits " + \
+                          #"\n      " + file_name
+    #print("solvefield: {0}".format(solve_command_print))
 
     # We save the command in the directory where it is running
-    command_file = dir_name+"/"+"solvefield_command_"+sub_dir_name+".txt"
-    print("command-file: {}".format(command_file))
-    with open(command_file, "w") as text_file:
-        text_file.write("{}".format("/usr/local/opt/astrometry-net/bin/solve-field "+solve_command_print))
+    command_file = "solvefield_command_"+sub_dir_name+".txt"
 
-    os.system("/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars)
+    str_cmd = "/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars
+    log_file = "solvefield_command_"+sub_dir_name+".log"
+
+    # run_command(str_cmd, p_shell=True, logfile=None, cmdfile=None)
+    print("solvefield: {0}".format(str_cmd))
+    pycavi_tools.run_command(str_cmd, p_shell=True, my_env=None, logfile=log_file, cmdfile=command_file)
+    #os.system("/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars)
+
+    os.chdir(cwd)
 
 
 def run_solve_field(argv: str, instrument, cpu_count: int):
