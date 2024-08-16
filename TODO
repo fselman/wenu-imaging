@@ -1,4 +1,4 @@
-- ZPcal notebook: display all target/filters and provide
+- DONE. ZPcal notebook: display all target/filters and provide
   a way to chose which to calibrate.
 
 - Calibration notebooks screw up things if run twice. Fix logic,
@@ -8,7 +8,7 @@
 - Leave only the check_calibration_frame routine in notebook 7? The current one
   is a sannity check on the ZPCal object but it might not be needed in production.
 
-- Swarp notebook. Add simple way to choose which list of frames to swarp:
+- Done. Swarp notebook. Add simple way to choose which list of frames to swarp:
     - create a dictionary with the tags and display it. Then swarp from the
       dictionary based on idices.
 

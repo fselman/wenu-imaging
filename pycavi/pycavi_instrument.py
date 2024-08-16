@@ -178,7 +178,7 @@ class Instrument:
                     product_name = fields[1].strip(';').strip('"')
                     break
         if found_key:
-            print("{}: {}".format(key_str, product_name))
+            #print("{}: {}".format(key_str, product_name))
             return product_name
         else:
             raise Exception("key: {} not found in {}".format(key, mefpp_paf))

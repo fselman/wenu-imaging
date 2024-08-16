@@ -9,7 +9,7 @@ from astropy.io import fits
 
 from pycavi import pycavi_tools
 
-def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_astrometry: bool = False):
+def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_astrometry: bool = False, solve_field_path: str = None):
     """
     Run astrometry over a given observation directory.
     For each _pre_wcs fits image within the folder, it will create an independent fits image for each extension,
@@ -55,14 +55,14 @@ def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_as
 
         # Solving
         logging.info("\n\n\nSolving field {0}".format(file_name[:-5]))
-        run_solve_field(file_name[:-5], instrument, cpu_count=cpu_count)
+        run_solve_field(file_name[:-5], instrument, cpu_count=cpu_count, solve_field_path=solve_field_path)
 
         # Creating WCS file
         logging.info("Creating wcs mosaic file {0}\n\n\n".format(file_name))
         create_wcs_frame(os.path.abspath(file_name), instrument, mode="continue")
 
 
-def solvefield(file_name):
+def solvefield(file_name, solve_field_path):
     """
     Run command solve-field in directory dir_name. Note that the
     dir_name is obtained from the file name assuming a fixed
@@ -148,26 +148,26 @@ def solvefield(file_name):
     # We save the command in the directory where it is running
     command_file = "solvefield_command_"+sub_dir_name+".txt"
 
-    str_cmd = "/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars
+    str_cmd = solve_field_path + " " + solve_command_pars
     log_file = "solvefield_command_"+sub_dir_name+".log"
 
     # run_command(str_cmd, p_shell=True, logfile=None, cmdfile=None)
-    print("solvefield: {0}".format(str_cmd))
+    print("solvefield: command: {0}".format(str_cmd))
     pycavi_tools.run_command(str_cmd, p_shell=True, my_env=None, logfile=log_file, cmdfile=command_file)
     #os.system("/usr/local/opt/astrometry-net/bin/solve-field " + solve_command_pars)
 
     os.chdir(cwd)
 
 
-def run_solve_field(argv: str, instrument, cpu_count: int):
+def run_solve_field(argv: str, instrument, cpu_count: int, solve_field_path=None):
     filename = argv + ".fits"
     dir_name = os.path.abspath(argv)
     try:
         # Create target Directory
         os.mkdir(dir_name)
-        logging.debug("run_solve_field: directory {0} created ".format(dir_name))
+        logging.info("run_solve_field: directory {0} created ".format(dir_name))
     except FileExistsError:
-        logging.debug("run_solve_field: directory {0} already exists".format(dir_name))
+        logging.info("run_solve_field: directory {0} already exists".format(dir_name))
 
     # here we create a directory where we will save all data from solve-field
     # It saves each extension in the fits images as an individual fits image in a new folder
@@ -189,10 +189,10 @@ def run_solve_field(argv: str, instrument, cpu_count: int):
         try:
             # Create target Directory
             os.mkdir(solve_field_dir_name)
-            logging.debug("run_solve_field: solve-field directory {0} Created ".format(solve_field_dir_name))
+            logging.info("run_solve_field: solve-field directory {0} Created ".format(solve_field_dir_name))
         except Exception as e:
-            logging.debug(e)
-            logging.debug("run_solve_field: solve-field directory {0} already exists".format(solve_field_dir_name))
+            logging.info(e)
+            logging.info("run_solve_field: solve-field directory {0} already exists".format(solve_field_dir_name))
         fits.writeto(solve_field_dir_name + "/" + ext_file_name + ".fits", an_hdu.data, an_hdu.header, overwrite=True)
     hdu_list.close()
     logging.info("run_solve_field: processing extensions...")
@@ -205,24 +205,24 @@ def run_solve_field(argv: str, instrument, cpu_count: int):
         solve_field_dir_name = dir_name + "/" + ext_file_name + "_solve_field/"
         if not os.path.exists(solve_field_dir_name + "/" + ext_file_name + ".wcs"):
             file_name = solve_field_dir_name + "/" + ext_file_name + ".fits"
-            logging.debug("run_solve_field: {0}: adding extension: {1} to processpool: ".format(filename, extension, ))
-            list_of_filenames.append(file_name)
-            processlist.append([file_name])
+            logging.info("run_solve_field: {0}: adding extension: {1} to processpool: ".format(filename, extension, ))
+            list_of_filenames.append((file_name, solve_field_path))
+            processlist.append([file_name, solve_field_path])
             logging.debug("added.")
     logging.info("run_solve_field: number of extensions: {:02d}".format(len(list_of_filenames)))
 
     try:
-        logging.debug("run_solve_field: creating processing pool.")
+        logging.info("run_solve_field: creating processing pool.")
         pool = multiprocessing.Pool(processes=cpu_count)
-        logging.debug("...done.")
+        logging.info("...done.")
     except Exception as e:
-        logging.debug("exception found attempting multiprocessing pool...")
+        logging.info("exception found attempting multiprocessing pool...")
         print(e)
         pool = multiprocessing.Pool(processes=1)
     num_tasks = len(processlist)
-    logging.debug("run_solve_field: number of tasks: {:02d}".format(num_tasks))
+    logging.info("run_solve_field: number of tasks: {:02d}".format(num_tasks))
     #pool.imap_unordered(solvefield, list_of_filenames)
-    result = pool.map_async(solvefield, list_of_filenames)
+    result = pool.starmap_async(solvefield, list_of_filenames)
     result.wait()
 
     pool.close()

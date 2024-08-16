@@ -337,7 +337,7 @@ class SWarp(object):
         # -- Finding SWARP program and its version
         # first look for 'swarp'
 
-        candidates = ['/opt/local/bin/swarp', 'swarp', "SWarp"]
+        candidates = ['swarp', "SWarp"]
 
         if path:
             candidates = [path]

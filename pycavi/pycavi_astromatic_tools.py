@@ -149,7 +149,7 @@ def prepare_to_scamp(target, redo_scamp):
             ready_to_scamp = False
     return ready_to_scamp
         
-def run_scamp_on_target(target, scamp_dir_path, special_pars):
+def run_scamp_on_target(target, scamp_dir_path, special_pars, scamp_path=None):
     """
     Run Scamp over the wcs.fits image.
     It creates a .ahead file from the image header, and uses the catalogue output by Sextractor.
@@ -175,7 +175,7 @@ def run_scamp_on_target(target, scamp_dir_path, special_pars):
         else:
             logging.info("**** Wrong key passed to scamp: {}".format(key))
     
-    scamp.run(file_cat, updateconfig=True, clean=False)  # run scamp on the single image
+    scamp.run(file_cat, updateconfig=True, clean=False, path=scamp_path)  # run scamp on the single image
     
     logging.info("Scamp finished without problems. Check the diagnosis plots for more information.")
 
@@ -241,6 +241,42 @@ def get_scamp_lists_dict(reduced_dir, reject_observations, filters_to_scamp):
     #print(swarp_lists_dict.keys())
     return scamp_lists_dict
 
+def scamp_lists(reduced_dir, reject_observations, filters_to_scamp):
+    """
+    Returns a dictionary indexed with a string made from the observation
+    name and filter, the observation_tag or data partition, with the list
+    of files for each observation tag.
+
+    The purpose of partitioning the data this way is to allow the selection
+    of which data partition to scamp. We only allow scamping per data partition.
+    """
+    scamp_lists = get_scamp_lists_dict(reduced_dir, reject_observations, filters_to_scamp)
+    #print(scamp_lists.keys())
+    observation_tags = list(set(scamp_lists.keys()))
+    observation_tags.sort()
+    for i in range(len(observation_tags)):
+        logging.info("scamp_lists: index: {} -- observation_tag: {}".format(i, observation_tags[i]))
+
+    files_to_scamp = {}
+    for i in range(len(observation_tags)):
+        targets_to_scamp = glob.glob(reduced_dir+"/**/"+observation_tags[i]+"/*/*_pre/*_wcs.fits", recursive=True)
+        #print(i, observation_tags[i])
+        files_to_scamp[observation_tags[i]] = []
+        for j in range(len(targets_to_scamp)):
+            files_to_scamp[observation_tags[i]].append(targets_to_scamp[j])
+
+    print_files = False
+    for i in range(len(observation_tags)):
+        if print_files:
+            print("index: {} -- partition tag: {} -- nfiles: {} ".format(i, observation_tags[i], len(files_to_scamp[sci_observation_tags[i]])))
+        for afile in files_to_scamp[observation_tags[i]]:
+            if print_files:
+                print("   ---------------> ", os.path.basename(targets_to_scamp[j]))
+            else:
+                pass
+
+    return files_to_scamp
+
 
 def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
     """
@@ -285,7 +321,7 @@ def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
     #print(swarp_lists_dict.keys())
     return swarp_lists_dict
 
-def run_swarp(swarp_dir_path, frame_list_name, special_pars=None):
+def run_swarp(swarp_dir_path, frame_list_name, special_pars=None, path=None):
     """Run swarp on the output of scamp for a given observation and filter."""
     os.chdir(swarp_dir_path)
     swarp = SWarp(swarp_dir_path)
@@ -307,7 +343,7 @@ def run_swarp(swarp_dir_path, frame_list_name, special_pars=None):
                 logging.info("**** Wrong key passed to swarp: {}".format(key))
 
     logging.info("Running Swarp on framelist")
-    swarp.run('@'+ frame_list_name, updateconfig=True, clean=False)
+    swarp.run('@'+ frame_list_name, updateconfig=True, clean=False, path=path)
 
     # update the headers of the swarped image
     # The reference header image is the first image
@@ -351,7 +387,7 @@ def prepare_to_swarp(images_list, swarp_dir_path, frames_list_name, special_pars
     that will be swarped.
 
     Returns the name of the file listing the .head files if succesful. Otherwise
-    it reurns None.
+    it returns None.
     """
     #print(images_list[0])
     first_image_path = images_list[0]
@@ -380,10 +416,21 @@ def prepare_to_swarp(images_list, swarp_dir_path, frames_list_name, special_pars
     current_dir = os.getcwd()
     os.chdir(swarp_dir_path)
     logging.info("Creating frame list to swarp in directory: {}".format(os.getcwd()))
-    with open(frames_list_name, "w") as f:
-        for image in images_list:
-            f.write(image[:-5]+".fits\n")
-        return frames_list_name
+    # Version1: we give only the basenames in the framelist but create symlinks in the swarp dir.
+    #           tested but if is no different that the simpler version below.
+    #with open(frames_list_name, "w") as f:
+    #    for image in images_list:
+    #        f.write(os.path.basename(image[:-5]+".fits")+"\n")
+    #        os.symlink(image[:-5]+".fits", os.path.basename(image[:-5]+".fits"))
+    #        os.symlink(image[:-5]+".head", os.path.basename(image[:-5]+".head"))
+    #    return frames_list_name
+
+    # Version2: we give the full path in the framelist
+    if frames_list_name is not None:
+        with open(frames_list_name, "w") as f:
+            for image in images_list:
+                f.write(image[:-5]+".fits"+"\n")
+            return frames_list_name
 
     # back to the original folder
     os.chdir(current_dir)

@@ -420,7 +420,7 @@ class SCAMP:
         # -- Finding scamp program and its version
         # first look for 'scamp'
 
-        candidates = ['/opt/local/scamp/bin/scamp', 'scamp']
+        candidates = ['scamp']
 
         if (path):
             candidates = [path]
