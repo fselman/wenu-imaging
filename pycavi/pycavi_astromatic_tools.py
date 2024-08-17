@@ -209,9 +209,11 @@ def get_scamp_lists_dict(reduced_dir, reject_observations, filters_to_scamp):
     targets_to_scamp = []
     list_of_solve_wcs_files = glob.glob(reduced_dir+"/**/*_pre/*_wcs.fits", recursive=True)
     for target in list_of_solve_wcs_files:
-        targets_to_scamp.append(target)
-        observations.append(target.split("/")[-5])
-        filters.append(target.split("/")[-4])
+        zfilter = target.split("/")[-4]
+        if (zfilter in filters_to_scamp) or not filters_to_scamp:     # if the list of input filters is empty we do all of them
+            targets_to_scamp.append(target)
+            observations.append(target.split("/")[-5])
+            filters.append(zfilter)
 
     observations = set(observations)
 
@@ -238,7 +240,6 @@ def get_scamp_lists_dict(reduced_dir, reject_observations, filters_to_scamp):
             if list_of_filtered_images:
                 scamp_lists_dict[observation + "/" + filter_] = list_of_filtered_images
 
-    #print(swarp_lists_dict.keys())
     return scamp_lists_dict
 
 def scamp_lists(reduced_dir, reject_observations, filters_to_scamp):
@@ -289,9 +290,11 @@ def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
     targets_to_swarp = []
     list_of_scamp_head_files = glob.glob(reduced_dir+"/**/*_pre/*_wcs.head", recursive=True)
     for target in list_of_scamp_head_files:
-        targets_to_swarp.append(target)
-        observations.append(target.split("/")[-5])
-        filters.append(target.split("/")[-4])
+        zfilter = target.split("/")[-4]
+        if (zfilter in filters_to_swarp) or not filters_to_swarp:     # if the list of input filters is empty we do all of them
+            targets_to_swarp.append(target)
+            observations.append(target.split("/")[-5])
+            filters.append(zfilter)
 
     observations = set(observations)
 
@@ -318,7 +321,6 @@ def get_swarp_lists_dict(reduced_dir, reject_observations, filters_to_swarp):
             if list_of_filtered_images:
                 swarp_lists_dict[observation + "/" + filter_] = list_of_filtered_images
 
-    #print(swarp_lists_dict.keys())
     return swarp_lists_dict
 
 def run_swarp(swarp_dir_path, frame_list_name, special_pars=None, path=None):

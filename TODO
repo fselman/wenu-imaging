@@ -1,3 +1,6 @@
+- Allow selection or do all in notebooks 7 and 7b
+- Add path to sextractor in notebooks that use it.
+- Add creation of region files for ds9 if user so chooses.
 - DONE. ZPcal notebook: display all target/filters and provide
   a way to chose which to calibrate.
 
