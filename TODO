@@ -1,6 +1,6 @@
 mefpp:
 
-- Add documentation web page in fselman.github.io/mefpp.
+- Add documentation web page in fselman.github.io/mefpp. 
 - IMPORTANT: clean usage message: currently gives the wrong
   instructions.
 - IMPORTANT: update the parameter dump.
