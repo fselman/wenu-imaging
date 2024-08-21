@@ -1,7 +1,6 @@
 eclipse.log
 *.o
 *.a
-bin
 
 # python stuff
 **/*.ipynb_checkpoints
