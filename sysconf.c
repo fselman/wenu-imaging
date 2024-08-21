@@ -800,7 +800,7 @@ int main(argc, argv)
             		strcpy(config.qfits_path, strchr(argv[i], '=')+1);
 		} else if (!strncmp(argv[i], "--prefix=", 9)) {
                         strcpy(config.prefix_path, strchr(argv[i], '=')+1);
-			config.prefix = config_abspath(config.prefix_path);
+			config.prefix = config.prefix_path;
 		} else if (!strncmp(argv[i], "--os=", 5)) {
             		strcpy(sysname, argv[i]+5);
             	if (!strcmp(sysname, "linux")) {

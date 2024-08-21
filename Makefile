@@ -104,6 +104,9 @@ clean veryclean:
 	@(if test -d ./qfits5 ; then\
 	(echo "cleaning qfits5 tree..." ; cd qfits5 ; $(MAKE) $@); \
 	else (true) fi)
+	@(if test -f ./config.make ; then\
+    (echo "cleaning config.make." ; rm ./config.make); \
+    else (true) fi)
 
 install:
 	echo "Installing eclipse and mefpp in " $(prefix)
