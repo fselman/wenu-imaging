@@ -31,7 +31,7 @@
 #define MAXSTRSZ    512
 #define PATHSZ      1024
 
-#define MACROS_FILE"config.make"
+#define MACROS_FILE "config.make"
 #define HEADER_FILE "config.h"
 #define PREFIX_DEFAULT "/opt/local/eclipse"
 
@@ -75,7 +75,8 @@ static struct {
     /* Compile with threads */
     int		with_threads ;
     /* Prefix for installation */
-    char *      prefix ;
+    char   *    prefix ;
+    char	prefix_path[MAXSTRSZ];
     /* Prefix for qfits install */
     char	qfits_path[MAXSTRSZ] ;
 
@@ -774,7 +775,7 @@ int main(argc, argv)
         config.prefix        = NULL ;
 	config.with_threads  = 0 ;
 	config.with_trace    = 0 ;
-    config.qfits_path[0] = 0 ;
+    	config.qfits_path[0] = 0 ;
 
     memset(config.sysname, 0, MAXSTRSZ);
     memset(config.release, 0, MAXSTRSZ);
@@ -795,43 +796,46 @@ int main(argc, argv)
 			config.with_threads=1 ;
 		} else if (!strcmp(argv[i], "--trace")) {
 			config.with_trace = 1 ;
-        } else if (!strncmp(argv[i], "--qfits=", 8)) {
-            strcpy(config.qfits_path, strchr(argv[i], '=')+1);
+        	} else if (!strncmp(argv[i], "--qfits=", 8)) {
+            		strcpy(config.qfits_path, strchr(argv[i], '=')+1);
+		} else if (!strncmp(argv[i], "--prefix=", 9)) {
+                        strcpy(config.prefix_path, strchr(argv[i], '=')+1);
+			config.prefix = config_abspath(config.prefix_path);
 		} else if (!strncmp(argv[i], "--os=", 5)) {
-            strcpy(sysname, argv[i]+5);
-            if (!strcmp(sysname, "linux")) {
-                strcpy(config.sysname, "Linux");
-            } else if (!strcmp(sysname, "cygwin")) {
-                strcpy(config.sysname, "CYGWIN");
-            } else if (!strcmp(sysname, "hp08")) {
-                strcpy(config.sysname, "HPUX");
-                strcpy(config.release, "8.x");
-            } else if (!strcmp(sysname, "hp09")) {
-                strcpy(config.sysname, "HPUX");
-                strcpy(config.release, "9.x");
-            } else if (!strcmp(sysname, "hp10")) {
-                strcpy(config.sysname, "HPUX");
-                strcpy(config.release, "10.x");
-            } else if (!strcmp(sysname, "hp11")) {
-                strcpy(config.sysname, "HPUX");
-                strcpy(config.release, "11.x");
-            } else if (!strcmp(sysname, "irix")) {
-                strcpy(config.sysname, "IRIX64");
-            } else if (!strcmp(sysname, "aix")) {
-                strcpy(config.sysname, "AIX");
-            } else if (!strcmp(sysname, "dec")) {
-                strcpy(config.sysname, "Dec OSF/1 or Tru64");
-            } else if (!strcmp(sysname, "solaris")) {
-                strcpy(config.sysname, "Solaris");
-                strcpy(config.release, ">= 2.5");
-            } else if (!strcmp(sysname, "bsd")) {
-                strcpy(config.sysname, "BSD compatible");
-            } else if (!strcmp(sysname, "darwin")) {
-                strcpy(config.sysname, "Darwin");
-            } else {
-                printf("unsupported OS: %s\n", sysname);
-                return -1 ;
-            }
+            		strcpy(sysname, argv[i]+5);
+            	if (!strcmp(sysname, "linux")) {
+                	strcpy(config.sysname, "Linux");
+            	} else if (!strcmp(sysname, "cygwin")) {
+                	strcpy(config.sysname, "CYGWIN");
+            	} else if (!strcmp(sysname, "hp08")) {
+                	strcpy(config.sysname, "HPUX");
+                	strcpy(config.release, "8.x");
+            	} else if (!strcmp(sysname, "hp09")) {
+                	strcpy(config.sysname, "HPUX");
+                	strcpy(config.release, "9.x");
+            	} else if (!strcmp(sysname, "hp10")) {
+                	strcpy(config.sysname, "HPUX");
+                	strcpy(config.release, "10.x");
+            	} else if (!strcmp(sysname, "hp11")) {
+                	strcpy(config.sysname, "HPUX");
+                	strcpy(config.release, "11.x");
+            	} else if (!strcmp(sysname, "irix")) {
+                	strcpy(config.sysname, "IRIX64");
+            	} else if (!strcmp(sysname, "aix")) {
+                	strcpy(config.sysname, "AIX");
+            	} else if (!strcmp(sysname, "dec")) {
+                	strcpy(config.sysname, "Dec OSF/1 or Tru64");
+            	} else if (!strcmp(sysname, "solaris")) {
+                	strcpy(config.sysname, "Solaris");
+                	strcpy(config.release, ">= 2.5");
+            	} else if (!strcmp(sysname, "bsd")) {
+                	strcpy(config.sysname, "BSD compatible");
+            	} else if (!strcmp(sysname, "darwin")) {
+                	strcpy(config.sysname, "Darwin");
+            	} else {
+                	printf("unsupported OS: %s\n", sysname);
+                	return -1 ;
+            	}
         }
 	}
 

@@ -54,14 +54,14 @@ default: all
 all: 	eclipse \
 		commands \
 		cp_scripts \
-		../bin/e_setup \
+		../commands/e_setup \
 		finish
 
 finish:
 	@(echo "")
 	@(echo "")
 	@(echo "finished compilation")
-	@(echo "Type bin/e_setup to setup your environment now.")
+	@(echo "Run e_setup to setup your environment now.")
 	@(echo "")
 	@(echo "")
 
@@ -176,10 +176,10 @@ eclipse: ./lib/libeclipse.a
 # eclipse setup tool
 #
 
-../bin/e_setup: sysconfig/e_setup.c
+../commands/e_setup: sysconfig/e_setup.c
 	@(echo "compiling $@ ...")
-	echo $(CC) $(CFLAGS) $(OSFLAG) -o ../bin/e_setup sysconfig/e_setup.c
-	@($(CC) $(CFLAGS) $(OSFLAG) -o ../bin/e_setup sysconfig/e_setup.c)
+	echo $(CC) $(CFLAGS) $(OSFLAG) -o ../commands/e_setup sysconfig/e_setup.c
+	@($(CC) $(CFLAGS) $(OSFLAG) -o ../commands/e_setup sysconfig/e_setup.c)
 
 #
 # commands: executable routines
@@ -198,19 +198,19 @@ commands:
 #
 
 cp_scripts:
-	@(if test ! -f ../bin/load_rtd; then\
-	  (cp ./scripts/load_rtd ../bin ;\
-	  chmod a+x ../bin/load_rtd) ;\
+	@(if test ! -f ../commands/load_rtd; then\
+	  (cp ./scripts/load_rtd ../commands ;\
+	  chmod a+x ../commands/load_rtd) ;\
 	  else (true) fi)
-	@(if test ! -f ../bin/load_rtd-98; then\
-	  (cp ./scripts/load_rtd-98 ../bin ;\
-	  chmod a+x ../bin/load_rtd-98) ;\
+	@(if test ! -f ../commands/load_rtd-98; then\
+	  (cp ./scripts/load_rtd-98 ../commands ;\
+	  chmod a+x ../commands/load_rtd-98) ;\
 	  else (true) fi)
-	@(if test ! -f ../bin/load_rtd-99; then\
-	  (cp ./scripts/load_rtd-99 ../bin ;\
-	  chmod a+x ../bin/load_rtd-99) ;\
+	@(if test ! -f ../commands/load_rtd-99; then\
+	  (cp ./scripts/load_rtd-99 ../commands ;\
+	  chmod a+x ../commands/load_rtd-99) ;\
 	  else (true) fi)
-	@(if test ! -f ../bin/midas_status.csh; then\
-	  (cp ./scripts/midas_status.csh ../bin ;\
-	  chmod a+x ../bin/midas_status.csh) ;\
+	@(if test ! -f ../commands/midas_status.csh; then\
+	  (cp ./scripts/midas_status.csh ../commands ;\
+	  chmod a+x ../commands/midas_status.csh) ;\
 	  else (true) fi)

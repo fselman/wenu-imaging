@@ -7,5 +7,5 @@ LFLAGS  =
 LDLIBSLOCAL =
 DYNSUF  = so
 STRIP   = strip
-QFITSDIR= /opt/local/qfits5
-prefix  = /opt/local/eclipse
+QFITSDIR= /home1/fselman/opt/local/qfits
+prefix  = /home1/fselman/opt/local/qfits

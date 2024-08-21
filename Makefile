@@ -139,7 +139,7 @@ install:
 	($(CP) -r ./man/* $(prefix)/man/.); \
 	else (true) fi)
 
-	@(if test -f ./bin/e_setup; then\
-	($(CP) ./bin/* $(prefix)/bin/.); \
+	@(if test -f ./commands/e_setup; then\
+	($(CP) ./commands/* $(prefix)/bin/.); \
 	else (true) fi)
 
