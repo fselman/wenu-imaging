@@ -1,9 +1,0 @@
-CC      = gcc
-CFLAGS  = -g -Wa,-q -O3
-RELOC   = -fPIC -DPIC
-SHARED  = -shared
-LFLAGS  = 
-DYNSUF  = so
-STRIP   = strip
-TARGETS = static
-prefix  = /home/fselman/opt/local/qfits5

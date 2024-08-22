@@ -126,10 +126,12 @@ install:
 	@(if test -f ./bin/frameq ; then\
 	($(CP) bin/frameq $(prefix)/bin); \
 	else (true) fi)
+
+	$(info Now execute: export PATH=$(prefix)/bin:$PATH)
 	
 clean:
 	$(RM) $(OBJS) 
-	$(RM) bin/*
+	$(RM) bin
  
 veryclean:
 	$(RM) $(OBJS) lib/libqfits.a lib/libqfits.$(DYNSUF)
@@ -142,12 +144,14 @@ veryclean:
 	cd main ; $(MAKE) veryclean ; cd ..
 	cd saft ; $(MAKE) veryclean ; cd ..
 	$(RM) config.make
+	$(RM) bin
 
 #
 # Build example and stand-alone programs
 #
 
 progs:
+	mkdir -p ./bin
 	cd main ; $(MAKE) ; cd ..
 	cd saft ; $(MAKE) ; cd ..
 
