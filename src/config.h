@@ -16,5 +16,5 @@
 
 
 
-#define OS_DARWIN       1
+#define OS_LINUX        1
 #endif

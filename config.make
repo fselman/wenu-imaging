@@ -6,4 +6,4 @@ LFLAGS  =
 DYNSUF  = so
 STRIP   = strip
 TARGETS = static
-prefix  = /opt/local/qfits5
+prefix  = /home/fselman/opt/local/qfits5

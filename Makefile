@@ -129,6 +129,7 @@ install:
 	
 clean:
 	$(RM) $(OBJS) 
+	$(RM) bin/*
  
 veryclean:
 	$(RM) $(OBJS) lib/libqfits.a lib/libqfits.$(DYNSUF)
