@@ -57,7 +57,7 @@ def run_sextractor_on_frame(image_path, sex_path, rerun=False):
         "PHOT_PETROPARAMS": "2.0, 3.5",
         "SATUR_LEVEL": 50000.0,
         "SATUR_KEY": "SATURATE",
-        "MAG_ZEROPOINT": frame_hdr["HIERARCH MEFPP QC MAGZP"],
+        "MAG_ZEROPOINT": frame_hdr["HIERARCH ESO PYCAVI QC MAGZP"],
         "MAG_GAMMA": 4.0,
         "GAIN": 2.6,
         "GAIN_KEY": "GAIN",

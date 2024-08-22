@@ -5,6 +5,15 @@ import astroplan
 import numpy as np
 import pandas as pd
 import urllib.request
+
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+from astropy.visualization import simple_norm
+from astropy.coordinates import SkyCoord
+from astropy import units as u
+from astropy.io import fits
+from matplotlib import cm
+
 from astropy.wcs import WCS
 from astropy.io import fits
 from astropy.time import Time
@@ -773,19 +782,19 @@ class ZPCalibration:
         comment = {}
 
         # we create PRO keywords to indicate frames that went into coadd.fits
-        ancestor_frames_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d}".format(i + 1) for i in
+        ancestor_frames_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d}".format(i + 1) for i in
                                 range(len(self.orig_skies_phys))]
-        sky_mean_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} SKYMEAN".format(i + 1) for i in
+        sky_mean_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} SKYMEAN".format(i + 1) for i in
                          range(len(self.orig_skies_phys))]
-        sky_std_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} SKYSTD".format(i + 1) for i in
+        sky_std_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} SKYSTD".format(i + 1) for i in
                         range(len(self.orig_skies_phys))]
-        moon_fli_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON FLI".format(i + 1) for i in
+        moon_fli_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} MOON FLI".format(i + 1) for i in
                          range(len(self.orig_skies_phys))]
-        moon_distance_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON DISTANCE".format(i + 1) for i in
+        moon_distance_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} MOON DISTANCE".format(i + 1) for i in
                               range(len(self.orig_skies_phys))]
-        moon_alt_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON ALT".format(i + 1) for i in
+        moon_alt_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} MOON ALT".format(i + 1) for i in
                          range(len(self.orig_skies_phys))]
-        moon_az_keys = ["HIERARCH MEFPP PRO ANCESTOR{:02d} MOON AZ".format(i + 1) for i in
+        moon_az_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} MOON AZ".format(i + 1) for i in
                         range(len(self.orig_skies_phys))]
 
         i = 0
@@ -828,27 +837,27 @@ class ZPCalibration:
 
         # we report several other values important to interpret data
         #
-        cards = [["HIERARCH MEFPP PRO SKY UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units of sky mean and std"],
-                 ["HIERARCH MEFPP QC SKYMEAN", self.mean_sky, "Average sky mean and std"],
-                 ["HIERARCH MEFPP QC SKYMEAN UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYMEAN"],
-                 ["HIERARCH MEFPP QC SKYSTD", self.std_sky, "Average sky std dev"],
-                 ["HIERARCH MEFPP QC SKYSTD UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYSTD"],
-                 ["HIERARCH MEFPP QC ZPHC", self.zphc, "Zero point for data in e/s -- HC Plots"],
-                 ["HIERARCH MEFPP QC BAND NAME", self.band, "Name of pass band"],
-                 ["HIERARCH MEFPP QC BAND WIDTH", self.filter_width, "Width of pass band [Angstrom]"],
-                 ["HIERARCH MEFPP QC BAND WAVELENGTH", self.plambda, "Pivot lambda of band [Angstrom]"],
-                 ["HIERARCH MEFPP QC MAGSKY", self.magsky, "Sky brightness mags/arcsec^2"],
-                 ["HIERARCH MEFPP QC DN2FLAM", self.factor_dn_to_flambda, "Conv. fact. mosaic DN to Flambda"],
-                 ["HIERARCH MEFPP QC BUNIT", self.bunit, "Units of Data Numbers this frame"],
-                 ["HIERARCH MEFPP QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
-                 ["HIERARCH MEFPP QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
-                 ["HIERARCH MEFPP QC PHO SKYR2", self.sky_annulus_r2, "Sky annulus r2 ap phot"],
-                 ["HIERARCH MEFPP QC PHO MAGMAX", self.mag_max, "max mag for photometric calibrators (faintest)"],
-                 ["HIERARCH MEFPP QC PHO MAGMIN", self.mag_min, "min mag for photometric calibrators (brightest)"],
-                 ["HIERARCH MEFPP QC PHO CALFILE", self.phot_cal_file.split('/')[-1], "cal file"],
-                 ["HIERARCH MEFPP QC MAGZP", self.zp2, "ZP to AB magnitudes in BAND"],
-                 ["HIERARCH MEFPP QC AVGAIRM", self.avg_airmass, "Average airmass of ancestor frames"],
-                 ["HIERARCH MEFPP QC AVGGAIN", self.avg_gain, "Average gain of ancestor frames"]
+        cards = [["HIERARCH ESO PYCAVI PRO SKY UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units of sky mean and std"],
+                 ["HIERARCH ESO PYCAVI QC SKYMEAN", self.mean_sky, "Average sky mean and std"],
+                 ["HIERARCH ESO PYCAVI QC SKYMEAN UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYMEAN"],
+                 ["HIERARCH ESO PYCAVI QC SKYSTD", self.std_sky, "Average sky std dev"],
+                 ["HIERARCH ESO PYCAVI QC SKYSTD UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYSTD"],
+                 ["HIERARCH ESO PYCAVI QC ZPHC", self.zphc, "Zero point for data in e/s -- HC Plots"],
+                 ["HIERARCH ESO PYCAVI QC BAND NAME", self.band, "Name of pass band"],
+                 ["HIERARCH ESO PYCAVI QC BAND WIDTH", self.filter_width, "Width of pass band [Angstrom]"],
+                 ["HIERARCH ESO PYCAVI QC BAND WAVELENGTH", self.plambda, "Pivot lambda of band [Angstrom]"],
+                 ["HIERARCH ESO PYCAVI QC MAGSKY", self.magsky, "Sky brightness mags/arcsec^2"],
+                 ["HIERARCH ESO PYCAVI QC DN2FLAM", self.factor_dn_to_flambda, "Conv. fact. mosaic DN to Flambda"],
+                 ["HIERARCH ESO PYCAVI QC BUNIT", self.bunit, "Units of Data Numbers this frame"],
+                 ["HIERARCH ESO PYCAVI QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
+                 ["HIERARCH ESO PYCAVI QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
+                 ["HIERARCH ESO PYCAVI QC PHO SKYR2", self.sky_annulus_r2, "Sky annulus r2 ap phot"],
+                 ["HIERARCH ESO PYCAVI QC PHO MAGMAX", self.mag_max, "max mag for photometric calibrators (faintest)"],
+                 ["HIERARCH ESO PYCAVI QC PHO MAGMIN", self.mag_min, "min mag for photometric calibrators (brightest)"],
+                 ["HIERARCH ESO PYCAVI QC PHO CALFILE", self.phot_cal_file.split('/')[-1], "cal file"],
+                 ["HIERARCH ESO PYCAVI QC MAGZP", self.zp2, "ZP to AB magnitudes in BAND"],
+                 ["HIERARCH ESO PYCAVI QC AVGAIRM", self.avg_airmass, "Average airmass of ancestor frames"],
+                 ["HIERARCH ESO PYCAVI QC AVGGAIN", self.avg_gain, "Average gain of ancestor frames"]
                  ]
 
         for zcard in cards:
@@ -875,26 +884,26 @@ class ZPCalibration:
             hdr = hdul[0].header
             hdata = hdul[0].data
 
-            # FSE CHECK: before writting new keywords we read the "HIERARCH MEFPP QC ADU2DN"
+            # FSE CHECK: before writting new keywords we read the "HIERARCH ESO PYCAVI QC ADU2DN"
             #            keyword if it exists, we will need it at the end.
-            if "MEFPP QC DN2FLAM" not in hdr.keys():
+            if "PYCAVI QC DN2FLAM" not in hdr.keys():
                 old_factor = 1.0
             else:
-                old_factor = hdr["MEFPP QC DN2FLAM"]
+                old_factor = hdr["PYCAVI QC DN2FLAM"]
 
             logging.info('old_factor: {}'.format(old_factor))
 
             # FSE CHECK: we should use update better so as not to create duplicate entries.
             # we start with the selected headers that will go close to the beginning
-            hdr.update(BUNIT=self.keyword["HIERARCH MEFPP QC BUNIT"],
-                                   comment=self.comment["HIERARCH MEFPP QC BUNIT"])
-            hdr.update(MAGZP=self.keyword["HIERARCH MEFPP QC MAGZP"],
-                                   comment=self.comment["HIERARCH MEFPP QC MAGZP"])
+            hdr.update(BUNIT=self.keyword["HIERARCH ESO PYCAVI QC BUNIT"],
+                                   comment=self.comment["HIERARCH ESO PYCAVI QC BUNIT"])
+            hdr.update(MAGZP=self.keyword["HIERARCH ESO PYCAVI QC MAGZP"],
+                                   comment=self.comment["HIERARCH ESO PYCAVI QC MAGZP"])
 
-            hdr.update(MAGSKY=self.keyword["HIERARCH MEFPP QC MAGSKY"],
-                                   comment=self.comment["HIERARCH MEFPP QC MAGSKY"])
+            hdr.update(MAGSKY=self.keyword["HIERARCH ESO PYCAVI QC MAGSKY"],
+                                   comment=self.comment["HIERARCH ESO PYCAVI QC MAGSKY"])
 
-            hdr.update({"HIERARCH MEFPP TOTEXP": self.total_exptime}, 
+            hdr.update({"HIERARCH ESO PYCAVI TOTEXP": self.total_exptime}, 
                                    comment="Total exposure time (s)")
             #hdr["EXPTIME"] = (self.total_exptime, "Total exposure time (s)")
             # we continue with the full set of keywords near the end
@@ -921,7 +930,7 @@ class ZPCalibration:
             hdr.update(BSCALE=factor,
                                    comment="scale factor to apply to data")
             hdr.update(BZERO=0.0,
-                                   comment="num,erical offset to apply to data")
+                                   comment="numerical offset to apply to data")
             hdul.flush()
 
         # we check the data values
@@ -938,3 +947,501 @@ class ZPCalibration:
                                              nbins=30, x_range="8-deciles", figname=None)
 
         logging.info("update_frame: Image updated correctly")
+
+# ------------------------------------------------------------------------------------------------------
+# This calibration check scrip needs the ZPCal object above.
+# It will probably become obsolete in production.
+#
+def plot_calibration_check_zpcal(query_catalogue, sex_catalogue_path, zp_cal):
+    """
+    Creates 5 different check plots from the SExtractor photometry on the swarped OmegaCam frame.
+    * Calibrated magnitudes vs Catalogue magnitudes
+    * Catalogue - Calibrated magnitudes vs Catalogue magnitudes.
+    * Catalogue - Calibrated magnitudes vs Catalogue colour. This one also check the systematic increase of magnitude
+        in function of the distance from the center R.
+    * Catalogue - Calibrated magnitudes vs R [distance from center] color coded Catalogue - Calibrated
+    * A check image of the field
+    
+    ##########
+    parameters
+    
+    phot_catalogue : str
+        The path to the clean photometric reference catalogue created during the calibration process of the frame.
+    sex_catalogue_path : str
+        The path to the SExtractor output catalogue with the photometry of the frame.
+    zp_cal : ZPCalibration
+        The calibration object containing important information regarding the frame.
+        
+    ######
+    output
+    
+    calibration image:
+        A png image named OBJECT_BAND_calibration_check.png containing the aforementioned plots. It is saved on the
+        calibration directory.
+    
+    """
+
+    logging.info("Creating check plots")
+    phot_catalogue = pd.read_csv(query_catalogue)
+    sex_catalogue = np.loadtxt(sex_catalogue_path)
+
+    # first load the ra, dec and magnitudes from both catalogues.
+    ra_skm = phot_catalogue["raj2000"].to_numpy()
+    de_skm = phot_catalogue["dej2000"].to_numpy()
+    ra_sex = sex_catalogue[:, 1]
+    de_sex = sex_catalogue[:, 2]
+
+    # select bands accordingly to frame band
+    # if band is NB_659, then construct the scatter plot using r-i and r-Ha
+    # in rest of cases uses g-band and band-OCam
+    # except in g case where we use band-r and band-OCam
+    if zp_cal.band == "NB_659":
+        mag_skm = phot_catalogue["r_SDSS"].to_numpy()
+        mag_side_skm = phot_catalogue["i_SDSS"].to_numpy()
+        mag_skm_band = "r_SDSS"
+        mag_side_skm_band = "i_SDSS"
+    else:
+        mag_skm = phot_catalogue[zp_cal.band].to_numpy()
+        mag_skm_band = zp_cal.band
+        if zp_cal.band == "g_SDSS":
+            mag_side_skm = phot_catalogue["r_SDSS"].to_numpy()
+            mag_side_skm_band = "r_SDSS"
+        else:
+            mag_side_skm = phot_catalogue["g_SDSS"].to_numpy()
+            mag_side_skm_band = "g_SDSS"
+
+    logging.info("Reading sextractor catalogue {}".format(sex_catalogue_path))
+    mag_sex = sex_catalogue[:, 5]
+
+    # select only sextractor best sources (flags == 0 and class_star > 0.9)
+    flags = sex_catalogue[:, 7]
+    class_star = sex_catalogue[:, 10]
+
+    # it was flags==0 and class_star >0.3
+    sel_best_stars = (flags == 0) & (class_star > 0.3)
+    ra_sex = ra_sex[sel_best_stars]
+    de_sex = de_sex[sel_best_stars]
+    mag_sex = mag_sex[sel_best_stars]
+    logging.info("number of valid entries in sex catalogue: {}".format(len(mag_sex)))
+
+    # cross-match the skm and sex catalogues
+    c_skm = SkyCoord(ra=ra_skm * u.degree, dec=de_skm * u.degree)
+    c_sex = SkyCoord(ra=ra_sex * u.degree, dec=de_sex * u.degree)
+    idx, d2d, _ = c_skm.match_to_catalog_sky(c_sex)
+
+    max_sep = 1.0 * u.arcsec
+    sep_constraint = d2d < max_sep
+
+    # match the ra and dec positions
+    ra_skm = ra_skm[sep_constraint]
+    de_skm = de_skm[sep_constraint]
+    ra_sex = ra_sex[idx[sep_constraint]]
+    de_sex = de_sex[idx[sep_constraint]]
+
+    # now we have matched the catalogues we can compare mag by mag
+    mag_skm = mag_skm[sep_constraint]
+    mag_side_skm = mag_side_skm[sep_constraint]
+    mag_sex = mag_sex[idx[sep_constraint]]
+
+    # we paint with the distance to the center
+    rad_dist = np.sqrt((ra_skm - zp_cal.crval1)**2 + (de_skm - zp_cal.crval2)**2)
+
+    data = zp_cal.data
+    wcs = zp_cal.wcs
+
+    mag_max = zp_cal.mag_max
+    mag_min = zp_cal.mag_min
+
+    # we plot the ocam vs skymapper relation
+    fig = plt.figure(figsize=(15.7, 12.1), dpi=120)
+
+    gs = gridspec.GridSpec(nrows=4, ncols=5, wspace=0.0)  # width_ratios=[1,1,1,1,1])
+    ax1 = fig.add_subplot(gs[:-2, :-3])
+    ax2 = fig.add_subplot(gs[-2, :-3], sharex=ax1)
+    ax3 = fig.add_subplot(gs[:-1, -3:])
+    ax4 = fig.add_subplot(gs[-1, :-3])
+    ax5 = fig.add_subplot(gs[-1, -3:])
+    
+
+    # skm versus sextractor
+    ax1.scatter(mag_skm, mag_sex,  color='black', s=2)
+    ax1.set_xlim(8.0, mag_max+1.0)
+    ax1.set_ylim(8.0, mag_max+1.0)
+    ax1.set_xlabel("{} Catalogue".format(zp_cal.band))
+    ax1.set_ylabel("{} OCam".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax1.set_xlabel("r_SDSS Catalogue".format(zp_cal.band))
+
+    # delta zp vs mag
+    sigma_res = np.nanstd(mag_sex - mag_skm)
+    ax2.scatter(mag_skm, mag_skm - mag_sex,  color='black', s=2)
+    ax2.set_ylim(-10.0*sigma_res, 10.0*sigma_res)
+    ax2.axhline(0.0, ls=':')
+    ax2.axvline(mag_min, ls=':')
+    ax2.axvline(mag_max, ls=':')
+    ax2.set_xlabel("{} Catalogue".format(zp_cal.band))
+    ax2.set_ylabel("{}\nCatalogue - OCam".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax2.set_ylabel("{} - {}\nCatalogue - OCam".format(mag_skm_band, zp_cal.band))
+
+    norm = simple_norm(data, 'sqrt', percent=99)
+    ax3.imshow(data, norm=norm)
+    zp_cal.aperture.to_pixel(wcs).plot(color='white', lw=1)
+
+    plt.setp(ax3.get_xticklabels(), visible=False)
+    plt.setp(ax3.get_yticklabels(), visible=False)
+
+    # delta zp vs color
+    color = mag_side_skm - mag_skm
+    sigma_clip = (color >= np.nanquantile(color, 0.005)) & (color <= np.nanquantile(color, 0.995))
+    
+    # if band is g_sdss, invert the color to have g-r instead of r-g. Same for NB659 to have r-i instead of i-r
+    if zp_cal.band == "g_SDSS" or zp_cal.band == "NB_659":
+        color *= -1
+    select = (mag_skm > mag_min) & (mag_skm < mag_max)
+    #
+    plot4 = ax4.scatter(color[select & sigma_clip], mag_skm[select & sigma_clip] - mag_sex[select & sigma_clip],  
+                        c=rad_dist[select & sigma_clip], cmap="viridis", s=1)
+    p4 = plt.colorbar(plot4, ax=ax4, label="R [deg]")
+    ax4.axhline(0.0, ls=':')
+    ax4.set_xlim(np.amin(color[select & sigma_clip]), np.amax(color[select & sigma_clip]))
+    ax4.set_ylim(np.amin(mag_skm[select & sigma_clip] - mag_sex[select & sigma_clip]), 
+                 np.amax(mag_skm[select & sigma_clip] - mag_sex[select & sigma_clip]))
+    ax4.set_xlabel("{} - {} Catalogue".format(mag_side_skm_band, mag_skm_band))
+    if zp_cal.band == "NB_659" or zp_cal.band == "g_SDSS":
+        ax4.set_xlabel("{} - {} Catalogue".format(mag_skm_band, mag_side_skm_band))
+    ax4.set_ylabel("{}\nCatalogue - OCam".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax4.set_ylabel("{} - {}\nCatalogue - OCam".format(mag_skm_band, zp_cal.band))
+
+    # dmag versus radius
+    plot5 = ax5.scatter(rad_dist[select & sigma_clip], mag_skm[select & sigma_clip] - mag_sex[select & sigma_clip],  
+                        c=color[select & sigma_clip], cmap="viridis", s=1)
+    p5 = plt.colorbar(plot5, ax=ax5, label="{} - {} Skymapper".format(mag_side_skm_band, mag_skm_band))
+    ax5.axhline(0.0, ls=':')
+    ax5.set_xlim(np.amin(rad_dist[select & sigma_clip]), np.amax(rad_dist[select & sigma_clip]))
+    ax5.set_ylim(np.amin(mag_skm[select & sigma_clip] - mag_sex[select & sigma_clip]), 
+                 np.amax(mag_skm[select & sigma_clip] - mag_sex[select & sigma_clip]))
+    ax5.set_xlabel("R [deg]")
+    if zp_cal.band == "NB_659" or zp_cal.band == "g_SDSS":
+        ax5.set_ylabel("{} - {} Catalogue".format(mag_skm_band, mag_side_skm_band))
+    else:
+        ax5.set_ylabel("{}\nCatalogue - OCam".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax5.set_ylabel("{} - {}\nCatalogue - OCam".format(mag_skm_band, zp_cal.band))
+
+    plt.tight_layout()
+    logging.info("check plots created. Saving figure...")
+    figname = zp_cal.calibrationdir + "/" + zp_cal.frame[:-5] + "_calibration_check.png"
+    plt.savefig(figname)
+ 
+
+# This checking script extracts all information from the headers of the frame
+# and does apperture photometry the same way as ZPCal but it does not calculate
+# zero points. It just a check from info in the frame itself.
+#
+def plot_calibration_check_frame(image_path, calibration_dir, swarp_dir):
+    """
+    Created 5 different check plots from the SExtractor photometry on the swarped OmegaCam frame.
+    * Calibrated magnitudes vs Catalogue magnitudes
+    * Catalogue - Calibrated magnitudes vs Catalogue magnitudes.
+    * Catalogue - Calibrated magnitudes vs Catalogue colour. This one also check the systematic increase of magnitude
+        in function of the distance from the center R.
+    * Catalogue - Calibrated magnitudes vs R [distance from center] color coded Catalogue - Calibrated
+    * A check image of the field
+    
+    ##########
+    parameters
+    
+    phot_catalogue : str
+        The path to the clean photometric reference catalogue created during the calibration process of the frame.
+    sex_catalogue_path : str
+        The path to the SExtractor output catalogue with the photometry of the frame.
+    zp_cal : ZPCalibration
+        The calibration object containing important information regarding the frame.
+        
+    ######
+    output
+    
+    calibration image:
+        A png image named OBJECT_BAND_calibration_check.png containing the aforementioned plots. It is saved on the
+        calibration directory.
+    
+    """
+
+    logging.info("pycavi qc phot: creating check plots")
+
+    # We first read the image whose photometry will be checked
+    logging.info("pycavi qc phot: reading image {}".format(image_path.split('/')[-1]))
+    zp_data, zp_hdu = fits.getdata(image_path, header=True)
+    #print(list(zp_hdu.keys()))
+
+    # we load some data from the image to be checked
+    keys_to_extract = {'band': "ESO PYCAVI QC BAND NAME",
+                       'crval1': "CRVAL1",
+                       'crval2': "CRVAL2",
+                       'mag_max': "ESO PYCAVI QC PHO MAGMAX",
+                       'mag_min': "ESO PYCAVI QC PHO MAGMIN",
+                       'phot_rad': "ESO PYCAVI QC PHO RAD",
+                       'phot_skyr1': "ESO PYCAVI QC PHO SKYR1",
+                       'phot_skyr2': "ESO PYCAVI QC PHO SKYR2",
+                       'phot_calfile': "ESO PYCAVI QC PHO CALFILE",
+                       'magzp': "MAGZP"}
+
+    input_dict = {}
+    for akey, avalue in keys_to_extract.items():
+        if avalue in list(zp_hdu.keys()):
+            input_dict[akey]=zp_hdu[avalue]
+        else:
+            logging.info("pycavi qc phot: **** missing key {} in headers".format(avalue))
+            
+    # we create a class to hold all these data
+    class ZPcal:
+        def __init__(self, input_dict, zdata, zhdu):
+            self.band = input_dict['band']
+            self.crval1 = input_dict['crval1']
+            self.crval2 = input_dict['crval2']
+            self.mag_max = input_dict['mag_max']
+            self.mag_min = input_dict['mag_min']
+            self.phot_rad = input_dict['phot_rad']
+            self.phot_skyr1 = input_dict['phot_skyr1']
+            self.phot_skyr2 = input_dict['phot_skyr2']
+            self.phot_calfile = input_dict['phot_calfile']
+            self.magzp = input_dict['magzp']
+            self.data = zdata
+            self.wcs = wcs = WCS(zhdu)
+            self.aperture = None
+            self.sky_annulus = None
+        
+    zp_cal = ZPcal(input_dict, zp_data, zp_hdu)
+
+    query_catalogue_path = calibration_dir+'/'+zp_cal.phot_calfile
+    logging.info("pycavi qc phot: reading catalogue used for query {}".format(query_catalogue_path.split('/')[-1]))
+    phot_catalogue = pd.read_csv(query_catalogue_path)
+
+    # first load the ra, dec and magnitudes from both catalogues.
+    ra_std = phot_catalogue["raj2000"].to_numpy() * u.deg
+    de_std = phot_catalogue["dej2000"].to_numpy() * u.deg
+
+    # select bands accordingly to frame band
+    # if band is NB_659, then construct the scatter plot using r-i and r-Ha
+    # in rest of cases uses g-band and band-OCam
+    # except in g case where we use band-r and band-OCam
+    if zp_cal.band == "NB_659":
+        mag_std = phot_catalogue["r_SDSS"].to_numpy()
+        mag_side_std = phot_catalogue["i_SDSS"].to_numpy()
+        mag_std_band = "r_SDSS"
+        mag_side_std_band = "i_SDSS"
+    else:
+        mag_std = phot_catalogue[zp_cal.band].to_numpy()
+        mag_std_band = zp_cal.band
+        if zp_cal.band == "g_SDSS":
+            mag_side_std = phot_catalogue["r_SDSS"].to_numpy()
+            mag_side_std_band = "r_SDSS"
+        else:
+            mag_side_std = phot_catalogue["g_SDSS"].to_numpy()
+            mag_side_std_band = "g_SDSS"
+    logging.info("pycavi qc phot: number of valid entries in calibrator catalogue: {}".format(len(mag_std)))
+    
+    # we read the sextractor catalogue created by previous notebook.
+    # After testing we will change to do photometry with do_phot in
+    # the positions of the query catalogue.
+    #
+    #sex_catalogue_path = image_path[:-5]+'.cat'
+    #logging.info("pycavi qc pho: reading sextractor catalogue {}".format(sex_catalogue_path))
+    #sex_catalogue = np.loadtxt(sex_catalogue_path)
+    #mag_sex = sex_catalogue[:, 5]
+    #ra_sex = sex_catalogue[:, 1]
+    #de_sex = sex_catalogue[:, 2]
+
+    # select only sextractor best sources (flags == 0 and class_star > 0.9)
+    #flags = sex_catalogue[:, 7]
+    #class_star = sex_catalogue[:, 10]
+
+    # it was flags==0 and class_star >0.3
+    #sel_best_stars = (flags == 0) & (class_star > 0.3)
+    #ra_sex = ra_sex[sel_best_stars]
+    #de_sex = de_sex[sel_best_stars]
+    #mag_sex = mag_sex[sel_best_stars]
+    #logging.info("number of valid entries in sex catalogue: {}".format(len(mag_sex)))
+    ################################################################################################
+
+    # Photometry is done directly on the frame
+    ra_frm = copy.deepcopy(ra_std)
+    de_frm = copy.deepcopy(de_std)
+    logging.info("pycavi qc phot:  creating aperture object")
+    positions = SkyCoord(ra=ra_frm, dec=de_frm, frame="icrs")
+    zp_cal.aperture = SkyCircularAperture(positions, r=zp_cal.phot_rad * u.arcsec)
+    zp_cal.sky_annulus = SkyCircularAnnulus(positions, zp_cal.phot_skyr1 * u.arcsec,
+                                                zp_cal.phot_skyr2 * u.arcsec)
+
+    logging.info("pycavi qc phot: doing aperture photometry on frame.")
+    phot_table = aperture_photometry(zp_cal.data, zp_cal.aperture, wcs=zp_cal.wcs, method="exact")
+    for col in phot_table.colnames:
+        if col != "id" and col != "sky_center":
+            phot_table[col].info.format = "%.2f"  # for consistent table output
+            
+    phot_disk_area = zp_cal.aperture.to_pixel(zp_cal.wcs).area
+    logging.info("pycavi qc phot: phot_disk_area in pixels: {}".format(phot_disk_area))
+
+
+    logging.info("pycavi qc phot: estimating backgrounds.")
+    annulus_masks = zp_cal.sky_annulus.to_pixel(zp_cal.wcs).to_mask(method='center')
+    logging.info("pycavi qc phot: number of objects: {}".format(len(annulus_masks)))
+    bkg_median = np.empty(len(annulus_masks))
+    bkg_median[:] = np.nan
+    for i in range(len(annulus_masks)):
+        mask = annulus_masks[i]
+        annulus_data = mask.multiply(zp_cal.data)
+        if annulus_data is not None:  # if we have data we use it
+            annulus_data_1d = annulus_data[mask.data > -0]
+            mean_sigclip, median_sigclip, _ = sigma_clipped_stats(annulus_data_1d, sigma_lower=3.0, sigma_upper=3.0)
+            bkg_median[i] = median_sigclip
+
+    # with the bkg median value, we can subtract from the circular aperture
+    # Note that the aper_sum_bkgsub array will have invalid entries in the
+    # form of nan and 0.0 values.
+    logging.info("pycavi qc phot: subtracting backgrounds.")
+    aper_bkg = bkg_median * phot_disk_area
+    aper_sum_bkgsub = np.array(phot_table["aperture_sum"] - aper_bkg)
+    raw_mags = np.zeros_like(aper_sum_bkgsub)
+    # FSE CHECK: is setting to 99.0 a good flag of a bad value?
+    raw_mags[aper_sum_bkgsub > 0] = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
+    raw_mags[aper_sum_bkgsub <= 0] = 99.0
+    mag_sex = np.around(raw_mags, 4)
+    good_sel = (raw_mags > 0) & (raw_mags < 20)
+    logging.info("pycavi qc phot: number of good values {}".format(good_sel.sum()))
+    mag_std = mag_std[good_sel]
+    mag_side_std = mag_side_std[good_sel]
+    mag_sex = mag_sex[good_sel]
+
+    #####################################################################################################
+    # cross-match the std and frame catalogues
+    #c_std = SkyCoord(ra=ra_std[good_sel], dec=de_std[good_sel])
+    #c_frm = SkyCoord(ra=ra_frm[good_sel], dec=de_frm[good_sel])
+    #idx, d2d, _ = c_std.match_to_catalog_sky(c_frm)
+
+    #max_sep = 1.0 * u.arcsec
+    #sep_constraint = d2d < max_sep
+
+    # match the ra and dec positions
+    #ra_std = ra_std[sep_constraint]
+    #de_std = de_std[sep_constraint]
+    #ra_frm = ra_frm[idx[sep_constraint]]
+    #de_frm = de_frm[idx[sep_constraint]]
+
+    # now we have matched the catalogues we can compare mag by mag
+    #mag_std = mag_std[sep_constraint]
+    #mag_side_std = mag_side_std[sep_constraint]
+    #mag_sex = mag_sex[idx[sep_constraint]]
+
+    # we paint with the distance to the center
+    rad_dist = np.sqrt((ra_std - zp_cal.crval1 * u.deg)**2 + (de_std - zp_cal.crval2 * u.deg)**2)[good_sel]
+
+    data = zp_cal.data
+    wcs = zp_cal.wcs
+
+    mag_max = zp_cal.mag_max
+    mag_min = zp_cal.mag_min
+
+    # we plot the ocam vs skymapper relation
+    fig = plt.figure(figsize=(15.7, 12.1), dpi=120)
+
+    gs = gridspec.GridSpec(nrows=4, ncols=5, wspace=0.0)  # width_ratios=[1,1,1,1,1])
+    ax1 = fig.add_subplot(gs[:-2, :-3])
+    ax2 = fig.add_subplot(gs[-2, :-3], sharex=ax1)
+    ax3 = fig.add_subplot(gs[:-1, -3:])
+    ax4 = fig.add_subplot(gs[-1, :-3])
+    ax5 = fig.add_subplot(gs[-1, -3:])
+    
+
+    # std versus sextractor
+    ax1.scatter(mag_std, mag_sex,  color='black', s=2)
+    ax1.set_xlim(8.0, mag_max+1.0)
+    ax1.set_ylim(8.0, mag_max+1.0)
+    ax1.set_xlabel("{} Catalogue".format(zp_cal.band))
+    ax1.set_ylabel("{} OCam".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax1.set_xlabel("r_SDSS Catalogue".format(zp_cal.band))
+
+    # delta zp vs mag
+    sigma_res = np.nanstd(mag_sex - mag_std)
+    ax2.scatter(mag_std, mag_std - mag_sex,  color='black', s=2)
+    ax2.set_ylim(-10.0*sigma_res, 10.0*sigma_res)
+    ax2.axhline(0.0, ls=':')
+    ax2.axvline(mag_min, ls=':')
+    ax2.axvline(mag_max, ls=':')
+    ax2.set_xlabel("{} Catalogue".format(zp_cal.band))
+    ax2.set_ylabel("{}\nCatalogue - Frame".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax2.set_ylabel("{} - {}\nCatalogue - Frame".format(mag_std_band, zp_cal.band))
+
+    norm = simple_norm(data, 'sqrt', percent=99)
+    ax3.imshow(data, norm=norm)
+    #zp_cal.aperture.to_pixel(wcs).plot(color='white', lw=1)
+
+    plt.setp(ax3.get_xticklabels(), visible=False)
+    plt.setp(ax3.get_yticklabels(), visible=False)
+
+    # delta zp vs color
+    color = mag_side_std - mag_std
+    sigma_clip = (color >= np.nanquantile(color, 0.005)) & (color <= np.nanquantile(color, 0.995))
+    
+    # if band is g_sdss, invert the color to have g-r instead of r-g. Same for NB659 to have r-i instead of i-r
+    if zp_cal.band == "g_SDSS" or zp_cal.band == "NB_659":
+        color *= -1
+    select = (mag_std > mag_min) & (mag_std < mag_max)
+    #
+    plot4 = ax4.scatter(color[select & sigma_clip], mag_std[select & sigma_clip] - mag_sex[select & sigma_clip],  
+                        c=rad_dist[select & sigma_clip].value, cmap="viridis", s=1)
+    p4 = plt.colorbar(plot4, ax=ax4, label="R [deg]")
+    ax4.axhline(0.0, ls=':')
+    #ymin = np.amin(mag_std[select & sigma_clip] - mag_sex[select & sigma_clip]
+    #ymax = np.amax(mag_std[select & sigma_clip] - mag_sex[select & sigma_clip]
+    ymin = -0.5
+    ymax = +0.5
+    ax4.set_xlim(np.amin(color[select & sigma_clip]), np.amax(color[select & sigma_clip]))
+    ax4.set_ylim((ymin, ymax))
+    ax4.set_xlabel("{} - {} Catalogue".format(mag_side_std_band, mag_std_band))
+    if zp_cal.band == "NB_659" or zp_cal.band == "g_SDSS":
+        ax4.set_xlabel("{} - {} Catalogue".format(mag_std_band, mag_side_std_band))
+    ax4.set_ylabel("{}\nCatalogue - OCam".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax4.set_ylabel("{} - {}\nCatalogue - OCam".format(mag_std_band, zp_cal.band))
+
+    # dmag versus radius
+    plot5 = ax5.scatter(rad_dist[select & sigma_clip], mag_std[select & sigma_clip] - mag_sex[select & sigma_clip],  
+                        c=color[select & sigma_clip], cmap="viridis", s=1)
+    p5 = plt.colorbar(plot5, ax=ax5, label="{} - {} Skymapper".format(mag_side_std_band, mag_std_band))
+    ax5.axhline(0.0, ls=':')
+    ax5.set_xlim(np.amin(rad_dist[select & sigma_clip].value), np.amax(rad_dist[select & sigma_clip].value))
+    ax5.set_ylim(ymin, ymax)
+    ax5.set_xlabel("R [deg]")
+    if zp_cal.band == "NB_659" or zp_cal.band == "g_SDSS":
+        ax5.set_ylabel("{} - {} Catalogue".format(mag_std_band, mag_side_std_band))
+    else:
+        ax5.set_ylabel("{}\nCatalogue - OCam".format(zp_cal.band))
+    if zp_cal.band == "NB_659":
+        ax5.set_ylabel("{} - {}\nCatalogue - OCam".format(mag_std_band, zp_cal.band))
+
+    plt.tight_layout()
+    logging.info("check plots created. Saving figure...")
+    figname = image_path[:-5] + "_qc_photcal_check.png"
+    plt.savefig(figname)
+
+def get_key_from_header(hdu, keys):
+    """
+    returns the value stored in the frame hdu headers
+        
+    Parameters
+    ----------
+    keys: str or list
+        the key, a single value if a str is passed, or a list of keys to select from the headers.
+     """
+    if type(keys) == str:
+        return hdu[keys]
+    elif type(keys) == list:
+        returned_values = []
+        for key in keys:
+            returned_values.append(hdu[key])
+        return returned_values

@@ -23,15 +23,15 @@ class Instrument:
                         from VST/Paranal and WFI from 2.2-m/La Silla.
 
     """
-    def __init__(self, config_dir, instrument='ocam'):
+    def __init__(self, config_dir, instrument='omegacam'):
         config = self.read_instrument_config(config_dir, instrument)
         self.config = config
 
         # 
         #[Project]                                                                              Values for OmegaCam
         #
-        self.instrument_str = config.get('Project', 'instrument_str').replace('"','')           # "OCAM"
-        self.config_dir = os.getcwd()+'/'+config.get('Project', 'config_dir').replace('"','')
+        self.instrument_str = config.get('Project', 'instrument_str').replace('"','')
+        self.config_dir = config_dir #+'/'+config.get('Project', 'config_dir').replace('"','')
 
         #[Data]                                                                 ---  Values for OmegaCam ----
         #
@@ -141,11 +141,12 @@ class Instrument:
         self.next_valid = len(self.valid_ext_names)
 
 
-    def read_instrument_config(self, config_dir=None, instrument='ocam'):
+    def read_instrument_config(self, config_dir=None, instrument='omegacam'):
         """Function to read configuration file."""
         if config_dir is None:
             print('No root directory for project specified.')
             return None
+        print("config_dir: {} instrument: {}".format(config_dir, instrument))
 
         # Create a ConfigParser object
         config = configparser.ConfigParser(inline_comment_prefixes=('#'))
@@ -166,13 +167,18 @@ class Instrument:
         with open(mefpp_paf, 'r') as f:
             lines = f.readlines()
             for aline in lines:
+                aline = aline[:-1]
+                if len(aline) == 0:
+                    continue
+                elif aline[0] == '#':
+                    continue
                 fields = aline.split()
                 if key_str in fields[0]:
                     found_key = True
                     product_name = fields[1].strip(';').strip('"')
                     break
         if found_key:
-            print("{}: {}".format(key_str, product_name))
+            #print("{}: {}".format(key_str, product_name))
             return product_name
         else:
             raise Exception("key: {} not found in {}".format(key, mefpp_paf))
@@ -181,7 +187,7 @@ class Instrument:
 if __name__ == "__main__":
     print(" ------------------------ TESTING PYCAVI INSTRUMENT MODULE ----------------------")
 
-    instrument = Instrument(config_dir='./config/', instrument='ocam')
+    instrument = Instrument(config_dir='./config/', instrument='omegacam')
 
     # Print the retrieved values
     print("Number of valid extensions: {}".format(len(instrument.valid_ext_names)))

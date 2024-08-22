@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "pycavi"
+version = "0.5.0"
+authors = [
+  { name="Lientur Celedon", email="lientur.celedon@postgrado.uv.cl" },
+  { name="Fernando Selman", email="fselman@eso.org" },
+]
+description = "Classify, organize, associate, and reduce imaging data from ESO wide field instruments."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Linux, MacOS",
+]
+dependencies = [
+  "numpy",
+  "astropy>=6.0",
+  "scipy",
+  "joblib",
+  "tqdm",
+]
+
+[project.scripts]
+pycavi_run = "pycavi.pycavi_run:main"
+
+[project.urls]
+Homepage = "https://github.com/LCeledon/Pycavi"

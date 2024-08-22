@@ -429,7 +429,7 @@ class SExtractor(object):
         # first look for (FSE 2024-07-05) 'source-extractor',
         # then'sextractor',and finally 'sex'
 
-        candidates = ['source-extractor', 'sextractor', 'sex']
+        candidates = ['/opt/local/bin/source-extractor']
 
         if (path):
             candidates = [path]
@@ -443,7 +443,7 @@ class SExtractor(object):
                 versionline = p.communicate()[0]
  
                 #print(versionline)
-                if (versionline.find(b"SExtractor") != -1):
+                if (versionline.find(b"Source Extractor") != -1):
                     selected=candidate
                     break
             except (IOError, OSError):
