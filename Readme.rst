@@ -1,12 +1,13 @@
-Mefpp python scripts.
+Mefpp python scripts
++++++++++++++++++++++
 
 Here are the scripts required to run mefpp. They are divided in the Jupyter-notebook and console versions. They were scripted by F.Selman in a first instance, then slightly improved by L.Celedon. It was build over Python 3.8.
 
-##########
 Mefpp flow
-##########
+==========
 
 The main flow of mefpp is as follow:
+
 	* Download data:  science with calibration files from the ESO archive.
 
 	* Select calibrations (optional): if the data is from WFI, then select the calibration files for the chosen science files.
@@ -33,9 +34,8 @@ The main flow of mefpp is as follow:
 			Last step is to calibrate the SWarped frame so its counts units will be in physical units of erg/s/cm2/arcsec2 instead of e-/s. To compute the multiplicative factor to goes from the current to desired units, mefpp uses the photometry available from Skymapper to compare with the raw magnitudes obtained from the same stars in the field. The zero point required to go from raw to Skymapper magnitudes is calculated and used to get the desired multiplicative factor together with the width of the filter used and the pixel scale of the instrument.
 			A catalogue of the objects found in the calibrated frame is generated using SExtractor. The magnitudes obtained from this catalogue are used to compare agains the Skymapper magnitudes to create check plots of the calibration.
 			
-##############################################
 External software and Python packages required
-##############################################
+==============================================
 	
 	The mefpp flow relies on external software to accomplish some parts of the work. Below is the list of software that must be installed before run mefpp.
 		* SExtractor  (can be downloaded and installed from https://www.astromatic.net/software/sextractor/)
@@ -55,25 +55,24 @@ External software and Python packages required
 		
 	Please be sure all the aforementioned packages and software are correctly installed on your machine before start running mefpp.
 	
-###########################
 Using the notebooks/scripts
-###########################
+===========================
 
 The notebooks and scripts are designed to work without much intervention of the user one after another. However, it is important that the path to the folder are correctly given in each notebook/script.
 In each one of the notebook and scripts the user must define the root_dir variable, which is a string with the absolute path to the directory where all the different folders including calibration files, reduced science and log files will be created.
 Additionaly, in the first 3 notebooks and the first script file the user must also defined the raw_data_dir variable, which correspond to a string with the path of the folder where the raw images are located.
 Once these two variables are defined, the notebooks and scripts should run smoothly.
 
-#####################
 Testing the notebooks
-#####################
+=====================
 
 The notebooks and scripts were tested on my laptop (intel core i7, 8 processors) using the images of the field near CP Pup in the filters r_SDSS and NB_659 (ESO program ID: 099.D-0533(A)). The whole process took less than 1 hour for each filter (10 images per filter). The most consuming part is the astrometry, for which SExtractor/Scamp could take several minutes per image. The resulting check plot of the calibration process for both filters can be found in the folder check_plots.
 The check plot for the r_SDSS filter shows a systemicatic deviation from the zero value in the residuals of approximately 0.1 magnitudes, which means there is still room for improvement.
 
-##############
 Possible isues
-##############
+==============
 
 The most likely part of the flow to present some failures is the astromatic process. The Scamp configuration parameters defined within the notebook are the result of testing in the filters r_SDSS and NB_659, but they could not be the optimal for bluer bands. If the SWarped image shows signal of bad astrometry I suggest to play a bit with the SCamp parameters.
 Other possible source of uncertainty is the photometry. Currently only aperture photometry is supported by mefpp, therefore, for dense crowd fields we should expect higher uncertainty in the raw photometry during the calibration process.
+
+
