@@ -1,10 +1,23 @@
-Mefpp python scripts
-+++++++++++++++++++++
+Pycavi: Mefpp python scripts
+++++++++++++++++++++++++++++
 
-Here are the scripts required to run mefpp. They are divided in the Jupyter-notebook and console versions. They were scripted by F.Selman in a first instance, then slightly improved by L.Celedon. It was build over Python 3.8.
+These scripts run mefpp to pre-process wide-field imaging mosaic data
+from the La Silla WFI instrument and Paranal's OmegaCam. At the end
+of the pre-processing run all instrument signatures have been removed
+and the data converted to e/s. Then, further processing is done to produce
+frames with a proper astrometry and a photometric calibration. Along the
+processing many quality control parameters, QC parameters, are produced
+to aid in the monitoring of the data quality.
+
+The scripts introduce the keywords needed for ESO's Phase 3 data product
+delivery.
+
+These scripts are divided into Jupyter-notebook and command line versions.
+They were scripted by F.Selman in a first instance, then
+slightly improved by L.Celedon. They were built using Python 3.8 - 3.11.
 
 Pycavi flow
-==========
+===========
 
 The main flow of a pycavi processing is as follows:
 
@@ -41,8 +54,7 @@ The main flow of a pycavi processing is as follows:
       the actual saturation level in e/s. At the same time a FITS key, ONEADU, will be inserted
       containing the e/s level corresponding to 1 ADU in the original frames.
             
-* Astrometry:
-			A good astrometry is necessary for the frame combination.  Pycavi relies on two steps: 
+* Astrometry: A good astrometry is necessary for the frame combination.  Pycavi relies on two steps: 
             a first improvement of the WCS found
             in the headers is carried on by solve-field from astrometry.net. This solution is then
             refined using the Scamp software from astromatic.  The notebooks 04_pycavi_solve and
@@ -51,13 +63,11 @@ The main flow of a pycavi processing is as follows:
             is necessary because the error in the pointings in  the headers of OmegaCam
             frames could be up to 2 arcmin and scamp cannot deal with uncertainties larger
             than approx 5 arcsec.
-* Combination of frames:
-			Once the astrometry is done, all the multi extension frames images belonging to a single
+* Combination of frames: Once the astrometry is done, all the multi extension frames images belonging to a single
             science data partition (images with same target, filter, obsid, and filter) are combined
             to crete a single frame. This is done by calling the SWarp package from astromatic. 
             The call to the package is done in notebook 06_pymefpp_swarp.ipynb.
-* Calibration in flux:
-			Last step is to calibrate the SWarped frame to convert e/s to physical units of erg/s/cm2.
+* Calibration in flux: Last step is to calibrate the SWarped frame to convert e/s to physical units of erg/s/cm2.
             To compute the multiplicative factor to go from e/s to physical units, pycavi uses the photometry
             available from Skymapper or SDSS to compare with the raw magnitudes obtained from the same stars in the field.
             The magnitude zero point required to go from raw to standard AB magnitudes is calculated and inserted
