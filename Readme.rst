@@ -1,11 +1,15 @@
 Pycavi: Mefpp python scripts
 ++++++++++++++++++++++++++++
 
-These scripts run mefpp to pre-process wide-field imaging mosaic data
-from the La Silla WFI instrument and Paranal's OmegaCam. At the end
-of the pre-processing run all instrument signatures have been removed
-and the data converted to e/s. Then, further processing is done to produce
-frames with a proper astrometry and a photometric calibration. Along the
+The scripts in this package are designed to aid in the processing
+of service mode data from the La Silla WFI instrument and Paranal's
+OmegaCam. These data usually contains observations of several targets,
+in various filters, *obtained accross many observing nights.* The data management
+can be a complex and tedious task which the authors of this package expect
+will be much alleviated by it. The end goal is to run mefpp to pre-process 
+the data removing the instrument signatures and the data converted to e/s. 
+Then, further processing is done to produce
+frames with a proper astrometry, and a good photometric calibration. Along the
 processing many quality control parameters, QC parameters, are produced
 to aid in the monitoring of the data quality.
 
