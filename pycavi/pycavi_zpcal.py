@@ -131,7 +131,7 @@ class ZPCalibration:
             if possible_filter in self.frame:
                 self.band = possible_filter
         if self.band is None:
-            self.band = paycavi_tools.keys_from_header(self.hdu, "FILTER").strip()
+            self.band = pycavi_tools.keys_from_header(self.hdu, "FILTER").strip()
 
         # we try to get a value
         try:
