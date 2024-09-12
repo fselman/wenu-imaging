@@ -6,24 +6,29 @@ import numpy as np
 import pandas as pd
 import urllib.request
 
+from matplotlib import cm
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-from astropy.visualization import simple_norm
-from astropy.coordinates import SkyCoord
-from astropy import units as u
-from astropy.io import fits
-from matplotlib import cm
 
-from astropy.wcs import WCS
-from astropy.io import fits
-from astropy.time import Time
-from astropy import units as u
 from scipy.optimize import minimize
-from astropy.stats import sigma_clipped_stats
-from astropy.coordinates import SkyCoord, get_moon, EarthLocation, AltAz
-from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
+
 from astroquery.sdss import SDSS
+
+from astropy import units as u
+
+from astropy.coordinates import SkyCoord, get_moon, EarthLocation, AltAz
+from astropy.io import fits
+from astropy.modeling import models, fitting
+from astropy.nddata import Cutout2D
+from astropy.stats import sigma_clipped_stats, gaussian_sigma_to_fwhm
+from astropy.time import Time
+from astropy.visualization import simple_norm
+from astropy.wcs import WCS
+
+from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
+
 from pycavi import pycavi_tools
+
 
 class ZPCalibration:
     """A class to contain a pandas dataframe with the data
@@ -276,6 +281,12 @@ class ZPCalibration:
         self.orig_moon_distance, self.orig_moon_fli, \
             self.orig_moon_alt, self.orig_moon_az = self.get_moon_from_frames()
 
+        # We get FITS keywords from ancestor frames for Phase 3
+        key_list = ["PRODCATG", "EXPTIME", "TEXPTIME", "MJD-OBS", 
+                    "MJD-END", "OBID1", "NCOMBINE", "PROG_ID",
+                    "OBSTECH", "FLUXCAL", "PROCSOFT", "TIMESYS", "SATLEVEL"]
+        self.phase3_keys, self.phase3_comment, self.phase3_cards = self.get_selected_keys_original(key_list)
+
         # create dictionary with keywords to be saved
         #
         self.keyword, self.comment, self.mefpp_header_cards = self.get_updated_keywords()
@@ -520,11 +531,13 @@ class ZPCalibration:
         dec = np.array(self.df["dej2000"]) * u.deg
 
         # Define positions and apertures
-        logging.info("do_phot: creating aperture object")
+        logging.info("calibrators_apertures: creating aperture object")
         self.positions = SkyCoord(ra=ra, dec=dec, frame="icrs")
         self.aperture = SkyCircularAperture(self.positions, r=self.ap_radius * u.arcsec)
         self.sky_annulus = SkyCircularAnnulus(self.positions, self.sky_annulus_r1 * u.arcsec,
                                               self.sky_annulus_r2 * u.arcsec)
+
+
 
     def do_phot(self):
         """
@@ -585,6 +598,70 @@ class ZPCalibration:
         raw_mags[aper_sum_bkgsub > 0] = -2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
         raw_mags[aper_sum_bkgsub <= 0] = 99.0
         self.df["raw_mags_" + self.band] = np.around(raw_mags, 4)
+
+
+        # we also get some morphological data
+        ra = np.array(self.df["raj2000"]) * u.deg
+        dec = np.array(self.df["dej2000"]) * u.deg
+        x_positions, y_positions = self.wcs.world_to_pixel_values(ra, dec)
+        # Define the cutout size for each source (in pixels)
+        cutout_size = (20, 20)
+        fwhm_values = []
+        ellipticity_values = []
+        theta_values = []
+        # Create a PSF model (Gaussian PSF in this case)
+        #psf_model = IntegratedGaussianPRF(sigma=4.0)  # Adjust sigma based on the expected FWHM
+        for x, y in zip(x_positions, y_positions):
+
+            # Check if the cutout would extend beyond the image boundaries
+            x_min, x_max = int(x - cutout_size[0] / 2), int(x + cutout_size[0] / 2)
+            y_min, y_max = int(y - cutout_size[1] / 2), int(y + cutout_size[1] / 2)
+
+            image_shape = self.data.shape  # Image dimensions
+            if x_min < 0 or x_max > image_shape[1] or y_min < 0 or y_max > image_shape[0]:
+                # Skip this source if it goes beyond the image boundaries
+                fwhm_values.append(np.nan)
+                ellipticity_values.append(np.nan)
+                theta_values.append(np.nan)
+                continue
+
+            position = (x, y)
+            cutout = Cutout2D(self.data, position, cutout_size)
+
+            # Fit a 2D Gaussian to the cutout to estimate FWHM and ellipticity
+            y_grid, x_grid = np.mgrid[:cutout.shape[0], :cutout.shape[1]]
+            gauss_init = models.Gaussian2D(amplitude=np.max(cutout.data), x_mean=cutout.shape[1]/2, y_mean=cutout.shape[0]/2)
+            fit_p = fitting.LevMarLSQFitter()
+
+            fitted_gauss = fit_p(gauss_init, x_grid, y_grid, cutout.data)
+
+            # FWHM can be estimated from the standard deviation of the Gaussian fit
+            x_stddev = fitted_gauss.x_stddev.value
+            y_stddev = fitted_gauss.y_stddev.value
+            theta = fitted_gauss.theta.value  # Rotation angle
+
+            sigma_major = np.sqrt((x_stddev * np.cos(theta))**2 + (y_stddev * np.sin(theta))**2)
+            sigma_minor = np.sqrt((x_stddev * np.sin(theta))**2 + (y_stddev * np.cos(theta))**2)
+            # Convert to FWHM using the standard Gaussian to FWHM factor (2.355)
+            fwhm_major = sigma_major * gaussian_sigma_to_fwhm
+            fwhm_minor = sigma_minor * gaussian_sigma_to_fwhm
+
+            fwhm_avg = (fwhm_major + fwhm_minor)/2.0  # Average FWHM
+
+            # Ellipticity is defined as 1-b/a, where a and b are 
+            # the Gaussian sigmas along the minoa and major axes.
+            ellipticity = 1 - fwhm_minor/fwhm_major
+
+            fwhm_values.append(fwhm_avg)
+            ellipticity_values.append(ellipticity)
+            theta_values.append(theta)
+
+        self.fwhm_median = np.nanmedian(fwhm_values)*self.plate_scale # Median FWHM in arcsec
+        self.ellipticity_median = np.nanmedian(ellipticity_values)    # Ellipticity defined as 1 - b/a
+        self.theta_median = np.degrees(np.nanmedian(theta_values)) # Median position angle of stellar images in degrees
+        logging.info("do_phot: **** median fwhm: {} ellipticity: {}  theta: {}".format(self.fwhm_median, self.ellipticity_median, self.theta_median))
+
+
         logging.info("do_phot: Done.")
 
     def get_zp_from_df(self):
@@ -704,6 +781,161 @@ class ZPCalibration:
         logging.info('get_orig_sky_levels: Done.')
         return orig_skies_adu
 
+    def get_selected_keys_original(self, key_list=None):
+        """Read original files used by Swarp to read a set of
+        selectd keywords. It processes this list to return a
+        list of values and comment fields to be inserted in
+        the primqry headers of the calibrated file."""
+        logging.info('get_selected_keys_original: reading selected FITS keys from original files used by Swarp.')
+
+        if key_list == None:
+            key_list = ["PROCATG","NCOMBINE", "EXPTIME", "TEXPTIME", "MJD-OBS", "MJD-END",
+                        "PROG-ID", "OBSTECH", "FLUXCAL", "PROCSOFT", "TIMESYS", "SATLEVEL"]
+
+        # We loop over frames reading values
+        c = 1
+        frame_keys = {}
+        for file_name in self.parents_list:
+            parent_fits_name = file_name.split("/")[-1]
+            # we read the primary FITS header of the ancestor file i
+            with fits.open(file_name) as hdul:
+                hdr = hdul[0].header
+                comments = hdr.comments
+
+                for akey in key_list:
+                    if akey in hdr:
+                        avalue = hdr[akey]
+                        acomment = comments[akey]
+                    else:
+                        avalue = "UNKNOWN"
+                        acomment = "UNKNOWN"
+                    if parent_fits_name not in frame_keys:
+                        frame_keys[parent_fits_name]={}
+                    frame_keys[parent_fits_name][akey] = (avalue,acomment)
+                    logging.info("get_selected_keys_original:{}/{}  {}: {} = {} / {}".format(c, len(self.parents_list), parent_fits_name, akey, avalue, acomment))
+            c += 1
+
+        logging.info('get_selected_keys_original: Done.')
+
+        # Phase3 keys are extracted from the ancestor files
+        # some of them directly, but others need some further
+        # processing. We create two dictionaries to contain them
+        keyword = {}
+        comment = {}
+
+        # we then fill all the requested keywords with values from
+        # the first frame.
+        frame_list = list(frame_keys.keys())
+        frame0 = frame_list[0]
+        phase3_keys = list(frame_keys[frame0].keys())
+        for akey in phase3_keys:
+            keyword[akey] = frame_keys[frame0][akey][0]
+            comment[akey] = frame_keys[frame0][akey][1]
+            logging.info("get_selected_keys_original: {0} = {1} / {2}".format(akey, keyword[akey], comment[akey]))
+
+        # some of the keys needs further processing
+        # Some keys require looping over all frames:
+        #
+        # TEXPTIME
+        # MJS-END
+        # OBSIDi
+        # PROG_ID, PROGIDi
+        # so these will be overwritten with the proper values.
+        #
+        try:
+            mjdobs = float('inf')
+            if "MJD-OBS" in frame_keys[frame0]:
+                for aframe in frame_keys.keys():
+                    mjdobs = min(mjdobs, frame_keys[aframe]["MJD-OBS"][0])
+                keyword["MJD-OBS"] = mjdobs
+        except:
+            logging.info("get_selected_keys_original: failed to get minimum MJD-OBS")
+
+        # we set MJD-END to the MJD-END of the last frame
+        try:
+            mjdend = float('-inf')
+            if "MJD-END" in frame_keys[frame0]:
+                for aframe in frame_keys.keys():
+                    mjdend = max(mjdend, frame_keys[aframe]["MJD-END"][0])
+                keyword["MJD-END"] = mjdend
+        except:
+            logging.info("get_selected_keys_original: failed to get maximum MJD-END")
+
+        # we set the total exposure time to the sume
+        try:
+            total_exptime = 0.0
+            if "EXPTIME" in frame_keys[frame0]:
+                for aframe in frame_keys.keys():
+                    total_exptime += frame_keys[aframe]["EXPTIME"][0]
+                keyword["TEXPTIME"] = total_exptime
+        except:
+            logging.info("get_selected_keys_original: failed to get TEXPTIME")
+
+        logging.info("get_selected_keys_original: mjd-obs: {} mjd-end: {} delta: {} s texptime: {}".format(mjdobs, mjdend, (mjdend-mjdobs)*84600., total_exptime))
+
+        # we set the satlevel to the avergage of the frames
+        try:
+            avg_satlevel = 0.0
+            if "SATLEVEL" in frame_keys[frame0]:
+                for aframe in frame_keys.keys():
+                    avg_satlevel += frame_keys[aframe]["SATLEVEL"][0]
+                keyword["SATLEVEL"] = avg_satlevel/len(frame_list)
+        except:
+            logging.info("get_selected_keys_original: failed to get average of SATLEVEL")
+
+        # we check whether we have multiple OB.IDS
+        #try:
+        obid1 = []
+        if "OBID1" in frame_keys[frame0]:
+            for aframe in frame_keys.keys():
+                obid1.append(frame_keys[aframe]["OBID1"][0])
+            obid1_set = list(set(obid1))
+
+        for i in range(len(obid1_set)):
+            keyword[f"OBID{i+1}"] = obid1_set[i]
+            comment[f"OBID{i+1}"] = frame_keys[frame0]["OBID1"][1] # assume same comment
+        #except:
+            #logging.info("get_selected_keys_original: failed to get list of OB IDs")
+
+        # we check whether we have multiple PROG IDs
+        # Note that ESO Phase3 is not consistent in
+        # its treatment of OBID and PROGID...
+        #
+        # If there are multiple PROG_IDs we create new
+        # keyword, so we also need the comment cards.
+        #try:
+        progid = []
+        if "PROG_ID" in frame_keys[frame0]:
+            for aframe in frame_keys.keys():
+                progid.append(frame_keys[aframe]["PROG_ID"][0])
+            progid_set = list(set(progid))
+        print(progid_set)
+
+        if len(progid_set) == 1:
+            keyword["PROG_ID"] = progid_set[0]
+        else:
+            for i in range(len(progid_set)):
+                keyword[f"PROGID{i+1}"] = progid_set[i]
+                comment[f"PROGID{i+1}"] = frame_keys[frame0]["PROG_ID"][1]
+            keyword["PROG_ID"] = "MULTI"
+        #except:
+        #   logging.info("get_selected_keys_original: failed to get list of PROG IDs")
+
+        # we must change NCOMBINE as it comes with value 1
+        ncombine = len(self.parents_list)
+        keyword["NCOMBINE"] = ncombine
+        comment["NCOMBINE"] = "Number of frames combined"
+
+        # here we create the list of card tuples
+        # note that here we add to a previous list
+        mefpp_header_list = []
+        for akey in keyword.keys():
+            mefpp_header_list.append((akey, keyword[akey], comment[akey]))
+            logging.info("{0} = {1} / {2}".format(akey, keyword[akey], comment[akey]))
+
+        return keyword, comment, mefpp_header_list
+
+
     def get_mag_sky(self):
         """Calculate the surface brightness of sky in magnitudes per arcsec^2"""
         logging.info("get_mag_sky: surface brightness of sky in magnitudes per arcsec^2")
@@ -777,10 +1009,6 @@ class ZPCalibration:
         """Load dictionary with keywords to be writen to primary headers"""
         logging.info("get_keywords: getting the updated keywords")
 
-        # the keys are the keywords. The values the corresponding dictionary values.
-        keyword = {}
-        comment = {}
-
         # we create PRO keywords to indicate frames that went into coadd.fits
         ancestor_frames_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d}".format(i + 1) for i in
                                 range(len(self.orig_skies_phys))]
@@ -797,6 +1025,9 @@ class ZPCalibration:
         moon_az_keys = ["HIERARCH ESO PYCAVI PRO ANCESTOR{:02d} MOON AZ".format(i + 1) for i in
                         range(len(self.orig_skies_phys))]
 
+        # the keys are the keywords. The values the corresponding dictionary values.
+        keyword = {}
+        comment = {}
         i = 0
         zkeys = self.orig_skies_phys.keys()
         for akey in zkeys:
@@ -809,45 +1040,63 @@ class ZPCalibration:
             logging.info("get_keywords: " + ancestor_frames_keys[i] + " = " + keyword[ancestor_frames_keys[i]] +
                          " / " + comment[ancestor_frames_keys[i]])
 
-            keyword[sky_mean_keys[i]] = self.orig_skies_phys[akey][0]
+            keyword[sky_mean_keys[i]] = float("{:.5e}".format(self.orig_skies_phys[akey][0]))
             comment[sky_mean_keys[i]] = "Mean of sky %d" % (i + 1)
             logging.info("get_keywords: " + sky_mean_keys[i] + " = " + "%.3E" % (keyword[sky_mean_keys[i]]))
 
-            keyword[sky_std_keys[i]] = self.orig_skies_phys[akey][1]
+            keyword[sky_std_keys[i]] = float("{:.5e}".format(self.orig_skies_phys[akey][1]))
             comment[sky_std_keys[i]] = "Std dev of sky %d" % (i + 1)
             logging.info("get_keywords: " + sky_std_keys[i] + " = %.3E" % (keyword[sky_std_keys[i]]))
 
-            keyword[moon_fli_keys[i]] = self.orig_moon_fli[akey]
+            keyword[moon_fli_keys[i]] = round(self.orig_moon_fli[akey],3)
             comment[moon_fli_keys[i]] = "Moon FLI of frame %d" % (i + 1)
             logging.info("get_keywords: " + moon_fli_keys[i] + " = {0}".format(keyword[moon_fli_keys[i]]))
 
-            keyword[moon_distance_keys[i]] = self.orig_moon_distance[akey]
+            keyword[moon_distance_keys[i]] = round(self.orig_moon_distance[akey],3)
             comment[moon_distance_keys[i]] = "Moon distance of frame %d" % (i + 1)
             logging.info("get_keywords: " + moon_distance_keys[i] + " = {0}".format(keyword[moon_distance_keys[i]]))
 
-            keyword[moon_alt_keys[i]] = self.orig_moon_alt[akey]
+            keyword[moon_alt_keys[i]] = round(self.orig_moon_alt[akey],3)
             comment[moon_alt_keys[i]] = "Moon Altitude of frame %d" % (i + 1)
             logging.info("get_keywords: " + moon_alt_keys[i] + " = {0}".format(keyword[moon_alt_keys[i]]))
 
-            keyword[moon_az_keys[i]] = self.orig_moon_az[akey]
+            keyword[moon_az_keys[i]] = round(self.orig_moon_az[akey],3)
             comment[moon_az_keys[i]] = "Moon Azimuth of frame %d" % (i + 1)
             logging.info("get_keywords: " + moon_az_keys[i] + " = {0}".format(keyword[moon_az_keys[i]]))
 
             i += 1
 
+        # here we deal with the fact that comments are transfered to COMMENT cards
+        # by adding new keyword to hold comments. Note that we need to create
+        # the list of keywords outside the for as the list will change as the
+        # loop proceeds.
+        key_list = list(keyword.keys())
+        for akey in key_list:
+            zcomment = comment[akey]
+            name_str = akey+" INFO"
+            if name_str not in keyword.keys():
+                n_name = len(name_str.strip())
+                nmax = 79 - n_name - 3
+                if nmax > 0:
+                    keyword[akey+" INFO"] = zcomment[0:nmax]
+                else:
+                    keyword[akey+" INFO"] = ""
+                comment[akey] = ""
+                comment[akey+" INFO"] = ""
+
         # we report several other values important to interpret data
         #
-        cards = [["HIERARCH ESO PYCAVI PRO SKY UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units of sky mean and std"],
-                 ["HIERARCH ESO PYCAVI QC SKYMEAN", self.mean_sky, "Average sky mean and std"],
-                 ["HIERARCH ESO PYCAVI QC SKYMEAN UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYMEAN"],
-                 ["HIERARCH ESO PYCAVI QC SKYSTD", self.std_sky, "Average sky std dev"],
-                 ["HIERARCH ESO PYCAVI QC SKYSTD UNITS", "10**(-15)*erg/s/cm**2/arcsec**2", "Units for QC SKYSTD"],
-                 ["HIERARCH ESO PYCAVI QC ZPHC", self.zphc, "Zero point for data in e/s -- HC Plots"],
+        cards = [["HIERARCH ESO PYCAVI PRO SKY UNITS", "erg/s/cm**2/arcsec**2", "Units of sky mean and std"],
+                 ["HIERARCH ESO PYCAVI QC SKYMEAN", float("{:.5e}".format(self.mean_sky)), "Average sky mean and std"],
+                 ["HIERARCH ESO PYCAVI QC SKYMEAN UNITS", "erg/s/cm**2/arcsec**2", "Units for QC SKYMEAN"],
+                 ["HIERARCH ESO PYCAVI QC SKYSTD", float("{:.5e}".format(self.std_sky)), "Average sky std dev"],
+                 ["HIERARCH ESO PYCAVI QC SKYSTD UNITS", "erg/s/cm**2/arcsec**2", "Units for QC SKYSTD"],
+                 ["HIERARCH ESO PYCAVI QC ZPHC", round(self.zphc,3), "Zero point for data in e/s -- HC Plots"],
                  ["HIERARCH ESO PYCAVI QC BAND NAME", self.band, "Name of pass band"],
                  ["HIERARCH ESO PYCAVI QC BAND WIDTH", self.filter_width, "Width of pass band [Angstrom]"],
                  ["HIERARCH ESO PYCAVI QC BAND WAVELENGTH", self.plambda, "Pivot lambda of band [Angstrom]"],
-                 ["HIERARCH ESO PYCAVI QC MAGSKY", self.magsky, "Sky brightness mags/arcsec^2"],
-                 ["HIERARCH ESO PYCAVI QC DN2FLAM", self.factor_dn_to_flambda, "Conv. fact. mosaic DN to Flambda"],
+                 ["HIERARCH ESO PYCAVI QC MAGSKY", round(self.magsky,3), "Sky brightness mags/arcsec^2"],
+                 ["HIERARCH ESO PYCAVI QC DN2FLAM", float("{:.5e}".format(self.factor_dn_to_flambda)), "Conv. fact. mosaic DN to Flambda"],
                  ["HIERARCH ESO PYCAVI QC BUNIT", self.bunit, "Units of Data Numbers this frame"],
                  ["HIERARCH ESO PYCAVI QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
                  ["HIERARCH ESO PYCAVI QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
@@ -855,23 +1104,46 @@ class ZPCalibration:
                  ["HIERARCH ESO PYCAVI QC PHO MAGMAX", self.mag_max, "max mag for photometric calibrators (faintest)"],
                  ["HIERARCH ESO PYCAVI QC PHO MAGMIN", self.mag_min, "min mag for photometric calibrators (brightest)"],
                  ["HIERARCH ESO PYCAVI QC PHO CALFILE", self.phot_cal_file.split('/')[-1], "cal file"],
-                 ["HIERARCH ESO PYCAVI QC MAGZP", self.zp2, "ZP to AB magnitudes in BAND"],
-                 ["HIERARCH ESO PYCAVI QC AVGAIRM", self.avg_airmass, "Average airmass of ancestor frames"],
-                 ["HIERARCH ESO PYCAVI QC AVGGAIN", self.avg_gain, "Average gain of ancestor frames"]
+                 ["HIERARCH ESO PYCAVI QC MAGZP", round(self.zp2,3), "ZP to AB magnitudes in BAND"],
+                 ["HIERARCH ESO PYCAVI QC AVGAIRM", round(self.avg_airmass,3), "Average airmass of ancestor frames"],
+                 ["HIERARCH ESO PYCAVI QC AVGGAIN", round(self.avg_gain), "Average gain of ancestor frames"]
                  ]
 
+        # some phase3 cards
         for zcard in cards:
             zkey = zcard[0]
             zval = zcard[1]
             zcomment = zcard[2]
             keyword[zkey] = zval
-            comment[zkey] = zcomment
+
+            # fits writes comment field as a COMMENT file if card is too long
+            # to avoid this I create a new card to contain only the comment
+            name_str = zkey+" INFO"
+            n_name = len(name_str.strip())
+            nmax = 79 - n_name - 3
+            if nmax > 0:
+                keyword[zkey+" INFO"] = zcomment[0:nmax]
+            else:
+                keyword[zkey+" INFO"] = ""
+            comment[zkey] = ""
+            comment[zkey+" INFO"] = ""
             logging.info("get_keywords: " + zkey + " = " + "{0}".format(keyword[zkey]) + " / " + comment[zkey])
 
         # here we create the list of card tuples
         mefpp_header_list = []
         for akey in keyword.keys():
             mefpp_header_list.append((akey, keyword[akey], comment[akey]))
+
+        # some phase3 cards
+        phase3_cards = [["PSF_FWHM", round(self.fwhm_median,3), "Median FWHM  in arcsec"],
+                        ["ELLIPTIC", round(self.ellipticity_median, 5), "Median ellipt. of sources 1 - b/a]"],
+                        ["PSF_THET", round(self.theta_median, 1), "Median PA of sources in degrees"]]
+
+        for zcard in phase3_cards:
+            zkey = zcard[0]
+            zval = zcard[1]
+            zcomment = zcard[2]
+            mefpp_header_list.append((zkey, zval, zcomment))
 
         return keyword, comment, mefpp_header_list
 
@@ -886,25 +1158,30 @@ class ZPCalibration:
 
             # FSE CHECK: before writting new keywords we read the "HIERARCH ESO PYCAVI QC ADU2DN"
             #            keyword if it exists, we will need it at the end.
-            if "PYCAVI QC DN2FLAM" not in hdr.keys():
+            #if "PYCAVI QC DN2FLAM" not in hdr.keys():
+            if "BSCALE" not in hdr.keys():
                 old_factor = 1.0
             else:
-                old_factor = hdr["PYCAVI QC DN2FLAM"]
+                old_factor = hdr["BSCALE"]
 
             logging.info('old_factor: {}'.format(old_factor))
 
             # FSE CHECK: we should use update better so as not to create duplicate entries.
             # we start with the selected headers that will go close to the beginning
-            hdr.update(BUNIT=self.keyword["HIERARCH ESO PYCAVI QC BUNIT"],
-                                   comment=self.comment["HIERARCH ESO PYCAVI QC BUNIT"])
-            hdr.update(MAGZP=self.keyword["HIERARCH ESO PYCAVI QC MAGZP"],
-                                   comment=self.comment["HIERARCH ESO PYCAVI QC MAGZP"])
+            hdr.set("BUNIT", self.keyword["HIERARCH ESO PYCAVI QC BUNIT"],
+                                   self.comment["HIERARCH ESO PYCAVI QC BUNIT"])
+            hdr.set("MAGZP", round(self.keyword["HIERARCH ESO PYCAVI QC MAGZP"],3),
+                                   self.comment["HIERARCH ESO PYCAVI QC MAGZP"])
 
-            hdr.update(MAGSKY=self.keyword["HIERARCH ESO PYCAVI QC MAGSKY"],
-                                   comment=self.comment["HIERARCH ESO PYCAVI QC MAGSKY"])
+            hdr.set("MAGSKY", round(self.keyword["HIERARCH ESO PYCAVI QC MAGSKY"],3),
+                                   self.comment["HIERARCH ESO PYCAVI QC MAGSKY"])
+            hdr.set("ABMAGLIM", round(self.magzp - 2.5*np.log10(5.0*self.keyword["HIERARCH ESO PYCAVI QC SKYSTD"]),3), "5-sigma magnitude limit")
 
-            hdr.update({"HIERARCH ESO PYCAVI TOTEXP": self.total_exptime}, 
-                                   comment="Total exposure time (s)")
+            # the phase3 keys
+            hdr.set("PHOTZP", round(self.keyword["HIERARCH ESO PYCAVI QC MAGZP"],3),
+                              self.comment["HIERARCH ESO PYCAVI QC MAGZP"])
+            hdr.set("PHOTSYS", "AB", "Photometric system AB or VEGA")
+
             #hdr["EXPTIME"] = (self.total_exptime, "Total exposure time (s)")
             # we continue with the full set of keywords near the end
             #        for zcard in cards:
@@ -916,7 +1193,21 @@ class ZPCalibration:
                 zkey = acard[0]
                 zval = acard[1]
                 zcomment = acard[2]
-                hdr.update({zkey: zval}, comment=zcomment)
+                hdr.set(zkey, zval, zcomment)
+
+            # We add the phase3 keys
+            # self.phase3_keys, self.phase3_comment, self.phase3_cards
+            cards_to_add = self.phase3_cards
+            for acard in cards_to_add:
+                zkey = acard[0]
+                zval = acard[1]
+                zcomment = acard[2]
+                hdr.set(zkey, zval, zcomment)
+
+            # before final writing we remove empty comments
+            comments_to_remove = [key for key, value in hdr.items() if key == 'COMMENT' and value.strip() == '']
+            for comment in comments_to_remove:
+                hdr.remove(comment)
 
             # we finally rewrite the data array
             #
@@ -927,11 +1218,74 @@ class ZPCalibration:
                                              label='Pixel value distribution BEFORE applying factor_dn_to flambda.', 
                                              nbins=30, x_range="8-deciles", figname=None)
             factor = self.factor_dn_to_flambda/old_factor
-            hdr.update(BSCALE=factor,
+            hdr.set("BSCALE", float("{:.8e}".format(factor)),
                                    comment="scale factor to apply to data")
-            hdr.update(BZERO=0.0,
+            hdr.set("BZERO", 0.0,
                                    comment="numerical offset to apply to data")
+
+            # we update the SATLEVEL accordingly
+            if "SATLEVEL" in hdr.keys(): 
+                satlevel = hdr["SATLEVEL"]*factor
+                hdr.set("SATLEVEL",float("{:.5e}".format(satlevel)), "Saturation level in frame")
+                hdr.set("MAGSATL",round(self.magzp - 2.5*np.log10(satlevel), 3), "Magnitude saturation level in frame")
+            else:
+                hdr.set("SATLEVEL", "UNKNOWN", "Saturation level in frame")
+                hdr.set("MAGSATL", "UNKNOWN", "Magnitude saturation level in frame")
+
+            # we finally deem the frame as calibrated
+            hdr.set("FLUXCAL", "CALIBRATED")
+
+
+            # here we reorder the headers
+            # ChatGPT personal comm.
+            #
+            logging.info("update_frame: reordering headers...")
+
+            # Separate non-HIERARCH and HIERARCH keywords along with their values and comments
+            non_hierarch = []
+            hierarch = []
+
+            n_hierarch = 0
+            n_nonhierarch = 0
+            for key, value in hdr.items():
+                comment = hdr.comments[key]  # Get the comment associated with the keyword
+                if len(key) > 8:
+                    n_hierarch+=1
+                    hierarch.append((key, value, comment))
+                else:
+                    n_nonhierarch+=1
+                    non_hierarch.append((key, value, comment))
+
+            # Sort the HIERARCH keywords
+            hierarch.sort(key=lambda x: x[0])
+
+            # We create a new header
+            new_header = fits.Header()
+
+            # Now clear the current header
+            #header_keys = list(hdr.keys())  # Get original header keys
+            reserved_keys = ['COMMENT', 'HISTORY', 'END']
+            #for key in header_keys:
+                #if key not in reserved_keys:
+                    #del hdr[key]
+
+            # Add back the non-HIERARCH keywords first (with comments)
+            for key, value, comment in non_hierarch:
+                new_header[key] = (value, comment)
+
+            # Add the sorted HIERARCH keywords at the end (with comments)
+            for key, value, comment in hierarch:
+                new_header[key] = (value, comment)
+
+            # before final writing we remove empty comments
+            comments_to_remove = [key for key, value in new_header.items() if key == 'COMMENT' and value.strip() == '']
+            for comment in comments_to_remove:
+                new_header.remove(comment)
+
+            hdul[0].header = new_header
             hdul.flush()
+            logging.info("update_frame: done, headers have been reordered successfully n_hierarch: {} n_nonhierarch: {}.".format(n_hierarch, n_nonhierarch))
+            # --- END OF WITH STATEMENT ----
 
         # we check the data values
         x1 = self.instrument.img_sec_x1
