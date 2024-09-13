@@ -1,15 +1,15 @@
-- Allow selection or do all in notebooks 7 and 7b
-- Add path to sextractor in notebooks that use it.
 - Add creation of region files for ds9 if user so chooses.
-- DONE. ZPcal notebook: display all target/filters and provide
-  a way to chose which to calibrate.
-
 - Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
-
 - Leave only the check_calibration_frame routine in notebook 7? The current one
   is a sannity check on the ZPCal object but it might not be needed in production.
+
+# ------ DONE -------
+- DONE. Allow selection or do all in notebooks 7 and 7b
+- DONE. Add path to sextractor in notebooks that use it.
+- DONE. ZPcal notebook: display all target/filters and provide
+  a way to chose which to calibrate.
 
 - Done. Swarp notebook. Add simple way to choose which list of frames to swarp:
     - create a dictionary with the tags and display it. Then swarp from the
