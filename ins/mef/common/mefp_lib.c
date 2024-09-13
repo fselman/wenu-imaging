@@ -29,7 +29,7 @@ Description	:	MEF library utilities, from wfi
 #include "qfits.h"
 #include "xmemory.h"
 
-static char recipe_version[] = "mefpp-2.0.0";
+static char recipe_version[] = "mefpp-2.0.3";
 
 /*---------------------------------------------------------------------------
   Function codes
