@@ -6,6 +6,9 @@ BINDIR = ./src/bin
 CP      = cp -r
 RM = rm -rf
 
+
+$(shell mkdir -p $(BINDIR))
+
 PROGS = $(BINDIR)/3color \
 	$(BINDIR)/average \
 	$(BINDIR)/catcube \
