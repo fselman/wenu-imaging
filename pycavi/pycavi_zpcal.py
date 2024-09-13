@@ -1,3 +1,4 @@
+import glob
 import os
 import copy
 import logging
@@ -28,6 +29,7 @@ from astropy.wcs import WCS
 from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
 
 from pycavi import pycavi_tools
+from pycavi.pycavi_astromatic_tools import get_swarp_lists_dict
 
 
 class ZPCalibration:
@@ -1302,6 +1304,55 @@ class ZPCalibration:
 
         logging.info("update_frame: Image updated correctly")
 
+# --------------------------------------------------------------------------------------------
+# Procedure to list all files that will be calibrated or whose calibration
+# will be checked to produce a QC plot.
+#
+def get_files_dict(reduced_std_dir, reduced_science_dir, dir_name, filters, reject_observations):
+    """ Search for all files with names *.coadd.fits under the target partitions
+    under the reduced_std_dir and reduced_science_dir. Return a list of files for
+    each target partition. If filters is non-empty it will restrict the files to
+    those of the corresponding filters, otherwise it will include all.
+
+    Input
+    =====
+
+        - reduced_std_dir: the subdirectory of the project containing
+                        the standard star observations previously swarped.
+        - reduced_science_dir: the subdirectory of the project containing
+                        the science observations previously swarped.
+        - dir_name: either config['Directories']['swarp_dir_name'] or
+                           config['Directories']['cal_dir_name']
+        - filters: list of filters to be calibrated. Empty means all.
+        - reject_observations: list of observations to be skipped
+    """
+    zpcal_dict = {}
+
+
+    # We first list the standard stars fields data partitions
+    swarp_lists_std = get_swarp_lists_dict(reduced_std_dir, reject_observations, filters)
+    std_observation_tags = list(set(swarp_lists_std.keys()))
+    std_observation_tags.sort()                # Needed to ensure same index in every run
+    for i in range(len(std_observation_tags)):
+        new_key = reduced_std_dir+std_observation_tags[i].split("/")[0]
+        file_list = glob.glob(new_key+"/"+dir_name+'/*.coadd.fits')
+        zpcal_dict[new_key] = file_list
+        #logging.info("index: {} observation_tag: {}".format(i,new_key))
+        #print(file_list)
+
+    # We next list the science observation fields data partitions
+    swarp_lists_sci = get_swarp_lists_dict(reduced_science_dir, reject_observations, filters)
+    sci_observation_tags = list(set(swarp_lists_sci.keys()))    
+    sci_observation_tags.sort()                # Needed to ensure same index in every run
+    for i in range(len(sci_observation_tags)):
+        new_key = reduced_science_dir+sci_observation_tags[i].split("/")[0]
+        file_list = glob.glob(new_key+"/"+dir_name+'/*.coadd.fits')
+        zpcal_dict[new_key] = file_list
+        #logging.info("index: {} observation_tag: {}".format(i,new_key))
+        #print(file_list)
+
+    return zpcal_dict
+
 # ------------------------------------------------------------------------------------------------------
 # This calibration check scrip needs the ZPCal object above.
 # It will probably become obsolete in production.
@@ -1494,7 +1545,7 @@ def plot_calibration_check_zpcal(query_catalogue, sex_catalogue_path, zp_cal):
 # and does apperture photometry the same way as ZPCal but it does not calculate
 # zero points. It just a check from info in the frame itself.
 #
-def plot_calibration_check_frame(image_path, calibration_dir, swarp_dir):
+def plot_calibration_check_frame(image_path):
     """
     Created 5 different check plots from the SExtractor photometry on the swarped OmegaCam frame.
     * Calibrated magnitudes vs Catalogue magnitudes
@@ -1569,6 +1620,7 @@ def plot_calibration_check_frame(image_path, calibration_dir, swarp_dir):
         
     zp_cal = ZPcal(input_dict, zp_data, zp_hdu)
 
+    calibration_dir = os.path.dirname(image_path)   # We assume that we work only in the link in the calibration directory
     query_catalogue_path = calibration_dir+'/'+zp_cal.phot_calfile
     logging.info("pycavi qc phot: reading catalogue used for query {}".format(query_catalogue_path.split('/')[-1]))
     phot_catalogue = pd.read_csv(query_catalogue_path)
