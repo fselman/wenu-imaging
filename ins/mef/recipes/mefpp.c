@@ -348,7 +348,7 @@ int mef_engine(mef_bb * bb)
     char    *   cval_ptr;
 	char		cval[80];
     char        cval2[80];
-    float   exptime, mjdobs, mjdend;
+    double   exptime, mjdobs, mjdend;
     float   science_mean, science_median, science_stdev;
     int     science_nplanes;
 
@@ -1174,6 +1174,7 @@ int mef_engine(mef_bb * bb)
                mjdobs = atof(qfits_header_getstr(fh, "MJD-OBS"));
                mjdend = mjdobs + exptime/86400.;
                sprintf(cval, "%.8f", mjdend);
+               e_comment(1, "frame: %s  --  mjdobs: %f  exptime: %f  mjdend: %f  cval: %s",bb->science_frame_name[p],  mjdobs, exptime, mjdend, cval);
                qfits_header_add_after(fh, "MJD-OBS", "MJD-END", cval, "End of exposure MJD", NULL);
 
                /* we set the time system explicitly */
