@@ -37,15 +37,17 @@ class ZPCalibration:
     to calibrate frame and the zero points needed for the calibration."""
 
     # current available filters to work with
-    _available_filters = ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS", "z_SDSS",  "NB_659"]
+    _standard_filters = ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS", "z_SDSS"]
+    _secondary_filters = ["NB_659"]
+    _available_filters = _standard_filters + _secondary_filters
 
     def __init__(self, frame, swarp_dir, calibration_dir, observatory, instrument,
                  mag_min, mag_max, 
                  ap_radius, ap_sky_r1, ap_sky_r2, 
                  query_calibrator, query_radius=0.7, query_min_mag=9.0, query_max_mag=19.0):
         """
-        Class to manage the calibration of images from instrumental units (adu/s or e-/s) into proper physical units
-        (erg/s/cm2/arcsec2).
+        Class to manage the calibration of images from instrumental units (e-/s) 
+        into proper physical units (erg/s/cm2).
 
         Parameters
         ----------
@@ -194,6 +196,13 @@ class ZPCalibration:
             logging.info("Sorry, but for the moment only Skymapper and SDSS are available as calibrator.")
             logging.info("Finishing the run")
             return
+
+        # If the filter is not in the standard set of the photometric calibrator
+        # catalogue, we add a column to the catalogue using known transformation
+        # eaquation for stars.
+        #
+        if self.band in self._secondary_filters:
+            self.add_secondary_filter_to_df()
 
         # creates the aperture objects
         #
@@ -419,6 +428,7 @@ class ZPCalibration:
             skymapper_df = skymapper_df[df_total_columns]
             skymapper_df = self.convert_sm_to_sdss(skymapper_df)
             skymapper_df.to_csv(skymapper_clean, index=False)
+            self.phot_cal_clean = skymapper_clean
 
         return skymapper_df
 
@@ -517,6 +527,7 @@ class ZPCalibration:
             sdss_raw = self.calibrationdir + "/sdss_query_result_{}.csv".format(self.object)
             sdss_clean = sdss_raw[:-4] + "_clean.csv"
             self.phot_cal_file = sdss_clean
+            self.phot_cal_clean = sdss_clean
             sdss_df.to_csv(sdss_clean, index=False)
             return sdss_df
         else:
@@ -662,9 +673,58 @@ class ZPCalibration:
         self.ellipticity_median = np.nanmedian(ellipticity_values)    # Ellipticity defined as 1 - b/a
         self.theta_median = np.degrees(np.nanmedian(theta_values)) # Median position angle of stellar images in degrees
         logging.info("do_phot: **** median fwhm: {} ellipticity: {}  theta: {}".format(self.fwhm_median, self.ellipticity_median, self.theta_median))
-
-
         logging.info("do_phot: Done.")
+
+    def add_secondary_filter_to_df(self):
+        """
+        Uses a published transformation equation to determine the magnitudes
+        in the secondary band as a function of the standard magnitudes.
+        """
+
+        if self.band == "NB_659":
+            # Drew+14 colors for MS stars (Table4)
+            # Changed from Vega to AB mags
+            drew_r_i_ab = np.array([0.061, 0.068, 0.070, 0.071, 0.083, 0.096, 0.115, 0.142, 0.151, 0.162, 0.174, 0.190,
+                                    0.210, 0.217, 0.227, 0.238, 0.269, 0.302, 0.366, 0.395, 0.443, 0.476, 0.491, 0.492,
+                                    0.540, 0.571, 0.609, 0.616, 0.632, 0.66, 0.681, 0.735, 0.937, 1.002, 1.147, 1.325,
+                                    1.381, 1.392])
+            drew_r_ha_ab = np.array([0.232, 0.248, 0.235, 0.241, 0.229, 0.226, 0.225, 0.22, 0.217, 0.210, 0.199, 0.186,
+                                     0.175, 0.173, 0.172, 0.172, 0.185, 0.207, 0.263, 0.288, 0.327, 0.351, 0.362, 0.362,
+                                     0.394, 0.410, 0.425, 0.428, 0.435, 0.446, 0.455, 0.477, 0.564, 0.588, 0.644, 0.699,
+                                     0.720, 0.722])
+
+            # select colors r_SDSS, i_SDSS and raw, clean nans and infinites
+            if os.path.isfile(self.phot_cal_clean):
+                logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
+                phot_cal_df = pd.read_csv(self.phot_cal_clean)
+                r_sdss = phot_cal_df["r_SDSS"].to_numpy()
+                i_sdss = phot_cal_df["i_SDSS"].to_numpy()
+            else:
+                r_sdss = self.df["r_SDSS"].to_numpy()
+                i_sdss = self.df["i_SDSS"].to_numpy()
+
+            clean_nans = ~np.isnan(r_sdss) & ~np.isnan(i_sdss)
+            clean_mags = (r_sdss >= self.mag_min) & (r_sdss <= self.mag_max)
+            condition = clean_nans & clean_mags
+
+            r_minus_i = np.full_like(r_sdss, np.nan, dtype=np.float64)
+            r_minus_i[condition] = r_sdss[condition] -  i_sdss[condition]
+
+            clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
+            r_minus_i[~clean_color] = np.nan
+
+
+            interp_data = np.interp(r_minus_i, drew_r_i_ab, drew_r_ha_ab)
+            calculated_ha_ab = r_sdss - interp_data
+            pycavi_tools.pycavi_qc_plot_hist(calculated_ha_ab, label='Halpha calculated', nbins=30, x_range="full")
+            self.df[self.band] = calculated_ha_ab
+
+            # we write the band m agnitudes to cleaned phot cat
+            phot_cal_df[self.band] = calculated_ha_ab
+            phot_cal_df.to_csv(self.phot_cal_clean, index=False)
+
+            logging.info("add_secondary_filter_to_df: filter: NB_659 added to df")
+
 
     def get_zp_from_df(self):
         """
@@ -687,67 +747,34 @@ class ZPCalibration:
             y_raw, y_exp = args
             return np.sum((y_exp - y_raw - zp_test) ** 2)
 
-        def sigma_clip(y_raw, y_exp, niter=3):
+        def sigma_clip(y_raw, y_exp, niter=5):
             sel = np.ones(len(y_raw), dtype=bool)
             zp_get = 23.0
             for i in range(niter+1):
                 minimize_solution = minimize(lst_sqr, x0=zp_get*np.ones(1), args=(y_raw[sel], y_exp[sel]),
                                              method="Nelder-Mead")
                 res = y_exp - y_raw - minimize_solution.x[0]
-                mean_res, std_res = np.mean(res), np.std(res)
-                sel = np.abs(res - mean_res) < 3*std_res
+                mean_res, std_res = np.nanmean(res), np.nanstd(res)
+                sel = np.abs(res - mean_res) < 2.0*std_res
                 zp_get = round(minimize_solution.x[0], 3)
             return zp_get
 
+        # This line makes sense only after running do_phot which adds column "raw_mags_" + self.band
+        # to df.
         raw = self.df["raw_mags_" + self.band].to_numpy()
 
-        if self.band == "NB_659":
-            # Drew+14 colors for MS stars (Table4)
-            # Changed from Vega to AB mags
-            drew_r_i_ab = np.array([0.061, 0.068, 0.070, 0.071, 0.083, 0.096, 0.115, 0.142, 0.151, 0.162, 0.174, 0.190,
-                                    0.210, 0.217, 0.227, 0.238, 0.269, 0.302, 0.366, 0.395, 0.443, 0.476, 0.491, 0.492,
-                                    0.540, 0.571, 0.609, 0.616, 0.632, 0.66, 0.681, 0.735, 0.937, 1.002, 1.147, 1.325,
-                                    1.381, 1.392])
-            drew_r_ha_ab = np.array([0.232, 0.248, 0.235, 0.241, 0.229, 0.226, 0.225, 0.22, 0.217, 0.210, 0.199, 0.186,
-                                     0.175, 0.173, 0.172, 0.172, 0.185, 0.207, 0.263, 0.288, 0.327, 0.351, 0.362, 0.362,
-                                     0.394, 0.410, 0.425, 0.428, 0.435, 0.446, 0.455, 0.477, 0.564, 0.588, 0.644, 0.699,
-                                     0.720, 0.722])
+        std_mags = self.df[self.band].to_numpy()
 
-            # select colors r_SDSS, i_SDSS and raw, clean nans and infinites
-            r_sdss = self.df["r_SDSS"].to_numpy()
-            i_sdss = self.df["i_SDSS"].to_numpy()
+        # clean nans and infinites
+        clean_nan = ~np.isnan(std_mags) & ~np.isnan(raw)
+        clean_infinites = ~np.isinf(raw)
+        clean_mag = (std_mags >= self.mag_min) & (std_mags <= self.mag_max) & (raw < 0)
 
-            clean_nans = ~np.isnan(r_sdss) & ~np.isnan(i_sdss) & ~np.isnan(raw)
-            clean_infinites = ~np.isinf(raw)
-            clean_mags = (r_sdss >= self.mag_min) & (r_sdss <= self.mag_max) & (raw < 0)
+        raw = raw[clean_nan & clean_mag & clean_infinites]
+        std_mags = std_mags[clean_nan & clean_mag & clean_infinites]
 
-            r_minus_i = r_sdss[clean_nans & clean_infinites & clean_mags] - \
-                i_sdss[clean_nans & clean_infinites & clean_mags]
-            r_minus_raw = r_sdss[clean_nans & clean_infinites & clean_mags] - \
-                raw[clean_nans & clean_infinites & clean_mags]
-
-            clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
-            interp_data = np.interp(r_minus_i[clean_color], drew_r_i_ab, drew_r_ha_ab)
-            pycavi_tools.pycavi_qc_plot_hist(r_minus_raw, label='r_SDSS - raw NB_659.', nbins=30, x_range="full")
-
-            # use scipy minimize to find the zero point through least square minimization
-            # do a sigma clipping before reach a zero point value.
-            zp = sigma_clip(r_minus_raw[clean_color], interp_data)
-
-        else:
-
-            std_mags = self.df[self.band].to_numpy()
-
-            # clean nans and infinites
-            clean_nan = ~np.isnan(std_mags) & ~np.isnan(raw)
-            clean_infinites = ~np.isinf(raw)
-            clean_mag = (std_mags >= self.mag_min) & (std_mags <= self.mag_max) & (raw < 0)
-
-            raw = raw[clean_nan & clean_mag & clean_infinites]
-            std_mags = std_mags[clean_nan & clean_mag & clean_infinites]
-
-            zp = sigma_clip(raw, std_mags)
-            logging.info('df zero point: {}'.format(zp))
+        zp = sigma_clip(raw, std_mags)
+        logging.info('df zero point: {}'.format(zp))
 
         return zp
 
@@ -1415,6 +1442,9 @@ def plot_calibration_check_zpcal(query_catalogue, sex_catalogue_path, zp_cal):
             mag_side_skm = phot_catalogue["g_SDSS"].to_numpy()
             mag_side_skm_band = "g_SDSS"
 
+    # FSE Risky: we are reading the catalogue by column number. This might
+    # change and break the program. Explore better use of papi tools.
+    #
     logging.info("Reading sextractor catalogue {}".format(sex_catalogue_path))
     mag_sex = sex_catalogue[:, 5]
 
@@ -1633,20 +1663,18 @@ def plot_calibration_check_frame(image_path):
     # if band is NB_659, then construct the scatter plot using r-i and r-Ha
     # in rest of cases uses g-band and band-OCam
     # except in g case where we use band-r and band-OCam
+    # THIS WILL NEED TO BE CONFIGURABLE FOR LARGE RANGE OF FILTERS
+    mag_std = phot_catalogue[zp_cal.band].to_numpy()
+    mag_std_band = zp_cal.band
     if zp_cal.band == "NB_659":
-        mag_std = phot_catalogue["r_SDSS"].to_numpy()
         mag_side_std = phot_catalogue["i_SDSS"].to_numpy()
-        mag_std_band = "r_SDSS"
         mag_side_std_band = "i_SDSS"
+    elif zp_cal.band == "g_SDSS":
+        mag_side_std = phot_catalogue["r_SDSS"].to_numpy()
+        mag_side_std_band = "r_SDSS"
     else:
-        mag_std = phot_catalogue[zp_cal.band].to_numpy()
-        mag_std_band = zp_cal.band
-        if zp_cal.band == "g_SDSS":
-            mag_side_std = phot_catalogue["r_SDSS"].to_numpy()
-            mag_side_std_band = "r_SDSS"
-        else:
-            mag_side_std = phot_catalogue["g_SDSS"].to_numpy()
-            mag_side_std_band = "g_SDSS"
+        mag_side_std = phot_catalogue["g_SDSS"].to_numpy()
+        mag_side_std_band = "g_SDSS"
     logging.info("pycavi qc phot: number of valid entries in calibrator catalogue: {}".format(len(mag_std)))
     
     # we read the sextractor catalogue created by previous notebook.

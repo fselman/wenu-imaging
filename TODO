@@ -6,6 +6,7 @@
   is a sannity check on the ZPCal object but it might not be needed in production.
 
 # ------ DONE -------
+- DONE. Fix bug giving wrong zero point for NB_659
 - DONE. Allow selection or do all in notebooks 7 and 7b
 - DONE. Add path to sextractor in notebooks that use it.
 - DONE. ZPcal notebook: display all target/filters and provide
