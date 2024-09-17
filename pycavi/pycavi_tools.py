@@ -327,6 +327,178 @@ def plambda(flt):
         print("getPivotWavelength: unrecognized filter pass band {}".format(flt))
         return None
 
+def band_pass_std_name(band):
+    """
+    Given a band returns the standard bandpass name. Needed due to
+    the multitude of names of filters used by OCAM, WFI, and other
+    instruments.
+
+    This table should be used to determine the standard bandpass
+    associated to a filter. Should not be used to get the properties
+    of the filter, such as pivot wavelength, which depends on the
+    actual realization of the passband.
+    """
+    aliases = {
+            "U": "U",
+            "U/38": "U",                # WFI narrower U
+            "U/50": "U",                # WFI Broadhurst filter U350/6
+            "U/360": "U",               # WFI Broadhurst filter U350/6
+            "B": "B",
+            "B/99": "B",                # WFI original B
+            "BB#B/123_ESO878": "B",     # WFI new B
+            "B_JOHN": "B",              # OCAM Johnson B
+            "V": "V",
+            "V/89": "V",                # WFI Johnson V
+            "V_JOHN": "V",              # OCAM Johnson V
+            "R": "R",
+            "Rc/162": "R",              # WFI Johnson R (large round filter)
+            "I": "I",
+            "Ic/lwp": "I",              # WFI Cousins I but with upper cutoff open
+            "BB#I/203_ESO879": "I",     # WFI EIS I filter
+            "Z": "Z",                   # WFI Z filter
+            "Z+/61": "Z",               # WFI Z filter
+            "Z+/60": "Z",               # WFI Z filter
+            "u": "u",                   # Sloan u
+            "u_sdss": "u",
+            "u_SDSS": "u",
+            "g": "g",                   # Sloan g
+            "g_sdss": "g",
+            "g_SDSS": "g",
+            "r": "r",                   # Sloan r
+            "r_sdss": "r",
+            "r_SDSS": "r",
+            "i": "i",                   # Sloan i
+            "i_sdss": "i",
+            "i_SDSS": "i",
+            "z": "z",                   # Sloan z
+            "z_SDSS": "z",
+            "z_sdss": "z",
+            "H_alpha": "H_alpha",
+            "NB_659": "H_alpha",         # OCAM VPHA project H-alpha filter
+            }
+
+    return aliases.get(band, None)
+
+def get_mab_minus_vega(band):
+    """
+    This procedures returns the parameters for passbands determined
+    by Blanton (2007), 
+    https://ui.adsabs.harvard.edu/abs/2007AJ....133..734B/abstract
+
+    Used mostly for AB - Vega magnitude differences.
+    """
+    band_properties = {"U": {"leff": 3571, "mab_mveg": 0.79, "MsunAB": 6.35, "MsunVega": 5.55},
+    "B": {"leff": 4344, "mab_mveg": -0.09, "MsunAB": 5.36, "MsunVega": 5.45},
+    "V": {"leff": 5456, "mab_mveg": 0.02, "MsunAB": 4.80, "MsunVega": 4.78},
+    "R": {"leff": 6442, "mab_mveg": 0.21, "MsunAB": 4.61, "MsunVega": 4.41},
+    "I": {"leff": 7994, "mab_mveg": 0.45, "MsunAB": 4.52, "MsunVega": 4.07},
+    "u": {"leff": 3546, "mab_mveg": 0.91, "MsunAB": 6.38, "MsunVega": 5.47},
+    "g": {"leff": 4670, "mab_mveg": -0.08, "MsunAB": 5.12, "MsunVega": 5.20},
+    "r": {"leff": 6156, "mab_mveg": 0.16, "MsunAB": 4.64, "MsunVega": 4.49},
+    "i": {"leff": 7472, "mab_mveg": 0.37, "MsunAB": 4.53, "MsunVega": 4.16},
+    "z": {"leff": 8917, "mab_mveg": 0.54, "MsunAB": 4.51, "MsunVega": 3.97},
+    "H_alpha": {"leff": 6590.63, "mab_mveg": 0.338, "MsunAB": -1, "MsunVega": -1}}
+
+    std_band = band_pass_std_name(band)
+    if std_band is not None:
+        return band_properties[std_band]["mab_mveg"]
+    else:
+        return None
+
+def drew_vst_synthetic_colours(r_sdss, i_sdss, mag_min, mag_max):
+    """
+    Calculate "standard" H-alpha AB magnitudes given the
+    catalogue standard r_sdss, and i_sdss magnitudes.
+    Implements the Drew et al 2014 synthetic VST relations.
+
+    Input
+    =====
+        A set of SDSS r, i magnitudes.
+
+    Output
+    ======
+        The Halpha AB magnitudes, assumimg main sequence stars.
+
+    This is a minimal implementation for testing. This can be easily
+    improved if we get the star type. Now we use the main sequence 
+    conversion.
+    """
+    #Spectral type	Main sequence (V)		Giants (III)
+						    #(model)	                                (P98 library spectra)
+	    #u − g	g − r	r − i	r − Hα		u − g	g − r	r − i	r − Hα	r − i	r − Hα
+    #O6	−1.494	−0.313	−0.145	0.071							
+    #O8	−1.463	−0.299	−0.152	0.055						−0.158	0.074
+    #O9	−1.426	−0.271	−0.142	0.064		−1.426	−0.271	−0.142	0.064		
+    #B0	−1.404	−0.267	−0.143	0.058		−1.404	−0.267	−0.143	0.058		
+    #B1	−1.296	−0.236	−0.130	0.052		−1.316	−0.234	−0.130	0.057	−0.095	0.071
+    #B2	−1.181	−0.214	−0.117	0.049		−1.209	−0.211	−0.116	0.056		
+    #B3	−1.025	−0.182	−0.098	0.048		−1.046	−0.182	−0.098	0.054	−0.035	0.083
+    #B5	−0.799	−0.133	−0.071	0.043		−0.814	−0.134	−0.072	0.050	−0.016	0.083
+    #B6	−0.699	−0.116	−0.062	0.040		−0.714	−0.116	−0.062	0.046		
+    #B7	−0.550	−0.094	−0.051	0.033		−0.568	−0.095	−0.051	0.041		
+    #B8	−0.361	−0.071	−0.039	0.022		−0.383	−0.072	−0.039	0.032		
+    #B9	−0.168	−0.040	−0.023	0.009		−0.186	−0.044	−0.024	0.021	−0.018	0.035
+    #A0	−0.024	0.000	−0.003	−0.002		−0.030	−0.009	−0.006	0.011	0.012	0.034
+    #A1	0.007	0.015	0.004	−0.004		0.007	0.004	0.000	0.008		
+    #A2	0.039	0.038	0.014	−0.005		0.051	0.022	0.009	0.008		
+    #A3	0.064	0.062	0.025	−0.005		0.085	0.045	0.019	0.007	0.037	0.063
+    #A5	0.096	0.130	0.056	0.008		0.143	0.107	0.048	0.015	0.096	0.087
+    #A7	0.073	0.206	0.089	0.030		0.145	0.179	0.078	0.032	0.115	0.094
+    #F0	0.003	0.336	0.153	0.086		0.091	0.317	0.144	0.084	0.156	0.102
+    #F2	−0.021	0.396	0.182	0.111		0.064	0.380	0.174	0.109	0.204	0.172
+    #F5	−0.039	0.505	0.230	0.150		0.046	0.491	0.224	0.148	0.238	0.164
+    #F8	−0.013	0.587	0.263	0.174							
+    #G0	0.012	0.628	0.278	0.185						0.333	0.213
+    #G2	0.011	0.628	0.279	0.185		0.253	0.759	0.329	0.215		
+    #G5	0.162	0.756	0.327	0.217		0.405	0.870	0.368	0.235	0.396	0.250
+    #G8	0.355	0.845	0.358	0.233		0.531	0.944	0.395	0.247	0.419	0.247
+    #K0	0.523	0.938	0.396	0.248		0.640	1.002	0.417	0.256	0.446	0.254
+    #K1	0.551	0.954	0.403	0.251		0.803	1.085	0.451	0.269	0.468	0.269
+    #K2	0.629	0.993	0.419	0.258		0.963	1.159	0.483	0.281	0.508	0.293
+    #K3	0.779	1.062	0.447	0.269		1.227	1.276	0.536	0.299	0.514	0.286
+    #K4	0.871	1.108	0.468	0.278		1.374	1.342	0.585	0.320	0.592	0.313
+    #K5	1.083	1.210	0.522	0.300		1.578	1.420	0.630	0.338	0.714	0.337
+    #K7	1.387	1.402	0.724	0.387							
+    #M0	1.372	1.411	0.789	0.411		1.697	1.454	0.686	0.360	0.827	0.411
+    #M1	1.335	1.439	0.934	0.467		1.838	1.506	0.769	0.395	0.872	0.401
+    #M2	1.262	1.442	1.112	0.522		1.938	1.546	0.825	0.420	0.920	0.443
+    #M3	1.236	1.447	1.179	0.545		1.980	1.556	0.933	0.444	1.165	0.471
+    #M4	1.248	1.457	1.168	0.543		1.959	1.551	1.136	0.500	1.472	0.512
+    #M5						                2.009	1.569	1.296	0.556	1.739	0.560
+    #M6						                2.199	1.612	1.267	0.554		
+
+    # Tables to be used for interpolation.
+    # The tables are in the Vega system
+    drew_r_minus_i = [-0.145, -0.152, -0.142, -0.143, -0.130, -0.117, -0.098, -0.071, -0.062, -0.051, 
+                -0.039, -0.023, -0.003,  0.004,  0.014,  0.025,  0.056,  0.089,  0.153,  0.182, 
+                0.230,  0.263,  0.278,  0.279,  0.327,  0.358,  0.396,  0.403,  0.419,  0.447, 
+                0.468,  0.522,  0.724,  0.789,  0.934,  1.112,  1.179,  1.168]
+    drew_r_minus_Ha = [0.071,  0.055,  0.064,  0.058,  0.052,  0.049,  0.048,  0.043,  0.040,  0.033, 
+                0.022,  0.009, -0.002, -0.004, -0.005, -0.005,  0.008,  0.030,  0.086,  0.111,
+                0.150,  0.174,  0.185,  0.185,  0.217,  0.233,  0.248,  0.251,  0.258,  0.269,
+                0.278,  0.300,  0.387,  0.411,  0.467,  0.522,  0.545,  0.543]
+    color_to_ab_rmi = get_mab_minus_vega("r_sdss") - get_mab_minus_vega("i_sdss")
+    color_to_ab_rmha = get_mab_minus_vega("r_sdss") - get_mab_minus_vega("NB_659")
+    drew_r_i_ab = [x + color_to_ab_rmi for x in drew_r_minus_i]
+    drew_r_ha_ab = [x + color_to_ab_rmha for x in  drew_r_minus_Ha]
+
+
+    clean_nans = ~np.isnan(r_sdss) & ~np.isnan(i_sdss)
+    clean_mags = (r_sdss >= mag_min) & (r_sdss <= mag_max)
+    condition = clean_nans & clean_mags
+
+    r_minus_i = np.full_like(r_sdss, np.nan, dtype=np.float64)
+    r_minus_i[condition] = r_sdss[condition] -  i_sdss[condition]
+
+    clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
+    r_minus_i[~clean_color] = np.nan
+
+    interp_data = np.interp(r_minus_i, drew_r_i_ab, drew_r_ha_ab)
+    calculated_ha_ab = r_sdss - interp_data
+
+    return calculated_ha_ab
+    
+
 def extinction_coeff(plambda, observatory):
     """
     Atmospheric extinction coefficients.
@@ -511,3 +683,9 @@ def run_command(str_cmd, p_shell=True, my_env=None, logfile=None, cmdfile=None):
 
 if __name__ == "__main__":
     print("pycavi_tools test - Flambda_zp({0}): {1}".format("V_JOHN", Flambda_zp("V_JOHN")))
+    print("pycavi_tools test - V_JOHN AB - Vega: {} ".format(get_mab_minus_vega("V_JOHN")["mab_mveg"]))
+    print("pycavi_tools test - B_JOHN AB - Vega: {} ".format(get_mab_minus_vega("B_JOHN")["mab_mveg"]))
+    print("pycavi_tools test - r_sdss AB - Vega: {} ".format(get_mab_minus_vega("r_SDSS")["mab_mveg"]))
+    print("pycavi_tools test - r_SDSS AB - Vega: {} ".format(get_mab_minus_vega("r_SDSS")["mab_mveg"]))
+
+

@@ -679,21 +679,26 @@ class ZPCalibration:
         """
         Uses a published transformation equation to determine the magnitudes
         in the secondary band as a function of the standard magnitudes.
+
+        Skymapper provides griz photometry, while SDSS provides ugriz.
+        For Johnson-Cousins we use
+        https://www.sdss3.org/dr8/algorithms/sdssUBVRITransform.php
+
+        For NB_659 we use the calibration of Drew et al.
+        https://ui.adsabs.harvard.edu/abs/2014MNRAS.440.2036D/abstract
+
+        ** WARNING **
+        This routine currently works only with OCAM filters NB_659,
+        B_JOHN, and V_JOHN. To extend it to WFI we will need to add
+        aliases to the filter names. TBD
+
+        For maintenance reasons the transformation equations should go
+        in the pycavi_tools module to ensure that bandpasses and 
+        pivot wavelengths are correctly set.
         """
 
+        # testing drew_vst_synthetic_colours(r_sdss, i_sdss, self.mag_min, self.mag_max)
         if self.band == "NB_659":
-            # Drew+14 colors for MS stars (Table4)
-            # Changed from Vega to AB mags
-            drew_r_i_ab = np.array([0.061, 0.068, 0.070, 0.071, 0.083, 0.096, 0.115, 0.142, 0.151, 0.162, 0.174, 0.190,
-                                    0.210, 0.217, 0.227, 0.238, 0.269, 0.302, 0.366, 0.395, 0.443, 0.476, 0.491, 0.492,
-                                    0.540, 0.571, 0.609, 0.616, 0.632, 0.66, 0.681, 0.735, 0.937, 1.002, 1.147, 1.325,
-                                    1.381, 1.392])
-            drew_r_ha_ab = np.array([0.232, 0.248, 0.235, 0.241, 0.229, 0.226, 0.225, 0.22, 0.217, 0.210, 0.199, 0.186,
-                                     0.175, 0.173, 0.172, 0.172, 0.185, 0.207, 0.263, 0.288, 0.327, 0.351, 0.362, 0.362,
-                                     0.394, 0.410, 0.425, 0.428, 0.435, 0.446, 0.455, 0.477, 0.564, 0.588, 0.644, 0.699,
-                                     0.720, 0.722])
-
-            # select colors r_SDSS, i_SDSS and raw, clean nans and infinites
             if os.path.isfile(self.phot_cal_clean):
                 logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
                 phot_cal_df = pd.read_csv(self.phot_cal_clean)
@@ -703,27 +708,146 @@ class ZPCalibration:
                 r_sdss = self.df["r_SDSS"].to_numpy()
                 i_sdss = self.df["i_SDSS"].to_numpy()
 
-            clean_nans = ~np.isnan(r_sdss) & ~np.isnan(i_sdss)
-            clean_mags = (r_sdss >= self.mag_min) & (r_sdss <= self.mag_max)
-            condition = clean_nans & clean_mags
-
-            r_minus_i = np.full_like(r_sdss, np.nan, dtype=np.float64)
-            r_minus_i[condition] = r_sdss[condition] -  i_sdss[condition]
-
-            clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
-            r_minus_i[~clean_color] = np.nan
-
-
-            interp_data = np.interp(r_minus_i, drew_r_i_ab, drew_r_ha_ab)
-            calculated_ha_ab = r_sdss - interp_data
-            pycavi_tools.pycavi_qc_plot_hist(calculated_ha_ab, label='Halpha calculated', nbins=30, x_range="full")
+            # Drew+14 Ha from colors for MS stars (Table4)
+            calculated_ha_ab = pycavi_tools.drew_vst_synthetic_colours(r_sdss, i_sdss, self.mag_min, self.mag_max)
+            
+            pycavi_tools.pycavi_qc_plot_hist(calculated_ha_ab, label='Halpha empirical', nbins=30, x_range="full")
             self.df[self.band] = calculated_ha_ab
-
+            
             # we write the band m agnitudes to cleaned phot cat
             phot_cal_df[self.band] = calculated_ha_ab
+            phot_cal_df[self.band] = phot_cal_df[self.band].round(3)    # only 3 decimal places make sense
             phot_cal_df.to_csv(self.phot_cal_clean, index=False)
-
+            
             logging.info("add_secondary_filter_to_df: filter: NB_659 added to df")
+        #if self.band == "NB_659":
+            ## Drew+14 colors for MS stars (Table4)
+            ## Changed from Vega to AB mags
+            #drew_r_i_ab = np.array([0.061, 0.068, 0.070, 0.071, 0.083, 0.096, 0.115, 0.142, 0.151, 0.162, 0.174, 0.190,
+                                    #0.210, 0.217, 0.227, 0.238, 0.269, 0.302, 0.366, 0.395, 0.443, 0.476, 0.491, 0.492,
+                                    #0.540, 0.571, 0.609, 0.616, 0.632, 0.66, 0.681, 0.735, 0.937, 1.002, 1.147, 1.325,
+                                    #1.381, 1.392])
+            #drew_r_ha_ab = np.array([0.232, 0.248, 0.235, 0.241, 0.229, 0.226, 0.225, 0.22, 0.217, 0.210, 0.199, 0.186,
+                                     #0.175, 0.173, 0.172, 0.172, 0.185, 0.207, 0.263, 0.288, 0.327, 0.351, 0.362, 0.362,
+                                     #0.394, 0.410, 0.425, 0.428, 0.435, 0.446, 0.455, 0.477, 0.564, 0.588, 0.644, 0.699,
+                                     #0.720, 0.722])
+#
+            ## select colors r_SDSS, i_SDSS and raw, clean nans and infinites
+            #if os.path.isfile(self.phot_cal_clean):
+                #logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
+                #phot_cal_df = pd.read_csv(self.phot_cal_clean)
+                #r_sdss = phot_cal_df["r_SDSS"].to_numpy()
+                #i_sdss = phot_cal_df["i_SDSS"].to_numpy()
+            #else:
+                #r_sdss = self.df["r_SDSS"].to_numpy()
+                #i_sdss = self.df["i_SDSS"].to_numpy()
+#
+            #clean_nans = ~np.isnan(r_sdss) & ~np.isnan(i_sdss)
+            #clean_mags = (r_sdss >= self.mag_min) & (r_sdss <= self.mag_max)
+            #condition = clean_nans & clean_mags
+#
+            #r_minus_i = np.full_like(r_sdss, np.nan, dtype=np.float64)
+            #r_minus_i[condition] = r_sdss[condition] -  i_sdss[condition]
+#
+            #clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
+            #r_minus_i[~clean_color] = np.nan
+#
+#
+            #interp_data = np.interp(r_minus_i, drew_r_i_ab, drew_r_ha_ab)
+            #calculated_ha_ab = r_sdss - interp_data
+#
+            #pycavi_tools.pycavi_qc_plot_hist(calculated_ha_ab, label='Halpha empirical', nbins=30, x_range="full")
+            #self.df[self.band] = calculated_ha_ab
+#
+            ## we write the band m agnitudes to cleaned phot cat
+            #phot_cal_df[self.band] = calculated_ha_ab
+            #phot_cal_df[self.band] = phot_cal_df[self.band].round(3)    # only 3 decimal places make sense
+            #phot_cal_df.to_csv(self.phot_cal_clean, index=False)
+#
+            #logging.info("add_secondary_filter_to_df: filter: NB_659 added to df")
+
+        # For UBVRcIc https://www.sdss3.org/dr8/algorithms/sdssUBVRITransform.php
+        # Lupton 2005
+        elif "B_JOHN" in self.band:
+            if os.path.isfile(self.phot_cal_clean):
+                logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
+                phot_cal_df = pd.read_csv(self.phot_cal_clean)
+                g_sdss = phot_cal_df["g_SDSS"].to_numpy()
+                r_sdss = phot_cal_df["r_SDSS"].to_numpy()
+            else:
+                g_sdss = self.df["g_SDSS"].to_numpy()
+                r_sdss = self.df["r_SDSS"].to_numpy()
+
+            B_JOHN = g_sdss + 0.3130*(g_sdss - r_sdss) + 0.2271;  sigma = 0.0107
+            # B = u - 0.8116*(u - g) + 0.1313   # sigma = 0.0095
+
+            pycavi_tools.pycavi_qc_plot_hist(B_JOHN, label='B_JOHN empirical', nbins=30, x_range="full")
+            self.df[self.band] = B_JOHN
+            phot_cal_df[self.band] = B_JOHN
+            phot_cal_df[self.band] = phot_cal_df[self.band].round(3)    # only 3 decimal places make sense
+            phot_cal_df.to_csv(self.phot_cal_clean, index=False)
+            logging.info("add_secondary_filter_to_df: filter: B_JOHN added to df")
+
+        elif "V_JOHN" in self.band:
+            if os.path.isfile(self.phot_cal_clean):
+                logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
+                phot_cal_df = pd.read_csv(self.phot_cal_clean)
+                g_sdss = phot_cal_df["g_SDSS"].to_numpy()
+                r_sdss = phot_cal_df["r_SDSS"].to_numpy()
+            else:
+                g_sdss = self.df["g_SDSS"].to_numpy()
+                r_sdss = self.df["r_SDSS"].to_numpy()
+
+            V_JOHN = g_sdss - 0.5784*(g_sdss- r_sdss) - 0.0038       # sigma = 0.0054
+            # V = g - 0.2906*(u - g) + 0.0885       # sigma = 0.0129
+
+            pycavi_tools.pycavi_qc_plot_hist(V_JOHN, label='V_JOHN empirical', nbins=30, x_range="full")
+            self.df[self.band] = V_JOHN
+            phot_cal_df[self.band] = V_JOHN
+            phot_cal_df[self.band] = phot_cal_df[self.band].round(3)    # only 3 decimal places make sense
+            phot_cal_df.to_csv(self.phot_cal_clean, index=False)
+            logging.info("add_secondary_filter_to_df: filter: V_JOHN added to df")
+
+        elif "R_JOHN" in self.band:
+            if os.path.isfile(self.phot_cal_clean):
+                logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
+                phot_cal_df = pd.read_csv(self.phot_cal_clean)
+                g_sdss = phot_cal_df["g_SDSS"].to_numpy()
+                r_sdss = phot_cal_df["r_SDSS"].to_numpy()
+            else:
+                g_sdss = self.df["g_SDSS"].to_numpy()
+                r_sdss = self.df["r_SDSS"].to_numpy()
+
+            R_JOHN = r_sdss - 0.1837*(g_sdss - r_sdss) - 0.0971     # sigma = 0.0106
+            #R = r - 0.2936*(r - i) - 0.1439        # sigma = 0.0072
+
+            pycavi_tools.pycavi_qc_plot_hist(R_JOHN, label='R_JOHN empirical', nbins=30, x_range="full")
+            self.df[self.band] = R_JOHN
+            phot_cal_df[self.band] = R_JOHN
+            phot_cal_df[self.band] = phot_cal_df[self.band].round(3)    # only 3 decimal places make sense
+            phot_cal_df.to_csv(self.phot_cal_clean, index=False)
+            logging.info("add_secondary_filter_to_df: filter: R_JOHN added to df")
+
+        elif "I_JOHN" in self.band:
+            if os.path.isfile(self.phot_cal_clean):
+                logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
+                phot_cal_df = pd.read_csv(self.phot_cal_clean)
+                r_sdss = phot_cal_df["r_SDSS"].to_numpy()
+                i_sdss = phot_cal_df["i_SDSS"].to_numpy()
+            else:
+                r_sdss = self.df["r_SDSS"].to_numpy()
+                i_sdss = self.df["i_SDSS"].to_numpy()
+
+            I_JOHN = r_sdss - 1.2444*(r_sdss - i_sdss) - 0.3820      # sigma = 0.0078
+            # I = i - 0.3780*(i - z)  -0.3974       # sigma = 0.0063
+
+            pycavi_tools.pycavi_qc_plot_hist(I_JOHN, label='I_JOHN empirical', nbins=30, x_range="full")
+            self.df[self.band] = I_JOHN
+            phot_cal_df[self.band] = I_JOHN
+            phot_cal_df[self.band] = phot_cal_df[self.band].round(3)    # only 3 decimal places make sense
+            phot_cal_df.to_csv(self.phot_cal_clean, index=False)
+            logging.info("add_secondary_filter_to_df: filter: I_JOHN added to df")
+
 
 
     def get_zp_from_df(self):

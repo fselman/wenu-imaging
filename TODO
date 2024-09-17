@@ -2,10 +2,13 @@
 - Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
-- Leave only the check_calibration_frame routine in notebook 7? The current one
-  is a sannity check on the ZPCal object but it might not be needed in production.
 
 # ------ DONE -------
+- DONE. zpcal notebook leaves a strong residual as a function of colour for the NB_659.
+  Understand and correct. Problem was the parametrization of Drew 2014. Made the
+  conversion to AB magnitudes explicit in pycavi_tools and problem solved.
+- DONE. Leave only the check_calibration_frame routine in notebook 7? The current one
+  is a sannity check on the ZPCal object but it might not be needed in production.
 - DONE. Fix bug giving wrong zero point for NB_659
 - DONE. Allow selection or do all in notebooks 7 and 7b
 - DONE. Add path to sextractor in notebooks that use it.
