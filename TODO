@@ -1,9 +1,17 @@
+- Add 2D Chebyshev fitting routine to the photometry rfesiduals
+  to correct the photometric catalogue of an image.
 - Add creation of region files for ds9 if user so chooses.
 - Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
 
 # ------ DONE -------
+- DONE. Separate the procedure used in notebook 7b into an extract calibration from frame
+        procedure, and a plot caliobration check procedure. This will be needed when we
+        create a procedure to correct the illumination errors of the photometry. Such
+        procedure will fit a 2D Chebyshev polynomial to the residual of the magnitudes
+        top create a 2D function to correct the photometry and thus eliminate the
+        field dependent systematics.
 - DONE. zpcal notebook leaves a strong residual as a function of colour for the NB_659.
   Understand and correct. Problem was the parametrization of Drew 2014. Made the
   conversion to AB magnitudes explicit in pycavi_tools and problem solved.

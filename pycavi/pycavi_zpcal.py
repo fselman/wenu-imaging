@@ -1693,42 +1693,71 @@ def plot_calibration_check_zpcal(query_catalogue, sex_catalogue_path, zp_cal):
     logging.info("check plots created. Saving figure...")
     figname = zp_cal.calibrationdir + "/" + zp_cal.frame[:-5] + "_calibration_check.png"
     plt.savefig(figname)
+
+# -------------------------------- Routines for calibration checks ------------------
+class ZPcal:
+    """
+    Small class, similar to ZPCalibration but only to contain some parameters
+    that will be read from a calibrated frame.
+    """
+    def __init__(self, input_dict, zdata, zhdu):
+        self.image_path = None
+        self.band = input_dict['band']
+        # This table below should be more extensive and configurable
+        if self.band == "NB_659":
+           self.side_band = "i_SDSS"
+           self.side_band_sign = -1
+        elif self.band == "g_SDSS":
+           self.side_band = "r_SDSS"
+           self.side_band_sign = -1
+        else:
+           self.side_band = "g_SDSS"
+           self.side_band_sign = 1
+        self.mag_std = None
+        self.mag_side_std = None
+        self.naxis1 =  input_dict['naxis1']
+        self.naxis2 =  input_dict['naxis2']
+        self.crval1 = input_dict['crval1']
+        self.crval2 = input_dict['crval2']
+        self.mag_max = input_dict['mag_max']
+        self.mag_min = input_dict['mag_min']
+        self.phot_rad = input_dict['phot_rad']
+        self.phot_skyr1 = input_dict['phot_skyr1']
+        self.phot_skyr2 = input_dict['phot_skyr2']
+        self.phot_calfile = input_dict['phot_calfile']
+        self.magzp = input_dict['magzp']
+        self.data = zdata
+        self.wcs = wcs = WCS(zhdu)
+        self.aperture = None
+        self.sky_annulus = None
+        self.ra_std = None
+        self.de_std = None
+        self.x = None
+        self.y = None
  
 
 # This checking script extracts all information from the headers of the frame
 # and does apperture photometry the same way as ZPCal but it does not calculate
 # zero points. It just a check from info in the frame itself.
 #
-def plot_calibration_check_frame(image_path):
+def extract_calibration(image_path):
     """
-    Created 5 different check plots from the SExtractor photometry on the swarped OmegaCam frame.
-    * Calibrated magnitudes vs Catalogue magnitudes
-    * Catalogue - Calibrated magnitudes vs Catalogue magnitudes.
-    * Catalogue - Calibrated magnitudes vs Catalogue colour. This one also check the systematic increase of magnitude
-        in function of the distance from the center R.
-    * Catalogue - Calibrated magnitudes vs R [distance from center] color coded Catalogue - Calibrated
-    * A check image of the field
-    
+    Extract information and do photometry of input frame. The photometry uses
+    only parameters and data from the input frame.
     ##########
-    parameters
+    Input
+    =====
+
+    image_path:            [FITS] Full path to image to be analyzed.
+    photometric catalogue: [csv] photometric catalogue used/retrieved in the calibration
+                           notebook. It should exists in the Calibration_dir directory.
     
-    phot_catalogue : str
-        The path to the clean photometric reference catalogue created during the calibration process of the frame.
-    sex_catalogue_path : str
-        The path to the SExtractor output catalogue with the photometry of the frame.
-    zp_cal : ZPCalibration
-        The calibration object containing important information regarding the frame.
-        
-    ######
-    output
-    
-    calibration image:
-        A png image named OBJECT_BAND_calibration_check.png containing the aforementioned plots. It is saved on the
-        calibration directory.
+    Output
+    ======
+    zp_cal : ZPCal object containing extracted photometry and other information
     
     """
-
-    logging.info("pycavi qc phot: creating check plots")
+    logging.info("pycavi qc phot: Reading data from frame to extract photometry")
 
     # We first read the image whose photometry will be checked
     logging.info("pycavi qc phot: reading image {}".format(image_path.split('/')[-1]))
@@ -1737,6 +1766,8 @@ def plot_calibration_check_frame(image_path):
 
     # we load some data from the image to be checked
     keys_to_extract = {'band': "ESO PYCAVI QC BAND NAME",
+                       'naxis1': "NAXIS1",
+                       'naxis2': "NAXIS2",
                        'crval1': "CRVAL1",
                        'crval2': "CRVAL2",
                        'mag_max': "ESO PYCAVI QC PHO MAGMAX",
@@ -1754,25 +1785,9 @@ def plot_calibration_check_frame(image_path):
         else:
             logging.info("pycavi qc phot: **** missing key {} in headers".format(avalue))
             
-    # we create a class to hold all these data
-    class ZPcal:
-        def __init__(self, input_dict, zdata, zhdu):
-            self.band = input_dict['band']
-            self.crval1 = input_dict['crval1']
-            self.crval2 = input_dict['crval2']
-            self.mag_max = input_dict['mag_max']
-            self.mag_min = input_dict['mag_min']
-            self.phot_rad = input_dict['phot_rad']
-            self.phot_skyr1 = input_dict['phot_skyr1']
-            self.phot_skyr2 = input_dict['phot_skyr2']
-            self.phot_calfile = input_dict['phot_calfile']
-            self.magzp = input_dict['magzp']
-            self.data = zdata
-            self.wcs = wcs = WCS(zhdu)
-            self.aperture = None
-            self.sky_annulus = None
-        
+    # This call loads parameters from frame
     zp_cal = ZPcal(input_dict, zp_data, zp_hdu)
+    zp_cal.image_path = image_path
 
     calibration_dir = os.path.dirname(image_path)   # We assume that we work only in the link in the calibration directory
     query_catalogue_path = calibration_dir+'/'+zp_cal.phot_calfile
@@ -1780,26 +1795,24 @@ def plot_calibration_check_frame(image_path):
     phot_catalogue = pd.read_csv(query_catalogue_path)
 
     # first load the ra, dec and magnitudes from both catalogues.
-    ra_std = phot_catalogue["raj2000"].to_numpy() * u.deg
-    de_std = phot_catalogue["dej2000"].to_numpy() * u.deg
+    zp_cal.ra_std = phot_catalogue["raj2000"].to_numpy() * u.deg
+    zp_cal.de_std = phot_catalogue["dej2000"].to_numpy() * u.deg
+    coords = np.array([zp_cal.ra_std, zp_cal.de_std]).T     # Transpose to get pairs of (ra, dec)
+    pixel_coords = zp_cal.wcs.wcs_world2pix(coords, 1)         # the 1 ensure FITS stndard of coordinates
+    zp_cal.x = pixel_coords[:,0]
+    zp_cal.y = pixel_coords[:,1]
 
     # select bands accordingly to frame band
     # if band is NB_659, then construct the scatter plot using r-i and r-Ha
     # in rest of cases uses g-band and band-OCam
     # except in g case where we use band-r and band-OCam
     # THIS WILL NEED TO BE CONFIGURABLE FOR LARGE RANGE OF FILTERS
-    mag_std = phot_catalogue[zp_cal.band].to_numpy()
+    zp_cal.mag_std = phot_catalogue[zp_cal.band].to_numpy()
     mag_std_band = zp_cal.band
-    if zp_cal.band == "NB_659":
-        mag_side_std = phot_catalogue["i_SDSS"].to_numpy()
-        mag_side_std_band = "i_SDSS"
-    elif zp_cal.band == "g_SDSS":
-        mag_side_std = phot_catalogue["r_SDSS"].to_numpy()
-        mag_side_std_band = "r_SDSS"
-    else:
-        mag_side_std = phot_catalogue["g_SDSS"].to_numpy()
-        mag_side_std_band = "g_SDSS"
-    logging.info("pycavi qc phot: number of valid entries in calibrator catalogue: {}".format(len(mag_std)))
+    zp_cal.mag_side_std = phot_catalogue[zp_cal.side_band].to_numpy()
+    mag_side_std_band = zp_cal.side_band
+
+    logging.info("pycavi qc phot: number of valid entries in calibrator catalogue: {}".format(len(zp_cal.mag_std)))
     
     # we read the sextractor catalogue created by previous notebook.
     # After testing we will change to do photometry with do_phot in
@@ -1825,8 +1838,8 @@ def plot_calibration_check_frame(image_path):
     ################################################################################################
 
     # Photometry is done directly on the frame
-    ra_frm = copy.deepcopy(ra_std)
-    de_frm = copy.deepcopy(de_std)
+    ra_frm = copy.deepcopy(zp_cal.ra_std)
+    de_frm = copy.deepcopy(zp_cal.de_std)
     logging.info("pycavi qc phot:  creating aperture object")
     positions = SkyCoord(ra=ra_frm, dec=de_frm, frame="icrs")
     zp_cal.aperture = SkyCircularAperture(positions, r=zp_cal.phot_rad * u.arcsec)
@@ -1863,17 +1876,17 @@ def plot_calibration_check_frame(image_path):
     aper_bkg = bkg_median * phot_disk_area
     aper_sum_bkgsub = np.array(phot_table["aperture_sum"] - aper_bkg)
     raw_mags = np.zeros_like(aper_sum_bkgsub)
+
     # FSE CHECK: is setting to 99.0 a good flag of a bad value?
     raw_mags[aper_sum_bkgsub > 0] = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
     raw_mags[aper_sum_bkgsub <= 0] = 99.0
-    mag_sex = np.around(raw_mags, 4)
-    good_sel = (raw_mags > 0) & (raw_mags < 20)
-    logging.info("pycavi qc phot: number of good values {}".format(good_sel.sum()))
-    mag_std = mag_std[good_sel]
-    mag_side_std = mag_side_std[good_sel]
-    mag_sex = mag_sex[good_sel]
+    zp_cal.mags_frame = np.around(raw_mags, 4)
 
-    #####################################################################################################
+    return zp_cal
+
+
+    ######### Zombied code to be removed after we create notebook for sextractor catalogue creation ##########
+    #
     # cross-match the std and frame catalogues
     #c_std = SkyCoord(ra=ra_std[good_sel], dec=de_std[good_sel])
     #c_frm = SkyCoord(ra=ra_frm[good_sel], dec=de_frm[good_sel])
@@ -1893,11 +1906,44 @@ def plot_calibration_check_frame(image_path):
     #mag_side_std = mag_side_std[sep_constraint]
     #mag_sex = mag_sex[idx[sep_constraint]]
 
-    # we paint with the distance to the center
-    rad_dist = np.sqrt((ra_std - zp_cal.crval1 * u.deg)**2 + (de_std - zp_cal.crval2 * u.deg)**2)[good_sel]
 
+# ------ Section below should need only the zpcal object and perhaps a few parameters for plotting
+def plot_zpcal(zp_cal):
+    """
+    Plots graphs to estimate the quality of the calibartion of the frame.
+
+    Input
+    =====
+
+    An instance of a ZPCal object created with the extract_photometry procedure.
+
+    Creates 5 different check plots from the photometry on the calibrated OmegaCam frame.
+
+    * Calibrated magnitudes vs Catalogue magnitudes
+    * Catalogue - Calibrated magnitudes vs Catalogue magnitudes.
+    * Catalogue - Calibrated magnitudes vs Catalogue colour. This one also check the systematic increase of magnitude
+        in function of the distance from the center R.
+    * Catalogue - Calibrated magnitudes vs R [distance from center] color coded Catalogue - Calibrated
+    * A check image of the field
+
+    Output
+    ======
+
+    Check plot image:
+        A png image named <image_base_name>_qc_photcal_check.png containing the aforementioned plots. 
+        It is saved on the calibration directory.
+
+    """
+    logging.info("pycavi plot_zpcal: creating check plots")
     data = zp_cal.data
     wcs = zp_cal.wcs
+
+    good_sel = (zp_cal.mags_frame > 0) & (zp_cal.mags_frame < 20)
+    logging.info("pycavi qc phot: number of good values {}".format(good_sel.sum()))
+    mag_sex = zp_cal.mags_frame[good_sel]
+    mag_std = zp_cal.mag_std[good_sel]
+    mag_side_std = zp_cal.mag_side_std[good_sel]
+    rad_dist = np.sqrt((zp_cal.ra_std - zp_cal.crval1 * u.deg)**2 + (zp_cal.de_std - zp_cal.crval2 * u.deg)**2)[good_sel]
 
     mag_max = zp_cal.mag_max
     mag_min = zp_cal.mag_min
@@ -1918,9 +1964,7 @@ def plot_calibration_check_frame(image_path):
     ax1.set_xlim(8.0, mag_max+1.0)
     ax1.set_ylim(8.0, mag_max+1.0)
     ax1.set_xlabel("{} Catalogue".format(zp_cal.band))
-    ax1.set_ylabel("{} OCam".format(zp_cal.band))
-    if zp_cal.band == "NB_659":
-        ax1.set_xlabel("r_SDSS Catalogue".format(zp_cal.band))
+    ax1.set_ylabel("{} Frame".format(zp_cal.band))
 
     # delta zp vs mag
     sigma_res = np.nanstd(mag_sex - mag_std)
@@ -1931,8 +1975,6 @@ def plot_calibration_check_frame(image_path):
     ax2.axvline(mag_max, ls=':')
     ax2.set_xlabel("{} Catalogue".format(zp_cal.band))
     ax2.set_ylabel("{}\nCatalogue - Frame".format(zp_cal.band))
-    if zp_cal.band == "NB_659":
-        ax2.set_ylabel("{} - {}\nCatalogue - Frame".format(mag_std_band, zp_cal.band))
 
     norm = simple_norm(data, 'sqrt', percent=99)
     ax3.imshow(data, norm=norm)
@@ -1942,12 +1984,10 @@ def plot_calibration_check_frame(image_path):
     plt.setp(ax3.get_yticklabels(), visible=False)
 
     # delta zp vs color
-    color = mag_side_std - mag_std
+     # if band is g_sdss, invert the color to have g-r instead of r-g. Same for NB659 to have r-i instead of i-r
+    color = (mag_side_std - mag_std)*zp_cal.side_band_sign
     sigma_clip = (color >= np.nanquantile(color, 0.005)) & (color <= np.nanquantile(color, 0.995))
     
-    # if band is g_sdss, invert the color to have g-r instead of r-g. Same for NB659 to have r-i instead of i-r
-    if zp_cal.band == "g_SDSS" or zp_cal.band == "NB_659":
-        color *= -1
     select = (mag_std > mag_min) & (mag_std < mag_max)
     #
     plot4 = ax4.scatter(color[select & sigma_clip], mag_std[select & sigma_clip] - mag_sex[select & sigma_clip],  
@@ -1960,31 +2000,29 @@ def plot_calibration_check_frame(image_path):
     ymax = +0.5
     ax4.set_xlim(np.amin(color[select & sigma_clip]), np.amax(color[select & sigma_clip]))
     ax4.set_ylim((ymin, ymax))
-    ax4.set_xlabel("{} - {} Catalogue".format(mag_side_std_band, mag_std_band))
-    if zp_cal.band == "NB_659" or zp_cal.band == "g_SDSS":
-        ax4.set_xlabel("{} - {} Catalogue".format(mag_std_band, mag_side_std_band))
-    ax4.set_ylabel("{}\nCatalogue - OCam".format(zp_cal.band))
-    if zp_cal.band == "NB_659":
-        ax4.set_ylabel("{} - {}\nCatalogue - OCam".format(mag_std_band, zp_cal.band))
+
+    if zp_cal.side_band_sign < 0:
+        ax4.set_xlabel("{} - {} Catalogue".format(zp_cal.band, zp_cal.side_band))
+    else:
+        ax4.set_xlabel("{} - {} Catalogue".format(zp_cal.side_band, zp_cal.band,))
+    ax4.set_ylabel("{} \nCatalogue - Frame".format(zp_cal.band))
 
     # dmag versus radius
     plot5 = ax5.scatter(rad_dist[select & sigma_clip], mag_std[select & sigma_clip] - mag_sex[select & sigma_clip],  
                         c=color[select & sigma_clip], cmap="viridis", s=1)
-    p5 = plt.colorbar(plot5, ax=ax5, label="{} - {} Skymapper".format(mag_side_std_band, mag_std_band))
+    if zp_cal.side_band_sign < 0:
+        p5 = plt.colorbar(plot5, ax=ax5, label="{} - {} Catalogue".format(zp_cal.band, zp_cal.side_band))
+    else:
+        p5 = plt.colorbar(plot5, ax=ax5, label="{} - {} Catalogue".format(zp_cal.side_band, zp_cal.band))
     ax5.axhline(0.0, ls=':')
     ax5.set_xlim(np.amin(rad_dist[select & sigma_clip].value), np.amax(rad_dist[select & sigma_clip].value))
     ax5.set_ylim(ymin, ymax)
     ax5.set_xlabel("R [deg]")
-    if zp_cal.band == "NB_659" or zp_cal.band == "g_SDSS":
-        ax5.set_ylabel("{} - {} Catalogue".format(mag_std_band, mag_side_std_band))
-    else:
-        ax5.set_ylabel("{}\nCatalogue - OCam".format(zp_cal.band))
-    if zp_cal.band == "NB_659":
-        ax5.set_ylabel("{} - {}\nCatalogue - OCam".format(mag_std_band, zp_cal.band))
+    ax5.set_ylabel("{}\nCatalogue - Frame".format(zp_cal.band))
 
     plt.tight_layout()
     logging.info("check plots created. Saving figure...")
-    figname = image_path[:-5] + "_qc_photcal_check.png"
+    figname = zp_cal.image_path[:-5] + "_qc_photcal_check.png"
     plt.savefig(figname)
 
 def get_key_from_header(hdu, keys):
