@@ -1,4 +1,4 @@
-- Add 2D Chebyshev fitting routine to the photometry rfesiduals
+- DONE. Add 2D Chebyshev fitting routine to the photometry residuals
   to correct the photometric catalogue of an image.
 - Add creation of region files for ds9 if user so chooses.
 - Calibration notebooks screw up things if run twice. Fix logic,
@@ -6,6 +6,20 @@
   directory instead of craeting a symbolic link.
 
 # ------ DONE -------
+- DONE. Fix bug in zpcal which does not set the variable self.phot_cal_clean
+        when running the notebook a second time in the same partition. The problem
+        was that the variable was only set when the catalogue was just downloaded
+        and the clean file created.
+- DONE. Homogeneize the selection of partitions in notebooks 4, 5, 6, and 7.
+        Now all notebooks give the posibility to select an index from a
+        list that contains both science and standard star frames.
+- DONE. Fix Bug that results in LIGHT CORRECTION always True in procedure
+        normalize in notebook 03.
+- DONE. Add a krigging method, in addition to Chebyshev, to estimate
+        the light concentration effect.
+        Krigging appears to be delivering better results than Chebyshev.
+- DONE. Add 2D Chebyshev fitting routine to the photometry residuals
+        to correct the photometric catalogue of an image.
 - DONE. Separate the procedure used in notebook 7b into an extract calibration from frame
         procedure, and a plot caliobration check procedure. This will be needed when we
         create a procedure to correct the illumination errors of the photometry. Such

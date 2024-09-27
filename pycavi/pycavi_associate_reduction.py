@@ -1383,7 +1383,7 @@ def mefpp_normalize_science(sci_part_list, instrument, apply_light_corr=False):
                 raise Exception("number of valid extensions from instrument config not equal with number of use=True values in same file")
 
             image_head = fits.getheader(image_name, 0)
-            if apply_light_correction and  image_head[instrument.filt_key] in ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS"]:
+            if apply_light_corr and  image_head[instrument.filt_key] in ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS"]:
                 light_coeffs = get_lightcorrection_coeffs(image_head[instrument.filt_key], instrument)
                 if light_coeffs is not None and instrument.correct_light_concentration:
                     apply_light_corr = True
@@ -1439,9 +1439,11 @@ def mefpp_normalize_science(sci_part_list, instrument, apply_light_corr=False):
                     if apply_light_corr:
                         header0["HIERARCH ESO PYCAVI LIGHTCOR"] = "True"
                         ext_head = hdul[ext_name].header
+                        logging.info("mefpp_normalize_science: applying light correction.")
                         apply_light_correction(light_coeffs, ext_data, ext_head, instrument)
                     else:
                         header0["HIERARCH ESO PYCAVI LIGHTCOR"] = "False"
+                        logging.info("mefpp_normalize_science: NO light correction.")
                     ext_data *= avg_gain / exptime  # converting raw adus into e-/s
 
                 # we update the SATLEVEL key necessary for downstream processing

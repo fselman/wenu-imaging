@@ -397,6 +397,7 @@ class ZPCalibration:
         if os.path.isfile(skymapper_clean):
             logging.info("get_skymapper_df: clean catalogue found. Reading it.")
             skymapper_df = pd.read_csv(skymapper_clean)
+            self.phot_cal_clean = skymapper_clean
         else:
             if os.path.isfile(skymapper_raw):
                 logging.info("get_skymapper_df: Raw Skymapper file found. Reading it.")
