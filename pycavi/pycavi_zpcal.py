@@ -2,26 +2,29 @@ import glob
 import os
 import copy
 import logging
-import astroplan
-import numpy as np
-import pandas as pd
 import urllib.request
+
+import numpy as np
+from numpy.polynomial import chebyshev
+from numpy.polynomial.chebyshev import chebvander2d
+import pandas as pd
 
 from matplotlib import cm
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
 from scipy.optimize import minimize
+from scipy.stats import norm
 
 from astroquery.sdss import SDSS
 
+import astroplan
 from astropy import units as u
-
 from astropy.coordinates import SkyCoord, get_moon, EarthLocation, AltAz
 from astropy.io import fits
 from astropy.modeling import models, fitting
 from astropy.nddata import Cutout2D
-from astropy.stats import sigma_clipped_stats, gaussian_sigma_to_fwhm
+from astropy.stats import gaussian_sigma_to_fwhm, sigma_clip, sigma_clipped_stats
 from astropy.time import Time
 from astropy.visualization import simple_norm
 from astropy.wcs import WCS
@@ -1730,12 +1733,189 @@ class ZPcal:
         self.wcs = wcs = WCS(zhdu)
         self.aperture = None
         self.sky_annulus = None
+        self.mag_frame = None
         self.ra_std = None
         self.de_std = None
         self.x = None
         self.y = None
- 
 
+        # Evaluate the fitted polynomial at new points
+    def chebyshev_2d_eval(self, x_pix, y_pix):
+        """
+        Evaluate the Chebyshev polynomial at the points defined
+        by the 1d ndarrays x and y. Note that x and y should be
+        scaled to lie in the interval -1 to 1.
+        """
+        coef = self.coefficients
+        deg = self.deg
+        # Generate 2D Vandermonde matrix for new points
+        # For well behaved polynomials we need to rescale coordinates to [-1, 1]
+        # Needs to rescale the x and y values before fitting the Chebyshev polys
+        x, y = self.pixel_coords_scaled(x_pix, y_pix)
+        V_new = chebvander2d(x, y, deg)
+        return np.dot(V_new, coef)
+
+    def filter_data(self, dm_min, dm_max, faintest_mag):
+        """
+        The data points are cleaned according to the criteria
+        provided by the input variables:
+
+        Input
+        ====
+
+                  dm_min: lower bound to dm
+                  dm_max: upper bound to dm
+            faintest_mag:   faintest catalogue magnitude to be included
+
+        This is done outside the fitting routines so we could include
+        different ways of fitting the dm data. The dm filters are necessary
+        because as a result of problems with the photometry we could
+        ecounter large values used as flag of bad data. Although that
+        should be investigated and fixed we do this to ensure proper
+        working of sigma_clip with reasonable sigma values.
+
+        Output
+        ======
+
+        The routine fills with masked arrays the ZPCal variables:
+        self.x_masked, self.y_masked, self.z_masked, self.z_masked_err,
+        self.mag_std_masked, and self.mag_frame_masked.
+        """
+        x_raw = self.x  # x-coordinates of the data points
+        y_raw = self.y  # y-coordinates of the data points
+        z_mag_raw = self.mag_std
+        z_raw = self.mag_std - self.mag_frame  # z-values of the data points
+        z_raw[(z_raw < dm_min) | (z_raw > dm_max)] = np.nan
+        z_err_raw = np.full_like(z_raw, 1.0)  # Assume fixed errors equal to 1.0 mags on the z-values
+
+        # *** Here we mask the bad values of z and create final 1d arrays ***
+        z_raw_clipped = sigma_clip(z_raw, sigma=3.0, maxiters=5)
+        mask = ~np.isnan(z_raw) & ~z_raw_clipped.mask & np.isfinite(z_raw) & (z_mag_raw < faintest_mag)
+        self.x_masked = x_raw[mask]
+        self.y_masked = y_raw[mask]
+        self.z_masked = z_raw[mask]
+        self.z_masked_err = z_err_raw[mask]
+        self.mag_std_masked = self.mag_std[mask]
+        self.mag_frame_masked = self.mag_frame[mask]
+
+    def fit_chebyshev(self, deg):
+        """
+        Fits a chebyshev polynomial using the numpy.linalg.lstsq
+        procedure via Vandermonde matrices with chebvander2d.
+
+        Input
+        =====
+
+            self.x:     The x-ccordinates [pix] of the sampled points
+            self.y:     The y-coordinates [pix] of the sampled points
+
+        filter_data should be called before this routine.
+
+        """
+        self.deg = deg
+
+        # Construct the Chebyshev design matrix for 2D data
+        x_scaled, y_scaled = self.pixel_coords_scaled(self.x_masked, self.y_masked)
+        V = chebvander2d(x_scaled, y_scaled, self.deg)
+
+        # Apply weights
+        W = np.diag(1 / self.z_masked_err)  # Weight matrix (inverse of errors)
+        VW = W @ V  # Weighted design matrix
+        zW = W @ self.z_masked  # Weighted z values
+
+        # Solve the weighted least squares problem
+        self.coefficients, self.residuals, self.rank, self.s = np.linalg.lstsq(VW, zW, rcond=None)
+
+        # We fit the masked values and correct the magnitudes
+        self.z_cheb_corr = self.z_masked - self.chebyshev_2d_eval(self.x_masked, self.y_masked)
+
+
+    def pixel_coords_scaled(self, xcoord, ycoord):
+        """
+        Converts pixel coordinates and scale them to the intervale [-1, 1].
+        """
+        x_scaled = 2 * (xcoord - self.naxis1) / self.naxis1 + 1
+        y_scaled = 2 * (ycoord - self.naxis2) / self.naxis2 + 1
+        return x_scaled, y_scaled
+
+    def print_chebyshev_polynomials(self):
+        """
+        Print the Chebyshev polynomials from the coefficients.
+    
+        Parameters:
+        - coefficients: 2D array of Chebyshev coefficients.
+        """
+        def cheb2std_nozeros(cheb_poly, new_var_name='x'):
+            """
+            Convert a Chebyshev polynomial to its standard polynomial form,
+            replace the variable name, and eliminate zero coefficient terms.
+            
+            Parameters:
+            - cheb_poly: Chebyshev polynomial object (numpy.polynomial.Chebyshev).
+            - new_var_name: String, new variable name to use in the output.
+            
+            Returns:
+            - poly_str: String representation of the standard polynomial with zero terms removed.
+            """
+            # Convert the Chebyshev polynomial to standard polynomial form
+            standard_poly = cheb_poly.convert(kind=np.polynomial.Polynomial)
+        
+            # Extract coefficients and corresponding terms
+            coeffs = standard_poly.coef
+            terms = []
+
+            # Construct polynomial terms, omitting zero coefficients
+            for power, coeff in enumerate(coeffs):
+                if coeff != 0.0:
+                    if power == 0:
+                        terms.append(f"{coeff:.4f}")
+                    elif power == 1:
+                        terms.append(f"{coeff:.4f} * {new_var_name}")
+                    else:
+                        terms.append(f"{coeff:.4f} * {new_var_name}^{power}")
+
+            # Combine all terms into the final polynomial string
+            poly_str = " + ".join(terms)
+
+            return poly_str
+
+        coefficients = self.coefficients.reshape(self.deg[0]+1, self.deg[1]+1)
+        num_x, num_y = self.deg[0], self.deg[1]
+        logging.info("icoefficients.shape: {}".format(coefficients.shape))
+
+        # I save the explicit form of the polynomial to write it in the headers
+        # of the image, eventually.
+        #
+        ncount = 0
+        self.cheb_coeff = {}
+        self.cheb_poly2d = {}
+        for i in range(num_x):
+            for j in range(num_y):
+                ncount+=1
+                coeff = coefficients[i, j]
+                self.cheb_coeff[(i,j)] = coeff
+                if coeff != 0:
+                    poly_x = chebyshev.Chebyshev([0] * i + [1])
+                    poly_y = chebyshev.Chebyshev([0] * j + [1])
+                    self.cheb_poly2d[(i,j)] = f"T_{i}(x) * T_{j}(y)"
+                    logging.info(f"{ncount:02d} Coefficient({i}, {j}): {coeff:.8f} * T_{i}(x) * T_{j}(y)")
+
+        self.cheb_poly_x = {}
+        self.cheb_poly_x_str = {}
+        for i in range(num_x):
+            poly_x = chebyshev.Chebyshev([0] * i + [1])
+            self.cheb_poly_x[i] = poly_x
+            self.cheb_poly_x_str[i] = f"{cheb2std_nozeros(poly_x)}"
+            logging.info(f"T_{i}(x): {cheb2std_nozeros(poly_x)}")
+
+        self.cheb_poly_y = {}
+        self.cheb_poly_y_str = {}
+        for j in range(num_y):
+            poly_y = chebyshev.Chebyshev([0] * j + [1])
+            self.cheb_poly_y[i] = poly_y
+            self.cheb_poly_y_str[i] = f"{cheb2std_nozeros(poly_y)}"
+            logging.info(f"T_{j}(y): {cheb2std_nozeros(poly_y, new_var_name='y')}")
+            
 # This checking script extracts all information from the headers of the frame
 # and does apperture photometry the same way as ZPCal but it does not calculate
 # zero points. It just a check from info in the frame itself.
@@ -1880,7 +2060,7 @@ def extract_calibration(image_path):
     # FSE CHECK: is setting to 99.0 a good flag of a bad value?
     raw_mags[aper_sum_bkgsub > 0] = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
     raw_mags[aper_sum_bkgsub <= 0] = 99.0
-    zp_cal.mags_frame = np.around(raw_mags, 4)
+    zp_cal.mag_frame = np.around(raw_mags, 4)
 
     return zp_cal
 
@@ -1938,9 +2118,9 @@ def plot_zpcal(zp_cal):
     data = zp_cal.data
     wcs = zp_cal.wcs
 
-    good_sel = (zp_cal.mags_frame > 0) & (zp_cal.mags_frame < 20)
+    good_sel = (zp_cal.mag_frame > 0) & (zp_cal.mag_frame < 20)
     logging.info("pycavi qc phot: number of good values {}".format(good_sel.sum()))
-    mag_sex = zp_cal.mags_frame[good_sel]
+    mag_sex = zp_cal.mag_frame[good_sel]
     mag_std = zp_cal.mag_std[good_sel]
     mag_side_std = zp_cal.mag_side_std[good_sel]
     rad_dist = np.sqrt((zp_cal.ra_std - zp_cal.crval1 * u.deg)**2 + (zp_cal.de_std - zp_cal.crval2 * u.deg)**2)[good_sel]
