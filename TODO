@@ -1,9 +1,14 @@
-- Test change of sign in routine that does light correction.
 - Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
 
 # ------ DONE -------
+- DONE. Test change of sign in routine that does light correction.
+        - It had a positive sign which resulted in the largest rms.
+        Changed sign to neg. But still, no light corr in notebook3
+        results in the lower rms of the magnitude residuals. Changed
+        sign but set the default to apply_light_corr=False. The routine
+        might be useful in the future.
 - Done. Add creation of region files for ds9 if user so chooses.
 - DONE. Fix bug in zpcal which does not set the variable self.phot_cal_clean
         when running the notebook a second time in the same partition. The problem
