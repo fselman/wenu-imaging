@@ -567,6 +567,53 @@ def pycavi_qc_plot_hist(array, label='x-val', nbins=30, x_range="8-deciles", fig
         plt.savefig(figname)
 
 
+# Pycavi tool to create region file
+def create_ds9_reg_file(ra_array, dec_array, filename, radius=20.0, coords='image'):
+    """
+    Create a DS9 region file from arrays of right ascension and declination,
+    including a header with coordinate system and equinox information.
+
+    Parameters:
+    ra_array (numpy.ndarray): Array of right ascension values (degrees, decimal format, 2000 equinox).
+    dec_array (numpy.ndarray): Array of declination values (degrees, decimal format, 2000 equinox).
+    filename (str): Name of the output region file.
+    radius (float): Radius of the circles (default is 10.0).
+    """
+
+    # Ensure RA and Dec arrays have the same length
+    if len(ra_array) != len(dec_array):
+        raise ValueError("create_ds9_reg_file: RA and Dec arrays must have the same length.")
+
+    if 'pixel' in coords or 'image' in coords:
+        region_file_content = (
+            "# Region file format: DS9 version 4.1\n" +
+            "global color=green dashlist=8 3 width=1 font='helvetica 10 normal' select=1 highlite=1 dash=0 " +
+            "fixed=0 edit=1 move=1 delete=1 include=1 source=1\n" +
+            "image\n"  # Specifies coordinate system (FK5) and equinox (2000)
+        )
+        # Add circles for each star
+        for ra, dec in zip(ra_array, dec_array):
+            region_file_content += f"circle({ra},{dec},{radius})\n"
+    elif "fk5" in coords:
+        region_file_content = (
+            "# Region file format: DS9 version 4.1\n" +
+            "global color=green dashlist=8 3 width=1 font='helvetica 10 normal' select=1 highlite=1 dash=0 " +
+            "fixed=0 edit=1 move=1 delete=1 include=1 source=1\n" +
+            "fk5\n"  # Specifies coordinate system (FK5) and equinox (2000)
+        )
+        # Add circles for each star
+        for ra, dec in zip(ra_array, dec_array):
+            region_file_content += f"circle({ra}d,{dec}d,{radius}\")\n"
+    else:
+        raise ValueError("create_ds9_reg_file: unknow coordinate type")
+
+    # Write the content to the specified file
+    with open(filename, 'w') as file:
+        file.write(region_file_content)
+
+    logging.info(f"create_ds9_reg_file: DS9 region file '{filename}' created successfully.")
+
+
 # Pycavi centralized run_command
 # ======================================================================
 # A utility function
@@ -688,4 +735,6 @@ if __name__ == "__main__":
     print("pycavi_tools test - r_sdss AB - Vega: {} ".format(get_mab_minus_vega("r_SDSS")["mab_mveg"]))
     print("pycavi_tools test - r_SDSS AB - Vega: {} ".format(get_mab_minus_vega("r_SDSS")["mab_mveg"]))
 
-
+    # Example usage with the ra_array and dec_array defined earlier
+    # filename = '/mnt/data/stars_region_with_header.reg'
+    # create_ds9_region_file_with_header(ra_array, dec_array, filename, coords="pixel")

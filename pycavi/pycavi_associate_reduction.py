@@ -1347,7 +1347,8 @@ def apply_light_correction(light_correction_coeffs, ccd_data, ccd_header, instru
         # but we want to increase the flux where delta_mag is gt zero to compensate light correction effect
         # so it becomes F = F_0 * 10^(delta_mag/2.5)
     
-        ccd_data *= np.power(10, delta_mag.reshape(n, m) / 2.5)
+        # FSE 2024-09-23: changed sign of exponent for testing.
+        ccd_data *= np.power(10, -delta_mag.reshape(n, m) / 2.5)
         return 0
 
 

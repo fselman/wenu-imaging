@@ -391,17 +391,24 @@ class ZPCalibration:
         # if this is a csv, why not read it with pandas?
         # Answer: because this script writes it.
         #
-        skymapper_raw = self.calibrationdir + "/skymapper_query_result_{}.csv".format(self.object)
+        skymapper_raw = self.calibrationdir + "/sm_qry_{}.csv".format(self.object)
         skymapper_clean = skymapper_raw[:-4] + "_clean.csv"
         self.phot_cal_file = skymapper_clean
         if os.path.isfile(skymapper_clean):
             logging.info("get_skymapper_df: clean catalogue found. Reading it.")
             skymapper_df = pd.read_csv(skymapper_clean)
             self.phot_cal_clean = skymapper_clean
+
+            # Before returning we write a reg file from the catalogue
+            # we create region files for the photometric catalogue.
+            pycavi_tools.create_ds9_reg_file(skymapper_df["raj2000"].to_numpy(), skymapper_df["dej2000"].to_numpy(), 
+                                             skymapper_clean[:-4]+".reg", radius=5.0, coords="fk5")
         else:
             if os.path.isfile(skymapper_raw):
                 logging.info("get_skymapper_df: Raw Skymapper file found. Reading it.")
                 skymapper_df = pd.read_csv(skymapper_raw)
+                pycavi_tools.create_ds9_reg_file(skymapper_df["raj2000"].to_numpy(), skymapper_df["dej2000"].to_numpy(),
+                                             skymapper_raw[:-4]+".reg", radius=5.0, coords="fk5")
             else:
                 logging.info("get_skymapper_df: Skymapper file does not exist. Downloading it.")
                 with urllib.request.urlopen(self.query_str) as f:
@@ -415,6 +422,11 @@ class ZPCalibration:
                         print(aline, file=f)
                 logging.info('get_skymapper_df: Done.')
                 skymapper_df = pd.read_csv(skymapper_raw)
+
+            # Before returning we write a reg file from the catalogue
+            # we create region files for the photometric catalogue.
+            pycavi_tools.create_ds9_reg_file(skymapper_df["raj2000"].to_numpy(), skymapper_df["dej2000"].to_numpy(),
+                                             skymapper_raw[:-4]+".reg", radius=5.0, coords="fk5")
 
             # we clean the df by selecting the data with flag and nimaflags == 0.
             clean_flags = skymapper_df["flags"].to_numpy() == 0
@@ -433,6 +445,11 @@ class ZPCalibration:
             skymapper_df = self.convert_sm_to_sdss(skymapper_df)
             skymapper_df.to_csv(skymapper_clean, index=False)
             self.phot_cal_clean = skymapper_clean
+
+            # Before returning we write a reg file from the catalogue
+            # we create region files for the photometric catalogue.
+            pycavi_tools.create_ds9_reg_file(skymapper_df["raj2000"].to_numpy(), skymapper_df["dej2000"].to_numpy(), 
+                                             self.phot_cal_file[:-4]+".reg", radius=5.0, coords="fk5")
 
         return skymapper_df
 
@@ -496,7 +513,7 @@ class ZPCalibration:
                           (sdss_df["r_psf"].to_numpy() > -9999) & \
                           (sdss_df["i_psf"].to_numpy() > -9999) & \
                           (sdss_df["z_psf"].to_numpy() > -9999)
-            print(len(sdss_df))
+            logging.info("get_sdss_df: before cleanning len(sdss_df): {}".format(len(sdss_df)))
             sdss_df = sdss_df[clean_flags]
             sdss_df['u_SDSS'] = sdss_df['u_psf']
             sdss_df['g_SDSS'] = sdss_df['g_psf']
@@ -525,7 +542,7 @@ class ZPCalibration:
             sdss_df['i_SDSS'] = sdss_df['i_SDSS'].round(3)
             sdss_df['z_SDSS'] = sdss_df['z_SDSS'].round(3)
 
-            print(len(sdss_df))
+            logging.info("get_sdss_df: after cleanning len(sdss_df): {}".format(len(sdss_df)))
 
             # we write the csv file for further data checks
             sdss_raw = self.calibrationdir + "/sdss_query_result_{}.csv".format(self.object)
@@ -533,6 +550,12 @@ class ZPCalibration:
             self.phot_cal_file = sdss_clean
             self.phot_cal_clean = sdss_clean
             sdss_df.to_csv(sdss_clean, index=False)
+
+            # Before returning we write a reg file from the catalogue
+            # we create region files for the photometric catalogue.
+            pycavi_tools.create_ds9_reg_file(sdss_df["raj2000"].to_numpy(), sdss_df["dej2000"].to_numpy(), 
+                                             sdss_raw[:-4]+".reg", radius=5.0, coords="fk5")
+
             return sdss_df
         else:
             print('SDSS query returned no results.')
@@ -1740,6 +1763,13 @@ class ZPcal:
         self.x = None
         self.y = None
 
+        self.x_masked = None
+        self.y_masked = None
+        self.z_masked = None
+        self.z_masked_err = None
+        self.mag_std_masked = None
+        self.mag_frame_masked = None
+
         # Evaluate the fitted polynomial at new points
     def chebyshev_2d_eval(self, x_pix, y_pix):
         """
@@ -1756,7 +1786,7 @@ class ZPcal:
         V_new = chebvander2d(x, y, deg)
         return np.dot(V_new, coef)
 
-    def filter_data(self, dm_min, dm_max, faintest_mag):
+    def filter_data(self, dm_min, dm_max, brightest_mag, faintest_mag):
         """
         The data points are cleaned according to the criteria
         provided by the input variables:
@@ -1791,13 +1821,25 @@ class ZPcal:
 
         # *** Here we mask the bad values of z and create final 1d arrays ***
         z_raw_clipped = sigma_clip(z_raw, sigma=3.0, maxiters=5)
-        mask = ~np.isnan(z_raw) & ~z_raw_clipped.mask & np.isfinite(z_raw) & (z_mag_raw < faintest_mag)
+        mask = ~np.isnan(z_raw) & ~z_raw_clipped.mask & np.isfinite(z_raw) & (brightest_mag < z_mag_raw) & (z_mag_raw < faintest_mag)
         self.x_masked = x_raw[mask]
         self.y_masked = y_raw[mask]
         self.z_masked = z_raw[mask]
         self.z_masked_err = z_err_raw[mask]
         self.mag_std_masked = self.mag_std[mask]
         self.mag_frame_masked = self.mag_frame[mask]
+
+    def create_ds9_region(self):
+        """
+        Creates region files with the coordinates of the filtered and unfiltered
+        stars. Should be run after filtering.
+        """
+
+        # we create reg files for our detections
+        pycavi_tools.create_ds9_reg_file(self.x, self.y, self.image_path[:-5]+".reg", radius=30, coords='image')
+        if self.x_masked is not None and self.y_masked is not None:
+            pycavi_tools.create_ds9_reg_file(self.x_masked, self.y_masked, self.image_path[:-5]+"_filtered.reg", radius=30, coords='image')
+
 
     def fit_chebyshev(self, deg):
         """
@@ -1983,6 +2025,11 @@ def extract_calibration(image_path):
     zp_cal.x = pixel_coords[:,0]
     zp_cal.y = pixel_coords[:,1]
 
+    # we check if a reg file exists, if not we create it
+    logging.info("pycavi qc phot: checkinh existence of {}".format(query_catalogue_path[:-4]+".reg"))
+    if not os.path.isfile(query_catalogue_path[:-4]+".reg"):
+        pycavi_tools.create_ds9_reg_file(phot_catalogue["raj2000"].to_numpy(), phot_catalogue["dej2000"].to_numpy(),
+                                             query_catalogue_path[:-4]+".reg", radius=5.0, coords="fk5")
     # select bands accordingly to frame band
     # if band is NB_659, then construct the scatter plot using r-i and r-Ha
     # in rest of cases uses g-band and band-OCam

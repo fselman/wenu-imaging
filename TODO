@@ -1,11 +1,10 @@
-- DONE. Add 2D Chebyshev fitting routine to the photometry residuals
-  to correct the photometric catalogue of an image.
-- Add creation of region files for ds9 if user so chooses.
+- Test change of sign in routine that does light correction.
 - Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
 
 # ------ DONE -------
+- Done. Add creation of region files for ds9 if user so chooses.
 - DONE. Fix bug in zpcal which does not set the variable self.phot_cal_clean
         when running the notebook a second time in the same partition. The problem
         was that the variable was only set when the catalogue was just downloaded
