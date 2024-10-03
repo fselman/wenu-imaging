@@ -135,7 +135,14 @@ class ZPCalibration:
 
         # open Swarp mosaic and read data and headers
         logging.info('ZPCalibration: init: reading frame')
-        self.data, self.hdu = fits.getdata(self.frame, header=True)
+        self.data, self.hdu = fits.getdata(self.frame, header=True, do_not_scale_image_data=False)
+
+        logging.info('self.data.shape: {}'.format(self.data.shape))
+        data_1d = self.data[10000:10100,10000:10100].flatten()
+        logging.info('ZPCalibration: Input data array with do_not_scale_image_data=True <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
+        pycavi_tools.pycavi_qc_plot_hist(data_1d,
+                                         label='Pixel value distribution right after reading Swarp mosaic.',
+                                         nbins=30, x_range="8-deciles", figname=None)
 
         # we get observing passband from title first, if not there, then looks in the header
         self.band = None
@@ -219,13 +226,14 @@ class ZPCalibration:
         # run aperture photometry in swarp frame using calibrators apertures
         # this call adds collumn  ["raw_mags_" + self.band] to df
         #
+        # The raw magnitudes use the MAGZP keywords.
         self.do_phot()  # first run to get raw magnitudes and convertion factors
 
         # here we get the zero points:
-        #    zp: to go from DNs in orig files to magnitudes
-        #  zphc: to go from e/s to std magnitudes. To compare with Health Check values.
+        #    zp: to go from e/s in orig files to magnitudes
+        #  zphc: to go from e/s to std magnitudes outside atmosphere. To compare with Health Check values.
         #   zp2: to go from Flambda (in erg/s/cm**2/Angstrom) to std magnitudes
-        # magzp: to go from DNs (in erg/s/cm**2 to std magnitudes)
+        # magzp: to go from DNs (in erg/s/cm**2 to std magnitudes, should be the same as zp2)
         #
         self.filter_width = pycavi_tools.filter_width(self.band)
         self.plambda = pycavi_tools.plambda(self.band)
@@ -233,6 +241,12 @@ class ZPCalibration:
 
         # zero point to convert raw magnitudes in Swarp frame to standard magnitudes
         self.zp = self.get_zp_from_df()
+
+        # If there was a MAGZP keyword it was used to calculate the raw mags, therefore, the actual zero
+        # point is different to what the previous expression returns. We do need to update it.
+        if "MAGZP" in self.hdu:
+            logging.info("do_phot: MAGZP found in headers with value: {}".format(self.hdu["MAGZP"]))
+            self.zp += self.hdu["MAGZP"]
         logging.info('ZPCalibration: zp: {0} to go from ADUs in orig files to mags - ESO health check values'.format(self.zp))
 
         # zp as calculated by ESO Health Check script. Uses e/s and airmass = 1.0, not above atmosphere
@@ -246,18 +260,19 @@ class ZPCalibration:
         # formula but instead of Fnu we use Flambda and the pivot wavelength.
         #
         self.zp2 = pycavi_tools.Flambda_zp(self.band)
+        if self.zp2 is None:
+            raise Exception("ZPCalibration: call to Flambda_zp returned None. Filter not in allowed list?")
         logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to std mags above atmosphere.'.format(self.zp2))
+        logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to AB mags'.format(self.zp2))
 
         # Imaging data should provide physical units of erg/s/cm^2. So we must
         # multiply DN by this factor
         self.factor_dn_to_flambda = 10 ** ((self.zp2 - self.zp) / 2.5)
-        if self.zp2 is None:
-            raise Exception("ZPCalibration: call to Flambda_zp returned None. Filter not in allowed list?")
-        logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to AB mags'.format(self.zp2))
+        logging.info('ZPCalibration: factor_dn_to_flambda: {:.3e} to go from DN to Flambda'.format(self.factor_dn_to_flambda))
         
         # conversion factor to multiply mosaic DN to get Flambda in erg/s/cm2
         self.magzp = self.zp2 # the zero point value to use with the mosaic data
-        logging.info('ZPCalibration: zp2: {:.3f} (from swarp mosaic DN to AB mags)'.format(self.zp2))
+        logging.info('ZPCalibration: magzp: {:.3f} (from swarp mosaic DN to AB mags)'.format(self.magzp))
         logging.info('ZPCalibration:               (mosaic DN in erg/s/cm**2)')
 
         # proper imaging fluxes needs erg/s/cm**2
@@ -273,10 +288,18 @@ class ZPCalibration:
         # get sky levels from orig files
         # these levels were substracted by swarp
         #
+        # If the key is present then we have a calibrated frame for which\
+        # the factor will be near 0 and cannot be used to deal with e/s
+        # in the original files.
+        if "ESO PYCAVI QC DN2FLAM" not in self.hdu.keys():
+            factor_dn_to_flambda = self.factor_dn_to_flambda
+        else:
+            factor_dn_to_flambda = float(self.hdu["ESO PYCAVI QC DN2FLAM"])
+
         self.orig_skies_adu = self.get_orig_sky_levels()
         self.orig_skies_phys = copy.deepcopy(self.orig_skies_adu)
         self.orig_skies_phys.update(
-            (x, y * self.factor_dn_to_flambda ) for x, y in self.orig_skies_phys.items())
+            (x, y * factor_dn_to_flambda ) for x, y in self.orig_skies_phys.items())
 
         sky_mean_list = []
         sky_std_list = []
@@ -577,8 +600,6 @@ class ZPCalibration:
         self.sky_annulus = SkyCircularAnnulus(self.positions, self.sky_annulus_r1 * u.arcsec,
                                               self.sky_annulus_r2 * u.arcsec)
 
-
-
     def do_phot(self):
         """
         perform aperture photometry on the observed frame based on the position 
@@ -632,12 +653,24 @@ class ZPCalibration:
         pycavi_tools.pycavi_qc_plot_hist(aper_sum_bkgsub, label='Median aperture background', nbins=30, x_range="full", figname=None)
 
         logging.info("do_phot: Adding column with raw magnitudes to data frame.")
-        # during test some points have fluxes below 1, in those cases, lets set the raw magnitude up to 99
-        raw_mags = np.zeros_like(aper_sum_bkgsub)
+        # we avoid values affecting statistics by setting all values no np.nan initially
+        raw_mags = np.full_like(aper_sum_bkgsub, np.nan)
+
+        # we check if the frame has a MAGZP keyword and apply it if present
         # FSE CHECK: is setting to 99.0 a good flag of a bad value
-        raw_mags[aper_sum_bkgsub > 0] = -2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
-        raw_mags[aper_sum_bkgsub <= 0] = 99.0
+        if "MAGZP" in self.hdu:
+            logging.info("do_phot: MAGZP found in headers with value: {}".format(self.hdu["MAGZP"]))
+            raw_mags[aper_sum_bkgsub > 0] = float(self.hdu["MAGZP"]) - 2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
+            raw_mags[aper_sum_bkgsub <= 0] = np.nan
+        else:
+            logging.info("do_phot: NO MAGZP found in headers")
+            raw_mags[aper_sum_bkgsub > 0] = -2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
+            raw_mags[aper_sum_bkgsub <= 0] = np.nan
+
         self.df["raw_mags_" + self.band] = np.around(raw_mags, 4)
+        pycavi_tools.pycavi_qc_plot_hist(raw_mags,
+                                         label='Histogram of raw frame magnitudes corrected by MAGZP if present.',
+                                         nbins=30, x_range="8-deciles", figname=None)
 
 
         # we also get some morphological data
@@ -747,51 +780,6 @@ class ZPCalibration:
             phot_cal_df.to_csv(self.phot_cal_clean, index=False)
             
             logging.info("add_secondary_filter_to_df: filter: NB_659 added to df")
-        #if self.band == "NB_659":
-            ## Drew+14 colors for MS stars (Table4)
-            ## Changed from Vega to AB mags
-            #drew_r_i_ab = np.array([0.061, 0.068, 0.070, 0.071, 0.083, 0.096, 0.115, 0.142, 0.151, 0.162, 0.174, 0.190,
-                                    #0.210, 0.217, 0.227, 0.238, 0.269, 0.302, 0.366, 0.395, 0.443, 0.476, 0.491, 0.492,
-                                    #0.540, 0.571, 0.609, 0.616, 0.632, 0.66, 0.681, 0.735, 0.937, 1.002, 1.147, 1.325,
-                                    #1.381, 1.392])
-            #drew_r_ha_ab = np.array([0.232, 0.248, 0.235, 0.241, 0.229, 0.226, 0.225, 0.22, 0.217, 0.210, 0.199, 0.186,
-                                     #0.175, 0.173, 0.172, 0.172, 0.185, 0.207, 0.263, 0.288, 0.327, 0.351, 0.362, 0.362,
-                                     #0.394, 0.410, 0.425, 0.428, 0.435, 0.446, 0.455, 0.477, 0.564, 0.588, 0.644, 0.699,
-                                     #0.720, 0.722])
-#
-            ## select colors r_SDSS, i_SDSS and raw, clean nans and infinites
-            #if os.path.isfile(self.phot_cal_clean):
-                #logging.info("add_secondary_filter_to_df: reading data from {}".format(self.phot_cal_clean))
-                #phot_cal_df = pd.read_csv(self.phot_cal_clean)
-                #r_sdss = phot_cal_df["r_SDSS"].to_numpy()
-                #i_sdss = phot_cal_df["i_SDSS"].to_numpy()
-            #else:
-                #r_sdss = self.df["r_SDSS"].to_numpy()
-                #i_sdss = self.df["i_SDSS"].to_numpy()
-#
-            #clean_nans = ~np.isnan(r_sdss) & ~np.isnan(i_sdss)
-            #clean_mags = (r_sdss >= self.mag_min) & (r_sdss <= self.mag_max)
-            #condition = clean_nans & clean_mags
-#
-            #r_minus_i = np.full_like(r_sdss, np.nan, dtype=np.float64)
-            #r_minus_i[condition] = r_sdss[condition] -  i_sdss[condition]
-#
-            #clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
-            #r_minus_i[~clean_color] = np.nan
-#
-#
-            #interp_data = np.interp(r_minus_i, drew_r_i_ab, drew_r_ha_ab)
-            #calculated_ha_ab = r_sdss - interp_data
-#
-            #pycavi_tools.pycavi_qc_plot_hist(calculated_ha_ab, label='Halpha empirical', nbins=30, x_range="full")
-            #self.df[self.band] = calculated_ha_ab
-#
-            ## we write the band m agnitudes to cleaned phot cat
-            #phot_cal_df[self.band] = calculated_ha_ab
-            #phot_cal_df[self.band] = phot_cal_df[self.band].round(3)    # only 3 decimal places make sense
-            #phot_cal_df.to_csv(self.phot_cal_clean, index=False)
-#
-            #logging.info("add_secondary_filter_to_df: filter: NB_659 added to df")
 
         # For UBVRcIc https://www.sdss3.org/dr8/algorithms/sdssUBVRITransform.php
         # Lupton 2005
@@ -898,17 +886,54 @@ class ZPCalibration:
             y_raw, y_exp = args
             return np.sum((y_exp - y_raw - zp_test) ** 2)
 
-        def sigma_clip(y_raw, y_exp, niter=5):
+        def sigma_clip(y_raw, y_exp, niter=9):
             sel = np.ones(len(y_raw), dtype=bool)
             zp_get = 23.0
             for i in range(niter+1):
                 minimize_solution = minimize(lst_sqr, x0=zp_get*np.ones(1), args=(y_raw[sel], y_exp[sel]),
-                                             method="Nelder-Mead")
+                                             method="L-BFGS-B")
                 res = y_exp - y_raw - minimize_solution.x[0]
                 mean_res, std_res = np.nanmean(res), np.nanstd(res)
-                sel = np.abs(res - mean_res) < 2.0*std_res
-                zp_get = round(minimize_solution.x[0], 3)
-            return zp_get
+                sel = np.abs(res - mean_res) < 5.0*std_res
+                zp_get = minimize_solution.x[0]
+            return round(zp_get, 3)
+
+
+        # Define the least squares function to minimize
+        def lst_sqr2(zp, y_raw, y_exp):
+            return np.sum((y_exp - y_raw - zp)**2)
+
+        # Sigma clipping with optimization
+        def sigma_clip2(y_raw, y_exp, niter=9, clipping_threshold=2.0):
+            sel = np.ones(len(y_raw), dtype=bool)  # Initialize selection mask
+            zp_get = 100.0  # Initial guess for zero-point
+            tol = 1e-5  # Tolerance for stopping if zp converges
+   
+            for i in range(niter):
+                print(y_raw[sel])
+                # Optimize to find the zero-point (zp)
+                minimize_solution = minimize(lst_sqr2, x0=[zp_get], args=(y_raw[sel], y_exp[sel]), method="L-BFGS-B")
+       
+                # Get the optimized zero-point value
+                zp_new = minimize_solution.x[0]
+       
+                # Calculate residuals
+                res = y_exp - y_raw - zp_new
+       
+                # Sigma clipping: keep values within the clipping threshold (e.g., 2-sigma)
+                mean_res, std_res = np.nanmean(res), np.nanstd(res)
+                sel = np.abs(res - mean_res) < clipping_threshold * std_res
+                logging.info("sigma_clip2: number of good data points: {}".format(np.sum(sel)))
+       
+                # Check for convergence: if zero-point doesn't change much, stop
+                if np.abs(zp_new - zp_get) < tol:
+                    break
+       
+                zp_get = zp_new  # Update the zero-point for the next iteration
+   
+            print(y_raw[sel])
+            return round(zp_get, 3)  # Return the final zero-point with better precision
+
 
         # This line makes sense only after running do_phot which adds column "raw_mags_" + self.band
         # to df.
@@ -919,12 +944,17 @@ class ZPCalibration:
         # clean nans and infinites
         clean_nan = ~np.isnan(std_mags) & ~np.isnan(raw)
         clean_infinites = ~np.isinf(raw)
-        clean_mag = (std_mags >= self.mag_min) & (std_mags <= self.mag_max) & (raw < 0)
 
-        raw = raw[clean_nan & clean_mag & clean_infinites]
-        std_mags = std_mags[clean_nan & clean_mag & clean_infinites]
+        # clean_mag = (std_mags >= self.mag_min) & (std_mags <= self.mag_max) & (raw < 0)
+        clean_mag = (std_mags >= self.mag_min) & (std_mags <= self.mag_max) 
 
-        zp = sigma_clip(raw, std_mags)
+        sel = clean_nan & clean_mag & clean_infinites
+        logging.info("get_zp_from_df: number of good mags: {}".format(np.sum(sel)))
+        raw = raw[sel]
+        std_mags = std_mags[sel]
+
+        #zp = sigma_clip(raw, std_mags)
+        zp = sigma_clip2(raw, std_mags)
         logging.info('df zero point: {}'.format(zp))
 
         return zp
@@ -1133,7 +1163,7 @@ class ZPCalibration:
         logging.info("get_std_dev_mag_sky: std_dev: %.3e ADUs" % std_dev)
 
         # here we have sigma directly in ADUs
-        mag_sky_std_dev = self.zphc - 2.5 * np.log10( std_dev / (self.plate_scale ** 2))
+        mag_sky_std_dev = self.magzp - 2.5 * np.log10( std_dev / (self.plate_scale ** 2))
         logging.info("mag_sky_std_dev: %6.3f mags/arcsec^2" % mag_sky_std_dev)
         return mag_sky_std_dev
 
@@ -1266,6 +1296,12 @@ class ZPCalibration:
 
         # we report several other values important to interpret data
         #
+        # Some cards will not be updated if the frame already have the keyword present
+        if "ESO PYCAVI QC DN2FLAM" in self.hdu:
+            factor_dn_to_flambda = float("{:.5e}".format(self.hdu["ESO PYCAVI QC DN2FLAM"]))
+        else:
+            factor_dn_to_flambda = float("{:.5e}".format(self.factor_dn_to_flambda))
+
         cards = [["HIERARCH ESO PYCAVI PRO SKY UNITS", "erg/s/cm**2/arcsec**2", "Units of sky mean and std"],
                  ["HIERARCH ESO PYCAVI QC SKYMEAN", float("{:.5e}".format(self.mean_sky)), "Average sky mean and std"],
                  ["HIERARCH ESO PYCAVI QC SKYMEAN UNITS", "erg/s/cm**2/arcsec**2", "Units for QC SKYMEAN"],
@@ -1276,7 +1312,7 @@ class ZPCalibration:
                  ["HIERARCH ESO PYCAVI QC BAND WIDTH", self.filter_width, "Width of pass band [Angstrom]"],
                  ["HIERARCH ESO PYCAVI QC BAND WAVELENGTH", self.plambda, "Pivot lambda of band [Angstrom]"],
                  ["HIERARCH ESO PYCAVI QC MAGSKY", round(self.magsky,3), "Sky brightness mags/arcsec^2"],
-                 ["HIERARCH ESO PYCAVI QC DN2FLAM", float("{:.5e}".format(self.factor_dn_to_flambda)), "Conv. fact. mosaic DN to Flambda"],
+                 ["HIERARCH ESO PYCAVI QC DN2FLAM", factor_dn_to_flambda, "Conv. fact. mosaic DN to Flambda"],
                  ["HIERARCH ESO PYCAVI QC BUNIT", self.bunit, "Units of Data Numbers this frame"],
                  ["HIERARCH ESO PYCAVI QC PHO RAD", self.ap_radius, "Radius used aperture photometry"],
                  ["HIERARCH ESO PYCAVI QC PHO SKYR1", self.sky_annulus_r1, "Sky annulus r1 ap phot"],
@@ -1336,13 +1372,14 @@ class ZPCalibration:
             hdr = hdul[0].header
             hdata = hdul[0].data
 
-            # FSE CHECK: before writting new keywords we read the "HIERARCH ESO PYCAVI QC ADU2DN"
+            # FSE CHECK: before writting new keywords we read the "HIERARCH ESO PYCAVI QC DN2FLAM"
             #            keyword if it exists, we will need it at the end.
-            #if "PYCAVI QC DN2FLAM" not in hdr.keys():
-            if "BSCALE" not in hdr.keys():
+            #if "ESO PYCAVI QC DN2FLAM" not in hdr.keys():
+            #print(list(hdr.keys()))
+            if "ESO PYCAVI QC DN2FLAM" not in hdr.keys():
                 old_factor = 1.0
             else:
-                old_factor = hdr["BSCALE"]
+                old_factor = hdr["ESO PYCAVI QC DN2FLAM"]
 
             logging.info('old_factor: {}'.format(old_factor))
 
@@ -1397,9 +1434,22 @@ class ZPCalibration:
             pycavi_tools.pycavi_qc_plot_hist(data_1d, 
                                              label='Pixel value distribution BEFORE applying factor_dn_to flambda.', 
                                              nbins=30, x_range="8-deciles", figname=None)
-            factor = self.factor_dn_to_flambda/old_factor
-            hdr.set("BSCALE", float("{:.8e}".format(factor)),
+
+            # We need to be carefull here: if the key is not present we use self.factor_dn_to_flambda,
+            # otherwise we use 1.
+            if "ESO PYCAVI QC DN2FLAM" not in hdr.keys():
+                factor = self.factor_dn_to_flambda
+            else:
+                factor = float(hdr["ESO PYCAVI QC DN2FLAM"])
+
+            logging.info("dn2flambda: {}   factor: {}    old_factor: {}".format(self.factor_dn_to_flambda, factor, old_factor))
+
+            # We set BSCALE to 1.0 and multiply the data by factor
+            hdul[0].data = hdata * factor
+            hdr.set("BSCALE", 1.0,
                                    comment="scale factor to apply to data")
+            # hdr.set("BSCALE", float("{:.8e}".format(factor)),
+            #                       comment="scale factor to apply to data")
             hdr.set("BZERO", 0.0,
                                    comment="numerical offset to apply to data")
 
@@ -1407,6 +1457,8 @@ class ZPCalibration:
             if "SATLEVEL" in hdr.keys(): 
                 satlevel = hdr["SATLEVEL"]*factor
                 hdr.set("SATLEVEL",float("{:.5e}".format(satlevel)), "Saturation level in frame")
+
+                # FSE: needs to be corrected. The central pixel brightness is not the whole story...
                 hdr.set("MAGSATL",round(self.magzp - 2.5*np.log10(satlevel), 3), "Magnitude saturation level in frame")
             else:
                 hdr.set("SATLEVEL", "UNKNOWN", "Saturation level in frame")
@@ -1475,7 +1527,7 @@ class ZPCalibration:
         with fits.open(self.frame, mode="readonly", output_verify="ignore") as hdul:
             hdr = hdul[0].header
             data_1d = hdul[0].section[x1:x2,y1:y2].flatten()
-            print('update_frame: before update <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
+            print('update_frame: after update <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
             pycavi_tools.pycavi_qc_plot_hist(data_1d,
                                              label='Pixel value distribution AFTER applying factor_dn_to flambda.',
                                              nbins=30, x_range="8-deciles", figname=None)
@@ -2026,7 +2078,7 @@ def extract_calibration(image_path):
     zp_cal.y = pixel_coords[:,1]
 
     # we check if a reg file exists, if not we create it
-    logging.info("pycavi qc phot: checkinh existence of {}".format(query_catalogue_path[:-4]+".reg"))
+    logging.info("pycavi qc phot: checking existence of {}".format(query_catalogue_path[:-4]+".reg"))
     if not os.path.isfile(query_catalogue_path[:-4]+".reg"):
         pycavi_tools.create_ds9_reg_file(phot_catalogue["raj2000"].to_numpy(), phot_catalogue["dej2000"].to_numpy(),
                                              query_catalogue_path[:-4]+".reg", radius=5.0, coords="fk5")
@@ -2093,7 +2145,9 @@ def extract_calibration(image_path):
         mask = annulus_masks[i]
         annulus_data = mask.multiply(zp_cal.data)
         if annulus_data is not None:  # if we have data we use it
-            annulus_data_1d = annulus_data[mask.data > -0]
+            # I commented out line that consider only data points which have a positive background.
+            #annulus_data_1d = annulus_data[mask.data > -0]
+            annulus_data_1d = annulus_data
             mean_sigclip, median_sigclip, _ = sigma_clipped_stats(annulus_data_1d, sigma_lower=3.0, sigma_upper=3.0)
             bkg_median[i] = median_sigclip
 
@@ -2106,8 +2160,9 @@ def extract_calibration(image_path):
     raw_mags = np.zeros_like(aper_sum_bkgsub)
 
     # FSE CHECK: is setting to 99.0 a good flag of a bad value?
-    raw_mags[aper_sum_bkgsub > 0] = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
-    raw_mags[aper_sum_bkgsub <= 0] = 99.0
+    #raw_mags[aper_sum_bkgsub > 0] = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
+    #raw_mags[aper_sum_bkgsub <= 0] = np.nan
+    raw_mags = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub)
     zp_cal.mag_frame = np.around(raw_mags, 4)
 
     return zp_cal
@@ -2166,9 +2221,13 @@ def plot_zpcal(zp_cal):
     data = zp_cal.data
     wcs = zp_cal.wcs
 
-    good_sel = (zp_cal.mag_frame > 0) & (zp_cal.mag_frame < 20)
+    #good_sel = (zp_cal.mag_frame > 10) & (zp_cal.mag_frame < 20)
+    good_sel =  ~np.isnan(zp_cal.mag_frame) & ~np.isinf(zp_cal.mag_frame)
     logging.info("pycavi qc phot: number of good values {}".format(good_sel.sum()))
     mag_sex = zp_cal.mag_frame[good_sel]
+    pycavi_tools.pycavi_qc_plot_hist(mag_sex,
+                                         label='Histogram of raw frame magnitudes corrected by MAGZP if present.',
+                                         nbins=30, x_range="8-deciles", figname=None)
     mag_std = zp_cal.mag_std[good_sel]
     mag_side_std = zp_cal.mag_side_std[good_sel]
     rad_dist = np.sqrt((zp_cal.ra_std - zp_cal.crval1 * u.deg)**2 + (zp_cal.de_std - zp_cal.crval2 * u.deg)**2)[good_sel]

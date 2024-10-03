@@ -1,6 +1,11 @@
 - Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
+    - Almost done. Need to test some more, add debug switch for the
+      histogtram plots, multiply or divide by factor near 1.00, review
+      the code for the presence of large values used to mark bad values.
+      Everything should use np.nan for marking bad values.
+- Add histogram of colors of input data.
 
 # ------ DONE -------
 - DONE. Test change of sign in routine that does light correction.

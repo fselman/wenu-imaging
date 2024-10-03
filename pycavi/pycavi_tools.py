@@ -276,7 +276,7 @@ def Flambda_zp(flt):
         Angstroms to cm.
     """
     c = constants.c.cgs.value*10**(-2)*10**(10)  # speed of light in Angstroms/s
-    print(c)
+    logging.info("Flambda_zp: speed of light in Angstroms per second: {}".format(c))
     plbd = plambda(flt)
     if plbd is not None:
         return -48.574 - 2.5*np.log10(plbd**2/c)
