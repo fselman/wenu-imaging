@@ -246,15 +246,9 @@ class ZPCalibration:
         # point is different to what the previous expression returns. We do need to update it.
         if "MAGZP" in self.hdu:
             logging.info("do_phot: MAGZP found in headers with value: {}".format(self.hdu["MAGZP"]))
+            delta_zp = self.zp
             self.zp += self.hdu["MAGZP"]
-        logging.info('ZPCalibration: zp: {0} to go from ADUs in orig files to mags - ESO health check values'.format(self.zp))
-
-        # zp as calculated by ESO Health Check script. Uses e/s and airmass = 1.0, not above atmosphere
-        # frames were converted to e-/s in notebook 3's mefpp_normalize_science function.
-        # These will be used for our QC.
-        #
-        self.zphc = self.zp + self.extinctionCoeff * self.avg_airmass
-        logging.info('ZPCalibration: zphc: {:.3f} to go from e/s to std mags below atmosphere.'.format(self.zphc))
+        logging.info('ZPCalibration: zp: {0} to go from DN in current file to mags'.format(self.zp))
 
         # zero point to go from Flambda to standard AB magnitudes via Oke's
         # formula but instead of Fnu we use Flambda and the pivot wavelength.
@@ -262,8 +256,20 @@ class ZPCalibration:
         self.zp2 = pycavi_tools.Flambda_zp(self.band)
         if self.zp2 is None:
             raise Exception("ZPCalibration: call to Flambda_zp returned None. Filter not in allowed list?")
-        logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to std mags above atmosphere.'.format(self.zp2))
         logging.info('ZPCalibration: zp2: {:.3f} to go from Flambda to AB mags'.format(self.zp2))
+
+        # zp as calculated by ESO Health Check script. Uses e/s and airmass = 1.0, not above atmosphere
+        # frames were converted to e-/s in notebook 3's mefpp_normalize_science function.
+        # These will be used for our QC.
+        #
+        if "ESO PYCAVI QC ZPHC" in self.hdu:
+            # the zp we calculated will turn erg/s/cm^2 into AB mags.
+            # Here we need the zp to go from e/s to AB
+            self.zphc = self.hdu["ESO PYCAVI QC ZPHC"] + delta_zp
+        else:
+            self.zphc = self.zp + self.extinctionCoeff * self.avg_airmass
+ 
+        logging.info('ZPCalibration: zphc: {:.3f} to go from e/s to std mags above atmosphere. ESO health check values'.format(self.zphc))
 
         # Imaging data should provide physical units of erg/s/cm^2. So we must
         # multiply DN by this factor
@@ -1399,6 +1405,54 @@ class ZPCalibration:
                               self.comment["HIERARCH ESO PYCAVI QC MAGZP"])
             hdr.set("PHOTSYS", "AB", "Photometric system AB or VEGA")
 
+            # we rewrite the data array
+            #
+            logging.info('update_frame: multipliying data by {}'.format(self.factor_dn_to_flambda))
+            data_1d = hdul[0].section[10000:10100,10000:10100].flatten()
+            print('update_frame: before update <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
+            pycavi_tools.pycavi_qc_plot_hist(data_1d,
+                                             label='Pixel value distribution BEFORE applying factor_dn_to flambda.',
+                                             nbins=30, x_range="8-deciles", figname=None)
+
+            # We need to be carefull here: if the key is not present we use self.factor_dn_to_flambda,
+            # otherwise we use 1.
+            if "ESO PYCAVI QC DN2FLAM" not in hdr.keys():
+                logging.info("update_frame: key ESO PYCAVI QC DN2FLAM not in headers. Assuming first calibration attempt.")
+                #print(list(hdr.keys))
+                factor = self.factor_dn_to_flambda
+                new_dn2flambda = self.factor_dn_to_flambda      # We need to update after the general keyword update so we save number
+                logging.info("update_frame: multiplyimg frame data by {} to convert to erg/s/cm^2".format(factor))
+            else:
+                logging.info("update_frame: key ESO PYCAVI QC DN2FLAM in headers with value {}".format(hdr["ESO PYCAVI QC DN2FLAM"]))
+                factor = self.factor_dn_to_flambda      # this should be near 1.0
+
+                # but we want to preserve the e/s definitions in the header value
+                new_dn2flambda = float("{:.5e}".format(factor * float(hdr["ESO PYCAVI QC DN2FLAM"])))
+                hdr["HIERARCH ESO PYCAVI QC DN2FLAM"] = new_dn2flambda  # We need to update after the general keyword update so we save number
+                logging.info("update_frame: multiplyimg frame data by {} (should be near 1.0)".format(factor))
+
+            logging.info("dn2flambda: {}   factor: {}    old_factor: {}".format(self.factor_dn_to_flambda, factor, old_factor))
+
+            # We set BSCALE to 1.0 and multiply the data by factor
+            hdul[0].data = hdata * factor
+            hdr.set("BSCALE", 1.0,
+                                   comment="scale factor to apply to data")
+            # hdr.set("BSCALE", float("{:.8e}".format(factor)),
+            #                       comment="scale factor to apply to data")
+            hdr.set("BZERO", 0.0,
+                                   comment="numerical offset to apply to data")
+
+            # we update the SATLEVEL accordingly
+            if "SATLEVEL" in hdr.keys():
+                satlevel = hdr["SATLEVEL"]*factor
+                hdr.set("SATLEVEL",float("{:.5e}".format(satlevel)), "Saturation level in frame")
+
+                # FSE: needs to be corrected. The central pixel brightness is not the whole story...
+                hdr.set("MAGSATL",round(self.magzp - 2.5*np.log10(satlevel), 3), "Magnitude saturation level in frame")
+            else:
+                hdr.set("SATLEVEL", "UNKNOWN", "Saturation level in frame")
+                hdr.set("MAGSATL", "UNKNOWN", "Magnitude saturation level in frame")
+
             #hdr["EXPTIME"] = (self.total_exptime, "Total exposure time (s)")
             # we continue with the full set of keywords near the end
             #        for zcard in cards:
@@ -1411,6 +1465,11 @@ class ZPCalibration:
                 zval = acard[1]
                 zcomment = acard[2]
                 hdr.set(zkey, zval, zcomment)
+
+            # we update the value of dn2flambda
+            # to preserve the e/s definitions in the header value
+            hdr["HIERARCH ESO PYCAVI QC DN2FLAM"] = new_dn2flambda
+            logging.info("update_frame: new value HIERARCH ESO PYCAVI QC DN2FLAM: {}".format(hdr["HIERARCH ESO PYCAVI QC DN2FLAM"]))
 
             # We add the phase3 keys
             # self.phase3_keys, self.phase3_comment, self.phase3_cards
@@ -1425,44 +1484,6 @@ class ZPCalibration:
             comments_to_remove = [key for key, value in hdr.items() if key == 'COMMENT' and value.strip() == '']
             for comment in comments_to_remove:
                 hdr.remove(comment)
-
-            # we finally rewrite the data array
-            #
-            logging.info('update_frame: multipliying data by {}'.format(self.factor_dn_to_flambda))
-            data_1d = hdul[0].section[10000:10100,10000:10100].flatten()
-            print('update_frame: before update <data_1d>: {:.3E}'.format(np.nanmean(data_1d)))
-            pycavi_tools.pycavi_qc_plot_hist(data_1d, 
-                                             label='Pixel value distribution BEFORE applying factor_dn_to flambda.', 
-                                             nbins=30, x_range="8-deciles", figname=None)
-
-            # We need to be carefull here: if the key is not present we use self.factor_dn_to_flambda,
-            # otherwise we use 1.
-            if "ESO PYCAVI QC DN2FLAM" not in hdr.keys():
-                factor = self.factor_dn_to_flambda
-            else:
-                factor = float(hdr["ESO PYCAVI QC DN2FLAM"])
-
-            logging.info("dn2flambda: {}   factor: {}    old_factor: {}".format(self.factor_dn_to_flambda, factor, old_factor))
-
-            # We set BSCALE to 1.0 and multiply the data by factor
-            hdul[0].data = hdata * factor
-            hdr.set("BSCALE", 1.0,
-                                   comment="scale factor to apply to data")
-            # hdr.set("BSCALE", float("{:.8e}".format(factor)),
-            #                       comment="scale factor to apply to data")
-            hdr.set("BZERO", 0.0,
-                                   comment="numerical offset to apply to data")
-
-            # we update the SATLEVEL accordingly
-            if "SATLEVEL" in hdr.keys(): 
-                satlevel = hdr["SATLEVEL"]*factor
-                hdr.set("SATLEVEL",float("{:.5e}".format(satlevel)), "Saturation level in frame")
-
-                # FSE: needs to be corrected. The central pixel brightness is not the whole story...
-                hdr.set("MAGSATL",round(self.magzp - 2.5*np.log10(satlevel), 3), "Magnitude saturation level in frame")
-            else:
-                hdr.set("SATLEVEL", "UNKNOWN", "Saturation level in frame")
-                hdr.set("MAGSATL", "UNKNOWN", "Magnitude saturation level in frame")
 
             # we finally deem the frame as calibrated
             hdr.set("FLUXCAL", "CALIBRATED")
@@ -1822,22 +1843,6 @@ class ZPcal:
         self.mag_std_masked = None
         self.mag_frame_masked = None
 
-        # Evaluate the fitted polynomial at new points
-    def chebyshev_2d_eval(self, x_pix, y_pix):
-        """
-        Evaluate the Chebyshev polynomial at the points defined
-        by the 1d ndarrays x and y. Note that x and y should be
-        scaled to lie in the interval -1 to 1.
-        """
-        coef = self.coefficients
-        deg = self.deg
-        # Generate 2D Vandermonde matrix for new points
-        # For well behaved polynomials we need to rescale coordinates to [-1, 1]
-        # Needs to rescale the x and y values before fitting the Chebyshev polys
-        x, y = self.pixel_coords_scaled(x_pix, y_pix)
-        V_new = chebvander2d(x, y, deg)
-        return np.dot(V_new, coef)
-
     def filter_data(self, dm_min, dm_max, brightest_mag, faintest_mag):
         """
         The data points are cleaned according to the criteria
@@ -1923,6 +1928,22 @@ class ZPcal:
 
         # We fit the masked values and correct the magnitudes
         self.z_cheb_corr = self.z_masked - self.chebyshev_2d_eval(self.x_masked, self.y_masked)
+
+    # Evaluate the fitted polynomial at new points
+    def chebyshev_2d_eval(self, x_pix, y_pix):
+        """
+        Evaluate the Chebyshev polynomial at the points defined
+        by the 1d ndarrays x and y. Note that x and y should be
+        scaled to lie in the interval -1 to 1.
+        """
+        coef = self.coefficients
+        deg = self.deg
+        # Generate 2D Vandermonde matrix for new points
+        # For well behaved polynomials we need to rescale coordinates to [-1, 1]
+        # Needs to rescale the x and y values before fitting the Chebyshev polys
+        x, y = self.pixel_coords_scaled(x_pix, y_pix)
+        V_new = chebvander2d(x, y, deg)
+        return np.dot(V_new, coef)
 
 
     def pixel_coords_scaled(self, xcoord, ycoord):

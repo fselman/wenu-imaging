@@ -1,13 +1,20 @@
-- Calibration notebooks screw up things if run twice. Fix logic,
+- Add histogram of colors of input data.
+    - Prepare a script which is in directory testing which currently
+    plots the colors of the input catalog. Needs to add a selection
+    of magnitude residual of the calibration to separate those stars with
+    good and bad values. Need to add the raw magnitudes to the clean catalogue
+    or better create a new catalogue, copy of the clean one, but with
+    the frame magnitudes calibrated with zero point.
+
+# ------ DONE -------
+- DONE. Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
     - Almost done. Need to test some more, add debug switch for the
       histogtram plots, multiply or divide by factor near 1.00, review
       the code for the presence of large values used to mark bad values.
       Everything should use np.nan for marking bad values.
-- Add histogram of colors of input data.
-
-# ------ DONE -------
+      Tested. Headers and image do match. It was not trivial.
 - DONE. Test change of sign in routine that does light correction.
         - It had a positive sign which resulted in the largest rms.
         Changed sign to neg. But still, no light corr in notebook3
