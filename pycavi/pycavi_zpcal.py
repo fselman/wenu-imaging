@@ -674,6 +674,24 @@ class ZPCalibration:
             raw_mags[aper_sum_bkgsub <= 0] = np.nan
 
         self.df["raw_mags_" + self.band] = np.around(raw_mags, 4)
+
+        # here we add this column to self.phot_cal_clean if not already present.
+        # we distinguish between a first run in which we call the new column raw_<band>
+        # and a second one where we have applied a magnitude zero points so the
+        # magnitudes are in the AB system, in which case we call it frame_ab_<band>
+        #
+        if "MAGZP" in self.hdu:
+            col_name = "frame_ab_"+self.band
+        else:
+            col_name = "raw_"+self.band
+        # here we test for the presence of self.phot_cal_clean
+        if os.path.isfile(self.phot_cal_clean):
+            phot_cal_df = pd.read_csv(self.phot_cal_clean)
+            #if col_name not in phot_cal_df.columns:
+            logging.info("do_phot: appending column {} to file {}".format(col_name, self.phot_cal_clean))
+            phot_cal_df[col_name] = self.df["raw_mags_" + self.band] 
+            phot_cal_df.to_csv(self.phot_cal_clean, index=False)
+
         pycavi_tools.pycavi_qc_plot_hist(raw_mags,
                                          label='Histogram of raw frame magnitudes corrected by MAGZP if present.',
                                          nbins=30, x_range="8-deciles", figname=None)

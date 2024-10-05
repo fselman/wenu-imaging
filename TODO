@@ -1,12 +1,19 @@
-- Add histogram of colors of input data.
+# ______ TBD  -------
+
+- Check SDSS calibration of SDSS magnitudes and modify
+  transformation equations.
+- Test PSF magnitudes.
+
+# ------ DONE -------
+- DONE. Add histogram of colors of input data.
     - Prepare a script which is in directory testing which currently
     plots the colors of the input catalog. Needs to add a selection
     of magnitude residual of the calibration to separate those stars with
     good and bad values. Need to add the raw magnitudes to the clean catalogue
     or better create a new catalogue, copy of the clean one, but with
     the frame magnitudes calibrated with zero point.
-
-# ------ DONE -------
+        - Created script plot_cat_colors.py saved in testing. It should
+        be run after notebook 7.
 - DONE. Calibration notebooks screw up things if run twice. Fix logic,
   but in the meantime make it copy the Swarp file to the calibration
   directory instead of craeting a symbolic link.
