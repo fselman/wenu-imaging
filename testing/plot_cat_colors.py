@@ -1,6 +1,7 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
+import numpy as np
 
 def determine_band(file_path):
     """
@@ -53,30 +54,40 @@ def determine_sides(band):
         side_band = 'g_SDSS'
         band2 = 'g_SDSS'
         band3 = 'r_SDSS'
+        inverty = False
     elif 'g_SDSS' in band:
         side_band = 'r_SDSS'
         band2 = 'r_SDSS'
         band3 = 'i_SDSS'
+        inverty = False
     elif 'r_SDSS' in band:
         side_band = 'i_SDSS'
         band2 = 'r_SDSS'
         band3 = 'z_SDSS'
+        inverty = False
     elif 'z_SDSS' in band:
         side_band = 'i_SDSS'
         band2 = 'r_SDSS'
         band3 = 'z_SDSS'
+        inverty = True
     elif 'g_psf' in band:
         side_band = 'r_psf'
         band2 = 'r_psf'
         band3 = 'i_psf'
+        inverty = False
+    elif 'NB_659' in band:
+        side_band = 'r_SDSS'
+        band2 = 'r_SDSS'
+        band3 = 'i_SDSS'
+        inverty = False
     else:
-        return None, None, None
+        return None, None, None, None
 
-    return side_band, band2, band3
+    return side_band, band2, band3, inverty
 
 
 # Function to read CSV and plot g-r vs r-i, coloring points by g_SDSS values
-def plot_sdss_colors(file_path, plot_band=None,  limits='cat'):
+def plot_sdss_colors(file_path, plot_band=None, band2=None, band3=None, band4=None, limits='cat'):
     """
     Skymapper DR1: https://ui.adsabs.harvard.edu/abs/2018PASA...35...10W/abstract
     Skymapper DR2: https://ui.adsabs.harvard.edu/abs/2019PASA...36...33O/abstract
@@ -95,11 +106,19 @@ def plot_sdss_colors(file_path, plot_band=None,  limits='cat'):
         if side_band is None or band2 is None or band3 is None:
             return None
     else:
-        band = plot_band
-        side_band, band2, band3 = determine_sides(band)
-        cal_mag = None
-        if side_band is None or band2 is None or band3 is None:
-            return None
+        if band2 is not None and band3 is not None and band4 is not None:
+            band = plot_band
+            side_band = band2
+            band2 = band3
+            band3 = band4
+            cal_mag = "NB_659"
+            inverty = False
+        else:
+            band = plot_band
+            side_band, band2, band3, inverty = determine_sides(band)
+            cal_mag = None
+            if side_band is None or band2 is None or band3 is None:
+                return None
 
     # sort data by g_sdss
     data = data.sort_values(by=band, ascending=False)
@@ -114,27 +133,31 @@ def plot_sdss_colors(file_path, plot_band=None,  limits='cat'):
    
     # Create the plot, color points based on g_SDSS values
     plt.figure(figsize=(8, 6))
-    scatter = plt.scatter(g_r, r_i, c=data[band], cmap='plasma_r', label='std mags', s=15, alpha=0.8)
-    xlim = plt.gca().get_xlim()
-    ylim = plt.gca().get_ylim()
    
     # Set the title and labels with the file name
     plt.title(f'{band} - {side_band} vs {band2} - {band3} from {file_path}', fontsize=16)
-    plt.xlabel(f'{band} - {side_band}', fontsize=16)
-    plt.ylabel(f'{band2} - {band3}', fontsize=16)
+    plt.ylabel(f'{band} - {side_band}', fontsize=16)
+    plt.xlabel(f'{band2} - {band3}', fontsize=16)
 
     # wplot filtering by magnitude residual
     if cal_mag is not None:
         residual = data[cal_mag] - data[band]
-        sel = abs(residual) < 500.
-        scatter = plt.scatter(g_r_cal[sel], r_i[sel], label='cal mags', marker='+', s=10, color='k')
-        if 'cat' in limits:
-            plt.xlim(xlim)
-            plt.ylim(ylim)
+        sel = np.abs(residual) < 500.05
+        scatter = plt.scatter(r_i[sel], g_r_cal[sel], label='cal mags', marker='+', s=30, color='k')
+        xlim = plt.gca().get_xlim()
+        ylim = plt.gca().get_ylim()
+        #if 'cat' in limits:
+        #    plt.xlim(0, 2)
+            #plt.ylim(-1, 1)
+
+    scatter = plt.scatter(r_i, g_r, c=data[band], cmap='viridis_r', label='std mags', s=5, alpha=0.8)
    
     # Set tick parameters
     plt.xticks(fontsize=14)
     plt.yticks(fontsize=14)
+
+    if inverty:
+        plt.gca().invert_yaxis()
    
     # Add a colorbar to show the scale of g_SDSS values
     colorbar = plt.colorbar(scatter)
@@ -152,5 +175,9 @@ def plot_sdss_colors(file_path, plot_band=None,  limits='cat'):
 # Main entry point of the script
 if __name__ == "__main__":
     # Example of using the function with an arbitrary file name
-    file_path = 'sdss_query_result_M67_clean.csv'
-    plot_sdss_colors(file_path, plot_band=None)
+    #file_path = 'gaia3_qry_M67_clean.csv'
+    file_path = 'sm_qry_M67_clean.csv'
+    #plot_sdss_colors(file_path, plot_band="g_SDSS")
+    #plot_band=None, band2=None, band3=None, band4=None,
+    plot_sdss_colors(file_path, plot_band="NB_659", band2="frame_ab_NB_659", band3="r_SDSS", band4="i_SDSS")
+    #plot_sdss_colors(file_path, plot_band="NB_659")

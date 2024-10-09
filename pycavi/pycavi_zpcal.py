@@ -17,6 +17,9 @@ from scipy.optimize import minimize
 from scipy.stats import norm
 
 from astroquery.sdss import SDSS
+from astroquery.gaia import Gaia
+Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
+Gaia.ROW_LIMIT = -1
 
 import astroplan
 from astropy import units as u
@@ -39,8 +42,13 @@ class ZPCalibration:
     """A class to contain a pandas dataframe with the data
     to calibrate frame and the zero points needed for the calibration."""
 
+    # standard filters, really bands, are those for which we have standard star magnitudes
     # current available filters to work with
     _standard_filters = ["u_SDSS", "g_SDSS", "r_SDSS", "i_SDSS", "z_SDSS"]
+
+    # secondary bands are bands that can calculated using transformation equations
+    # Only NB_659. Johnson-Cousins bands should use Gaia3-GSPC query.
+    #
     _secondary_filters = ["NB_659"]
     _available_filters = _standard_filters + _secondary_filters
 
@@ -202,8 +210,10 @@ class ZPCalibration:
             self.df = self.get_skymapper_df()
         elif self.query_calibrator.lower() == "sdss":
             self.df = self.get_sdss_df()
+        elif self.query_calibrator.lower() == "gaia":
+            self.df = self.get_gaia_dr3_gspc_df()
         else:
-            logging.info("Sorry, but for the moment only Skymapper and SDSS are available as calibrator.")
+            logging.info("For the moment only Skymapper, SDSS, and Gaia DR3 are available as calibrator.")
             logging.info("Finishing the run")
             return
 
@@ -245,7 +255,7 @@ class ZPCalibration:
         # If there was a MAGZP keyword it was used to calculate the raw mags, therefore, the actual zero
         # point is different to what the previous expression returns. We do need to update it.
         if "MAGZP" in self.hdu:
-            logging.info("do_phot: MAGZP found in headers with value: {}".format(self.hdu["MAGZP"]))
+            logging.info("ZPCalibration: MAGZP found in headers with value: {}".format(self.hdu["MAGZP"]))
             delta_zp = self.zp
             self.zp += self.hdu["MAGZP"]
         logging.info('ZPCalibration: zp: {0} to go from DN in current file to mags'.format(self.zp))
@@ -263,7 +273,7 @@ class ZPCalibration:
         # These will be used for our QC.
         #
         if "ESO PYCAVI QC ZPHC" in self.hdu:
-            # the zp we calculated will turn erg/s/cm^2 into AB mags.
+            # the zp we calculated will turn erg/s/cm^2/A into AB mags.
             # Here we need the zp to go from e/s to AB
             self.zphc = self.hdu["ESO PYCAVI QC ZPHC"] + delta_zp
         else:
@@ -271,7 +281,7 @@ class ZPCalibration:
  
         logging.info('ZPCalibration: zphc: {:.3f} to go from e/s to std mags above atmosphere. ESO health check values'.format(self.zphc))
 
-        # Imaging data should provide physical units of erg/s/cm^2. So we must
+        # Imaging data should provide physical units of erg/s/cm^2/A. So we must
         # multiply DN by this factor
         self.factor_dn_to_flambda = 10 ** ((self.zp2 - self.zp) / 2.5)
         logging.info('ZPCalibration: factor_dn_to_flambda: {:.3e} to go from DN to Flambda'.format(self.factor_dn_to_flambda))
@@ -283,7 +293,7 @@ class ZPCalibration:
 
         # proper imaging fluxes needs erg/s/cm**2
         #
-        self.bunit = 'erg/s/cm**2'  # The DN will be in these units.
+        self.bunit = 'erg/s/cm**2/A'  # The DN will be in these units.
 
         # ----- Determining sky levels for Swarp input frames -------
         #
@@ -405,7 +415,7 @@ class ZPCalibration:
         avg_exptime = np.nanmean(orig_expotime)
         total_exptime = np.nansum(orig_expotime)
         logging.info("get_avg_exptime_from_frames: average exposure time of frames : {:.0f}".format(avg_exptime))
-        logging.info("get_avg_exptime_from_frames: total exposire time of frames : {:.0f}".format(total_exptime))
+        logging.info("get_avg_exptime_from_frames: total exposure time of frames : {:.0f}".format(total_exptime))
         return avg_exptime, total_exptime
 
     def get_skymapper_df(self):
@@ -472,6 +482,8 @@ class ZPCalibration:
             df_total_columns = df_id_columns + df_pos_columns + df_star_class_columns + df_band_columns
             skymapper_df = skymapper_df[df_total_columns]
             skymapper_df = self.convert_sm_to_sdss(skymapper_df)
+
+            logging.info(f"get_skymapper_df: Saving cleaned catalogue to {skymapper_clean}")
             skymapper_df.to_csv(skymapper_clean, index=False)
             self.phot_cal_clean = skymapper_clean
 
@@ -508,7 +520,7 @@ class ZPCalibration:
         return df
 
     def get_sdss_df(self):
-        """Read tke sdss catalogue to get magnitudes of star in frame."""
+        """Read the sdss catalogue to get magnitudes of star in frame."""
         logging.info('get_sdss_df: querying SDSS and creating pandas data frame with magnitudes.')
 
         half_width_ra = self.query_radius
@@ -574,7 +586,7 @@ class ZPCalibration:
             logging.info("get_sdss_df: after cleanning len(sdss_df): {}".format(len(sdss_df)))
 
             # we write the csv file for further data checks
-            sdss_raw = self.calibrationdir + "/sdss_query_result_{}.csv".format(self.object)
+            sdss_raw = self.calibrationdir + "/sdss_qry_{}.csv".format(self.object)
             sdss_clean = sdss_raw[:-4] + "_clean.csv"
             self.phot_cal_file = sdss_clean
             self.phot_cal_clean = sdss_clean
@@ -589,6 +601,136 @@ class ZPCalibration:
         else:
             print('SDSS query returned no results.')
             return None
+
+    def get_gaia_dr3_gspc_df(self):
+        """
+        Simple query function to retrieve Gaia data. It performs a Gaia query over
+        a region in the sky and retrieve basic data from the Gaia Data Release 3 (DR3)
+        and the Gaia Synthetic Photometry Catalogue (GSPC).
+        From the latter it can return Johnson-Cousins and SDSS magnitudes.
+
+        Parameters:
+            input_ra: RA of the centre of the field to retrieve, in deg format
+            input_dec: Dec of the centre of the field to retrieve, in deg format
+            r_ra: half RA size of the area to search, in deg
+            r_dec: half DEC size of the area to search, in deg
+            query_str: string passed to the query, If None a default query is used.
+            mag_band: string giving the name of the band to limit query ['g_sdss_mag']
+            mag_max: magnitude of faintest star to be retrieved [float: 19.5]
+
+
+        Returns:
+            output: the resulting table from the Gaia query [astropy.table.table.Table]
+        """
+        input_ra = self.crval1
+        input_dec = self.crval2
+        r_ra = self.query_radius
+        r_dec = self.query_radius
+        bands_list=[]
+        mag_band='g_sdss_mag'
+        bands_list_sdss = ["gspc.u_sdss_mag", "gspc.u_sdss_flux", "gspc.u_sdss_flux_error",
+                   "gspc.g_sdss_mag", "gspc.g_sdss_flux", "gspc.g_sdss_flux_error",
+                   "gspc.r_sdss_mag", "gspc.r_sdss_flux", "gspc.r_sdss_flux_error",
+                   "gspc.i_sdss_mag", "gspc.i_sdss_flux", "gspc.i_sdss_flux_error",
+                   "gspc.z_sdss_mag", "gspc.z_sdss_flux", "gspc.z_sdss_flux_error"]
+
+        bands_list_jkc = ["gspc.u_jkc_mag", "gspc.u_jkc_flux", "gspc.u_jkc_flux_error",
+                  "gspc.b_jkc_mag", "gspc.b_jkc_flux", "gspc.b_jkc_flux_error",
+                  "gspc.v_jkc_mag", "gspc.v_jkc_flux", "gspc.v_jkc_flux_error",
+                  "gspc.r_jkc_mag", "gspc.r_jkc_flux", "gspc.r_jkc_flux_error",
+                  "gspc.i_jkc_mag", "gspc.i_jkc_flux", "gspc.i_jkc_flux_error"]
+
+        if 'sdss' in self.band.lower() or 'NB_659' in self.band:
+            bands_list = bands_list_sdss
+        elif 'johnson' in self.band.lower():
+            bands_list = bands_list_jkc
+        else:
+            raise f"Band {self.band} not recognized"
+
+        mag_max=19.5
+        query_str=None
+        check_gaia_params=True
+
+        #query_conesearch = str(input_ra)+','+str(input_dec)+','+str(radius_search)
+        r1_str = str(input_ra - r_ra)
+        r2_str = str(input_ra + r_ra)
+        dec1_str = str(input_dec - r_dec)
+        dec2_str = str(input_dec + r_dec)
+
+        # we create a string with the requested band fields to pass to query
+        bands_string = ', '.join(bands_list)
+        if mag_band not in bands_string:
+            print('conditioning band {mag_band} not in list of bands requested.')
+            return None
+        print(bands_string)
+
+        if query_str is None:
+            query_str2=f"""
+SELECT dr3.source_id, dr3.ra, dr3.dec, classprob_dsc_combmod_star,
+gspc.source_id, {bands_string}
+FROM gaiadr3.gaia_source AS dr3
+JOIN gaiadr3.synthetic_photometry_gspc AS gspc
+ON gspc.source_id = dr3.source_id
+WHERE
+    ra BETWEEN {r1_str} AND {r2_str}
+AND
+    dec BETWEEN {dec1_str} AND {dec2_str}
+AND
+    {mag_band} < {str(mag_max)}
+        """
+
+        logging.info('Query used:\n')
+        logging.info(query_str2)
+        job = Gaia.launch_job_async(query_str2)
+        gaia_astropy_table = job.get_results()
+        if check_gaia_params:
+            for column in gaia_astropy_table.columns:
+                print(column)
+
+        if gaia_astropy_table is not None:
+            gaia_df = gaia_astropy_table.to_pandas()
+
+            # we calculate the error in magnitudes from the errors in flux
+            # and add a column with the magnitude error
+            err_band_names = {'u_sdss': 'e_u_psf', 'g_sdss': 'e_g_psf', 'r_sdss': 'e_r_psf', 'i_sdss': 'e_i_psf', 'z_sdss': 'e_z_psf'}
+            for zband in err_band_names.keys():
+                gaia_df[err_band_names[zband]] = (gaia_df[zband+'_flux_error'] / gaia_df[zband+'_flux'])*2.5/np.log(10.)
+
+            # we erase the flux columns
+            for zband in err_band_names.keys():
+                gaia_df = gaia_df.drop(zband+'_flux_error', axis=1)
+                gaia_df = gaia_df.drop(zband+'_flux', axis=1)
+
+            # we rename some columns so that all looks the same
+            gaia_df = gaia_df.rename(columns={'ra': 'raj2000', 'dec': 'dej2000', \
+                                  'u_sdss_mag': 'u_psf', \
+                                  'g_sdss_mag': 'g_psf', \
+                                  'r_sdss_mag': 'r_psf', \
+                                  'i_sdss_mag': 'i_psf', \
+                                  'z_sdss_mag': 'z_psf', \
+                                  'classprob_dsc_combmod_star': 'class_star'})
+
+            # and we add some standard nomenclature columns
+            gaia_df['u_SDSS'] = gaia_df['u_psf']
+            gaia_df['g_SDSS'] = gaia_df['g_psf']
+            gaia_df['r_SDSS'] = gaia_df['r_psf']
+            gaia_df['i_SDSS'] = gaia_df['i_psf']
+            gaia_df['z_SDSS'] = gaia_df['z_psf']
+
+            # at this point the datframe has the same format a the sdss case
+           # we write the csv file for further data checks
+            gaia_raw = self.calibrationdir + "/gaia3_qry_{}.csv".format(self.object)
+            gaia_clean = gaia_raw[:-4] + "_clean.csv"
+            self.phot_cal_file = gaia_clean
+            self.phot_cal_clean = gaia_clean
+            gaia_df.to_csv(gaia_clean, index=False)
+
+            # Before returning we write a reg file from the catalogue
+            # we create region files for the photometric catalogue.
+            pycavi_tools.create_ds9_reg_file(gaia_df["raj2000"].to_numpy(), gaia_df["dej2000"].to_numpy(),
+                                             gaia_raw[:-4]+".reg", radius=5.0, coords="fk5")
+
+        return gaia_df
 
     def calibrators_apertures(self):
         """
@@ -637,6 +779,8 @@ class ZPCalibration:
             annulus_data = mask.multiply(self.data)
             #pycavi_tools.pycavi_qc_plot_hist(annulus_data, label='annulus_data values {}'.format(i), nbins=20, x_range="8-deciles", figname=None)
             if annulus_data is not None:  # if we have data we use it
+
+                # here we extract the data within the mask...
                 annulus_data_1d = annulus_data[mask.data > -0]
                 _, median_sigclip, _ = sigma_clipped_stats(annulus_data_1d, sigma_lower=3.0, sigma_upper=3.0)
                 #print(median_sigclip)
@@ -673,23 +817,33 @@ class ZPCalibration:
             raw_mags[aper_sum_bkgsub > 0] = -2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
             raw_mags[aper_sum_bkgsub <= 0] = np.nan
 
-        self.df["raw_mags_" + self.band] = np.around(raw_mags, 4)
-
         # here we add this column to self.phot_cal_clean if not already present.
         # we distinguish between a first run in which we call the new column raw_<band>
         # and a second one where we have applied a magnitude zero points so the
         # magnitudes are in the AB system, in which case we call it frame_ab_<band>
         #
+        #   raw_<bands>: magnitudes measured during the first run (usually negatives)
+        #   raw_mags_<band>: can be previous or secopnd run which includes MAGZP
+        #   frame_ab_<band>: photometry done with MAGZP
+        #
+        self.df["raw_mags_"+self.band] = np.around(raw_mags, 4)
         if "MAGZP" in self.hdu:
             col_name = "frame_ab_"+self.band
+            self.df[col_name] = np.around(raw_mags, 4)
         else:
             col_name = "raw_"+self.band
+            self.df[col_name] = np.around(raw_mags, 4)
+
         # here we test for the presence of self.phot_cal_clean
+        # and save the updated magnitudes.
+        #
         if os.path.isfile(self.phot_cal_clean):
-            phot_cal_df = pd.read_csv(self.phot_cal_clean)
+            #phot_cal_df = pd.read_csv(self.phot_cal_clean)
+            phot_cal_df = self.df
             #if col_name not in phot_cal_df.columns:
             logging.info("do_phot: appending column {} to file {}".format(col_name, self.phot_cal_clean))
-            phot_cal_df[col_name] = self.df["raw_mags_" + self.band] 
+            #phot_cal_df[col_name] = self.df["raw_mags_" + self.band] 
+            #phot_cal_df.to_csv(self.phot_cal_clean, index=False)
             phot_cal_df.to_csv(self.phot_cal_clean, index=False)
 
         pycavi_tools.pycavi_qc_plot_hist(raw_mags,
@@ -698,6 +852,7 @@ class ZPCalibration:
 
 
         # we also get some morphological data
+        logging.info("do_phot: Creating a PSF model to extract morphological parameters of star...")
         ra = np.array(self.df["raj2000"]) * u.deg
         dec = np.array(self.df["dej2000"]) * u.deg
         x_positions, y_positions = self.wcs.world_to_pixel_values(ra, dec)
@@ -2071,7 +2226,7 @@ def extract_calibration(image_path):
     zp_cal : ZPCal object containing extracted photometry and other information
     
     """
-    logging.info("pycavi qc phot: Reading data from frame to extract photometry")
+    logging.info("extract_calibration: Reading data from frame to extract photometry")
 
     # We first read the image whose photometry will be checked
     logging.info("pycavi qc phot: reading image {}".format(image_path.split('/')[-1]))
@@ -2096,16 +2251,19 @@ def extract_calibration(image_path):
     for akey, avalue in keys_to_extract.items():
         if avalue in list(zp_hdu.keys()):
             input_dict[akey]=zp_hdu[avalue]
+            logging.info(f"extract_calibration:   ----> akey: {akey} = {zp_hdu[avalue]}")
         else:
-            logging.info("pycavi qc phot: **** missing key {} in headers".format(avalue))
+            logging.info("extract_calibration: **** missing key {} in headers".format(avalue))
             
     # This call loads parameters from frame
     zp_cal = ZPcal(input_dict, zp_data, zp_hdu)
     zp_cal.image_path = image_path
 
+    # we read the photometric catalogue
+    #
     calibration_dir = os.path.dirname(image_path)   # We assume that we work only in the link in the calibration directory
     query_catalogue_path = calibration_dir+'/'+zp_cal.phot_calfile
-    logging.info("pycavi qc phot: reading catalogue used for query {}".format(query_catalogue_path.split('/')[-1]))
+    logging.info("extract_calibration: reading catalogue used for query {}".format(query_catalogue_path.split('/')[-1]))
     phot_catalogue = pd.read_csv(query_catalogue_path)
 
     # first load the ra, dec and magnitudes from both catalogues.
@@ -2117,7 +2275,7 @@ def extract_calibration(image_path):
     zp_cal.y = pixel_coords[:,1]
 
     # we check if a reg file exists, if not we create it
-    logging.info("pycavi qc phot: checking existence of {}".format(query_catalogue_path[:-4]+".reg"))
+    logging.info("extract_calibration: checking existence of {}".format(query_catalogue_path[:-4]+".reg"))
     if not os.path.isfile(query_catalogue_path[:-4]+".reg"):
         pycavi_tools.create_ds9_reg_file(phot_catalogue["raj2000"].to_numpy(), phot_catalogue["dej2000"].to_numpy(),
                                              query_catalogue_path[:-4]+".reg", radius=5.0, coords="fk5")
@@ -2130,8 +2288,8 @@ def extract_calibration(image_path):
     mag_std_band = zp_cal.band
     zp_cal.mag_side_std = phot_catalogue[zp_cal.side_band].to_numpy()
     mag_side_std_band = zp_cal.side_band
-
-    logging.info("pycavi qc phot: number of valid entries in calibrator catalogue: {}".format(len(zp_cal.mag_std)))
+    logging.info(f"extract_calibration: mag_std_band: {mag_std_band}  mag_side_std_band: {mag_side_std_band}")  
+    logging.info(f"extract_calibration: number of valid entries in calibrator catalogue: {len(zp_cal.mag_std)}")
     
     # we read the sextractor catalogue created by previous notebook.
     # After testing we will change to do photometry with do_phot in
@@ -2159,48 +2317,43 @@ def extract_calibration(image_path):
     # Photometry is done directly on the frame
     ra_frm = copy.deepcopy(zp_cal.ra_std)
     de_frm = copy.deepcopy(zp_cal.de_std)
-    logging.info("pycavi qc phot:  creating aperture object")
+    logging.info("extract_calibration:  creating aperture object")
     positions = SkyCoord(ra=ra_frm, dec=de_frm, frame="icrs")
     zp_cal.aperture = SkyCircularAperture(positions, r=zp_cal.phot_rad * u.arcsec)
     zp_cal.sky_annulus = SkyCircularAnnulus(positions, zp_cal.phot_skyr1 * u.arcsec,
                                                 zp_cal.phot_skyr2 * u.arcsec)
 
-    logging.info("pycavi qc phot: doing aperture photometry on frame.")
+    logging.info("extract_calibration: doing aperture photometry on frame.")
     phot_table = aperture_photometry(zp_cal.data, zp_cal.aperture, wcs=zp_cal.wcs, method="exact")
     for col in phot_table.colnames:
         if col != "id" and col != "sky_center":
             phot_table[col].info.format = "%.2f"  # for consistent table output
             
     phot_disk_area = zp_cal.aperture.to_pixel(zp_cal.wcs).area
-    logging.info("pycavi qc phot: phot_disk_area in pixels: {}".format(phot_disk_area))
+    logging.info("extract_calibration: phot_disk_area in pixels: {}".format(phot_disk_area))
 
 
-    logging.info("pycavi qc phot: estimating backgrounds.")
+    logging.info("extract_calibration: estimating backgrounds.")
     annulus_masks = zp_cal.sky_annulus.to_pixel(zp_cal.wcs).to_mask(method='center')
-    logging.info("pycavi qc phot: number of objects: {}".format(len(annulus_masks)))
+    logging.info("extract_calibration: number of objects: {}".format(len(annulus_masks)))
     bkg_median = np.empty(len(annulus_masks))
     bkg_median[:] = np.nan
     for i in range(len(annulus_masks)):
         mask = annulus_masks[i]
         annulus_data = mask.multiply(zp_cal.data)
         if annulus_data is not None:  # if we have data we use it
-            # I commented out line that consider only data points which have a positive background.
-            #annulus_data_1d = annulus_data[mask.data > -0]
-            annulus_data_1d = annulus_data
+            # here we extract the data within the mask...
+            annulus_data_1d = annulus_data[mask.data > -0]
             mean_sigclip, median_sigclip, _ = sigma_clipped_stats(annulus_data_1d, sigma_lower=3.0, sigma_upper=3.0)
             bkg_median[i] = median_sigclip
 
     # with the bkg median value, we can subtract from the circular aperture
     # Note that the aper_sum_bkgsub array will have invalid entries in the
-    # form of nan and 0.0 values.
-    logging.info("pycavi qc phot: subtracting backgrounds.")
+    # form of nan values.
+    logging.info("extract_calibration: subtracting backgrounds.")
     aper_bkg = bkg_median * phot_disk_area
     aper_sum_bkgsub = np.array(phot_table["aperture_sum"] - aper_bkg)
-    raw_mags = np.zeros_like(aper_sum_bkgsub)
-
-    # FSE CHECK: is setting to 99.0 a good flag of a bad value?
-    #raw_mags[aper_sum_bkgsub > 0] = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub[aper_sum_bkgsub > 0])
-    #raw_mags[aper_sum_bkgsub <= 0] = np.nan
+    raw_mags = np.full_like(aper_sum_bkgsub, np.nan)
     raw_mags = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub)
     zp_cal.mag_frame = np.around(raw_mags, 4)
 

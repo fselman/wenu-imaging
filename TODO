@@ -1,10 +1,14 @@
 # ______ TBD  -------
 
-- Check SDSS calibration of SDSS magnitudes and modify
-  transformation equations.
 - Test PSF magnitudes.
 
 # ------ DONE -------
+- DONE. Add script to use Gaia GSPC photometry.
+    - Added this choice and the results are much better
+    than before getting rms of 0.015 in g_SDSS and 
+    0.03 in NB_659 with Kriging.
+- DONE. Check SDSS calibration of SDSS magnitudes and modify
+  transformation equations.
 - DONE. Add histogram of colors of input data.
     - Prepare a script which is in directory testing which currently
     plots the colors of the input catalog. Needs to add a selection

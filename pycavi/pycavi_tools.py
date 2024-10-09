@@ -491,6 +491,7 @@ def drew_vst_synthetic_colours(r_sdss, i_sdss, mag_min, mag_max):
     r_minus_i[condition] = r_sdss[condition] -  i_sdss[condition]
 
     clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= drew_r_i_ab[-1])
+    #clean_color = (r_minus_i >= drew_r_i_ab[0]) & (r_minus_i <= 0.70)
     r_minus_i[~clean_color] = np.nan
 
     interp_data = np.interp(r_minus_i, drew_r_i_ab, drew_r_ha_ab)
