@@ -2157,11 +2157,11 @@ class ZPcal:
             for power, coeff in enumerate(coeffs):
                 if coeff != 0.0:
                     if power == 0:
-                        terms.append(f"{coeff:.4f}")
+                        terms.append(f"{coeff:.0f}")
                     elif power == 1:
-                        terms.append(f"{coeff:.4f} * {new_var_name}")
+                        terms.append(f"{coeff:.0f} * {new_var_name}")
                     else:
-                        terms.append(f"{coeff:.4f} * {new_var_name}^{power}")
+                        terms.append(f"{coeff:.0f} * {new_var_name}^{power}")
 
             # Combine all terms into the final polynomial string
             poly_str = " + ".join(terms)

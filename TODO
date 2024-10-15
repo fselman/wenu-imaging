@@ -1,8 +1,17 @@
 # ______ TBD  -------
+- Copy instead of linking swarp file.
 
 - Test PSF magnitudes.
 
 # ------ DONE -------
+- DONE. Modify Krigging:
+        - determine the variogram directly
+        - set the varigram model directly
+        - permit the selection of bins, nugget and range
+          in the varigram before the fitt.
+        - pass the variogram model and parameters to UK Krigging.
+        - permit the subselection of points for proper error estimates.
+        - plot the experimental variogram.
 - DONE. Add script to use Gaia GSPC photometry.
     - Added this choice and the results are much better
     than before getting rms of 0.015 in g_SDSS and 
