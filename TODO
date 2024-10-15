@@ -1,9 +1,9 @@
 # ______ TBD  -------
-- Copy instead of linking swarp file.
-
-- Test PSF magnitudes.
+- Create catalogue with sextractor
+- Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE. Copy instead of linking swarp file zpcal.
 - DONE. Modify Krigging:
         - determine the variogram directly
         - set the varigram model directly

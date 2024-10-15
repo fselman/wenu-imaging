@@ -1,5 +1,6 @@
 import glob
 import os
+import shutil
 import copy
 import logging
 import urllib.request
@@ -95,12 +96,7 @@ class ZPCalibration:
 
         # we define swarp dir and position script there
         self.swarpdir = swarp_dir
-        self.originaldir = None
-        if self.swarpdir != os.getcwd():
-            self.originaldir = os.getcwd()
-            os.chdir(self.swarpdir)
 
-        # creates the calibration folder
         self.calibrationdir = calibration_dir 
         if not os.path.isdir(self.calibrationdir):
             os.mkdir(self.calibrationdir)
@@ -109,11 +105,19 @@ class ZPCalibration:
             logging.info("Folder already exists")
 
         # check if the symbolic link already exists, that means the calibration of that frame was already done.
-        if os.path.islink(self.calibrationdir + "/" + self.frame):
+        if os.path.isfile(self.calibrationdir + "/" + self.frame):
             logging.info("Calibration on frame {} already completed. Leaving the class".format(self.frame))
-            if self.originaldir is not None:
-                os.chdir(self.originaldir)
             return
+
+        if os.path.isfile(self.swarpdir + "/" + self.frame):
+            logging.info(f"Copying {self.swarpdir + '/' + self.frame} --> {self.calibrationdir+'/'+self.frame}")
+            shutil.copy2(self.swarpdir + "/" + self.frame, self.calibrationdir + "/" + self.frame)
+
+        # we define swarp dir and position script there
+        self.originaldir = None
+        if self.calibrationdir != os.getcwd():
+            self.originaldir = os.getcwd()
+            os.chdir(self.calibrationdir)
 
         # Provenance
         self.observatory = observatory
@@ -189,7 +193,7 @@ class ZPCalibration:
 
         # read the list of images using in SWarp to get the child paths
         self.parents_list = []
-        with open(self.frame[:-11] + ".list", "r") as f:
+        with open(self.swarpdir+'/'+self.frame[:-11] + ".list", "r") as f:
             lines = f.readlines()
         for line in lines:
             self.parents_list.append(line[:-1])  # remove the \n character at the end of the line
@@ -347,10 +351,12 @@ class ZPCalibration:
         # we save everything to file
         self.update_frame()
 
+        # We work in place so this part is not needed.
+        #
         # create a symbolic link to the updated image in the Calibration dir
-        logging.info("Creating symbolic link to the updated frame")
-        logging.info("{} -> {}".format(self.frame, self.calibrationdir + "/" + self.frame))
-        os.symlink(self.swarpdir + "/" + self.frame, self.calibrationdir + "/" + self.frame)
+        ## logging.info("Creating symbolic link to the updated frame")
+        ##logging.info("{} -> {}".format(self.frame, self.calibrationdir + "/" + self.frame))
+        ##os.symlink(self.swarpdir + "/" + self.frame, self.calibrationdir + "/" + self.frame)
 
         logging.info("ZPCalibration: all done. Celebrate with a cup of coffe :)")
 
