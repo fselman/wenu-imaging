@@ -35,6 +35,8 @@ from astropy.wcs import WCS
 
 from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
 
+from skimage.transform import resize
+
 from pycavi import pycavi_tools
 from pycavi.pycavi_astromatic_tools import get_swarp_lists_dict
 
@@ -2389,7 +2391,7 @@ def extract_calibration(image_path):
 
 
 # ------ Section below should need only the zpcal object and perhaps a few parameters for plotting
-def plot_zpcal(zp_cal):
+def plot_zpcal(zp_cal, img_scaling=2):
     """
     Plots graphs to estimate the quality of the calibartion of the frame.
 
@@ -2407,6 +2409,8 @@ def plot_zpcal(zp_cal):
     * Catalogue - Calibrated magnitudes vs R [distance from center] color coded Catalogue - Calibrated
     * A check image of the field
 
+    * img_scaling: factor to downsample image to reduce display and saving time
+
     Output
     ======
 
@@ -2418,6 +2422,8 @@ def plot_zpcal(zp_cal):
     logging.info("pycavi plot_zpcal: creating check plots")
     data = zp_cal.data
     wcs = zp_cal.wcs
+    image_path = zp_cal.image_path[:-5]
+    image_name = image_path.split("/")[-1]
 
     #good_sel = (zp_cal.mag_frame > 10) & (zp_cal.mag_frame < 20)
     good_sel =  ~np.isnan(zp_cal.mag_frame) & ~np.isinf(zp_cal.mag_frame)
@@ -2435,6 +2441,7 @@ def plot_zpcal(zp_cal):
 
     # we plot the ocam vs skymapper relation
     fig = plt.figure(figsize=(15.7, 12.1), dpi=120)
+    fig.suptitle(image_name, fontsize=24)
 
     gs = gridspec.GridSpec(nrows=4, ncols=5, wspace=0.0)  # width_ratios=[1,1,1,1,1])
     ax1 = fig.add_subplot(gs[:-2, :-3])
@@ -2462,7 +2469,8 @@ def plot_zpcal(zp_cal):
     ax2.set_ylabel("{}\nCatalogue - Frame".format(zp_cal.band))
 
     norm = simple_norm(data, 'sqrt', percent=99)
-    ax3.imshow(data, norm=norm)
+    downsampled_image = resize(data, (data.shape[0]//img_scaling, data.shape[1]//img_scaling), anti_aliasing=True)
+    ax3.imshow(downsampled_image, norm=norm)
     #zp_cal.aperture.to_pixel(wcs).plot(color='white', lw=1)
 
     plt.setp(ax3.get_xticklabels(), visible=False)

@@ -1,8 +1,13 @@
 # ______ TBD  -------
+- Add fixing nugget in kriggin variogram model plot.
 - Create catalogue with sextractor
 - Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE. Add interpolation parameters to plots
+- DONE. Add saving of variogram plot
+- DONE. Add downsampling scaling factor to plot_zpcal
+- DONE. Move kriging procedures to their own library
 - DONE. Copy instead of linking swarp file zpcal.
 - DONE. Modify Krigging:
         - determine the variogram directly
