@@ -1,11 +1,19 @@
 # ______ TBD  -------
-- Add to the swarped files an ORIGFILE keyword with
-  the value PSDP.<ISO 8601 time to ms>.fits
 - Add fixing nugget in kriggin variogram model plot.
 - Create catalogue with sextractor
 - Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE. Add procedure to read coefficients and polynomials
+        from file.
+- DONE. Save results of Chebyshev fit to a file, with
+        headers to appropriately interpret the parameters
+        and apply them to photometry from the image. 
+- DONE. Add to the swarped files an ORIGFILE keyword with
+  the value PSDP.<ISO 8601 time to ms>.fits
+    - but not the swarped file but the calibrated file,
+      which is the last notebook to touch the data.
+    - This was done modifying the ZPcalibration and ZPCal classes. 
 - DONE. Move chebyshev functionality to use separate library.
 - DONE. Use explicit polynomial expressions for display and
         check of residuals. Themn save polynomials to

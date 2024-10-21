@@ -5,6 +5,8 @@ import copy
 import logging
 import urllib.request
 
+from datetime import datetime
+
 import numpy as np
 from numpy.polynomial import chebyshev
 from numpy.polynomial.chebyshev import chebvander2d
@@ -150,6 +152,9 @@ class ZPCalibration:
         # open Swarp mosaic and read data and headers
         logging.info('ZPCalibration: init: reading frame')
         self.data, self.hdu = fits.getdata(self.frame, header=True, do_not_scale_image_data=False)
+
+        # we set the proper identification
+        self.origfile = self.frame      # the ORIGFILE key will be filled in the update_frame sectio.
 
         logging.info('self.data.shape: {}'.format(self.data.shape))
         data_1d = self.data[10000:10100,10000:10100].flatten()
@@ -1711,6 +1716,12 @@ AND
             for key, value, comment in hierarch:
                 new_header[key] = (value, comment)
 
+            # and finally we add the ORIGFILE key with the ISO 8601 date format.
+            now = datetime.now()
+            formatted_date = now.strftime("%Y-%m-%dT%H:%S.%f")[:-3] # ISO 8601 truncated to millisecond
+            origfile = "SPDP."+formatted_date+".fits"   # Science Pycavi Data product
+            new_header["ORIGFILE"] = origfile
+
             # before final writing we remove empty comments
             comments_to_remove = [key for key, value in new_header.items() if key == 'COMMENT' and value.strip() == '']
             for comment in comments_to_remove:
@@ -1983,6 +1994,7 @@ class ZPcal:
     """
     def __init__(self, input_dict, zdata, zhdu):
         self.image_path = None
+
         self.band = input_dict['band']
         # This table below should be more extensive and configurable
         if self.band == "NB_659":
@@ -1996,6 +2008,7 @@ class ZPcal:
            self.side_band_sign = 1
         self.mag_std = None
         self.mag_side_std = None
+        self.origfile = input_dict['origfile']
         self.naxis1 =  input_dict['naxis1']
         self.naxis2 =  input_dict['naxis2']
         self.crval1 = input_dict['crval1']
@@ -2108,6 +2121,7 @@ def extract_calibration(image_path):
 
     # we load some data from the image to be checked
     keys_to_extract = {'band': "ESO PYCAVI QC BAND NAME",
+                       'origfile': "ORIGFILE",
                        'naxis1': "NAXIS1",
                        'naxis2': "NAXIS2",
                        'crval1': "CRVAL1",

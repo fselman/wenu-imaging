@@ -66,7 +66,7 @@ def pixel_coords_scaled(xcoord, ycoord, dimx, dimy):
     y_scaled = 2 * (ycoord - dimy/2) / dimy
     return x_scaled, y_scaled
 
-def chebyshev_polynomials( deg, coefficients=None, coeff_file=None):
+def chebyshev_polynomials( deg, coefficients=None, coeff_file=None, origfile=None, dimx=None, dimy=None):
     """
     Print the Chebyshev polynomials from the coefficients.
 
@@ -75,6 +75,7 @@ def chebyshev_polynomials( deg, coefficients=None, coeff_file=None):
     - deg:          degree of polynomial
     - coefficients: 2D array of Chebyshev coefficients.
     - coeff_file:   full path to file to store coefficients and polynomials
+    - dimx, dimy:   dimesion of image for the polynomial approx.
 
     """
     def cheb2std_nozeros(cheb_poly, new_var_name='x'):
@@ -115,8 +116,13 @@ def chebyshev_polynomials( deg, coefficients=None, coeff_file=None):
     if coeff_file is not None:
         with open(coeff_file, 'w') as f:
             f.write(f"# 2D Chebyshev polynomial in x and y\n")
-            f.write(f"x_deg: {deg[0]}\n")
-            f.write(f"y_deg: {deg[1]}\n")
+            f.write(f"# ORIGFILE: {origfile}\n")
+            f.write(f"# x_deg: {deg[0]}\n")
+            f.write(f"# y_deg: {deg[1]}\n")
+            f.write(f"# dimx: {dimx}\n")
+            f.write(f"# dimy: {dimy}\n")
+            f.write("# x = 2 * (x_pix - dimx/2) / dimx\n")
+            f.write("# y = 2 * (y_pix - dimy/2) / dimy\n")
 
 
     if coefficients is not None:
@@ -217,6 +223,91 @@ def evaluate_2dpoly(x_pix, y_pix, dimx, dimy, deg, poly_x_strlst, poly_y_strlst,
             value = value + coefficients[i, j]*poly_x[i](x_scaled)*poly_y[j](y_scaled)
 
     return value
+
+def append_hashline(filename, new_header_line):
+    # Open the file and read all lines
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+
+    # Find the position of the last header line (lines starting with '#')
+    header_end = 0
+    for i, line in enumerate(lines):
+        if line.startswith('#'):
+            header_end = i
+
+    # Insert the new header line after the last header line
+    lines.insert(header_end + 1, new_header_line + '\n')
+
+    # Write the modified content back to the file (or to a new file)
+    with open(filename, 'w') as file:
+        file.writelines(lines)
+
+def parse_cheb_file(file_content):
+    """
+    Procedure that loads coefficients and 1D polynomials for
+    a 2D representation of a Chebyshev polynomial stored
+    in a file and returns  dictionary. Can be used as part of
+    a separate procedure to correct photometry in a catalogue
+    extracted from the FITS image used to determine the
+    illumination corrections.
+    """
+    # Dictionary to store the parsed data
+    parsed_data = {
+        'x_deg': None,
+        'y_deg': None,
+        'dimx': None,
+        'dimy': None,
+        'polynomials_x': {},  # Polynomials for T_i(x)
+        'polynomials_y': {},  # Polynomials for T_j(y)
+        'coefficients': {}  # Coefficients c(I, j) as a dictionary with keys (I, j)
+    }
+
+    # Split the file content into lines
+    lines = file_content.strip().splitlines()
+
+    for line in lines:
+        line = line.strip()
+        if not line or 'pix' in line or 'Chebyshev' in line:
+            continue  # Skip empty lines or not relevant lines
+
+        # We first parse the headers of the file to
+        # handle the variables: x_deg, y_deg, dimx, dimy
+        if 'ORIGFILE' in line:
+            parsed_data['origfile'] = line.split('ORIGFILE:')[-1].strip()
+        elif "x_deg" in line:
+            parsed_data['x_deg'] = int(line.split('x_deg:')[-1].strip())
+        elif "y_deg" in line:
+            parsed_data['y_deg'] = int(line.split('y_deg:')[-1].strip())
+        elif "dimx" in line:
+            parsed_data['dimx'] = int(line.split('dimx:')[-1].strip())
+        elif "dimy" in line:
+            parsed_data['dimy'] = int(line.split('dimy:')[-1].strip())
+
+        if line.startswith("#"):
+            continue
+
+        # Handle polynomial definitions like: x 0: T_0(x) = 1
+        elif "x" == line[0] and  "T_" in line and "(x)" in line:
+            parts = line.split(':')
+            index = int(parts[0].split()[1])
+            polynomial = parts[1].split('=')[-1].strip()
+            parsed_data['polynomials_x'][index] = polynomial
+
+        elif "y" == line[0] and  "T_" in line and "(y)" in line:
+            parts = line.split(':')
+            index = int(parts[0].split()[1])
+            polynomial = parts[1].split('=')[-1].strip()
+            parsed_data['polynomials_y'][index] = polynomial
+
+        # Handle coefficients like: 0, 0, T_0(x) * T_0(y), 0.02912866079326984
+        elif "," in line:
+            parts = line.split(',')
+            i = int(parts[0].strip())
+            j = int(parts[1].strip())
+            coefficient = float(parts[3].strip())
+            parsed_data['coefficients'][(i, j)] = coefficient
+
+    return parsed_data
         
 if __name__ == "__main__":
     log_file_swarp = "./pycavi_chebyshev_main.log"
@@ -257,3 +348,32 @@ if __name__ == "__main__":
     x = [0.0, 5000.0, 10000., 17000.]
     y = [0.0, 5000.0, 10000., 17000.]
     print(evaluate_2dpoly(np.array(x), np.array(y), dimx, dimy, deg, poly_x_strlst, poly_y_strlst, coefficients))
+
+    # Example usage
+    file_content = """
+# 2D Chebyshev polynomial in x and y
+# ORIGFILE: SPDP.2024-10-21T15:12.822.fits
+# x_deg: 4
+# y_deg: 4
+# dimx: 18296
+# dimy: 19312
+# x = 2 * (x_pix - dimx/2) / dimx
+# y = 2 * (y_pix - dimy/2) / dimy
+0, 0, T_0(x) * T_0(y), 0.02912866079326984
+0, 1, T_0(x) * T_1(y), 5.530685262100654e-06
+x 0: T_0(x) = 1
+x 1: T_1(x) = 1 * x
+x 2: T_2(x) = -1 + 2 * x**2
+x 3: T_3(x) = -3 * x + 4 * x**3
+y 0: T_0(y) = 1
+y 1: T_1(y) = 1 * y
+y 2: T_2(y) = -1 + 2 * y**2
+y 3: T_3(y) = -3 * y + 4 * y**3
+"""
+
+    # Parse the content
+    parsed_data = parse_cheb_file(file_content)
+
+    # Output the parsed data
+    import pprint
+    pprint.pprint(parsed_data)
