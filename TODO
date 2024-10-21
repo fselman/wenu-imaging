@@ -1,9 +1,17 @@
 # ______ TBD  -------
+- Add to the swarped files an ORIGFILE keyword with
+  the value PSDP.<ISO 8601 time to ms>.fits
 - Add fixing nugget in kriggin variogram model plot.
 - Create catalogue with sextractor
 - Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE. Move chebyshev functionality to use separate library.
+- DONE. Use explicit polynomial expressions for display and
+        check of residuals. Themn save polynomials to
+        a file. This validates the use of those specific
+        polynomials and coefficients for illumination
+        correction determination.
 - DONE. Add interpolation parameters to plots
 - DONE. Add saving of variogram plot
 - DONE. Add downsampling scaling factor to plot_zpcal

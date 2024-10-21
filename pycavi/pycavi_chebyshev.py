@@ -1,8 +1,10 @@
 import logging
+
 import numpy as np
 from numpy.polynomial import chebyshev
 from numpy.polynomial.chebyshev import chebvander2d
 import pandas as pd
+import sympy
 
 def fit_chebyshev(x, y, z, z_err, dimx, dimy, deg):
     """
@@ -25,7 +27,7 @@ def fit_chebyshev(x, y, z, z_err, dimx, dimy, deg):
     """
 
     # Construct the Chebyshev design matrix for 2D data
-    x_scaled, y_scaled = self.pixel_coords_scaled(x, y, dimx, dimy)
+    x_scaled, y_scaled = pixel_coords_scaled(x, y, dimx, dimy)
     V = chebvander2d(x_scaled, y_scaled, deg)
 
     # Apply weights
@@ -37,12 +39,12 @@ def fit_chebyshev(x, y, z, z_err, dimx, dimy, deg):
     coefficients, residuals, rank, s = np.linalg.lstsq(VW, zW, rcond=None)
 
     # We fit the masked values and correct the magnitudes
-    z_corr = z - chebyshev_2d_eval(x, y, coefficients, deg)
+    z_corr = z - chebyshev_2d_eval(x, y, dimx, dimy, coefficients, deg)
 
     return z_corr, coefficients, residuals, rank, s
 
 # Evaluate the fitted polynomial at new points
-def chebyshev_2d_eval(self, x_pix, y_pix, coeff, deg):
+def chebyshev_2d_eval(x_pix, y_pix, dimx, dimy, coeff, deg):
     """
     Evaluate the Chebyshev polynomial at the points defined
     by the 1d ndarrays x and y. Note that x and y should be
@@ -51,25 +53,29 @@ def chebyshev_2d_eval(self, x_pix, y_pix, coeff, deg):
     # Generate 2D Vandermonde matrix for new points
     # For well behaved polynomials we need to rescale coordinates to [-1, 1]
     # Needs to rescale the x and y values before fitting the Chebyshev polys
-    x, y = pixel_coords_scaled(x_pix, y_pix)
+    x, y = pixel_coords_scaled(x_pix, y_pix, dimx, dimy)
     V_new = chebvander2d(x, y, deg)
-    return np.dot(V_new, coef)
+    return np.dot(V_new, coeff)
 
 
 def pixel_coords_scaled(xcoord, ycoord, dimx, dimy):
     """
     Converts pixel coordinates and scale them to the intervale [-1, 1].
     """
-    x_scaled = 2 * (xcoord - dimx) / dimx + 1
-    y_scaled = 2 * (ycoord - dimy) / dimy + 1
+    x_scaled = 2 * (xcoord - dimx/2) / dimx
+    y_scaled = 2 * (ycoord - dimy/2) / dimy
     return x_scaled, y_scaled
 
-def print_chebyshev_polynomials( deg, coefficients=None):
+def chebyshev_polynomials( deg, coefficients=None, coeff_file=None):
     """
     Print the Chebyshev polynomials from the coefficients.
 
     Parameters:
+
+    - deg:          degree of polynomial
     - coefficients: 2D array of Chebyshev coefficients.
+    - coeff_file:   full path to file to store coefficients and polynomials
+
     """
     def cheb2std_nozeros(cheb_poly, new_var_name='x'):
         """
@@ -106,6 +112,13 @@ def print_chebyshev_polynomials( deg, coefficients=None):
         return poly_str
 
     num_x, num_y = deg[0], deg[1]
+    if coeff_file is not None:
+        with open(coeff_file, 'w') as f:
+            f.write(f"# 2D Chebyshev polynomial in x and y\n")
+            f.write(f"x_deg: {deg[0]}\n")
+            f.write(f"y_deg: {deg[1]}\n")
+
+
     if coefficients is not None:
         coefficients = coefficients.reshape(deg[0]+1, deg[1]+1)
         logging.info("coefficients.shape: {}".format(coefficients.shape))
@@ -126,6 +139,9 @@ def print_chebyshev_polynomials( deg, coefficients=None):
                     poly_y = chebyshev.Chebyshev([0] * j + [1])
                     cheb_poly2d[(i,j)] = f"T_{i}(x) * T_{j}(y)"
                     logging.info(f"{ncount:02d} Coefficient({i}, {j}): {coeff:.8f} * T_{i}(x) * T_{j}(y)")
+                    if coeff_file is not None:
+                        with open(coeff_file, 'a') as f:
+                            f.write(f"{i}, {j}, {cheb_poly2d[(i,j)]}, {cheb_coeff[(i,j)]}\n")
 
     cheb_poly_x = {}
     cheb_poly_x_str = {}
@@ -134,14 +150,73 @@ def print_chebyshev_polynomials( deg, coefficients=None):
         cheb_poly_x[i] = poly_x
         cheb_poly_x_str[i] = f"{cheb2std_nozeros(poly_x)}"
         logging.info(f"T_{i}(x): {cheb2std_nozeros(poly_x)}")
+        if coeff_file is not None:
+            with open(coeff_file, 'a') as f:
+                f.write(f"x {i}: T_{i}(x) = {cheb_poly_x_str[i]}\n")
 
     cheb_poly_y = {}
     cheb_poly_y_str = {}
     for j in range(num_y):
         poly_y = chebyshev.Chebyshev([0] * j + [1])
-        cheb_poly_y[i] = poly_y
-        cheb_poly_y_str[i] = f"{cheb2std_nozeros(poly_y)}"
+        cheb_poly_y[j] = poly_y
+        cheb_poly_y_str[j] = f"{cheb2std_nozeros(poly_y, new_var_name='y')}"
         logging.info(f"T_{j}(y): {cheb2std_nozeros(poly_y, new_var_name='y')}")
+        if coeff_file is not None:
+            with open(coeff_file, 'a') as f:
+                f.write(f"y {j}: T_{j}(y) = {cheb_poly_y_str[j]}\n")
+
+    return coefficients, cheb_poly_x_str, cheb_poly_y_str
+
+def evaluate_2dpoly(x_pix, y_pix, dimx, dimy, deg, poly_x_strlst, poly_y_strlst, coefficients):
+    """
+    Evaluate polynomial 
+
+    2dpoly(x, y) = Sum_i_j coeffs(i, j)*poly_x(i, x)*poly_y(j, y)
+
+    These polynomials will go in the headers of the images so we
+    work with them in the illumination correction to ensure that
+    they work.
+
+    Parameters
+
+    x_pix, y_pix:   ndarrays of pixel coordinates of point of evaluation
+    dimx, dimy:     dimensions of image
+    deg:            tuple giving the degree of the polynomial
+    poly_x_strlst:  list of strings with the polynomial basis in x
+    poly_y_strlst:  list of strings with the polynomial basis in y
+    coefs:          dictionary with coefficients indexe by i, j
+
+    Output
+
+        The value of the polynomial evaluated in the points defined
+        bu arrays x, y.
+    """
+
+    num_x, num_y = deg[0], deg[1]
+
+    # scale to -1, 1 both input coordinate arrays
+    x_scaled, y_scaled = pixel_coords_scaled(x_pix, y_pix, dimx, dimy)
+
+    # prepare sympy
+    #x, y = sympy.symbols('x y')
+    #y = sympy.symbols('y')
+
+    x = sympy.symbols('x')
+    poly_x = {}
+    for i in range(num_x):
+        poly_x[i] = sympy.lambdify(x, poly_x_strlst[i], modules='numpy')
+
+    y = sympy.symbols('y')
+    poly_y = {}
+    for j in range(num_y):
+        poly_y[j] = sympy.lambdify(y, poly_y_strlst[j], modules='numpy')
+
+    value = np.full_like(x_scaled, 0.0, dtype=np.float64)
+    for i in range(num_x):
+        for j in range(num_y):
+            value = value + coefficients[i, j]*poly_x[i](x_scaled)*poly_y[j](y_scaled)
+
+    return value
         
 if __name__ == "__main__":
     log_file_swarp = "./pycavi_chebyshev_main.log"
@@ -152,4 +227,33 @@ if __name__ == "__main__":
                               logging.StreamHandler()])
     logging.getLogger().setLevel(logging.INFO)
 
-    print_chebyshev_polynomials((5,5))
+    deg = (6, 6)
+    coeffs =  np.array([4.82422806e-02,  3.82165299e-03,  5.29654434e-02, -1.91632991e-03,
+  1.09430500e-02,  3.81040921e-03,  6.62935617e-03, -7.30069797e-03,
+ -1.54203713e-02, -9.13238120e-03,  4.99340754e-03, -1.08462464e-02,
+  1.50644835e-03,  8.70488271e-04,  4.28451332e-02,  1.38346413e-02,
+ -2.79114196e-03, -5.26495160e-04,  5.46612655e-03,  6.88309734e-03,
+ -2.02916461e-03, -7.36621494e-03,  7.03049697e-03, -1.85654332e-02,
+  9.82811454e-03, -8.90951896e-03,  1.34942188e-02,  1.43602622e-03,
+  3.67991128e-05,  1.50050018e-02,  3.65549764e-03,  2.38036561e-03,
+ -7.16767648e-03,  5.30500242e-03, -6.81341376e-03, -1.26700478e-03,
+ -4.56901031e-04, -1.76516270e-02,  4.64499422e-03, -5.02132889e-03,
+  4.42668778e-03, -6.16990152e-04, -1.63464954e-03, 3.48676159e-03,
+  2.71899656e-03, -6.19233055e-04, -1.76064313e-03,  1.61008439e-03,
+  1.43415107e-03])
+
+    deg = (5, 6)
+    coeffs = np.array([[ 0.04917397,  0.00097915,  0.04958182, -0.00176778,  0.01174935,  0.00206,
+  0.00499915, -0.0082055,  -0.01601269, -0.01010048,  0.00442772, -0.01229346,
+  0.00058156,  0.00061599,  0.04418039,  0.00871695, -0.00935186, -0.00016861,
+  0.0066462,   0.00390206, -0.00533027, -0.00783639,  0.00588149, -0.01909552,
+  0.00911492, -0.00978593,  0.01243552,  0.00150667,  0.00121181,  0.01055183,
+ -0.00236117,  0.0027261,  -0.00615827,  0.00269404, -0.01012376, -0.00160121,
+ -0.00109681, -0.01823493,  0.00417204, -0.00558683,  0.00373529, -0.00070089]])
+
+    coefficients, poly_x_strlst, poly_y_strlst = chebyshev_polynomials(deg, coeffs)
+    dimx = 18176
+    dimy = 18893
+    x = [0.0, 5000.0, 10000., 17000.]
+    y = [0.0, 5000.0, 10000., 17000.]
+    print(evaluate_2dpoly(np.array(x), np.array(y), dimx, dimy, deg, poly_x_strlst, poly_y_strlst, coefficients))
