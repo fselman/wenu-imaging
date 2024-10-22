@@ -4,6 +4,7 @@
 - Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE. Add posibility of choice in kriging error determination.
 - DONE. Add procedure to read coefficients and polynomials
         from file.
 - DONE. Save results of Chebyshev fit to a file, with
