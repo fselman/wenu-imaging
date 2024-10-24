@@ -4,6 +4,18 @@
 - Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE. Divide notebook 07b into 3 notebooks:
+    - 07b retains the photometry extraction from frame, but
+      saves photometry data, together with some metadata to file.
+        file <image_name>.illum.csv
+    - Creates 08a_pycavi_chebyshev which reads the file produced
+      by 07b and does a Chebyshev fitting writing results into
+      file <image_name>.cheb_degx_degy_<interp>_fit_01.chebyshev
+    - Creates 08b_pycavi_kriging which reads the file produced
+      by 07b and does a kriging interpolation to the illumination
+      correction. No saving yet.
+- DONE. Convert plotting routines in notebook 07b into procedures
+       in library pycavi_zpcal.
 - DONE. Add posibility of choice in kriging error determination.
 - DONE. Add procedure to read coefficients and polynomials
         from file.

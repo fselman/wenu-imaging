@@ -11,10 +11,13 @@ import numpy as np
 from numpy.polynomial import chebyshev
 from numpy.polynomial.chebyshev import chebvander2d
 import pandas as pd
+from IPython.display import display
 
 from matplotlib import cm
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+from matplotlib.gridspec import GridSpec
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from scipy.optimize import minimize
 from scipy.stats import norm
@@ -2024,11 +2027,14 @@ class ZPcal:
         self.wcs = wcs = WCS(zhdu)
         self.aperture = None
         self.sky_annulus = None
-        self.mag_frame = None
+
         self.ra_std = None
         self.de_std = None
-        self.x = None
-        self.y = None
+        self.x = None           # pixel x-coords
+        self.y = None           # pixel y-coords
+        self.mag_frame = None
+        self.mag_frame_err = None
+        self.z = None       # difference std - frame mags
 
         self.x_masked = None
         self.y_masked = None
@@ -2073,6 +2079,7 @@ class ZPcal:
         # *** Here we mask the bad values of z and create final 1d arrays ***
         z_raw_clipped = sigma_clip(z_raw, sigma=3.0, maxiters=5)
         mask = ~np.isnan(z_raw) & ~z_raw_clipped.mask & np.isfinite(z_raw) & (brightest_mag < z_mag_raw) & (z_mag_raw < faintest_mag)
+
         self.x_masked = x_raw[mask]
         self.y_masked = y_raw[mask]
         self.z_masked = z_raw[mask]
@@ -2243,6 +2250,7 @@ def extract_calibration(image_path):
     raw_mags = np.full_like(aper_sum_bkgsub, np.nan)
     raw_mags = zp_cal.magzp - 2.5 * np.log10(aper_sum_bkgsub)
     zp_cal.mag_frame = np.around(raw_mags, 4)
+    zp_cal.mag_frame_err = np.full_like(aper_sum_bkgsub, 1.0)
 
     return zp_cal
 
@@ -2413,3 +2421,301 @@ def get_key_from_header(hdu, keys):
         for key in keys:
             returned_values.append(hdu[key])
         return returned_values
+
+##############################################################
+# Plotting routines for the illumination correction notebooks
+
+def plot_residuals(x_subset, z_subset, ylim=(-0.25, 0.25)):
+
+    z_mean_subset, z_median_subset, z_std_subset = sigma_clipped_stats(z_subset, sigma=3, maxiters=5)
+
+    fig = plt.figure(figsize=(12,5))
+
+    gs = GridSpec(1, 3, figure = fig)
+
+    ax1 = fig.add_subplot(gs[0, 0:2])
+    ax1.scatter(x_subset, z_subset, s=2, color='red')
+
+    ax1.axhline(z_mean_subset, color='k', linewidth=1, linestyle='-', label='mean: {}'.format(round(z_mean_subset, 3)))
+    ax1.axhline(z_mean_subset+z_std_subset, color='k', linewidth=1, linestyle='--', label='sigma: {}'.format(round(z_std_subset, 3)))
+    ax1.axhline(z_mean_subset-z_std_subset, color='k', linewidth=1, linestyle='--')
+    ax1.set_title("Magnitude residuals", fontsize=16)
+    ax1.set_xlabel("RA in pixels", fontsize=14)
+    ax1.set_ylabel("delta mag", fontsize=14)
+    ax1.set_ylim(ylim)
+    ax1.tick_params(axis='x', labelsize=12)
+    ax1.tick_params(axis='y', labelsize=12)
+    ax1.legend()
+
+    ax2 = fig.add_subplot(gs[0, 2])
+    z_val = np.linspace(-0.2, 0.2, 100)
+    p = norm.pdf(z_val, z_mean_subset, z_std_subset)
+    clean_data = z_subset[~np.isnan(z_subset) & np.isfinite(z_subset)]
+    ax2.hist(clean_data, bins=30, range=(-0.25, 0.25), density=True, stacked=True, color='green', alpha=0.7)
+    ax2.set_xlim(-0.25, 0.25)
+    plt.plot(z_val, p, 'k', linewidth=2)
+
+    ax2.axvline(z_mean_subset, color='k', linewidth=1, linestyle='-', label='mean: {}'.format(round(z_mean_subset, 3)))
+    ax2.axvline(z_mean_subset+z_std_subset, color='k', linewidth=1, linestyle='--', label='sigma: {}'.format(round(z_std_subset, 3)))
+    ax2.axvline(z_mean_subset-z_std_subset, color='k', linewidth=1, linestyle='--')
+    ax2.set_title("Distribution of dm", fontsize=16)
+    ax2.set_xlabel("dm [mag]", fontsize=14)
+    ax2.set_ylabel("P(dm)", fontsize=14)
+    ax2.tick_params(axis='x', labelsize=12)
+    ax2.tick_params(axis='y', labelsize=12)
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_illumination_correction(x_subset, y_subset, x_check, y_check, grid_x, grid_y, grid_z, z_on_grid, dimx, dimy, fit_plot, fit_image_title):
+    fig, ax = plt.subplots(figsize=(12,12))
+    img = ax.imshow(z_on_grid, extent=(1, dimx, 1, dimy), origin='lower', cmap='viridis')
+    ax.set_title(fit_image_title, fontsize=24)
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes('right', size="5%", pad=0.1)
+    cbar = plt.colorbar(img, cax=cax)
+    cbar.set_label('Residual [mag]', fontsize=14)
+    cbar.ax.tick_params(labelsize=14)
+
+    # Define contours and label them
+    contour_levels_neg = np.arange(-0.20, 0.0, 0.02)
+    contour_levels_pos = np.arange(0.02, 0.22, 0.02)
+
+    contour_neg = ax.contour(grid_x, grid_y, grid_z, cmap='viridis', levels = contour_levels_neg)
+    contour_pos = ax.contour(grid_x, grid_y, grid_z, cmap='plasma', levels = contour_levels_pos)
+    zero_contour = ax.contour(grid_x, grid_y, grid_z, colors='white', linestyles='--', linewidths=2, levels = [0])
+
+    ax.clabel(contour_neg, inline=True, fontsize=10, fmt='%1.3f')
+    ax.clabel(contour_pos, inline=True, fontsize=10, fmt='%1.3f')
+    ax.clabel(zero_contour, inline=True, fontsize=10, fmt='%1.3f')
+
+    # Plot the sample of points used to determine the 2D approximation
+    XY_subset = np.array(list(zip(x_subset, y_subset)))
+    ax.scatter(XY_subset[:,0], XY_subset[:,1], s=2, color='white')
+
+    # Plot the set of points to be used to check uncertainty
+    XY_check = np.array(list(zip(x_check, y_check)))
+    ax.scatter(XY_check[:,0], XY_check[:,1], s=30, color='white', marker='+')
+
+
+    #plt.colorbar(contour, label='Illumination correction')
+    ax.set_xlabel('RA in pixels', fontsize=16)
+    ax.set_ylabel('DEC in pixels', fontsize=16)
+    ax.tick_params(axis='x', labelsize=14)
+    ax.tick_params(axis='y', labelsize=14)
+
+
+    logging.info("Saving fit plot to {}".format(fit_plot))
+    plt.savefig(fit_plot)
+
+    plt.show()
+
+def plot_corrected_residuals(x_subset, z_subset, z_corr, x_check, res_plot_str, determine_errors, err_type, ylim=(-0.25, 0.25)):
+    fig = plt.figure(figsize=(12,5))
+    fig.suptitle(os.path.basename(res_plot_str[0:-1]), fontsize=16)
+    gs = GridSpec(1, 3, figure = fig)
+
+    z_mean_u, z_median_u, z_std_u = sigma_clipped_stats(z_subset, sigma=3.0, maxiters=5)
+    logging.info("mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean_u, 4), round(z_median_u, 4), round(z_std_u, 4)))
+
+    z_mean, z_median, z_std = sigma_clipped_stats(z_corr, sigma=3, maxiters=5)
+    logging.info("mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean, 4), round(z_median, 4), round(z_std, 4)))
+
+    z_mean_subset, z_median_subset, z_std_subset = sigma_clipped_stats(z_subset, sigma=3, maxiters=5)
+    logging.info("mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean_subset, 4), round(z_median_subset, 4), round(z_std_subset, 4)))
+
+    # Residuals plot
+    ax1 = fig.add_subplot(gs[0, 0:2])
+    ax1.scatter(x_subset, z_subset, s=10, color='red', label="mean: {}   stdev: {}".format(round(z_mean_u, 3), round(z_std_u, 3)))
+    if determine_errors:
+        ax1.scatter(x_check, z_corr, color='black', s=5, marker='+', label='mean: {}  stdev: {}'.format(round(z_mean, 3), round(z_std, 3)))
+    ax1.axhline(z_mean, color='k', linewidth=1, linestyle='-')
+    ax1.axhline(z_mean+z_std, color='k', linewidth=1, linestyle='--')
+    ax1.axhline(z_mean-z_std, color='k', linewidth=1, linestyle='--')
+    ax1.set_title("Magnitude residuals", fontsize=16)
+    ax1.set_xlabel("RA in pixels", fontsize=14)
+    ax1.set_ylabel("delta mag", fontsize=14)
+    ax1.set_ylim(ylim)
+    ax1.tick_params(axis='x', labelsize=12)
+    ax1.tick_params(axis='y', labelsize=12)
+    ax1.legend()
+
+    # Histogram plot
+    x_val = np.linspace(-0.25, 0.25, 100)
+    p = norm.pdf(x_val, z_mean, z_std)
+    ax2 = fig.add_subplot(gs[0, 2])
+
+    # We color the uncorrected 1-sigma interval
+    #ax2.axvline(z_mean_subset, color='k', linewidth=1, linestyle='-', label='mean: {}'.format(round(z_mean_subset, 3)))
+    ax2.axvspan(z_mean_subset-z_std_subset, z_mean_subset+z_std_subset, 
+                color='gray', alpha=0.5,
+                label='sigma: {}'.format(round(z_std_subset, 3)))
+
+    # We color the corrected 1-sigma interval
+    ax2.axvspan(z_mean-z_std, z_mean+z_std, 
+                color='yellow', alpha=0.9,
+                label='sigma: {}'.format(round(z_std, 3)))
+    ax2.axvline(z_mean+z_std, color='k', linewidth=1, linestyle='--', label='sigma: {}'.format(round(z_std, 3)))
+    ax2.axvline(z_mean-z_std, color='k', linewidth=1, linestyle='--')
+
+    ax2.hist(z_subset, bins=30, density=True, stacked=True, color='green', alpha=1.0)
+    ax2.hist(z_corr, bins=30, density=True, stacked=True, color='blue', alpha=0.7)
+    plt.plot(x_val, p, 'k', linewidth=2)
+    ax2.set_title("Distribution of dm", fontsize=16)
+    ax2.set_xlabel("dm", fontsize=14)
+    ax2.set_ylabel("P(dm)", fontsize=14)
+    ax2.tick_params(axis='x', labelsize=12)
+    ax2.tick_params(axis='y', labelsize=12)
+    #ax2.set_ylim(0, 35)
+    ax2.text(0.80, 0.9, f"sigma x: {round(z_std_subset/z_std, 2)}", 
+                          fontsize=11, 
+                          transform=ax2.transAxes,
+                          bbox=dict(facecolor='lightgray', alpha=0.5),
+                          horizontalalignment='center')
+
+    plt.tight_layout()
+    logging.info("Saving residual plots to {}".format(res_plot_str+"_01.png"))
+    plt.savefig(res_plot_str+"_"+err_type+"_01.png")
+
+    plt.show()
+
+def plot_spatial_residuals(x_subset, y_subset, z_subset, z_corr, x_check, y_check, dimx, dimy, res_plot_str, err_type, ylim=(-0.25, 0.25)):
+    r = np.sqrt(x_subset**2+y_subset**2)
+    theta = np.degrees(np.arctan2(y_subset-dimy/2.0, x_subset-dimx/2.0))
+
+    r_check = np.sqrt(x_check**2+y_check**2)
+    theta_check = np.degrees(np.arctan2(y_check-dimy/2.0, x_check-dimx/2.0))
+
+    # fit a line to the radial dependence
+    from scipy import stats
+
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12,5))
+    fig.suptitle(os.path.basename(res_plot_str[0:-1])+"\nResiduals of corrected and uncorrected magnitude differences")
+
+    slope, intercept, r_value, p_value, std_err = stats.linregress(r, z_subset)
+    ax1.scatter(r, z_subset, color='red', s=6, label="uncorrected mags")
+    xx = np.linspace(0, max(r), 100)
+    #ax1.plot(xx, slope*xx+intercept, label=f'Fitted line: y = {slope:.3f}x + {intercept:.3f}', color='red')
+    ax1.plot(xx, slope*xx+intercept, color='red')
+    ax1.set_xlabel("r [pix]")
+    ax1.set_ylabel("dm") 
+    ax1.set_ylim(ylim)
+               
+    ax1.scatter(r_check, z_corr, color='black', s=2, label="corrected mags")
+    slope, intercept, r_value, p_value, std_err = stats.linregress(r_check, z_corr)
+    xx = np.linspace(0, 1.2, 10)
+    #ax1.plot(xx, slope*xx+intercept, label=f'Fitted line: y = {slope:.3f}x + {intercept:.3f}', color='black')
+    ax1.plot(xx, slope*xx+intercept, color='black')
+
+    ax1.axhline(0.0, color='k', linewidth=1, linestyle='--')
+    ax1.legend()
+
+    ax2.scatter(theta, z_subset, color='red', s=6, label="Residual of uncorrected mags")
+    ax2.scatter(theta_check, z_corr, color='black', s=2, label="Residual of uncorrected mags")
+    ax2.axhline(0.0, color='k', linewidth=1, linestyle='--')
+    ax2.set_xlabel("theta [deg]")
+    ax2.set_ylabel("dm")
+    ax2.set_ylim(ylim)
+
+    ax3.scatter(x_subset, z_subset, color='red', s=6, label="Residual of uncorrected mags")
+    ax3.scatter(x_check, z_corr, color='black', s=2, label="Residual of corrected mags")
+    ax3.axhline(0.0, color='k', linewidth=1, linestyle='--')
+    ax3.set_xlabel("RA [pix]")
+    ax3.set_ylabel("dm")
+    ax3.set_ylim(ylim)
+
+    ax4.scatter(y_subset, z_subset, color='red', s=6, label="Residual of uncorrected mags")
+    ax4.scatter(y_check, z_corr, color='black', s=2, label="Residual of ucorrected mags")
+    ax4.axhline(0.0, color='k', linewidth=1, linestyle='--')
+    ax4.set_xlabel("Dec [pix]")
+    ax4.set_ylabel("dm")
+    ax4.set_ylim(ylim)
+
+    plt.tight_layout()
+
+    logging.info("Saving residual plots to {}".format(res_plot_str+"_02.png"))
+    plt.savefig(res_plot_str+"_"+err_type+"_02.png")
+               
+    plt.show()
+
+##################################################################################
+# Routines to save and read illumination correction data.
+
+def save_illumination_data(zpcal, display_dataframe=False):
+    """
+    Save to file the calibration data that will be used to determine the illumination correction.
+    This procedure saves all the data. The filtering will be done downstream.
+    """
+    
+    # Create headers
+    image_dir = os.path.dirname(zpcal.image_path)
+    image_name = os.path.basename(zpcal.image_path)[:-5]     # Note that it assumes that we strip the fits extension
+    image_path = image_dir+'/'+image_name
+    headers = {
+            'image_dir': image_dir,
+            'image_name': image_name,
+            'image_path': image_path,
+            'band': zpcal.band,
+            'origfile': zpcal.origfile,
+            'dimx': zpcal.naxis1,
+            'dimy': zpcal.naxis2
+            }
+
+    # Create DataFrame from arrays
+    data = {
+            'x_all': zpcal.x,
+            'y_all': zpcal.y,
+            'mag_std': zpcal.mag_std,
+            'mag_frame': zpcal.mag_frame,
+            'z_all': zpcal.mag_std - zpcal.mag_frame,
+            'z_all_err': zpcal.mag_frame_err
+    }
+    df = pd.DataFrame(data)
+    if display_dataframe:
+        display(df)
+
+
+    # Dave DataFrame to a CSV file, without the index.
+    output_file = image_path+'.illum.csv'
+    with open(output_file, 'w') as f:
+
+        # first the headers
+        for key, value in headers.items():
+            f.write(f"# {key}: {value}\n")
+
+        # then the data
+        df.to_csv(f, index=False)
+
+        return output_file
+    return None
+
+
+def read_illumination_data(filename):
+    """
+    Procedure to read illumination data output of nonetbook zpcal.
+    It is used by the chebyshev and the kriging notebooks.
+    """
+    # Extract headers manually
+    headers = {}
+
+    # Open the file to parse the header lines
+    with open(filename, 'r') as file:
+        for line in file:
+            if line.startswith('#'):
+                # Remove '#' and extract key-value pairs
+                key, value = line[1:].strip().split(': ', 1)
+                headers[key] = value
+            elif line.strip() == "":
+                continue
+            else:
+                # Break on the first line that isn't a comment
+                break
+
+    # Load the CSV data with Pandas, ignoring lines starting with '#'
+    data_df = pd.read_csv(filename, comment='#')
+
+    return headers, data_df
+
+
+#_oOo_
