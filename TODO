@@ -1,5 +1,11 @@
 # ______ TBD  -------
 - Add fixing nugget in kriggin variogram model plot.
+- Notebooks 07b and 8 can be rearranged a little to simplify
+  their use. Right now part is run on a loop, and another
+  part is run on the last image from the loop. So the loop
+  is not really necessary and the user should always select
+  the index of what to correct. This should be improved
+  with better logic.
 - Create catalogue with sextractor
 - Do PSF fitting photometry.
 
@@ -14,6 +20,7 @@
     - Creates 08b_pycavi_kriging which reads the file produced
       by 07b and does a kriging interpolation to the illumination
       correction. No saving yet.
+    - Tested OK.
 - DONE. Convert plotting routines in notebook 07b into procedures
        in library pycavi_zpcal.
 - DONE. Add posibility of choice in kriging error determination.
