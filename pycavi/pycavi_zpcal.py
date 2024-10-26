@@ -2513,7 +2513,7 @@ def plot_illumination_correction(x_subset, y_subset, x_check, y_check, grid_x, g
 
 def plot_corrected_residuals(x_subset, z_subset, z_corr, x_check, res_plot_str, determine_errors, err_type, ylim=(-0.25, 0.25)):
     fig = plt.figure(figsize=(12,5))
-    fig.suptitle(os.path.basename(res_plot_str[0:-1]), fontsize=16)
+    fig.suptitle(os.path.basename(res_plot_str), fontsize=16)
     gs = GridSpec(1, 3, figure = fig)
 
     z_mean_u, z_median_u, z_std_u = sigma_clipped_stats(z_subset, sigma=3.0, maxiters=5)
@@ -2591,7 +2591,7 @@ def plot_spatial_residuals(x_subset, y_subset, z_subset, z_corr, x_check, y_chec
     from scipy import stats
 
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12,5))
-    fig.suptitle(os.path.basename(res_plot_str[0:-1])+"\nResiduals of corrected and uncorrected magnitude differences")
+    fig.suptitle(os.path.basename(res_plot_str)+"\nResiduals of corrected and uncorrected magnitude differences")
 
     slope, intercept, r_value, p_value, std_err = stats.linregress(r, z_subset)
     ax1.scatter(r, z_subset, color='red', s=6, label="uncorrected mags")

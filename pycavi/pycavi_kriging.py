@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from pykrige.uk import UniversalKriging  # Ordinary Kriging from pykrige
+
+from lmfit import Model
 from scipy.optimize import curve_fit
 from scipy.spatial.distance import pdist
 
@@ -51,6 +53,8 @@ def kriging_interpolation(x_subset, y_subset, z_subset,
                 determine_empirical_variogram = True, 
                 plot_variogram = False,
                 use_empirical_variogram = False,
+                fit_type = 'curve_fit',
+                fixed_nugget = None,                        # if this value is none the nugget will also be fitted
                 image_path=None):
     """
     Determine universal kriging interpolator using z values on a
@@ -68,6 +72,8 @@ def kriging_interpolation(x_subset, y_subset, z_subset,
         plot_variogram:                  Instruct to plot the empirical variogram
         use_empirical_variogram:         Flag to instruct to use the empirical variogram to fit the model,
                                          and pass these model parameters to UK.
+        fit_type:                        curve_fit or lmfit.Model, this last one allows to fix the nugget
+        fixed_nugget:                    if not None the value will be fixed during the fit and fit_type will be lmfit.Model
 
     Output
 
@@ -174,19 +180,41 @@ def kriging_interpolation(x_subset, y_subset, z_subset,
     initial_guess = [0.1,0.1, 500.0]
 
     # Perform the fitting
-    # It is important to look at the nugget which has a tendency to be too close
-    # to zero. If this is the case, do not hesitate to refit fixing this value
-    # to a reasonable one, otherwise short range correlations will dominate.
-    # CURRENTLY WE DO NOT PROVIDE THIS OPTION.
-    #
-    bounds=[(0, 0, 100.),(np.inf, np.inf, 5000.)]
-    popt, pcov = curve_fit(model, lags_truncated, semivariance_truncated, p0=initial_guess, bounds=bounds)
+    if 'curve_fit' in  fit_type and fixed_nugget is None:
+        # Step 4: Fit the model to the empirical variogram using curve_fit
+        # Use initial guesses for nugget, sill, and range
+        initial_guess = [0.1,0.1, 500.0]
+        # It is important to look at the nugget which has a tendency to be too close
+        # to zero. If this is the case, do not hesitate to refit fixing this value
+        # to a reasonable one, otherwise short range correlations will dominate.
+        # CURRENTLY WE DO NOT PROVIDE THIS OPTION.
+        #
+        bounds=[(0, 0, 100.),(np.inf, np.inf, 5000.)]
+        popt, pcov = curve_fit(model, lags_truncated, semivariance_truncated, p0=initial_guess, bounds=bounds)
 
-    # Extract the fitted parameters
-    fitted_nugget, fitted_partial_sill, fitted_range = popt
-    variogram_parameters = {'psill': fitted_partial_sill, 'range': fitted_range, 'nugget': fitted_nugget}     # NB THE ORDER IS DIFFERENT
-    print(variogram_parameters)
-    print(f"Fitted Nugget: {fitted_nugget}, Partial Sill: {fitted_partial_sill}, Range: {fitted_range}")
+        # Extract the fitted parameters
+        fitted_nugget, fitted_partial_sill, fitted_range = popt
+        variogram_parameters = {'psill': fitted_partial_sill, 'range': fitted_range, 'nugget': fitted_nugget}     # NB THE ORDER IS DIFFERENT
+        print(variogram_parameters)
+        print(f"Fitted Nugget: {fitted_nugget}, Partial Sill: {fitted_partial_sill}, Range: {fitted_range}")
+    elif 'lmfit' in fit_type or fixed_nugget is not None:
+        lmfit_model = Model(model)
+        # Create parameters object and set initial values
+        lmfit_params = lmfit_model.make_params(nugget=0.1, partial_sill=0.1 , range_=500)
+        if fixed_nugget is not None:
+            lmfit_params['nugget'].set(value=fixed_nugget, vary=False)
+
+        lmfit_result = lmfit_model.fit(semivariance_truncated, lmfit_params, h=lags_truncated)
+        fitted_nugget = lmfit_result.params['nugget'].value
+        fitted_partial_sill = lmfit_result.params['partial_sill'].value
+        fitted_range = lmfit_result.params['range_'].value
+        variogram_parameters = {'psill': fitted_partial_sill, 'range': fitted_range, 'nugget': fitted_nugget}     # NB THE ORDER IS DIFFERENT
+        popt = fitted_nugget, fitted_partial_sill, fitted_range
+        print(variogram_parameters)
+        print(f"Fitted Nugget: {fitted_nugget}, Partial Sill: {fitted_partial_sill}, Range: {fitted_range}")
+    else:
+        raise Exception(f"Inconsistent fit_type: {fit_type} and fixed_nugget: {fixed_nugget} values.")
+        
 
     if plot_variogram:
         if image_path is not None:
@@ -201,7 +229,7 @@ def kriging_interpolation(x_subset, y_subset, z_subset,
         plt.scatter(elags, esemivariance, color='green', marker='+', s=5, label='Full Empirical Variogram')
 
         # Plot model-fitted variogram
-        plt.plot(lags_truncated, model_function[selected_model](lags_truncated, *popt), color='red', label='Fitted Variogram Model')
+        plt.plot(elags, model_function[selected_model](elags, *popt), color='red', label='Fitted Variogram Model')
         plt.plot([0], [fitted_nugget], color='gold', marker='o')
 
         plt.xlabel('Lag Distance')
@@ -233,7 +261,9 @@ def determine_kriging_errors(x, y, z,
                              nlags=6, 
                              determine_empirical_variogram=True, 
                              plot_variogram=False, 
-                             use_empirical_variogram=True):
+                             use_empirical_variogram=True,
+                             fit_type = 'curve_fit',
+                             fixed_nugget = None):
     """
     k-fold cross-validation procedure
     
@@ -243,7 +273,7 @@ def determine_kriging_errors(x, y, z,
     Parameters
 
         x, y, z:          Positions and values of points to determine kriging
-        A:                Percent of points to use for checking errors
+        k:                Percent of points to use for checking errors
         kargs:            Same as in procedure kriging_interpolation
 
     Output
@@ -283,6 +313,8 @@ def determine_kriging_errors(x, y, z,
                     determine_empirical_variogram = determine_empirical_variogram, 
                     plot_variogram = plot_variogram,
                     use_empirical_variogram = determine_empirical_variogram,
+                    fit_type = fit_type,
+                    fixed_nugget = fixed_nugget,
                     image_path=None)
         dpix = 1
         corr, _ = UK.execute('points', x_check_i, y_check_i)

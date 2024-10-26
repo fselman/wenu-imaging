@@ -1,5 +1,4 @@
 # ______ TBD  -------
-- Add fixing nugget in kriggin variogram model plot.
 - Notebooks 07b and 8 can be rearranged a little to simplify
   their use. Right now part is run on a loop, and another
   part is run on the last image from the loop. So the loop
@@ -10,6 +9,7 @@
 - Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE. Add fixing nugget in kriggin variogram model plot.
 - DONE. Divide notebook 07b into 3 notebooks:
     - 07b retains the photometry extraction from frame, but
       saves photometry data, together with some metadata to file.
