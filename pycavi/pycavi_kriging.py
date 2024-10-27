@@ -1,8 +1,12 @@
 import os
 import logging
 
+from datetime import datetime
+
 import numpy as np
 import matplotlib.pyplot as plt
+
+from astropy.io import fits
 
 from pykrige.uk import UniversalKriging  # Ordinary Kriging from pykrige
 
@@ -333,3 +337,82 @@ def determine_kriging_errors(x, y, z,
     z_corr = np.concatenate(z_corr)
 
     return x_check, y_check, z_check, z_corr
+
+# SAVING THE KRIGING MODEL
+#
+# We save an interpolated grid
+#
+def save_kriging_model(z_on_grid, npts,  header_dict, file_name):
+    """
+    Procedure to save the result of the interpolation. It will be saved 
+    as a gridata image that can be used later to interpolate the values.
+
+    The image z_on_grid of dimensions (n_pts, n_pts) was displayed with the command
+
+    img = ax.imshow(z_on_grid, extent=(1, dimx, 1, dimy), origin='lower', cmap='viridis')
+
+    """
+    # Create a FITS header
+    header = fits.Header()
+
+    # Add custom keywords
+    for akey, avalue in header_dict.items():
+        header[akey] = avalue
+
+    # and finally we add the ORIGFILE key with the ISO 8601 date format.
+    now = datetime.now()
+    formatted_date = now.strftime("%Y-%m-%dT%H:%S.%f")[:-3] # ISO 8601 truncated to millisecond
+    origfile = "APDP."+formatted_date+".fits"   # Auxiliary Pycavi Data product
+    header["ORIGFILE"] = (origfile, 'Unique name for this file')
+
+    # Create the PrimaryHDU with the data and header
+    hdu = fits.PrimaryHDU(data=z_on_grid.filled(np.nan), header=header)
+
+    # Save the subsampled Kriging data to a FITS file with custom headers
+    hdu.writeto(file_name, overwrite=True)
+
+def get_kriging_interpolation(kriging_fits_name, x_pix, y_pix):
+    """
+    This procedure returns the interpolated values from a grid
+    that was created using kriging.
+    """
+
+    # Load the FITS file with the metadata
+    with fits.open(kriging_fits_name) as hdul:
+        subsampled_kriging = hdul[0].data
+        header = hdul[0].header
+
+    # Extract metadata from the header
+    original_height = header['ORIG_H']
+    original_width = header['ORIG_W']
+    factor = header['FACTOR']
+    variogram_model = header['VARIOMOD']
+
+    # If Kriging parameters are included in the header
+    nugget = header.get('NUGGET', None)  # Use None if not present
+    psill = header.get('PSILL', None)
+    range_val = header.get('RANGE', None)
+
+    # Define the subsampled grid based on the original size and factor
+    x_subsampled = np.arange(0, original_width, factor)
+    y_subsampled = np.arange(0, original_height, factor)
+
+    # Define the extent for the subsampled image as if it covers the full original image size
+    extent = [0, original_width, 0, original_height]
+
+    # Set up an interpolator using the subsampled Kriging data
+    interpolator = RegularGridInterpolator((y_subsampled, x_subsampled), subsampled_kriging, method='linear')
+
+    # Function to map coordinates from original image space to the subsampled grid
+    def get_value_from_subsampled(x, y, extent, interpolator):
+        # Unpack the extent (xmin, xmax, ymin, ymax)
+        xmin, xmax, ymin, ymax = extent
+    
+        # Scale x and y to the subsampled grid
+        scaled_x = (x - xmin) / (xmax - xmin) * (len(x_subsampled) - 1)
+        scaled_y = (y - ymin) / (ymax - ymin) * (len(y_subsampled) - 1)
+
+    # Retrieve the interpolated value
+    return interpolator((scaled_y, scaled_x)), subsampled_kriging, header
+
+

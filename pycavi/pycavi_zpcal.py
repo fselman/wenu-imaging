@@ -2467,9 +2467,9 @@ def plot_residuals(x_subset, z_subset, ylim=(-0.25, 0.25)):
     plt.tight_layout()
     plt.show()
 
-def plot_illumination_correction(x_subset, y_subset, x_check, y_check, grid_x, grid_y, grid_z, z_on_grid, dimx, dimy, fit_plot, fit_image_title):
+def plot_illumination_correction(x_subset, y_subset, x_check, y_check, grid_x, grid_y, grid_z, dimx, dimy, fit_plot, fit_image_title):
     fig, ax = plt.subplots(figsize=(12,12))
-    img = ax.imshow(z_on_grid, extent=(1, dimx, 1, dimy), origin='lower', cmap='viridis')
+    img = ax.imshow(grid_z, extent=(1, dimx, 1, dimy), origin='lower', cmap='viridis')
     ax.set_title(fit_image_title, fontsize=24)
 
     divider = make_axes_locatable(ax)
