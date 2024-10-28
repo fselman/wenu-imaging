@@ -2506,12 +2506,13 @@ def plot_illumination_correction(x_subset, y_subset, x_check, y_check, grid_x, g
     ax.tick_params(axis='y', labelsize=14)
 
 
-    logging.info("Saving fit plot to {}".format(fit_plot))
-    plt.savefig(fit_plot)
+    if fit_plot is not None:
+        logging.info("Saving fit plot to {}".format(fit_plot))
+        plt.savefig(fit_plot)
 
     plt.show()
 
-def plot_corrected_residuals(x_subset, z_subset, z_corr, x_check, res_plot_str, determine_errors, err_type, ylim=(-0.25, 0.25)):
+def plot_corrected_residuals(x_subset, z_subset, z_corr, x_check, res_plot_str, determine_errors, err_type, ylim=(-0.25, 0.25), save_plot=None):
     fig = plt.figure(figsize=(12,5))
     fig.suptitle(os.path.basename(res_plot_str), fontsize=16)
     gs = GridSpec(1, 3, figure = fig)
@@ -2575,12 +2576,13 @@ def plot_corrected_residuals(x_subset, z_subset, z_corr, x_check, res_plot_str, 
                           horizontalalignment='center')
 
     plt.tight_layout()
-    logging.info("Saving residual plots to {}".format(res_plot_str+"_01.png"))
-    plt.savefig(res_plot_str+"_"+err_type+"_01.png")
+    logging.info("Saving residual plots to {}".format(save_plot))
+    if save_plot is not None:
+        plt.savefig(save_plot)
 
     plt.show()
 
-def plot_spatial_residuals(x_subset, y_subset, z_subset, z_corr, x_check, y_check, dimx, dimy, res_plot_str, err_type, ylim=(-0.25, 0.25)):
+def plot_spatial_residuals(x_subset, y_subset, z_subset, z_corr, x_check, y_check, dimx, dimy, res_plot_str, err_type, ylim=(-0.25, 0.25), save_plot=None):
     r = np.sqrt(x_subset**2+y_subset**2)
     theta = np.degrees(np.arctan2(y_subset-dimy/2.0, x_subset-dimx/2.0))
 
@@ -2634,8 +2636,9 @@ def plot_spatial_residuals(x_subset, y_subset, z_subset, z_corr, x_check, y_chec
 
     plt.tight_layout()
 
-    logging.info("Saving residual plots to {}".format(res_plot_str+"_02.png"))
-    plt.savefig(res_plot_str+"_"+err_type+"_02.png")
+    if save_plot is not None:
+        logging.info("Saving residual plots to {}".format(save_plot))
+        plt.savefig(save_plot)
                
     plt.show()
 

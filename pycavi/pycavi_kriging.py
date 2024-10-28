@@ -12,6 +12,7 @@ from pykrige.uk import UniversalKriging  # Ordinary Kriging from pykrige
 
 from lmfit import Model
 from scipy.optimize import curve_fit
+from scipy.interpolate import RegularGridInterpolator
 from scipy.spatial.distance import pdist
 
 def random_sampling_no_repeats(n, n_sel):
@@ -394,17 +395,18 @@ def get_kriging_interpolation(kriging_fits_name, x_pix, y_pix):
     range_val = header.get('RANGE', None)
 
     # Define the subsampled grid based on the original size and factor
-    x_subsampled = np.arange(0, original_width, factor)
-    y_subsampled = np.arange(0, original_height, factor)
+    x_subsampled = np.linspace(0, header['NAXIS1'], header['NAXIS1'])
+    y_subsampled = np.linspace(0, header['NAXIS2'], header['NAXIS2'])
 
     # Define the extent for the subsampled image as if it covers the full original image size
-    extent = [0, original_width, 0, original_height]
+    extent = [1, original_width, 1, original_height]
 
     # Set up an interpolator using the subsampled Kriging data
+    # print(original_height, x_subsampled.shape, original_width, y_subsampled.shape, factor, subsampled_kriging.shape)
     interpolator = RegularGridInterpolator((y_subsampled, x_subsampled), subsampled_kriging, method='linear')
 
     # Function to map coordinates from original image space to the subsampled grid
-    def get_value_from_subsampled(x, y, extent, interpolator):
+    def get_values(x, y, extent, interp):
         # Unpack the extent (xmin, xmax, ymin, ymax)
         xmin, xmax, ymin, ymax = extent
     
@@ -412,7 +414,12 @@ def get_kriging_interpolation(kriging_fits_name, x_pix, y_pix):
         scaled_x = (x - xmin) / (xmax - xmin) * (len(x_subsampled) - 1)
         scaled_y = (y - ymin) / (ymax - ymin) * (len(y_subsampled) - 1)
 
+        return interp((scaled_y, scaled_x))
+
     # Retrieve the interpolated value
-    return interpolator((scaled_y, scaled_x)), subsampled_kriging, header
+    gridx = np.linspace(1, original_width, factor)
+    gridy = np.linspace(1, original_height, factor)
+    grid_x, grid_y = np.meshgrid(gridx, gridy)
+    return get_values(x_pix, y_pix, extent, interpolator), grid_x, grid_y,  subsampled_kriging, header
 
 
