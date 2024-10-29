@@ -1,9 +1,4 @@
 # ______ TBD  -------
-- Modify zpcal notebook 7 to save a .clean file for
-  each filter. Make sure that it does not have unwanted
-  secondary effects downstream.
-- Add the code line to save the residual plots. We only
-  need to give the plot name right before plotting.
 - Notebooks 07b and 8 can be rearranged a little to simplify
   their use. Right now part is run on a loop, and another
   part is run on the last image from the loop. So the loop
@@ -14,6 +9,11 @@
 - Do PSF fitting photometry.
 
 # ------ DONE -------
+- DONE.Modify zpcal notebook 7 to save a .clean file for
+  each filter. Make sure that it does not have unwanted
+  secondary effects downstream.
+- DONE. Add the code line to save the residual plots. We only
+  need to give the plot name right before plotting.
 - DONE. Add a procedure to read kriging interpolation image to correct
   table of magnitudes.
     - more testing needed, and cleanup to make workflow easier to

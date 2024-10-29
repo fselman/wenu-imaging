@@ -447,7 +447,7 @@ class ZPCalibration:
         # Answer: because this script writes it.
         #
         skymapper_raw = self.calibrationdir + "/sm_qry_{}.csv".format(self.object)
-        skymapper_clean = skymapper_raw[:-4] + "_clean.csv"
+        skymapper_clean = skymapper_raw[:-4]+"_"+self.band + "_clean.csv"
         self.phot_cal_file = skymapper_clean
         if os.path.isfile(skymapper_clean):
             logging.info("get_skymapper_df: clean catalogue found. Reading it.")
@@ -457,7 +457,7 @@ class ZPCalibration:
             # Before returning we write a reg file from the catalogue
             # we create region files for the photometric catalogue.
             pycavi_tools.create_ds9_reg_file(skymapper_df["raj2000"].to_numpy(), skymapper_df["dej2000"].to_numpy(), 
-                                             skymapper_clean[:-4]+".reg", radius=5.0, coords="fk5")
+                                             skymapper_clean[:-4]+"_"+self.band+".reg", radius=5.0, coords="fk5")
         else:
             if os.path.isfile(skymapper_raw):
                 logging.info("get_skymapper_df: Raw Skymapper file found. Reading it.")
@@ -506,7 +506,7 @@ class ZPCalibration:
             # Before returning we write a reg file from the catalogue
             # we create region files for the photometric catalogue.
             pycavi_tools.create_ds9_reg_file(skymapper_df["raj2000"].to_numpy(), skymapper_df["dej2000"].to_numpy(), 
-                                             self.phot_cal_file[:-4]+".reg", radius=5.0, coords="fk5")
+                                             self.phot_cal_file[:-4]+"_"+self.band+".reg", radius=5.0, coords="fk5")
 
         return skymapper_df
 
@@ -603,7 +603,7 @@ class ZPCalibration:
 
             # we write the csv file for further data checks
             sdss_raw = self.calibrationdir + "/sdss_qry_{}.csv".format(self.object)
-            sdss_clean = sdss_raw[:-4] + "_clean.csv"
+            sdss_clean = sdss_raw[:-4] + "_" + self.band + "_clean.csv"
             self.phot_cal_file = sdss_clean
             self.phot_cal_clean = sdss_clean
             sdss_df.to_csv(sdss_clean, index=False)
@@ -611,7 +611,7 @@ class ZPCalibration:
             # Before returning we write a reg file from the catalogue
             # we create region files for the photometric catalogue.
             pycavi_tools.create_ds9_reg_file(sdss_df["raj2000"].to_numpy(), sdss_df["dej2000"].to_numpy(), 
-                                             sdss_raw[:-4]+".reg", radius=5.0, coords="fk5")
+                                             sdss_raw[:-4]+"_"+self.band+".reg", radius=5.0, coords="fk5")
 
             return sdss_df
         else:
@@ -663,7 +663,7 @@ class ZPCalibration:
         else:
             raise f"Band {self.band} not recognized"
 
-        mag_max=19.5
+        mag_max=self.query_max_mag
         query_str=None
         check_gaia_params=True
 
@@ -733,10 +733,10 @@ AND
             gaia_df['i_SDSS'] = gaia_df['i_psf']
             gaia_df['z_SDSS'] = gaia_df['z_psf']
 
-            # at this point the datframe has the same format a the sdss case
+            # at this point the dataframe has the same format a the sdss case
            # we write the csv file for further data checks
             gaia_raw = self.calibrationdir + "/gaia3_qry_{}.csv".format(self.object)
-            gaia_clean = gaia_raw[:-4] + "_clean.csv"
+            gaia_clean = gaia_raw[:-4]+"_"+self.band + "_clean.csv"
             self.phot_cal_file = gaia_clean
             self.phot_cal_clean = gaia_clean
             gaia_df.to_csv(gaia_clean, index=False)
@@ -744,7 +744,7 @@ AND
             # Before returning we write a reg file from the catalogue
             # we create region files for the photometric catalogue.
             pycavi_tools.create_ds9_reg_file(gaia_df["raj2000"].to_numpy(), gaia_df["dej2000"].to_numpy(),
-                                             gaia_raw[:-4]+".reg", radius=5.0, coords="fk5")
+                                             gaia_raw[:-4]+"_"+self.band+".reg", radius=5.0, coords="fk5")
 
         return gaia_df
 
@@ -2512,7 +2512,15 @@ def plot_illumination_correction(x_subset, y_subset, x_check, y_check, grid_x, g
 
     plt.show()
 
-def plot_corrected_residuals(x_subset, z_subset, z_corr, x_check, res_plot_str, determine_errors, err_type, ylim=(-0.25, 0.25), save_plot=None):
+def plot_corrected_residuals(x_subset, z_subset, 
+                             x_check, z_corr, 
+                             res_plot_str, determine_errors, err_type, 
+                             ylim=(-0.25, 0.25), 
+                             save_plot=None):
+    """
+    Plot the raw residuals, and the residuals after correcting the illumination
+    effects. Display the standard deviation of both residuals.
+    """
     fig = plt.figure(figsize=(12,5))
     fig.suptitle(os.path.basename(res_plot_str), fontsize=16)
     gs = GridSpec(1, 3, figure = fig)
@@ -2582,7 +2590,16 @@ def plot_corrected_residuals(x_subset, z_subset, z_corr, x_check, res_plot_str, 
 
     plt.show()
 
-def plot_spatial_residuals(x_subset, y_subset, z_subset, z_corr, x_check, y_check, dimx, dimy, res_plot_str, err_type, ylim=(-0.25, 0.25), save_plot=None):
+def plot_spatial_residuals(x_subset, y_subset, z_subset, 
+                           x_check, y_check, z_corr, 
+                           dimx, dimy, 
+                           res_plot_str, err_type, 
+                           ylim=(-0.25, 0.25), 
+                           save_plot=None):
+    """
+    Plot residuals versus positional variables and azimuth to visually
+    inspect possible leftover spatial structure.
+    """
     r = np.sqrt(x_subset**2+y_subset**2)
     theta = np.degrees(np.arctan2(y_subset-dimy/2.0, x_subset-dimx/2.0))
 
