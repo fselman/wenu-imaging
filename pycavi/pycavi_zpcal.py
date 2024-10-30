@@ -38,7 +38,7 @@ from astropy.time import Time
 from astropy.visualization import simple_norm
 from astropy.wcs import WCS
 
-from photutils import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
+from photutils.aperture import SkyCircularAperture, SkyCircularAnnulus, aperture_photometry
 
 from skimage.transform import resize
 
@@ -663,8 +663,6 @@ class ZPCalibration:
         else:
             raise f"Band {self.band} not recognized"
 
-        mag_max=self.query_max_mag
-        query_str=None
         check_gaia_params=True
 
         #query_conesearch = str(input_ra)+','+str(input_dec)+','+str(radius_search)
@@ -680,9 +678,13 @@ class ZPCalibration:
             return None
         print(bands_string)
 
-        if query_str is None:
-            query_str2=f"""
-SELECT dr3.source_id, dr3.ra, dr3.dec, classprob_dsc_combmod_star,
+        query_str=f"""
+SELECT dr3.source_id, dr3.ra, dr3.ra_error, dr3.dec, dr3.dec_error, dr3.parallax, dr3.parallax_error, 
+dr3.pmra, dr3.pmra_error, dr3.pmdec, dr3.pmdec_error, 
+dr3.phot_g_mean_flux, dr3.phot_g_mean_flux_error, dr3.phot_g_mean_mag,
+dr3.phot_bp_mean_flux, dr3.phot_bp_mean_flux_error, dr3.phot_bp_mean_mag,
+dr3.phot_rp_mean_flux, dr3.phot_rp_mean_flux_error, dr3.phot_rp_mean_mag,
+dr3.radial_velocity, dr3.radial_velocity_error, dr3.classprob_dsc_combmod_star,
 gspc.source_id, {bands_string}
 FROM gaiadr3.gaia_source AS dr3
 JOIN gaiadr3.synthetic_photometry_gspc AS gspc
@@ -691,41 +693,51 @@ WHERE
     ra BETWEEN {r1_str} AND {r2_str}
 AND
     dec BETWEEN {dec1_str} AND {dec2_str}
-AND
-    {mag_band} < {str(mag_max)}
         """
 
         logging.info('Query used:\n')
-        logging.info(query_str2)
-        job = Gaia.launch_job_async(query_str2)
-        gaia_astropy_table = job.get_results()
-        if check_gaia_params:
-            for column in gaia_astropy_table.columns:
-                print(column)
+        logging.info(query_str)
 
-        if gaia_astropy_table is not None:
+        gaia_raw_savepath = self.calibrationdir + "/gaia3_qry_{}_raw.csv".format(self.object)  # the savepath to the gaia query
+        if not os.path.isfile(gaia_raw_savepath):
+        
+            job = Gaia.launch_job_async(query_str)
+            gaia_astropy_table = job.get_results()
+    
+            # remove duplicated column with the source id (gspc.source_id)
+            gaia_astropy_table.remove_column('source_id')
+            if check_gaia_params:
+                for column in gaia_astropy_table.columns:
+                    print(column)
+        
             gaia_df = gaia_astropy_table.to_pandas()
 
             # we calculate the error in magnitudes from the errors in flux
             # and add a column with the magnitude error
-            err_band_names = {'u_sdss': 'e_u_psf', 'g_sdss': 'e_g_psf', 'r_sdss': 'e_r_psf', 'i_sdss': 'e_i_psf', 'z_sdss': 'e_z_psf'}
+            err_band_names = {'u_sdss': 'e_u_psf', 'g_sdss': 'e_g_psf', 'r_sdss': 'e_r_psf', 'i_sdss': 'e_i_psf', 'z_sdss': 'e_z_psf', 
+                              'phot_g_mean': 'phot_g_mean_mag_error', 'phot_bp_mean': 'phot_bp_mean_mag_error', 
+                              'phot_rp_mean': 'phot_rp_mean_mag_error'}
             for zband in err_band_names.keys():
                 gaia_df[err_band_names[zband]] = (gaia_df[zband+'_flux_error'] / gaia_df[zband+'_flux'])*2.5/np.log(10.)
-
+         
             # we erase the flux columns
             for zband in err_band_names.keys():
                 gaia_df = gaia_df.drop(zband+'_flux_error', axis=1)
                 gaia_df = gaia_df.drop(zband+'_flux', axis=1)
-
+    
             # we rename some columns so that all looks the same
             gaia_df = gaia_df.rename(columns={'ra': 'raj2000', 'dec': 'dej2000', \
+                                  'ra_error': 'raj2000_error', 'dec_error':'dej2000_error', \
+                                  'phot_g_mean_mag': 'g_mag', 'phot_g_mean_mag_error':'g_mag_error', \
+                                  'phot_bp_mean_mag': 'bp_mag', 'phot_bp_mean_mag_error':'bp_mag_error', \
+                                  'phot_rp_mean_mag': 'rp_mag', 'phot_rp_mean_mag_error':'rp_mag_error', \
                                   'u_sdss_mag': 'u_psf', \
                                   'g_sdss_mag': 'g_psf', \
                                   'r_sdss_mag': 'r_psf', \
                                   'i_sdss_mag': 'i_psf', \
                                   'z_sdss_mag': 'z_psf', \
                                   'classprob_dsc_combmod_star': 'class_star'})
-
+    
             # and we add some standard nomenclature columns
             gaia_df['u_SDSS'] = gaia_df['u_psf']
             gaia_df['g_SDSS'] = gaia_df['g_psf']
@@ -733,18 +745,44 @@ AND
             gaia_df['i_SDSS'] = gaia_df['i_psf']
             gaia_df['z_SDSS'] = gaia_df['z_psf']
 
-            # at this point the dataframe has the same format a the sdss case
-           # we write the csv file for further data checks
-            gaia_raw = self.calibrationdir + "/gaia3_qry_{}.csv".format(self.object)
-            gaia_clean = gaia_raw[:-4]+"_"+self.band + "_clean.csv"
-            self.phot_cal_file = gaia_clean
-            self.phot_cal_clean = gaia_clean
-            gaia_df.to_csv(gaia_clean, index=False)
+            # sort the columns arbitrarily
+            columns_sorted=['SOURCE_ID', 'raj2000', 'raj2000_error', 'dej2000', 'dej2000_error', 'parallax', 'parallax_error', 
+                            'pmra', 'pmra_error', 'pmdec', 'pmdec_error', 'radial_velocity', 'radial_velocity_error', 
+                            'g_mag', 'g_mag_error', 'bp_mag', 'bp_mag_error', 'rp_mag', 'rp_mag_error', 
+                            'u_psf', 'e_u_psf', 'g_psf', 'e_g_psf', 'r_psf', 'e_r_psf', 'i_psf', 'e_i_psf', 'z_psf', 'e_z_psf', 
+                            'u_SDSS', 'g_SDSS', 'r_SDSS', 'i_SDSS', 'z_SDSS', 'class_star']
+            gaia_df = gaia_df.reindex(columns=columns_sorted)
 
-            # Before returning we write a reg file from the catalogue
-            # we create region files for the photometric catalogue.
-            pycavi_tools.create_ds9_reg_file(gaia_df["raj2000"].to_numpy(), gaia_df["dej2000"].to_numpy(),
-                                             gaia_raw[:-4]+"_"+self.band+".reg", radius=5.0, coords="fk5")
+            # Lastly, we save the dataframe with the gaia query data
+            gaia_df.to_csv(gaia_raw_savepath, index=False)
+
+        else:
+            gaia_df = pd.read_csv(gaia_raw_savepath)
+
+        # now that the raw gaia query has been saved, we can clean the catalogue based on magnitude and class star
+        # first we select those source that have magnitude lower than self.query_mag_max
+        # and second, by selecting those source that have a class star larger than 0.999
+        sel = np.ones(len(gaia_df), dtype=bool)
+        for col in gaia_df.columns:
+            if 'mag' in col or 'psf' in col:
+                sel_col = gaia_df[col] <= self.query_max_mag
+                sel = sel & sel_col
+        sel_star = gaia_df['class_star'] > 0.999
+        sel = sel & sel_star
+        gaia_df = gaia_df.loc[sel]
+        
+        # at this point the dataframe has the same format a the sdss case
+        # we write the csv file for further data checks
+        
+        gaia_clean_savepath = gaia_raw_savepath[:-8]+"_"+self.band + "_clean.csv"
+        self.phot_cal_file = gaia_clean_savepath
+        self.phot_cal_clean = gaia_clean_savepath
+        gaia_df.to_csv(gaia_clean_savepath, index=False)
+
+        # Before returning we write a reg file from the catalogue
+        # we create region files for the photometric catalogue.
+        pycavi_tools.create_ds9_reg_file(gaia_df["raj2000"].to_numpy(), gaia_df["dej2000"].to_numpy(),
+                                         gaia_clean_savepath[:-4]+".reg", radius=5.0, coords="fk5")
 
         return gaia_df
 
