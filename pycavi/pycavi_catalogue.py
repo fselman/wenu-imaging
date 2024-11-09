@@ -310,8 +310,10 @@ def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
     # Illumination correction cheking
     x_pxl = catalogue['x_image_'+band.lower()]
     y_pxl = catalogue['y_image_'+band.lower()]
-    r_pxl = np.sqrt(x_pxl**2 + y_pxl**2)
-    theta_pxl = np.arctan2(y_pxl-np.amax(y_pxl)/2, x_pxl-np.amax(x_pxl)/2)
+    center_x = np.nanmax(x_pxl)/2
+    center_y = np.nanmax(y_pxl)/2
+    r_pxl = np.sqrt((x_pxl-center_x)**2 + (y_pxl-center_y)**2)
+    theta_pxl = np.arctan2(y_pxl-center_y, x_pxl-center_x)
     
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(8, 8))
     ax[0,0].scatter(x_pxl[sel], mag_py[sel]-mag_gaia[sel], s=1, color='black')
