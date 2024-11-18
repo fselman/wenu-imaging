@@ -666,8 +666,8 @@ class ZPCalibration:
         check_gaia_params=True
 
         #query_conesearch = str(input_ra)+','+str(input_dec)+','+str(radius_search)
-        r1_str = str(input_ra - r_ra)
-        r2_str = str(input_ra + r_ra)
+        r1_str = str(input_ra - r_ra/np.cos(input_dec*np.pi/180))
+        r2_str = str(input_ra + r_ra/np.cos(input_dec*np.pi/180))
         dec1_str = str(input_dec - r_dec)
         dec2_str = str(input_dec + r_dec)
 
@@ -2205,6 +2205,7 @@ def extract_calibration(image_path):
     pixel_coords = zp_cal.wcs.wcs_world2pix(coords, 1)         # the 1 ensure FITS stndard of coordinates
     zp_cal.x = pixel_coords[:,0]
     zp_cal.y = pixel_coords[:,1]
+    
 
     # we check if a reg file exists, if not we create it
     logging.info("extract_calibration: checking existence of {}".format(query_catalogue_path[:-4]+".reg"))
@@ -2564,13 +2565,13 @@ def plot_corrected_residuals(x_subset, z_subset,
     gs = GridSpec(1, 3, figure = fig)
 
     z_mean_u, z_median_u, z_std_u = sigma_clipped_stats(z_subset, sigma=3.0, maxiters=5)
-    logging.info("mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean_u, 4), round(z_median_u, 4), round(z_std_u, 4)))
+    logging.info("subset mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean_u, 4), round(z_median_u, 4), round(z_std_u, 4)))
 
     z_mean, z_median, z_std = sigma_clipped_stats(z_corr, sigma=3, maxiters=5)
-    logging.info("mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean, 4), round(z_median, 4), round(z_std, 4)))
+    logging.info("corrected mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean, 4), round(z_median, 4), round(z_std, 4)))
 
     z_mean_subset, z_median_subset, z_std_subset = sigma_clipped_stats(z_subset, sigma=3, maxiters=5)
-    logging.info("mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean_subset, 4), round(z_median_subset, 4), round(z_std_subset, 4)))
+    # logging.info("mean: {}  --  median: {}  --  stdev: {}".format(round(z_mean_subset, 4), round(z_median_subset, 4), round(z_std_subset, 4)))
 
     # Residuals plot
     ax1 = fig.add_subplot(gs[0, 0:2])
