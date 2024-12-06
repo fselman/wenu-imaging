@@ -8,6 +8,12 @@ from astropy.table import Table, hstack
 # for cross matching the catalogues
 from astropy.coordinates import SkyCoord
 import astropy.units as u
+import pandas as pd
+
+# for downloading SkyMapper data
+import urllib.request
+
+import os
 
 # for check plots
 import matplotlib.pyplot as plt
@@ -161,6 +167,66 @@ def clean_merged_catalogue(merged_catalogue):
     
     return clean_catalogue
 
+def crossmatch_against_SkyMapper(catalogue_path):
+    """
+    Download SkyMapper data 
+    
+    parameters:
+    frame: str, the path to the frame
+
+    return:
+    merged_table: astropy.Table, the resulting table after do the cross match 
+    """
+    # first read ra and dec from the frame headers
+    frame_headers = fits.getheader(catalogue_path)
+    ra = frame_headers['RA']
+    dec = frame_headers['DEC']
+    obj = frame_headers['OBJECT'].replace(' ','_')
+
+    if dec > 0:
+        print('No available SkyMapper data: target not in the southern hemisphere')
+        return None
+    
+    work_dir = '/'.join(catalogue_path.split('/')[:-1])
+    
+    # second step, download the skymapper data
+    # query radius set up to 1.0 degree
+    query_str = "http://skymapper.anu.edu.au/sm-cone/public/query?RA=" + str(ra) + "&DEC=" + str(dec) + "&SR=1.0&VERB=3&RESPONSEFORMAT=CSV"
+    skymapper_raw = work_dir + '/SkyMapper_query_' + obj + '.csv'
+    # if file does not exist, we download the data
+    if not os.path.isfile(skymapper_raw):
+        with urllib.request.urlopen(query_str) as f:
+                    charset = f.headers.get_content_charset()
+                    line_list = f.read().decode(charset).split('\r\n')
+        with open(skymapper_raw, "w") as f:
+                    for aline in line_list:
+                        print(aline, file=f)
+    # check if the download was ok based on the size of the downloaded file
+    if os.path.getsize(skymapper_raw) < 1024:
+        os.remove(skymapper_raw)
+        print('Error: download of the data failed')
+        return None
+    skymapper_df = pd.read_csv(skymapper_raw)
+    skymapper_table = Table.from_pandas(skymapper_df)
+    for col in skymapper_table.colnames:
+        skymapper_table.rename_column(col, col+'_sm')
+    
+    # next step, crossmatch the catalogues
+    catalogue_table = load_catalogue(catalogue_path, extnumber=1)
+    catalogue_header = fits.getheader(catalogue_path)
+
+    merged_table = crossmatch_catalogues(cat_1=catalogue_table, cat_2=skymapper_table, 
+                                         radec_tag_1=['raj2000', 'dej2000'], radec_tag_2=['raj2000_sm', 'dej2000_sm'])
+
+    merged_table_savepath = work_dir + '/' + obj + '_merged_catalogue_skymapper.fits'
+
+    # Save table1 as a FITS file with the copied headers
+    table_hdu = fits.BinTableHDU(data=merged_table)
+    primary_hdu = fits.PrimaryHDU(header=catalogue_header)
+    hdul = fits.HDUList([primary_hdu, table_hdu])
+    hdul.writeto(merged_table_savepath, overwrite=True)
+    return merged_table
+
 def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
     """
     Apply the illumination correction from Krigging method to the catalogue.
@@ -231,13 +297,15 @@ def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
 
     return 1
 
-def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
+def create_catalogue_checkplots(catalogue_path, band, band_ref, magmin=13.0, magmax=17.0):
     """
     Create several check plots over the input catalogue to check the quality of the photometry, astrometry, and illumination correction.
 
     Parameters:
         catalogue_path: str. The absolute path to the catalogue to check.
-        band: str. The band to analize (e.g. r_SDSS)
+        band: str. The band to compare from the pycavi catalogue (e.g. 'mag_petro_r_sdss')
+        band_ref: str. The band to compare from the reference catalogue (e.g. 'r_sdss_gaia')
+        
         magmin: float. Minimum magnitude in the reference catalogue used for some check plots. Default=13.0
         magmax: float. Maximum magnitude in the reference catalogue used for some check plots. Default=17.0
         
@@ -251,27 +319,48 @@ def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
     basedir = '/'.join(basedir)
 
     target_name = catalogue_headers['OBJECT'].replace(' ','_')
+    reference_catalogue_name = None
+    if 'gaia' in band_ref:
+        reference_catalogue_name = 'Gaia DR3'
+    elif 'sm' in band_ref:
+        reference_catalogue_name = 'SkyMapper DR4'
+    elif 'vphas' in band_ref:
+        reference_catalogue_name = 'VPHAS+'
+    if reference_catalogue_name is None:
+        print('Error: reference caatlogue from band was not recognized')
+        return 1
     
     # photometric checks, differences with the gaia reference catalogue
-    mag_py = catalogue['mag_petro_'+band.lower()]
-    mag_gaia = catalogue[band+'_gaia']
+    band_exists = False
+    bandref_exists = False
+    for col in catalogue.columns:
+        if col == band:
+            band_exists = True
+        if col == band_ref:
+            bandref_exists = True
+    if not (band_exists or bandref_exists):
+        print('Error: band not found in table column')
+        return 2
+    
+    mag_py = catalogue[band]
+    mag_ref = catalogue[band_ref]
 
-    sel = (mag_gaia >= magmin) & (mag_gaia <= magmax)
-    mean_dif = np.nanmean(mag_py[sel]-mag_gaia[sel])
-    median_dif = np.nanmedian(mag_py[sel]-mag_gaia[sel])
-    std_dif = np.nanstd(mag_py[sel]-mag_gaia[sel])
+    sel = (mag_ref >= magmin) & (mag_ref <= magmax)
+    mean_dif = np.nanmean(mag_py[sel]-mag_ref[sel])
+    median_dif = np.nanmedian(mag_py[sel]-mag_ref[sel])
+    std_dif = np.nanstd(mag_py[sel]-mag_ref[sel])
     stats_text = 'mean:{:.2f}\nmedian:{:.2f}\nstd:{:.2f}'.format(mean_dif, median_dif, std_dif)
 
     bins = np.arange(8, 20, 1)
     
-    # pycavi versus gaia
+    # pycavi versus ref photometry
     fig, ax = plt.subplots(ncols=2, width_ratios=(2,1), figsize=(7, 4.4), dpi=120)
-    ax[0].scatter(mag_gaia, mag_py-mag_gaia, s=1, color='black')
+    ax[0].scatter(mag_ref, mag_py-mag_ref, s=1, color='black')
 
     for i in range(len(bins)-1):
-        sel_bin = (mag_gaia > bins[i]) & (mag_gaia < bins[i+1])
-        median_bin = np.nanmedian(mag_py[sel_bin]-mag_gaia[sel_bin])
-        std_bin = np.nanstd(mag_py[sel_bin]-mag_gaia[sel_bin])
+        sel_bin = (mag_ref > bins[i]) & (mag_ref < bins[i+1])
+        median_bin = np.nanmedian(mag_py[sel_bin]-mag_ref[sel_bin])
+        std_bin = np.nanstd(mag_py[sel_bin]-mag_ref[sel_bin])
         ax[0].errorbar(x=0.5*(bins[i]+bins[i+1]), y=median_bin, yerr=std_bin, xerr=0.5, marker='o', color='tab:orange', ms=2)
     
     ax[0].axhline(0, ls='--', color='tab:blue', zorder=-1)
@@ -279,10 +368,10 @@ def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
     ax[0].axvline(magmax, ls='--', color='tab:blue', zorder=-1)
     ax[0].set_ylim(-1,1)
     ax[0].invert_yaxis()
-    ax[0].set_xlabel('Gaia [mag]')
-    ax[0].set_ylabel('Pycavi - Gaia [mag]')
+    ax[0].set_xlabel('{} [mag]'.format(reference_catalogue_name))
+    ax[0].set_ylabel('Pycavi - {} [mag]'.format(reference_catalogue_name))
     
-    ax[1].hist(mag_py[sel]-mag_gaia[sel], bins='fd', orientation='horizontal', color='black')
+    ax[1].hist(mag_py[sel]-mag_ref[sel], bins='fd', orientation='horizontal', color='black')
     ax[1].axhline(0, ls='--', color='tab:blue', zorder=-1)
     ax[1].text(x=0.05, y=0.95, s=stats_text, transform=ax[1].transAxes, bbox=dict(facecolor='oldlace'), va='top', ha='left')
     ax[1].set_ylim(-1,1)
@@ -290,43 +379,45 @@ def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
     ax[1].yaxis.set_ticklabels([])
     ax[1].set_xlabel('counts')
     
-    fig.suptitle('Photometric validation Gaia DR3\n{} {}'.format(target_name, band))
+    fig.suptitle('Photometric validation {}\n{} {}'.format(reference_catalogue_name, target_name, band))
     plt.tight_layout()
-    plt.savefig(basedir+'/{}_photometric_validation_Gaia.png'.format(target_name), format='png', facecolor='white')
+    plt.savefig(basedir+'/{}_photometric_validation_{}.png'.format(target_name, reference_catalogue_name.lower().replace(' ','_')), 
+                format='png', facecolor='white')
     plt.show()
 
     # Histogram of magnitudes
     fig, ax = plt.subplots(figsize=(7, 4.4), dpi=120)
-    ax.hist(mag_gaia, bins=np.arange(8, 22.1, 0.1), histtype='step', label='Gaia DR3')
+    ax.hist(mag_ref, bins=np.arange(8, 22.1, 0.1), histtype='step', label='Gaia DR3')
     ax.hist(mag_py, bins=np.arange(8, 22.1, 0.1), histtype='step', label='Pycavi')
     ax.legend(loc='upper left')
     ax.set_xlabel('Magnitude')
     ax.set_ylabel('Counts')
-    ax.set_title('Objects detected Pycavi vs Gaia DR3\n{} {}'.format(target_name, band))
+    ax.set_title('Objects detected Pycavi vs {}\n{} {}'.format(reference_catalogue_name, target_name, band))
     plt.tight_layout()
-    plt.savefig(basedir+'/{}_objects_detected_Gaia.png'.format(target_name), format='png', facecolor='white')
+    plt.savefig(basedir+'/{}_objects_detected_{}.png'.format(target_name, reference_catalogue_name.lower().replace(' ','_')), 
+                format='png', facecolor='white')
     plt.show()
 
     # Illumination correction cheking
-    x_pxl = catalogue['x_image_'+band.lower()]
-    y_pxl = catalogue['y_image_'+band.lower()]
+    x_pxl = catalogue['x_image_'+'_'.join(band.split('_')[2:])]
+    y_pxl = catalogue['y_image_'+'_'.join(band.split('_')[2:])]
     center_x = np.nanmax(x_pxl)/2
     center_y = np.nanmax(y_pxl)/2
     r_pxl = np.sqrt((x_pxl-center_x)**2 + (y_pxl-center_y)**2)
     theta_pxl = np.arctan2(y_pxl-center_y, x_pxl-center_x)
     
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(8, 8))
-    ax[0,0].scatter(x_pxl[sel], mag_py[sel]-mag_gaia[sel], s=1, color='black')
+    ax[0,0].scatter(x_pxl[sel], mag_py[sel]-mag_ref[sel], s=1, color='black')
     ax[0,0].set_xlabel('X [pxl]')
     
-    ax[0,1].scatter(y_pxl[sel], mag_py[sel]-mag_gaia[sel], s=1, color='black')
+    ax[0,1].scatter(y_pxl[sel], mag_py[sel]-mag_ref[sel], s=1, color='black')
     ax[0,1].set_xlabel('Y [pxl]')
     ax[0,1].yaxis.set_ticklabels([])
     
-    ax[1,0].scatter(r_pxl[sel], mag_py[sel]-mag_gaia[sel], s=1, color='black')
+    ax[1,0].scatter(r_pxl[sel], mag_py[sel]-mag_ref[sel], s=1, color='black')
     ax[1,0].set_xlabel('r [pxl]')
     
-    ax[1,1].scatter(theta_pxl[sel], mag_py[sel]-mag_gaia[sel], s=1, color='black')
+    ax[1,1].scatter(theta_pxl[sel], mag_py[sel]-mag_ref[sel], s=1, color='black')
     ax[1,1].set_xlabel('Theta [rad]')
     ax[1,1].yaxis.set_ticklabels([])
     
@@ -335,7 +426,7 @@ def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
         axi.set_ylim(-0.25,0.25)
         axi.invert_yaxis()
     
-    fig.supylabel('Pycavi - Gaia [mag]')
+    fig.supylabel('Pycavi - {} [mag]'.format(reference_catalogue_name))
     fig.suptitle('Illumination correction checking\n{} {}'.format(target_name, band))
     plt.savefig(basedir+'/{}_illumination_correction_checking.png'.format(target_name), format='png', facecolor='white')
     plt.show()    
@@ -343,12 +434,12 @@ def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
     # Astrometric validation
     ra_py = catalogue['raj2000']
     de_py = catalogue['dej2000']
-    ra_gaia = catalogue['raj2000_gaia']
-    de_gaia = catalogue['dej2000_gaia']
+    ra_ref = catalogue['raj2000_'+band_ref.split('_')[-1]]
+    de_ref = catalogue['dej2000_'+band_ref.split('_')[-1]]
 
-    mean_de = np.nanmean(de_gaia) * np.pi/180
-    delta_ra = np.cos(mean_de) * (ra_py - ra_gaia) * 3600
-    delta_de = (de_py - de_gaia) * 3600
+    mean_de = np.nanmean(de_ref) * np.pi/180
+    delta_ra = np.cos(mean_de) * (ra_py - ra_ref) * 3600
+    delta_de = (de_py - de_ref) * 3600
     
     t = np.linspace(0, 2*np.pi, 100)
     x = np.cos(t)
@@ -365,9 +456,10 @@ def create_catalogue_checkplots(catalogue_path, band, magmin=13.0, magmax=17.0):
     ax.set_aspect(1)
     ax.set_xlabel(r'$\Delta$ RA [arcsec]')
     ax.set_ylabel(r'$\Delta$ Dec [arcsec]')
-    ax.set_title('Astrometric validation Pycavi vs Gaia\n{} {}'.format(target_name, band))
+    ax.set_title('Astrometric validation Pycavi vs {}\n{} {}'.format(reference_catalogue_name, target_name, band))
     plt.tight_layout()
-    plt.savefig(basedir+'/{}_astrometric_validation_Gaia.png'.format(target_name), format='png', facecolor='white')
+    plt.savefig(basedir+'/{}_astrometric_validation_{}.png'.format(target_name, reference_catalogue_name), 
+                format='png', facecolor='white')
     plt.show()
 
     return 0
