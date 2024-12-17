@@ -307,59 +307,30 @@ class SExtractor(object):
          "value": "QUIET"},
 
         # -- Extra-keys (will not be saved in the main configuration file
-        #    Some of them are needed by SCAMP (XWIN_IMAGE, YWIN_IMAGE, 
-        #    ERRAWIN_IMAGE, ERRBWIN_IMAGE, FLUX_AUTO, FLUXERR_AUTO, ERRTHETAWIN_IMAGE)
 
-        # (FSE 2024-07-09): For Pycavi we edited the list to contain trhe following:
-        # NUMBER                   Running object number
-        # EXT_NUMBER               FITS extension number
-        # FLUX_ISO                 Isophotal flux                                            [count]
-        # FLUXERR_ISO              RMS error for isophotal flux                              [count]
-        # MAG_ISO                  Isophotal magnitude                                       [mag]
-        # MAGERR_ISO               RMS error for isophotal magnitude                         [mag]
+        # (LC, Oct 30): Minimum sextractor parameters to run scamp
+
         # FLUX_AUTO                Flux within a Kron-like elliptical aperture               [count]
         # FLUXERR_AUTO             RMS error for AUTO flux                                   [count]
-        # MAG_AUTO                 Kron-like elliptical aperture magnitude                   [mag]
-        # MAGERR_AUTO              RMS error for AUTO magnitude                              [mag]
-        # A_IMAGE                  Profile RMS along major axis                              [pixel]
-        # B_IMAGE                  Profile RMS along minor axis                              [pixel]
-        # THETA_IMAGE              Position angle (CCW/x)                                    [deg]
         # XWIN_IMAGE               Windowed position estimate along x                        [pixel]
         # YWIN_IMAGE               Windowed position estimate along y                        [pixel]
-        # ERRX2WIN_IMAGE           Variance of windowed pos along x                          [pixel**2]
-        # ERRY2WIN_IMAGE           Variance of windowed pos along y                          [pixel**2]
-        # ERRXYWIN_IMAGE           Covariance of windowed pos between x and y                [pixel**2]
-        # ERRX2WIN_WORLD           Variance of windowed pos along X-WORLD (alpha)            [deg**2]
-        # ERRY2WIN_WORLD           Variance of windowed pos along Y-WORLD (delta)            [deg**2]
-        # ERRXYWIN_WORLD           Covariance of windowed pos X-WORLD/Y-WORLD                [deg**2]
         # ERRAWIN_IMAGE            RMS windowed pos error along major axis                   [pixel]
         # ERRBWIN_IMAGE            RMS windowed pos error along minor axis                   [pixel]
         # ERRTHETAWIN_IMAGE        Windowed error ellipse pos angle (CCW/x)                  [deg]
         # FLAGS                    Extraction flags
         # FLAGS_WEIGHT             Weighted extraction flags
-        # FLAGS_WIN                Flags for WINdowed parameters
-        # FWHM_IMAGE               FWHM assuming a gaussian core                             [pixel]
+        # IMAFLAGS_ISO             FLAG-image flags OR'ed over the iso. profile
+        # FLUX_RADIUS              Fraction-of-light radii
         # ELONGATION               A_IMAGE/B_IMAGE
-        # ELLIPTICITY              1 - B_IMAGE/A_IMAGE
-        # CLASS_STAR               S/G classifier output
 
         "PARAMETERS_LIST":
         {"comment": '[Extra key] catalog contents (to put in PARAMETERS_NAME)',
-         #"value": ["NUMBER", "XWIN_IMAGE", "YWIN_IMAGE","ERRAWIN_IMAGE",
-                   #"ERRBWIN_IMAGE", "ERRTHETAWIN_IMAGE",
-                   #"FLUX_BEST", "FLUXERR_BEST", 
-                   #"X_IMAGE", "Y_IMAGE", "X_WORLD", "Y_WORLD", 
-                   #"FLAGS", "FWHM_IMAGE","FLUX_RADIUS","FLUX_AUTO", 
-                   #"FLUXERR_AUTO", "MAG_AUTO", "MAG_APER","ISOAREA_IMAGE",
-                   #"ISOAREAF_IMAGE"]},
-         "value": ["NUMBER", "EXT_NUMBER", "FLUX_ISO", "FLUXERR_ISO",
-                    "MAG_ISO", "MAGERR_ISO", "FLUX_AUTO", "FLUXERR_AUTO",
-                    "MAG_AUTO", "MAGERR_AUTO", "A_IMAGE", "B_IMAGE",
-                    "THETA_IMAGE", "XWIN_IMAGE", "YWIN_IMAGE", "ERRX2WIN_IMAGE",
-                    "ERRY2WIN_IMAGE", "ERRXYWIN_IMAGE", "ERRX2WIN_WORLD", "ERRY2WIN_WORLD",
-                    "ERRXYWIN_WORLD", "ERRAWIN_IMAGE", "ERRBWIN_IMAGE", "ERRTHETAWIN_IMAGE",
-                    "FLAGS", "FLAGS_WEIGHT", "FLAGS_WIN", "FWHM_IMAGE",
-                    "ELONGATION", "ELLIPTICITY", "CLASS_STAR"]},
+         "value": ["NUMBER", "EXT_NUMBER",
+                   "XWIN_IMAGE", "YWIN_IMAGE",
+                   "ERRAWIN_IMAGE","ERRBWIN_IMAGE","ERRTHETAWIN_IMAGE",
+                   "FLUX_AUTO", "FLUXERR_AUTO",
+                   "FLAGS", "FLAGS_WEIGHT",
+                   "FLUX_RADIUS","ELONGATION"]},
 
         "CONFIG_FILE":
         {"comment": '[Extra key] name of the main configuration file',
@@ -429,7 +400,7 @@ class SExtractor(object):
         # first look for (FSE 2024-07-05) 'source-extractor',
         # then'sextractor',and finally 'sex'
 
-        candidates = ['/opt/local/bin/source-extractor']
+        candidates = ['source-extractor', 'sextractor', 'sex']
 
         if (path):
             candidates = [path]

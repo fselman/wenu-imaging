@@ -209,14 +209,13 @@ class ProjectInfo:
 
     def select_project_dir(self):
         self.project_dir = filedialog.askdirectory()
-        self.project_dir = self.project_dir+'/'
         if self.project_dir:
             self.config['Directories']['project_dir'] = self.project_dir+'/'
-            self.config['Directories']['static_calib_dir'] = self.project_dir +'/'+'static_calib'+'/'
-            self.config['Directories']['reduced_calib_dir'] = self.project_dir +'/'+'calib'+'/'
-            self.config['Directories']['reduced_std_dir'] = self.project_dir +'/'+'std'+'/'
-            self.config['Directories']['reduced_science_dir'] = self.project_dir +'/'+'science'+'/'
-            self.config['Directories']['project_logs_dir'] = self.project_dir +'/'+'logs'+'/'
+            self.config['Directories']['static_calib_dir'] = self.project_dir +'/static_calib/'
+            self.config['Directories']['reduced_calib_dir'] = self.project_dir +'/calib/'
+            self.config['Directories']['reduced_std_dir'] = self.project_dir +'/std/'
+            self.config['Directories']['reduced_science_dir'] = self.project_dir +'/science/'
+            self.config['Directories']['project_logs_dir'] = self.project_dir +'/logs/'
             self.project_dir_label.config(text=self.project_dir)
 
     def close_window (self):
