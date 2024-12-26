@@ -18,6 +18,9 @@ import os
 # for check plots
 import matplotlib.pyplot as plt
 
+# for reading the chebyshev file
+from pycavi.pycavi_chebyshev import parse_cheb_file
+
 def getheaderfromframe(framepath, header):
     """
     Simple function to extract a single header from a fits frame
@@ -32,13 +35,14 @@ def getheaderfromframe(framepath, header):
     hdr = fits.getheader(framepath)
     return hdr[header]
 
-def load_catalogue(catalogue_path, extnumber=2):
+def load_catalogue(catalogue_path, extnumber=2, columns=None):
     """
     Load the fits catalogue as a astropy table object
 
     Parameters:
         catalogue_path: str, path of the catalogue to load
         extnumber: int, extension number of the data in the catalogue. Default value 2 for sextractor catalogues.
+        columns: Specify which columns will be returned. If None (default option) will return the entire catalogue
 
     Return:
         An astropy table containing the catalogue information
@@ -48,6 +52,10 @@ def load_catalogue(catalogue_path, extnumber=2):
     table_data = hdul[extnumber].data
     hdul.close()
     output_table = Table(table_data)
+
+    if columns is not None:
+        output_table = output_table[columns]
+    
     return output_table
 
 def crossmatch_catalogues(cat_1, cat_2, max_sep=1.0,
@@ -105,7 +113,7 @@ def crossmatch_catalogues(cat_1, cat_2, max_sep=1.0,
     table_matched = hstack([cat_long, table_short_matches])
     return table_matched
 
-def clean_merged_catalogue(merged_catalogue):
+def clean_merged_catalogue(merged_catalogue, q_dictionary=None):
     """
     Clean the merged catalogue by removing sources that were not detected on all the catalogues, and also average the celestial positions 
     but keep the rest of columns untouched, except for the names.
@@ -113,6 +121,7 @@ def clean_merged_catalogue(merged_catalogue):
 
     Parameters:
         merged_catalogue: the catalogue resulting from merging the sextrator outputs and the gaia catalogue used during the calibration process
+        q_dictionary: optional. If given will correct the magnitude errors derived by sextractor using the stored factor from adu to physical unit
 
     Output:
         a cleaned version of the catalogue.
@@ -164,6 +173,13 @@ def clean_merged_catalogue(merged_catalogue):
     # change the column names to lowercase
     for col in clean_catalogue.colnames:
         clean_catalogue.rename_column(col, col.lower())
+
+    # if q_dictionary is provided then we correct the magnitude errors
+    if q_dictionary is not None:
+        mags_list = ['magerr_auto', 'magerr_iso', 'magerr_petro', 'magerr_best']
+        for filt in q_dictionary.keys():
+            for col in mags_list:
+                clean_catalogue[col+'_'+filt.lower()] *= q_dictionary[filt]**(1/2)
     
     return clean_catalogue
 
@@ -297,6 +313,71 @@ def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
 
     return 1
 
+def apply_chebyshev_illumination_correction(chebyshev_file_path, catalogue_path):
+    """
+    Apply the illumination correction from Chebyshev method to the catalogue.
+    It read the Chebyshev files including the polynomial coefficients, determine the band, and apply the correction to the pycavi magnitudes in the catalogue.
+
+    Parameters:
+        chebyshev_file_path:str
+            The path to the Chebyshev file with the coefficients necesaries to apply the illumination correction.
+        catalogue_path:str
+            The path to the catalogue which will be corrected by illumination
+
+    Return:
+        0 if the catalogue was already corrected, 1 if it was corrected during this run, None if some error was trigger.
+    """
+    catalogue = load_catalogue(catalogue_path, extnumber=1)
+    catalogue_header = fits.getheader(catalogue_path)
+    parsed_data = parse_cheb_file(chebyshev_file_path)
+    
+    # check if the catalogue was already corrected for the given filter
+    bands = ['g_SDSS', 'r_SDSS', 'i_SDSS', 'NB_659']
+    band = None
+    for band_i in bands:
+        if band_i in chebyshev_file_path:
+            band = band_i.lower()
+            break
+            
+    if band is None:
+        print('Error: Band of Chebyshev file not identified')
+        return
+        
+    bands_corrected = []
+    for key, val in catalogue_header.items():
+        if 'ILLCOR' in key:
+            if key == band:
+                logging.info('Catalogue already corrected in band {}. Skipping band.'.format(band))
+                return 0
+            bands_corrected.append(val)
+
+    # we proceed to correct the magnitudes
+    x_subset = catalogue['x_image_'+band]
+    y_subset = catalogue['y_image_'+band]
+    corrections = evaluate_2dpoly(x_subset, y_subset, parsed_data['dimx'], parsed_data['dimy'], 
+                             (parsed_data['x_deg'], parsed_data['y_deg']), 
+                              parsed_data['polynomials_x'], parsed_data['polynomials_y'], parsed_data['coefficients'])
+    mags_to_correct = []
+    for col in catalogue.colnames:
+        if 'mag_' in col and band in col:
+            mags_to_correct.append(col)
+
+    with fits.open(catalogue_path, mode='update') as hdul:
+        # Access the primary header (extension 0)
+        primary_header = hdul[0].header
+        # Modify primary headers as needed
+        primary_header['ILLCOR{:02d}'.format(len(bands_corrected))] = (band, 'Band with illumination correction applied')
+        
+        # Access the table data (extension 1) and convert it to an Astropy Table
+        table_data = Table(hdul[1].data)
+        for col in mags_to_correct:
+            table_data[col] += corrections
+
+        # Update the HDU with the modified table data
+        hdul[1].data = table_data.as_array()     
+
+    return 1
+    
 def create_catalogue_checkplots(catalogue_path, band, band_ref, magmin=13.0, magmax=17.0):
     """
     Create several check plots over the input catalogue to check the quality of the photometry, astrometry, and illumination correction.

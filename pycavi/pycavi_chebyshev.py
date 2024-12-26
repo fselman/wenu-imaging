@@ -263,7 +263,8 @@ def parse_cheb_file(file_content):
     }
 
     # Split the file content into lines
-    lines = file_content.strip().splitlines()
+    with open(file_content, 'r') as f:
+        lines = [line for line in f]
 
     for line in lines:
         line = line.strip()
@@ -308,72 +309,3 @@ def parse_cheb_file(file_content):
             parsed_data['coefficients'][(i, j)] = coefficient
 
     return parsed_data
-        
-if __name__ == "__main__":
-    log_file_swarp = "./pycavi_chebyshev_main.log"
-    logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)s:%(levelname)s:%(message)s",
-                    handlers=[
-                              logging.FileHandler(log_file_swarp),
-                              logging.StreamHandler()])
-    logging.getLogger().setLevel(logging.INFO)
-
-    deg = (6, 6)
-    coeffs =  np.array([4.82422806e-02,  3.82165299e-03,  5.29654434e-02, -1.91632991e-03,
-  1.09430500e-02,  3.81040921e-03,  6.62935617e-03, -7.30069797e-03,
- -1.54203713e-02, -9.13238120e-03,  4.99340754e-03, -1.08462464e-02,
-  1.50644835e-03,  8.70488271e-04,  4.28451332e-02,  1.38346413e-02,
- -2.79114196e-03, -5.26495160e-04,  5.46612655e-03,  6.88309734e-03,
- -2.02916461e-03, -7.36621494e-03,  7.03049697e-03, -1.85654332e-02,
-  9.82811454e-03, -8.90951896e-03,  1.34942188e-02,  1.43602622e-03,
-  3.67991128e-05,  1.50050018e-02,  3.65549764e-03,  2.38036561e-03,
- -7.16767648e-03,  5.30500242e-03, -6.81341376e-03, -1.26700478e-03,
- -4.56901031e-04, -1.76516270e-02,  4.64499422e-03, -5.02132889e-03,
-  4.42668778e-03, -6.16990152e-04, -1.63464954e-03, 3.48676159e-03,
-  2.71899656e-03, -6.19233055e-04, -1.76064313e-03,  1.61008439e-03,
-  1.43415107e-03])
-
-    deg = (5, 6)
-    coeffs = np.array([[ 0.04917397,  0.00097915,  0.04958182, -0.00176778,  0.01174935,  0.00206,
-  0.00499915, -0.0082055,  -0.01601269, -0.01010048,  0.00442772, -0.01229346,
-  0.00058156,  0.00061599,  0.04418039,  0.00871695, -0.00935186, -0.00016861,
-  0.0066462,   0.00390206, -0.00533027, -0.00783639,  0.00588149, -0.01909552,
-  0.00911492, -0.00978593,  0.01243552,  0.00150667,  0.00121181,  0.01055183,
- -0.00236117,  0.0027261,  -0.00615827,  0.00269404, -0.01012376, -0.00160121,
- -0.00109681, -0.01823493,  0.00417204, -0.00558683,  0.00373529, -0.00070089]])
-
-    coefficients, poly_x_strlst, poly_y_strlst = chebyshev_polynomials(deg, coeffs)
-    dimx = 18176
-    dimy = 18893
-    x = [0.0, 5000.0, 10000., 17000.]
-    y = [0.0, 5000.0, 10000., 17000.]
-    print(evaluate_2dpoly(np.array(x), np.array(y), dimx, dimy, deg, poly_x_strlst, poly_y_strlst, coefficients))
-
-    # Example usage
-    file_content = """
-# 2D Chebyshev polynomial in x and y
-# ORIGFILE: SPDP.2024-10-21T15:12.822.fits
-# x_deg: 4
-# y_deg: 4
-# dimx: 18296
-# dimy: 19312
-# x = 2 * (x_pix - dimx/2) / dimx
-# y = 2 * (y_pix - dimy/2) / dimy
-0, 0, T_0(x) * T_0(y), 0.02912866079326984
-0, 1, T_0(x) * T_1(y), 5.530685262100654e-06
-x 0: T_0(x) = 1
-x 1: T_1(x) = 1 * x
-x 2: T_2(x) = -1 + 2 * x**2
-x 3: T_3(x) = -3 * x + 4 * x**3
-y 0: T_0(y) = 1
-y 1: T_1(y) = 1 * y
-y 2: T_2(y) = -1 + 2 * y**2
-y 3: T_3(y) = -3 * y + 4 * y**3
-"""
-
-    # Parse the content
-    parsed_data = parse_cheb_file(file_content)
-
-    # Output the parsed data
-    import pprint
-    pprint.pprint(parsed_data)
