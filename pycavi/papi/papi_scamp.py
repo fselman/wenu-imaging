@@ -57,8 +57,8 @@ import subprocess
 
 
 # PAPI modules
-from papi.papi_misc_paLog import log
-from pycavi.pycavi_tools import run_command
+from pycavi.papi.papi_misc_paLog import log
+from pycavi.pycavi.pycavi_tools import run_command
 
 
 # ======================================================================

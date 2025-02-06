@@ -19,7 +19,7 @@ import os
 import matplotlib.pyplot as plt
 
 # for reading the chebyshev file
-from pycavi.pycavi_chebyshev import parse_cheb_file, evaluate_2dpoly
+from pycavi.pycavi.pycavi_chebyshev import parse_cheb_file, evaluate_2dpoly
 
 def getheaderfromframe(framepath, header):
     """

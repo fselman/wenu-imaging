@@ -10,7 +10,7 @@ try:
 except ImportError:
     import builtins as exceptions
 
-from pycavi.pycavi_tools import run_command
+from pycavi.pycavi.pycavi_tools import run_command
 
 # ################
 # SWarp class start here

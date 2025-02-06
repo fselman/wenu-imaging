@@ -40,7 +40,7 @@ import fileinput
 
 
 # PAPI modules
-from papi.papi_misc_paLog import log
+from pycavi.papi.papi_misc_paLog import log
 
 class clock:
 

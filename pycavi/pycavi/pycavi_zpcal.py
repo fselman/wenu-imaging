@@ -42,8 +42,8 @@ from photutils.aperture import SkyCircularAperture, SkyCircularAnnulus, aperture
 
 from skimage.transform import resize
 
-from pycavi import pycavi_tools
-from pycavi.pycavi_astromatic_tools import get_swarp_lists_dict
+from pycavi.pycavi import pycavi_tools
+from pycavi.pycavi.pycavi_astromatic_tools import get_swarp_lists_dict
 
 
 class ZPCalibration:

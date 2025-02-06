@@ -7,7 +7,7 @@ import multiprocessing
 from textwrap import wrap
 from astropy.io import fits
 
-from pycavi import pycavi_tools
+from pycavi.pycavi import pycavi_tools
 
 def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_astrometry: bool = False, solve_field_path: str = None):
     """

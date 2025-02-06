@@ -37,7 +37,7 @@ pycavi_setup = "pycavi.pycavi_setup:setup_pycavi"
 file = "LICENSE"
 
 [tool.setuptools]
-packages = ["pycavi"]
+packages = ["pycavi", "pycavi.pycavi", "pycavi.papi"]
 include-package-data = true
 
 [tool.setuptools.package-data]

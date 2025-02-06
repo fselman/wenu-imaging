@@ -5,9 +5,9 @@ import logging
 
 from astropy.io import fits
 
-from papi.papi_sextractor import SExtractor
-from papi.papi_scamp import SCAMP
-from papi.papi_swarp import SWarp
+from pycavi.papi.papi_sextractor import SExtractor
+from pycavi.papi.papi_scamp import SCAMP
+from pycavi.papi.papi_swarp import SWarp
 
 # --------------------------------- SExtractor -----------------------------
 #

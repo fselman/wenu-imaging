@@ -103,11 +103,11 @@ except ImportError:
 import re
 import copy
 
-from papi.papi_sexcatalog import *
+from pycavi.papi.papi_sexcatalog import *
 
 
 # PAPI packages
-import papi.papi_misc_utils as papi_misc_utils
+import pycavi.papi.papi_misc_utils as papi_misc_utils
 
 # ======================================================================
 
