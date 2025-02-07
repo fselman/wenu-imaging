@@ -15,6 +15,23 @@ import subprocess
 
 # Configuration resources
 
+# Package setup configuration
+
+def load_executable_paths():
+    """Load paths to astronomy-related executables from the config file."""
+    config_file = os.path.expanduser("~/.pycavi/pycavi_astrosoft.cfg")
+   
+    if not os.path.exists(config_file):
+        raise FileNotFoundError(f"Configuration file not found: {config_file}")
+
+    config = configparser.ConfigParser()
+    config.read(config_file)
+   
+    paths = dict(config["Paths"])
+    return paths
+
+# Data reduction environment configuration
+
 def init_pycavi_config(raw_data_dir=None, project_dir=None):
     """Function to create configuration file.
     The configuration file is read by all notebooks,

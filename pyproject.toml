@@ -27,6 +27,7 @@ email = "your.email@example.com"
 
 [project.scripts]
 pycavi_setup = "pycavi.pycavi_setup:setup_pycavi"
+pycavi_setastro = "pycavi.pycavi_setastro:find_and_choose_executables"
 #01_mefpp_associate_and_reduce = "scripts.01_mefpp_associate_and_reduce:main"
 #02_mefpp_astrometry_solve_field = "scripts.02_mefpp_astrometry_solve_field:main"
 #03_mefpp_astrometry_scamp = "scripts.03_mefpp_astrometry_scamp:main"
