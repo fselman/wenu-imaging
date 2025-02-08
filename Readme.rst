@@ -25,10 +25,13 @@ Pycavi installation and setup
 
 After downloading the Pycavi package there are several installation steps.
 
-1. Install the package. 
+1. Clone the package. 
    
-In the Pycavi directory issue the command `pip install -e .`
+This creates directory Pycavi. In the Pycavi directory issue the command `pip install -e .`
 This will install the libraries required by the notebooks in your local python user environment.
+Note that a developer can edit directly the libraries inside Pycavi and the
+changes will be reflected in the installation which link to this directory. This
+is convenient when debugging new or old functionality. 
 
 2. Run script `pycavi_setastro.` 
    
