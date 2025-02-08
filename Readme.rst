@@ -30,7 +30,7 @@ After downloading the Pycavi package there are several installation steps.
 In the Pycavi directory issue the command `pip install -e .`
 This will install the libraries required by the notebooks in your local python user environment.
 
-1. Run script `pycavi_setastro.` 
+2. Run script `pycavi_setastro.` 
    
 This script was created in the previous step.
 It will look for all the required executables, `mefpp`, `solve-field`, `sextractor`, `scamp`,
@@ -42,11 +42,11 @@ were found. Care should be taken to choose the proper executable as the script d
 the proper version. Note that the file `~/.pycavi/pycavi_astrosoft.cfg.` can be manually
 edited later if needed.
 
-1. Create the pycavi command center directory. 
+3. Create the pycavi command center directory. 
    
-That is, the directory where the notebooks will
-be copied, and where the config directory with the necessary configuration files for the
-data reduction will be saved. Once the directory is created move to it and issue the command
+This is the directory from where the data reduction will be controlled by running the appropriate
+notebooks in sequence. The notebooks will be copied here, and a `config` directory, with the necessary 
+data reduction configuration files, will be placed. Once the directory is created move to it and issue the command
 `pycavi_setup.` After this, step the user is ready to start the data reduction process
 by issuing the command `jupyter notebook`.
   
