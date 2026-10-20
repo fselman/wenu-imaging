@@ -1,0 +1,219 @@
+# ______ TBD  -------
+- Notebooks 07b and 8 can be rearranged a little to simplify
+  their use. Right now part is run on a loop, and another
+  part is run on the last image from the loop. So the loop
+  is not really necessary and the user should always select
+  the index of what to correct. This should be improved
+  with better logic.
+- Create catalogue with sextractor
+- Do PSF fitting photometry.
+
+# ------ DONE -------
+- DONE.Modify zpcal notebook 7 to save a .clean file for
+  each filter. Make sure that it does not have unwanted
+  secondary effects downstream.
+- DONE. Add the code line to save the residual plots. We only
+  need to give the plot name right before plotting.
+- DONE. Add a procedure to read kriging interpolation image to correct
+  table of magnitudes.
+    - more testing needed, and cleanup to make workflow easier to
+      follow.
+- DONE. Add saving kriging results as an image to be interpolated.
+- DONE. Add fixing nugget in kriggin variogram model plot.
+- DONE. Divide notebook 07b into 3 notebooks:
+    - 07b retains the photometry extraction from frame, but
+      saves photometry data, together with some metadata to file.
+        file <image_name>.illum.csv
+    - Creates 08a_pycavi_chebyshev which reads the file produced
+      by 07b and does a Chebyshev fitting writing results into
+      file <image_name>.cheb_degx_degy_<interp>_fit_01.chebyshev
+    - Creates 08b_pycavi_kriging which reads the file produced
+      by 07b and does a kriging interpolation to the illumination
+      correction. No saving yet.
+    - Tested OK.
+- DONE. Convert plotting routines in notebook 07b into procedures
+       in library pycavi_zpcal.
+- DONE. Add posibility of choice in kriging error determination.
+- DONE. Add procedure to read coefficients and polynomials
+        from file.
+- DONE. Save results of Chebyshev fit to a file, with
+        headers to appropriately interpret the parameters
+        and apply them to photometry from the image. 
+- DONE. Add to the swarped files an ORIGFILE keyword with
+  the value PSDP.<ISO 8601 time to ms>.fits
+    - but not the swarped file but the calibrated file,
+      which is the last notebook to touch the data.
+    - This was done modifying the ZPcalibration and ZPCal classes. 
+- DONE. Move chebyshev functionality to use separate library.
+- DONE. Use explicit polynomial expressions for display and
+        check of residuals. Themn save polynomials to
+        a file. This validates the use of those specific
+        polynomials and coefficients for illumination
+        correction determination.
+- DONE. Add interpolation parameters to plots
+- DONE. Add saving of variogram plot
+- DONE. Add downsampling scaling factor to plot_zpcal
+- DONE. Move kriging procedures to their own library
+- DONE. Copy instead of linking swarp file zpcal.
+- DONE. Modify Krigging:
+        - determine the variogram directly
+        - set the varigram model directly
+        - permit the selection of bins, nugget and range
+          in the varigram before the fitt.
+        - pass the variogram model and parameters to UK Krigging.
+        - permit the subselection of points for proper error estimates.
+        - plot the experimental variogram.
+- DONE. Add script to use Gaia GSPC photometry.
+    - Added this choice and the results are much better
+    than before getting rms of 0.015 in g_SDSS and 
+    0.03 in NB_659 with Kriging.
+- DONE. Check SDSS calibration of SDSS magnitudes and modify
+  transformation equations.
+- DONE. Add histogram of colors of input data.
+    - Prepare a script which is in directory testing which currently
+    plots the colors of the input catalog. Needs to add a selection
+    of magnitude residual of the calibration to separate those stars with
+    good and bad values. Need to add the raw magnitudes to the clean catalogue
+    or better create a new catalogue, copy of the clean one, but with
+    the frame magnitudes calibrated with zero point.
+        - Created script plot_cat_colors.py saved in testing. It should
+        be run after notebook 7.
+- DONE. Calibration notebooks screw up things if run twice. Fix logic,
+  but in the meantime make it copy the Swarp file to the calibration
+  directory instead of craeting a symbolic link.
+    - Almost done. Need to test some more, add debug switch for the
+      histogtram plots, multiply or divide by factor near 1.00, review
+      the code for the presence of large values used to mark bad values.
+      Everything should use np.nan for marking bad values.
+      Tested. Headers and image do match. It was not trivial.
+- DONE. Test change of sign in routine that does light correction.
+        - It had a positive sign which resulted in the largest rms.
+        Changed sign to neg. But still, no light corr in notebook3
+        results in the lower rms of the magnitude residuals. Changed
+        sign but set the default to apply_light_corr=False. The routine
+        might be useful in the future.
+- Done. Add creation of region files for ds9 if user so chooses.
+- DONE. Fix bug in zpcal which does not set the variable self.phot_cal_clean
+        when running the notebook a second time in the same partition. The problem
+        was that the variable was only set when the catalogue was just downloaded
+        and the clean file created.
+- DONE. Homogeneize the selection of partitions in notebooks 4, 5, 6, and 7.
+        Now all notebooks give the posibility to select an index from a
+        list that contains both science and standard star frames.
+- DONE. Fix Bug that results in LIGHT CORRECTION always True in procedure
+        normalize in notebook 03.
+- DONE. Add a krigging method, in addition to Chebyshev, to estimate
+        the light concentration effect.
+        Krigging appears to be delivering better results than Chebyshev.
+- DONE. Add 2D Chebyshev fitting routine to the photometry residuals
+        to correct the photometric catalogue of an image.
+- DONE. Separate the procedure used in notebook 7b into an extract calibration from frame
+        procedure, and a plot caliobration check procedure. This will be needed when we
+        create a procedure to correct the illumination errors of the photometry. Such
+        procedure will fit a 2D Chebyshev polynomial to the residual of the magnitudes
+        top create a 2D function to correct the photometry and thus eliminate the
+        field dependent systematics.
+- DONE. zpcal notebook leaves a strong residual as a function of colour for the NB_659.
+  Understand and correct. Problem was the parametrization of Drew 2014. Made the
+  conversion to AB magnitudes explicit in pycavi_tools and problem solved.
+- DONE. Leave only the check_calibration_frame routine in notebook 7? The current one
+  is a sannity check on the ZPCal object but it might not be needed in production.
+- DONE. Fix bug giving wrong zero point for NB_659
+- DONE. Allow selection or do all in notebooks 7 and 7b
+- DONE. Add path to sextractor in notebooks that use it.
+- DONE. ZPcal notebook: display all target/filters and provide
+  a way to chose which to calibrate.
+
+- Done. Swarp notebook. Add simple way to choose which list of frames to swarp:
+    - create a dictionary with the tags and display it. Then swarp from the
+      dictionary based on idices.
+
+
+- DONE. Verify functioning of WCS solution. Currently on a Mac is not producing the proper shift. It applies same solution to all frames. Perhaps it is writing initial guess and not final solution. CHECK.
+- debug
+- DONE. add SDSS as a possible catalogue. DONE.
+- DONE. Add possibility to remove files before swarping. Done.
+- DONE. Clean atmospheric extinction subroutine. Done.
+- DONE. Add configuration for project_directory automatically determined in all notebooks. Done
+  Added tkinter input window and propagated value via file to other notebooks. Done.
+- Debug offset in zp according to plots in notebook 7. DONE.
+    - Cleaned code
+    - Better but still debugging.
+    - Cannot yet the 10**(-15) reflected in the numbers reported by SAOIMAGE or sextractor..
+    - DONE!!!!
+        - I fixed issue writing the convertion factor to BSCALE.
+        astropy.io.fits is not very simple when it comes to dealing
+        with the scaling of the data. Best way seems to be use those keywords.
+        STILL TO DO: handle reprocessing by properly handle the old_bscale and new bscale 
+- DONE. Save the 07b plot with a different name than the plot created by by the 07_ plot. Done.
+    - done. copying omegacam.paf or wfi.paf into mefpp.paf depending on instrument.
+    - dealing with product name strings in product files.
+        - done. this is more complicated. The names of the products appear in the
+          mefpp.paf file. They should be coordinated with those.
+        - done. test mefpp and save changes to module. I am currently somewhat confused
+          with what version I am using.
+            o Saved latest version.
+- Add instrument configuration: extensions, DPR keywords, filters. WIP. Almost done. What remains:
+        - change ESO to MEFPP in the paf file, the current package is not an ESO package. DONE.
+
+- DONE. Clean notebook 3. It is too easy to modify vital script. Move the association part to the PartitionTree class. Leave only the run part here.
+  This will make inspection of the whole data reduction tree faster as there will be no need to wait for the full reduction.
+    o First, split the cells into a part the create all subdirectories and file links, and another one that run the notebook.
+    o Second, split the actual notebook in two notebooks.
+    o Finally, move the code of the first notebook to the PartitionTree class.
+
+- DONE. dealing with prefix and suffix.
+    o Prefix issues have been solved. Now we need to modify the detmode suffix. CANCEL: remove the suffix as it is not needed.
+
+- DONE up to and including swarp. testing with actual WFI data+debug
+- DONE. Separate Swarp into a prepaper and run utilities and permit the update of some keys in the main notebook a la scamp notebook.
+- DONE. Read in strument from pycavi.cfg for those notebooks that needs it.
+- DONE. the mefpp run command needs to run in the directory where the files are located. It crashes if there is very long file name. Done and debugged.
+- DONE. Change runCmd for run_command with logfile writing and environment passing. Done and debugged.
+- DONE. Fix bug in associate library which attempt to add FILTER keyord to file which already have one. Done and debugged.
+- DONE. Add renormalization of SATURATE keyword in notebook 3.
+- DONE. Add ONEADU keyword translating the 1ADU value in a raw frame to e/s.
+- DONE. Store in a HIERARCH key the original SATLEVEL key rom the raw frame (tipically 65534).
+- DONE. mefpp: science products are missing the processing keywords.
+
+PENDING:
+========
+
+- Fix error handling in Scamp. Should separate different error types and write an exception file when there are important issues, such as
+  not accurate solution.
+    o currently the solve step can fails silently
+- Notebook 1 fails without proper information when calibration data is incomplete:
+    o catch failures, display them appropriately, and continue with next partition
+    o leave a touched file informing that it is a failed calibration with info on what is missing
+- Create a monitor script that summarizes the product directory: user should know what is going on!
+- To run ZPCal we need to introduce color equations for the transformation between SDSS magnitudes and the WFI set. Investigate.
+    - Should investigate how to estimate zeropoints for all filters. Spain's web pages data for synthetic phot?
+- suffix 1x1 should be reinserted. It is created by mefpp. I have hardcoded it for the time.
+- fix logging, change papi_astromatic runCmd for run_command with logfile.
+- adding QC keys to files
+    - Now that Scamp runs with the SAME_CRVAL mosaic type key we could plot
+      the CRPIX and CDi_j keys for each chip as a QC check.
+        o create a QC routine that runs after scamp that checks these values. Note that
+          in principle these values will depend on the filter.
+- final debug with larger OCAM data set
+
+- Clean code and add inspect configuration keyword to see data subplots.
+
+- add configuration for installation directory. 
+- check zp values against ESO HC. We seem to be high, also in the AB magnitudes.
+- add chapter on installation of astrometry.net and use of index files for OCAM and WFI
+- add configuration files for astromatic software location
+
+For Version 2.0
+---------------
+
+- Do check on BPMs to ensure that proper extensions are used. Currently assuming indexing.
+    o FIXED. FITS headers almost empty. Not a hint of what software creted them, but more worrysome, they do not contain information about to which extension they c
+orrespond. For V2 we have to fix this.
+    - DONE. These files seems to be created with a scrip used to analyze linearity sequences. Should recover the script and clean it.
+- Investigate the use of default values for CRPIXi values and distortion corrections for cases when we cannot determine a good
+  astrometric solution. The SAME_CRVAL key in Scamp should help with this. Whether possible or not should be researched with
+  observations at different airmasses for different filters.
+- adding PRO.CATG fits key to files. For V2.
+- For WFI data which does not have Garching QC selection of QC files: write a script to select and check raw files, specially sky flats.
+
