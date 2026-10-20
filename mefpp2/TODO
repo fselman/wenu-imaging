@@ -1,0 +1,115 @@
+mefpp:
+
+- Add documentation web page in fselman.github.io/mefpp. 
+- IMPORTANT: clean usage message: currently gives the wrong
+  instructions.
+- IMPORTANT: update the parameter dump.
+- DONE 2024-08-09. Test end to end with MEF BPM.
+- Create merged BPM
+    o DONE. 
+    o DONE. BUT STILL NEED TO DEBUG ACTUAL USAGE. IT IS NOT PROPERLY IDENTIFYING BAD PIXELS.
+- Add switch that permits the creation of the bad pixel map
+  without needing a bias.
+    o DONE.
+- Add extension name to BPM.
+    o DONE.
+- Check extension names as processing loop over extensions proceeds.
+    o DONE, but no comparison yet,
+- Add ORIGFILE and PROCATG keys to BPM.
+    o DONE.
+
+DONE LIST
+---------
+- Done. <iso date and time should include miliseconds>
+- Done. master calibration and science names:
+    o CMDP: MEFPP Calibration Data Product
+    o SMDP: MEFPP Science Data Product
+
+    o names should be: SMDP.OCAM.<iso date and time>.fits
+        o written into ORIGFILE keyword
+- Done. Add PROCATG to calibration products:
+    o MASTER_BIAS
+    o MASTER_DOME_FLAT
+    o MASTER_SKY_FLAT
+    o MASTER_FLAT   
+
+- Done. Add QC keywords:
+    o scan median and stddev to bias, dome, sky and science frames
+    o input frame median and stdev to bias, dome, sky, and science frames
+        o added input frame exptime to sky master to do QC
+    o stacked frame median and stdev to bias, dome and sky
+        o Done. IMPORTANT: we should add this to the MFF
+    o clean order of QC frames
+- Done. Rationalize input frame list:
+    o master bias should have:
+        o input raw bias
+        o list of processing parameters
+        o list of QC keywords
+    o dome flat should have:
+        o input master bias
+        o list of input raw dome frames
+        o list of processing parameters
+        o list of QC keywords
+    o master sky should have:
+        o master bias
+        o list of input raw frames
+        o list of processing parameters
+        o list of QC keywords
+    o master flat field
+        o master bias
+        o master dome
+        o master sky
+        o list of QC keywords -- TBD
+    o reduced science frames should have:
+        o master bias
+        o master flat field
+        o list of processing parameters
+        o list of QC keywords
+
+- DONE. Add ESO Phase 3 keywords relevant to mefpp:
+    o PROCATG set to SCIENCE.IMAGE
+    o FILTER set to HIERARCH ESO INS FILT1 NAME
+        o configure in mefpp.paf
+    o RADESYS set to value of RADECSYS
+        o configure in mefpp.paf
+    o TIMESYS set to UTC explicitly
+        o configure in mefpp.paf?
+    o PROG_ID set to HIERARCH ESO OBS PROG ID
+        o configure in mefpp.paf
+    o OBSTECH set to HIERARCH ESO DPR TECH
+        o configure in mefpp.paf
+    o FLUXCAL set to UNCALIBRATED
+    o PROCSOFT set to Pycavi-mefpp
+    o OBID1 set to HIERARCH ESO OBS ID
+        o configure in mefpp.paf
+    0 NCOMBINE set to 1 by default.
+        o configure in mefpp.paf
+    o Added MJD-END key = MJD-OBS + EXPTIME/86400.
+    o Added SATLEVEL key with value read from mefpp.paf. To be propagated and scaled. Used during processing.
+    o Added SATNMAX key, max fraction of saturated pixels allowed, with value read from mefpp.paf.
+
+- install to prefix directory. Done.
+- Separate qfits5 from eclipse. Done.
+- install the man pages. Done.
+- install e_setup. Done.
+- check e_setup to use the prefix installation as defaulty during setup
+- unzip the WFI BPM and recover the method used to create them. Done.
+- test functionality of mefpp. Done
+- copy scripts to prefix in src/Makefile
+- create a version tested in mac. Done.
+- test in Linux and create version that works in both environments
+
+pymefpp: This is outdated after pycavi so it will be removed soon.
+
+- clean over all workflow
+- test NB_659 with calibrator data. PNs?
+- Add functionality for: u_SDSS, g_SDSS, i_SDSS, z_SDSS
+- Add colour equation in zp calculation. Refer to colour=0
+- Add linearity correction
+- Add ZP field variation correction
+
+- Done. currently the association of sky (at least) is associating wrong filters. Fix.
+- Clean up the classes to use a single Exposure class
+- Done. Merge partition_science and partition_calibrations into partition_data
+- Done with logging message in  zp notebook. Needs to propagate to other modules. clean log messages. Define my_print with time stamp.
+- properly receive outpt messages from executable and print them with time stamp

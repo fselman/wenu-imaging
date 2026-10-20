@@ -1,0 +1,76 @@
+2019-06-22	fselman		mefpp-1.6
+
+	- converted to 64 bits
+	- made it work for bpm creation and reading
+	- in chapman2 five OMEGACAM frames get reduced 
+	in 1m49s
+
+2011-05-20	fselman		mefpp-1.5
+	- working on clone of version in Bitbucket
+	repository. This version has major modifications
+	to the WCS sectin. It should be given relatively
+	good astrometry for WFI at PA=0 degrees.
+
+2011-04-29	fselman		mefpp-1.4
+
+	- Added split function. A set of MEF files
+	can be split without any further processing.
+
+	- Tested BPM function. The system create a BPM
+	such that a bad pixel has value 0 and a good one
+	has a value 1. It uses a BPM with the oposite
+	identification.
+
+	- Modified to read configuration from file.
+	No need for wfi.h. Now in the directory
+	where the data is being processed there
+	should be a file named mefpp.paf. This file
+	could be a symbolic link: meffpp.paf -> wfi.paf,
+	or mefpp.paf -> omegacam.paf.
+
+	- qfits/src/pafs.c was modified so that
+	the routine query_paf closes the file
+	that it opens.
+
+	- mefpp modified so that bias and bpm creation
+	can be run stand alone.
+
+	- TODO: clean the logic so that the recipe can
+	be called in the following configurations:
+
+		- mefpp --split splitlist.txt
+		(only split files)
+
+		- mefpp --bias biaslist.txt --biassave
+		(it assumes presence of BPMs)
+
+		- mefpp --dome <> (with default values for other cal frames)
+
+		- mefpp  --sky <> (with default values for other cal frames)
+
+		- mefpp --mff <> (with default values for other cal frames)
+
+		- mefpp --science <> (with default values for cal frames)
+
+2011-03-29	fselman		mefpp-1.2
+	- Added a "!" in front of the bmp command in the
+	routine that creates the master flat field in
+	mefp_lib.c. This fixes a bug that with the 
+	BPM in use we were choosing the bad pixels.
+	This issue should be addresses in a more general
+	way by allowing the user to select how a
+	"0" in the BPM will be interpreted.
+
+2011-03-25	fselman		mefpp-1.1
+	- Used eclipse 5.0.0 which is the latest version,
+	together with qfits-5.4.0 which is the latest
+	version compatible with eclipse (it uses the
+	function xmemory).
+	- Modified the sysconf.c routines to configure
+	the system to use gcc for os_darwin, and to
+	include the CFLAG "-m32" to force 32 bits in
+	machines that can compile both.
+	- Modified tutorial document.
+	- Added directory ins/mef/static_cal together
+	with a set of BPM fits file that can be used
+	for testing.

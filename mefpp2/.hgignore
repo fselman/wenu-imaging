@@ -1,0 +1,6 @@
+syntax: glob
+bin/**
+qfits/bin/**
+*.o
+*.a
+*.log
