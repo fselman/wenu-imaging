@@ -1,0 +1,12 @@
+[submodule "Pycavi2"]
+	path = Pycavi2
+	url = git@github.com:fselman/Pycavi2.git
+	branch = main
+[submodule "mefpp2"]
+	path = mefpp2
+	url = git@github.com:fselman/mefpp2.git
+	branch = main
+[submodule "qfits52"]
+	path = qfits52
+	url = git@github.com:fselman/qfits52.git
+	branch = main
