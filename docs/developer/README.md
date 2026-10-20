@@ -10,6 +10,7 @@ Updated for the subsequent decision to consolidate into one repository.
 | [Migration](migration.md) | Repository consolidation, checks and merge requirements |
 | [Roadmap](roadmap.md) | Platform priorities, operational OmegaCAM delivery and later capabilities |
 | [Original audit, 20 October 2026](audit-2026-10-20.md) | Original source-based findings and historical proposals, preserved unchanged |
+| [Previous Mac installation and OmegaCAM workflow](mac-installation-history-2026-10-20.md) | Installed tools, build provenance, OCAM layout and last apparent use |
 
 The immediate goal is a scientifically validated reduction of a medium-sized
 OmegaCAM dataset, prepared for submission as ESO Phase 3 products. Dataset
