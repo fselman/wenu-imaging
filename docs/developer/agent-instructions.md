@@ -6,6 +6,37 @@ directs agents here.
 
 ## Scope update, 21 October 2026
 
+### Latest sequencing clarification
+
+Fernando subsequently revised the proposed refactoring order:
+
+1. Retire the historical `.py` reduction scripts; do not port their obsolete
+   implementations. Streamline the notebooks using the existing libraries.
+2. Once the notebook workflow is thin, provide runnable Python scripts driven
+   by configuration files from that workflow, calling the same library routines.
+3. Audit the library routines actually used by those notebooks systematically.
+   Existing targeted fixes/tests do not establish that other routines are sound.
+   Keep refactoring equivalence checks while thinning; the full scientific
+   library audit follows the thin-notebook stage.
+4. Audit mefpp after the Python-library audit. Read-only tracing of an existing
+   native capability may inform the plan without starting the full C audit.
+
+Keep packaging and Mac/Linux OmegaCAM execution as immediate prerequisites.
+Postpone WFI implementation and dedicated validation until wenu-imaging works on
+Mac and Linux. WFI remains a retained requirement; preserve its files/history and
+record shared-code risks, but do not let WFI-specific work lead the current phase.
+No Python/library/engine upgrades or backend replacements are authorized now.
+
+BPM generation must be part of normal calibration creation, not permanently
+defined as copying a static installed mask. Trace and validate the existing
+mefpp construction path first, including required inputs, dependency order,
+detector mapping, mask convention, thresholds, provenance and reuse rules.
+Do not invent new BPM algorithms or silently change the working pilot products.
+
+This clarification supersedes earlier suggestions to repair the legacy scripts
+or begin implementation with WFI calibration preselection. Keep notebook/script
+logic shared and preserve the single-node parallelism objective.
+
 Fernando clarified the order of work after the portability audit:
 
 - The immediate deliverable is properly packaged wenu-imaging with robust
@@ -41,9 +72,9 @@ Fernando's intended design is thin, editable notebooks for learning and inspecti
 data, plus Python scripts/configuration for repeatable headless processing. Both
 must call the same library stage functions; do not maintain separate scientific
 implementations or implement the script path by executing notebooks. Keep useful
-parameter choices and inspection visible in notebooks. Always include WFI as well
-as OmegaCAM in architecture, refactoring, installation and validation plans,
-including WFI calibration preselection, filter/metadata conventions and standards.
+parameter choices and inspection visible in notebooks. Retain WFI in the design,
+but defer WFI implementation and validation as specified above, including its
+calibration preselection, filter/metadata conventions and standards.
 See [the two-interface review](pycavi-two-interface-review-2026-10-21.md).
 
 ## Purpose and scope

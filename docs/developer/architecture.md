@@ -2,6 +2,16 @@
 
 ## Current direction, 21 October 2026
 
+Latest clarification: discard the old reduction-script implementation path;
+thin the notebooks first, derive new configuration-driven runnable scripts from
+the resulting shared library calls, audit those Python routines, then audit
+mefpp. WFI implementation/validation is deferred until Mac/Linux OmegaCAM works;
+its requirements remain preserved. BPM production belongs in the normal
+calibration workflow. Current Pycavi copies a static mask, but native mefpp
+contains a construction path; validate and integrate existing work before
+designing any replacement. No library or engine upgrades now. This clarification
+controls where earlier proposed sequences below differ.
+
 The immediate work is coherent wenu-imaging packaging and Pycavi debugging and
 improvement with the existing library/engine versions retained. Library upgrades
 and SEP or other backend adoption are deferred. Complete the Pycavi milestone

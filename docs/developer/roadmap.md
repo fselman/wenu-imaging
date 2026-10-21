@@ -2,6 +2,16 @@
 
 ## Sequencing update, 21 October 2026
 
+Latest clarification from Fernando supersedes the earlier proposals below:
+package/establish OmegaCAM execution on Mac and Linux; retire old reduction
+scripts and thin notebooks; derive new configuration-driven scripts from that
+workflow; systematically audit the notebook-used Python routines; then audit
+mefpp. WFI implementation/validation waits for Mac/Linux operation. Preserve WFI
+requirements and source. No library/engine upgrades now. BPM creation belongs
+to normal calibration production: trace/validate the existing native construction
+path and its Python integration, rather than treating static-mask copying as the
+final design. Refactoring checks remain necessary before the full library audit.
+
 Fernando clarified the following order after the installation audit:
 
 1. Properly package wenu-imaging using the existing scientific stack; no library,

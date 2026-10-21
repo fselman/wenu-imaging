@@ -7,6 +7,15 @@ remaining editable for learning/exploration; Python scripts and configuration
 files should offer the same processing without interactive notebook execution.
 WFI must be included throughout, alongside OmegaCAM. No implementation changed.
 
+Subsequent decision: keep the WFI findings as deferred requirements, but postpone
+WFI implementation/validation until Mac/Linux OmegaCAM works. Retire the old
+scripts rather than repair them. Thin notebooks first, derive new configuration-
+driven scripts from that workflow, then perform the systematic audit of the
+Python routines used and finally mefpp. Earlier recommendations below are the
+review history, not a competing execution order. BPM generation is required in
+normal calibration production; current copying and existing C construction must
+be reconciled by tracing and validation. No library upgrades now.
+
 ## Existing strengths
 
 The original design is substantially present. `pycavi_instrument.Instrument`
