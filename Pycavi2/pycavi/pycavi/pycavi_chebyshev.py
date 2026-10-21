@@ -112,7 +112,8 @@ def chebyshev_polynomials( deg, coefficients=None, coeff_file=None, origfile=Non
 
         return poly_str
 
-    num_x, num_y = deg[0], deg[1]
+    # A degree n includes T_0 through T_n, i.e. n + 1 basis terms.
+    num_x, num_y = deg[0] + 1, deg[1] + 1
     if coeff_file is not None:
         with open(coeff_file, 'w') as f:
             f.write(f"# 2D Chebyshev polynomial in x and y\n")
@@ -198,7 +199,13 @@ def evaluate_2dpoly(x_pix, y_pix, dimx, dimy, deg, poly_x_strlst, poly_y_strlst,
         bu arrays x, y.
     """
 
-    num_x, num_y = deg[0], deg[1]
+    num_x, num_y = deg[0] + 1, deg[1] + 1
+    if (any(i not in poly_x_strlst for i in range(num_x)) or
+            any(j not in poly_y_strlst for j in range(num_y))):
+        raise ValueError(
+            "Incomplete Chebyshev basis: regenerate the coefficient file "
+            "from the original fit with all degree + 1 terms."
+        )
 
     # scale to -1, 1 both input coordinate arrays
     x_scaled, y_scaled = pixel_coords_scaled(x_pix, y_pix, dimx, dimy)
@@ -220,7 +227,10 @@ def evaluate_2dpoly(x_pix, y_pix, dimx, dimy, deg, poly_x_strlst, poly_y_strlst,
     value = np.full_like(x_scaled, 0.0, dtype=np.float64)
     for i in range(num_x):
         for j in range(num_y):
-            value = value + coefficients[i, j]*poly_x[i](x_scaled)*poly_y[j](y_scaled)
+            # Export omits zero coefficients; parsed files use a sparse dict.
+            coeff = (coefficients.get((i, j), 0.0)
+                     if isinstance(coefficients, dict) else coefficients[i, j])
+            value = value + coeff*poly_x[i](x_scaled)*poly_y[j](y_scaled)
 
     return value
 
