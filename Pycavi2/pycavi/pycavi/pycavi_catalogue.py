@@ -1,3 +1,5 @@
+import hashlib
+import logging
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator  # for applying the illumination correction
 
@@ -150,17 +152,10 @@ def clean_merged_catalogue(merged_catalogue, q_dictionary=None):
     clean_catalogue = merged_catalogue[sel_nan]
     
     # combine the ra and dec
-    ra_comb = None
-    de_comb = None
-    for tag in tags:
-        if ra_comb is None:
-            ra_comb = clean_catalogue['ALPHA_J2000_'+tag]
-            de_comb = clean_catalogue['DELTA_J2000_'+tag]
-        else:
-            ra_comb = np.vstack((ra_comb, clean_catalogue['ALPHA_J2000_'+tag])).T
-            de_comb = np.vstack((de_comb, clean_catalogue['DELTA_J2000_'+tag])).T
-    ra_mean = np.mean(ra_comb, axis=1)
-    de_mean = np.mean(de_comb, axis=1)
+    ra_comb = np.vstack([clean_catalogue['ALPHA_J2000_'+tag] for tag in tags])
+    de_comb = np.vstack([clean_catalogue['DELTA_J2000_'+tag] for tag in tags])
+    ra_mean = np.mean(ra_comb, axis=0)
+    de_mean = np.mean(de_comb, axis=0)
     
     # remove alpha/delta j2000 columns
     clean_catalogue.remove_columns(['ALPHA_J2000_'+tag for tag in tags])
@@ -243,6 +238,36 @@ def crossmatch_against_SkyMapper(catalogue_path):
     hdul.writeto(merged_table_savepath, overwrite=True)
     return merged_table
 
+def _illumination_model_digest(path):
+    digest = hashlib.sha256()
+    with open(path, 'rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _illumination_already_applied(header, band, model_digest):
+    for key, value in header.items():
+        if key.startswith('ILLCOR') and str(value).casefold() == band.casefold():
+            previous = header.get('ILHASH'+key[6:])
+            if previous is not None and previous != model_digest:
+                raise ValueError('A different illumination model is already applied '
+                                 'in band {}. Start from the uncorrected catalogue.'.format(band))
+            logging.info('Catalogue already corrected in band %s; leaving it unchanged.', band)
+            return True
+    return False
+
+
+def _record_illumination_model(header, band, path, digest):
+    index = 0
+    while 'ILLCOR{:02d}'.format(index) in header:
+        index += 1
+    key = 'ILLCOR{:02d}'.format(index)
+    header[key] = (band.lower(), 'Band with illumination correction applied')
+    header['ILFILE'+key[6:]] = os.path.basename(path)
+    header['ILHASH'+key[6:]] = digest
+
+
 def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
     """
     Apply the illumination correction from Krigging method to the catalogue.
@@ -263,13 +288,9 @@ def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
 
     # check if the catalogue was already corrected for the given filter
     band = kriggin_fits_header['BAND']
-    bands_corrected = []
-    for key, val in catalogue_header.items():
-        if 'ILLCOR' in key:
-            if key == band:
-                logging.info('Catalogue already corrected in band {}. Skipping band.'.format(band))
-                return 0
-            bands_corrected.append(val)
+    model_digest = _illumination_model_digest(kriggin_fits_path)
+    if _illumination_already_applied(catalogue_header, band, model_digest):
+        return 0
 
     # up to this point we are sure the catalogue has not been corrected on band, so we correct 
     n, m = np.shape(kriggin_fits_data)
@@ -301,7 +322,7 @@ def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
         # Access the primary header (extension 0)
         primary_header = hdul[0].header
         # Modify primary headers as needed
-        primary_header['ILLCOR{:02d}'.format(len(bands_corrected))] = (band, 'Band with illumination correction applied')
+        _record_illumination_model(primary_header, band, kriggin_fits_path, model_digest)
         
         # Access the table data (extension 1) and convert it to an Astropy Table
         table_data = Table(hdul[1].data)
@@ -335,7 +356,7 @@ def apply_chebyshev_illumination_correction(chebyshev_file_path, catalogue_path)
     bands = ['g_SDSS', 'r_SDSS', 'i_SDSS', 'NB_659']
     band = None
     for band_i in bands:
-        if band_i in chebyshev_file_path:
+        if band_i in os.path.basename(chebyshev_file_path):
             band = band_i.lower()
             break
             
@@ -343,13 +364,9 @@ def apply_chebyshev_illumination_correction(chebyshev_file_path, catalogue_path)
         print('Error: Band of Chebyshev file not identified')
         return
         
-    bands_corrected = []
-    for key, val in catalogue_header.items():
-        if 'ILLCOR' in key:
-            if key == band:
-                logging.info('Catalogue already corrected in band {}. Skipping band.'.format(band))
-                return 0
-            bands_corrected.append(val)
+    model_digest = _illumination_model_digest(chebyshev_file_path)
+    if _illumination_already_applied(catalogue_header, band, model_digest):
+        return 0
 
     # we proceed to correct the magnitudes
     x_subset = catalogue['x_image_'+band]
@@ -362,11 +379,14 @@ def apply_chebyshev_illumination_correction(chebyshev_file_path, catalogue_path)
         if 'mag_' in col and band in col:
             mags_to_correct.append(col)
 
+    if not mags_to_correct:
+        raise ValueError('No magnitude columns found for band {}'.format(band))
+
     with fits.open(catalogue_path, mode='update') as hdul:
         # Access the primary header (extension 0)
         primary_header = hdul[0].header
         # Modify primary headers as needed
-        primary_header['ILLCOR{:02d}'.format(len(bands_corrected))] = (band, 'Band with illumination correction applied')
+        _record_illumination_model(primary_header, band, chebyshev_file_path, model_digest)
         
         # Access the table data (extension 1) and convert it to an Astropy Table
         table_data = Table(hdul[1].data)
