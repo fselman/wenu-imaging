@@ -4,6 +4,37 @@ Status: accepted working agreement, with scope clarified by Fernando Selman on
 20 October 2026. This is the canonical developer policy; the root AGENTS.md
 directs agents here.
 
+## Scope update, 21 October 2026
+
+Fernando clarified the order of work after the portability audit:
+
+- The immediate deliverable is properly packaged wenu-imaging with robust
+  installed resources, explicit dependencies and reproducible installation.
+  Debug and improve Pycavi before moving on to mefpp implementation.
+- Do not upgrade Python libraries, Python itself, external astronomy engines,
+  or replace backends in this stage. Prior modern-library probes are audit
+  evidence only. Future compatibility means maintained interfaces, packaging,
+  tests and recorded constraints now, with upgrades qualified separately later.
+  Correctly declaring existing runtime imports is distinct from selecting a
+  new library or upgrading the working environment.
+- Audit single-chip CCD and CMOS requirements now, including primary-image and
+  one-extension FITS layouts and detector-specific calibration/noise behavior.
+  Audit findings do not establish implemented detector support.
+- Audit every pipeline stage for single-node concurrency, aiming to parallelize
+  every independent task where resource use and scientific dependencies permit.
+  Cover exposure, detector, target/filter and independent QC work; coordinate
+  outer processes and inner executable/BLAS threads within one node allocation.
+- Dependency barriers and exclusive ownership of outputs remain mandatory.
+  Joint fits and coadds may have parallel internals but cannot be replaced by
+  independent per-frame results without preserving their scientific definition.
+- Keep the present mefpp behavior for the packaging/Pycavi milestone. The later
+  mefpp audit must consider both concurrent independent invocations and internal
+  C parallelism rather than assuming one is automatically safe or sufficient.
+
+This dated update controls the sequencing where earlier future-work paragraphs
+differ. It does not authorize a broad rewrite, premature backend replacement,
+archive submission or merging a proposal without instruction.
+
 ## Purpose and scope
 
 wenu-imaging coordinates Pycavi2 (Python), mefpp2 (ANSI C with embedded Eclipse),

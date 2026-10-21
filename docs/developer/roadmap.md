@@ -1,5 +1,33 @@
 # wenu-imaging roadmap
 
+## Sequencing update, 21 October 2026
+
+Fernando clarified the following order after the installation audit:
+
+1. Properly package wenu-imaging using the existing scientific stack; no library,
+   Python or external-engine upgrades yet. Validate ordinary wheel/sdist installs,
+   installed resources and setup outside the checkout, plus reproducible
+   configuration/environment records.
+2. Debug and improve Pycavi, preserving and comparing the OmegaCAM pilot and WFI
+   behavior. Fix integration and failure reporting before increasing concurrency.
+3. Audit single-chip CCD/CMOS support and every single-node parallelization
+   opportunity now; use that audit to define focused Pycavi changes. Distinguish
+   single-detector data layout from the actual detector noise/calibration model.
+4. Once Pycavi is debugged and improved, continue with mefpp's build, detector and
+   parallel-execution work. Evaluate independent-process scheduling and internal
+   C parallelism separately. Native mefpp behavior is unchanged in earlier steps.
+5. Qualify newer libraries and alternative backends later, by a separate decision.
+
+The concurrency goal covers all suitable independent work, not just solve-field.
+Allocation, memory, I/O and scientific dependencies determine what can run at the
+same time. No multi-node/MPI requirement is introduced. The immediate scientific
+delivery remains the OmegaCAM Phase 3 dataset; release quality and format checks
+remain necessary alongside packaging and performance work.
+
+Earlier sections below retain their baseline history. This dated update controls
+the current sequencing. Detailed source findings and task opportunities are in
+[the detector/concurrency audit](detectors-and-parallel-work-audit-2026-10-21.md).
+
 Status: accepted roadmap direction, amended by Fernando on 20 October 2026.
 The immediate science delivery is an OmegaCAM dataset for ESO Phase 3 submission.
 Component implementation remains limited to separately authorized stages.
