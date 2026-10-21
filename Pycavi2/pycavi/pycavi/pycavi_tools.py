@@ -17,14 +17,15 @@ import subprocess
 
 # Package setup configuration
 
-def load_executable_paths():
+def load_executable_paths(config_file=None):
     """Load paths to astronomy-related executables from the config file."""
-    config_file = os.path.expanduser("~/.pycavi/pycavi_astrosoft.cfg")
+    config_file = os.path.expanduser(str(config_file or os.environ.get(
+        "PYCAVI_ASTROSOFT_CONFIG", "~/.pycavi/pycavi_astrosoft.cfg")))
    
     if not os.path.exists(config_file):
         raise FileNotFoundError(f"Configuration file not found: {config_file}")
 
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(interpolation=None)
     config.read(config_file)
    
     paths = dict(config["Paths"])

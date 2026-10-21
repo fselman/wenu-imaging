@@ -8,6 +8,7 @@ Updated for the subsequent decision to consolidate into one repository.
 | [Agent instructions](agent-instructions.md) | Current shared working rules and scientific invariants |
 | [Architecture](architecture.md) | Existing components, interfaces and agreed direction |
 | [Migration](migration.md) | Repository consolidation, checks and merge requirements |
+| [Python installation and packaging evidence](installation.md) | Root install, resources, setup, external paths, platform facts and outstanding acceptance |
 | [Roadmap](roadmap.md) | Platform priorities, operational OmegaCAM delivery and later capabilities |
 | [Original audit, 20 October 2026](audit-2026-10-20.md) | Original source-based findings and historical proposals, preserved unchanged |
 | [Previous Mac installation and OmegaCAM workflow](mac-installation-history-2026-10-20.md) | Installed tools, build provenance, OCAM layout and last apparent use |

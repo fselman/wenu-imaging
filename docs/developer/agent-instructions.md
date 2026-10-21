@@ -4,6 +4,14 @@ Status: accepted working agreement, with scope clarified by Fernando Selman on
 20 October 2026. This is the canonical developer policy; the root AGENTS.md
 directs agents here.
 
+## Packaging-stage authorization, 21 October 2026
+
+Fernando authorized the packaging implementation, preserving the current
+scientific dependencies and engines. **Any deviation from the roadmap must be
+discussed with him and approved before proceeding.** Packaging validation does
+not replace the later systematic Pycavi Python library audit or mefpp audit.
+See installation.md for actual checks and pending platform gates.
+
 ## Scope update, 21 October 2026
 
 ### Latest sequencing clarification

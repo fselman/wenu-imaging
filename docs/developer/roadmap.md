@@ -1,5 +1,17 @@
 # wenu-imaging roadmap
 
+## Packaging implementation status, 21 October 2026
+
+Fernando authorized the packaging stage and reiterated that any roadmap deviation
+must be discussed and approved **before** proceeding. Work is limited to Python
+packaging/setup, resource delivery, dependency declarations and executable
+configuration, with current scientific versions retained. See
+[installation and evidence](installation.md). Mac/cluster acceptance and exact
+reference constraints remain pending; do not mark the stage complete from local
+Linux smoke tests. Notebook thinning follows this gate, then configuration-driven
+scripts, the **Pycavi Python library audit**, and the mefpp audit. WFI work remains
+deferred. No later implementation stage is started by this patch.
+
 ## Sequencing update, 21 October 2026
 
 Latest clarification from Fernando supersedes the earlier proposals below:

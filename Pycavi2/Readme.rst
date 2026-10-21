@@ -21,38 +21,23 @@ They were scripted by F.Selman in a first instance, then
 slightly improved by L.Celedon. They were built using Python 3.8 - 3.11.
 
 Pycavi installation and setup
-=============================
+============================
 
-After downloading the Pycavi package there are several installation steps.
+Installation is now defined once at the wenu-imaging repository root.
+From that root, use ``python -m pip install .`` in an isolated reference
+Python environment, or ``python -m pip install '.[notebooks]'`` to include
+the notebook application and kernel. Do not install from this component directory.
 
-1. Clone the package. 
-   
-This creates directory Pycavi. In the Pycavi directory issue the command `pip install -e .`
-This will install the libraries required by the notebooks in your local python user environment.
-Note that a developer can edit directly the libraries inside Pycavi and the
-changes will be reflected in the installation which link to this directory. This
-is convenient when debugging new or old functionality. 
+Run ``pycavi_setup /path/to/new-workspace`` to copy notebooks, configuration
+and historical WFI reference tables. Existing files are preserved unless
+``--overwrite`` is supplied. Native engines and astrometry indexes are separate.
+Run ``pycavi_setastro --help`` for explicit executable selection and headless setup.
+The current installed workflow still has limitations described in
+``docs/developer/installation.md`` at the repository root.
 
-2. Run script `pycavi_setastro.` 
-   
-This script was created in the previous step.
-It will look for all the required executables, `mefpp`, `solve-field`, `sextractor`, `scamp`,
-and `swarp`, and write their full paths to file `~/.pycavi/pycavi_astrosoft.cfg.` The notebooks
-will extract those paths as needed. Patience, as this might take long as the script recursively travel 
-directories, from  several starting root points, looking for the needed full path commands. For each 
-needed command the user will be presented with a numbered list of all the places where the commands
-were found. Care should be taken to choose the proper executable as the script does not check for
-the proper version. Note that the file `~/.pycavi/pycavi_astrosoft.cfg.` can be manually
-edited later if needed.
-
-3. Create the pycavi command center directory. 
-   
-This is the directory from where the data reduction will be controlled by running the appropriate
-notebooks in sequence. The notebooks will be copied here, and a `config` directory, with the necessary 
-data reduction configuration files, will be placed. Once the directory is created move to it and issue the command
-`pycavi_setup.` After this, step the user is ready to start the data reduction process
-by issuing the command `jupyter notebook`.
-  
+The workflow description below is historical. New configuration-driven scripts
+will follow notebook thinning; the old reduction scripts are not a supported
+alternative. The subsequent Pycavi library audit and mefpp audit remain required.
 
 Pycavi flow
 ===========
