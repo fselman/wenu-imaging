@@ -19,16 +19,16 @@ def prepare_to_sextract(target, redo_sextractor):
     Prepare directory where source-extraction will take place. 
     Returns flag indicating whether we should run sextractor.
     """
-    sextractor_cat_file = target[:-4]+".cat"
+    sextractor_cat_file = os.path.splitext(target)[0]+".cat"
     sextractor_base_dir = "/".join(target.split("/")[:-1])
     print("sextractor_base_dir: {}".format(sextractor_base_dir))
-    ready_to_sextract = False and redo_sextractor
-    if not os.path.isfile(sextractor_base_dir+'/'+sextractor_cat_file):
+    ready_to_sextract = False
+    if not os.path.isfile(sextractor_cat_file):
         logging.info("Running Sextractor on image {}".format(target.split("/")[-1]))
         ready_to_sextract = True
-    elif os.path.isfile(sextractor_base_dir+'/'+sextractor_cat_file) and redo_sextractor:
+    elif redo_sextractor:
         logging.info("Removing {} before proceeding".format(sextractor_cat_file))
-        os.remove(sextractor_base_dir+'/'+sextractor_cat_file)
+        os.remove(sextractor_cat_file)
         os.sync()
         ready_to_sextract = True
     else:
