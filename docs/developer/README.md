@@ -14,6 +14,7 @@ Updated for the subsequent decision to consolidate into one repository.
 | [Chebyshev repair and pilot evidence](chebyshev-repair-2026-10-21.md) | Complete model export, notebook diagnostics, validation and safe Mac update |
 | [Catalogue execution repair](catalogue-repair-2026-10-21.md) | Single-filter catalogues, explicit models, correction copies and repeat-run protection |
 | [Pycavi portability and library upgrade audit](pycavi-portability-audit-2026-10-21.md) | Reproduced packaging failures, current-library probes and staged compatibility plan |
+| [External tools and library options](external-tools-and-library-options-2026-10-21.md) | Installed versus upstream releases and a coherent integration strategy |
 
 The immediate goal is a scientifically validated reduction of a medium-sized
 OmegaCAM dataset, prepared for submission as ESO Phase 3 products. Dataset
