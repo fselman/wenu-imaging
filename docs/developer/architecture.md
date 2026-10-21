@@ -9,6 +9,14 @@ before mefpp implementation. Packaging must distinguish the wenu-imaging product
 Python distribution metadata, stable pycavi imports and separately built native
 components; a successful Python install must not imply native engines were built.
 
+Pycavi has two intended user interfaces: thin editable notebooks and
+configuration-driven Python scripts/commands. Both call the same installed
+library stages. Keep notebook choices and data inspection accessible while
+moving stable processing/sequence logic to shared functions. WFI and OmegaCAM
+are both required paths, including WFI calibration selection and instrument-
+specific photometry/provenance; the OmegaCAM pilot does not validate WFI.
+See [the two-interface review](pycavi-two-interface-review-2026-10-21.md).
+
 The packaging acceptance target includes an obvious repository-root installation
 entry point, correctly installed notebook/config resources, preserved edited
 orchestration files, explicit external executable/resource configuration and a

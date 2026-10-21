@@ -35,6 +35,17 @@ This dated update controls the sequencing where earlier future-work paragraphs
 differ. It does not authorize a broad rewrite, premature backend replacement,
 archive submission or merging a proposal without instruction.
 
+### Two user interfaces and WFI coverage
+
+Fernando's intended design is thin, editable notebooks for learning and inspecting
+data, plus Python scripts/configuration for repeatable headless processing. Both
+must call the same library stage functions; do not maintain separate scientific
+implementations or implement the script path by executing notebooks. Keep useful
+parameter choices and inspection visible in notebooks. Always include WFI as well
+as OmegaCAM in architecture, refactoring, installation and validation plans,
+including WFI calibration preselection, filter/metadata conventions and standards.
+See [the two-interface review](pycavi-two-interface-review-2026-10-21.md).
+
 ## Purpose and scope
 
 wenu-imaging coordinates Pycavi2 (Python), mefpp2 (ANSI C with embedded Eclipse),

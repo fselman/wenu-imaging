@@ -16,6 +16,7 @@ Updated for the subsequent decision to consolidate into one repository.
 | [Pycavi portability and library upgrade audit](pycavi-portability-audit-2026-10-21.md) | Reproduced packaging failures, current-library probes and staged compatibility plan |
 | [External tools and library options](external-tools-and-library-options-2026-10-21.md) | Installed versus upstream releases and a coherent integration strategy |
 | [Single-detector and parallel-work audit](detectors-and-parallel-work-audit-2026-10-21.md) | FITS/detector assumptions and single-node task opportunities; native engine work deferred |
+| [Thin notebooks and script interface review](pycavi-two-interface-review-2026-10-21.md) | Shared library stages, legacy script drift and explicit WFI work |
 
 The immediate goal is a scientifically validated reduction of a medium-sized
 OmegaCAM dataset, prepared for submission as ESO Phase 3 products. Dataset
