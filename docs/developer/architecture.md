@@ -1,5 +1,73 @@
 # wenu-imaging architecture
 
+## Current direction, 21 October 2026
+
+Latest clarification: discard the old reduction-script implementation path;
+thin the notebooks first, derive new configuration-driven runnable scripts from
+the resulting shared library calls, audit those Python routines, then audit
+mefpp. WFI implementation/validation is deferred until Mac/Linux OmegaCAM works;
+its requirements remain preserved. BPM production belongs in the normal
+calibration workflow. Current Pycavi copies a static mask, but native mefpp
+contains a construction path; validate and integrate existing work before
+designing any replacement. No library or engine upgrades now. This clarification
+controls where earlier proposed sequences below differ.
+
+The immediate work is coherent wenu-imaging packaging and Pycavi debugging and
+improvement with the existing library/engine versions retained. Library upgrades
+and SEP or other backend adoption are deferred. Complete the Pycavi milestone
+before mefpp implementation. Packaging must distinguish the wenu-imaging product,
+Python distribution metadata, stable pycavi imports and separately built native
+components; a successful Python install must not imply native engines were built.
+
+Pycavi has two intended user interfaces: thin editable notebooks and
+configuration-driven Python scripts/commands. Both call the same installed
+library stages. Keep notebook choices and data inspection accessible while
+moving stable processing/sequence logic to shared functions. WFI and OmegaCAM
+are both required paths, including WFI calibration selection and instrument-
+specific photometry/provenance; the OmegaCAM pilot does not validate WFI.
+See [the two-interface review](pycavi-two-interface-review-2026-10-21.md).
+
+The packaging acceptance target includes an obvious repository-root installation
+entry point, correctly installed notebook/config resources, preserved edited
+orchestration files, explicit external executable/resource configuration and a
+record of the tested environment. Select the exact distribution metadata layout
+in the focused packaging implementation; do not maintain competing independent
+metadata definitions or rename imports merely to match the parent name.
+
+Audit detector layout and concurrency now; implementation is staged. See
+[single-detector and parallel-work audit](detectors-and-parallel-work-audit-2026-10-21.md).
+Represent processing opportunities as tasks with explicit inputs, dependencies,
+outputs and CPU/memory/thread budgets. Reuse current functions and simple process
+tools rather than introduce a workflow framework. An independent file has one
+writer; shared master calibrations become immutable inputs once complete.
+
+### Complete application distribution
+
+A Python wheel and a complete application installation are separate deliverables.
+The Python package declares dependencies and contains its code/notebooks/config;
+a coordinated environment supplies Python, scientific libraries and native
+astronomy programs. A candidate delivery is one Conda-based environment recipe
+with platform-specific tested resolutions and native component recipes where
+needed, followed later by optional self-contained installers (for example with
+constructor). Availability and licensing of every packaged native dependency
+must be verified; this is an architecture proposal, not an existing installer.
+
+Build/test separately for Linux, macOS Intel and macOS arm64. Native Windows
+support is not established by packaging Python: current POSIX shell/symlink and
+native-engine assumptions require porting and validation. Windows via WSL2 is
+the practical candidate for reusing the Linux environment. Fernando's question
+about feasibility does not change the urgent Intel Mac/cluster priorities.
+
+Astrometry indexes and observational inputs remain separately identified data;
+an offline distribution can include staged indexes as a separate data bundle.
+Do not hide large downloads inside setup or a reduction run. Retain existing
+dependency versions/limits during this packaging stage; platform builds and
+installers do not constitute permission to upgrade libraries or engines.
+
+References: [constructor](https://conda.github.io/constructor/),
+[Python binary packaging](https://packaging.python.org/en/latest/guides/packaging-binary-extensions/),
+[Microsoft WSL](https://learn.microsoft.com/en-us/windows/wsl/about).
+
 Status: accepted architecture direction, updated with Fernando's scope decisions
 on 20 October 2026. Existing behavior and future capabilities are distinguished;
 this documentation update does not change component implementation.

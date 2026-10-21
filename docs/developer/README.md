@@ -13,6 +13,10 @@ Updated for the subsequent decision to consolidate into one repository.
 | [Previous Mac installation and OmegaCAM workflow](mac-installation-history-2026-10-20.md) | Installed tools, build provenance, OCAM layout and last apparent use |
 | [Chebyshev repair and pilot evidence](chebyshev-repair-2026-10-21.md) | Complete model export, notebook diagnostics, validation and safe Mac update |
 | [Catalogue execution repair](catalogue-repair-2026-10-21.md) | Single-filter catalogues, explicit models, correction copies and repeat-run protection |
+| [Pycavi portability and library upgrade audit](pycavi-portability-audit-2026-10-21.md) | Reproduced packaging failures, current-library probes and staged compatibility plan |
+| [External tools and library options](external-tools-and-library-options-2026-10-21.md) | Installed versus upstream releases and a coherent integration strategy |
+| [Single-detector and parallel-work audit](detectors-and-parallel-work-audit-2026-10-21.md) | FITS/detector assumptions and single-node task opportunities; native engine work deferred |
+| [Thin notebooks and script interface review](pycavi-two-interface-review-2026-10-21.md) | Shared library stages, legacy script drift and explicit WFI work |
 
 The immediate goal is a scientifically validated reduction of a medium-sized
 OmegaCAM dataset, prepared for submission as ESO Phase 3 products. Dataset

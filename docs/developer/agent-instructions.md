@@ -4,6 +4,79 @@ Status: accepted working agreement, with scope clarified by Fernando Selman on
 20 October 2026. This is the canonical developer policy; the root AGENTS.md
 directs agents here.
 
+## Scope update, 21 October 2026
+
+### Latest sequencing clarification
+
+Fernando subsequently revised the proposed refactoring order:
+
+1. Retire the historical `.py` reduction scripts; do not port their obsolete
+   implementations. Streamline the notebooks using the existing libraries.
+2. Once the notebook workflow is thin, provide runnable Python scripts driven
+   by configuration files from that workflow, calling the same library routines.
+3. Audit the library routines actually used by those notebooks systematically.
+   Existing targeted fixes/tests do not establish that other routines are sound.
+   Keep refactoring equivalence checks while thinning; the full scientific
+   library audit follows the thin-notebook stage.
+4. Audit mefpp after the Python-library audit. Read-only tracing of an existing
+   native capability may inform the plan without starting the full C audit.
+
+Keep packaging and Mac/Linux OmegaCAM execution as immediate prerequisites.
+Postpone WFI implementation and dedicated validation until wenu-imaging works on
+Mac and Linux. WFI remains a retained requirement; preserve its files/history and
+record shared-code risks, but do not let WFI-specific work lead the current phase.
+No Python/library/engine upgrades or backend replacements are authorized now.
+
+BPM generation must be part of normal calibration creation, not permanently
+defined as copying a static installed mask. Trace and validate the existing
+mefpp construction path first, including required inputs, dependency order,
+detector mapping, mask convention, thresholds, provenance and reuse rules.
+Do not invent new BPM algorithms or silently change the working pilot products.
+
+This clarification supersedes earlier suggestions to repair the legacy scripts
+or begin implementation with WFI calibration preselection. Keep notebook/script
+logic shared and preserve the single-node parallelism objective.
+
+Fernando clarified the order of work after the portability audit:
+
+- The immediate deliverable is properly packaged wenu-imaging with robust
+  installed resources, explicit dependencies and reproducible installation.
+  Debug and improve Pycavi before moving on to mefpp implementation.
+- Do not upgrade Python libraries, Python itself, external astronomy engines,
+  or replace backends in this stage. Prior modern-library probes are audit
+  evidence only. Future compatibility means maintained interfaces, packaging,
+  tests and recorded constraints now, with upgrades qualified separately later.
+  Correctly declaring existing runtime imports is distinct from selecting a
+  new library or upgrading the working environment.
+- Audit single-chip CCD and CMOS requirements now, including primary-image and
+  one-extension FITS layouts and detector-specific calibration/noise behavior.
+  Audit findings do not establish implemented detector support.
+- Audit every pipeline stage for single-node concurrency, aiming to parallelize
+  every independent task where resource use and scientific dependencies permit.
+  Cover exposure, detector, target/filter and independent QC work; coordinate
+  outer processes and inner executable/BLAS threads within one node allocation.
+- Dependency barriers and exclusive ownership of outputs remain mandatory.
+  Joint fits and coadds may have parallel internals but cannot be replaced by
+  independent per-frame results without preserving their scientific definition.
+- Keep the present mefpp behavior for the packaging/Pycavi milestone. The later
+  mefpp audit must consider both concurrent independent invocations and internal
+  C parallelism rather than assuming one is automatically safe or sufficient.
+
+This dated update controls the sequencing where earlier future-work paragraphs
+differ. It does not authorize a broad rewrite, premature backend replacement,
+archive submission or merging a proposal without instruction.
+
+### Two user interfaces and WFI coverage
+
+Fernando's intended design is thin, editable notebooks for learning and inspecting
+data, plus Python scripts/configuration for repeatable headless processing. Both
+must call the same library stage functions; do not maintain separate scientific
+implementations or implement the script path by executing notebooks. Keep useful
+parameter choices and inspection visible in notebooks. Retain WFI in the design,
+but defer WFI implementation and validation as specified above, including its
+calibration preselection, filter/metadata conventions and standards.
+See [the two-interface review](pycavi-two-interface-review-2026-10-21.md).
+
 ## Purpose and scope
 
 wenu-imaging coordinates Pycavi2 (Python), mefpp2 (ANSI C with embedded Eclipse),
