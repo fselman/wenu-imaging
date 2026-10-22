@@ -12,6 +12,26 @@ separately and is not established by successful engine execution.
 
 ## Candidate inputs
 
+### NB_659 sky and combined-flat functional results
+
+The NB_659 sky and combined master flat were produced at niceness 10; both
+contain all 32 named detectors and finite pixels. The sky flat reproduces the
+historical pixels exactly. The combined flat differs in 15,604 pixels across
+18 detectors, the same detectors with changed BPM pixels. The largest absolute
+difference is 0.08831357955932617 on ESO_CCD_#90; do not dismiss local differences
+based on their small fraction of the mosaic.
+
+A read-only spatial check used the actual staged kernel half-size 4 (9x9 square
+support) and the project BPM versus historical split masks. Every changed MFF
+pixel is inside the corresponding changed-mask influence footprint; zero lie
+outside it. Together with exact bias, dome and sky reproduction and the native
+BPM-aware smoothing code, this strongly supports the changed BPM as the cause.
+It is not a controlled rerun with identical BPM input or independent scientific
+quality certification. No production image-processing algorithm was changed.
+The records are `sky-mff-comparison.json` and `mff-bpm-footprint.json` in the
+staged NB_659 sky partition. The functional pilot may proceed with this recorded
+input difference; scientific mask/calibration validation remains deferred.
+
 ### Functional-test threshold override authorized
 
 Chapman3 follow-up: the failed 45,000 attempt is preserved at
