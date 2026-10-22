@@ -4,6 +4,49 @@ Status: accepted working agreement, with scope clarified by Fernando Selman on
 20 October 2026. This is the canonical developer policy; the root AGENTS.md
 directs agents here.
 
+## Machine guards and process priority, 22 October 2026
+
+Fernando develops on his Mac (wenu) and chapman3 (wenu-imaging) in parallel.
+Every copy-and-paste command block must state its intended machine/project and
+start with an automatic OS/hostname guard before any other work, including
+environment activation, imports, Git operations, installs or file writes.
+Do not rely on the displayed shell prompt or a previous block's successful check.
+Group the block in a subshell so a guard failure stops that block without
+closing the user's interactive terminal or SSH session.
+
+For the current chapman3 imaging pilot, use this guard:
+
+```bash
+(
+test "$(uname -s):$(hostname -s)" = "Linux:chapman3" || {
+    echo "STOP: run this block on chapman3 for wenu-imaging." >&2
+    exit 1
+}
+# Intended commands follow here.
+)
+```
+
+The known Mac is MC02VV0HPHTDG (Darwin); the parallel wenu checkout is
+`/Users/fselman/odrive/Dropbox/software/wenu`. The current chapman3 imaging
+checkout is `$HOME/Software/wenu-imaging`. These are distinct projects. For
+repository operations, additionally check the actual Git root, origin repository
+and expected branch before modifying/fetching/installing; hostname alone cannot
+distinguish checkouts. For Python processing, also check the resolved interpreter
+prefix against the intended environment before scientific imports. The current
+chapman3 prefix is `$HOME/.conda/envs/wenu-imaging`. Use the explicitly selected
+target for future Mac imaging validation rather than requiring Linux for every
+wenu-imaging task. Do not silently update a failed guard to match the current
+terminal or infer the correct project from a directory's basename.
+
+Future reduction launches must use `nice -n 10` on the Python parent so native
+child processes inherit the lower CPU priority. Retain existing thread/resource
+limits. Do not renice, restart or otherwise disturb an already running job
+without instruction. The first pilot bias was already running when Fernando
+requested this priority convention; it was left running as instructed.
+
+These are instructions for preparing commands, not authorization for a new CLI,
+host migration, workflow refactor or scheduler change.
+
 ## Packaging-stage authorization, 21 October 2026
 
 Fernando authorized the packaging implementation, preserving the current

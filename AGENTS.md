@@ -8,6 +8,10 @@ The immediate goal is an OmegaCAM reduction set for ESO Phase 3 submission.
 Multiprocessing is within one node; mefpp remains serial for this milestone.
 Component implementation changes require authorization for the relevant stage.
 
+Before user-facing terminal commands, follow the machine/repository guards in
+the developer instructions. Fernando works on Mac/wenu and chapman3/wenu-imaging
+in parallel. Future reduction launches must use `nice -n 10`.
+
 The original audit is historical evidence, not the current agent policy.
 
 Scope clarification, 21 October 2026: package wenu-imaging and debug/improve
