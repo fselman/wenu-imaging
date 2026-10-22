@@ -1,14 +1,35 @@
 # CN Ori paired-filter pilot proposal
 
 Status: Fernando approved the four historical numerical values on 22 October
-2026 and authorized proceeding with input/BPM provenance checks. Application of
-the PAF on chapman3 is not yet verified; no pilot execution is established.
+2026 and authorized proceeding with input/BPM provenance checks. PAF
+application, input staging and links are now verified on chapman3; the first
+native bias run is pending. The latest evidence below supersedes earlier
+pending-check notes retained as implementation history.
 Fernando requires NB_659 and an associated r_SDSS set because the narrow-band
 photometric calibration has particular behavior. This proposal concerns
 instrumental preprocessing first; photometric validation must treat each filter
 separately and is not established by successful engine execution.
 
 ## Candidate inputs
+
+Latest chapman3 preparation evidence: all 60 distinct inputs total 32.22 GiB;
+detector EXTNAME ordering matches the installed MEF BPM across all 60 inputs.
+The preserved dependency inventory is
+`/home/fselman/wenu-pilot-manifest.p0y2ven1/manifest.json`.
+All nine lists and approved PAFs are staged in the isolated project, with a
+project `pilot-manifest.json`. All nine BPM links and ten calibration links are
+verified. The copied project BPM matches the installed source, passes the
+legacy-aware preflight, and the installed source checksum is unchanged.
+The workspace PAF backup is `omegacam.paf.backup-20261022-095059-005728`.
+
+Fernando agreed to the first bounded run: the ten-input shared science bias
+partition dated 2017-03-11T09:21:33, followed by detector/shape/units/finite-pixel
+checks and initially exact numerical pixel comparison. He clarified that the
+old master is merely a product of previous reductions, not independently
+validated truth. Treat it as a historical reproducibility comparison. Investigate
+differences before continuing dependent reductions; equality does not establish
+scientific quality. A calibration-product QC library is deferred until the
+currently planned wenu-imaging work is complete (see roadmap).
 
 Historical root: `/home/fselman/omegacam/testing/reduced/`.
 The paths below are relative to that root; their existing lists define the

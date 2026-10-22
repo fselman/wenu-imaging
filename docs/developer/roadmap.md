@@ -282,6 +282,11 @@ These are explicit future requirements and have no implementation authorization:
 3. **Single CMOS reductions.** Determine readout modes and calibration/noise
    requirements from actual detectors/data. Do not treat single CMOS support as
    already implemented or assume every CCD correction applies unchanged.
+4. **Calibration-product QC library (Fernando, 22 October 2026).** Develop a
+   library for scientific quality control of calibration products after the
+   currently planned wenu-imaging work is finished. Keep this deferred; current
+   historical-product comparisons establish reproducibility evidence, not
+   independent calibration-quality certification. No implementation is started.
 
 Agree their relative order after the operational OmegaCAM milestone. Preserve
 instrument configuration boundaries and existing mosaic support when designing
