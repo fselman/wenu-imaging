@@ -14,6 +14,15 @@ separately and is not established by successful engine execution.
 
 ### Functional-test threshold override authorized
 
+Chapman3 follow-up: the failed 45,000 attempt is preserved at
+`calib/dome/574184/r_SDSS/2017-03-14T09:41:34/failed-45000-20261022T143505694348Z/`.
+The local PAF was changed to 55,000 with minimum accepted count still five;
+`functional-override.json` records the new PAF hash and purpose. The rerun
+confirmed niceness 10 and produced a complete MEF dome flat with all 32 named
+detector images and finite pixels. There is no historical r_SDSS dome reference.
+This is a functional pass, not a calibration-quality certification. The override
+does not change sky-flat thresholds or the baseline project PAF hash.
+
 Fernando clarified that this stage is functional testing and authorized raising
 the dome upper frame threshold to 55,000 for the failed r_SDSS dome test.
 Keep the production minimum of five accepted frames; lowering it to three
