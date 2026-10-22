@@ -3,7 +3,7 @@
 Status: Fernando approved the four historical numerical values on 22 October
 2026 and authorized proceeding with input/BPM provenance checks. PAF
 application, input staging and links are now verified on chapman3; the first
-native bias run is pending. The latest evidence below supersedes earlier
+native bias run and exact historical pixel comparison pass. The latest evidence below supersedes earlier
 pending-check notes retained as implementation history.
 Fernando requires NB_659 and an associated r_SDSS set because the narrow-band
 photometric calibration has particular behavior. This proposal concerns
@@ -11,6 +11,17 @@ instrumental preprocessing first; photometric validation must treat each filter
 separately and is not established by successful engine execution.
 
 ## Candidate inputs
+
+The first native run produced
+`calib/bias/574184/2017-03-11T09:21:33/OCAM_MB_1x1.fits` (1,070,729,280 bytes).
+Comparison with the historical `OMEGACAM_MB_1x1.fits` found 33 HDUs in each,
+identical detector-name ordering and dimensions, finite pixels throughout all
+32 detector arrays, zero differing pixels and zero maximum/RMS differences.
+Both products lack primary and detector BUNIT cards: zero unit-header
+differences means shared missing metadata, not established physical units.
+The result is historical reproducibility evidence, not independent scientific
+quality certification. The saved comparison is `bias-comparison.json` in the
+new bias partition. No dome, sky or science reduction is established yet.
 
 Latest chapman3 preparation evidence: all 60 distinct inputs total 32.22 GiB;
 detector EXTNAME ordering matches the installed MEF BPM across all 60 inputs.
