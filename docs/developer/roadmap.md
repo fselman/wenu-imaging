@@ -1,5 +1,24 @@
 # wenu-imaging roadmap
 
+## mefpp detector-identity audit TODO, 22 October 2026
+
+Fernando requests verification that reduction associates detector images by
+chip identity (for example EXTNAME), rather than assuming the same ordinal
+extension in every MEF. He recalls correcting positional matching; its current
+status is unresolved. Trace raw inputs, bias, dome/sky/master flats, BPMs and
+output assembly, including extension subsets. Distinguish name lookup from
+merely logging names while loading by index. Check the existing source/history
+and identify the source of the installed chapman3 binary where possible.
+Use synthetic MEFs with deliberately permuted extension order to verify either
+correct name matching or an explicit failure before processing; also cover
+missing, duplicate and unknown chip names. Record this under the later mefpp
+audit; no native implementation change is authorized by this TODO. Matching
+order in the ten pilot science exposures is evidence for those inputs only.
+
+Fernando approved a focused Pycavi MEF BPM linking/preflight correction on
+22 October. Keep mask pixels, native engines and notebook logic unchanged;
+verify missing/broken links and invalid layouts using disposable FITS fixtures.
+
 ## Limited compatibility review authorized, 22 October 2026
 
 Fernando approved bringing a focused part of the Pycavi library audit forward

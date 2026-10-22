@@ -335,6 +335,116 @@ change and several scientific dependencies are absent in this test environment.
 Chapman3's working notebook copy and installed wheel still need this update;
 no reduction has run as part of the correction.
 
+### Chapman3 deployment of the prefix correction
+
+Fernando fast-forwarded `fix/installed-packaging` to
+`94488232968d2eb52fac3eac2f5b0925a0c964a7`, built a new wheel from a clean
+`git archive` source copy and reinstalled only Pycavi with `--no-deps`.
+All ten installed-package tests passed in 0.634 seconds. Verification directory:
+`/home/fselman/wenu-prefix-check.nJUCnO`; wheel SHA256:
+`65f1e4936276d9252cc2b12e711dd000a96d503f46c24382f273414ad7df0579`.
+The path check found the actual installed executable, `config/omegacam.paf`
+and `static_cal/OCAM_BPM_1x1.fits` below
+`/home/fselman/opt/local/mefpp`. This checks locations, not resource science
+content or a native reduction.
+
+The isolated workspace's notebook 03 was patched with only the approved
+assignment replacement. Its prior contents were backed up as
+`03_pycavi_run.ipynb.backup-20261022-085959-537279` in that workspace.
+The reported installation prefix is `/home/fselman/opt/local/mefpp`.
+No processing run has occurred. Next inventory the old reductions read-only
+to select a small pilot, calibration associations and trusted comparison
+products before creating partitions or executing reduction cells.
+
+Fernando's bounded old-reduction inventory (`Pasted text(20261022-120207).txt`)
+lists 42 science target directories and calibration roots `bias`, `bpm`, `dome`
+and `sky`. Only the first 30 target/filter/date partitions and first 12 entries
+per partition were displayed; BPM filenames dominate those truncated listings.
+Do not infer that unseen products are absent or that any reduction is complete.
+CN Ori / NB_659 at `2017-03-11T01:24:08` and `2017-03-12T00:24:41` visibly have
+five `_pre.fits` entries per night and similarly named companion directories.
+These are useful pilot/reference candidates, not yet trusted reference products.
+Inspect their full non-BPM entries, symlinks, association lists and primary FITS
+headers read-only before choosing the pilot and comparison tolerances.
+
+The detailed CN Ori listing confirms five 480-second `_pre.fits` exposures per
+night, each 1,070,553,600 bytes, with `science.list` pointing into the raw FITS
+directory. Master bias links resolve to separate 11/12 March 2017 partitions;
+both nights' master flats resolve to the sky partition dated
+`2017-03-08T23:14:31`. Associated master links exist. The 11 March solve log is
+nonempty; the 12 March solve log is empty. Neither log size proves processing
+success. Primary sample headers lack plain `FILTER`, `BUNIT`, `NEXTEND` and
+`HISTORY`. The instrument filter key is `HIERARCH ESO INS FILT1 NAME`; missing
+plain FILTER alone does not show missing filter information. Current Python
+normalization writes primary `BUNIT=e-/s`, so the old products' normalization
+stage/units need establishing before comparisons. Do not normalize or edit
+those originals. The missing keywords alone do not prove pixel units, detector
+count, corruption or reduction completeness. The first night is a candidate
+for a five-exposure preprocessing pilot, pending calibration-chain inspection
+and agreed comparison stage/tolerances.
+
+The first calibration-link traversal displayed 5 science, 5 sky and two sets
+of 10 bias input-list entries, with existing linked bias/MFF files. Its filter
+followed only symlink names starting `OMEGACAM_M`; that is not a complete
+calibration traversal and may exclude dome products. Thirty listed inputs are
+therefore a visible subset, not a complete pilot manifest. The logs display
+only the mefpp 1.6.0 banner, environment initialization and parameter loading;
+they do not document completion or full command/config provenance.
+
+Further read-only source inspection identifies two relevant preconditions:
+current `mefpp_reduce_sky` requires a dome master before generating sky/MFF
+products, and the packaged OmegaCAM PAF names products `OCAM_MB`, `OCAM_BPM`,
+`OCAM_DOMEFF`, `OCAM_SKYFF` and `OCAM_MFF`, whereas the inspected old products
+include `OMEGACAM_MB` and `OMEGACAM_MFF`. Inspect old partition PAFs, installed
+PAF and current workspace PAF before interpreting absent links or reusing old
+calibrations. Do not change naming/configuration or remove the dome requirement
+as an unreviewed workaround.
+
+The follow-up inventory found the valid `OMEGACAM_DOMEFF_NB_659_1x1.fits`
+symlink in the sky partition. Its dome partition is
+`calibs/dome/574184/NB_659/2017-03-09T09:40:35`, with five dome inputs and a
+master bias link to the already identified 9 March bias partition. The visible
+NB_659 chain now comprises 5 science, 5 sky, 5 dome and 20 bias list entries;
+existence/uniqueness of every raw path still needs checking before a manifest.
+
+Fernando required an associated `r_SDSS` set in addition to the narrow-band
+set because NB_659 has calibration-specific behavior. His initial recollection
+of NB_654 was corrected to NB_659; do not locate a different filter on that
+basis. The matching CN Ori r_SDSS partitions have not yet been characterized.
+
+Old science/sky PAFs consistently use `OMEGACAM_*`; current installed/workspace
+PAFs consistently use `OCAM_*`. More importantly, a comment/PAF-metadata-filtered
+comparison reported 65 changed settings, including these numerical differences:
+
+| Setting | Historical | Current |
+|---|---|---|
+| `MEF.DOMEFF.FRAMETHR.HI` | 45000 | 55000 |
+| `MEF.SKYFF.FRAMETHR.HI` | 45000 | 55000 |
+| `MEF.SKYFF.FRAMETHR.LO` | 10000 | 7000 |
+| `MEF.KERN.HSIZE` | 4 | 7 |
+
+The remaining reported differences include names, header-key mappings, origin
+and added Phase 3 metadata. This is not evidence that all these changes are
+scientifically neutral. Some new metadata values visibly contain curly quotes;
+no correction is authorized by recording that observation. Do not run a current
+PAF against historical outputs and attribute all numerical differences to
+Python or packaging. Agree on the baseline configuration and comparison stage
+before any rerun; no PAF settings have been changed.
+
+The same-night CN Ori r_SDSS science partition has five list entries. Its first
+raw exposure (`OMEGA.2017-03-11T02:14:43.394.fits`) confirms OBJECT CN Ori,
+filter r_SDSS, DATE-OBS `2017-03-11T02:14:43.393` and exposure time 80 seconds.
+The master bias link resolves to the shared 11 March ten-bias partition. Its
+master-flat symlink points to
+`calibs/sky/200253584/r_SDSS/2017-03-13T23:12:13/OMEGACAM_MFF_r_SDSS_1x1.fits`,
+which is missing. The traversal did not visit that parent because it followed
+only existing files. Inspect the parent even when the master file is absent:
+the calibration input lists may still be available. This is an old-tree
+precondition, not evidence of a Python/environment failure. Do not substitute
+a different flat, repair old links or modify old products without a reviewed
+association decision. Paired-filter pilot definition and baseline PAF choice
+remain pending.
+
 Primary package-format reference:
 [Astroplan 0.10.1 release files](https://pypi.org/project/astroplan/0.10.1/).
 
