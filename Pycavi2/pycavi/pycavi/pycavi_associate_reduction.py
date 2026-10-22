@@ -1015,17 +1015,19 @@ def check_mef_bpm(basepath, instrument):
     """Check the partition's MEF mask without loading or changing its pixels.
 
     This checks the mask layout and configured detector-name coverage, not
-    pixel quality or native name-versus-position matching semantics.
+    pixel quality or native name-versus-position matching semantics. Legacy
+    image extensions missing PCOUNT/GCOUNT are checked with 0/1 defaults in
+    memory only, with a warning; no changes are written to the mask.
     """
     path = Path(basepath) / (instrument.bpm_prefix + '_1x1.fits')
     if not path.is_file():
         raise FileNotFoundError("Missing MEF BPM (or broken link): {}".format(path))
     try:
         with fits.open(path, mode='readonly', memmap=True) as hdus:
-            hdus.verify('exception')
             if len(hdus) != instrument.nextensions + 1 or hdus[0].header.get('NAXIS') != 0:
                 raise ValueError("expected empty primary and {} image extensions".format(instrument.nextensions))
             names = []
+            legacy_extensions = 0
             for hdu in hdus[1:]:
                 header = hdu.header
                 if (not isinstance(hdu, fits.ImageHDU) or isinstance(hdu, fits.CompImageHDU)
@@ -1037,8 +1039,26 @@ def check_mef_bpm(basepath, instrument):
                 if not name or name in names:
                     raise ValueError("missing or duplicate detector EXTNAME")
                 names.append(name)
+                missing = 'PCOUNT' not in header or 'GCOUNT' not in header
+                for key, expected, after in (('PCOUNT', 0, 'NAXIS2'), ('GCOUNT', 1, 'PCOUNT')):
+                    if key not in header:
+                        # Supplement only the read-only in-memory header, not
+                        # the original file or its pixel arrays.
+                        position = header.index(after) + 1
+                        if position < len(header) and header.cards[position].keyword == '':
+                            del header[position]
+                        header.set(key, expected, after=after)
+                    elif header[key] != expected:
+                        raise ValueError("{} must be {} for an image mask".format(key, expected))
+                legacy_extensions += int(missing)
             if not set(instrument.valid_ext_names).issubset(names):
                 raise ValueError("configured detector names missing from mask")
+            hdus.verify('exception')
+            if legacy_extensions:
+                logging.warning(
+                    "Using legacy MEF BPM %s: missing PCOUNT/GCOUNT cards in %d extensions; "
+                    "checked with PCOUNT=0, GCOUNT=1 in memory only; file unchanged",
+                    path, legacy_extensions)
     except (OSError, ValueError, fits.verify.VerifyError) as exc:
         raise ValueError("Invalid MEF BPM {}: {}".format(path, exc)) from exc
     return True

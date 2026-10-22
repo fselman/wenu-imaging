@@ -48,6 +48,78 @@ class MefBpmTests(unittest.TestCase):
     def link(self):
         self.tree.link_bpm([self.part], self.instrument)
 
+    def remove_group_cards(self, keys, compact=False):
+        # Edit header cards directly: a FITS writer would restore mandatory
+        # cards, hiding the legacy layout seen on chapman3.
+        raw = bytearray(self.source.read_bytes())
+        with fits.open(self.source, memmap=True) as hdus:
+            for i, hdu in enumerate(hdus[1:], 1):
+                start = hdus.fileinfo(i)['hdrLoc']
+                if compact:
+                    header = hdu.header.copy()
+                    for key in keys:
+                        del header[key]
+                    block = header.tostring().encode('ascii')
+                    raw[start:start+len(block)] = block
+                    continue
+                for j, card in enumerate(hdu.header.cards):
+                    if card.keyword in keys:
+                        raw[start + 80*j:start + 80*(j+1)] = b' ' * 80
+        self.source.write_bytes(raw)
+
+    def test_legacy_missing_group_cards_warn_without_changing_file(self):
+        self.link()
+        for keys in (('PCOUNT',), ('GCOUNT',), ('PCOUNT', 'GCOUNT')):
+            with self.subTest(keys=keys):
+                self.write_mask()
+                self.remove_group_cards(keys)
+                before = self.source.read_bytes()
+                with fits.open(self.source) as hdus:
+                    with self.assertRaises(fits.verify.VerifyError):
+                        hdus.verify('exception')
+                with self.assertLogs(level='WARNING') as captured:
+                    self.assertTrue(reduction.check_mef_bpm(self.work, self.instrument))
+                self.assertIn('legacy MEF BPM', captured.output[0])
+                self.assertEqual(before, self.source.read_bytes())
+                with fits.open(self.source) as hdus:
+                    self.assertTrue(all(k not in hdus[1].header for k in keys))
+
+        self.write_mask()
+        self.remove_group_cards(('PCOUNT', 'GCOUNT'), compact=True)
+        before = self.source.read_bytes()
+        with self.assertLogs(level='WARNING'):
+            self.assertTrue(reduction.check_mef_bpm(self.work, self.instrument))
+        self.assertEqual(before, self.source.read_bytes())
+
+    def test_legacy_tolerance_does_not_ignore_other_fits_errors(self):
+        self.write_mask()
+        self.link()
+        self.remove_group_cards(('PCOUNT', 'GCOUNT'))
+        with fits.open(self.source) as hdus:
+            start = hdus.fileinfo(1)['hdrLoc']
+            bitpix = start + 80 * hdus[1].header.index('BITPIX')
+            name = start + 80 * hdus[1].header.index('EXTNAME')
+        raw = bytearray(self.source.read_bytes())
+        raw[bitpix:bitpix+80], raw[name:name+80] = raw[name:name+80], raw[bitpix:bitpix+80]
+        self.source.write_bytes(raw)
+        before = self.source.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'NAXIS1.*wrong place'):
+            reduction.check_mef_bpm(self.work, self.instrument)
+        self.assertEqual(before, self.source.read_bytes())
+
+    def test_nonstandard_group_values_are_rejected(self):
+        self.link()
+        for key, value in (('PCOUNT', 1), ('GCOUNT', 2)):
+            with self.subTest(key=key):
+                self.write_mask()
+                with fits.open(self.source) as hdus:
+                    offset = hdus.fileinfo(1)['hdrLoc'] + 80 * hdus[1].header.index(key)
+                raw = bytearray(self.source.read_bytes())
+                raw[offset:offset+80] = fits.Card(key, value).image.encode('ascii')
+                self.source.write_bytes(raw)
+                with self.assertRaisesRegex(ValueError, key):
+                    reduction.check_mef_bpm(self.work, self.instrument)
+
     def test_existing_source_creates_link_without_changing_mask(self):
         self.write_mask()
         before = self.source.read_bytes()

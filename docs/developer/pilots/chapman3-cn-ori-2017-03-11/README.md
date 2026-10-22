@@ -153,7 +153,32 @@ reproduce the old link-creation and false-success defects against the previous
 module. A fresh wheel passes ten installed-package checks outside the checkout;
 all eight BPM tests also pass against the wheel-installed module. Native calls
 are mocked in runner tests; this is not evidence of successful real reduction.
-Chapman3 Python 3.11 installation and actual-MEF verification remain pending.
+Chapman3 subsequently installed commit 3f5c102 and passed all ten packaging
+checks and eighteen source regressions. Its actual installed MEF failed the
+new strict FITS verification because PCOUNT/GCOUNT are absent in all 32 image
+extensions; these cards were not inspected in the earlier header inventory.
+The previous successful pixel reads do not establish full FITS conformance.
+
+The follow-up preflight retains strict verification but supplies missing
+PCOUNT=0/GCOUNT=1 in read-only, in-memory image headers only and logs an explicit
+legacy warning after verification succeeds. It rejects explicitly nonstandard
+group values and other structural errors. It never writes those defaults or
+changes pixels in the source file. Regression fixtures directly remove cards
+from FITS header bytes (both blanked slots and compact headers), reproducing the
+real failure rather than relying only on standards-compliant Astropy output.
+Tests compare file bytes before/after, require the warning and confirm that
+other FITS errors still fail. Native header assembly is recorded as a separate
+mefpp audit TODO, not repaired here. Revalidation of the actual chapman3 MEF
+with this follow-up remains pending.
+
+Follow-up local validation: all 21 source regressions pass (11 BPM plus 10
+existing scientific tests). A clean rebuilt wheel passes 10 installed-package
+checks and all 11 BPM tests against its installed module outside the checkout.
+These use local Python 3.12/Astropy 6.1.7 and disposable masks; they do not
+substitute for the pending chapman3 actual-mask check.
+
+Reference: [Astropy FITS verification](https://docs.astropy.org/en/stable/io/fits/usage/verification.html)
+distinguishes permissive input reading from explicit strict verification.
 
 The mefpp detector-identity TODO in `roadmap.md` explicitly requires tracing
 name versus ordinal matching across raw/calibration/BPM/output paths, with

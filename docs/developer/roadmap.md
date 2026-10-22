@@ -15,6 +15,11 @@ missing, duplicate and unknown chip names. Record this under the later mefpp
 audit; no native implementation change is authorized by this TODO. Matching
 order in the ten pilot science exposures is evidence for those inputs only.
 
+Also audit native FITS header assembly: the installed chapman3 MEF BPM lacks
+PCOUNT/GCOUNT in all 32 image extensions. Identify the writer/source generation,
+check other products, and ensure future output meets the applicable FITS
+requirements. Do not rewrite the installed mask as a side effect of preflight.
+
 Fernando approved a focused Pycavi MEF BPM linking/preflight correction on
 22 October. Keep mask pixels, native engines and notebook logic unchanged;
 verify missing/broken links and invalid layouts using disposable FITS fixtures.
