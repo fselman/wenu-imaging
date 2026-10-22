@@ -12,6 +12,40 @@ separately and is not established by successful engine execution.
 
 ## Candidate inputs
 
+### Functional-test threshold override authorized
+
+Fernando clarified that this stage is functional testing and authorized raising
+the dome upper frame threshold to 55,000 for the failed r_SDSS dome test.
+Keep the production minimum of five accepted frames; lowering it to three
+would not remedy the observed zero accepted frames. Do not select additional
+adjacent-night dome inputs now. Apply this as a recorded local override in the
+r_SDSS dome partition's PAF, preserving the failed 45,000 attempt and leaving
+the canonical/native configuration and the NB_659 historical comparison intact.
+The original project manifest PAF hash describes the initial baseline; the new
+attempt must record its own PAF hash and explicit override.
+
+At the 45,000 threshold, the r_SDSS run wrote only 25 image extensions (26 HDUs)
+through ESO_CCD_#85. At extension 26, the logged frame-rejection statistics for
+all five inputs were 45,056.1 to 45,063.5, above the upper limit; native errors
+reported zero accepted frames and aborted dome production. The Python wrapper
+misreported success because it ignored the process exit code and searched only
+case-sensitive `Error` text in the log. That separate runner defect remains
+unfixed. Preserve logs, partial master, command, provenance, list and PAF before
+rerunning. Raising this frame-selection threshold does not establish pixel
+linearity or calibration quality; do not claim historical equivalence for the
+new functional attempt.
+
+### Completed bias and NB_659 dome checks
+
+All three selected bias masters have been produced. March 9 and March 11 match
+historical pixels exactly over all 32 detectors; the March 14 bias passes named
+detector and finite-pixel checks but has no historical master for comparison.
+All three candidate bias products are 1,070,729,280 bytes. The NB_659 dome master
+is 1,070,732,160 bytes and also matches historical pixels exactly across all 32
+detectors, with zero mean/RMS/maximum differences and finite pixels. Units are
+unspecified in both versions of the compared products. The dome run confirmed
+Python niceness 10. These results do not certify calibration quality.
+
 The first native run produced
 `calib/bias/574184/2017-03-11T09:21:33/OCAM_MB_1x1.fits` (1,070,729,280 bytes).
 Comparison with the historical `OMEGACAM_MB_1x1.fits` found 33 HDUs in each,
@@ -21,7 +55,8 @@ Both products lack primary and detector BUNIT cards: zero unit-header
 differences means shared missing metadata, not established physical units.
 The result is historical reproducibility evidence, not independent scientific
 quality certification. The saved comparison is `bias-comparison.json` in the
-new bias partition. No dome, sky or science reduction is established yet.
+new bias partition. Later dome results are recorded in the milestone above;
+no sky or science reduction is established yet.
 
 Latest chapman3 preparation evidence: all 60 distinct inputs total 32.22 GiB;
 detector EXTNAME ordering matches the installed MEF BPM across all 60 inputs.
