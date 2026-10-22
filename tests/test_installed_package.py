@@ -3,16 +3,20 @@
 PYCAVI_SOURCE_ROOT points to the checkout for byte-for-byte resource comparison.
 Only temporary workspaces and fake executable programs are created.
 """
+import ast
 import configparser
 from contextlib import redirect_stdout
 from importlib import metadata, resources
 import io
+import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pycavi
@@ -46,6 +50,50 @@ class InstalledPackageTests(unittest.TestCase):
         self.assertTrue(any(d.lower().startswith("ipython") for d in dependencies))
         self.assertTrue(any(d.lower().startswith("scikit-image") for d in dependencies))
         self.assertFalse(any(d.lower().startswith("pathlib") for d in dependencies))
+
+    def test_reduction_notebook_resolves_mefpp_executable_and_resources(self):
+        package = resources.files("pycavi")
+        notebook = json.loads(package.joinpath("notebooks", "03_pycavi_run.ipynb").read_text())
+        assignments = [node for cell in notebook["cells"] if cell["cell_type"] == "code"
+                       for node in ast.walk(ast.parse("".join(cell["source"])))
+                       if isinstance(node, ast.Assign)
+                       and any(isinstance(target, ast.Name) and target.id == "mefpp_dir"
+                               for target in node.targets)]
+        self.assertEqual(len(assignments), 1)
+        prefix = self.root / "existing mefpp"
+        for directory in ("bin", "config", "static_cal"):
+            (prefix / directory).mkdir(parents=True)
+        executable = prefix / "bin/mefpp"
+        executable.write_text("Not executed by this path-resolution test")
+        paf = prefix / "config/omegacam.paf"
+        paf.write_text("Existing installed PAF fixture")
+        bpm = prefix / "static_cal/OCAM_BPM_1x1.fits"
+        bpm.write_bytes(b"Resource-location fixture, not a scientific FITS image")
+        namespace = {"os": os, "executable_paths": {"mefpp": str(executable)}}
+        exec(compile(ast.Module(body=assignments, type_ignores=[]), "<notebook path>", "exec"), namespace)
+        self.assertEqual(Path(namespace["mefpp_dir"]), prefix)
+
+        # Execute actual consumer expressions/functions without importing scientific
+        # dependencies or launching mefpp. All resources and copies are disposable.
+        tree = ast.parse(package.joinpath("pycavi", "pycavi_associate_reduction.py").read_text())
+        functions = {node.name: node for node in tree.body if isinstance(node, ast.FunctionDef)}
+        instrument = SimpleNamespace(config_dir=str(self.root / "absent project config"),
+                                     mefpp_paf="omegacam.paf", bpm_prefix="OCAM_BPM")
+        namespace.update(Path=Path, shutil=shutil, instrument=instrument)
+        for function, target in (("mefpp_reduce_bias", "command_line"),
+                                 ("mefpp_reduce_bpm", "bpm_file")):
+            assignment = next(node for node in ast.walk(functions[function])
+                              if isinstance(node, ast.Assign)
+                              and any(isinstance(t, ast.Name) and t.id == target for t in node.targets))
+            exec(compile(ast.Module(body=[assignment], type_ignores=[]), "<consumer path>", "exec"), namespace)
+        self.assertTrue(namespace["command_line"].startswith("nohup " + str(executable) + " "))
+        self.assertEqual(Path(namespace["bpm_file"]), bpm)
+        exec(compile(ast.Module(body=[functions["copy_paf"]], type_ignores=[]), "<copy_paf>", "exec"), namespace)
+        output = self.root / "temporary reduction directory"
+        output.mkdir()
+        with redirect_stdout(io.StringIO()):
+            self.assertTrue(namespace["copy_paf"](namespace["mefpp_dir"], str(output), instrument))
+        self.assertEqual((output / "mefpp.paf").read_bytes(), paf.read_bytes())
 
     def test_setup_preserves_edits_and_overwrite_is_explicit(self):
         workspace = self.root / "notebook workspace"

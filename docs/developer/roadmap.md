@@ -1,5 +1,26 @@
 # wenu-imaging roadmap
 
+## Limited compatibility review authorized, 22 October 2026
+
+Fernando approved bringing a focused part of the Pycavi library audit forward
+before further chapman3 dependency installation. Review actual Python/API needs
+against the historical environment and current code, preserving environments,
+native engines and science data. See the
+[compatibility review](python-compatibility-review-2026-10-22.md) for evidence and
+pending checks. This authorizes review and isolated diagnostics, not a dependency
+version change or the full scientific audit. The remaining stage order holds.
+Restore Jupyter execution on chapman3 with Firefox locally on the Mac through an
+SSH tunnel after environment validation; this remains pending.
+
+Follow-up evidence on 22 October: the approved isolated Python 3.11 stack passes
+pip check, nine initial installed-package tests, ten numerical/catalogue
+regressions and nine runtime imports. A named Jupyter kernel and Mac Firefox
+connection to chapman3 are verified. Fernando also explicitly approved the
+narrow notebook 03 mefpp-prefix adapter and its path-resolution regression;
+the corrected local wheel passes ten installed-package tests. Full reduction,
+pilot selection and scientific reference comparisons remain pending. This does
+not authorize general notebook thinning or scientific changes ahead of schedule.
+
 ## Packaging implementation status, 21 October 2026
 
 Fernando authorized the packaging stage and reiterated that any roadmap deviation
