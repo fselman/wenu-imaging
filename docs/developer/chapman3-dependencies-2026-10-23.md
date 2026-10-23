@@ -107,7 +107,7 @@ Known provisioning differences:
 | qfits system | eso-qfits-6.2.0-1.el7.centos.x86_64 | RPM ownership and shared-library registration |
 | qfits private | ~/opt/local/qfits5; static library | Located; exact native build provenance still open |
 | SExtractor | /usr/bin/sex; 2.19.5 | Synthetic extraction passed; Pycavi catalogue workflow pending |
-| SCAMP | /usr/bin/scamp; 2.10.0 | Executable/version check; functional catalogue fit pending |
+| SCAMP | /usr/bin/scamp; 2.10.0 | Offline synthetic linear fit passed; live reference access/mosaic/plotting pending |
 | SWarp | /usr/bin/swarp; 2.38.0 | Synthetic resampling passed; science coadd/Pycavi integration pending |
 | Astrometry.net | ~/opt/astrometry.net-0.98; 0.98 | Installed modules/helpers and two full detector pilots passed |
 | Astrometry indexes | /usr/local/astrometry/data | 191 files, about 9.579 GiB; existing indexes reused |
@@ -162,6 +162,22 @@ No global PYTHONPATH or system interpreter replacement is required.
 
 ## Qualification evidence and boundaries
 
+- **Completed offline SCAMP dependency check:** Fernando ran commit
+  `ecd2dbacef7e2e4b0ca7c8f3a53e74972715f2c8` on chapman3 with Python 3.11.14,
+  tool SHA256 `f9f0e522efb93e42604f2b192f74c3cf959c89e276805d008283b3fc64729a2b`.
+  `/usr/bin/scamp` returned zero for version, configuration dump and the fit.
+  The 100-source local FILE-reference test passed: initial RMS
+  2.5982501129308218 arcsec, final RMS 7.018608212456754e-06 arcsec, one SCAMP
+  thread, batch niceness 10. Both input catalogues remained unchanged. Native
+  `.head` SHA256 is
+  `8332f6fe8e4a4393e062aa3d3627e093e4b8bf34cbc4a61ace4fe5f90c7a7c9a`;
+  its non-ASCII copyright COMMENT was recorded and excluded only from the
+  in-memory WCS parser. Records: `~/wenu-scamp-dependency.jGHw3y/results`.
+  This completes this bounded synthetic engine test, not the dependency gate,
+  live Gaia/VizieR access, pattern matching, plotting, mosaics or workflow audit.
+  Microarcsecond residuals measure recovery of constructed noiseless data;
+  they are not a real-sky astrometric precision claim.
+
 - The reusable compression, SExtractor and SWarp checks each passed on chapman3
   at niceness 10. Records: `~/wenu-dependency-tools.p11U9J/results`. This is
   actual target execution of the shared tool, superseding the earlier pending
@@ -173,8 +189,8 @@ No global PYTHONPATH or system interpreter replacement is required.
   selection is changed by this finding. Live service/alias behavior is untested.
   Required input columns include windowed centroids/error ellipses and auto flux/
   flux error in FITS_LDAC; local-reference FILE mode is available. The portable
-  synthetic SCAMP check is added for qualification, but its native execution
-  on chapman3 is pending. Plotting/PDF support is not covered by a plot-free fit.
+  synthetic SCAMP check has now passed on chapman3 as recorded above.
+  Plotting/PDF support is not covered by a plot-free fit.
   Initial native attempt at `~/wenu-scamp-dependency.8Mg445/results` returned
   signal 11 while examining the input. GDB evidence at
   `~/wenu-scamp-backtrace-kkt_bnvj/gdb.log` locates the crash in
@@ -183,7 +199,7 @@ No global PYTHONPATH or system interpreter replacement is required.
   NUL padding into embedded image-header cards, including `END\0...`; the
   SCAMP v2.10.0 native `fitsfind` contract requires `END` followed by spaces.
   Corrected fixture generation preserves exact space-padded header bytes and
-  adds a raw-byte regression. Native rerun remains pending; do not classify
+  adds a raw-byte regression. The successful corrected rerun is recorded above; do not classify
   this malformed-fixture failure as a failed valid-input engine qualification.
   The corrected-input trial at `~/wenu-scamp-dependency.2NSKHl/results` returned
   zero from SCAMP, loaded 100 local references and wrote `.head`/XML outputs.
@@ -192,7 +208,8 @@ No global PYTHONPATH or system interpreter replacement is required.
   evaluating the fitted WCS: SCAMP's copyright COMMENT contains UTF-8 accents
   (`Université`), rejected by Astropy's ASCII FITS header parser. The diagnostic
   now excludes and records only non-ASCII commentary in memory, preserving raw
-  output and scientific cards strictly. Full diagnostic rerun remains pending.
+  output and scientific cards strictly. The full diagnostic subsequently passed
+  as recorded above.
   Record production header-reader compatibility for the later Pycavi workflow
   audit; no wrapper, native engine or saved configuration is changed here.
 
