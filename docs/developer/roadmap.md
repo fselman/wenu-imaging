@@ -1,5 +1,21 @@
 # wenu-imaging roadmap
 
+## Current metadata correction, 23 October 2026
+
+Fernando approved the bounded correction in [#25](https://github.com/fselman/wenu-imaging/issues/25):
+propagate authoritative science exposure metadata into extracted/assembled
+detectors, recompute MJD-END at double precision, and derive coadd timing from
+all contributing science exposures. Reuse solved WCS and unchanged pixels in
+fresh copies; do not repeat normalization, extraction or all-detector solving.
+Keep SWarp equivalent EXPTIME/GAIN and scientific settings intact; TEXPTIME
+records the sum of exposure times separately. No native rebuild is included.
+The underlying native defects #23/#24 stay open for the later mefpp stage.
+The immediate objective remains working chapman3 through all notebooks, then
+retesting on Mac; no new photometric functionality or dependency upgrades.
+
+The correction has synthetic regression coverage; chapman3 installed-package
+and real-product acceptance remain pending. See [the correction notes](science-metadata-correction.md).
+
 ## Notebook 05 executable detection fix, 23 October 2026
 
 The ongoing functional notebook walkthrough reached SExtractor discovery after
@@ -22,8 +38,9 @@ Six regressions pass in the agent environment, including config generation,
 the native command's `-NTHREADS 1` argument and catalogue renaming with the native
 execution mocked. The failed working copy is preserved at
 `~/omegacam/testing/wenu-imaging-test/notebook05-r_SDSS-28gx2t5e`;
-no native extraction was launched. Installation of the thread-option correction
-and subsequent extraction/SCAMP remain pending on chapman3.
+no native extraction was launched. The thread correction was subsequently installed and verified on chapman3;
+all ten pilot exposures passed extraction/SCAMP with checked 32-detector outputs.
+The two SExtractor defects are closed with evidence in #26/#27.
 Preserve existing solved MEFs and continue with a fresh working copy;
 do not repeat normalization or solving. The later efficiency plan is not being
 implemented by this compatibility fix.
