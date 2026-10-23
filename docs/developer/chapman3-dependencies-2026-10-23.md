@@ -260,6 +260,26 @@ No global PYTHONPATH or system interpreter replacement is required.
 
 ## Remaining dependency acceptance gate
 
+### Live-reference connectivity, 23 October
+
+Fernando reported successful bounded curl queries from chapman3 to both the
+existing `http://vizier.u-strasbg.fr/viz-bin/asu-tsv` route and the advertised
+`https://vizier.cds.unistra.fr/viz-bin/asu-tsv` route. Each queried Gaia DR2
+(`I/345/gaia2`) within one arcminute of (88.018586, -5.464047), explicitly capped
+at five rows. Both returned HTTP 200 and the same five coordinate/magnitude
+rows. Reported transfers were 2285 bytes / 2.537 s and 2289 bytes / 2.176 s,
+respectively. Records: `~/wenu-vizier-connection-o0k6s236`.
+
+This establishes curl/service connectivity, not SCAMP's native retrieval/parser.
+No saved server or catalogue selection was changed. The reusable tool now offers
+explicitly opt-in `scamp-live --allow-network` for that remaining requirement:
+one small synthetic field, Gaia DR2, current server, fitting disabled. Its native
+query is area-bounded rather than five-row-capped. Native execution remains
+pending; simulated unit tests do not establish native success. This work does
+not start the Pycavi workflow audit or change production header readers.
+
+### Outstanding requirements
+
 1. Fresh Python/Conda inventories, kernel registration, saved engine paths and
    pip check captured successfully in `~/wenu-dependencies-mi_avvgc`. Preserve
    these artifacts; installed Pycavi file identities and complete package-origin

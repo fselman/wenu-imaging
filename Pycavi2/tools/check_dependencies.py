@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
 import socket
 import subprocess
@@ -154,21 +155,21 @@ def swarp(context, paths):
     return {'central_mean': mean, 'finite_wcs': True, 'positive_central_weights': True}
 
 
-def scamp_fixture(directory):
+def scamp_fixture(directory, center=(123., -30.), pixel_scale=1., offset_arcsec=3.):
     """Create labelled synthetic LDAC data with a deliberately offset input WCS."""
     import numpy as np
     from astropy.io import fits
     from astropy.wcs import WCS
     truth = WCS(naxis=2)
     truth.wcs.crpix = [512.5, 512.5]
-    truth.wcs.crval = [123., -30.]
-    truth.wcs.cdelt = [-1./3600., 1./3600.]
+    truth.wcs.crval = center
+    truth.wcs.cdelt = [-pixel_scale/3600., pixel_scale/3600.]
     truth.wcs.ctype = ['RA---TAN', 'DEC--TAN']
     rng = np.random.default_rng(20261023)
     xy = rng.uniform(50., 975., (100, 2))
     sky = truth.all_pix2world(xy, 1)
     nominal = truth.deepcopy()
-    nominal.wcs.crval[0] += 3./3600.
+    nominal.wcs.crval[0] += offset_arcsec/3600.
     header = fits.Header({'SIMPLE': True, 'BITPIX': -32, 'NAXIS': 2,
                           'NAXIS1': 1024, 'NAXIS2': 1024})
     header.update(nominal.to_header())
@@ -291,10 +292,65 @@ def scamp(context, paths):
             'scope': 'single-detector linear fit; no live reference query or plotting'}
 
 
+def scamp_live(context, paths):
+    """One explicitly authorized live retrieval; synthetic detections are never fitted."""
+    import numpy as np
+    from astropy.io import fits
+    from astropy.coordinates import SkyCoord
+    center = (88.018586, -5.464047)
+    scamp_fixture(context.directory, center=center, pixel_scale=0.05, offset_arcsec=0.)
+    # No local reference can accidentally satisfy this check.
+    (context.directory / 'reference.cat').unlink()
+    input_path = context.directory / 'input.cat'
+    input_sha = sha256(input_path)
+    defaults = context.run([paths['scamp'], '-dd'], 'defaults')
+    (context.directory / 'default.scamp').write_text(defaults.stdout)
+    context.run([
+        paths['scamp'], 'input.cat', '-c', 'default.scamp',
+        '-ASTREF_CATALOG', 'GAIA-DR2', '-ASTREF_BAND', 'REDDEST',
+        '-REF_SERVER', context.ref_server, '-REF_TIMEOUT', '10',
+        '-POSITION_MAXERR', '0.05', '-MATCH', 'N',
+        '-SOLVE_ASTROM', 'N', '-SOLVE_PHOTOM', 'N',
+        '-MOSAIC_TYPE', 'UNCHANGED', '-CHECKPLOT_TYPE', 'NONE',
+        '-CHECKPLOT_DEV', 'NULL', '-SAVE_REFCATALOG', 'Y',
+        '-REFOUT_CATPATH', '.', '-WRITE_XML', 'Y', '-XML_NAME', 'scamp.xml',
+        '-NTHREADS', '1',
+    ], 'retrieve')
+    caches = sorted(context.directory.glob('GAIA-DR2_*.cat'))
+    assert caches, 'SCAMP did not save a retrieved Gaia DR2 catalogue'
+    count, maximum = 0, 0.
+    for cache in caches:
+        with fits.open(cache) as hdus:
+            for hdu in hdus:
+                if hdu.name != 'LDAC_OBJECTS':
+                    continue
+                ra = np.asarray(hdu.data['X_WORLD'], dtype=float)
+                dec = np.asarray(hdu.data['Y_WORLD'], dtype=float)
+                assert np.isfinite(ra).all() and np.isfinite(dec).all()
+                assert ((ra >= 0) & (ra < 360)).all()
+                assert ((dec >= -90) & (dec <= 90)).all()
+                if len(ra):
+                    separation = SkyCoord(ra, dec, unit='deg').separation(
+                        SkyCoord(*center, unit='deg')).arcmin
+                    maximum = max(maximum, float(separation.max()))
+                    count += len(ra)
+    assert count > 0, 'Retrieved reference catalogue contains no positions'
+    assert maximum < 1., 'Unexpectedly broad reference response'
+    assert sha256(input_path) == input_sha, 'Synthetic input catalogue changed'
+    return {'reference_catalogue': 'GAIA-DR2', 'ref_server': context.ref_server,
+            'center_degrees': center, 'field_width_arcsec': 51.2,
+            'position_margin_arcmin': 0.05, 'retrieved_positions': count,
+            'maximum_reference_distance_arcmin': maximum,
+            'saved_catalogues': [{'name': p.name, 'sha256': sha256(p)} for p in caches],
+            'input_unchanged': True, 'astrometric_fit': False, 'photometric_fit': False,
+            'scope': 'live retrieval/parser only; no scientific fitting or catalogue upgrade'}
+
+
 CHECKS = {'fits-compression': compression, 'sextractor': sextractor,
-          'swarp': swarp, 'scamp': scamp}
+          'swarp': swarp, 'scamp': scamp, 'scamp-live': scamp_live}
 NEEDS = {'fits-compression': ('fpack', 'funpack'),
-         'sextractor': ('sextractor',), 'swarp': ('swarp',), 'scamp': ('scamp',)}
+         'sextractor': ('sextractor',), 'swarp': ('swarp',), 'scamp': ('scamp',),
+         'scamp-live': ('scamp',)}
 
 
 def main(argv=None):
@@ -305,6 +361,10 @@ def main(argv=None):
     parser.add_argument('--expect-host', help='Require this short hostname.')
     parser.add_argument('--expect-prefix', type=Path, help='Require this Python prefix.')
     parser.add_argument('--dry-run', action='store_true', help='Validate paths; write/run nothing.')
+    parser.add_argument('--allow-network', action='store_true',
+                        help='Explicitly permit the scamp-live service check.')
+    parser.add_argument('--ref-server', default='vizier.u-strasbg.fr',
+                        help='SCAMP live-query hostname; no saved config is changed.')
     for name, default in [('fpack', 'fpack'), ('funpack', 'funpack'),
                           ('sextractor', 'sex'), ('swarp', 'swarp'), ('scamp', 'scamp')]:
         parser.add_argument('--' + name, default=default)
@@ -312,6 +372,11 @@ def main(argv=None):
     try:
         if sys.flags.optimize:
             raise ValueError('Run without -O: numerical assertions must be enabled')
+        if 'scamp-live' in args.checks:
+            if not args.allow_network:
+                raise ValueError('scamp-live requires explicit --allow-network')
+            if not re.fullmatch(r'[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?', args.ref_server):
+                raise ValueError('Supply a reference hostname, without scheme, port or path')
         if args.expect_host and socket.gethostname().split('.')[0] != args.expect_host:
             raise ValueError('Unexpected hostname: ' + socket.gethostname())
         if args.expect_prefix and args.expect_prefix.expanduser().resolve() != Path(sys.prefix).resolve():
@@ -327,6 +392,7 @@ def main(argv=None):
                   'prefix': sys.prefix, 'checks': {},
                   'executables': paths, 'started_utc': datetime.now(timezone.utc).isoformat()}
         report['tool_sha256'] = sha256(__file__)
+        report['network_check_authorized'] = 'scamp-live' in args.checks and args.allow_network
         print(json.dumps(report, indent=2), flush=True)
         if args.dry_run:
             print('Dry run: no output directory, imports, jobs or priority changes.')
@@ -346,6 +412,7 @@ def main(argv=None):
         print('Batch niceness:', report['niceness'], flush=True)
         for name in checks:
             context = Check(output / name)
+            context.ref_server = args.ref_server
             try:
                 for executable_name in NEEDS[name]:
                     flag = '-V' if executable_name in ('fpack', 'funpack') else '-v'
