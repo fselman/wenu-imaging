@@ -69,8 +69,12 @@ timeout. SCAMP 2.10.0 hardcodes a large row ceiling in its VizieR request;
 this native check does **not** impose the five-row cap used by the separate curl
 connectivity probe. It supplies one server and performs no tool-level retries.
 No network check has been qualified on Mac or Ubuntu yet. Unit tests simulate
-the response and command contract; actual native retrieval on chapman3 remains
-pending. The inspected implementation is
+the response and command contract. Fernando's native chapman3 run passed with
+three Gaia DR2 positions, maximum distance 0.511 arcmin, unchanged input and
+all native exit codes zero. SCAMP's saved reference table produced Astropy
+warnings about invalid `TDISPn` display formats (`E15`/`E12`); coordinate reading
+succeeded and the file was not repaired. See the dated dependency inventory for
+exact evidence and limits. The inspected implementation is
 [SCAMP 2.10.0 makeit.c](https://github.com/astromatic/scamp/blob/2.10.0/src/makeit.c)
 and [astrefcat.c](https://github.com/astromatic/scamp/blob/2.10.0/src/astrefcat.c).
 
