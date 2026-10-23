@@ -13,8 +13,13 @@ The underlying native defects #23/#24 stay open for the later mefpp stage.
 The immediate objective remains working chapman3 through all notebooks, then
 retesting on Mac; no new photometric functionality or dependency upgrades.
 
-The correction has synthetic regression coverage; chapman3 installed-package
-and real-product acceptance remain pending. See [the correction notes](science-metadata-correction.md).
+The correction passed synthetic regressions, chapman3 installed-package checks
+and real-product preservation/coaddition checks in both filters. Issue #25 is
+closed with evidence. All four notebook 06 coadds (BACK_SIZE 128 and 2048,
+SUBTRACT_BACK=Y, MEDIAN) passed functional checks; continue to notebook 07
+zpcal preflight. The misleading second-pass filename remains #31; no
+photometric calibration or independent scientific accuracy is established.
+Native #23/#24 and later Mac retesting remain pending. See [the correction notes](science-metadata-correction.md).
 
 ## Notebook 05 executable detection fix, 23 October 2026
 

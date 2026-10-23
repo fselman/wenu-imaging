@@ -49,10 +49,61 @@ installed-package checks also pass in the agent Linux/Python 3.12 environment
 with Astropy 6.1.7 and NumPy 1.26.4. Synthetic multi-detector fixtures exercise double-precision timing,
 unchanged pixels/WCS/detector gain, unsigned FITS storage, checksums, source
 preservation, no-overwrite/invalid-input behavior, all-input coadd metadata, and
-actual extraction/assembly paths with native solver execution mocked. Native
-science coaddition and installed-wheel acceptance on chapman3 are still pending.
-Keep #25 open until that evidence is recorded. Preserve the diagnostic coadd at
+actual extraction/assembly paths with native solver execution mocked.
+
+Chapman3 installed-wheel and real-product acceptance subsequently passed, as
+reported by Fernando. Issue #25 was closed with the correction and verification
+comments; PR #32 is still unmerged. Native causes #23/#24 and Mac retesting
+remain pending. Preserve the diagnostic coadd at
 `~/omegacam/testing/wenu-imaging-test/notebook06-r_SDSS-B128-20pm51ir`.
+
+
+## Chapman3 acceptance evidence
+
+Code commit: `03a59c55a9be13952c93bf77d2e889f6cca01385`.
+Installed verification records: `~/wenu-metadata-check-4j5cdwy1`.
+Wheel SHA256: `b390017ff4ca27d01af583ae5941cba8395168b2135dd01ff03037671a92b04f`.
+All ten metadata and six SExtractor regressions passed against the source and
+installed wheel; ten installed-package checks and pip check passed. Three
+installed runtime modules were verified against the source snapshot.
+
+All ten corrected MEFs passed 32-detector pixel-byte, WCS/non-exposure-header,
+FITS checksum, source-hash and copied-SCAMP-header preservation checks. No
+normalization, solve-field or source extraction was repeated.
+
+| Filter | BACK_SIZE | Records below `~/omegacam/testing/wenu-imaging-test/` | EXPTIME / TEXPTIME (s) |
+| --- | --- | --- | --- |
+| r_SDSS | 128 | `notebook06-r_SDSS-metadata-_bzh232q` | 400 / 400 |
+| NB_659 | 128 | `notebook06-NB_659-metadata-rbp1f48a` | 2400 / 2400 |
+| r_SDSS | 2048 | `notebook06-B2048-zslaummd/r_SDSS` | 400 / 400 |
+| NB_659 | 2048 | `notebook06-B2048-zslaummd/NB_659` | 2400 / 2400 |
+
+Each directory contains its start record, native/runner logs and
+`output-check.json`. The second-pass root contains `completed.json`.
+All four coadds passed finite nonempty science data, finite nonnegative weights,
+finite sampled celestial WCS, input-hash preservation and science timing checks.
+They retain `BUNIT=e-/s`, `NCOMBINE=5` and native equivalent EXPTIME/GAIN.
+Both passes used MEDIAN and SUBTRACT_BACK=Y, sequentially at niceness 10 with
+one native thread. The second pass's historical `coadd_nobacksub` name remains
+misleading (#31); its separately isolated weight map preserves the first pass.
+
+r_SDSS timing: DATE-OBS `2017-03-11T02:14:43.393`, MJD-OBS
+`57823.093557795`, MJD-END `57823.100269381925`.
+NB_659 timing: DATE-OBS `2017-03-11T01:30:31.026`, MJD-OBS
+`57823.062859104`, MJD-END `57823.09271171356`.
+
+First-pass coadd / weight SHA256:
+
+- r_SDSS: `0631d84ccdfba04ee317da57080a397e6be57bedf40758b7c44496525d504b72` /
+  `674545b4733103eae16c3fb4f02ec10fde1b40d13f964a1a0b719c0b3952ec22`.
+- NB_659: `923725e110614b9702996e17a88b33d3497cb94e73b9b198bfe8db4c3f4a0fae` /
+  `2ac2de5d41b1bb0eebfae1fa01a73cf0044193410d2fe782d7bf7d2f1b2a48c2`.
+
+These are reported functional checks, not independent astrometric accuracy,
+photometric calibration, a validated gain/noise model or Phase 3 acceptance.
+Continue to notebook 07 using its existing Gaia DR3/GSPC Pycavi calibration path;
+SCAMP photometry remains disabled. The normal notebook 07 selector takes
+`*.coadd.fits`, not the second pass's `*.coadd_nobacksub.fits`.
 
 
 ## Chapman storage context supplied by Fernando

@@ -279,3 +279,29 @@ distinguishes permissive input reading from explicit strict verification.
 The mefpp detector-identity TODO in `roadmap.md` explicitly requires tracing
 name versus ordinal matching across raw/calibration/BPM/output paths, with
 permuted-extension regression cases. Its native implementation remains deferred.
+
+
+## Notebook 06 functional completion, 23 October 2026
+
+Fernando reported passing coadd checks for r_SDSS and NB_659 using the installed
+Pycavi metadata correction (`03a59c55a9be13952c93bf77d2e889f6cca01385`, PR #32).
+Both existing notebook passes (BACK_SIZE 128 and 2048) ran sequentially at
+niceness 10 with one native thread, MEDIAN and SUBTRACT_BACK=Y. Each used five
+corrected 32-detector MEFs with exact pixel/WCS and original-input preservation.
+All four coadds passed finite/nonempty science data, nonnegative weights,
+sampled celestial WCS, input hashes and timing. r_SDSS records 400 s and NB_659
+2400 s in both EXPTIME and TEXPTIME, with NCOMBINE=5 and BUNIT=e-/s.
+
+Records under the pilot project:
+
+- `notebook06-r_SDSS-metadata-_bzh232q` (first pass).
+- `notebook06-NB_659-metadata-rbp1f48a` (first pass).
+- `notebook06-B2048-zslaummd` (second pass, per-filter records and completed.json).
+
+The [metadata correction notes](../../science-metadata-correction.md) record
+installation, timing and first-pass hashes. Issue #25 is closed with correction
+and verification comments; native #23/#24 remain open. The historical second
+filename says nobacksub despite enabled subtraction (#31 remains open).
+Preserve all diagnostic/coadd products and their separate weight maps.
+No photometric calibration, independent science accuracy or Mac acceptance is
+claimed. Next is notebook 07 preflight; do not repeat earlier processing.
