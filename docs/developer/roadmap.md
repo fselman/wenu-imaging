@@ -2,6 +2,12 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Fernando approved a ticket for each defect and a correction/verification comment
+before closure. The [walkthrough defect register](walkthrough-defects-2026-10-23.md)
+links the current tickets. The approved immediate metadata correction is #25;
+the native timestamp and precision causes (#23, #24) remain deferred to the
+mefpp stage. Ticket creation does not expand implementation scope.
+
 Future requirement requested by Fernando: [provisional photometry and explicit
 calibration methods](provisional-photometry-plan-2026-10-23.md). Plan Astromatic
 photometric processing plus an instrument/filter/focal-plane/detector model for

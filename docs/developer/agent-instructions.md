@@ -264,6 +264,25 @@ copies and a separate installation prefix during characterization.
 
 ## Minimal-change discipline
 
+### Defect tickets, approved 23 October 2026
+
+Open a GitHub issue for every distinct defect found. Search existing issues
+first and update the matching ticket rather than duplicating it. Separate
+confirmed failures, source findings and hypotheses. Record reproduction/evidence,
+affected stage/platform, scope, acceptance criteria and relevant dependencies.
+Link implementation commits/PRs to their tickets. An issue does not authorize
+out-of-scope implementation or a change in scientific policy.
+
+After correcting a defect, add a correction comment explaining the change,
+commit/PR (or environmental remedy), tests and target verification actually
+performed, and remaining limitations. Then close the ticket when its acceptance
+criteria are met. Do not equate a written patch with target qualification, or
+closure with a merged PR. Keep a native root-cause ticket open when only a
+Python mitigation has been verified; link the separate mitigation ticket.
+Retrospectively record defects corrected during the current walkthrough and
+their existing evidence. Track subsequent findings the same way without asking
+Fernando to repeat this authorization.
+
 Trace and reuse existing functions before adding replacements. Prefer focused
 refactoring and compatibility fixes. No broad rewrite, module relocation,
 additional repository restructuring, workflow engine, build-system migration, dependency upgrade

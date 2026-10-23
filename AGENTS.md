@@ -1,5 +1,11 @@
 # wenu-imaging
 
+Defect tracking, approved 23 October 2026: create a GitHub issue for each
+distinct defect found, checking for an existing ticket first. Record evidence,
+scope and acceptance criteria; link the fix and verification in a correction
+comment before closing it. Keep unresolved native causes and pending target
+qualification open. See the canonical developer instructions.
+
 Latest direction, 23 October 2026: continue the existing OmegaCAM functional
 notebook walkthrough at notebook 04 through zpcal before deciding further checks.
 Defer lunar/site-data testing to zpcal. This supersedes the earlier dependency
