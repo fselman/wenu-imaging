@@ -7,18 +7,25 @@ import os
 from pathlib import Path
 import platform
 import shlex
-import shutil
 import sys
 
 
-def prepare_launch(root, port):
-    """Validate the host, interpreter and registered kernel without writing files."""
+def validate_runtime():
+    """Check the pilot machine and interpreter before any launch."""
     if (platform.system(), platform.node().split('.')[0]) != ('Linux', 'chapman3'):
         raise ValueError('Run this launcher on Linux chapman3 for wenu-imaging.')
     expected = (Path.home() / '.conda/envs/wenu-imaging').resolve()
     python = expected / 'bin/python'
     if Path(sys.prefix).resolve() != expected or Path(sys.executable).resolve() != python.resolve():
         raise ValueError('Use $HOME/.conda/envs/wenu-imaging/bin/python.')
+    return python
+
+
+def prepare_launch(root, port):
+    """Validate the host, interpreter and registered kernel without writing files."""
+    python = validate_runtime()
+    if os.getpriority(os.PRIO_PROCESS, 0) != 0:
+        raise ValueError('Start Jupyter from a normal-priority terminal (niceness 0).')
     if not 1 <= port <= 65535:
         raise ValueError('Port must be between 1 and 65535.')
     root = root.expanduser().resolve()
@@ -34,10 +41,7 @@ def prepare_launch(root, port):
         raise ValueError('Kernel must use an absolute Python executable.')
     if Path(spec.argv[0]).resolve() != python.resolve():
         raise ValueError('Registered kernel points outside the wenu-imaging environment.')
-    nice = shutil.which('nice')
-    if nice is None:
-        raise ValueError('Required nice command is unavailable.')
-    command = [nice, '-n', '10', str(python), '-m', 'notebook',
+    command = [str(python), '-m', 'notebook',
                '--no-browser', '--ip=127.0.0.1', '--port={}'.format(port),
                '--ServerApp.port_retries=0', '--ServerApp.root_dir={}'.format(root),
                '--MappingKernelManager.default_kernel_name=' + kernel]
@@ -59,6 +63,8 @@ def main(argv=None):
     except Exception as exc:
         parser.exit(1, 'STOP: {}\n'.format(exc))
     print('Server command: ' + shlex.join(command), flush=True)
+    print('Jupyter/kernel niceness: 0. Launch batch work through run_batch.py '
+          'for niceness 10; do not lower the notebook kernel priority.', flush=True)
     print('In a separate Mac terminal, open the tunnel:', flush=True)
     print('ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=60 '
           '-L 127.0.0.1:{0}:127.0.0.1:{0} fselman@chapman3.sc.eso.org'

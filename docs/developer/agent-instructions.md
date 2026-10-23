@@ -61,6 +61,16 @@ limits. Do not renice, restart or otherwise disturb an already running job
 without instruction. The first pilot bias was already running when Fernando
 requested this priority convention; it was left running as instructed.
 
+Priority clarification approved 23 October: the Jupyter server and interactive
+kernel run at normal niceness 0. Only batch processes and their descendants run
+at niceness >=10. Launch scripts through `Pycavi2/tools/run_batch.py` in a
+separate process, or use the existing `nice -n 10` terminal pattern. Never call
+`os.nice`/`os.setpriority` in the interactive kernel to lower batch priority;
+that also lowers later interaction. Direct heavy notebook-cell computations or
+existing library calls do not automatically pass through the helper. Explicitly
+launch those workloads in a batch process when using this priority split. Do not
+claim all existing notebook runners were changed by this launcher utility.
+
 These are instructions for preparing commands, not authorization for a new CLI,
 host migration, workflow refactor or scheduler change.
 

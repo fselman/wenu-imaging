@@ -10,7 +10,8 @@ Component implementation changes require authorization for the relevant stage.
 
 Before user-facing terminal commands, follow the machine/repository guards in
 the developer instructions. Fernando works on Mac/wenu and chapman3/wenu-imaging
-in parallel. Future reduction launches must use `nice -n 10`.
+in parallel. Batch reduction launches must use niceness >=10; the interactive
+Jupyter server/kernel stays at niceness 0 (23 October clarification).
 Before changing either user's cloned wenu-imaging checkout or its installation,
 obtain current Git/environment evidence from that actual computer; an agent's
 checkout is not evidence of the user's local state. See the canonical policy.
