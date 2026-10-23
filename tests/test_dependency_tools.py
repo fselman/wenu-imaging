@@ -118,6 +118,45 @@ class ScampOracleTests(unittest.TestCase):
                 load_tool().scamp(self.context(Path(directory) / 'test', corrupt=True),
                                   {'scamp': '/synthetic/test-double'})
 
+    def live_context(self, directory, positions):
+        import numpy as np
+        from astropy.io import fits
+        context = load_tool().Check(directory)
+        context.ref_server = 'vizier.u-strasbg.fr'
+        context.recorded = []
+
+        def fake_run(command, label):
+            context.recorded.append(command)
+            if label == 'retrieve':
+                self.assertFalse((directory / 'reference.cat').exists())
+                columns = [fits.Column(name=name, format='D', array=np.array(values))
+                           for name, values in zip(('X_WORLD', 'Y_WORLD'), positions)]
+                fits.HDUList([fits.PrimaryHDU(), fits.BinTableHDU.from_columns(
+                    columns, name='LDAC_OBJECTS')]).writeto(directory / 'GAIA-DR2_test.cat')
+            return SimpleNamespace(stdout='')
+        context.run = fake_run
+        return context
+
+    def test_live_retrieval_requires_positions_and_disables_both_fits(self):
+        with tempfile.TemporaryDirectory() as directory:
+            context = self.live_context(Path(directory) / 'test',
+                                        ([88.018586], [-5.464047]))
+            result = load_tool().scamp_live(context, {'scamp': '/synthetic/test-double'})
+            self.assertEqual(result['retrieved_positions'], 1)
+            self.assertFalse(result['astrometric_fit'])
+            self.assertFalse(result['photometric_fit'])
+            command = context.recorded[-1]
+            for flag, value in (('-SOLVE_ASTROM', 'N'), ('-SOLVE_PHOTOM', 'N'),
+                                ('-MATCH', 'N'), ('-REF_SERVER', context.ref_server)):
+                self.assertEqual(command[command.index(flag) + 1], value)
+
+    def test_empty_or_distant_live_response_cannot_pass(self):
+        for positions in (([], []), ([90.], [-5.])):
+            with self.subTest(positions=positions), tempfile.TemporaryDirectory() as directory:
+                context = self.live_context(Path(directory) / 'test', positions)
+                with self.assertRaises(AssertionError):
+                    load_tool().scamp_live(context, {'scamp': '/synthetic/test-double'})
+
 
 class DependencyToolTests(unittest.TestCase):
     def invoke(self, *arguments):
@@ -132,6 +171,18 @@ class DependencyToolTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn('Unexpected hostname', result.stderr)
             self.assertFalse(output.exists())
+
+    def test_live_requires_network_opt_in_and_hostname_before_any_work(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'result'
+            for extra, message in (([], '--allow-network'),
+                                   (['--allow-network', '--ref-server', 'https://example.org'],
+                                    'without scheme')):
+                result = self.invoke('scamp-live', '--output', output,
+                                     '--scamp', '/missing/engine', *extra)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(message, result.stderr)
+                self.assertFalse(output.exists())
 
     def test_existing_directory_and_dangling_symlink_are_preserved(self):
         with tempfile.TemporaryDirectory() as directory:

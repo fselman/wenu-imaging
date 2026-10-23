@@ -107,7 +107,7 @@ Known provisioning differences:
 | qfits system | eso-qfits-6.2.0-1.el7.centos.x86_64 | RPM ownership and shared-library registration |
 | qfits private | ~/opt/local/qfits5; static library | Located; exact native build provenance still open |
 | SExtractor | /usr/bin/sex; 2.19.5 | Synthetic extraction passed; Pycavi catalogue workflow pending |
-| SCAMP | /usr/bin/scamp; 2.10.0 | Offline synthetic linear fit passed; live reference access/mosaic/plotting pending |
+| SCAMP | /usr/bin/scamp; 2.10.0 | Offline synthetic linear fit and live Gaia DR2 retrieval passed; mosaic/plotting pending |
 | SWarp | /usr/bin/swarp; 2.38.0 | Synthetic resampling passed; science coadd/Pycavi integration pending |
 | Astrometry.net | ~/opt/astrometry.net-0.98; 0.98 | Installed modules/helpers and two full detector pilots passed |
 | Astrometry indexes | /usr/local/astrometry/data | 191 files, about 9.579 GiB; existing indexes reused |
@@ -259,6 +259,45 @@ No global PYTHONPATH or system interpreter replacement is required.
   calibration quality and Phase 3 compliance are not established by these tests.
 
 ## Remaining dependency acceptance gate
+
+### Live-reference connectivity, 23 October
+
+Fernando reported successful bounded curl queries from chapman3 to both the
+existing `http://vizier.u-strasbg.fr/viz-bin/asu-tsv` route and the advertised
+`https://vizier.cds.unistra.fr/viz-bin/asu-tsv` route. Each queried Gaia DR2
+(`I/345/gaia2`) within one arcminute of (88.018586, -5.464047), explicitly capped
+at five rows. Both returned HTTP 200 and the same five coordinate/magnitude
+rows. Reported transfers were 2285 bytes / 2.537 s and 2289 bytes / 2.176 s,
+respectively. Records: `~/wenu-vizier-connection-o0k6s236`.
+
+This establishes curl/service connectivity, not SCAMP's native retrieval/parser.
+No saved server or catalogue selection was changed. The reusable tool now offers
+explicitly opt-in `scamp-live --allow-network` for that requirement:
+one small synthetic field, Gaia DR2, current server, fitting disabled. Its native
+query is area-bounded rather than five-row-capped.
+
+Fernando ran commit `86ab87c4429df0bf217bb998e54b5d8b1a2b8ee8` successfully on
+chapman3 with Python 3.11.14 and tool SHA256
+`0998d00689cc359a879e18ec2feabd7f9d351407f9d43dbeb9c0376aecc4e25f`.
+Records: `~/wenu-scamp-live.IVRjXH/results`. The version, configuration dump and
+native retrieval all returned zero. At batch niceness 10 with one SCAMP thread,
+the existing `vizier.u-strasbg.fr` route returned three Gaia DR2 positions;
+maximum separation was 0.51083023477751 arcmin. The synthetic input was unchanged;
+both astrometric and photometric fitting were disabled. Saved reference:
+`GAIA-DR2_0552-0527_r1.cat`, SHA256
+`66c43b1fa2adb9b8bc89cb33ec93c82a60a8e6bea63bbef4c00749d6d58b2e88`.
+
+Astropy emitted eight VerifyWarnings for the saved reference table's `TDISPn`
+display formats (`E15` for columns 1–2 and `E12` for columns 3–8). The warnings
+state that these invalid values are ignored for display formatting; coordinate
+reading and the acceptance checks succeeded. Preserve the native catalogue and
+warnings; no file repair, warning suppression or production-reader change was
+made. This establishes the tested native retrieval/parser path, not every
+catalogue schema, real-sky fitting, plotting, mosaics or complete workflow
+compatibility. Mac and Ubuntu live checks remain untested. The dependency gate
+and Pycavi workflow audit remain open.
+
+### Outstanding requirements
 
 1. Fresh Python/Conda inventories, kernel registration, saved engine paths and
    pip check captured successfully in `~/wenu-dependencies-mi_avvgc`. Preserve

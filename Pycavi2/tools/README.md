@@ -49,6 +49,35 @@ environment before writes or native jobs. `--dry-run` resolves selected paths an
 checks guards without scientific imports, jobs, directory creation or priority
 changes. It is not an engine qualification test.
 
+### Opt-in live SCAMP retrieval
+
+`scamp-live --allow-network --ref-server vizier.u-strasbg.fr` separately tests
+SCAMP's own Gaia DR2 retrieval and parser. The hostname defaults to the existing
+Pycavi wrapper's server; it is not a URL. This does not edit saved settings or
+change the selected catalogue. Offline checks never select this check implicitly.
+
+The fixture covers 51.2 arcsec near CN Ori (88.018586, -5.464047 degrees), with
+a 0.05 arcmin position margin. SCAMP 2.10.0 retrieves references before the
+optional fit; both astrometric and photometric solving and pattern matching are
+disabled. A saved Gaia DR2 LDAC catalogue must contain finite, valid coordinates
+within one arcminute of the field centre. Input hashes must remain unchanged.
+The native response, commands and logs remain available in the output directory.
+This qualifies live retrieval/parsing only, not a real-sky astrometric fit.
+
+The request is bounded by this small sky area and the command's 120-second
+timeout. SCAMP 2.10.0 hardcodes a large row ceiling in its VizieR request;
+this native check does **not** impose the five-row cap used by the separate curl
+connectivity probe. It supplies one server and performs no tool-level retries.
+No network check has been qualified on Mac or Ubuntu yet. Unit tests simulate
+the response and command contract. Fernando's native chapman3 run passed with
+three Gaia DR2 positions, maximum distance 0.511 arcmin, unchanged input and
+all native exit codes zero. SCAMP's saved reference table produced Astropy
+warnings about invalid `TDISPn` display formats (`E15`/`E12`); coordinate reading
+succeeded and the file was not repaired. See the dated dependency inventory for
+exact evidence and limits. The inspected implementation is
+[SCAMP 2.10.0 makeit.c](https://github.com/astromatic/scamp/blob/2.10.0/src/makeit.c)
+and [astrefcat.c](https://github.com/astromatic/scamp/blob/2.10.0/src/astrefcat.c).
+
 Always launch as a separate process from a guarded terminal or with notebook
 `subprocess.Popen`; never `%run`, `runpy` or call `main` inside the kernel. The
 CLI lowers only itself and descendants to niceness >=10 and sets four numerical

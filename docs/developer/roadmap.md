@@ -2,6 +2,21 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Following acceptance and merge of the offline SCAMP check, Fernando instructed
+the bounded live-reference requirement check to proceed. Compare existing and
+advertised VizieR routes with tiny capped Gaia DR2 queries, then test SCAMP's own
+retrieval/parser in one small field with fitting disabled. Keep this reusable,
+explicitly opt-in and separate from deterministic offline checks. Do not change
+saved server/catalogue choices, production wrappers or scientific data. A service
+probe does not complete the workflow audit or claim real-sky fit accuracy.
+
+Reported chapman3 result: the native live-reference check passed on 23 October
+at niceness 10 with one thread, returning three Gaia DR2 positions within
+0.511 arcmin and preserving its input. Native reference-table display-format
+warnings are retained in the dependency inventory. This completes the bounded
+retrieval check, not the complete dependency gate or workflow audit. No saved
+server/catalogue choice was changed; Mac/Ubuntu execution remains untested.
+
 Current bounded dependency check: qualify installed SCAMP using a disposable,
 synthetic single-detector FITS_LDAC catalogue and local known reference positions.
 Exercise catalogue loading and a linear astrometric fit; require finite output,
