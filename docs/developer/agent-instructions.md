@@ -6,6 +6,23 @@ directs agents here.
 
 ## Machine guards and process priority, 22 October 2026
 
+### Actual user checkout verification, 23 October 2026
+
+Before changing Git state or the installed wenu-imaging package on Fernando's
+Mac or chapman3, inspect that computer's actual clone. Obtain fresh OS/hostname,
+resolved checkout root, origin fetch/push URLs, branch, HEAD, upstream, full
+`git status --porcelain` and interpreter/prefix evidence. Do this before fetch,
+pull, switch, merge, reset, commit, push, cleanup or installation commands.
+Do not substitute the agent workspace's state, yesterday's terminal output or a
+directory name for this evidence. Use guards matching the established target;
+preserve local edits and discuss unexpected branch/origin/divergence before
+mutating it. A fetch changes Git references too. Do not assume the Mac imaging
+clone is the separate Mac wenu clone. No Git software upgrade is authorized.
+
+Fernando authorized the bounded remote-notebook launcher in
+`Pycavi2/tools/start_remote_notebook.py` on 23 October. It starts the existing
+chapman3 notebook workflow; it does not expand the reduction/refactoring scope.
+
 Fernando develops on his Mac (wenu) and chapman3 (wenu-imaging) in parallel.
 Every copy-and-paste command block must state its intended machine/project and
 start with an automatic OS/hostname guard before any other work, including

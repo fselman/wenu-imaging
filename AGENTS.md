@@ -11,6 +11,9 @@ Component implementation changes require authorization for the relevant stage.
 Before user-facing terminal commands, follow the machine/repository guards in
 the developer instructions. Fernando works on Mac/wenu and chapman3/wenu-imaging
 in parallel. Future reduction launches must use `nice -n 10`.
+Before changing either user's cloned wenu-imaging checkout or its installation,
+obtain current Git/environment evidence from that actual computer; an agent's
+checkout is not evidence of the user's local state. See the canonical policy.
 
 The original audit is historical evidence, not the current agent policy.
 
