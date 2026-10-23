@@ -2,6 +2,14 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+After PR #18 merge and verified chapman3 cleanup at `9ee7ff9`, Fernando approved
+the read-only [OmegaCAM requirements map](omegacam-dependency-map-2026-10-23.md).
+It connects notebook imports/calls to Python/native/data/service requirements
+and existing evidence. It identifies remaining Gaia DR3/GSPC, SkyMapper comparison,
+lunar/site-data, SCAMP PDF and platform/provenance checks without executing those
+paths or changing software. Further bounded checks need defined acceptance
+criteria; the dependency gate remains open and the workflow audit has not started.
+
 Following acceptance and merge of the offline SCAMP check, Fernando instructed
 the bounded live-reference requirement check to proceed. Compare existing and
 advertised VizieR routes with tiny capped Gaia DR2 queries, then test SCAMP's own
