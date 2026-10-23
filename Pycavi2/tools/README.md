@@ -12,12 +12,25 @@ Checks are `fits-compression` (exact integer FITS round trip and selected header
 and `swarp` (constant-image resampling, finite WCS and positive central weights).
 These retain the manual chapman3 fixtures and tolerances, with unique source
 matching additionally checked. Floating-point compression, science photometry,
-coadd quality and astrometric accuracy are outside their claims. SCAMP and real
-Astrometry.net image solves are not yet included in this tool.
+coadd quality and real-sky astrometric accuracy are outside their claims.
+
+`scamp` additionally tests a synthetic single-detector FITS_LDAC catalogue with
+100 noiseless sources against a local known reference catalogue (`ASTREF_CATALOG
+FILE`). Its initial RA reference is displaced by three arcseconds in coordinate
+angle. Pattern matching, photometric calibration and check plots are disabled;
+one thread performs a degree-one astrometric fit. The recovered sky positions
+must have RMS below 0.2 arcsec and improve at least tenfold over the input WCS;
+input catalogue hashes must remain unchanged. No observational data or online
+reference service is used. This is a controlled engine/interface test, not a
+Pycavi wrapper, mosaic, Gaia access, proper-motion or scientific-accuracy test.
+Use `--scamp /actual/path/to/scamp`; generated `.head`, XML and logs are preserved.
+Real Astrometry.net image solves are not yet included in this tool.
+The fixture follows the official
+[SCAMP input/output catalogue contract](https://scamp.readthedocs.io/en/latest/Using.html).
 
 Select checks as positional arguments. Supply a new `--output` directory and,
-where needed, `--fpack`, `--funpack`, `--sextractor`, `--swarp` executable paths.
-Defaults resolve fpack/funpack/sex/swarp on PATH. Nothing reads or changes Pycavi's
+where needed, `--fpack`, `--funpack`, `--sextractor`, `--swarp`, `--scamp` paths.
+Defaults resolve fpack/funpack/sex/swarp/scamp on PATH. Nothing reads or changes Pycavi's
 saved engine configuration. Explicit paths are preferred when comparing machines.
 `--expect-host` checks the short hostname and `--expect-prefix` checks the Python
 environment before writes or native jobs. `--dry-run` resolves selected paths and

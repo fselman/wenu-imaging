@@ -9,9 +9,70 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 
 
 TOOL = Path(__file__).resolve().parents[1] / 'Pycavi2/tools/check_dependencies.py'
+
+
+def load_tool():
+    spec = importlib.util.spec_from_file_location('dependency_tool', TOOL)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@unittest.skipUnless(importlib.util.find_spec('astropy') and importlib.util.find_spec('numpy'),
+                     'Numerical fixture checks require Astropy and NumPy')
+class ScampOracleTests(unittest.TestCase):
+    """Test the synthetic fixture and acceptance oracle, not native SCAMP."""
+
+    def context(self, directory, correct=True, corrupt=False):
+        from astropy.io import fits
+        context = load_tool().Check(directory)
+
+        def fake_run(command, label):
+            if label == 'fit':
+                with fits.open(directory / 'input.cat') as hdus:
+                    cards = ''.join(card.ljust(80) for card in
+                                    hdus[1].data['Field Header Card'][0])
+                    header = fits.Header.fromstring(cards, sep='')
+                    self.assertEqual(header['NAXIS1'], 1024)
+                    self.assertEqual(header['NAXIS2'], 1024)
+                    self.assertEqual(header['CTYPE1'], 'RA---TAN')
+                    self.assertEqual(len(hdus[2].data), 100)
+                with fits.open(directory / 'reference.cat') as hdus:
+                    self.assertEqual(len(hdus['LDAC_OBJECTS'].data), 100)
+                if correct:
+                    header['CRVAL1'] = 123.
+                header.totextfile(directory / 'input.head')
+                (directory / 'scamp.xml').write_text('<synthetic-test-double/>')
+                if corrupt:
+                    with (directory / 'input.cat').open('ab') as stream:
+                        stream.write(b'changed')
+            return SimpleNamespace(stdout='')
+
+        context.run = fake_run
+        return context
+
+    def test_known_wcs_is_accepted_and_initial_offset_is_measured(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = load_tool().scamp(self.context(Path(directory) / 'test'),
+                                      {'scamp': '/synthetic/test-double'})
+            self.assertGreater(result['initial_rms_arcsec'], 1.)
+            self.assertLess(result['final_rms_arcsec'], 1e-6)
+
+    def test_noop_fit_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(AssertionError, 'Fit did not recover'):
+                load_tool().scamp(self.context(Path(directory) / 'test', correct=False),
+                                  {'scamp': '/synthetic/test-double'})
+
+    def test_changed_input_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(AssertionError, 'Input changed'):
+                load_tool().scamp(self.context(Path(directory) / 'test', corrupt=True),
+                                  {'scamp': '/synthetic/test-double'})
 
 
 class DependencyToolTests(unittest.TestCase):

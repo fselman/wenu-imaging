@@ -162,13 +162,27 @@ No global PYTHONPATH or system interpreter replacement is required.
 
 ## Qualification evidence and boundaries
 
+- The reusable compression, SExtractor and SWarp checks each passed on chapman3
+  at niceness 10. Records: `~/wenu-dependency-tools.p11U9J/results`. This is
+  actual target execution of the shared tool, superseding the earlier pending
+  statement for those three checks on chapman3; Mac and Ubuntu remain pending.
+- SCAMP 2.10.0 version/default-configuration probes returned zero and ldd showed
+  no unresolved libraries. The compiled default reference host is
+  `vizier.unistra.fr`, while installed Pycavi's PAPI wrapper sets
+  `vizier.u-strasbg.fr`; notebook 05 requests Gaia DR2. No host or catalogue
+  selection is changed by this finding. Live service/alias behavior is untested.
+  Required input columns include windowed centroids/error ellipses and auto flux/
+  flux error in FITS_LDAC; local-reference FILE mode is available. The portable
+  synthetic SCAMP check is added for qualification, but its native execution
+  on chapman3 is pending. Plotting/PDF support is not covered by a plot-free fit.
+
 - `/usr/bin/swarp` returned zero for a synthetic 64x64 constant-image resample;
   central intensity was 100.0 (expected 100), celestial WCS was finite and central
   weights were positive. Records: `~/wenu-swarp-check-ovnmyd2y`. This does not
   establish science coadd quality or Pycavi integration. Fernando requested
   reusable cross-platform dependency checks; `Pycavi2/tools/check_dependencies.py`
-  now holds the compression, extraction and resampling fixtures. Its actual
-  execution on chapman3, Mac and Ubuntu is pending, separate from manual results.
+  now holds the compression, extraction and resampling fixtures. Subsequent
+  shared-tool execution on chapman3 is recorded above; other platforms are pending.
 
 - `/usr/bin/sex` returned zero and detected exactly five synthetic Gaussian
   stars, all within 0.008 pixel of their injected positions, with finite catalogue
