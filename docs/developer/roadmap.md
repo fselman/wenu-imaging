@@ -1,5 +1,21 @@
 # wenu-imaging roadmap
 
+## Notebook 05 executable detection fix, 23 October 2026
+
+The ongoing functional notebook walkthrough reached SExtractor discovery after
+all ten notebook 04 pilot exposures passed solving/MEF assembly checks. On
+chapman3, `/usr/bin/sex` returns `SExtractor version 2.19.5`; the installed PAPI
+wrapper incorrectly requires the alternative spelling `Source Extractor`.
+The first extraction block stopped at discovery, before copying an image or
+launching extraction. The focused correction accepts both banner spellings,
+preserving candidate order, explicit-path selection and the bytes version return
+contract. It changes no extraction parameters, dependency versions or engines.
+Five mocked regression tests pass in the agent environment; actual installed
+wrapper discovery and subsequent notebook 05 extraction/SCAMP remain pending on
+chapman3. Preserve existing solved MEFs and continue with a fresh working copy;
+do not repeat normalization or solving. The later efficiency plan is not being
+implemented by this compatibility fix.
+
 ## Controlling sequence clarification, 23 October 2026
 
 Following acceptance and merge of the offline SCAMP check, Fernando instructed
