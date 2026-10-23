@@ -279,3 +279,29 @@ distinguishes permissive input reading from explicit strict verification.
 The mefpp detector-identity TODO in `roadmap.md` explicitly requires tracing
 name versus ordinal matching across raw/calibration/BPM/output paths, with
 permuted-extension regression cases. Its native implementation remains deferred.
+
+## Notebook 04 walkthrough, 23 October 2026
+
+After Fernando instructed continuing through the notebook sequence and deferring
+lunar/site-data to zpcal, the installed `pycavi_solve.run_py4_solve()` was exercised
+on a fresh independent copy of the first normalized r_SDSS exposure,
+`OMEGA.2017-03-11T02:14:43.394_pre.fits`, with one worker at niceness 10 and local
+Astrometry.net 0.98. The wrapper called the existing library; no new solving or
+assembly implementation was substituted and no installed code was changed.
+
+Fernando reported successful solution markers for all 32 detectors and an
+assembled 33-HDU MEF with matching detector names, unchanged pixel shapes/dtypes
+and exact detector pixel equality. Sampled celestial WCS coordinates were finite;
+primary BUNIT/ONEADU/EXPTIME were preserved, and the original and copied inputs
+retained their hashes. This is functional orchestration/assembly evidence, not
+real-sky astrometric accuracy or a systematic scientific audit. Only one worker
+was exercised; it does not qualify multiworker failure propagation.
+
+Records: `~/omegacam/testing/wenu-imaging-test/notebook04-r_SDSS-t4f5cu78/`
+(`runner.log`, `started.json`, `completed.json`). The assembled MEF is beneath
+`OMEGA.2017-03-11T02:14:43.394_pre/`, named
+`OMEGA.2017-03-11T02:14:43.394_pre_wcs.fits`. Installed solving module SHA256:
+`f0a9a17ec84dae4b4e5e9635e2b76ed336ecc7044d50e6a6314e3065f5a447c8`.
+The other four r_SDSS and five NB_659 exposures have not yet been run through
+this complete runner/assembly path. Earlier 32-detector diagnostic solves for
+each filter remain separate evidence and are preserved.

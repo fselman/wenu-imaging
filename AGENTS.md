@@ -1,5 +1,11 @@
 # wenu-imaging
 
+Latest direction, 23 October 2026: continue the existing OmegaCAM functional
+notebook walkthrough at notebook 04 through zpcal before deciding further checks.
+Defer lunar/site-data testing to zpcal. This supersedes the earlier dependency
+gate stopping rule for this walkthrough only; no general refactoring/audit or
+scientific-policy changes are authorized. See the latest developer instructions.
+
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where
 practical. Python future-proofing follows the agreed five points, not this gate.

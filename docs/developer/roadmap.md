@@ -2,6 +2,30 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Fernando requested the [mosaic astrometry efficiency plan](mosaic-astrometry-efficiency-plan-2026-10-23.md):
+one canonical SExtractor measurement pass with catalogue reuse; a validated
+per-filter focal-plane baseline propagated into mefpp headers; only 1–3 detector
+solves for exposure pointing; explicit review of SCAMP mosaic and SWarp grid/
+resampling/photometric settings; and a QC script monitoring deviations from that
+baseline. Define extraction units across exposures/coadds and validate detector
+stability, model freedoms, fallback and scientific equivalence before adoption.
+The recalled `FIX_FOCALPLANE` is a SCAMP MOSAIC_TYPE, not a SWarp setting.
+This is a planned optimization in the existing Pycavi/mefpp sequence, not a
+change to the current walkthrough, running jobs or scientific defaults.
+
+Latest user direction: Fernando declined a separate lunar/site-data check now
+and instructed continuing through the whole notebook sequence before deciding
+what further work is needed. Resume the existing OmegaCAM functional walkthrough
+at notebook 04 (astrometric solving), then SCAMP, SWarp and zpcal. Lunar/site-data
+belongs to zpcal and remains deferred until that stage. This revises the earlier
+dependency-first stopping rule for this walkthrough; it does not declare the
+dependency baseline accepted or start general thinning/refactoring, replacement
+or the systematic scientific library/mefpp audits. Use the existing installed
+library, isolated pilot outputs, explicit worker limits and batch niceness >=10;
+keep the interactive kernel at zero. Inspect existing output locations before
+running or assembling anything, preserve prior products, and distinguish
+individual-solver checks from notebook orchestration and full MEF validation.
+
 Following acceptance and merge of the offline SCAMP check, Fernando instructed
 the bounded live-reference requirement check to proceed. Compare existing and
 advertised VizieR routes with tiny capped Gaia DR2 queries, then test SCAMP's own

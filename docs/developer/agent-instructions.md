@@ -1,5 +1,18 @@
 # wenu-imaging agent instructions
 
+## Latest notebook walkthrough direction, 23 October 2026
+
+Fernando declined the proposed standalone lunar/site-data check and explicitly
+instructed continuing through the whole notebook sequence before deciding further
+work. Resume the existing isolated OmegaCAM functional walkthrough at notebook
+04, then SCAMP, SWarp and zpcal. Defer lunar/site-data to zpcal. This direction
+supersedes the earlier requirement to close every dependency check before this
+walkthrough; it does not accept the entire dependency baseline or authorize
+general refactoring, replacement implementations or the systematic library/mefpp
+audits. Preserve existing code/data/settings and use the established machine,
+output-isolation and priority guards. Record actual results and resolve unexpected
+failures before dependent stages. See the roadmap for the current boundary.
+
 ## Controlling dependency gate, 23 October 2026
 
 Fernando clarified that dependency establishment and documentation on chapman3
