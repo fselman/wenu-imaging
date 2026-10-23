@@ -27,7 +27,7 @@ def load_tool():
 class ScampOracleTests(unittest.TestCase):
     """Test the synthetic fixture and acceptance oracle, not native SCAMP."""
 
-    def context(self, directory, correct=True, corrupt=False):
+    def context(self, directory, correct=True, corrupt=False, accented_comment=False):
         from astropy.io import fits
         context = load_tool().Check(directory)
 
@@ -46,6 +46,10 @@ class ScampOracleTests(unittest.TestCase):
                 if correct:
                     header['CRVAL1'] = 123.
                 header.totextfile(directory / 'input.head')
+                if accented_comment:
+                    path = directory / 'input.head'
+                    path.write_bytes('COMMENT   Université de Bordeaux\n'.encode('utf-8')
+                                     + path.read_bytes())
                 (directory / 'scamp.xml').write_text('<synthetic-test-double/>')
                 if corrupt:
                     with (directory / 'input.cat').open('ab') as stream:
@@ -78,6 +82,29 @@ class ScampOracleTests(unittest.TestCase):
                                       {'scamp': '/synthetic/test-double'})
             self.assertGreater(result['initial_rms_arcsec'], 1.)
             self.assertLess(result['final_rms_arcsec'], 1e-6)
+
+    def test_native_utf8_comment_is_recorded_without_rewriting_header(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'test'
+            tool = load_tool()
+            result = tool.scamp(self.context(root, accented_comment=True),
+                                {'scamp': '/synthetic/test-double'})
+            self.assertLess(result['final_rms_arcsec'], 1e-6)
+            omitted = result['non_ascii_commentary_excluded_from_in_memory_wcs']
+            self.assertEqual(len(omitted), 1)
+            self.assertIn('Université', omitted[0]['text'])
+            raw = (root / 'input.head').read_bytes()
+            self.assertTrue(raw.startswith('COMMENT   Université'.encode('utf-8')))
+            self.assertEqual(tool.sha256(root / 'input.head'), result['native_header_sha256'])
+
+    def test_non_ascii_scientific_value_is_not_silently_discarded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'input.head'
+            path.write_bytes("CTYPE1  = 'RA---TANé'\nEND     \n".encode('utf-8'))
+            original = path.read_bytes()
+            with self.assertRaisesRegex(ValueError, 'Non-ASCII scientific'):
+                load_tool().read_scamp_wcs_header(path)
+            self.assertEqual(path.read_bytes(), original)
 
     def test_noop_fit_cannot_pass(self):
         with tempfile.TemporaryDirectory() as directory:

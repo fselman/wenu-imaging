@@ -223,9 +223,24 @@ def scamp_fixture(directory):
     return xy, sky, header
 
 
+def read_scamp_wcs_header(path):
+    """Read scientific cards strictly, retaining original non-ASCII commentary on disk."""
+    from astropy.io import fits
+    accepted, omitted = [], []
+    for line in path.read_bytes().splitlines():
+        if line.isascii():
+            accepted.append(line.decode('ascii'))
+        elif line[:8].strip() in (b'COMMENT', b'HISTORY'):
+            omitted.append({'card_type': line[:8].decode('ascii').strip(),
+                            'bytes_hex': line.hex(),
+                            'text': line.decode('utf-8', errors='backslashreplace')})
+        else:
+            raise ValueError('Non-ASCII scientific/unknown card in ' + str(path))
+    return fits.Header.fromstring('\n'.join(accepted), sep='\n'), omitted
+
+
 def scamp(context, paths):
     import numpy as np
-    from astropy.io import fits
     from astropy.coordinates import SkyCoord
     from astropy.wcs import WCS
     xy, sky, header = scamp_fixture(context.directory)
@@ -248,8 +263,10 @@ def scamp(context, paths):
     output = context.directory / 'input.head'
     assert output.is_file(), 'SCAMP did not write input.head'
     assert (context.directory / 'scamp.xml').is_file(), 'Missing SCAMP summary'
+    output_sha = sha256(output)
+    solution, omitted = read_scamp_wcs_header(output)
     corrected = header.copy()
-    corrected.update(fits.Header.fromtextfile(output))
+    corrected.update(solution)
     fitted = WCS(corrected).celestial
     assert fitted.has_celestial, 'Missing fitted celestial WCS'
     before = WCS(header).celestial.all_pix2world(xy, 1)
@@ -265,9 +282,12 @@ def scamp(context, paths):
         'Fit did not recover synthetic WCS: RMS={} arcsec'.format(final_rms))
     for name, original in inputs.items():
         assert sha256(context.directory / name) == original, 'Input changed: ' + name
+    assert sha256(output) == output_sha, 'Native SCAMP header was changed'
     return {'synthetic_sources': len(xy), 'reference_mode': 'FILE',
             'initial_rms_arcsec': initial_rms, 'final_rms_arcsec': final_rms,
             'catalogue_inputs_unchanged': True,
+            'native_header_sha256': output_sha,
+            'non_ascii_commentary_excluded_from_in_memory_wcs': omitted,
             'scope': 'single-detector linear fit; no live reference query or plotting'}
 
 

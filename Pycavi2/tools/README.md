@@ -33,6 +33,12 @@ Astropy can reconstruct readable cards from NUL-padded table strings while
 SCAMP 2.10.0's native reader cannot recognize their `END` keyword. The initial
 fixture exposed this construction defect and crashed during header loading;
 that run is not evidence against the installed engine's valid-input behavior.
+SCAMP 2.10.0 can write UTF-8 accents in `.head` COMMENT text, which Astropy's
+strict FITS text reader rejects. For this diagnostic's in-memory WCS only,
+non-ASCII COMMENT/HISTORY lines are excluded and recorded verbatim as text/hex
+in the result. Other non-ASCII cards fail explicitly. The native `.head` file
+is never rewritten, and its hash is recorded and checked unchanged. This narrow
+diagnostic reader does not repair Pycavi's production header-reading paths.
 
 Select checks as positional arguments. Supply a new `--output` directory and,
 where needed, `--fpack`, `--funpack`, `--sextractor`, `--swarp`, `--scamp` paths.

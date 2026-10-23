@@ -185,6 +185,16 @@ No global PYTHONPATH or system interpreter replacement is required.
   Corrected fixture generation preserves exact space-padded header bytes and
   adds a raw-byte regression. Native rerun remains pending; do not classify
   this malformed-fixture failure as a failed valid-input engine qualification.
+  The corrected-input trial at `~/wenu-scamp-dependency.2NSKHl/results` returned
+  zero from SCAMP, loaded 100 local references and wrote `.head`/XML outputs.
+  Its reported external residuals were about 4e-6 arcsec in this noiseless
+  synthetic case, but the Python acceptance check failed before independently
+  evaluating the fitted WCS: SCAMP's copyright COMMENT contains UTF-8 accents
+  (`Université`), rejected by Astropy's ASCII FITS header parser. The diagnostic
+  now excludes and records only non-ASCII commentary in memory, preserving raw
+  output and scientific cards strictly. Full diagnostic rerun remains pending.
+  Record production header-reader compatibility for the later Pycavi workflow
+  audit; no wrapper, native engine or saved configuration is changed here.
 
 - `/usr/bin/swarp` returned zero for a synthetic 64x64 constant-image resample;
   central intensity was 100.0 (expected 100), celestial WCS was finite and central
