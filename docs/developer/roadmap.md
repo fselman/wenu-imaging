@@ -2,6 +2,14 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Fernando approved the six delivery/synchronization instruction adaptations from
+Wenu on 23 October, after chapman3 synchronized to `340347f` and the merged
+feature branch was removed locally and remotely. This bounded documentation
+item requires automatic delivery handoffs, fresh target evidence, safe sync and
+authorized cleanup, complete guarded command groups, explicit delivery status
+and strict roadmap control. It changes no processing code, dependency versions
+or stage order. See the canonical agent instructions for the operational rules.
+
 Fernando confirmed that the current phase establishes the packages and external
 requirements on chapman3, with documented installation and verification evidence.
 Complete the dependency acceptance gate before auditing or refactoring the

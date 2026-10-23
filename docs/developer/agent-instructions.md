@@ -97,6 +97,20 @@ discussed with him and approved before proceeding.** Packaging validation does
 not replace the later systematic Pycavi Python library audit or mefpp audit.
 See installation.md for actual checks and pending platform gates.
 
+### Bounded roadmap execution
+
+Before implementation, identify the currently approved bounded task, its intended
+result, scope limits, prerequisites and acceptance gate. A general "proceed"
+applies to the task just discussed, not unmentioned stages or pending backlog.
+If an extra item, new package/capability, scientific policy change, scope expansion
+or changed order is needed, stop that affected implementation; read-only
+assessment may continue. Discuss the concrete need, alternatives, consequences
+and acceptance gate with Fernando, obtain explicit agreement and document the
+agreed change in roadmap.md before implementing it. Keep proposals, partial
+results and accepted completion distinct. Passing dependency checks does not
+authorize starting the workflow audit. Routine choices and necessary fixes
+inside the already approved boundary do not require repeated permission.
+
 ## Scope update, 21 October 2026
 
 ### Latest sequencing clarification
@@ -283,6 +297,60 @@ fixes may share a focused commit when they implement one agreed change.
 The former component repositories remain historical references; do not push
 ongoing development to them or to their original upstream projects.
 Do not merge, delete branches, tag or release without instruction.
+
+### Delivery handoff and local synchronization
+
+These six rules were approved by Fernando on 23 October 2026, adapting the
+applicable delivery procedure from `fselman/wenu` to this separate project.
+
+1. **Automatic handoff.** After every push or merge, provide complete commands
+   for synchronizing the applicable user computer, verifying its resulting
+   commit and performing any authorized cleanup. Include this handoff without
+   waiting for Fernando to ask. A pushed review branch and merged main require
+   different commands; use the actual delivered ref and full expected SHA.
+   When fresh local evidence is missing, provide the read-only preflight group
+   immediately and explain which sync/cleanup group follows its review.
+2. **Fresh target evidence.** Follow the existing actual-checkout verification
+   rule before changing the user's clone or installation: hostname/OS, resolved
+   checkout, origin fetch/push URLs, branch, HEAD, upstream, full working-tree
+   status and Python environment. Never substitute agent-workspace evidence.
+   Inspect returned output before dependent mutations and discuss unexpected
+   differences. A failed guard is a stop, not permission to repair another host.
+3. **Safe sync and authorized cleanup.** Use fast-forward updates and preserve
+   local edits and unrelated branches. Verify ancestry before deleting an
+   explicitly authorized merged branch; protect remote deletion against an
+   unexpected changed tip. Do not force-reset, discard edits or delete branches
+   just because a new task starts. Distinguish cleanup in the agent workspace,
+   GitHub, chapman3 and Mac. Detect single-branch clones and explicitly fetch the
+   delivered branch; explain any necessary change to their tracking configuration.
+   If authentication fails, report the incomplete action without changing user
+   credentials or requiring a graphical prompt/X11. Offer the applicable GitHub
+   UI operation, then prune and verify after the user confirms completion.
+4. **Complete command groups.** State the intended machine/project. Supply every
+   command copy/paste ready in chat, with the OS/hostname guard first, exact
+   verified checkout and applicable branch/SHA/clean/upstream checks. Use a
+   subshell with fail-fast handling or equivalent dependent `&&` chaining; guard
+   failure must stop the entire group without closing the user's terminal.
+   Give one group at a time, then inspect its output before dependent operations.
+   Respect normal notebook priority and lowered batch priority where applicable.
+5. **Explicit delivery status.** Report branch/full commit or merge commit, PR,
+   checks actually executed, remaining platform acceptance and any incomplete
+   cleanup. Do not call written or unexecuted tests passing. Remote delivery
+   does not synchronize the user's checkout, reinstall its wheel or update an
+   already running kernel; state which of these actions actually occurred.
+6. **Roadmap control.** Apply the bounded roadmap-execution rules above. Discuss
+   and document changes of scope/order before implementation. Dependency
+   qualification does not implicitly approve workflow refactoring, scientific
+   changes or Python future-proofing. Publication of a plan is not acceptance
+   of its pending implementation stages.
+
+Use a dedicated branch and PR for the authorized item. Approval to implement
+these instructions does not by itself authorize merging or deleting that new
+branch; require the corresponding explicit instruction. Once a merge/cleanup
+is explicitly authorized and its gates pass, do not request the same approval
+again. Prefer the GitHub connector for repository delivery; user commands are
+for their local synchronization/acceptance, not manual source editing on the
+agent's behalf.
 
 Report the problem addressed, changed files, checks actually run, unresolved
 limitations and next decision. Keep working instructions and approved decisions

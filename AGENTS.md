@@ -21,6 +21,13 @@ Before changing either user's cloned wenu-imaging checkout or its installation,
 obtain current Git/environment evidence from that actual computer; an agent's
 checkout is not evidence of the user's local state. See the canonical policy.
 
+After every push or merge, automatically provide the applicable complete,
+guarded synchronization/verification commands and any authorized cleanup steps.
+Give one command group at a time and inspect the user's result before dependent
+operations. Distinguish agent-workspace, GitHub, chapman3 and Mac status; never
+claim that remote delivery synchronized a user's clone. Follow the canonical
+[delivery handoff rules](docs/developer/agent-instructions.md#delivery-handoff-and-local-synchronization).
+
 The original audit is historical evidence, not the current agent policy.
 
 Scope clarification, 21 October 2026: package wenu-imaging and debug/improve
