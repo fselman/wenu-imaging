@@ -13,6 +13,14 @@ job details. No photometric fitting, production-query change, catalogue migratio
 package installation or scientific workflow audit is authorized by this check.
 The five-arcminute probe radius is a diagnostic choice, not a production default.
 
+Reported target result: the bounded Gaia DR3/GSPC probe passed on chapman3 at
+`9724dd9` with five joined sources, all five usable in r/i, maximum separation
+4.367 arcmin and worker exit zero at niceness 10. Three u-band and four
+radial-velocity entries were missing and retained as such. Exact query/response
+identities are in the dependency inventory. This completes that retrieval probe,
+not photometric calibration, production conversion or the overall dependency
+gate; no package, saved setting or scientific workflow change was made.
+
 Following acceptance and merge of the offline SCAMP check, Fernando instructed
 the bounded live-reference requirement check to proceed. Compare existing and
 advertised VizieR routes with tiny capped Gaia DR2 queries, then test SCAMP's own

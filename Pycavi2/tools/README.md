@@ -126,8 +126,12 @@ The asynchronous API follows the installed-version
 [Astroquery 0.4.11 Gaia documentation](https://astroquery.readthedocs.io/en/stable/api/astroquery.gaia.GaiaClass.html)
 and [job implementation](https://github.com/astropy/astroquery/blob/v0.4.11/astroquery/utils/tap/model/job.py).
 Tests use simulated archive responses and verify query bounds, exact source IDs,
-schema/coordinate/error rejection and saved evidence. Actual chapman3 Gaia
-execution, Mac execution and Ubuntu execution remain pending.
+schema/coordinate/error rejection and saved evidence. Fernando's chapman3 run
+passed with five joined sources and five usable r/i rows; three sources lacked
+u-band photometry and four lacked radial velocities. The raw response is
+preserved. See the dated dependency inventory for identities and limits.
+Mac and Ubuntu execution remain pending. This result does not qualify the
+production query's downstream table conversion, quality cuts or calibration.
 
 The output contains synthetic inputs, generated engine configs, native stdout/
 stderr and `report.json`: executable paths/hashes, tool hash, Python distribution

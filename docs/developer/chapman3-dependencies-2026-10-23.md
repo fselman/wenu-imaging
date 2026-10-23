@@ -270,13 +270,44 @@ preserving query, native VOTable, schema, nulls, units and job provenance. This
 does not change the scientific query, its selected catalogue or the installation.
 The direct column contract comes from the existing SDSS-band branch, including
 NB_659's use of r/i; Johnson-Cousins and the downstream calibration are not
-qualified by this check. Actual target execution remains pending; unit tests
-simulate the service and are not evidence of current archive availability.
+qualified by this check. Unit tests simulate the service; actual target evidence
+is recorded below.
 
 Acceptance requires a completed job with 1–5 joined sources, valid matching
 integer IDs, nearby coordinates and at least one usable r/i row. Missing ancillary
 values are reported. Failure is preserved for diagnosis; no automatic service
 fallback, package upgrade or production-query rewrite is authorized.
+
+Fernando reported a passing live run on chapman3 at commit
+`9724dd9358d48f9658d60d898e20fd9666be985f`, Python 3.11.14, batch niceness 10,
+worker exit zero. Records: `~/wenu-gaia-dependency.F4w6ZZ/results`.
+The anonymous job completed with five joined sources, all five usable in r/i;
+maximum angular separation was 4.366722257651971 arcmin within the five-arcminute
+cone. All 39 requested columns were present, IDs matched and were preserved
+without float conversion. Returned `SOURCE_ID` capitalization was handled in a
+diagnostic copy; the native response remained unchanged.
+
+| Evidence | Recorded identity |
+|---|---|
+| Tool SHA256 | `9167a052c4038a2620746f542bd1b24a40f11e493860f185e5109fdeca13b887` |
+| Worker SHA256 | `b1a6aee9f9a13f54a42d1d07a8c2486f4f844b10751a6da85809ffc6a137b813` |
+| Query SHA256 | `10441d9fdf1d65574eef55d023184be90611f9dec13b925b2f5e3d691b1a0131` |
+| Native response SHA256 | `da629e3cc52a77af39e875278cf6e3806871638717eb17dd51c559f42f625187` |
+| Archive job ID | `c022f9de-cf04-11f1-9d98-bc97e148b76b-O` |
+| Endpoint | `https://gea.esac.esa.int/tap-server/tap` |
+
+The response had three missing u-band magnitude/flux/error rows and four missing
+radial-velocity/error rows. All other requested columns had zero reported null
+or nonfinite entries. This is not evidence of complete u-band coverage. Coordinates
+were in degrees; SDSS synthetic fluxes/errors were reported as W/(nm m²), unlike
+the Gaia G/BP/RP fluxes/errors in electron/s. Magnitudes were reported in mag.
+Units were retained, not converted by this check. No scientific comparison or
+calibration validity follows from retrieval alone.
+
+This completes the bounded client/schema-retrieval requirement on chapman3 for
+the probed SDSS branch. Production table transformation, selection/filter policy,
+photometric fitting, Johnson-Cousins, full fields and Mac/Ubuntu remain unqualified.
+The complete dependency gate and systematic workflow audit remain open.
 
 ### Live-reference connectivity, 23 October
 
