@@ -1,8 +1,101 @@
 # wenu-imaging agent instructions
 
+## Controlling dependency gate, 23 October 2026
+
+Fernando clarified that dependency establishment and documentation on chapman3
+come before the Pycavi workflow audit. Inventory Python packages, native engines,
+resources, installation/build details, configuration, evidence and limitations.
+Aim to align the Mac versions after capturing its actual imaging environment;
+do not change either platform merely to force identical inventories. Diagnostic
+wrappers calling existing functions are dependency evidence, not validation of
+the complete orchestration or authorization to replace it. Keep the agreed
+five-point sequence in roadmap.md. Future-proof Python only after those five
+points are complete and the software works well, under a separately agreed plan.
+The local Astrometry.net 0.98 installation was explicitly approved; this is not
+blanket authorization for other engine or library upgrades. See the dated
+chapman3 dependency inventory for current evidence and outstanding checks.
+
 Status: accepted working agreement, with scope clarified by Fernando Selman on
 20 October 2026. This is the canonical developer policy; the root AGENTS.md
 directs agents here.
+
+## Machine guards and process priority, 22 October 2026
+
+### Actual user checkout verification, 23 October 2026
+
+Before changing Git state or the installed wenu-imaging package on Fernando's
+Mac or chapman3, inspect that computer's actual clone. Obtain fresh OS/hostname,
+resolved checkout root, origin fetch/push URLs, branch, HEAD, upstream, full
+`git status --porcelain` and interpreter/prefix evidence. Do this before fetch,
+pull, switch, merge, reset, commit, push, cleanup or installation commands.
+Do not substitute the agent workspace's state, yesterday's terminal output or a
+directory name for this evidence. Use guards matching the established target;
+preserve local edits and discuss unexpected branch/origin/divergence before
+mutating it. A fetch changes Git references too. Do not assume the Mac imaging
+clone is the separate Mac wenu clone. No Git software upgrade is authorized.
+
+Fernando authorized the bounded remote-notebook launcher in
+`Pycavi2/tools/start_remote_notebook.py` on 23 October. It starts the existing
+chapman3 notebook workflow; it does not expand the reduction/refactoring scope.
+
+Fernando develops on his Mac (wenu) and chapman3 (wenu-imaging) in parallel.
+Every copy-and-paste command block must state its intended machine/project and
+start with an automatic OS/hostname guard before any other work, including
+environment activation, imports, Git operations, installs or file writes.
+Do not rely on the displayed shell prompt or a previous block's successful check.
+Group the block in a subshell so a guard failure stops that block without
+closing the user's interactive terminal or SSH session.
+
+For the current chapman3 imaging pilot, use this guard:
+
+```bash
+(
+test "$(uname -s):$(hostname -s)" = "Linux:chapman3" || {
+    echo "STOP: run this block on chapman3 for wenu-imaging." >&2
+    exit 1
+}
+# Intended commands follow here.
+)
+```
+
+The known Mac is MC02VV0HPHTDG (Darwin); the parallel wenu checkout is
+`/Users/fselman/odrive/Dropbox/software/wenu`. The current chapman3 imaging
+checkout is `$HOME/Software/wenu-imaging`. These are distinct projects. For
+repository operations, additionally check the actual Git root, origin repository
+and expected branch before modifying/fetching/installing; hostname alone cannot
+distinguish checkouts. For Python processing, also check the resolved interpreter
+prefix against the intended environment before scientific imports. The current
+chapman3 prefix is `$HOME/.conda/envs/wenu-imaging`. Use the explicitly selected
+target for future Mac imaging validation rather than requiring Linux for every
+wenu-imaging task. Do not silently update a failed guard to match the current
+terminal or infer the correct project from a directory's basename.
+
+Future reduction launches must use `nice -n 10` on the Python parent so native
+child processes inherit the lower CPU priority. Retain existing thread/resource
+limits. Do not renice, restart or otherwise disturb an already running job
+without instruction. The first pilot bias was already running when Fernando
+requested this priority convention; it was left running as instructed.
+
+Priority clarification approved 23 October: the Jupyter server and interactive
+kernel run at normal niceness 0. Only batch processes and their descendants run
+at niceness >=10. Launch scripts through `Pycavi2/tools/run_batch.py` in a
+separate process, or use the existing `nice -n 10` terminal pattern. Never call
+`os.nice`/`os.setpriority` in the interactive kernel to lower batch priority;
+that also lowers later interaction. Direct heavy notebook-cell computations or
+existing library calls do not automatically pass through the helper. Explicitly
+launch those workloads in a batch process when using this priority split. Do not
+claim all existing notebook runners were changed by this launcher utility.
+
+These are instructions for preparing commands, not authorization for a new CLI,
+host migration, workflow refactor or scheduler change.
+
+## Packaging-stage authorization, 21 October 2026
+
+Fernando authorized the packaging implementation, preserving the current
+scientific dependencies and engines. **Any deviation from the roadmap must be
+discussed with him and approved before proceeding.** Packaging validation does
+not replace the later systematic Pycavi Python library audit or mefpp audit.
+See installation.md for actual checks and pending platform gates.
 
 ## Scope update, 21 October 2026
 

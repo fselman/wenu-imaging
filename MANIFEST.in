@@ -1,0 +1,8 @@
+include README.md
+include Pycavi2/Readme.rst
+recursive-include Pycavi2/pycavi/config *.cfg *.paf
+recursive-include Pycavi2/pycavi/data *.csv 0readme
+recursive-include Pycavi2/pycavi/notebooks *.ipynb
+recursive-include Pycavi2/tests *.py
+recursive-include tests *.py
+recursive-include docs/developer *.md

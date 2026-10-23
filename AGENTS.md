@@ -1,5 +1,10 @@
 # wenu-imaging
 
+Latest scope, 23 October 2026: finish and document chapman3 dependency
+qualification before the Pycavi workflow audit. Aim to align Mac versions where
+practical. Python future-proofing follows the agreed five points, not this gate.
+See the controlling dated updates in the developer instructions and roadmap.
+
 Read and follow [the developer agent instructions](docs/developer/agent-instructions.md)
 before work in this workspace or its component directories. Also read the
 [architecture](docs/developer/architecture.md) and [roadmap](docs/developer/roadmap.md).
@@ -7,6 +12,14 @@ before work in this workspace or its component directories. Also read the
 The immediate goal is an OmegaCAM reduction set for ESO Phase 3 submission.
 Multiprocessing is within one node; mefpp remains serial for this milestone.
 Component implementation changes require authorization for the relevant stage.
+
+Before user-facing terminal commands, follow the machine/repository guards in
+the developer instructions. Fernando works on Mac/wenu and chapman3/wenu-imaging
+in parallel. Batch reduction launches must use niceness >=10; the interactive
+Jupyter server/kernel stays at niceness 0 (23 October clarification).
+Before changing either user's cloned wenu-imaging checkout or its installation,
+obtain current Git/environment evidence from that actual computer; an agent's
+checkout is not evidence of the user's local state. See the canonical policy.
 
 The original audit is historical evidence, not the current agent policy.
 

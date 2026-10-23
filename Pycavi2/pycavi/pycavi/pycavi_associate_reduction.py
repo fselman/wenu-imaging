@@ -242,31 +242,22 @@ class PartitionsTree:
         Creates symbolic links in all partitions in list partitions, to the
         corresponding master BPM file in the static calibration directory.
 
-        Note that the BPM files needs to exists before creating the symbolic links.
+        The source may be staged later; reduction preflight requires a valid MEF.
         """
+        if not self.bpm_partitions:
+            raise ValueError("No BPM partition configured")
         for part in partitions:
             part.bpmPartition = self.bpm_partitions[0]
-            #print((part.bpmPartition).base_path)
-            #print(instrument.bpm_prefix+'*'+instrument.reduced_file_suffix)
-
-            bpm_file = (part.bpmPartition).base_path+'/'+instrument.bpm_prefix+'_1x1.fits'
-            local_bpm_filename = part.base_path+'/'+instrument.bpm_prefix+'_1x1.fits'
-            if not Path(bpm_file).is_file():
-                try:
-                    os.symlink(bpm_file, local_bpm_filename)
-                    print("create symbolic link from : {}".format(local_bpm_filename))
-                    print("                       to : {}".format(bpm_file))
-                    Path((part.bpmPartition).base_path+'/toreduce_'+part_type).touch()
-                    pass
-                except FileExistsError:
-                    pass
-                except Exception as e:
-                    print(e)
-                    pass
-                
+            bpm_file = Path(part.bpmPartition.base_path) / (instrument.bpm_prefix + '_1x1.fits')
+            local_bpm = Path(part.base_path) / bpm_file.name
+            # Association precedes static-mask copying: preserve a correct
+            # dangling link, and validate its target at reduction preflight.
+            if os.path.lexists(local_bpm):
+                if not local_bpm.is_symlink() or local_bpm.resolve() != bpm_file.resolve():
+                    raise FileExistsError("Refusing to replace conflicting BPM path: {}".format(local_bpm))
             else:
-                print("symbolic link exists from : {}".format(local_bpm_filename))
-                print("                       to : {}".format(bpm_file))
+                local_bpm.symlink_to(bpm_file.resolve())
+                Path(part.bpmPartition.base_path, 'toreduce_' + part_type).touch()
 
 
     def select_nearest_calib(self, partitions, cal_partitions, calpart_type='bias', ndays_max=10):
@@ -1020,6 +1011,59 @@ def mefpp_reduce_bpm(mefpp_dir, calib_dir, instrument):
     print('mefpp_reduce_bpm: done copying BPMs')
 
 
+def check_mef_bpm(basepath, instrument):
+    """Check the partition's MEF mask without loading or changing its pixels.
+
+    This checks the mask layout and configured detector-name coverage, not
+    pixel quality or native name-versus-position matching semantics. Legacy
+    image extensions missing PCOUNT/GCOUNT are checked with 0/1 defaults in
+    memory only, with a warning; no changes are written to the mask.
+    """
+    path = Path(basepath) / (instrument.bpm_prefix + '_1x1.fits')
+    if not path.is_file():
+        raise FileNotFoundError("Missing MEF BPM (or broken link): {}".format(path))
+    try:
+        with fits.open(path, mode='readonly', memmap=True) as hdus:
+            if len(hdus) != instrument.nextensions + 1 or hdus[0].header.get('NAXIS') != 0:
+                raise ValueError("expected empty primary and {} image extensions".format(instrument.nextensions))
+            names = []
+            legacy_extensions = 0
+            for hdu in hdus[1:]:
+                header = hdu.header
+                if (not isinstance(hdu, fits.ImageHDU) or isinstance(hdu, fits.CompImageHDU)
+                        or header.get('NAXIS') != 2
+                        or header.get('NAXIS1', 0) <= 0 or header.get('NAXIS2', 0) <= 0
+                        or header.get('BITPIX') not in (8, 16, 32)):
+                    raise ValueError("expected two-dimensional integer mask extensions")
+                name = header.get('EXTNAME')
+                if not name or name in names:
+                    raise ValueError("missing or duplicate detector EXTNAME")
+                names.append(name)
+                missing = 'PCOUNT' not in header or 'GCOUNT' not in header
+                for key, expected, after in (('PCOUNT', 0, 'NAXIS2'), ('GCOUNT', 1, 'PCOUNT')):
+                    if key not in header:
+                        # Supplement only the read-only in-memory header, not
+                        # the original file or its pixel arrays.
+                        position = header.index(after) + 1
+                        if position < len(header) and header.cards[position].keyword == '':
+                            del header[position]
+                        header.set(key, expected, after=after)
+                    elif header[key] != expected:
+                        raise ValueError("{} must be {} for an image mask".format(key, expected))
+                legacy_extensions += int(missing)
+            if not set(instrument.valid_ext_names).issubset(names):
+                raise ValueError("configured detector names missing from mask")
+            hdus.verify('exception')
+            if legacy_extensions:
+                logging.warning(
+                    "Using legacy MEF BPM %s: missing PCOUNT/GCOUNT cards in %d extensions; "
+                    "checked with PCOUNT=0, GCOUNT=1 in memory only; file unchanged",
+                    path, legacy_extensions)
+    except (OSError, ValueError, fits.verify.VerifyError) as exc:
+        raise ValueError("Invalid MEF BPM {}: {}".format(path, exc)) from exc
+    return True
+
+
 def mefpp_reduce_bias(mefpp_dir, bias_part_list, instrument):
     print("\n----------------------------- mefpp_reduce_bias ------------------------------")
     print('mefpp_reduce_bias: length of bias partition list: %d' % len(set(bias_part_list)))
@@ -1038,11 +1082,7 @@ def mefpp_reduce_bias(mefpp_dir, bias_part_list, instrument):
             raise Exception("mefpp_reduce_bias: could not find or copy mefpp.paf to bias basepath.")
 
         # checking for the presence of bpm files
-        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
-        bpm_exists = True
-        for bpm_file in bpm_files_list:
-            if not Path(bpm_file).exists():
-                bpm_exists = bpm_exists and False
+        bpm_exists = check_mef_bpm(basepath, instrument)
 
         # checking to see if bias was already reduced
         #
@@ -1096,11 +1136,7 @@ def mefpp_reduce_dome(mefpp_dir, dome_part_list, instrument):
         if not mefpp_paf_exists:
             raise Exception("mefpp_reduce_dome: could not find or copy mefpp.paf to dome basepath.")
 
-        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
-        bpm_exists = True
-        for bpm_file in bpm_files_list:
-            if not Path(bpm_file).exists():
-                bpm_exists = bpm_exists and False
+        bpm_exists = check_mef_bpm(basepath, instrument)
 
         # here we check the presence of the required master bias frame
         mb_exists = False
@@ -1158,11 +1194,7 @@ def mefpp_reduce_sky(mefpp_dir, sky_part_list, instrument):
         if not mefpp_paf_exists:
             raise Exception("mefpp_reduce_sky: could not find or copy mefpp.paf to skyff basepath.")
 
-        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
-        bpm_exists = True
-        for bpm_file in bpm_files_list:
-            if not Path(bpm_file).exists():
-                bpm_exists = bpm_exists and False
+        bpm_exists = check_mef_bpm(basepath, instrument)
 
         # here we check the presence of the required master bias frame
         mb_exists = False
@@ -1239,11 +1271,7 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
         if not mefpp_paf_exists:
             raise Exception("mefpp_reduce_science: could not find or copy mefpp.paf to science basepath.")
 
-        bpm_files_list = glob.glob(basepath + '/'+instrument.bpm_prefix+'_??.fits', recursive=False)
-        bpm_exists = True
-        for bpm_file in bpm_files_list:
-            if not Path(bpm_file).exists():
-                bpm_exists = bpm_exists and False
+        bpm_exists = check_mef_bpm(basepath, instrument)
 
         # here we check the presence of the required master bias frame
         mb_exists = False

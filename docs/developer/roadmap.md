@@ -1,5 +1,86 @@
 # wenu-imaging roadmap
 
+## Controlling sequence clarification, 23 October 2026
+
+Fernando confirmed that the current phase establishes the packages and external
+requirements on chapman3, with documented installation and verification evidence.
+Complete the dependency acceptance gate before auditing or refactoring the
+Pycavi workflow. Aim for the same Python and scientific-package versions on Mac,
+recording necessary platform differences rather than assuming a portable lock.
+
+The agreed five points remain: (1) package/establish Mac and Linux OmegaCAM
+execution, (2) retire obsolete reduction scripts and thin notebooks, (3) derive
+configuration-driven scripts calling the same library, (4) systematically audit
+the Pycavi Python library, and (5) audit mefpp. Future-proofing Python follows
+completion of those five points and working software, by a separately agreed
+compatibility plan. WFI and the calibration-product QC library remain deferred.
+
+Dependency qualification includes separately approved narrow integration fixes
+and local Astrometry.net 0.98 installation. Its single-detector and two
+32-detector tests call installed Pycavi `solvefield()` through diagnostic wrappers;
+they do not validate full notebook orchestration, multiprocessing, MEF assembly
+or astrometric accuracy. No replacement assembly implementation is authorized.
+See [chapman3 dependencies](chapman3-dependencies-2026-10-23.md) for inventory,
+evidence and remaining gate checks. This clarification controls where older
+pending statements or sequencing below differ.
+
+## mefpp detector-identity audit TODO, 22 October 2026
+
+Fernando requests verification that reduction associates detector images by
+chip identity (for example EXTNAME), rather than assuming the same ordinal
+extension in every MEF. He recalls correcting positional matching; its current
+status is unresolved. Trace raw inputs, bias, dome/sky/master flats, BPMs and
+output assembly, including extension subsets. Distinguish name lookup from
+merely logging names while loading by index. Check the existing source/history
+and identify the source of the installed chapman3 binary where possible.
+Use synthetic MEFs with deliberately permuted extension order to verify either
+correct name matching or an explicit failure before processing; also cover
+missing, duplicate and unknown chip names. Record this under the later mefpp
+audit; no native implementation change is authorized by this TODO. Matching
+order in the ten pilot science exposures is evidence for those inputs only.
+
+Also audit native FITS header assembly: the installed chapman3 MEF BPM lacks
+PCOUNT/GCOUNT in all 32 image extensions. Identify the writer/source generation,
+check other products, and ensure future output meets the applicable FITS
+requirements. Do not rewrite the installed mask as a side effect of preflight.
+
+Fernando approved a focused Pycavi MEF BPM linking/preflight correction on
+22 October. Keep mask pixels, native engines and notebook logic unchanged;
+verify missing/broken links and invalid layouts using disposable FITS fixtures.
+
+## Limited compatibility review authorized, 22 October 2026
+
+Fernando approved bringing a focused part of the Pycavi library audit forward
+before further chapman3 dependency installation. Review actual Python/API needs
+against the historical environment and current code, preserving environments,
+native engines and science data. See the
+[compatibility review](python-compatibility-review-2026-10-22.md) for evidence and
+pending checks. This authorizes review and isolated diagnostics, not a dependency
+version change or the full scientific audit. The remaining stage order holds.
+Restore Jupyter execution on chapman3 with Firefox locally on the Mac through an
+SSH tunnel after environment validation; this remains pending.
+
+Follow-up evidence on 22 October: the approved isolated Python 3.11 stack passes
+pip check, nine initial installed-package tests, ten numerical/catalogue
+regressions and nine runtime imports. A named Jupyter kernel and Mac Firefox
+connection to chapman3 are verified. Fernando also explicitly approved the
+narrow notebook 03 mefpp-prefix adapter and its path-resolution regression;
+the corrected local wheel passes ten installed-package tests. Full reduction,
+pilot selection and scientific reference comparisons remain pending. This does
+not authorize general notebook thinning or scientific changes ahead of schedule.
+
+## Packaging implementation status, 21 October 2026
+
+Fernando authorized the packaging stage and reiterated that any roadmap deviation
+must be discussed and approved **before** proceeding. Work is limited to Python
+packaging/setup, resource delivery, dependency declarations and executable
+configuration, with current scientific versions retained. See
+[installation and evidence](installation.md). Mac/cluster acceptance and exact
+reference constraints remain pending; do not mark the stage complete from local
+Linux smoke tests. Notebook thinning follows this gate, then configuration-driven
+scripts, the **Pycavi Python library audit**, and the mefpp audit. WFI work remains
+deferred. No later implementation stage is started by this patch.
+
 ## Sequencing update, 21 October 2026
 
 Latest clarification from Fernando supersedes the earlier proposals below:
@@ -225,6 +306,11 @@ These are explicit future requirements and have no implementation authorization:
 3. **Single CMOS reductions.** Determine readout modes and calibration/noise
    requirements from actual detectors/data. Do not treat single CMOS support as
    already implemented or assume every CCD correction applies unchanged.
+4. **Calibration-product QC library (Fernando, 22 October 2026).** Develop a
+   library for scientific quality control of calibration products after the
+   currently planned wenu-imaging work is finished. Keep this deferred; current
+   historical-product comparisons establish reproducibility evidence, not
+   independent calibration-quality certification. No implementation is started.
 
 Agree their relative order after the operational OmegaCAM milestone. Preserve
 instrument configuration boundaries and existing mosaic support when designing
