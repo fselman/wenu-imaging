@@ -9,9 +9,114 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 
 
 TOOL = Path(__file__).resolve().parents[1] / 'Pycavi2/tools/check_dependencies.py'
+
+
+def load_tool():
+    spec = importlib.util.spec_from_file_location('dependency_tool', TOOL)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@unittest.skipUnless(importlib.util.find_spec('astropy') and importlib.util.find_spec('numpy'),
+                     'Numerical fixture checks require Astropy and NumPy')
+class ScampOracleTests(unittest.TestCase):
+    """Test the synthetic fixture and acceptance oracle, not native SCAMP."""
+
+    def context(self, directory, correct=True, corrupt=False, accented_comment=False):
+        from astropy.io import fits
+        context = load_tool().Check(directory)
+
+        def fake_run(command, label):
+            if label == 'fit':
+                with fits.open(directory / 'input.cat') as hdus:
+                    cards = ''.join(card.ljust(80) for card in
+                                    hdus[1].data['Field Header Card'][0])
+                    header = fits.Header.fromstring(cards, sep='')
+                    self.assertEqual(header['NAXIS1'], 1024)
+                    self.assertEqual(header['NAXIS2'], 1024)
+                    self.assertEqual(header['CTYPE1'], 'RA---TAN')
+                    self.assertEqual(len(hdus[2].data), 100)
+                with fits.open(directory / 'reference.cat') as hdus:
+                    self.assertEqual(len(hdus['LDAC_OBJECTS'].data), 100)
+                if correct:
+                    header['CRVAL1'] = 123.
+                header.totextfile(directory / 'input.head')
+                if accented_comment:
+                    path = directory / 'input.head'
+                    path.write_bytes('COMMENT   Université de Bordeaux\n'.encode('utf-8')
+                                     + path.read_bytes())
+                (directory / 'scamp.xml').write_text('<synthetic-test-double/>')
+                if corrupt:
+                    with (directory / 'input.cat').open('ab') as stream:
+                        stream.write(b'changed')
+            return SimpleNamespace(stdout='')
+
+        context.run = fake_run
+        return context
+
+    def test_embedded_header_bytes_preserve_spaces_and_native_end_marker(self):
+        from astropy.io import fits
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _, _, header = load_tool().scamp_fixture(root)
+            path = root / 'input.cat'
+            with fits.open(path) as hdus:
+                hdus.verify('exception')
+                offset = hdus[1].fileinfo()['datLoc']
+                size = hdus[1].header['NAXIS1']
+                self.assertEqual(size % 2880, 0)
+            raw = path.read_bytes()[offset:offset+size]
+            self.assertEqual(raw, header.tostring(sep='', padding=True).encode('ascii'))
+            self.assertNotIn(b'\x00', raw)
+            cards = [raw[i:i+80] for i in range(0, size, 80)]
+            self.assertEqual(sum(card[:8] == b'END     ' for card in cards), 1)
+
+    def test_known_wcs_is_accepted_and_initial_offset_is_measured(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = load_tool().scamp(self.context(Path(directory) / 'test'),
+                                      {'scamp': '/synthetic/test-double'})
+            self.assertGreater(result['initial_rms_arcsec'], 1.)
+            self.assertLess(result['final_rms_arcsec'], 1e-6)
+
+    def test_native_utf8_comment_is_recorded_without_rewriting_header(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'test'
+            tool = load_tool()
+            result = tool.scamp(self.context(root, accented_comment=True),
+                                {'scamp': '/synthetic/test-double'})
+            self.assertLess(result['final_rms_arcsec'], 1e-6)
+            omitted = result['non_ascii_commentary_excluded_from_in_memory_wcs']
+            self.assertEqual(len(omitted), 1)
+            self.assertIn('Université', omitted[0]['text'])
+            raw = (root / 'input.head').read_bytes()
+            self.assertTrue(raw.startswith('COMMENT   Université'.encode('utf-8')))
+            self.assertEqual(tool.sha256(root / 'input.head'), result['native_header_sha256'])
+
+    def test_non_ascii_scientific_value_is_not_silently_discarded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'input.head'
+            path.write_bytes("CTYPE1  = 'RA---TANé'\nEND     \n".encode('utf-8'))
+            original = path.read_bytes()
+            with self.assertRaisesRegex(ValueError, 'Non-ASCII scientific'):
+                load_tool().read_scamp_wcs_header(path)
+            self.assertEqual(path.read_bytes(), original)
+
+    def test_noop_fit_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(AssertionError, 'Fit did not recover'):
+                load_tool().scamp(self.context(Path(directory) / 'test', correct=False),
+                                  {'scamp': '/synthetic/test-double'})
+
+    def test_changed_input_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(AssertionError, 'Input changed'):
+                load_tool().scamp(self.context(Path(directory) / 'test', corrupt=True),
+                                  {'scamp': '/synthetic/test-double'})
 
 
 class DependencyToolTests(unittest.TestCase):

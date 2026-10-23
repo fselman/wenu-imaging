@@ -2,6 +2,15 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Current bounded dependency check: qualify installed SCAMP using a disposable,
+synthetic single-detector FITS_LDAC catalogue and local known reference positions.
+Exercise catalogue loading and a linear astrometric fit; require finite output,
+recovery of the planted WCS displacement, unchanged input catalogues and recorded
+commands/results. Reuse the portable dependency-check tool. Do not change Pycavi
+wrappers, science data, reference-catalogue selection or live-service settings.
+This follows Fernando's instruction to proceed with the SCAMP requirement check;
+it does not begin the workflow audit or qualify real-sky accuracy.
+
 Fernando approved the six delivery/synchronization instruction adaptations from
 Wenu on 23 October, after chapman3 synchronized to `340347f` and the merged
 feature branch was removed locally and remotely. This bounded documentation
