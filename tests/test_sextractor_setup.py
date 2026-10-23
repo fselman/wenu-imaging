@@ -1,5 +1,7 @@
 """Executable discovery regressions for the notebook 05 PAPI wrapper."""
 import sys
+import os
+import tempfile
 from pathlib import Path
 import unittest
 from unittest.mock import Mock, patch
@@ -52,6 +54,33 @@ class SExtractorSetupTests(unittest.TestCase):
                 b"SExtractor help")):
             with self.assertRaisesRegex(wrapper.SExtractorException, "Cannot determine"):
                 wrapper.SExtractor().setup("/opt/tools/sex")
+
+    def test_notebook_helper_passes_thread_limit_to_native_command(self):
+        from pycavi.pycavi import pycavi_astromatic_tools as tools
+
+        original_cwd = Path.cwd()
+        with tempfile.TemporaryDirectory() as directory:
+            work = Path(directory)
+
+            def native_command(command):
+                self.assertIn(" -NTHREADS 1 ", command)
+                self.assertIn("DETECT_THRESH", (work / "py-sextractor.sex").read_text())
+                (work / "py-sextractor.cat").write_bytes(b"test catalogue")
+                return 1  # Existing PAPI runCmd success convention.
+
+            try:
+                with patch.object(wrapper.SExtractor, "setup", return_value=("sex", b"2.19.5")), \
+                     patch.object(wrapper.papi_misc_utils, "runCmd", side_effect=native_command):
+                    result = tools.run_sextractor_on_target(
+                        str(work / "input.fits"), str(work),
+                        {"DETECT_THRESH": 10, "NTHREADS": 1})
+                self.assertNotIn("NTHREADS", result.config)
+                self.assertEqual(result.ext_config["NTHREADS"], 1)
+                self.assertEqual((work / "input.cat").read_bytes(), b"test catalogue")
+                self.assertEqual(Path.cwd(), original_cwd)
+                self.assertEqual(wrapper.SExtractor().ext_config, {})
+            finally:
+                os.chdir(original_cwd)
 
 
 if __name__ == "__main__":

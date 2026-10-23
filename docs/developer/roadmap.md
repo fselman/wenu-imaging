@@ -10,9 +10,21 @@ The first extraction block stopped at discovery, before copying an image or
 launching extraction. The focused correction accepts both banner spellings,
 preserving candidate order, explicit-path selection and the bytes version return
 contract. It changes no extraction parameters, dependency versions or engines.
-Five mocked regression tests pass in the agent environment; actual installed
-wrapper discovery and subsequent notebook 05 extraction/SCAMP remain pending on
-chapman3. Preserve existing solved MEFs and continue with a fresh working copy;
+Chapman3 installed-wheel checks subsequently passed: five banner regressions,
+ten packaging checks, pip dependency consistency and actual automatic/explicit
+SExtractor discovery. Records: `~/wenu-sextractor-fix.19w6fdss`.
+
+The first real extraction then stopped during config generation because the
+legacy PAPI config schema does not include the explicitly requested `NTHREADS`.
+Route this option through PAPI's existing `ext_config` native-command mechanism
+when supplied to the notebook helper, leaving absent-option defaults unchanged.
+Six regressions pass in the agent environment, including config generation,
+the native command's `-NTHREADS 1` argument and catalogue renaming with the native
+execution mocked. The failed working copy is preserved at
+`~/omegacam/testing/wenu-imaging-test/notebook05-r_SDSS-28gx2t5e`;
+no native extraction was launched. Installation of the thread-option correction
+and subsequent extraction/SCAMP remain pending on chapman3.
+Preserve existing solved MEFs and continue with a fresh working copy;
 do not repeat normalization or solving. The later efficiency plan is not being
 implemented by this compatibility fix.
 

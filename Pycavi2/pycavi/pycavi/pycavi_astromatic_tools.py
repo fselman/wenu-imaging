@@ -71,7 +71,11 @@ def run_sextractor_on_target(filename_abspath, sextractor_dir_path, special_pars
     for key, val in special_pars.items():
         if key in special_pars.keys():
             logging.info("sextractor.config[{}] = {}".format(key, val))
-            sextractor.config[key] = val
+            if key == "NTHREADS":
+                # Not in PAPI's legacy config schema; pass as a native option.
+                sextractor.ext_config[key] = val
+            else:
+                sextractor.config[key] = val
         else:
             logging.info("**** Wrong key passed to sextractor: {}".format(key))
     p = sextractor.run(image_name)
