@@ -314,3 +314,57 @@ and unchanged source/copy hashes. No broad astrometric-accuracy or multiworker
 validation follows from these checks. Earlier 32-detector diagnostic solves for
 each filter remain separate evidence and are preserved. Continue at notebook
 05 using these assembled outputs; do not repeat solving or normalization.
+
+## Notebook 05 reported functional results, 23 October 2026
+
+All ten exposures (five r_SDSS, five NB_659) passed installed SExtractor/SCAMP
+functional output checks, sequentially at niceness 10 with NTHREADS=1. Each has
+32 LDAC detector groups with required columns and nonzero total detections,
+32 finite sampled celestial WCS solutions, a parseable SCAMP XML report and
+eight PDFs with valid framing/EOF markers. Images/catalogue inputs were checked
+unchanged across the relevant stages. No independent astrometric accuracy,
+photometric calibration or rendered-plot acceptance is established here.
+
+Evidence under `~/omegacam/testing/wenu-imaging-test/`:
+
+- First r_SDSS extraction: `notebook05-r_SDSS-j7p7xgf_`.
+- First r_SDSS accepted output checks: `notebook05-r_SDSS-scamp-i3mbyoln/scamp-output-check.json`.
+- First NB_659 output checks: `notebook05-NB_659-p_o9_0eg/scamp-output-check.json`.
+- Remaining eight and combined ten-exposure summary:
+  `notebook05-remaining-umptm20a/completed.json`.
+
+The native fit statistics were about 0.0158/0.0159 arcsec for the first r_SDSS
+exposure and 0.0127/0.0177 arcsec for the first NB_659 exposure. These are SCAMP
+fit residuals, not independent accuracy assessments. Native .head blocks contain
+TAN plus 20 PV cards per detector and no SIP cards; input image headers contain
+TAN without SIP/PV. Astropy's compatibility warning is retained; its generic SIP
+removal wording does not demonstrate SIP cards were actually present. Native
+headers were not rewritten by the diagnostic WCS checks.
+
+Focused PAPI integration fixes (banner recognition and explicit NTHREADS via
+ext_config) are delivered separately on `fix/sextractor-banner` at
+`1927166644606567b374a23ff5437b248b9b7029`. Chapman3 verification records are
+`~/wenu-sextractor-fix.19w6fdss` and `~/wenu-sextractor-threads.zug6x2b4`:
+six regression tests, ten installed-package tests, pip check and installed-source
+identity/native discovery passed. Failed attempts are preserved, not reused.
+
+The first SCAMP attempt aborted during plotting because only plplot-libs was
+installed and `/usr/share/plplot5.10.0` was absent. The matching
+`plplot-5.10.0-10.el7.x86_64.rpm` was fetched from Fedora's EPEL archive; package
+identity and payload digests passed, SHA256
+`647b33589603895b9c4ef98d8421cbeeff95098ffa87764af2c04d2ac0a9feed`.
+Twenty-one flat plotting data files were extracted to
+`~/opt/plplot-data-5.10.0`; evidence and per-file hashes:
+`~/wenu-plplot-data.pflmnt42/local-data-manifest.json`. PLPLOT_LIB was scoped to
+batch processes. No RPM was installed and system packages were unchanged.
+The original aborted output remains under `notebook05-r_SDSS-j7p7xgf_`.
+PAPI failed to propagate that native abort; retain this as an unresolved
+library-audit issue rather than claiming its failure handling is validated.
+
+Notebook 06 preflight found five inputs per filter, e-/s units, and FLXSCALE=0
+in all 320 SCAMP blocks. SCAMP photometric solving is disabled by design;
+SWarp 2.38.0 source replaces zero flux scale with unity and warns. The native
+coadd is still pending: do not claim the actual fallback/photometric behavior
+has been tested here. Preserve the existing Pycavi zpcal method and defer the
+[new provisional photometry plan](../../provisional-photometry-plan-2026-10-23.md)
+to future work.

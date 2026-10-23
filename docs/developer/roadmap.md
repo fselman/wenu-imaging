@@ -2,12 +2,43 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Future requirement requested by Fernando: [provisional photometry and explicit
+calibration methods](provisional-photometry-plan-2026-10-23.md). Plan Astromatic
+photometric processing plus an instrument/filter/focal-plane/detector model for
+a labelled provisional flux scale, later refined through an explicitly named
+method/release (Gaia DR2, Gaia DR3/GSPC, standard stars or another specified
+method). Define model validity, units, cumulative factors, provenance and QC;
+reuse canonical measurements and prevent double normalization. This is future
+work within the agreed Pycavi/mefpp sequence, not implementation now. Continue
+the current functional walkthrough with SCAMP photometry disabled and the
+existing Pycavi zpcal path. Implementation details and scientific acceptance
+criteria require later agreement.
+
+Notebook 05 target evidence: all ten CN Ori pilot exposures now have checked
+SExtractor/SCAMP outputs: 32 detector groups and finite sampled WCS per exposure,
+XML reports and eight PDFs with basic complete framing, with inputs unchanged.
+Jobs were sequential at niceness 10 with one native thread. Two focused wrapper
+fixes are on `fix/sextractor-banner` at `1927166644606567b374a23ff5437b248b9b7029`;
+six regressions and ten installed-package checks passed on chapman3. Missing
+PLplot 5.10.0 plotting data was extracted locally without modifying system
+packages. No independent astrometric accuracy or rendered-PDF assessment is
+implied. Continue at notebook 06; do not repeat normalization, solving or source
+extraction. The pilot README records the evidence paths.
+
+Source tracing confirms the current SCAMP wrapper uses SOLVE_PHOTOM=N and
+photometric calibration belongs to Pycavi notebook 07. SWarp 2.38.0 replaces
+zero FLXSCALE with unity and warns; verify that behavior in the actual coadd
+without enabling SCAMP photometry or rewriting its headers. Notebook 06 has two
+passes (BACK_SIZE 128 and 2048), both SUBTRACT_BACK=Y; the second output's
+`coadd_nobacksub` label is inconsistent with its settings. Preserve the effective
+settings during characterization and resolve naming/scientific policy later.
+
 Notebook 04 target evidence: all ten CN Ori pilot exposures (five r_SDSS and five
 NB_659) passed the installed full runner with one worker at niceness 10: 320
 successful detector solves, ten assembled MEFs, exact detector-pixel preservation
 and unchanged inputs. Records are in the pilot README. This is functional
-evidence, not a real-sky accuracy or multiworker-failure assessment. Continue
-at notebook 05 with the existing outputs; no repeated normalization/solving.
+evidence, not a real-sky accuracy or multiworker-failure assessment. Notebook 05
+follow-up results are recorded above; no repeated normalization/solving.
 
 Fernando requested the [mosaic astrometry efficiency plan](mosaic-astrometry-efficiency-plan-2026-10-23.md):
 one canonical SExtractor measurement pass with catalogue reuse; a validated
