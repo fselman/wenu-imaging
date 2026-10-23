@@ -1,5 +1,29 @@
 # wenu-imaging roadmap
 
+## Controlling sequence clarification, 23 October 2026
+
+Fernando confirmed that the current phase establishes the packages and external
+requirements on chapman3, with documented installation and verification evidence.
+Complete the dependency acceptance gate before auditing or refactoring the
+Pycavi workflow. Aim for the same Python and scientific-package versions on Mac,
+recording necessary platform differences rather than assuming a portable lock.
+
+The agreed five points remain: (1) package/establish Mac and Linux OmegaCAM
+execution, (2) retire obsolete reduction scripts and thin notebooks, (3) derive
+configuration-driven scripts calling the same library, (4) systematically audit
+the Pycavi Python library, and (5) audit mefpp. Future-proofing Python follows
+completion of those five points and working software, by a separately agreed
+compatibility plan. WFI and the calibration-product QC library remain deferred.
+
+Dependency qualification includes separately approved narrow integration fixes
+and local Astrometry.net 0.98 installation. Its single-detector and two
+32-detector tests call installed Pycavi `solvefield()` through diagnostic wrappers;
+they do not validate full notebook orchestration, multiprocessing, MEF assembly
+or astrometric accuracy. No replacement assembly implementation is authorized.
+See [chapman3 dependencies](chapman3-dependencies-2026-10-23.md) for inventory,
+evidence and remaining gate checks. This clarification controls where older
+pending statements or sequencing below differ.
+
 ## mefpp detector-identity audit TODO, 22 October 2026
 
 Fernando requests verification that reduction associates detector images by

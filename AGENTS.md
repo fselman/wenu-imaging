@@ -1,5 +1,10 @@
 # wenu-imaging
 
+Latest scope, 23 October 2026: finish and document chapman3 dependency
+qualification before the Pycavi workflow audit. Aim to align Mac versions where
+practical. Python future-proofing follows the agreed five points, not this gate.
+See the controlling dated updates in the developer instructions and roadmap.
+
 Read and follow [the developer agent instructions](docs/developer/agent-instructions.md)
 before work in this workspace or its component directories. Also read the
 [architecture](docs/developer/architecture.md) and [roadmap](docs/developer/roadmap.md).

@@ -1,4 +1,53 @@
-# Remote notebook launcher
+# Pycavi checkout tools
+
+## Portable synthetic dependency checks
+
+`check_dependencies.py` runs the same bounded checks on Linux and macOS. It is
+a checkout utility, not a wheel-installed command. It does not install packages,
+change saved engine selections, consume observational data or validate the full
+Pycavi workflow. Python with NumPy and Astropy is required for the checks.
+
+Checks are `fits-compression` (exact integer FITS round trip and selected headers),
+`sextractor` (five synthetic stars with distinct detections within two pixels),
+and `swarp` (constant-image resampling, finite WCS and positive central weights).
+These retain the manual chapman3 fixtures and tolerances, with unique source
+matching additionally checked. Floating-point compression, science photometry,
+coadd quality and astrometric accuracy are outside their claims. SCAMP and real
+Astrometry.net image solves are not yet included in this tool.
+
+Select checks as positional arguments. Supply a new `--output` directory and,
+where needed, `--fpack`, `--funpack`, `--sextractor`, `--swarp` executable paths.
+Defaults resolve fpack/funpack/sex/swarp on PATH. Nothing reads or changes Pycavi's
+saved engine configuration. Explicit paths are preferred when comparing machines.
+`--expect-host` checks the short hostname and `--expect-prefix` checks the Python
+environment before writes or native jobs. `--dry-run` resolves selected paths and
+checks guards without scientific imports, jobs, directory creation or priority
+changes. It is not an engine qualification test.
+
+Always launch as a separate process from a guarded terminal or with notebook
+`subprocess.Popen`; never `%run`, `runpy` or call `main` inside the kernel. The
+CLI lowers only itself and descendants to niceness >=10 and sets four numerical
+thread-limit variables to one. It never changes its caller's priority. Runtime
+host, OS and Python are printed before jobs. Supported targets are macOS and
+Linux; other operating systems are not qualified. Do not use Python `-O`.
+
+The output contains synthetic inputs, generated engine configs, native stdout/
+stderr and `report.json`: executable paths/hashes, tool hash, Python distribution
+versions, host, priority, command arguments/statuses and per-check measurements.
+Existing output directories and symlinks are refused. Commands have 120-second
+timeouts. Independent selected checks continue after one fails; CLI exit status
+is nonzero if any check fails. Preserve failed directories; rerun in a new one.
+Conda explicit builds and full installation provenance still need separate capture.
+
+For chapman3 use the existing absolute project Python and engine paths. For Mac
+or Ubuntu obtain the actual checkout/interpreter/engine locations first; do not
+reuse chapman3's paths or assume those targets passed. Compare each platform's
+JSON measurements and installed versions after executing there. The earlier
+manual chapman3 results are evidence for those manual runs, not an execution of
+this new tool. Follow machine guards in `docs/developer/agent-instructions.md`
+when preparing runnable command blocks.
+
+## Remote notebook launcher
 
 `start_remote_notebook.py` is a checkout utility for the existing chapman3 pilot,
 not a wheel-installed entry point or a general remote service manager. Run it

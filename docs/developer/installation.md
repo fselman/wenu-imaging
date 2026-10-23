@@ -1,5 +1,14 @@
 # Python packaging and installation
 
+## Current chapman3 evidence, 23 October 2026
+
+The [chapman3 dependency inventory](chapman3-dependencies-2026-10-23.md)
+updates the historical baseline and pending statements below. The isolated
+Python 3.11 environment, installed-package tests, remote notebook connection,
+selected native reductions and local Astrometry.net 0.98 detector tests now have
+reported evidence. Dependency acceptance is still open. Full workflow auditing
+and Python future-proofing are subsequent work, as clarified in roadmap.md.
+
 Packaging implementation based on `2732d285fee41d266a5aace14ecb773ba357298c`.
 This is the first roadmap item. It does not complete Mac/cluster acceptance,
 notebook thinning, the scientific Pycavi library audit or the subsequent mefpp audit.

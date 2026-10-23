@@ -1,5 +1,20 @@
 # wenu-imaging agent instructions
 
+## Controlling dependency gate, 23 October 2026
+
+Fernando clarified that dependency establishment and documentation on chapman3
+come before the Pycavi workflow audit. Inventory Python packages, native engines,
+resources, installation/build details, configuration, evidence and limitations.
+Aim to align the Mac versions after capturing its actual imaging environment;
+do not change either platform merely to force identical inventories. Diagnostic
+wrappers calling existing functions are dependency evidence, not validation of
+the complete orchestration or authorization to replace it. Keep the agreed
+five-point sequence in roadmap.md. Future-proof Python only after those five
+points are complete and the software works well, under a separately agreed plan.
+The local Astrometry.net 0.98 installation was explicitly approved; this is not
+blanket authorization for other engine or library upgrades. See the dated
+chapman3 dependency inventory for current evidence and outstanding checks.
+
 Status: accepted working agreement, with scope clarified by Fernando Selman on
 20 October 2026. This is the canonical developer policy; the root AGENTS.md
 directs agents here.
