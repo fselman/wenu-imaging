@@ -260,6 +260,24 @@ No global PYTHONPATH or system interpreter replacement is required.
 
 ## Remaining dependency acceptance gate
 
+### Authorized Gaia DR3/GSPC probe
+
+After clarification that Gaia DR3/GSPC already exists in notebook 07's selected
+library path, Fernando explicitly authorized proceeding with its dependency
+check. `Pycavi2/tools/check_dependencies.py gaia-dr3 --allow-network` now offers
+a separate five-row, five-arcminute cone query through installed Astroquery,
+preserving query, native VOTable, schema, nulls, units and job provenance. This
+does not change the scientific query, its selected catalogue or the installation.
+The direct column contract comes from the existing SDSS-band branch, including
+NB_659's use of r/i; Johnson-Cousins and the downstream calibration are not
+qualified by this check. Actual target execution remains pending; unit tests
+simulate the service and are not evidence of current archive availability.
+
+Acceptance requires a completed job with 1–5 joined sources, valid matching
+integer IDs, nearby coordinates and at least one usable r/i row. Missing ancillary
+values are reported. Failure is preserved for diagnosis; no automatic service
+fallback, package upgrade or production-query rewrite is authorized.
+
 ### Live-reference connectivity, 23 October
 
 Fernando reported successful bounded curl queries from chapman3 to both the

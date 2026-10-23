@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run portable, synthetic dependency checks in a fresh evidence directory.
+"""Run portable dependency checks in a fresh evidence directory.
 
 Launch as a separate process, never with notebook %run: this process lowers its
 own CPU priority. No science input, package installation or configuration edits.
@@ -346,11 +346,18 @@ def scamp_live(context, paths):
             'scope': 'live retrieval/parser only; no scientific fitting or catalogue upgrade'}
 
 
+def gaia_dr3(context, paths):
+    worker = Path(__file__).resolve().with_name('_gaia_dr3_probe.py')
+    context.run([sys.executable, '-u', str(worker), '--allow-network'], 'retrieve')
+    return json.loads((context.directory / 'details.json').read_text())
+
+
+NETWORK_CHECKS = {'scamp-live', 'gaia-dr3'}
 CHECKS = {'fits-compression': compression, 'sextractor': sextractor,
-          'swarp': swarp, 'scamp': scamp, 'scamp-live': scamp_live}
+          'swarp': swarp, 'scamp': scamp, 'scamp-live': scamp_live, 'gaia-dr3': gaia_dr3}
 NEEDS = {'fits-compression': ('fpack', 'funpack'),
          'sextractor': ('sextractor',), 'swarp': ('swarp',), 'scamp': ('scamp',),
-         'scamp-live': ('scamp',)}
+         'scamp-live': ('scamp',), 'gaia-dr3': ()}
 
 
 def main(argv=None):
@@ -362,7 +369,7 @@ def main(argv=None):
     parser.add_argument('--expect-prefix', type=Path, help='Require this Python prefix.')
     parser.add_argument('--dry-run', action='store_true', help='Validate paths; write/run nothing.')
     parser.add_argument('--allow-network', action='store_true',
-                        help='Explicitly permit the scamp-live service check.')
+                        help='Explicitly permit selected live service checks.')
     parser.add_argument('--ref-server', default='vizier.u-strasbg.fr',
                         help='SCAMP live-query hostname; no saved config is changed.')
     for name, default in [('fpack', 'fpack'), ('funpack', 'funpack'),
@@ -372,9 +379,9 @@ def main(argv=None):
     try:
         if sys.flags.optimize:
             raise ValueError('Run without -O: numerical assertions must be enabled')
+        if NETWORK_CHECKS.intersection(args.checks) and not args.allow_network:
+            raise ValueError('Live checks require explicit --allow-network')
         if 'scamp-live' in args.checks:
-            if not args.allow_network:
-                raise ValueError('scamp-live requires explicit --allow-network')
             if not re.fullmatch(r'[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?', args.ref_server):
                 raise ValueError('Supply a reference hostname, without scheme, port or path')
         if args.expect_host and socket.gethostname().split('.')[0] != args.expect_host:
@@ -392,7 +399,9 @@ def main(argv=None):
                   'prefix': sys.prefix, 'checks': {},
                   'executables': paths, 'started_utc': datetime.now(timezone.utc).isoformat()}
         report['tool_sha256'] = sha256(__file__)
-        report['network_check_authorized'] = 'scamp-live' in args.checks and args.allow_network
+        report['network_check_authorized'] = bool(NETWORK_CHECKS.intersection(args.checks)) and args.allow_network
+        if 'gaia-dr3' in checks:
+            report['gaia_worker_sha256'] = sha256(Path(__file__).with_name('_gaia_dr3_probe.py'))
         print(json.dumps(report, indent=2), flush=True)
         if args.dry_run:
             print('Dry run: no output directory, imports, jobs or priority changes.')

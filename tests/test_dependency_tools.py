@@ -184,6 +184,19 @@ class DependencyToolTests(unittest.TestCase):
                 self.assertIn(message, result.stderr)
                 self.assertFalse(output.exists())
 
+    def test_gaia_requires_opt_in_and_dry_run_does_not_import_client(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'result'
+            result = self.invoke('gaia-dr3', '--output', output)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn('--allow-network', result.stderr)
+            self.assertFalse(output.exists())
+            # This also succeeds in the test environment without Astroquery.
+            result = self.invoke('gaia-dr3', '--allow-network', '--dry-run',
+                                 '--output', output)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse(output.exists())
+
     def test_existing_directory_and_dangling_symlink_are_preserved(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

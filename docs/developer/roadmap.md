@@ -2,6 +2,17 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Fernando explicitly approved proceeding with Gaia DR3 after clarification that
+notebook 07 already selects the Gaia DR3/GSPC library path. The approved bounded
+task adds an opt-in dependency probe in `Pycavi2/tools`: one anonymous Astroquery
+asynchronous join of the existing DR3 and GSPC tables, at most five sources in
+a five-arcminute cone near CN Ori. Require the notebook's SDSS-band column
+schema, valid matching source identifiers and nearby coordinates, and at least
+one usable r/i photometric row. Preserve query, response, units, null counts and
+job details. No photometric fitting, production-query change, catalogue migration,
+package installation or scientific workflow audit is authorized by this check.
+The five-arcminute probe radius is a diagnostic choice, not a production default.
+
 Following acceptance and merge of the offline SCAMP check, Fernando instructed
 the bounded live-reference requirement check to proceed. Compare existing and
 advertised VizieR routes with tiny capped Gaia DR2 queries, then test SCAMP's own
