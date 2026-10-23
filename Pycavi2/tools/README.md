@@ -27,6 +27,12 @@ Use `--scamp /actual/path/to/scamp`; generated `.head`, XML and logs are preserv
 Real Astrometry.net image solves are not yet included in this tool.
 The fixture follows the official
 [SCAMP input/output catalogue contract](https://scamp.readthedocs.io/en/latest/Using.html).
+The embedded image header is serialized as exact space-padded 80-byte FITS
+cards in complete 2880-byte blocks. Raw-byte regression coverage is required:
+Astropy can reconstruct readable cards from NUL-padded table strings while
+SCAMP 2.10.0's native reader cannot recognize their `END` keyword. The initial
+fixture exposed this construction defect and crashed during header loading;
+that run is not evidence against the installed engine's valid-input behavior.
 
 Select checks as positional arguments. Supply a new `--output` directory and,
 where needed, `--fpack`, `--funpack`, `--sextractor`, `--swarp`, `--scamp` paths.

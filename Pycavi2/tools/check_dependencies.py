@@ -8,6 +8,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import importlib.metadata
+import io
 import json
 import os
 from pathlib import Path
@@ -174,7 +175,7 @@ def scamp_fixture(directory):
     header['EXPTIME'], header['GAIN'] = 1., 1.
     header['FILTER'], header['OBJECT'] = 'r', 'SYNTHETIC DEPENDENCY TEST'
     header['MJD-OBS'], header['AIRMASS'] = 58000., 1.
-    cards = header.tostring(sep='', padding=False)
+    cards = header.tostring(sep='', padding=True)
     imhead = fits.BinTableHDU.from_columns([
         fits.Column(name='Field Header Card', format='{}A'.format(len(cards)),
                     dim='(80,{})'.format(len(cards)//80),
@@ -197,7 +198,19 @@ def scamp_fixture(directory):
         column('IMAFLAGS_ISO', 0, 'J'), column('FLUX_RADIUS', 2.),
         column('FWHM_IMAGE', 4.), column('ELONGATION', 1.),
     ], name='LDAC_OBJECTS')
-    fits.HDUList([fits.PrimaryHDU(), imhead, objects]).writeto(directory / 'input.cat')
+    # Astropy normalizes trailing spaces in string-array cells to NULs. LDAC
+    # embeds FITS cards, whose padding (including END's keyword) must remain
+    # literal spaces for native FITS readers. Set the exact synthetic payload
+    # after table serialization; never patch observational or existing files.
+    buffer = io.BytesIO()
+    fits.HDUList([fits.PrimaryHDU(), imhead, objects]).writeto(buffer)
+    payload = bytearray(buffer.getvalue())
+    with fits.open(io.BytesIO(payload)) as hdus:
+        offset = hdus[1].fileinfo()['datLoc']
+        assert hdus[1].header['NAXIS1'] == len(cards)
+    payload[offset:offset + len(cards)] = cards.encode('ascii')
+    with (directory / 'input.cat').open('xb') as stream:
+        stream.write(payload)
     reference = fits.BinTableHDU.from_columns([
         column('X_WORLD', sky[:, 0], 'D', 'deg'),
         column('Y_WORLD', sky[:, 1], 'D', 'deg'),

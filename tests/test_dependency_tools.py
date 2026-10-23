@@ -55,6 +55,23 @@ class ScampOracleTests(unittest.TestCase):
         context.run = fake_run
         return context
 
+    def test_embedded_header_bytes_preserve_spaces_and_native_end_marker(self):
+        from astropy.io import fits
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _, _, header = load_tool().scamp_fixture(root)
+            path = root / 'input.cat'
+            with fits.open(path) as hdus:
+                hdus.verify('exception')
+                offset = hdus[1].fileinfo()['datLoc']
+                size = hdus[1].header['NAXIS1']
+                self.assertEqual(size % 2880, 0)
+            raw = path.read_bytes()[offset:offset+size]
+            self.assertEqual(raw, header.tostring(sep='', padding=True).encode('ascii'))
+            self.assertNotIn(b'\x00', raw)
+            cards = [raw[i:i+80] for i in range(0, size, 80)]
+            self.assertEqual(sum(card[:8] == b'END     ' for card in cards), 1)
+
     def test_known_wcs_is_accepted_and_initial_offset_is_measured(self):
         with tempfile.TemporaryDirectory() as directory:
             result = load_tool().scamp(self.context(Path(directory) / 'test'),

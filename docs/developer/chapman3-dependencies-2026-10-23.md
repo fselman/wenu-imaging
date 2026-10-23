@@ -175,6 +175,16 @@ No global PYTHONPATH or system interpreter replacement is required.
   flux error in FITS_LDAC; local-reference FILE mode is available. The portable
   synthetic SCAMP check is added for qualification, but its native execution
   on chapman3 is pending. Plotting/PDF support is not covered by a plot-free fit.
+  Initial native attempt at `~/wenu-scamp-dependency.8Mg445/results` returned
+  signal 11 while examining the input. GDB evidence at
+  `~/wenu-scamp-backtrace-kkt_bnvj/gdb.log` locates the crash in
+  `load_field -> readbasic_head -> fitsread -> __intel_sse2_strncmp`.
+  The documenting agent reproduced a fixture defect locally: Astropy serialized
+  NUL padding into embedded image-header cards, including `END\0...`; the
+  SCAMP v2.10.0 native `fitsfind` contract requires `END` followed by spaces.
+  Corrected fixture generation preserves exact space-padded header bytes and
+  adds a raw-byte regression. Native rerun remains pending; do not classify
+  this malformed-fixture failure as a failed valid-input engine qualification.
 
 - `/usr/bin/swarp` returned zero for a synthetic 64x64 constant-image resample;
   central intensity was 100.0 (expected 100), celestial WCS was finite and central
