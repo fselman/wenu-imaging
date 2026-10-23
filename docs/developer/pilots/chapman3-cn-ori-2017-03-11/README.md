@@ -302,6 +302,15 @@ Records: `~/omegacam/testing/wenu-imaging-test/notebook04-r_SDSS-t4f5cu78/`
 `OMEGA.2017-03-11T02:14:43.394_pre/`, named
 `OMEGA.2017-03-11T02:14:43.394_pre_wcs.fits`. Installed solving module SHA256:
 `f0a9a17ec84dae4b4e5e9635e2b76ed336ecc7044d50e6a6314e3065f5a447c8`.
-The other four r_SDSS and five NB_659 exposures have not yet been run through
-this complete runner/assembly path. Earlier 32-detector diagnostic solves for
-each filter remain separate evidence and are preserved.
+Follow-up reported by Fernando: all remaining four r_SDSS and five NB_659
+exposures passed the same complete runner/assembly checks, sequentially with
+one worker at niceness 10. Records:
+`~/omegacam/testing/wenu-imaging-test/notebook04-remaining-s2t7bhf8/`, with the
+root `completed.json` linking the nine per-exposure records and the first run.
+All ten pilot exposures now have checked assembled MEFs: 320 successful detector
+solves in this runner/assembly walkthrough, with exact pixel preservation,
+preserved selected primary headers, finite sampled celestial WCS coordinates
+and unchanged source/copy hashes. No broad astrometric-accuracy or multiworker
+validation follows from these checks. Earlier 32-detector diagnostic solves for
+each filter remain separate evidence and are preserved. Continue at notebook
+05 using these assembled outputs; do not repeat solving or normalization.

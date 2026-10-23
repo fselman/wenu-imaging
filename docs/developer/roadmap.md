@@ -2,6 +2,13 @@
 
 ## Controlling sequence clarification, 23 October 2026
 
+Notebook 04 target evidence: all ten CN Ori pilot exposures (five r_SDSS and five
+NB_659) passed the installed full runner with one worker at niceness 10: 320
+successful detector solves, ten assembled MEFs, exact detector-pixel preservation
+and unchanged inputs. Records are in the pilot README. This is functional
+evidence, not a real-sky accuracy or multiworker-failure assessment. Continue
+at notebook 05 with the existing outputs; no repeated normalization/solving.
+
 Fernando requested the [mosaic astrometry efficiency plan](mosaic-astrometry-efficiency-plan-2026-10-23.md):
 one canonical SExtractor measurement pass with catalogue reuse; a validated
 per-filter focal-plane baseline propagated into mefpp headers; only 1–3 detector
