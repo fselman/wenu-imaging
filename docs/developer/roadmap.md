@@ -1,5 +1,27 @@
 # wenu-imaging roadmap
 
+## Notebook 09 baseline acceptance, 24 October 2026
+
+Installed correction and actual catalogue checks passed; #46 is closed. The two
+extractions produced 17682 r_SDSS / 17937 NB_659 rows; existing filter matching
+and cleaning retained 16459 paired rows. The baseline contains 3718 distinct
+Gaia IDs, preserved exactly as int64/FITS K with correct null masks. All images
+and reference CSV hashes are unchanged. Evidence: notebook09-catalogue-95xc1kyz
+output-check.json. Continue functional illumination application on fresh copies
+with explicitly recorded existing models; no refit, new query or independent
+science acceptance. Separate Kriging application edge/grid defect #48 is open
+and is not fixed by #41. PRs #43/#45/#47 are unmerged. Earlier plans below are
+historical. See [the correction record](catalogue-integer-correction.md).
+
+## Current notebook 09 integer-preservation fix, 24 October 2026
+
+#44 recovery passed. Before catalogue construction, fix #46: crossmatch_catalogues
+casts every shorter-table column to float64, rounding large IDs. Preserve integer
+dtypes with masks for unmatched rows; retain float NaNs, current row anchoring,
+nearest-neighbour selection, radius and all scientific settings. Notebook 09 must
+use the exact-ID cache reader. Test actual function/notebook, then installed
+Chapman3 and fresh observational output. No extraction or matching launched yet.
+
 ## Gaia identity acceptance; resume notebook 09, 24 October 2026
 
 #44 is corrected and target-qualified. Installed source/ID regressions (8+8),

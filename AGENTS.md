@@ -6,12 +6,13 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: resume notebook 09 after verified Gaia ID
-recovery (#44). Both filters' raw/clean CSVs preserve every non-ID field and
-exact int64 IDs through CSV/Table/FITS; originals and science products remain
-unchanged. Use fresh recovered catalogues, no recalibration/refitting. #41/#42
-reader/08c corrections passed target checks. PRs #43/#45 remain unmerged.
-No new scientific model, parameter policy or dependency upgrades.
+Current task, 24 October 2026: notebook 09 baseline construction passed on
+chapman3 (16459 paired rows, 3718 distinct exact Gaia IDs); #46 is closed after
+installed/actual-output checks. Preserve the baseline and all inputs. Continue
+functional illumination application only on fresh copies, with explicit saved
+models and existing settings; no scientific model acceptance is implied.
+Separate Kriging application coordinate defect #48 remains open. PRs #43/#45/#47
+are unmerged; no calibration/refitting, new policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

@@ -1,5 +1,18 @@
 # wenu-imaging agent instructions
 
+## Current notebook 09 baseline handoff, 24 October 2026
+
+Baseline construction passed on chapman3 in notebook09-catalogue-95xc1kyz:
+16459 paired-filter rows and 3718 distinct exact int64 Gaia associations, with
+FITS null masks and all input hashes preserved. #46 is closed after correction,
+installed tests and actual-output verification. Preserve baseline catalogue and
+recovered references; continue functional correction only on fresh copies with
+explicit saved models. Existing default Chebyshev application is distinct from
+scientific model acceptance. Separate Kriging application coordinates fail at
+valid edges (#48); do not treat corrected reader #41 as correcting that function.
+PRs #43/#45/#47 remain unmerged; no new query, calibration, fitting or scientific
+policy change. Earlier handoffs below are historical.
+
 ## Current catalogue handoff, 24 October 2026
 
 #44 correction and bounded identity recovery passed chapman3 acceptance: four

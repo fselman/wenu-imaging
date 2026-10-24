@@ -5,7 +5,7 @@ from scipy.interpolate import RegularGridInterpolator  # for applying the illumi
 
 # for reading the catalogues
 from astropy.io import fits
-from astropy.table import Table, hstack
+from astropy.table import Table, MaskedColumn, hstack
 
 # for cross matching the catalogues
 from astropy.coordinates import SkyCoord
@@ -68,7 +68,8 @@ def crossmatch_catalogues(cat_1, cat_2, max_sep=1.0,
     Both catalogue must be Astropy Table objects.
     It returns a table whith the columns of both catalogues, so be sure the column names do not repeat among the catalogues.
     The resulting table will consist in the longest table with the shorter one horizontally stacked. The rows where the source in the longest
-    catalogue is no present in the shorter one will be filled with nans.
+    catalogue is no present in the shorter one will be filled with nans
+    for floating columns, or masked for integer columns (identifiers stay exact).
     
     Parameters:
         cat_1: Table with the catalogue to cross match
@@ -106,9 +107,17 @@ def crossmatch_catalogues(cat_1, cat_2, max_sep=1.0,
     # create the combined catalogue
     table_short_matches = {}
     for col in cat_short.colnames:
-        aux_arr = 1.0*np.arange(len(cat_long))
-        aux_arr[:] = np.nan
-        aux_arr[sep_constraint] = matches_short[col]
+        column = matches_short[col]
+        if column.dtype.kind in 'iu':
+            # NaN requires floats and silently rounds large identifiers. Keep
+            # integer values exact and represent absent matches with a mask.
+            aux_arr = MaskedColumn(np.zeros(len(cat_long), dtype=column.dtype),
+                                   mask=np.ones(len(cat_long), dtype=bool),
+                                   name=col, unit=column.unit,
+                                   description=column.description, meta=column.meta.copy())
+        else:
+            aux_arr = np.full(len(cat_long), np.nan)
+        aux_arr[sep_constraint] = column
         table_short_matches[col] = aux_arr
 
     table_short_matches = Table(table_short_matches)

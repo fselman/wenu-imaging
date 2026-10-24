@@ -564,3 +564,19 @@ Records: `gaia-id-recovery-jh763zwi/recovered/report.json` and
 fresh copies of these recovered catalogues; no extraction, matching or science
 catalogue correction has yet been qualified. Do not rerun calibration/models.
 PRs #43/#45 remain unmerged; #41/#42 target acceptance is recorded separately.
+
+## Notebook 09 baseline accepted, 24 October 2026
+
+`notebook09-catalogue-95xc1kyz` completed with exit code 0 using installed Pycavi
+libraries and fresh copies. SExtractor rows: r_SDSS 17682; NB_659 17937. Existing
+matching/cleaning retained 16459 paired rows; 3718 have distinct exact recovered
+Gaia IDs. FITS K/null masks, reference positions and all source/staged input
+hashes passed. Baseline SHA256:
+`bb2cd9b91969470ea5d917ec0489c02beff0dc8f3db4dd0b9205d315c41b2171`.
+See [the acceptance record](../../catalogue-integer-correction.md), local
+`output-check.json`, `status.json`, `runner.py` and `runner.log`. #46 is closed;
+PR #47 remains unmerged. No illumination correction, new query or refit occurred.
+Kriging catalogue-application coordinates need separate correction (#48); the
+previous #41 reader acceptance does not cover that routine. Preserve the baseline
+and use fresh copies for further functional tests; scientific acceptance remains
+separate.
