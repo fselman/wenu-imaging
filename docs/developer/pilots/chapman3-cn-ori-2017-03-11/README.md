@@ -523,3 +523,30 @@ fixed_nugget=None, use_kfold=False, diagnostic offset 4 pixels, 50x50 grid.
 These settings are recorded, not scientifically endorsed; the offset diagnostic
 is not independent validation. No variogram, Kriging interpolation or correction
 has run. Fernando requested merge/cleanup first, then continuation at 08b.
+
+
+## Notebook 08b completed; saved reader defects, 24 October 2026
+
+Both Gaussian Kriging runs completed in `notebook08b-kriging-4_ssz0f9`, sequential
+niceness 10/thread limits 1, using the installed library and preserved settings.
+r_SDSS selected 583 stars and NB_659 580. Both saved 50x50 FITS grids exactly
+matching live grid arrays, finite correction/variance grids and five decodable
+QC PNGs. Source illumination tables and prior check records remained unchanged.
+`completed.json` and per-filter `output-check.json`/`kriging-check-arrays.npz`
+retain parameters, hashes and diagnostics. No science-data correction occurred.
+
+r_SDSS before scatter 0.03277068409366147 mag and four-pixel-offset residual
+scatter 0.00850436182407726; NB_659 0.03649722564773833 -> 0.023369077164626034.
+These offset checks are not independent validation and use a different selection
+from the Chebyshev checks. NB_659 fitted psill=0.003378462027856533,
+range=489.1362908360239 pixels and nugget=0.005894817742894744; model SHA256
+`a5dc4409f8d5dfdbff40b4856443417b1394421f8f42e76439ee6b573c424106`,
+arrays SHA256 `1df7076d67bd34b2461872fa01b19617719f6084a68a43bfd7415aa92aecb927`.
+
+08c/readback found the [mapping defect](../../kriging-readback-correction.md)
+#41 despite exact FITS serialization, plus swapped plotting arguments #42.
+The first target diagnostic verified unchanged grids and quantified sample-node
+errors before correction; details are in those tickets and correction notes.
+Keep existing fits; fix/verify only reader coordinates and plotting bindings.
+Notebook loop scope remains #37. Do not infer full notebook execution from
+per-filter diagnostic-wrapper success.
