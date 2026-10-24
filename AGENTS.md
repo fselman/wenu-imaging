@@ -6,11 +6,13 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: fix notebook 09 crossmatch integer coercion
-(#46) before catalogue construction. Preserve exact IDs with integer masks for
-unmatched rows; retain float NaNs, current nearest matching, radius and scientific
-settings. Use exact-ID cache reads. #44 recovery passed; originals unchanged.
-PRs #43/#45 are unmerged. No new model, calibration or dependency upgrades.
+Current task, 24 October 2026: notebook 09 baseline construction passed on
+chapman3 (16459 paired rows, 3718 distinct exact Gaia IDs); #46 is closed after
+installed/actual-output checks. Preserve the baseline and all inputs. Continue
+functional illumination application only on fresh copies, with explicit saved
+models and existing settings; no scientific model acceptance is implied.
+Separate Kriging application coordinate defect #48 remains open. PRs #43/#45/#47
+are unmerged; no calibration/refitting, new policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

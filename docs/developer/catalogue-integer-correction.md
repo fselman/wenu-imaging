@@ -32,8 +32,44 @@ column metadata and FITS missing-value/ID round trips. Notebook AST checks verif
 the actual cache-reader call/import; installed notebook/module bytes match source.
 No native extraction, live query or observational matching occurred in these tests.
 
-Keep #46 open pending chapman3 installed checks and exact IDs in the fresh actual
-notebook 09 catalogue. Use the already verified recovered Gaia files, staged
-coadd copies and existing Pycavi libraries. Retain original hashes and catalogue
-row/match accounting; no independent photometric/astrometric or Phase 3 claim
-follows from functional construction. PRs #43/#45 are unmerged prerequisites.
+## Chapman3 acceptance, 24 October 2026
+
+Installed commit `a57ec108a3c15540a7f74b9aa726d0c3d88d5f7c` passed five source
+and five installed regressions, ten installed-package/resource checks and pip
+check in `~/wenu-catalogue-integers-jbpixqeh`. Catalogue, Gaia helper, zpcal and
+Kriging module bytes match source. A normal full production import/crossmatch
+also preserved the synthetic ID and missing mask. Wheel SHA256
+`16d5d8cbab5abd785fd07c056c2066b1264f5eca8612997cd462d41096e42c1f`.
+
+The fresh notebook 09 functional runner completed exit code 0 in
+`~/omegacam/testing/wenu-imaging-test/notebook09-catalogue-95xc1kyz`:
+
+| Check | Result |
+|---|---|
+| r_SDSS extraction | 17682 rows |
+| NB_659 extraction | 17937 rows |
+| Paired-filter rows after existing cleaning | 16459 |
+| Gaia reference rows | 6245 |
+| Rows with Gaia IDs/positions | 3718 |
+| Distinct assigned Gaia IDs | 3718 |
+| Exact int64 IDs, reference-position agreement and FITS masks | Pass |
+| SOURCE_ID_gaia FITS format | K |
+| Original/staged image and reference hashes | Unchanged |
+
+`CN_Ori_merged_catalogue.fits` SHA256:
+`bb2cd9b91969470ea5d917ec0489c02beff0dc8f3db4dd0b9205d315c41b2171`.
+Native extraction catalogue SHA256s: r_SDSS
+`66a16c2357f1f6dd8e3da5a298f82b19da1df44a8ac95b9e0465820b3bcd58c1`;
+NB_659 `0b050c902e0880fca316f56de962d8039c103ffba55a059a38b487a3e88364a5`.
+The saved runner calls the installed Pycavi extraction/matching/cleaning libraries
+with existing notebook settings (including error scaling), single native thread
+and niceness 10. The second/last filter's recovered raw Gaia cache supplies the
+reference, matching the notebook's current selection order. The diagnostic runner
+does not execute the complete notebook discovery/selection orchestration.
+
+#46 was closed after its correction/evidence comment. PR #47 is unmerged and
+stacked on #45/#43. No new reference query, calibration, model fit or illumination
+correction occurred. Counts are functional row/match accounting, not completeness
+or independent science/Phase 3 validation. Preserve this baseline for subsequent
+correction on fresh copies. The separate catalogue Kriging application has a
+confirmed edge/grid-coordinate failure (#48); it is not the corrected #41 reader.

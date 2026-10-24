@@ -1,13 +1,17 @@
 # wenu-imaging agent instructions
 
-## Current notebook 09 type correction, 24 October 2026
+## Current notebook 09 baseline handoff, 24 October 2026
 
-#46 is a confirmed crossmatch precision loss: shorter-table integer columns are
-coerced to float64. Correct only integer dtype/missing representation and wire
-09 to the existing exact-ID CSV reader. Preserve matching/scientific settings,
-images and recovered caches. Verify installed tests and fresh observational
-catalogue IDs before closing #46. #44 recovery is accepted. Earlier handoffs
-below are historical; no notebook 09 extraction/matching has launched.
+Baseline construction passed on chapman3 in notebook09-catalogue-95xc1kyz:
+16459 paired-filter rows and 3718 distinct exact int64 Gaia associations, with
+FITS null masks and all input hashes preserved. #46 is closed after correction,
+installed tests and actual-output verification. Preserve baseline catalogue and
+recovered references; continue functional correction only on fresh copies with
+explicit saved models. Existing default Chebyshev application is distinct from
+scientific model acceptance. Separate Kriging application coordinates fail at
+valid edges (#48); do not treat corrected reader #41 as correcting that function.
+PRs #43/#45/#47 remain unmerged; no new query, calibration, fitting or scientific
+policy change. Earlier handoffs below are historical.
 
 ## Current catalogue handoff, 24 October 2026
 
