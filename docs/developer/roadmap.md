@@ -1,5 +1,18 @@
 # wenu-imaging roadmap
 
+## Gaia identity acceptance; resume notebook 09, 24 October 2026
+
+#44 is corrected and target-qualified. Installed source/ID regressions (8+8),
+packaging/resource checks (10) and pip check passed. One bounded identity-only
+query recovered IDs for both raw 6245-row and clean 981-row files per filter,
+with maximum separation 0.0 arcsec in every file. Exact int64 CSV/Table/FITS
+round trips, unchanged non-ID fields, clean/raw subset membership and original
+hashes passed. Evidence: gaia-id-recovery-jh763zwi/identity-output-check.json.
+Resume notebook 09 using the fresh recovered catalogue copies. No recalibration,
+refitting or science-image change occurred; notebook 09 remains unqualified.
+PRs #43/#45 are unmerged. See [the recovery record](gaia-source-id-correction.md).
+The prerequisite plan below is historical.
+
 ## Current Gaia identity repair before notebook 09, 24 October 2026
 
 08c corrected readback/plot checks passed both filters; #41/#42 are closed with

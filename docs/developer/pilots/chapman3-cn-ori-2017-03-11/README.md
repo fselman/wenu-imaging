@@ -550,3 +550,17 @@ errors before correction; details are in those tickets and correction notes.
 Keep existing fits; fix/verify only reader coordinates and plotting bindings.
 Notebook loop scope remains #37. Do not infer full notebook execution from
 per-filter diagnostic-wrapper success.
+
+## Notebook 09 prerequisite: recovered Gaia identities, 24 October 2026
+
+Production source-ID loss (#44) blocked the initial catalogue preflight: all
+6245 IDs were missing in each raw query, inherited by both 981-row clean files.
+The installed query/cache fix and one bounded identity-only retrieval passed
+[the recorded acceptance](../../gaia-source-id-correction.md). All four recovered
+CSVs have zero coordinate difference and unchanged non-ID fields; exact int64
+IDs survive target CSV/Table/FITS round trips. Original hashes are preserved.
+Records: `gaia-id-recovery-jh763zwi/recovered/report.json` and
+`gaia-id-recovery-jh763zwi/identity-output-check.json`. Resume notebook 09 from
+fresh copies of these recovered catalogues; no extraction, matching or science
+catalogue correction has yet been qualified. Do not rerun calibration/models.
+PRs #43/#45 remain unmerged; #41/#42 target acceptance is recorded separately.

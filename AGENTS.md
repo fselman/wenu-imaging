@@ -6,11 +6,11 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: correct Gaia DR3 ID loss (#44) before notebook
-09 matching. Preserve existing calibration, photometry, coordinates and row
-order. Recovery writes fresh CSV copies after a single bounded identity query
-and unambiguous same-position checks; target acceptance is pending. Kriging
-reader/08c fixes passed target checks (#41/#42 closed), PR #43 remains unmerged.
+Current task, 24 October 2026: resume notebook 09 after verified Gaia ID
+recovery (#44). Both filters' raw/clean CSVs preserve every non-ID field and
+exact int64 IDs through CSV/Table/FITS; originals and science products remain
+unchanged. Use fresh recovered catalogues, no recalibration/refitting. #41/#42
+reader/08c corrections passed target checks. PRs #43/#45 remain unmerged.
 No new scientific model, parameter policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
