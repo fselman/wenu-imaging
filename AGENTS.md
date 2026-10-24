@@ -6,13 +6,12 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: #39 display correction passed source/installed
-checks and fresh direct-plot verification on chapman3; ticket closed. Fernando
-requested merge and cleanup before proceeding to notebook 08b Kriging. Its
-read-only preflight passed (583 r_SDSS / 580 NB_659 unique selected positions),
-but no Kriging model or variogram has been fitted. Preserve completed products.
-Notebook orchestration #37 and experimental state #38 remain open; no new
-science model, parameter policy or dependency upgrades.
+Current task, 24 October 2026: notebook 08b passed both filters. Correct saved
+Kriging reader coordinate mapping (#41) and 08c plot bindings (#42) as focused
+walkthrough fixes. Reuse immutable saved grids; no refitting or science-data
+correction. Keep tickets open pending chapman3 verification. #37/#38, scientific
+saturation and independent-accuracy investigations remain separate and open.
+No new model, parameter policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

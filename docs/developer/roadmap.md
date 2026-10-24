@@ -1,5 +1,22 @@
 # wenu-imaging roadmap
 
+## Current saved-Kriging readback correction, 24 October 2026
+
+Both filters passed 08b fitting, grid serialization and basic plots in isolated
+wrappers. The next 08c/readback check confirmed [#41](https://github.com/fselman/wenu-imaging/issues/41):
+stored grid nodes are mapped inconsistently by the linear-interpolation reader.
+Correct only the mapping to the actual physical sample axes, preserving saved
+models and the linear interpolation method. Also correct the two 08c plotting
+argument bindings in [#42](https://github.com/fselman/wenu-imaging/issues/42) using
+explicit keywords; no fitting/model/selection policy changes. Test boundaries,
+rectangular grids/fields, affine interior values, actual notebook call bindings
+and unchanged input files, then verify the existing chapman3 models without
+refitting. Keep #41/#42 open pending target verification. Notebook loop scope
+#37, experimental state #38 and independent scientific validation remain open.
+No correction is applied to science images or catalogues in this step.
+
+The previous merge/preflight handoff below is historical.
+
 ## Notebook 08a accepted; merge/cleanup before 08b, 24 October 2026
 
 Both filters passed notebook 07b functional QC and the installed 08a fit/export

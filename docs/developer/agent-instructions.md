@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+## Current reader correction, 24 October 2026
+
+Both 08b fits/grid serialization/QC passed. Target 08c diagnostics confirmed
+#41 reader coordinate mapping errors despite exact saved grids; #42 records
+misordered plotting arguments. Correct only reader axes and explicit plotting
+bindings, preserving the linear method and immutable models. Verify existing
+saved grids and fresh plots without refitting; keep #41/#42 open until target
+verification. No science-image/catalogue correction, model/selection changes or
+upgrades. Earlier dated handoffs below are historical; #37/#38 stay open.
+
 ## Current handoff, 24 October 2026
 
 Fernando requested merging and cleaning the completed Chebyshev display work
