@@ -464,3 +464,62 @@ Fernando requested merge/cleanup and a pause until notebook 07b QC. Reuse these
 outputs and saved queries. Preserve all earlier products, logs and separate
 weight maps. Independent photometric/astrometric accuracy, physical saturation,
 Phase 3 acceptance and Mac retesting remain pending.
+
+
+## Notebook 07b and 08a functional checks, 24 October 2026
+
+07b completed both filters through installed library calls in fresh isolated
+copies at `notebook07b-qc-uq8x1s6d`. Both have 981 illumination-table rows, 590
+finite frame magnitudes, and all nonfinite measurements excluded from the
+reported residual selections. r_SDSS has 334 NaNs and 57 positive infinities;
+NB_659 has 335 NaNs and 56 positive infinities. Source images and catalogues
+retain their hashes. These invalid measurements remain in the full saved table,
+not in the selected finite residuals; they have not all been assigned a cause.
+
+For magnitude 13--17, r_SDSS has 459 selected rows, catalogue-minus-frame mean
+0.03584815848214288 and scatter 0.025418532331133052 mag; NB_659 has 437 rows,
+mean 0.015571600429506593 and scatter 0.03296354183402808 mag. These use the
+calibration reference, not an independent validation catalogue. Each filter
+has a QC image, two residual views, region files, `.illum.csv` and output checks.
+07c is explicitly obsolete; continue through 08a rather than rerunning 07c.
+
+08a existing fit/export/plot functions were exercised separately for each filter
+at `notebook08a-chebyshev-6jhubdcu`, retaining degree (5,5), notebook 12--18 mag,
++/-0.25 residual selection, sigma-3 clipping and original errors/weights. r_SDSS
+selected 504 stars and NB_659 516; each fit rank is 36 with 36 coefficients.
+Export/readback matches direct polynomial evaluation to 2.220446049250313e-16
+and 1.0581813203458523e-16 mag respectively. Same-fitting-star scatter changes
+from 0.02729796086936255 to 0.015772353507174916 mag for r_SDSS, and from
+0.03432194203231734 to 0.027392507874621 for NB_659. No independent validation
+or image/catalogue correction follows from these fits.
+
+The notebook's extra RBF display is a different surface from the saved polynomial.
+The [display correction](../../chebyshev-display-correction.md) and #39 record
+full-grid and covered-sample discrepancies. Historical plots/coefficients and
+fit-check-arrays.npz remain immutable. Separate source issues remain open:
+#37 fits only the last selected table in notebook control flow; #38's experimental
+nonlinearity cell references undefined prior-kernel state. The diagnostic wrapper
+processes each filter using library functions; it is not proof that those notebook
+orchestration defects are fixed. No experimental nonlinearity correction ran.
+
+
+## Display acceptance and pending Kriging, 24 October 2026
+
+The direct display correction passed source/installed tests and regenerated
+plot/grid checks from saved models in `notebook08a-direct-ppzkqpm0`, without
+refitting or changing science images/catalogues. Source models and arrays are
+unchanged. #39 is closed with evidence; [correction notes](../../chebyshev-display-correction.md)
+record exact hashes and roundoff agreement. #37/#38 remain open.
+
+08b preflight only: installed Kriging module SHA256
+`e9142ec2ed809e0a6b6d8d23f2103d4a53aba11d68d8a7c236b6be6e3629e192`,
+byte-identical to checkout source. PyKrige 1.7.3, lmfit 1.3.4, NumPy 1.26.4,
+SciPy 1.17.1 and Astropy 6.1.7 imports passed. Its existing 1--20 mag, +/-1
+residual selection (clipping mask explicitly cleared) yields 583 r_SDSS and
+580 NB_659 positions, all unique; no random subsampling at limit 2000.
+Parameters: Gaussian, maxlag 10000, nlags 200, init_kriging=False,
+use_empirical_variogram=True, determine_empirical_variogram=True, fit_type=lmfit,
+fixed_nugget=None, use_kfold=False, diagnostic offset 4 pixels, 50x50 grid.
+These settings are recorded, not scientifically endorsed; the offset diagnostic
+is not independent validation. No variogram, Kriging interpolation or correction
+has run. Fernando requested merge/cleanup first, then continuation at 08b.

@@ -6,12 +6,13 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 23 October 2026: notebook 07 passed functional checks in both
-filters on chapman3; #25 and #33 are corrected and verified. Fernando authorized
-merging completed branches and cleanup, then pausing until notebook 07b QC.
-Resume there without repeating calibration or earlier reductions. Saturation
-science investigations #35/#36 and native mefpp #23/#24 remain open; no new
-functionality, scientific-policy changes or upgrades. Retest on Mac afterward.
+Current task, 24 October 2026: #39 display correction passed source/installed
+checks and fresh direct-plot verification on chapman3; ticket closed. Fernando
+requested merge and cleanup before proceeding to notebook 08b Kriging. Its
+read-only preflight passed (583 r_SDSS / 580 NB_659 unique selected positions),
+but no Kriging model or variogram has been fitted. Preserve completed products.
+Notebook orchestration #37 and experimental state #38 remain open; no new
+science model, parameter policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where
