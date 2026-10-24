@@ -6,12 +6,12 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: notebook 08b passed both filters. Correct saved
-Kriging reader coordinate mapping (#41) and 08c plot bindings (#42) as focused
-walkthrough fixes. Reuse immutable saved grids; no refitting or science-data
-correction. Keep tickets open pending chapman3 verification. #37/#38, scientific
-saturation and independent-accuracy investigations remain separate and open.
-No new model, parameter policy or dependency upgrades.
+Current task, 24 October 2026: correct Gaia DR3 ID loss (#44) before notebook
+09 matching. Preserve existing calibration, photometry, coordinates and row
+order. Recovery writes fresh CSV copies after a single bounded identity query
+and unambiguous same-position checks; target acceptance is pending. Kriging
+reader/08c fixes passed target checks (#41/#42 closed), PR #43 remains unmerged.
+No new scientific model, parameter policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

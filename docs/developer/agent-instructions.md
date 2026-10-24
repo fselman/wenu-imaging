@@ -1,5 +1,14 @@
 # wenu-imaging agent instructions
 
+## Current catalogue prerequisite, 24 October 2026
+
+Correct #44 production Gaia ID loss and recover only identifiers into new CSV
+copies from one bounded same-release query. Preserve every non-ID field and all
+existing science products. No calibration/refitting. Both Kriging reader/08c
+target checks passed (#41/#42 closed); PR #43 is still unmerged. Keep #44 open
+until installed and recovered-cache target acceptance. Earlier handoffs below
+are historical.
+
 ## Current reader correction, 24 October 2026
 
 Both 08b fits/grid serialization/QC passed. Target 08c diagnostics confirmed
