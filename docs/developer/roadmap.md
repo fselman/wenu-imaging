@@ -1,5 +1,18 @@
 # wenu-imaging roadmap
 
+## Authorized merge/cleanup handoff, 24 October 2026
+
+Fernando authorized integrating the five qualified PRs into main in order:
+#43 reader/08c bindings, #45 Gaia identity recovery, #47 crossmatch integer IDs,
+#50 FITS null-preserving illumination writes and #52 cubic Kriging application.
+The last head carries all acceptance/QC evidence. Verify final main tree/ancestry,
+then delete only those merged branches and synchronize the inspected chapman3
+checkout. The existing installed wheel already matches the qualified code; no
+reinstall or data processing is needed. This is integration/cleanup authorization,
+not scientific/model acceptance, full orchestration, Mac or Phase 3 qualification.
+Deferred #51 and broader open investigations remain open; older handoffs below
+are historical.
+
 ## Selected OmegaCAM functional paths through notebook 09 passed, 24 October 2026
 
 Kriging application and its four existing QC PNGs passed, completing baseline/

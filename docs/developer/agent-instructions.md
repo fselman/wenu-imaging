@@ -1,5 +1,17 @@
 # wenu-imaging agent instructions
 
+## Current authorized integration/cleanup, 24 October 2026
+
+Fernando instructed merge and cleanup of the five qualified PRs #43, #45, #47,
+#50 and #52. Integrate them into main in dependency order, retargeting stacked
+PRs as their predecessors merge. Preserve all qualified heads/acceptance records;
+verify every head is an ancestor and the final main tree equals the integrated
+head. Cleanup only these merged branches with expected-tip and ancestry checks.
+Obtain current actual chapman3 checkout evidence before local sync/cleanup and
+provide guarded commands automatically. No reinstall, processing, query or
+refit is required. This authorization does not close scientific/orchestration/
+export/Mac gates or deferred #51; earlier handoffs below are historical.
+
 ## Current functional walkthrough handoff, 24 October 2026
 
 The selected isolated OmegaCAM functional paths through notebook 09 passed:

@@ -6,13 +6,14 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current handoff, 24 October 2026: selected OmegaCAM functional paths through
-notebook 09 passed, including baseline construction, Chebyshev/cubic Kriging
-application and twelve QC PNGs across baseline/two corrections. #48 is closed;
-all inputs, saved models and prior products are preserved. Record/handoff only;
-no new query, refit, scientific acceptance, Mac retest or unrelated fixes.
-#51 and broader scientific/orchestration gaps remain open. PRs #43/#45/#47/
-#50/#52 are qualified but unmerged; merge/cleanup requires user instruction.
+Current integration handoff, 24 October 2026: Fernando authorized merge and
+cleanup of qualified PRs #43/#45/#47/#50/#52, in that dependency order. Preserve
+all qualified commits and verify the final main tree against this integrated
+head, then remove only merged branches with ancestry/tip checks. Synchronize
+chapman3 from its inspected clean checkout; no reinstall or reduction rerun.
+Selected functional paths through notebook 09 and twelve QC PNGs passed.
+Scientific/orchestration/export/Mac gaps and #51 remain open. This instruction
+authorizes integration/cleanup only, not further processing or unrelated fixes.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where
