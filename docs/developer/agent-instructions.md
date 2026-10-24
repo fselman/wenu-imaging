@@ -1,5 +1,17 @@
 # wenu-imaging agent instructions
 
+## Current Kriging application coordinate correction, 24 October 2026
+
+The existing before/after catalogue QC call generated and decoded all eight PNGs
+without changing either source/staged catalogue (notebook09-qc-h6o98cy8). Address
+#48 next: application axes must use the stored physical 1..ORIG_W/H endpoints,
+actual grid shape and (y,x) orientation. Preserve cubic interpolation/default
+solver, strict bounds, correction sign, null-safe writer and guards. No use of
+the linear reader as a substitute, new model, refit or reference query. Test
+source/installed behavior, then fresh target copies; keep #48 open until target
+acceptance. #51 is deferred and does not affect the valid current QC inputs.
+Earlier handoffs below are historical.
+
 ## Current notebook 09 QC handoff, 24 October 2026
 
 Chebyshev application passed in notebook09-chebyshev-6xb3rgu1 with the existing

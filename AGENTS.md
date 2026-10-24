@@ -6,12 +6,12 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: Chebyshev catalogue application passed on a
-fresh chapman3 copy (16459 rows; 3718 exact IDs and 12741 null masks preserved);
-#49 is closed. Preserve baseline, corrected copy and models. Continue existing
-notebook 09 catalogue QC on fresh staged copies, with unchanged plot settings.
-Separate Kriging application grid failure #48 stays open. PRs #43/#45/#47/#50
-are unmerged. No new query, refit, scientific policy or dependency upgrade.
+Current task, 24 October 2026: correct #48 Kriging catalogue application axes
+using physical stored sample coordinates and (y,x) orientation. Preserve cubic
+interpolation/default solver, bounds, sign, models, null-safe writer and repeat
+provenance; no linear-method substitution or refit. Chebyshev application and
+eight QC PNGs passed with unchanged inputs. #51 stays deferred. PRs #43/#45/
+#47/#50 are unmerged; no new query, scientific policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

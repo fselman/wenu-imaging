@@ -1,5 +1,16 @@
 # wenu-imaging roadmap
 
+## Current Kriging catalogue application coordinate fix, 24 October 2026
+
+Chebyshev application and all eight before/after QC PNGs passed; inputs remain
+unchanged in notebook09-qc-h6o98cy8. Address confirmed #48 as the next focused
+functional correction: use the stored physical 1..ORIG_W/H sample axes in the
+Kriging catalogue application with correct (y,x) orientation and actual grid
+shape. Retain cubic interpolation, its default solver, strict bounds, sign,
+models, null-preserving writer and repeat/provenance guards. Do not substitute
+the linear 08c reader or refit. Source/installed tests precede fresh target
+catalogue application. #51 is deferred because current QC inputs are valid.
+
 ## Chebyshev application accepted; catalogue QC next, 24 October 2026
 
 #49 passed installed and actual fresh-catalogue verification and is closed.

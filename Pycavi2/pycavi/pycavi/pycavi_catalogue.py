@@ -303,12 +303,11 @@ def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
 
     # up to this point we are sure the catalogue has not been corrected on band, so we correct 
     n, m = np.shape(kriggin_fits_data)
-    x_kriggin = 1.0*np.arange(m) / m
-    y_kriggin = 1.0*np.arange(n) / n  # kriggin data between 0 and 1
-
     band = kriggin_fits_header['BAND'].lower()
-    x_image = kriggin_fits_header['ORIG_W']
-    y_image = kriggin_fits_header['ORIG_H']  # band, x, and y dimensiones of the image from the krigging headers
+    # The stored grid samples physical FITS pixels 1..ORIG_W/H, inclusive.
+    # Rows are y and columns are x, including on rectangular stored grids.
+    x_kriggin = np.linspace(1, kriggin_fits_header['ORIG_W'], m)
+    y_kriggin = np.linspace(1, kriggin_fits_header['ORIG_H'], n)
     
     catalogue = load_catalogue(catalogue_path, extnumber=1)
     
@@ -316,12 +315,12 @@ def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
     for col in catalogue.colnames:
         if 'mag_' in col and band in col:
             mags_to_correct.append(col)
-    x_catalogue = catalogue['x_image_'+band] / x_image
-    y_catalogue = catalogue['y_image_'+band] / y_image  # x/y position of the sources in the catalogue normalized from zero to one
+    x_catalogue = catalogue['x_image_'+band]
+    y_catalogue = catalogue['y_image_'+band]
 
     # here we do the interpolation of data
     # Use 'cubic' or 'quintic' for smoother interpolation  
-    f = RegularGridInterpolator((x_kriggin, y_kriggin), kriggin_fits_data, method='cubic')  
+    f = RegularGridInterpolator((y_kriggin, x_kriggin), kriggin_fits_data, method='cubic')
     pts = np.vstack((y_catalogue, x_catalogue)).T
 
     mag_corr = f(pts)

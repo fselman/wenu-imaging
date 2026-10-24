@@ -595,3 +595,16 @@ PR #50 remains unmerged, #48 Kriging application grid/bounds is open. Continue
 functional before/after catalogue QC in separate staging directories, retaining
 current plot settings. No independent accuracy, image correction, new query or
 refit is claimed. Existing flux/error columns remain unchanged by design.
+
+## Notebook 09 Chebyshev-path QC passed, 24 October 2026
+
+`notebook09-qc-h6o98cy8` contains separate `before`/`after` staged catalogues and
+four existing `create_catalogue_checkplots` PNGs per catalogue. All eight PNGs
+verified and decoded; all source/staged catalogue hashes remain unchanged.
+Parameters: `band=mag_petro_r_sdss`, `band_ref=r_SDSS_gaia`, reference magnitude
+13..17; both preflights reported 2300 finite comparison rows. `started.json` and
+`output-check.json` retain parameters, paths, PNG hashes and dimensions. This
+accepts functional plot generation, not visual/scientific accuracy. No new
+query, extraction, refit or correction occurred. The separate #48 Kriging
+application coordinates are the next focused functional correction; #51's
+missing-column guard is deferred for these valid inputs.
