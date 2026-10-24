@@ -580,3 +580,18 @@ Kriging catalogue-application coordinates need separate correction (#48); the
 previous #41 reader acceptance does not cover that routine. Preserve the baseline
 and use fresh copies for further functional tests; scientific acceptance remains
 separate.
+
+## Notebook 09 Chebyshev application accepted, 24 October 2026
+
+`notebook09-chebyshev-6xb3rgu1/output-check.json` verifies the two existing models
+applied to a fresh baseline copy. All 16459 rows, 3718 exact Gaia IDs and 12741
+missing masks survive. Four magnitude columns per filter match predictions at
+their stored dtype; unrelated column bytes/masks and full FITS extension metadata
+are unchanged. Model provenance and repeat no-op byte identity pass; original
+baseline/models are unchanged. Corrected catalogue SHA256:
+`b11b932dea2a3be6dc43fb1cbf16e9a75e33d5840b16ef1c5326e8d99a4782fa`.
+See [writer acceptance](../../illumination-null-mask-correction.md). #49 is closed;
+PR #50 remains unmerged, #48 Kriging application grid/bounds is open. Continue
+functional before/after catalogue QC in separate staging directories, retaining
+current plot settings. No independent accuracy, image correction, new query or
+refit is claimed. Existing flux/error columns remain unchanged by design.

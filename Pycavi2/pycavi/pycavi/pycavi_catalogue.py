@@ -333,13 +333,12 @@ def apply_kriggin_illumination_correction(kriggin_fits_path, catalogue_path):
         # Modify primary headers as needed
         _record_illumination_model(primary_header, band, kriggin_fits_path, model_digest)
         
-        # Access the table data (extension 1) and convert it to an Astropy Table
-        table_data = Table(hdul[1].data)
+        # Update only magnitude fields. Rebuilding from FITS_rec drops TNULL
+        # metadata and makes missing integer identifiers appear valid.
+        table_data = hdul[1].data
         for col in mags_to_correct:
             table_data[col] += mag_corr
 
-        # Update the HDU with the modified table data
-        hdul[1].data = table_data.as_array()    
 
     return 1
 
@@ -397,13 +396,12 @@ def apply_chebyshev_illumination_correction(chebyshev_file_path, catalogue_path)
         # Modify primary headers as needed
         _record_illumination_model(primary_header, band, chebyshev_file_path, model_digest)
         
-        # Access the table data (extension 1) and convert it to an Astropy Table
-        table_data = Table(hdul[1].data)
+        # Update only magnitude fields. Rebuilding from FITS_rec drops TNULL
+        # metadata and makes missing integer identifiers appear valid.
+        table_data = hdul[1].data
         for col in mags_to_correct:
             table_data[col] += corrections
 
-        # Update the HDU with the modified table data
-        hdul[1].data = table_data.as_array()     
 
     return 1
     

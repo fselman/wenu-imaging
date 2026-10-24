@@ -1,5 +1,18 @@
 # wenu-imaging agent instructions
 
+## Current notebook 09 QC handoff, 24 October 2026
+
+Chebyshev application passed in notebook09-chebyshev-6xb3rgu1 with the existing
+saved models: all expected magnitude changes, unchanged unrelated columns and
+complete FITS extension metadata, 3718 exact IDs and 12741 missing masks, correct
+provenance and byte-identical repeat calls. Baseline/model hashes are unchanged.
+#49 is closed after source/installed and actual-copy evidence. Resume existing
+catalogue QC on fresh staged baseline/corrected copies so fixed plot filenames
+do not overwrite prior outputs. Keep current plot/reference settings and distinguish
+functional generation from independent scientific acceptance. No new reference
+query or fit; #48's separate Kriging application grid remains open. PRs #43/#45/
+#47/#50 are unmerged. Earlier handoffs below are historical.
+
 ## Current notebook 09 baseline handoff, 24 October 2026
 
 Baseline construction passed on chapman3 in notebook09-catalogue-95xc1kyz:

@@ -1,5 +1,31 @@
 # wenu-imaging roadmap
 
+## Chebyshev application accepted; catalogue QC next, 24 October 2026
+
+#49 passed installed and actual fresh-catalogue verification and is closed.
+notebook09-chebyshev-6xb3rgu1 retains all 16459 rows, 3718 exact Gaia IDs and
+12741 missing-ID masks; only the four expected magnitude columns per filter
+changed. All unrelated column bytes/masks, complete extension metadata, model
+provenance and repeat-call byte identity passed; baseline/models unchanged.
+Continue the existing notebook 09 QC plots on separate staged before/after copies
+with default r_SDSS/Gaia comparison settings. No new query/refit or scientific
+acceptance. #48 Kriging application grid failure remains open. See
+[writer acceptance](illumination-null-mask-correction.md). Earlier plans below
+are historical; PRs #43/#45/#47/#50 remain unmerged.
+Nonblocking QC missing-column guard finding #51 is recorded for later; check
+both requested columns in the pilot preflight and retain valid-input behavior.
+
+## Current illumination null-mask correction, 24 October 2026
+
+Before applying models, correct #49: both catalogue correction writers rebuild
+the FITS table and discard TNULL, exposing unmatched Gaia placeholders as IDs.
+Update only magnitude field arrays; preserve integer masks, all unrelated data
+and column metadata, existing numerical corrections and repeat/provenance
+guards. Test actual writer bodies with real FITS, then installed/observational
+copies on chapman3. Do not change the separate Kriging grid failure #48. The
+verified baseline and all models remain immutable; no observational correction
+has launched.
+
 ## Notebook 09 baseline acceptance, 24 October 2026
 
 Installed correction and actual catalogue checks passed; #46 is closed. The two
