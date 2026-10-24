@@ -414,7 +414,9 @@ class SExtractor(object):
                 versionline = p.communicate()[0]
  
                 #print(versionline)
-                if (versionline.find(b"Source Extractor") != -1):
+                # Released binaries use either spelling in their banner.
+                if any(name in versionline for name in
+                       (b"Source Extractor", b"SExtractor")):
                     selected=candidate
                     break
             except (IOError, OSError):
@@ -429,7 +431,7 @@ class SExtractor(object):
         _program = selected
 
         # print versionline
-        _version_match = re.search(b"[Vv]ersion ([0-9\.])+", versionline)
+        _version_match = re.search(b"[Vv]ersion ([0-9.])+", versionline)
         if not _version_match:
             raise SExtractorException("Cannot determine SExtractor version.")
 
