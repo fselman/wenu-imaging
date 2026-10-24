@@ -7,8 +7,8 @@ comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
 
-Current task, 23 October 2026: correct science metadata at the Pycavi
-detector/coadd boundaries (#25) during the functional notebook walkthrough.
+Current task, 23 October 2026: notebook 07 functional walkthrough; correct
+the saturation-unit handoff (#33). Detector/coadd metadata #25 is verified.
 Make the existing workflow work on chapman3 through zpcal, then retest on Mac.
 Native mefpp causes (#23/#24) remain deferred; no new functionality or upgrades.
 

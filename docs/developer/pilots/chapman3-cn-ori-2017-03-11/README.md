@@ -305,3 +305,22 @@ filename says nobacksub despite enabled subtraction (#31 remains open).
 Preserve all diagnostic/coadd products and their separate weight maps.
 No photometric calibration, independent science accuracy or Mac acceptance is
 claimed. Next is notebook 07 preflight; do not repeat earlier processing.
+
+
+## Notebook 07 first r_SDSS calibration, 23 October 2026
+
+The installed ZPCalibration constructor completed in
+`notebook07-r_SDSS-tft0e40n`, with the notebook's Gaia DR3/GSPC parameters.
+After a disconnected terminal, runner-returned.json and the final log confirmed
+completion and no remaining calibration process. The verification did not rerun
+calibration: finite pixels, recorded scale (relative discrepancy <8e-8), sampled
+unchanged WCS/timing, 981 catalogue rows/584 usable calibrators and unchanged
+source/parent inputs passed. The five exposures total 400 s; legacy calibrated
+EXPTIME is 80 s, TEXPTIME 400 s, NCOMBINE 5. This is not independent photometric
+accuracy or Phase 3 acceptance. Preserve all results and query files.
+
+A saturation unit mismatch was found despite the successful pixel checks:
+SATLEVEL was restored in original e-/s after conversion to physical units.
+Issue #33 tracks the focused correction and native SATURATE conversion; see
+[the correction notes](../../zpcal-saturation-correction.md). The original
+calibration must be reused through a fresh header-only repair, not rerun.
