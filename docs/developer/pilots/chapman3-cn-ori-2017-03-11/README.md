@@ -501,3 +501,25 @@ fit-check-arrays.npz remain immutable. Separate source issues remain open:
 nonlinearity cell references undefined prior-kernel state. The diagnostic wrapper
 processes each filter using library functions; it is not proof that those notebook
 orchestration defects are fixed. No experimental nonlinearity correction ran.
+
+
+## Display acceptance and pending Kriging, 24 October 2026
+
+The direct display correction passed source/installed tests and regenerated
+plot/grid checks from saved models in `notebook08a-direct-ppzkqpm0`, without
+refitting or changing science images/catalogues. Source models and arrays are
+unchanged. #39 is closed with evidence; [correction notes](../../chebyshev-display-correction.md)
+record exact hashes and roundoff agreement. #37/#38 remain open.
+
+08b preflight only: installed Kriging module SHA256
+`e9142ec2ed809e0a6b6d8d23f2103d4a53aba11d68d8a7c236b6be6e3629e192`,
+byte-identical to checkout source. PyKrige 1.7.3, lmfit 1.3.4, NumPy 1.26.4,
+SciPy 1.17.1 and Astropy 6.1.7 imports passed. Its existing 1--20 mag, +/-1
+residual selection (clipping mask explicitly cleared) yields 583 r_SDSS and
+580 NB_659 positions, all unique; no random subsampling at limit 2000.
+Parameters: Gaussian, maxlag 10000, nlags 200, init_kriging=False,
+use_empirical_variogram=True, determine_empirical_variogram=True, fit_type=lmfit,
+fixed_nugget=None, use_kfold=False, diagnostic offset 4 pixels, 50x50 grid.
+These settings are recorded, not scientifically endorsed; the offset diagnostic
+is not independent validation. No variogram, Kriging interpolation or correction
+has run. Fernando requested merge/cleanup first, then continuation at 08b.

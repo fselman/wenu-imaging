@@ -1,6 +1,6 @@
 # wenu-imaging roadmap
 
-## Current notebook 08a display correction, 24 October 2026
+## Notebook 08a accepted; merge/cleanup before 08b, 24 October 2026
 
 Both filters passed notebook 07b functional QC and the installed 08a fit/export
 checks in isolated wrappers. The saved degree-(5,5) polynomial agrees with
@@ -11,10 +11,22 @@ to evaluate that same Chebyshev model directly on its grid, preserving fit,
 selection, weights, degree and science data. Use a direct-labelled output name
 and retain historical RBF products. Verify non-square/asymmetric grid orientation
 and all orders, then regenerate fresh plots from saved models without refitting.
-Keep #39 open until chapman3 verification. No extrapolation policy, new model,
+Chapman3 verification passed and #39 is closed. No extrapolation policy, new model,
 nonlinearity correction or independent-accuracy claim is included. Notebook
 last-filter orchestration #37 and experimental undefined-state #38 remain open.
 The earlier notebook 07b resume note below is historical.
+
+Fernando requested merge and cleanup of this completed work before notebook 08b.
+The [display correction notes](chebyshev-display-correction.md) record source,
+installed-wheel and fresh saved-model plot checks, with no refitting. Kriging
+preflight passed against installed PyKrige 1.7.3/lmfit 1.3.4: 583 r_SDSS and 580
+NB_659 unique positions, so the existing 2000-point limit needs no random subset.
+The retained notebook parameters are Gaussian, maxlag 10000 pixels, 200 lags,
+lmfit with unfixed nugget and empirical variogram, 50x50 display grid. The 1--20
+mag and +/-1 residual selection explicitly clears the sigma-clipping mask.
+The existing four-pixel-offset residual diagnostic is not cross-validation.
+No variogram or Kriging fit has been launched. Proceed only after merge/cleanup;
+no model selection, fitting-policy changes or dependency upgrades are included.
 
 ## Resume at notebook 07b QC
 

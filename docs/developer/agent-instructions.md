@@ -1,5 +1,17 @@
 # wenu-imaging agent instructions
 
+## Current handoff, 24 October 2026
+
+Fernando requested merging and cleaning the completed Chebyshev display work
+before launching Kriging. #39 is closed after target plot/grid verification
+without refitting. Notebook 08b imports/source identity and input selection
+passed preflight: 583 r_SDSS and 580 NB_659 unique positions, no subsampling.
+No variogram, Kriging fit or correction has run. Keep existing notebook settings
+explicit, including its cleared clipping mask and four-pixel-offset diagnostic;
+that diagnostic is not independent validation. Preserve all prior products and
+leave #37/#38 and scientific accuracy/saturation investigations open.
+The earlier dated handoffs below are historical.
+
 ## Current handoff, 23 October 2026
 
 Both filters passed notebook 07 functional calibration checks on chapman3.

@@ -6,12 +6,13 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: notebook 07b passed both filters; the 08a
-fit/export checks passed in isolated wrappers. Correct the 08a display-only
-mismatch (#39): plot direct Chebyshev evaluation, preserving fits and saved
-products. Verify fresh plots from existing models without refitting; keep #39
-open pending chapman3 verification. Notebook orchestration #37 and experimental
-state #38 remain separate and unresolved. No new science model or upgrades.
+Current task, 24 October 2026: #39 display correction passed source/installed
+checks and fresh direct-plot verification on chapman3; ticket closed. Fernando
+requested merge and cleanup before proceeding to notebook 08b Kriging. Its
+read-only preflight passed (583 r_SDSS / 580 NB_659 unique selected positions),
+but no Kriging model or variogram has been fitted. Preserve completed products.
+Notebook orchestration #37 and experimental state #38 remain open; no new
+science model, parameter policy or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where
