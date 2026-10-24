@@ -1,5 +1,21 @@
 # wenu-imaging roadmap
 
+## Current notebook 08a display correction, 24 October 2026
+
+Both filters passed notebook 07b functional QC and the installed 08a fit/export
+checks in isolated wrappers. The saved degree-(5,5) polynomial agrees with
+readback to roundoff. The notebook instead displays a second cubic RBF surface;
+[#39](https://github.com/fselman/wenu-imaging/issues/39) records discrepancies in
+positive-weight samples as well as uncovered corners. Correct only the display
+to evaluate that same Chebyshev model directly on its grid, preserving fit,
+selection, weights, degree and science data. Use a direct-labelled output name
+and retain historical RBF products. Verify non-square/asymmetric grid orientation
+and all orders, then regenerate fresh plots from saved models without refitting.
+Keep #39 open until chapman3 verification. No extrapolation policy, new model,
+nonlinearity correction or independent-accuracy claim is included. Notebook
+last-filter orchestration #37 and experimental undefined-state #38 remain open.
+The earlier notebook 07b resume note below is historical.
+
 ## Resume at notebook 07b QC
 
 On 23 October 2026 Fernando authorized merging completed branches and cleanup,
