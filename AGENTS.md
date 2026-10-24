@@ -6,11 +6,12 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Latest direction, 23 October 2026: continue the existing OmegaCAM functional
-notebook walkthrough at notebook 04 through zpcal before deciding further checks.
-Defer lunar/site-data testing to zpcal. This supersedes the earlier dependency
-gate stopping rule for this walkthrough only; no general refactoring/audit or
-scientific-policy changes are authorized. See the latest developer instructions.
+Current task, 23 October 2026: notebook 07 passed functional checks in both
+filters on chapman3; #25 and #33 are corrected and verified. Fernando authorized
+merging completed branches and cleanup, then pausing until notebook 07b QC.
+Resume there without repeating calibration or earlier reductions. Saturation
+science investigations #35/#36 and native mefpp #23/#24 remain open; no new
+functionality, scientific-policy changes or upgrades. Retest on Mac afterward.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

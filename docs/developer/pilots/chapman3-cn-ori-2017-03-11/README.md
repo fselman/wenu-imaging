@@ -363,8 +363,104 @@ library-audit issue rather than claiming its failure handling is validated.
 
 Notebook 06 preflight found five inputs per filter, e-/s units, and FLXSCALE=0
 in all 320 SCAMP blocks. SCAMP photometric solving is disabled by design;
-SWarp 2.38.0 source replaces zero flux scale with unity and warns. The native
-coadd is still pending: do not claim the actual fallback/photometric behavior
-has been tested here. Preserve the existing Pycavi zpcal method and defer the
+SWarp 2.38.0 source replaces zero flux scale with unity and warns. At this preflight the native
+coadd was pending; the notebook 06 completion record below supersedes that status. Preserve the existing Pycavi zpcal method and defer the
 [new provisional photometry plan](../../provisional-photometry-plan-2026-10-23.md)
 to future work.
+
+## Notebook 06 functional completion, 23 October 2026
+
+Fernando reported passing coadd checks for r_SDSS and NB_659 using the installed
+Pycavi metadata correction (`03a59c55a9be13952c93bf77d2e889f6cca01385`, PR #32).
+Both existing notebook passes (BACK_SIZE 128 and 2048) ran sequentially at
+niceness 10 with one native thread, MEDIAN and SUBTRACT_BACK=Y. Each used five
+corrected 32-detector MEFs with exact pixel/WCS and original-input preservation.
+All four coadds passed finite/nonempty science data, nonnegative weights,
+sampled celestial WCS, input hashes and timing. r_SDSS records 400 s and NB_659
+2400 s in both EXPTIME and TEXPTIME, with NCOMBINE=5 and BUNIT=e-/s.
+
+Records under the pilot project:
+
+- `notebook06-r_SDSS-metadata-_bzh232q` (first pass).
+- `notebook06-NB_659-metadata-rbp1f48a` (first pass).
+- `notebook06-B2048-zslaummd` (second pass, per-filter records and completed.json).
+
+The [metadata correction notes](../../science-metadata-correction.md) record
+installation, timing and first-pass hashes. Issue #25 is closed with correction
+and verification comments; native #23/#24 remain open. The historical second
+filename says nobacksub despite enabled subtraction (#31 remains open).
+Preserve all diagnostic/coadd products and their separate weight maps.
+No photometric calibration, independent science accuracy or Mac acceptance is
+claimed. Next is notebook 07 preflight; do not repeat earlier processing.
+
+
+## Notebook 07 first r_SDSS calibration, 23 October 2026
+
+The installed ZPCalibration constructor completed in
+`notebook07-r_SDSS-tft0e40n`, with the notebook's Gaia DR3/GSPC parameters.
+After a disconnected terminal, runner-returned.json and the final log confirmed
+completion and no remaining calibration process. The verification did not rerun
+calibration: finite pixels, recorded scale (relative discrepancy <8e-8), sampled
+unchanged WCS/timing, 981 catalogue rows/584 usable calibrators and unchanged
+source/parent inputs passed. The five exposures total 400 s; legacy calibrated
+EXPTIME is 80 s, TEXPTIME 400 s, NCOMBINE 5. This is not independent photometric
+accuracy or Phase 3 acceptance. Preserve all results and query files.
+
+A saturation unit mismatch was found despite the successful pixel checks:
+SATLEVEL was restored in original e-/s after conversion to physical units.
+Issue #33 tracks the focused correction and native SATURATE conversion; see
+[the correction notes](../../zpcal-saturation-correction.md). The original
+calibration must be reused through a fresh header-only repair, not rerun.
+
+
+## Notebook 07 acceptance and next-session handoff
+
+Both filters passed the existing installed ZPCalibration path, with the notebook
+parameters preserved: magnitude range 10.5--18.5, aperture 5 arcsec, sky annulus
+6--9 arcsec, Gaia query radius 0.7 and query magnitude parameters 8--20. These
+are functional checks, not independent photometric accuracy or saturation science.
+
+r_SDSS original completed calibration/query records remain in
+`notebook07-r_SDSS-tft0e40n`. The unit-only repair is a fresh copy in
+`notebook07-r_SDSS-saturation-gnwwuqtu/CN_Ori_r_SDSS.coadd.fits`, with
+`output-check.json` alongside it. All pixel bytes and unrelated header cards,
+including WCS/timing, are unchanged; FITS checksums passed and originals remain
+unchanged. DN2FLAM is 2.10315823839273e-19; corrected SATLEVEL is
+3.7003687528143e-16 and SATURATE is 3.6496271310164e-16 in erg/s/cm**2/A.
+MAGSATL=17.206 is the existing pixel diagnostic, not a validated point-source
+limit (#35/#36). There were 981 catalogue rows and 584 usable calibrators.
+Corrected image SHA256:
+`347378a8115b168d58ee743b7acc70e47ed915b097b9b6428f8218d326fff4e2`.
+No calibration/query was repeated for this repair; #33 is closed with evidence.
+
+NB_659 ran in `notebook07-NB_659-nz_u9xnu` as a detached batch at niceness 10
+with thread limits 1. Its `status.json` records exit zero; `output-check.json`
+verifies finite pixels and recorded scaling, exact WCS keyword values and sampled
+sky coordinates, preserved timing and input hashes, and consistent saturation
+units. Output: `Calibration_dir/CN_Ori_NB_659.coadd.fits`, shape 19729 x 18417.
+DN2FLAM=2.60156342977624e-18, maximum relative scaling error
+7.492641331862997e-08; 981 clean catalogue rows, 582 usable calibrators.
+EXPTIME=480 s, TEXPTIME=2400 s, NCOMBINE=5 retain the existing calibration
+convention; do not silently substitute total integration for equivalent exposure.
+SATLEVEL=7.62879990694798e-16, SATURATE=7.5942006980366e-16; MAGSATL=16.318
+has the same unresolved physical interpretation. Image SHA256:
+`2ccf319453ff8b18c4cfc9444d8ff40e824b3946241097a88989c3ba0a92d407`.
+Clean catalogue SHA256:
+`5d466e200ff6e9eaa00b7e206b919b56f1f34c23f3144f869d1447c734b20277`.
+
+The initial NB verifier required identical WCS card text and stopped on numeric
+formatting only. The corrected value/sky-coordinate comparisons passed without
+image edits or a calibration rerun. DATE-END datfix warnings arose during
+read-only WCS parsing from unchanged MJD-END. HIERARCH warnings describe long
+ESO keyword serialization, not a failed calibration.
+
+The corrected writer was installed from b3ef4b4b6a0a7017b4446f0cfd24c65662e94dc6.
+Chapman3 records `~/wenu-zpcal-saturation-euz_d7e9` show seven saturation and ten
+metadata tests passing against source and installed wheel, ten packaging tests,
+pip check and exact installed-source identity. Wheel SHA256:
+`3e5d78d5095020c5caeca162b9cb742d278c276cfed5cf9a2018825f324e2e34`.
+
+Fernando requested merge/cleanup and a pause until notebook 07b QC. Reuse these
+outputs and saved queries. Preserve all earlier products, logs and separate
+weight maps. Independent photometric/astrometric accuracy, physical saturation,
+Phase 3 acceptance and Mac retesting remain pending.

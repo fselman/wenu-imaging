@@ -85,6 +85,54 @@ thread-limit variables to one. It never changes its caller's priority. Runtime
 host, OS and Python are printed before jobs. Supported targets are macOS and
 Linux; other operating systems are not qualified. Do not use Python `-O`.
 
+### Explicit Gaia DR3/GSPC check
+
+`check_dependencies.py gaia-dr3 --allow-network --output NEW_DIRECTORY` runs
+one small anonymous asynchronous query through the installed Astroquery Gaia
+client. Select the intended Python interpreter and the normal host/prefix guards.
+No native executable option is needed. Without `--allow-network`, the check stops
+before imports or writes; `--dry-run` does not import Astroquery or access Gaia.
+This flag explicitly selects an online dependency test, not another approval
+prompt. Offline checks never call the Gaia worker.
+
+The query uses `SELECT TOP 5`, a five-arcminute cone near CN Ori, and the existing
+`gaiadr3.gaia_source` / `gaiadr3.synthetic_photometry_gspc` join. It requests the
+DR3 and SDSS synthetic-photometry columns used in `get_gaia_dr3_gspc_df`, with
+explicit source-ID aliases. Require 1–5 rows, matching positive integer source
+IDs, unique IDs, finite angular coordinates inside the cone, and at least one
+row with finite r/i magnitudes, positive fluxes and nonnegative flux errors.
+Missing ancillary quantities (e.g. radial velocity or u-band values) are counted,
+not silently replaced or rejected. Units are recorded; only coordinate units are
+checked for angular compatibility. This does not establish photometric units,
+quality cuts, transformations, calibration accuracy or every filter's support.
+
+The internal `_gaia_dr3_probe.py` worker runs with the selected interpreter in
+its own process at inherited niceness >=10. Its stdout/stderr and 120-second
+parent timeout are recorded. Connections use a 30-second default socket timeout.
+There are no tool-level query retries. The client may fetch archive notices on
+import and polls the asynchronous job; these are not additional science queries.
+On timeout an anonymous archive job may remain: keep any recorded job ID and
+diagnostics rather than automatically resubmitting.
+
+Evidence includes `query.adql`, `job.json`, unchanged native `response.vot`,
+`details.json`, hashes, returned column names/units, null counts and source IDs
+(decimal strings, preserving integer precision). Validation normalizes column
+case only in a copy. The worker and parent hashes are recorded in `report.json`.
+There is no login, full-field download, production CSV reuse, catalogue change,
+fitting, or modification of the client's global table/row-limit settings.
+The cone and r/i row check are diagnostic choices, not production defaults.
+
+The asynchronous API follows the installed-version
+[Astroquery 0.4.11 Gaia documentation](https://astroquery.readthedocs.io/en/stable/api/astroquery.gaia.GaiaClass.html)
+and [job implementation](https://github.com/astropy/astroquery/blob/v0.4.11/astroquery/utils/tap/model/job.py).
+Tests use simulated archive responses and verify query bounds, exact source IDs,
+schema/coordinate/error rejection and saved evidence. Fernando's chapman3 run
+passed with five joined sources and five usable r/i rows; three sources lacked
+u-band photometry and four lacked radial velocities. The raw response is
+preserved. See the dated dependency inventory for identities and limits.
+Mac and Ubuntu execution remain pending. This result does not qualify the
+production query's downstream table conversion, quality cuts or calibration.
+
 The output contains synthetic inputs, generated engine configs, native stdout/
 stderr and `report.json`: executable paths/hashes, tool hash, Python distribution
 versions, host, priority, command arguments/statuses and per-check measurements.

@@ -8,13 +8,17 @@ record; this table records the initial disposition, not a second tracker.
 | --- | --- | --- |
 | [#23](https://github.com/fselman/wenu-imaging/issues/23) | Native science detector headers inherit calibration timestamps | Open; native implementation deferred |
 | [#24](https://github.com/fselman/wenu-imaging/issues/24) | Native MJD-END loses precision | Open; native implementation deferred |
-| [#25](https://github.com/fselman/wenu-imaging/issues/25) | Pycavi science metadata lost at detector/coadd boundaries | Open; bounded correction approved, not yet implemented/qualified |
+| [#25](https://github.com/fselman/wenu-imaging/issues/25) | Pycavi science metadata lost at detector/coadd boundaries | Corrected and verified on chapman3; closed with evidence (#32) |
 | [#26](https://github.com/fselman/wenu-imaging/issues/26) | Released SExtractor banner rejected | Corrected and verified on chapman3; closed with comment |
 | [#27](https://github.com/fselman/wenu-imaging/issues/27) | Explicit SExtractor NTHREADS raises KeyError | Corrected and verified on chapman3; closed with comment |
 | [#28](https://github.com/fselman/wenu-imaging/issues/28) | Missing PLplot plotting resources | Local environmental remedy verified on chapman3; closed with comment |
 | [#29](https://github.com/fselman/wenu-imaging/issues/29) | Logging retains a closed redirected stream | Open; ownership/lifetime correction pending |
 | [#30](https://github.com/fselman/wenu-imaging/issues/30) | SCAMP abort not propagated by Python wrapper | Open; related shared-command failures already recorded in #10/#12 |
 | [#31](https://github.com/fselman/wenu-imaging/issues/31) | Second notebook 06 output says nobacksub although subtraction is enabled | Open; intended naming/background policy needs resolution |
+
+| [#33](https://github.com/fselman/wenu-imaging/issues/33) | Zpcal saturation values retain pre-calibration units | Corrected writer and fresh header-only repair verified on chapman3; closed |
+| [#35](https://github.com/fselman/wenu-imaging/issues/35) | Pixel saturation magnitude is not an integrated point-source limit | Open; investigate PSF/peak fraction and validate against stars |
+| [#36](https://github.com/fselman/wenu-imaging/issues/36) | Linearity/flat limits and actual saturation need separate handling | Open; audit raw ADC/full-well boundaries, flags, transforms and future correction |
 
 The two SExtractor corrections are on PR #22, commit
 `1927166644606567b374a23ff5437b248b9b7029`, installed and verified on chapman3.

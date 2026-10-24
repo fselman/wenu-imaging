@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+## Current handoff, 23 October 2026
+
+Both filters passed notebook 07 functional calibration checks on chapman3.
+Fernando authorized merge/cleanup of completed branches, then a pause until
+notebook 07b QC. Reuse the verified calibrated products and recorded queries;
+do not rerun calibration. The r_SDSS saturation repair and installed writer
+passed target verification (#33 closed). Keep #35/#36 scientific saturation
+investigations, native #23/#24, independent accuracy and Mac qualification open.
+The earlier walkthrough directions below record the agreed scope/history.
+
 ## Latest notebook walkthrough direction, 23 October 2026
 
 Fernando declined the proposed standalone lunar/site-data check and explicitly
@@ -12,6 +22,17 @@ general refactoring, replacement implementations or the systematic library/mefpp
 audits. Preserve existing code/data/settings and use the established machine,
 output-isolation and priority guards. Record actual results and resolve unexpected
 failures before dependent stages. See the roadmap for the current boundary.
+
+## Current approved metadata correction, 23 October 2026
+
+Fernando approved the bounded Pycavi correction in #25: authoritative science
+metadata at detector extraction/assembly, precise exposure endpoints, and
+all-input coadd timing with total integration separate from native equivalent
+exposure/gain. Preserve pixels, reuse solved WCS in fresh copies, and leave
+native mefpp implementation (#23/#24) deferred. Continue the existing functional
+notebook sequence through zpcal on chapman3, then retest on Mac. This supersedes
+the older dependency-gate stop for this walkthrough; it does not authorize new
+photometry functionality, broad refactoring or upgrades.
 
 ## Controlling dependency gate, 23 October 2026
 

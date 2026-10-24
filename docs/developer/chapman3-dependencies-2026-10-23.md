@@ -8,6 +8,11 @@ or a functional pilot is not full workflow or scientific validation. Capture a
 fresh machine-readable environment inventory before declaring the gate complete.
 No workflow implementation changes are included in this documentation update.
 
+The [OmegaCAM notebook requirements map](omegacam-dependency-map-2026-10-23.md)
+connects the inspected `9ee7ff9` source to this evidence, including import-time
+dependencies and remaining service/resource capabilities. It is inspection,
+not an executed workflow or a claim that every installed package is sufficient.
+
 Fresh capture reported on 23 October: `~/wenu-dependencies-mi_avvgc` contains
 `python-inventory.json` (140 distributions), `pip-freeze.txt`, `pip-check.txt`,
 `conda-explicit.txt`, `conda-history.txt`, `kernels.json`, saved engine configuration,
@@ -17,8 +22,9 @@ selected versions and Conda build summary below. Full 140-distribution inventory
 and explicit URLs remain in the capture on chapman3, not copied into this repo.
 
 The latest reported checkout is `~/Software/wenu-imaging`, origin
-`https://github.com/fselman/wenu-imaging.git`, branch `fix/installed-packaging`,
-clean at `470d57b23ce5ca3ca7e16c4520020ab5db3f20d6`. The installed scientific
+`https://github.com/fselman/wenu-imaging.git`, branch `main`,
+clean at `9ee7ff998a3d98e8dc6fbecf16e1e07ac55b8c30` after PR #18 cleanup.
+The original environment capture was made before that merge. The installed scientific
 library came from the earlier `dfcb3e715d8bbee5174e3a9cb5ad782a2cedc0ae`
 wheel; later changes supplied tools/documentation. Version `pycavi==0.1.0` alone
 does not distinguish these wheels. Refresh actual checkout and installed-library
@@ -259,6 +265,55 @@ No global PYTHONPATH or system interpreter replacement is required.
   calibration quality and Phase 3 compliance are not established by these tests.
 
 ## Remaining dependency acceptance gate
+
+### Authorized Gaia DR3/GSPC probe
+
+After clarification that Gaia DR3/GSPC already exists in notebook 07's selected
+library path, Fernando explicitly authorized proceeding with its dependency
+check. `Pycavi2/tools/check_dependencies.py gaia-dr3 --allow-network` now offers
+a separate five-row, five-arcminute cone query through installed Astroquery,
+preserving query, native VOTable, schema, nulls, units and job provenance. This
+does not change the scientific query, its selected catalogue or the installation.
+The direct column contract comes from the existing SDSS-band branch, including
+NB_659's use of r/i; Johnson-Cousins and the downstream calibration are not
+qualified by this check. Unit tests simulate the service; actual target evidence
+is recorded below.
+
+Acceptance requires a completed job with 1–5 joined sources, valid matching
+integer IDs, nearby coordinates and at least one usable r/i row. Missing ancillary
+values are reported. Failure is preserved for diagnosis; no automatic service
+fallback, package upgrade or production-query rewrite is authorized.
+
+Fernando reported a passing live run on chapman3 at commit
+`9724dd9358d48f9658d60d898e20fd9666be985f`, Python 3.11.14, batch niceness 10,
+worker exit zero. Records: `~/wenu-gaia-dependency.F4w6ZZ/results`.
+The anonymous job completed with five joined sources, all five usable in r/i;
+maximum angular separation was 4.366722257651971 arcmin within the five-arcminute
+cone. All 39 requested columns were present, IDs matched and were preserved
+without float conversion. Returned `SOURCE_ID` capitalization was handled in a
+diagnostic copy; the native response remained unchanged.
+
+| Evidence | Recorded identity |
+|---|---|
+| Tool SHA256 | `9167a052c4038a2620746f542bd1b24a40f11e493860f185e5109fdeca13b887` |
+| Worker SHA256 | `b1a6aee9f9a13f54a42d1d07a8c2486f4f844b10751a6da85809ffc6a137b813` |
+| Query SHA256 | `10441d9fdf1d65574eef55d023184be90611f9dec13b925b2f5e3d691b1a0131` |
+| Native response SHA256 | `da629e3cc52a77af39e875278cf6e3806871638717eb17dd51c559f42f625187` |
+| Archive job ID | `c022f9de-cf04-11f1-9d98-bc97e148b76b-O` |
+| Endpoint | `https://gea.esac.esa.int/tap-server/tap` |
+
+The response had three missing u-band magnitude/flux/error rows and four missing
+radial-velocity/error rows. All other requested columns had zero reported null
+or nonfinite entries. This is not evidence of complete u-band coverage. Coordinates
+were in degrees; SDSS synthetic fluxes/errors were reported as W/(nm m²), unlike
+the Gaia G/BP/RP fluxes/errors in electron/s. Magnitudes were reported in mag.
+Units were retained, not converted by this check. No scientific comparison or
+calibration validity follows from retrieval alone.
+
+This completes the bounded client/schema-retrieval requirement on chapman3 for
+the probed SDSS branch. Production table transformation, selection/filter policy,
+photometric fitting, Johnson-Cousins, full fields and Mac/Ubuntu remain unqualified.
+The complete dependency gate and systematic workflow audit remain open.
 
 ### Live-reference connectivity, 23 October
 
