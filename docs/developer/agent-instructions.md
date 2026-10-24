@@ -1,5 +1,16 @@
 # wenu-imaging agent instructions
 
+## Current illumination writer correction, 24 October 2026
+
+#49 is confirmed: rebuilding the FITS table in either correction function loses
+TNULL and unmasks integer placeholders. Correct only the writer to update
+magnitude fields in place, preserving existing dtype, numerical correction,
+provenance/repeat guards and all unrelated data/metadata. Verify source/installed
+real-FITS regressions, then fresh chapman3 correction output. Keep #49 open until
+target acceptance. Do not change the independent Kriging grid failure #48 or
+select a new model/scientific policy. Baseline #46 is accepted and immutable;
+no observational correction has launched. Earlier handoffs are historical.
+
 ## Current notebook 09 baseline handoff, 24 October 2026
 
 Baseline construction passed on chapman3 in notebook09-catalogue-95xc1kyz:

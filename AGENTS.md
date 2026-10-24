@@ -6,13 +6,13 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: notebook 09 baseline construction passed on
-chapman3 (16459 paired rows, 3718 distinct exact Gaia IDs); #46 is closed after
-installed/actual-output checks. Preserve the baseline and all inputs. Continue
-functional illumination application only on fresh copies, with explicit saved
-models and existing settings; no scientific model acceptance is implied.
-Separate Kriging application coordinate defect #48 remains open. PRs #43/#45/#47
-are unmerged; no calibration/refitting, new policy or dependency upgrades.
+Current task, 24 October 2026: correct illumination-writer null metadata loss
+(#49) before applying a saved model. Modify only magnitude fields; preserve
+integer IDs/masks and FITS column metadata, existing corrections and guards.
+Baseline notebook 09 passed (#46 closed); preserve all inputs and models.
+Separate Kriging grid failure #48 remains open. No observational correction has
+launched; retain the approved functional scope without new scientific policy,
+refitting, merging or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

@@ -1,5 +1,16 @@
 # wenu-imaging roadmap
 
+## Current illumination null-mask correction, 24 October 2026
+
+Before applying models, correct #49: both catalogue correction writers rebuild
+the FITS table and discard TNULL, exposing unmatched Gaia placeholders as IDs.
+Update only magnitude field arrays; preserve integer masks, all unrelated data
+and column metadata, existing numerical corrections and repeat/provenance
+guards. Test actual writer bodies with real FITS, then installed/observational
+copies on chapman3. Do not change the separate Kriging grid failure #48. The
+verified baseline and all models remain immutable; no observational correction
+has launched.
+
 ## Notebook 09 baseline acceptance, 24 October 2026
 
 Installed correction and actual catalogue checks passed; #46 is closed. The two
