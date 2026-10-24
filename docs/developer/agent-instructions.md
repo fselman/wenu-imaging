@@ -1,5 +1,14 @@
 # wenu-imaging agent instructions
 
+## Current notebook 09 type correction, 24 October 2026
+
+#46 is a confirmed crossmatch precision loss: shorter-table integer columns are
+coerced to float64. Correct only integer dtype/missing representation and wire
+09 to the existing exact-ID CSV reader. Preserve matching/scientific settings,
+images and recovered caches. Verify installed tests and fresh observational
+catalogue IDs before closing #46. #44 recovery is accepted. Earlier handoffs
+below are historical; no notebook 09 extraction/matching has launched.
+
 ## Current catalogue handoff, 24 October 2026
 
 #44 correction and bounded identity recovery passed chapman3 acceptance: four

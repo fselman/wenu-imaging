@@ -1,5 +1,14 @@
 # wenu-imaging roadmap
 
+## Current notebook 09 integer-preservation fix, 24 October 2026
+
+#44 recovery passed. Before catalogue construction, fix #46: crossmatch_catalogues
+casts every shorter-table column to float64, rounding large IDs. Preserve integer
+dtypes with masks for unmatched rows; retain float NaNs, current row anchoring,
+nearest-neighbour selection, radius and all scientific settings. Notebook 09 must
+use the exact-ID cache reader. Test actual function/notebook, then installed
+Chapman3 and fresh observational output. No extraction or matching launched yet.
+
 ## Gaia identity acceptance; resume notebook 09, 24 October 2026
 
 #44 is corrected and target-qualified. Installed source/ID regressions (8+8),

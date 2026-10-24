@@ -6,12 +6,11 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: resume notebook 09 after verified Gaia ID
-recovery (#44). Both filters' raw/clean CSVs preserve every non-ID field and
-exact int64 IDs through CSV/Table/FITS; originals and science products remain
-unchanged. Use fresh recovered catalogues, no recalibration/refitting. #41/#42
-reader/08c corrections passed target checks. PRs #43/#45 remain unmerged.
-No new scientific model, parameter policy or dependency upgrades.
+Current task, 24 October 2026: fix notebook 09 crossmatch integer coercion
+(#46) before catalogue construction. Preserve exact IDs with integer masks for
+unmatched rows; retain float NaNs, current nearest matching, radius and scientific
+settings. Use exact-ID cache reads. #44 recovery passed; originals unchanged.
+PRs #43/#45 are unmerged. No new model, calibration or dependency upgrades.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where
