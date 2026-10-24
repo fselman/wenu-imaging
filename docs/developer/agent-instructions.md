@@ -1,5 +1,20 @@
 # wenu-imaging agent instructions
 
+## Current functional walkthrough handoff, 24 October 2026
+
+The selected isolated OmegaCAM functional paths through notebook 09 passed:
+baseline, Chebyshev and cubic Kriging applications, and twelve existing QC PNGs
+across baseline/two corrected catalogues. Kriging QC records are in
+notebook09-kriging-qc-saittxaz; all original/staged catalogue hashes remain
+unchanged. #48 is closed after correction/installed/actual-copy evidence.
+No independent scientific/model acceptance, complete notebook orchestration,
+SkyMapper query, Mac qualification or Phase 3 compliance is claimed. #37/#38,
+#51 and broader scientific/native/export gaps remain open. Preserve all inputs,
+models, baseline and corrected outputs. PRs #43/#45/#47/#50/#52 are unmerged;
+merging/cleanup needs the corresponding user instruction. Earlier handoffs below
+are historical. Do not start a new implementation/refactor/query merely because
+these selected functional checks passed.
+
 ## Current Kriging application coordinate correction, 24 October 2026
 
 The existing before/after catalogue QC call generated and decoded all eight PNGs

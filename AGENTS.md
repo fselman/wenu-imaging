@@ -6,12 +6,13 @@ scope and acceptance criteria; link the fix and verification in a correction
 comment before closing it. Keep unresolved native causes and pending target
 qualification open. See the canonical developer instructions.
 
-Current task, 24 October 2026: correct #48 Kriging catalogue application axes
-using physical stored sample coordinates and (y,x) orientation. Preserve cubic
-interpolation/default solver, bounds, sign, models, null-safe writer and repeat
-provenance; no linear-method substitution or refit. Chebyshev application and
-eight QC PNGs passed with unchanged inputs. #51 stays deferred. PRs #43/#45/
-#47/#50 are unmerged; no new query, scientific policy or dependency upgrades.
+Current handoff, 24 October 2026: selected OmegaCAM functional paths through
+notebook 09 passed, including baseline construction, Chebyshev/cubic Kriging
+application and twelve QC PNGs across baseline/two corrections. #48 is closed;
+all inputs, saved models and prior products are preserved. Record/handoff only;
+no new query, refit, scientific acceptance, Mac retest or unrelated fixes.
+#51 and broader scientific/orchestration gaps remain open. PRs #43/#45/#47/
+#50/#52 are qualified but unmerged; merge/cleanup requires user instruction.
 
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where

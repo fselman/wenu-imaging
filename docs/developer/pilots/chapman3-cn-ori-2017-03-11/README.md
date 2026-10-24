@@ -608,3 +608,29 @@ accepts functional plot generation, not visual/scientific accuracy. No new
 query, extraction, refit or correction occurred. The separate #48 Kriging
 application coordinates are the next focused functional correction; #51's
 missing-column guard is deferred for these valid inputs.
+
+## Notebook 09 Kriging application accepted, 24 October 2026
+
+`notebook09-kriging-s0e1demx/output-check.json` verifies both unchanged 50x50
+models applied to a fresh baseline copy with physical coordinates and cubic
+interpolation/default solver. All selected magnitude changes match direct cubic
+predictions. All 16459 rows, 3718 exact IDs/12741 null masks, unrelated columns
+and full extension metadata survive. Model provenance and repeat no-op byte
+identity pass; baseline/Chebyshev/models are unchanged. Output SHA256:
+`6243227b5bd2c3a0284cf241e63143eaef7ad9f53f3d64ee0b6a056df90d03bf`.
+See [application acceptance](../../kriging-application-correction.md). #48 is
+closed; PR #52 is unmerged. Existing r_SDSS/Gaia QC plots on a fresh staged copy
+remain the next functional check. No new query, extraction, image correction,
+refit or independent scientific acceptance is claimed. #51 is deferred.
+
+## Notebook 09 Kriging QC passed; functional handoff
+
+`notebook09-kriging-qc-saittxaz/output-check.json` verifies four expected existing
+r_SDSS/Gaia QC PNGs, fully decoded, with source/staged catalogue hashes unchanged.
+The invocation uses the same 13..17 reference magnitude settings as the baseline
+and Chebyshev QC. Twelve plots across the three catalogues are now functionally
+checked. #48 is closed; all five review PRs (#43/#45/#47/#50/#52) remain unmerged.
+No new query, extraction, correction or refitting occurred during QC. Preserve
+all previous products. This is a selected-library-path walkthrough, not full
+notebook orchestration, scientific/model choice, SkyMapper/Mac or Phase 3
+acceptance. #51 and the documented broader questions remain open.
