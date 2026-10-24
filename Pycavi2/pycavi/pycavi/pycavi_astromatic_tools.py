@@ -4,6 +4,7 @@ from textwrap import wrap
 import logging
 
 from astropy.io import fits
+from pycavi.pycavi.pycavi_metadata import coadd_observation_metadata
 
 from pycavi.papi.papi_sextractor import SExtractor
 from pycavi.papi.papi_scamp import SCAMP
@@ -348,41 +349,38 @@ def run_swarp(swarp_dir_path, frame_list_name, special_pars=None, path=None):
             else:
                 logging.info("**** Wrong key passed to swarp: {}".format(key))
 
+    # Validate all science inputs before launching the native coadd. The list
+    # produced by prepare_to_swarp contains FITS paths, not .head paths.
+    with open(frame_list_name) as stream:
+        images = [line.strip() for line in stream if line.strip()]
+    coadd_observation_metadata(images)
     logging.info("Running Swarp on framelist")
     swarp.run('@'+ frame_list_name, updateconfig=True, clean=False, path=path)
-
-    # update the headers of the swarped image
-    # The reference header image is the first image
-    with open(frame_list_name, "r") as f:
-        lines_ = f.readlines()
-        first_image = lines_[0][:-1]
-
-    #observation = images_list[0].split("/")[-5]
-    #filter_ = images_list[0].split("/")[-4]
-    #swarp_observation = swarp_dir_path+'/'+observation
-    #swarp_filter = filter_
-    #logging.info("run_swarp: swarp_observation: {0}  swarp_filter: {1}".format(swarp_observation, swarp_filter))
-    swarp_coadded_image = special_pars["IMAGEOUT_NAME"]
-    header_reference_image = first_image[:-5]+'.fits'
-    logging.info("\nrun_swarp: updating headers of image: {0}\nwith headers from {1}".format(swarp_coadded_image, header_reference_image))
-    update_headers(swarp_coadded_image, header_reference_image)
+    update_headers(swarp.config["IMAGEOUT_NAME"], images[0], images)
+    weight = swarp.config["WEIGHTOUT_NAME"]
+    if os.path.isfile(weight):
+        update_headers(weight, images[0], images, weight_map=True)
 
 
-def update_headers(swarped_image, reference_image):
+def update_headers(swarped_image, reference_image, contributing_images=None, weight_map=False):
+    """Apply all-input observation metadata, preserving native EXPTIME/GAIN.
+
+    The two-argument interface remains valid for one contributing exposure.
+    Weight maps receive timing/provenance but never science pixel units.
     """
-    Read the headers of the reference image to transfer keywords OBJECT, RA and DEC
-    which were not copied during SWarp
-    """
-
-    logging.info("reference_image: {}".format(reference_image))
-    reference_header = fits.getheader(reference_image)
-    with fits.open(swarped_image, mode="update", output_verify="ignore") as hdul:
+    metadata = coadd_observation_metadata(
+        contributing_images if contributing_images is not None else [reference_image])
+    with fits.open(swarped_image, mode="update") as hdul:
         hdr = hdul[0].header
-        hdr["BUNIT"] = ("e-/s", "units of image pixels")
-        hdr["ORIGIN"] = reference_header["ORIGIN"]
-        hdr["OBJECT"] = reference_header["OBJECT"]
+        for key in metadata:
+            if key != "BUNIT" or not weight_map:
+                hdr[key] = (metadata[key], metadata.comments[key])
         hdr["RA"] = hdr["CRVAL1"]
         hdr["DEC"] = hdr["CRVAL2"]
+        # Existing native checksums would otherwise describe the old header.
+        for hdu in hdul:
+            if "CHECKSUM" in hdu.header or "DATASUM" in hdu.header:
+                hdu.add_checksum()
 
 
 def prepare_to_swarp(images_list, swarp_dir_path, frames_list_name, special_pars):

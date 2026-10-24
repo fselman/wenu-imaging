@@ -8,6 +8,7 @@ from textwrap import wrap
 from astropy.io import fits
 
 from pycavi.pycavi import pycavi_tools
+from pycavi.pycavi.pycavi_metadata import science_exposure_header, detector_science_header
 
 def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_astrometry: bool = False, solve_field_path: str = None):
     """
@@ -193,7 +194,9 @@ def run_solve_field(argv: str, instrument, cpu_count: int, solve_field_path=None
         except Exception as e:
             logging.info(e)
             logging.info("run_solve_field: solve-field directory {0} already exists".format(solve_field_dir_name))
-        fits.writeto(solve_field_dir_name + "/" + ext_file_name + ".fits", an_hdu.data, an_hdu.header, overwrite=True)
+        detector_header = detector_science_header(an_hdu.header, hdu_list[0].header)
+        fits.writeto(fits_savename, an_hdu.data, detector_header,
+                     overwrite=True, checksum=True)
     hdu_list.close()
     logging.info("run_solve_field: processing extensions...")
 
@@ -313,7 +316,7 @@ def create_wcs_frame(argv, instrument, mode="continue"):
     if os.path.isdir(dir_name):
         logging.info('create_wcs_frame: directory exists: {0}'.format(dir_name))
 
-    hdu_primary_header = fits.getheader(file_name, ext=0)
+    hdu_primary_header = science_exposure_header(fits.getheader(file_name, ext=0))
     new_hdul = fits.HDUList()
     new_hdul.append(fits.PrimaryHDU(header=hdu_primary_header))
 
@@ -345,11 +348,12 @@ def create_wcs_frame(argv, instrument, mode="continue"):
                 wcs_fits = solve_field_dir_name + "/" + ext_file_name + ".fits"
 
         print("wcs_fits: {}".format(wcs_fits))
-        image_hdu = fits.ImageHDU(data=fits.getdata(wcs_fits), header=fits.getheader(wcs_fits))
+        detector_header = detector_science_header(fits.getheader(wcs_fits), hdu_primary_header)
+        image_hdu = fits.ImageHDU(data=fits.getdata(wcs_fits), header=detector_header)
         new_hdul.append(image_hdu)
 
     logging.info('create_wcs_frame: creating {0}'.format(dir_name + "/" + file_name[:-5] + "_wcs.fits"))
-    new_hdul.writeto(dir_name + "/" + file_name[:-5] + "_wcs.fits", output_verify="ignore", overwrite=True)
+    new_hdul.writeto(dir_name + "/" + file_name[:-5] + "_wcs.fits", output_verify="ignore", overwrite=True, checksum=True)
     new_hdul.close()
 
 
