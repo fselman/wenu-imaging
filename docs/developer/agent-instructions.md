@@ -1,15 +1,17 @@
 # wenu-imaging agent instructions
 
-## Current illumination writer correction, 24 October 2026
+## Current notebook 09 QC handoff, 24 October 2026
 
-#49 is confirmed: rebuilding the FITS table in either correction function loses
-TNULL and unmasks integer placeholders. Correct only the writer to update
-magnitude fields in place, preserving existing dtype, numerical correction,
-provenance/repeat guards and all unrelated data/metadata. Verify source/installed
-real-FITS regressions, then fresh chapman3 correction output. Keep #49 open until
-target acceptance. Do not change the independent Kriging grid failure #48 or
-select a new model/scientific policy. Baseline #46 is accepted and immutable;
-no observational correction has launched. Earlier handoffs are historical.
+Chebyshev application passed in notebook09-chebyshev-6xb3rgu1 with the existing
+saved models: all expected magnitude changes, unchanged unrelated columns and
+complete FITS extension metadata, 3718 exact IDs and 12741 missing masks, correct
+provenance and byte-identical repeat calls. Baseline/model hashes are unchanged.
+#49 is closed after source/installed and actual-copy evidence. Resume existing
+catalogue QC on fresh staged baseline/corrected copies so fixed plot filenames
+do not overwrite prior outputs. Keep current plot/reference settings and distinguish
+functional generation from independent scientific acceptance. No new reference
+query or fit; #48's separate Kriging application grid remains open. PRs #43/#45/
+#47/#50 are unmerged. Earlier handoffs below are historical.
 
 ## Current notebook 09 baseline handoff, 24 October 2026
 
