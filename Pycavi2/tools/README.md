@@ -202,3 +202,16 @@ they run at kernel priority. Do not run the helper with `%run`/`runpy` inside
 the kernel: it changes its own process priority and replaces its process.
 The helper is only for a separately launched subprocess. No scientific library
 or reduction notebook implementation is changed by these tools.
+
+## Recover missing Gaia source IDs (#44)
+
+`recover_gaia_source_ids.py` is a focused metadata-repair tool for damaged legacy
+Gaia DR3/GSPC CSV caches. It accepts `--manifest <json> --output <new-directory>`;
+the JSON is a list of `{path, sha256, group}` objects (raw/clean files grouped by
+filter). The default only checks local inputs and prints the bounded identity
+query. Add `--allow-network` explicitly, at batch niceness >=10, to run one query
+and recover IDs into fresh copies. Retain the full output directory, including
+query/job/native response, per-row mappings and report. Missing/ambiguous matches
+or a potentially truncated response stop recovery without publishing catalogues.
+It never reruns calibration or changes other CSV fields. See
+[the correction and acceptance scope](../../docs/developer/gaia-source-id-correction.md).

@@ -44,6 +44,7 @@ from skimage.transform import resize
 
 from pycavi.pycavi import pycavi_tools
 from pycavi.pycavi.pycavi_metadata import calibrated_saturation_cards
+from pycavi.pycavi.pycavi_gaia_ids import normalize_gaia_identifiers, read_gaia_csv
 from pycavi.pycavi.pycavi_astromatic_tools import get_swarp_lists_dict
 
 
@@ -680,13 +681,13 @@ class ZPCalibration:
         print(bands_string)
 
         query_str=f"""
-SELECT dr3.source_id, dr3.ra, dr3.ra_error, dr3.dec, dr3.dec_error, dr3.parallax, dr3.parallax_error, 
+SELECT dr3.source_id AS SOURCE_ID, dr3.ra, dr3.ra_error, dr3.dec, dr3.dec_error, dr3.parallax, dr3.parallax_error,
 dr3.pmra, dr3.pmra_error, dr3.pmdec, dr3.pmdec_error, 
 dr3.phot_g_mean_flux, dr3.phot_g_mean_flux_error, dr3.phot_g_mean_mag,
 dr3.phot_bp_mean_flux, dr3.phot_bp_mean_flux_error, dr3.phot_bp_mean_mag,
 dr3.phot_rp_mean_flux, dr3.phot_rp_mean_flux_error, dr3.phot_rp_mean_mag,
 dr3.radial_velocity, dr3.radial_velocity_error, dr3.classprob_dsc_combmod_star,
-gspc.source_id, {bands_string}
+gspc.source_id AS GSPC_SOURCE_ID, {bands_string}
 FROM gaiadr3.gaia_source AS dr3
 JOIN gaiadr3.synthetic_photometry_gspc AS gspc
 ON gspc.source_id = dr3.source_id
@@ -705,8 +706,8 @@ AND
             job = Gaia.launch_job_async(query_str)
             gaia_astropy_table = job.get_results()
     
-            # remove duplicated column with the source id (gspc.source_id)
-            gaia_astropy_table.remove_column('source_id')
+            # Validate both explicitly aliased IDs before dropping the duplicate.
+            gaia_astropy_table = normalize_gaia_identifiers(gaia_astropy_table)
             if check_gaia_params:
                 for column in gaia_astropy_table.columns:
                     print(column)
@@ -758,7 +759,7 @@ AND
             gaia_df.to_csv(gaia_raw_savepath, index=False)
 
         else:
-            gaia_df = pd.read_csv(gaia_raw_savepath)
+            gaia_df = read_gaia_csv(gaia_raw_savepath)
 
         # now that the raw gaia query has been saved, we can clean the catalogue based on magnitude and class star
         # first we select those source that have magnitude lower than self.query_mag_max

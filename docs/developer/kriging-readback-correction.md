@@ -65,3 +65,17 @@ are not exercised by these isolated tests; chapman3 fitting/import qualification
 was performed separately. Notebook JSON/code syntax, local links and whitespace
 checks passed. No chapman dependency or observational product was changed.
 Target corrected reader/plot checks remain pending; #41/#42 stay open.
+
+## Chapman3 acceptance, 24 October 2026
+
+The installed reader and 08c notebook passed their five regressions, ten packaging
+checks and pip check in `~/wenu-kriging-readback-q9sl2a88`. Real saved-grid checks
+in `notebook08c-readback-bjje4xqj/output-check.json` recovered every node exactly
+(maximum error 0.0 mag in both filters), executed all three actual notebook plot
+calls and preserved models/arrays/tables without refitting. #41/#42 were closed
+with correction/evidence comments. PR #43 remains unmerged.
+
+The 08c selection used 498 r_SDSS / 514 NB_659 stars. Saved-grid residual scatter
+was 0.02733 -> 0.02648 mag (r) and 0.03438 -> 0.02634 mag (NB); the r mean changed
+0.03444 -> 0.03732 mag. These are functional same-data QC results, not independent
+validation or equivalence to the continuous predictor between coarse grid nodes.

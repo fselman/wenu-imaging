@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+## Current catalogue handoff, 24 October 2026
+
+#44 correction and bounded identity recovery passed chapman3 acceptance: four
+raw/clean CSVs, zero coordinate differences, exact int64 CSV/Table/FITS round
+trips, unchanged non-ID fields and original hashes. Resume notebook 09 with
+fresh recovered catalogues under gaia-id-recovery-jh763zwi/recovered/catalogues;
+do not replace historic calibration provenance or rerun calibration/models.
+#41/#42 reader/08c checks also passed. PRs #43/#45 remain unmerged. Earlier
+handoffs below are historical; independent science accuracy remains open.
+
 ## Current reader correction, 24 October 2026
 
 Both 08b fits/grid serialization/QC passed. Target 08c diagnostics confirmed

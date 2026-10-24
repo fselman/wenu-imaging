@@ -1,5 +1,35 @@
 # wenu-imaging roadmap
 
+## Gaia identity acceptance; resume notebook 09, 24 October 2026
+
+#44 is corrected and target-qualified. Installed source/ID regressions (8+8),
+packaging/resource checks (10) and pip check passed. One bounded identity-only
+query recovered IDs for both raw 6245-row and clean 981-row files per filter,
+with maximum separation 0.0 arcsec in every file. Exact int64 CSV/Table/FITS
+round trips, unchanged non-ID fields, clean/raw subset membership and original
+hashes passed. Evidence: gaia-id-recovery-jh763zwi/identity-output-check.json.
+Resume notebook 09 using the fresh recovered catalogue copies. No recalibration,
+refitting or science-image change occurred; notebook 09 remains unqualified.
+PRs #43/#45 are unmerged. See [the recovery record](gaia-source-id-correction.md).
+The prerequisite plan below is historical.
+
+## Current Gaia identity repair before notebook 09, 24 October 2026
+
+08c corrected readback/plot checks passed both filters; #41/#42 are closed with
+evidence, PR #43 remains unmerged. Notebook 09 preflight found #44: all 6245
+SOURCE_ID values are missing in each production raw Gaia CSV. The production
+method discards its ID fields during column removal/reindexing. Fix response
+aliasing and exact integer CSV handling without changing query geometry or
+photometric processing. Reject invalid legacy identity caches before reuse.
+The inspected run directories contain no retained TAP result/job reference.
+Prepare one bounded identity-only DR3/GSPC retrieval and traceable one-to-one
+matching to existing cached coordinates; preserve every other CSV field and all
+originals in fresh copies. Retain query, native result, job ID, mappings and
+hashes; reject missing/ambiguous matches and floating identifiers. No catalogue
+construction, recalibration, model refitting or science-data correction until
+identities are verified. Keep #44 open pending target qualification.
+
+
 ## Current saved-Kriging readback correction, 24 October 2026
 
 Both filters passed 08b fitting, grid serialization and basic plots in isolated
