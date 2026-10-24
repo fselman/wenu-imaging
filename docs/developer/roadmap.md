@@ -1,5 +1,20 @@
 # wenu-imaging roadmap
 
+## Notebook 07 saturation-unit defect (#33)
+
+The first r_SDSS ZPCalibration finished and passed finite/scaled-pixel,
+WCS/timing/source-preservation checks: 981 catalogue rows, 584 usable
+calibrators, DN2FLAM=2.10315823839273e-19. Its SATLEVEL remains in e-/s after
+BUNIT changes to physical flux units. Trace confirms that parent metadata
+appended after conversion overwrites the saturation value; native SATURATE
+also remains unscaled. Correct this unit handoff as a necessary focused fix
+within the existing functional walkthrough. Preserve the parent-average and
+native saturation definitions, cumulative calibration factors and original
+pixels/products. Reuse the completed calibration/query in a fresh header-only
+copy; do not recalibrate it. Independent saturation/gain modelling and Phase 3
+export redesign (#9) remain deferred. Keep #33 open pending target verification.
+
+
 ## Current metadata correction, 23 October 2026
 
 Fernando approved the bounded correction in [#25](https://github.com/fselman/wenu-imaging/issues/25):

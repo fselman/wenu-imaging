@@ -119,3 +119,43 @@ def coadd_observation_metadata(images):
     result["TEXPTIME"] = (math.fsum(float(h["EXPTIME"]) for h in headers), "Sum of input exposure times (s)")
     result["NCOMBINE"] = (len(paths), "Number of contributing science exposures")
     return result
+
+
+def calibrated_saturation_cards(satlevel, cumulative_factor, magzp,
+                               input_saturate=None, input_factor=None):
+    """Saturation cards in calibrated pixel units, without a new noise model.
+
+    satlevel is the existing mean from normalized parent exposures; it needs
+    the cumulative e-/s-to-flux factor. input_saturate is SWarp's saturation
+    in the current input image units and needs only this run's incremental
+    factor. For header-only repair from an uncalibrated coadd, both factors
+    are the cumulative factor (input_factor defaults to it).
+
+    MAGSATL retains the existing pixel-level expression; it is not a measured
+    point-source saturation magnitude or a Phase 3 ABMAGSAT determination.
+    """
+    cumulative_factor = float(cumulative_factor)
+    input_factor = cumulative_factor if input_factor is None else float(input_factor)
+    magzp = float(magzp)
+    if (not math.isfinite(cumulative_factor) or cumulative_factor <= 0
+            or not math.isfinite(input_factor) or input_factor <= 0
+            or not math.isfinite(magzp)):
+        raise ValueError("Calibration factors must be finite and positive; MAGZP finite")
+
+    def scaled(value, factor):
+        try:
+            value = float(value)
+        except (ValueError, TypeError):
+            return "UNKNOWN"
+        value *= factor
+        return value if math.isfinite(value) and value > 0 else "UNKNOWN"
+
+    result = fits.Header()
+    level = scaled(satlevel, cumulative_factor)
+    result["SATLEVEL"] = (level, "Parent mean saturation, calibrated units")
+    magnitude = "UNKNOWN" if level == "UNKNOWN" else round(magzp - 2.5 * math.log10(level), 3)
+    result["MAGSATL"] = (magnitude, "Pixel diagnostic, not point-source limit")
+    if input_saturate is not None:
+        result["SATURATE"] = (scaled(input_saturate, input_factor),
+                              "SWarp saturation in calibrated pixel units")
+    return result
