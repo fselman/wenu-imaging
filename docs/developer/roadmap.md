@@ -1,5 +1,56 @@
 # wenu-imaging roadmap
 
+## Authorized merge/cleanup handoff, 24 October 2026
+
+Fernando authorized integrating the five qualified PRs into main in order:
+#43 reader/08c bindings, #45 Gaia identity recovery, #47 crossmatch integer IDs,
+#50 FITS null-preserving illumination writes and #52 cubic Kriging application.
+The last head carries all acceptance/QC evidence. Verify final main tree/ancestry,
+then delete only those merged branches and synchronize the inspected chapman3
+checkout. The existing installed wheel already matches the qualified code; no
+reinstall or data processing is needed. This is integration/cleanup authorization,
+not scientific/model acceptance, full orchestration, Mac or Phase 3 qualification.
+Deferred #51 and broader open investigations remain open; older handoffs below
+are historical.
+
+## Selected OmegaCAM functional paths through notebook 09 passed, 24 October 2026
+
+Kriging application and its four existing QC PNGs passed, completing baseline/
+Chebyshev/Kriging functional catalogue checks for this isolated pilot. Twelve
+QC PNGs across the three catalogues were generated and decoded; all original
+and staged catalogue hashes remain unchanged. #48 is closed; code remains
+298d2867c21fa2734874e1562ff28696147f7d06. No new query/refit/image correction
+or independent scientific/model acceptance occurred. Evidence:
+notebook09-kriging-qc-saittxaz/output-check.json and the application records below.
+PRs #43/#45/#47/#50/#52 are qualified, unmerged and available for review; no merge
+or cleanup has been authorized for these branches. Mac testing, independent
+accuracy/uncertainty, SkyMapper comparison review, complete notebook orchestration
+(#37/#38), native metadata and Phase 3 work remain separate. #51 is a deferred
+nonblocking guard finding. Earlier plans below are historical.
+
+## Kriging application accepted; catalogue QC next, 24 October 2026
+
+#48 is closed after installed and actual-model application acceptance. Fresh
+notebook09-kriging-s0e1demx retains 16459 rows, 3718 exact IDs/12741 null masks,
+all unrelated columns/metadata and repeat-call byte identity. Direct cubic
+predictions and inherited default solver bounds pass for both unchanged 50x50
+grids; baseline/Chebyshev/models are unchanged. Finish existing QC plots on a
+fresh staged Kriging catalogue with unchanged r_SDSS/Gaia settings. This is
+functional verification, not independent scientific or continuous-predictor
+validation. #51 is deferred. PRs #43/#45/#47/#50/#52 remain unmerged; earlier
+plans below are historical.
+
+## Current Kriging catalogue application coordinate fix, 24 October 2026
+
+Chebyshev application and all eight before/after QC PNGs passed; inputs remain
+unchanged in notebook09-qc-h6o98cy8. Address confirmed #48 as the next focused
+functional correction: use the stored physical 1..ORIG_W/H sample axes in the
+Kriging catalogue application with correct (y,x) orientation and actual grid
+shape. Retain cubic interpolation, its default solver, strict bounds, sign,
+models, null-preserving writer and repeat/provenance guards. Do not substitute
+the linear 08c reader or refit. Source/installed tests precede fresh target
+catalogue application. #51 is deferred because current QC inputs are valid.
+
 ## Chebyshev application accepted; catalogue QC next, 24 October 2026
 
 #49 passed installed and actual fresh-catalogue verification and is closed.

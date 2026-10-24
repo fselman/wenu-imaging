@@ -1,5 +1,44 @@
 # wenu-imaging agent instructions
 
+## Current authorized integration/cleanup, 24 October 2026
+
+Fernando instructed merge and cleanup of the five qualified PRs #43, #45, #47,
+#50 and #52. Integrate them into main in dependency order, retargeting stacked
+PRs as their predecessors merge. Preserve all qualified heads/acceptance records;
+verify every head is an ancestor and the final main tree equals the integrated
+head. Cleanup only these merged branches with expected-tip and ancestry checks.
+Obtain current actual chapman3 checkout evidence before local sync/cleanup and
+provide guarded commands automatically. No reinstall, processing, query or
+refit is required. This authorization does not close scientific/orchestration/
+export/Mac gates or deferred #51; earlier handoffs below are historical.
+
+## Current functional walkthrough handoff, 24 October 2026
+
+The selected isolated OmegaCAM functional paths through notebook 09 passed:
+baseline, Chebyshev and cubic Kriging applications, and twelve existing QC PNGs
+across baseline/two corrected catalogues. Kriging QC records are in
+notebook09-kriging-qc-saittxaz; all original/staged catalogue hashes remain
+unchanged. #48 is closed after correction/installed/actual-copy evidence.
+No independent scientific/model acceptance, complete notebook orchestration,
+SkyMapper query, Mac qualification or Phase 3 compliance is claimed. #37/#38,
+#51 and broader scientific/native/export gaps remain open. Preserve all inputs,
+models, baseline and corrected outputs. PRs #43/#45/#47/#50/#52 are unmerged;
+merging/cleanup needs the corresponding user instruction. Earlier handoffs below
+are historical. Do not start a new implementation/refactor/query merely because
+these selected functional checks passed.
+
+## Current Kriging application coordinate correction, 24 October 2026
+
+The existing before/after catalogue QC call generated and decoded all eight PNGs
+without changing either source/staged catalogue (notebook09-qc-h6o98cy8). Address
+#48 next: application axes must use the stored physical 1..ORIG_W/H endpoints,
+actual grid shape and (y,x) orientation. Preserve cubic interpolation/default
+solver, strict bounds, correction sign, null-safe writer and guards. No use of
+the linear reader as a substitute, new model, refit or reference query. Test
+source/installed behavior, then fresh target copies; keep #48 open until target
+acceptance. #51 is deferred and does not affect the valid current QC inputs.
+Earlier handoffs below are historical.
+
 ## Current notebook 09 QC handoff, 24 October 2026
 
 Chebyshev application passed in notebook09-chebyshev-6xb3rgu1 with the existing
