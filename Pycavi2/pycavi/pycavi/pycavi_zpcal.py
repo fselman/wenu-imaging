@@ -43,6 +43,7 @@ from photutils.aperture import SkyCircularAperture, SkyCircularAnnulus, aperture
 from skimage.transform import resize
 
 from pycavi.pycavi import pycavi_tools
+from pycavi.pycavi.pycavi_metadata import calibrated_saturation_cards
 from pycavi.pycavi.pycavi_astromatic_tools import get_swarp_lists_dict
 
 
@@ -1604,6 +1605,8 @@ AND
         with fits.open(self.frame, mode="update", output_verify="ignore") as hdul:
             hdr = hdul[0].header
             hdata = hdul[0].data
+            input_satlevel = hdr.get("SATLEVEL")
+            input_saturate = hdr.get("SATURATE")
 
             # FSE CHECK: before writting new keywords we read the "HIERARCH ESO PYCAVI QC DN2FLAM"
             #            keyword if it exists, we will need it at the end.
@@ -1669,17 +1672,6 @@ AND
             hdr.set("BZERO", 0.0,
                                    comment="numerical offset to apply to data")
 
-            # we update the SATLEVEL accordingly
-            if "SATLEVEL" in hdr.keys():
-                satlevel = hdr["SATLEVEL"]*factor
-                hdr.set("SATLEVEL",float("{:.5e}".format(satlevel)), "Saturation level in frame")
-
-                # FSE: needs to be corrected. The central pixel brightness is not the whole story...
-                hdr.set("MAGSATL",round(self.magzp - 2.5*np.log10(satlevel), 3), "Magnitude saturation level in frame")
-            else:
-                hdr.set("SATLEVEL", "UNKNOWN", "Saturation level in frame")
-                hdr.set("MAGSATL", "UNKNOWN", "Magnitude saturation level in frame")
-
             #hdr["EXPTIME"] = (self.total_exptime, "Total exposure time (s)")
             # we continue with the full set of keywords near the end
             #        for zcard in cards:
@@ -1706,6 +1698,18 @@ AND
                 zval = acard[1]
                 zcomment = acard[2]
                 hdr.set(zkey, zval, zcomment)
+
+            # Parent saturation is in normalized e-/s, so apply the cumulative
+            # factor AFTER appending those cards. Native SATURATE is already in
+            # this input image's units: only apply the incremental factor there.
+            parent_saturation = [card[1] for card in self.phase3_cards
+                                 if card[0] == "SATLEVEL"]
+            saturation = calibrated_saturation_cards(
+                parent_saturation[-1] if parent_saturation else input_satlevel,
+                new_dn2flambda if parent_saturation else factor,
+                self.magzp, input_saturate=input_saturate, input_factor=factor,
+            )
+            hdr.update(saturation)
 
             # before final writing we remove empty comments
             comments_to_remove = [key for key, value in hdr.items() if key == 'COMMENT' and value.strip() == '']

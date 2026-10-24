@@ -8,6 +8,11 @@ or a functional pilot is not full workflow or scientific validation. Capture a
 fresh machine-readable environment inventory before declaring the gate complete.
 No workflow implementation changes are included in this documentation update.
 
+The [OmegaCAM notebook requirements map](omegacam-dependency-map-2026-10-23.md)
+connects the inspected `9ee7ff9` source to this evidence, including import-time
+dependencies and remaining service/resource capabilities. It is inspection,
+not an executed workflow or a claim that every installed package is sufficient.
+
 Fresh capture reported on 23 October: `~/wenu-dependencies-mi_avvgc` contains
 `python-inventory.json` (140 distributions), `pip-freeze.txt`, `pip-check.txt`,
 `conda-explicit.txt`, `conda-history.txt`, `kernels.json`, saved engine configuration,
@@ -17,8 +22,9 @@ selected versions and Conda build summary below. Full 140-distribution inventory
 and explicit URLs remain in the capture on chapman3, not copied into this repo.
 
 The latest reported checkout is `~/Software/wenu-imaging`, origin
-`https://github.com/fselman/wenu-imaging.git`, branch `fix/installed-packaging`,
-clean at `470d57b23ce5ca3ca7e16c4520020ab5db3f20d6`. The installed scientific
+`https://github.com/fselman/wenu-imaging.git`, branch `main`,
+clean at `9ee7ff998a3d98e8dc6fbecf16e1e07ac55b8c30` after PR #18 cleanup.
+The original environment capture was made before that merge. The installed scientific
 library came from the earlier `dfcb3e715d8bbee5174e3a9cb5ad782a2cedc0ae`
 wheel; later changes supplied tools/documentation. Version `pycavi==0.1.0` alone
 does not distinguish these wheels. Refresh actual checkout and installed-library

@@ -1,6 +1,79 @@
 # wenu-imaging roadmap
 
+## Notebook 07 saturation-unit defect (#33)
+
+The first r_SDSS ZPCalibration finished and passed finite/scaled-pixel,
+WCS/timing/source-preservation checks: 981 catalogue rows, 584 usable
+calibrators, DN2FLAM=2.10315823839273e-19. Its SATLEVEL remains in e-/s after
+BUNIT changes to physical flux units. Trace confirms that parent metadata
+appended after conversion overwrites the saturation value; native SATURATE
+also remains unscaled. Correct this unit handoff as a necessary focused fix
+within the existing functional walkthrough. Preserve the parent-average and
+native saturation definitions, cumulative calibration factors and original
+pixels/products. Reuse the completed calibration/query in a fresh header-only
+copy; do not recalibrate it. Independent saturation/gain modelling and Phase 3
+export redesign (#9) remain deferred. Keep #33 open pending target verification.
+
+
+## Current metadata correction, 23 October 2026
+
+Fernando approved the bounded correction in [#25](https://github.com/fselman/wenu-imaging/issues/25):
+propagate authoritative science exposure metadata into extracted/assembled
+detectors, recompute MJD-END at double precision, and derive coadd timing from
+all contributing science exposures. Reuse solved WCS and unchanged pixels in
+fresh copies; do not repeat normalization, extraction or all-detector solving.
+Keep SWarp equivalent EXPTIME/GAIN and scientific settings intact; TEXPTIME
+records the sum of exposure times separately. No native rebuild is included.
+The underlying native defects #23/#24 stay open for the later mefpp stage.
+The immediate objective remains working chapman3 through all notebooks, then
+retesting on Mac; no new photometric functionality or dependency upgrades.
+
+The correction passed synthetic regressions, chapman3 installed-package checks
+and real-product preservation/coaddition checks in both filters. Issue #25 is
+closed with evidence. All four notebook 06 coadds (BACK_SIZE 128 and 2048,
+SUBTRACT_BACK=Y, MEDIAN) passed functional checks; continue to notebook 07
+zpcal preflight. The misleading second-pass filename remains #31; no
+photometric calibration or independent scientific accuracy is established.
+Native #23/#24 and later Mac retesting remain pending. See [the correction notes](science-metadata-correction.md).
+
+## Notebook 05 executable detection fix, 23 October 2026
+
+The ongoing functional notebook walkthrough reached SExtractor discovery after
+all ten notebook 04 pilot exposures passed solving/MEF assembly checks. On
+chapman3, `/usr/bin/sex` returns `SExtractor version 2.19.5`; the installed PAPI
+wrapper incorrectly requires the alternative spelling `Source Extractor`.
+The first extraction block stopped at discovery, before copying an image or
+launching extraction. The focused correction accepts both banner spellings,
+preserving candidate order, explicit-path selection and the bytes version return
+contract. It changes no extraction parameters, dependency versions or engines.
+Chapman3 installed-wheel checks subsequently passed: five banner regressions,
+ten packaging checks, pip dependency consistency and actual automatic/explicit
+SExtractor discovery. Records: `~/wenu-sextractor-fix.19w6fdss`.
+
+The first real extraction then stopped during config generation because the
+legacy PAPI config schema does not include the explicitly requested `NTHREADS`.
+Route this option through PAPI's existing `ext_config` native-command mechanism
+when supplied to the notebook helper, leaving absent-option defaults unchanged.
+Six regressions pass in the agent environment, including config generation,
+the native command's `-NTHREADS 1` argument and catalogue renaming with the native
+execution mocked. The failed working copy is preserved at
+`~/omegacam/testing/wenu-imaging-test/notebook05-r_SDSS-28gx2t5e`;
+no native extraction was launched. The thread correction was subsequently installed and verified on chapman3;
+all ten pilot exposures passed extraction/SCAMP with checked 32-detector outputs.
+The two SExtractor defects are closed with evidence in #26/#27.
+Preserve existing solved MEFs and continue with a fresh working copy;
+do not repeat normalization or solving. The later efficiency plan is not being
+implemented by this compatibility fix.
+
 ## Controlling sequence clarification, 23 October 2026
+
+After PR #18 merge and verified chapman3 cleanup at `9ee7ff9`, Fernando approved
+the read-only [OmegaCAM requirements map](omegacam-dependency-map-2026-10-23.md).
+It connects notebook imports/calls to Python/native/data/service requirements
+and existing evidence. It identifies remaining Gaia DR3/GSPC, SkyMapper comparison,
+lunar/site-data, SCAMP PDF and platform/provenance checks without executing those
+paths or changing software. Further bounded checks need defined acceptance
+criteria; the dependency gate remains open and the workflow audit has not started.
 
 Fernando explicitly approved proceeding with Gaia DR3 after clarification that
 notebook 07 already selects the Gaia DR3/GSPC library path. The approved bounded

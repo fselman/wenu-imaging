@@ -1,5 +1,17 @@
 # wenu-imaging
 
+Defect tracking, approved 23 October 2026: create a GitHub issue for each
+distinct defect found, checking for an existing ticket first. Record evidence,
+scope and acceptance criteria; link the fix and verification in a correction
+comment before closing it. Keep unresolved native causes and pending target
+qualification open. See the canonical developer instructions.
+
+
+Current task, 23 October 2026: notebook 07 functional walkthrough; correct
+the saturation-unit handoff (#33). Detector/coadd metadata #25 is verified.
+Make the existing workflow work on chapman3 through zpcal, then retest on Mac.
+Native mefpp causes (#23/#24) remain deferred; no new functionality or upgrades.
+
 Latest scope, 23 October 2026: finish and document chapman3 dependency
 qualification before the Pycavi workflow audit. Aim to align Mac versions where
 practical. Python future-proofing follows the agreed five points, not this gate.
