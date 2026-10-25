@@ -1,5 +1,46 @@
 # wenu-imaging agent instructions
 
+## Explain every functional and result-verification test, 25 October 2026
+
+Fernando requires an explanation before every functional test and every test
+that verifies results, including preflight checks, synthetic checks, installed
+package checks, observational runs and read-only output checks. Give the
+explanation before the command group or agent execution, not only when asked.
+Keep it concise and specific to the test being proposed:
+
+- State the purpose, inputs and settings, actions performed, and whether the
+  test processes data, queries a service, writes outputs or only reads results.
+- Name the actual Pycavi modules and subroutines/methods exercised, including
+  relevant indirect calls and native programs. Distinguish production routines
+  from orchestration and verification helpers; do not imply that a helper's
+  independent calculation exercises a production implementation.
+- State expected outputs, pass criteria and the test's limits. Distinguish
+  wrapper completion, native execution, output integrity and scientific
+  validation. Do not claim coverage of routines that the test does not call.
+- After execution, explain what actually ran, what passed or failed, evidence
+  and remaining limitations. Clearly identify checks still pending; a launch
+  or zero wrapper exit code alone is not acceptance of the outputs.
+
+In every testing script or copy-and-paste command group prepared or revised by
+the agent, put short comments immediately before the relevant sections identifying
+the tests or verification actions performed there. Use matching short names or
+labels in the preceding user-facing explanation so the correspondence is easy
+to follow. Every announced test/action must have a counterpart comment and
+implementing code; every commented test/action must appear in the explanation
+and match what its code actually does. Include preparation, guards, queries,
+processing, output checks and preservation checks when those actions are part
+of the test. Comments should explain sections, not narrate every code line.
+
+Before supplying or executing a test, review the explanation, section comments
+and executable code together for omissions or mismatches in both directions.
+Do not silently reuse an uncommented older runner: add the matching comments in
+a fresh test copy while preserving the original and its processing behavior.
+Label launch-only steps and checks deferred to a later script explicitly; do not
+describe a future output check as executed by the launch script.
+
+These explanations do not authorize scientific tuning, broader validation,
+extra processing or changes outside the currently approved task.
+
 ## Current authorized integration/cleanup, 24 October 2026
 
 Fernando instructed merge and cleanup of the five qualified PRs #43, #45, #47,

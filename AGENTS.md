@@ -1,5 +1,14 @@
 # wenu-imaging
 
+Test explanations, approved 25 October 2026: before every functional test or
+result-verification test, explain its purpose, inputs, actions, the actual
+Pycavi subroutines/methods and native tools exercised, and expected outputs and
+pass criteria. Distinguish processing from read-only verification and functional
+success from scientific validation. In testing scripts and command groups, add
+short comments identifying each test section; the announced tests and script
+comments must correspond in both directions. Report actual results and
+limitations after execution. See the canonical developer instructions.
+
 Defect tracking, approved 23 October 2026: create a GitHub issue for each
 distinct defect found, checking for an existing ticket first. Record evidence,
 scope and acceptance criteria; link the fix and verification in a correction
