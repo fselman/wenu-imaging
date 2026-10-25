@@ -21,6 +21,23 @@ Keep it concise and specific to the test being proposed:
   and remaining limitations. Clearly identify checks still pending; a launch
   or zero wrapper exit code alone is not acceptance of the outputs.
 
+In every testing script or copy-and-paste command group prepared or revised by
+the agent, put short comments immediately before the relevant sections identifying
+the tests or verification actions performed there. Use matching short names or
+labels in the preceding user-facing explanation so the correspondence is easy
+to follow. Every announced test/action must have a counterpart comment and
+implementing code; every commented test/action must appear in the explanation
+and match what its code actually does. Include preparation, guards, queries,
+processing, output checks and preservation checks when those actions are part
+of the test. Comments should explain sections, not narrate every code line.
+
+Before supplying or executing a test, review the explanation, section comments
+and executable code together for omissions or mismatches in both directions.
+Do not silently reuse an uncommented older runner: add the matching comments in
+a fresh test copy while preserving the original and its processing behavior.
+Label launch-only steps and checks deferred to a later script explicitly; do not
+describe a future output check as executed by the launch script.
+
 These explanations do not authorize scientific tuning, broader validation,
 extra processing or changes outside the currently approved task.
 
