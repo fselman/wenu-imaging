@@ -80,4 +80,3 @@ Pycavi first; do not upgrade Python libraries or external engines yet. Audit
 single-detector support and all opportunities for single-node parallel work.
 mefpp implementation follows the Pycavi milestone. See the dated scope update
 in the developer instructions and roadmap.
-

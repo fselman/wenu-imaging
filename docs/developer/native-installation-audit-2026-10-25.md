@@ -198,4 +198,3 @@ until a candidate passes acceptance and Fernando selects it.
 The user's requested roadmap reordering is approved. This initial report does
 not claim implementation, successful target builds, completed source migration,
 merging, native selection or closure of the listed defects.
-

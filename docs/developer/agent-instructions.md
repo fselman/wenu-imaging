@@ -620,4 +620,3 @@ support for single-CCD and single-CMOS reductions as separate work items. Audit
 format assumptions and detector-specific calibration/noise behavior before
 claiming single-detector support. Neither future item may delay the urgent
 OmegaCAM production path without an explicit scope decision.
-

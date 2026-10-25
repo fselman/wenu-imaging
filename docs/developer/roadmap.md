@@ -777,4 +777,3 @@ syntax check, no-op `make check`, or editable install is not a release gate.
 This roadmap is intentionally sequential at approval boundaries. Independent
 documentation and evidence gathering may proceed together; implementation must
 remain within the stage Fernando has approved.
-

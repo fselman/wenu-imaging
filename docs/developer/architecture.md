@@ -261,4 +261,3 @@ After the system works correctly for the operational OmegaCAM milestone:
 The detector generalization should reuse instrument/configuration boundaries
 where practical. It must not trigger a premature rewrite of the urgent OmegaCAM
 workflow.
-
