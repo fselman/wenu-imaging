@@ -99,3 +99,27 @@ parent, and an explicitly linked prefix. All seven installation cases plus the
 native tests pass under agent Linux for both existing C90/C17 build directories.
 This changes installer/tests/docs only; native C sources are unchanged. Actual
 Mac rerun remains pending, and #82 stays open until its target acceptance.
+
+## Intel Mac C90 acceptance and C17 inline correction (#83)
+
+Fernando reports /Users/fselman/wenu-mac-native-build-9lgbhxqn at revision
+e1f4bedb93aa21cb4b1fd96ced490a78407987c4: C90 configure/build, all three
+CTest entries (including seven installer cases) and complete OCAM/WFI BPM
+comparisons passed. This supplies the actual-Mac installer regression evidence
+for #82. C17 configured but linking mefpp failed with 45 duplicate symbols,
+including toupper and ___inline_signbitd. C17 tests/BPM checks were not run;
+no actual runtime installation or observation processing took place.
+
+local_types.h defined inline as an empty macro even in C17, where it is a
+language keyword. This can alter subsequently included system definitions and
+is consistent with the Mac link errors. Restrict the legacy fallback to pre-C99
+modes; keep the existing C90 path. Do not suppress duplicate symbols or change
+inline semantics with a linker/compiler workaround.
+
+The native primitive test now rejects a leaked inline macro in C99+ and checks
+ctype/math integration after Eclipse includes using toupper/fabs. Agent Linux
+GCC 13.3 C17 compilation failed with this regression and the old header, then
+actual-source C90/C17 builds and three CTest entries per mode passed after the
+correction. This is a preprocessor compatibility change, not numerical refactoring.
+Actual Mac C17 link/CTest/BPM acceptance and renewed C90 checks remain pending.
+Preserve both previous attempt directories as evidence.

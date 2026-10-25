@@ -74,7 +74,9 @@ against ordinary mistakes, not an atomic transaction against concurrent changes.
 
 - `native_primitives` calls image_new, image_getmean and image_del with three known
   pixels, qfits_paf_query with a tiny PAF, and qfits_pixdump_float / qfits_pixin_float
-  for exact float pixel conversion. It does not validate full MEF/FITS headers.
+  for exact float pixel conversion. It also checks C17 retains the inline keyword
+  and exercises toupper/fabs after Eclipse includes (#83). It does not validate
+  full MEF/FITS headers.
 - `native_cli_usage` executes mefpp without arguments and requires nonzero status
   plus its usage text. This does not establish truthful reduction-failure exits.
 - `native_install_contract` runs the production install template with synthetic

@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "eclipse.h"
+/* Header compatibility: C99+ must retain the language keyword for system headers. */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#ifdef inline
+#error Eclipse must not replace the C99/C17 inline keyword
+#endif
+#endif
+#include <ctype.h>
+#include <math.h>
 #include "qfits.h"
 #include "xmemory.h"
 int main(void)
@@ -37,6 +45,8 @@ int main(void)
     free(decoded);
     free(bytes);
     if (remove("probe.paf") != 0) return 10;
-    puts("PASS: Eclipse image mean, qfits PAF and float pixel conversion");
+    /* System-header integration: call ctype/math after the Eclipse includes. */
+    if (toupper((unsigned char)'a') != 'A' || fabs(-2.0) != 2.0) return 11;
+    puts("PASS: Eclipse/qfits primitives and system-header integration");
     return 0;
 }
