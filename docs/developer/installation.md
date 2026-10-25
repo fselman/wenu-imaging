@@ -1,4 +1,7 @@
-# Installation: Python and native components
+# Developer installation: Python and native components
+
+For ordinary users, start with the [quick installation guide](../installation.md).
+This page retains detailed Python packaging and validation information.
 
 ## Maintained native installation guide, 25 October 2026
 

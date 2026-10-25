@@ -1,4 +1,7 @@
-# Native mefpp installation guide
+# Developer guide: native mefpp build, installation and qualification
+
+For ordinary users, start with the [quick installation guide](../installation.md).
+The detailed toolchain, test and acceptance procedure below is for developers.
 
 Maintained guide. Last updated: 25 October 2026.
 Qualified native source: **41c8e6a544c1bc5122dc558e0c8cc7904214e1d0**.

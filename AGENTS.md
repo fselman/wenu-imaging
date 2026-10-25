@@ -1,5 +1,14 @@
 # wenu-imaging
 
+Documentation audience correction, 25 October 2026: Fernando requests a short
+[user installation entry point](docs/installation.md) directly under docs; keep detailed
+build/test/install material in [the developer guide](docs/developer/native-installation.md). Maintain
+both with installation changes. Group developer navigation by topic; any later
+physical move must update inbound links together. Package-manager review is a
+proposal, not authorization to install/provision dependencies or publish binaries.
+Conda/micromamba is the first recommended user-distribution evaluation; preserve
+the existing CMake/CTest build and current working environments.
+
 Maintained installation guide, approved 25 October 2026: Fernando requires
 [the native installation guide](docs/developer/native-installation.md) under docs to stay current.
 Update it in the same PR as changes to build/install tools, entry points,

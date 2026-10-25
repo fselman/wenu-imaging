@@ -1,5 +1,8 @@
 # wenu-imaging
 
+Start with the [quick installation guide](docs/installation.md).
+Detailed build/test procedures are in [developer documentation](docs/developer/README.md).
+
 wenu-imaging coordinates Pycavi (Python), mefpp and qfits for astronomical image
 reduction. The Python distribution and imports retain the name **pycavi**.
 

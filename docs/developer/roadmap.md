@@ -1,5 +1,19 @@
 # wenu-imaging roadmap
 
+## User installation and documentation review — 25 October 2026
+
+Fernando requests a short [user installation guide](../installation.md), detailed
+procedures under docs/developer, and clearer topical navigation. The native
+source-install gate passed on Intel Mac; simple end-user distribution is a
+separate Stage 1 usability deliverable. Review
+[Mac/Linux package-manager options](native-distribution-options.md), with
+Conda/micromamba the first recommended evaluation for native mefpp plus the Python
+application environment. No recipe, channel, binary publication or new dependency
+is selected/installed by this review. Qualify relocation, platform/glibc compatibility
+and fresh-user installation before advertising a one-command install.
+A physical developer-document move follows an inbound-link inventory; topic-grouped
+navigation is the first change. Observational comparison is paused for this review.
+
 Intel Mac native acceptance, 25 October 2026: Fernando reports C90/C17 native
 builds, three CTest entries per mode, exact OCAM/WFI BPM pixels, checksum metadata
 accounting, real private installations/repeats/installed CLI and C17 DESTDIR passed

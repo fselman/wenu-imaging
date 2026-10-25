@@ -1,39 +1,58 @@
 # Developer documentation
 
-Working agreement and scope accepted by Fernando Selman on 20 October 2026.
-Updated for the subsequent decision to consolidate into one repository.
+For ordinary installation, use the [short user guide](../installation.md).
+This directory contains development policy, detailed procedures and evidence.
+The latest dated policy/acceptance record controls; old audits remain historical.
 
-| Document | Purpose |
-|---|---|
-| [Agent instructions](agent-instructions.md) | Current shared working rules and scientific invariants |
-| [Architecture](architecture.md) | Existing components, interfaces and agreed direction |
-| [Migration](migration.md) | Repository consolidation, checks and merge requirements |
-| [Native mefpp installation guide](native-installation.md) | Maintained build/install prerequisites, verified Intel Mac procedure, resources, staging/rollback and pending platforms |
-| [Intel Mac native acceptance](native-mac-build-install-acceptance.md) | Qualified source, actual target evidence and remaining runtime gates |
-| [Python installation and packaging evidence](installation.md) | Root install, resources, setup, external paths, platform facts and outstanding acceptance |
-| [Roadmap](roadmap.md) | Platform priorities, operational OmegaCAM delivery and later capabilities |
-| [Original audit, 20 October 2026](audit-2026-10-20.md) | Original source-based findings and historical proposals, preserved unchanged |
-| [Previous Mac installation and OmegaCAM workflow](mac-installation-history-2026-10-20.md) | Installed tools, build provenance, OCAM layout and last apparent use |
-| [Chebyshev repair and pilot evidence](chebyshev-repair-2026-10-21.md) | Complete model export, notebook diagnostics, validation and safe Mac update |
-| [Catalogue execution repair](catalogue-repair-2026-10-21.md) | Single-filter catalogues, explicit models, correction copies and repeat-run protection |
-| [Pycavi portability and library upgrade audit](pycavi-portability-audit-2026-10-21.md) | Reproduced packaging failures, current-library probes and staged compatibility plan |
-| [External tools and library options](external-tools-and-library-options-2026-10-21.md) | Installed versus upstream releases and a coherent integration strategy |
-| [Single-detector and parallel-work audit](detectors-and-parallel-work-audit-2026-10-21.md) | FITS/detector assumptions and single-node task opportunities; native engine work deferred |
-| [Thin notebooks and script interface review](pycavi-two-interface-review-2026-10-21.md) | Shared library stages, legacy script drift and explicit WFI work |
+## Current work and policy
 
-The immediate goal is a scientifically validated reduction of a medium-sized
-OmegaCAM dataset, prepared for submission as ESO Phase 3 products. Dataset
-inventory and precise product/validation requirements remain to be established.
+- [Agent instructions](agent-instructions.md)
+- [Overall roadmap](roadmap.md)
+- [Native modernization roadmap](mefpp-modernization-roadmap-v1.md)
+- [Current native candidate and remaining gates](native-cmake-candidate.md)
 
-Current multiprocessing is within a single node. mefpp does not implement
-multiprocessing and remains serial for the operational milestone. Later work
-includes mefpp multiprocessing and reductions from single CCD and single CMOS
-detectors, after wenu-imaging works correctly.
+## Installation and portability
 
-The audit predates acceptance and subsequent scope clarifications. Its references
-to proposed instructions, pending decisions and earlier document locations are
-historical. Use the current agent instructions and roadmap for present scope.
-Preserve the audit rather than rewriting what was reported at that baseline.
+- [Native build/install/qualification guide](native-installation.md)
+- [Detailed Python installation and packaging](installation.md)
+- [Intel Mac native build/install acceptance](native-mac-build-install-acceptance.md)
+- [Mac/Linux package-manager assessment](native-distribution-options.md)
+- [Pycavi portability audit](pycavi-portability-audit-2026-10-21.md)
+- [External tools and library options](external-tools-and-library-options-2026-10-21.md)
 
-The root `AGENTS.md` is an entry point to the canonical policy in this directory;
-it keeps these instructions discoverable when an agent opens the monorepo workspace.
+## Architecture and native design
+
+- [Overall architecture](architecture.md)
+- [Current mefpp architecture](mefpp-current-architecture.md)
+- [Native build specification](native-build-specification-v1.md)
+- [Native architecture audit](native-architecture-audit-2026-10-25.md)
+- [Native installation audit](native-installation-audit-2026-10-25.md)
+- [Single-detector/parallel audit](detectors-and-parallel-work-audit-2026-10-21.md)
+- [Thin notebooks and script interface review](pycavi-two-interface-review-2026-10-21.md)
+
+## Workflow evidence and corrections
+
+- [Mac CP Pup pilot](pilots/mac-cp-pup-2017-03-13/README.md)
+- [chapman3 CN Ori pilot](pilots/chapman3-cn-ori-2017-03-11/README.md)
+- [Chebyshev correction and pilot](chebyshev-repair-2026-10-21.md)
+- [Catalogue execution correction](catalogue-repair-2026-10-21.md)
+- [Gaia IDs](gaia-source-id-correction.md)
+- [Catalogue integer IDs](catalogue-integer-correction.md)
+- [Illumination null masks](illumination-null-mask-correction.md)
+- [Kriging readback](kriging-readback-correction.md)
+- [Kriging application](kriging-application-correction.md)
+
+## Historical background
+
+- [Original audit, 20 October 2026](audit-2026-10-20.md)
+- [Previous Mac installation/workflow](mac-installation-history-2026-10-20.md)
+- [Repository migration](migration.md)
+
+This is the first navigation reorganization. Before moving dated files into
+physical subdirectories, inventory and update their inbound links, AGENTS and
+guide references together; preserve stable entry points. New developer documents
+must be added to the appropriate topic, not appended as an undifferentiated list.
+
+The immediate scientific goal remains OmegaCAM products for ESO Phase 3.
+Functional acceptance, scientific validation and archive compliance are distinct.
+Native mefpp remains serial; later threading/accelerators follow reviewed gates.
