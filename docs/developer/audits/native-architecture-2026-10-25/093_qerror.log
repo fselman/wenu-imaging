@@ -1,0 +1,14 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c: In function ‘qfits_warning’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c:175:27: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1020 [-Wformat-overflow=]
+  175 |         sprintf(all, "*** %s", msg);
+      |                           ^~   ~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c:175:9: note: ‘sprintf’ output between 5 and 1028 bytes into a destination of size 1024
+  175 |         sprintf(all, "*** %s", msg);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c: In function ‘qfits_error’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c:193:30: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1017 [-Wformat-overflow=]
+  193 |         sprintf(all, "error: %s", msg);
+      |                              ^~   ~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c:193:9: note: ‘sprintf’ output between 8 and 1031 bytes into a destination of size 1024
+  193 |         sprintf(all, "error: %s", msg);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,0 +1,46 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c: In function ‘get_datetime_iso8601’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:258:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:258:27: note: directive argument in the range [-99, 99]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:258:5: note: ‘sprintf’ output between 20 and 40 bytes into a destination of size 20
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  259 |             GET_CCYEAR(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  260 |             GET_MONTH(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~
+  261 |             GET_DAY(curdate),
+      |             ~~~~~~~~~~~~~~~~~
+  262 |             GET_HOUR(curtime),
+      |             ~~~~~~~~~~~~~~~~~~
+  263 |             GET_MINUTE(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  264 |             GET_SECOND(curtime));
+      |             ~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c: In function ‘get_datetimemili_iso8601’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:277:58: warning: ‘%03d’ directive writing between 3 and 4 bytes into a region of size between 0 and 4 [-Wformat-overflow=]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                                                          ^~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:277:27: note: directive argument in the range [-999, 999]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:277:5: note: ‘sprintf’ output between 24 and 45 bytes into a destination of size 24
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  278 |             GET_CCYEAR(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  279 |             GET_MONTH(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~
+  280 |             GET_DAY(curdate),
+      |             ~~~~~~~~~~~~~~~~~
+  281 |             GET_HOUR(curtime),
+      |             ~~~~~~~~~~~~~~~~~~
+  282 |             GET_MINUTE(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  283 |             GET_SECOND(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  284 |             GET_MILI(curtime));
+      |             ~~~~~~~~~~~~~~~~~~

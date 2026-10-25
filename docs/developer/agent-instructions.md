@@ -1,5 +1,31 @@
 # wenu-imaging agent instructions
 
+## Current hold: architecture audit, then full roadmap, 25 October 2026
+
+Fernando now requires an audit of how outdated the native build/organization
+is against modern development practices, a diagram of the current structure
+and a trace of Eclipse use/non-use. He intends eventual components for bias,
+BPM, non-linearity determination/application, dome/sky/master flats and science.
+Read [the architecture audit](native-architecture-audit-2026-10-25.md), #73
+and its compiler-assisted evidence. It distinguishes potential function paths,
+conservative object closure and actual runtime coverage; never label an
+unreached function safe to delete or an existing linearity routine qualified.
+
+The full roadmap must follow this audit and be reviewed/agreed before actual
+modification work. This supersedes proceeding directly from #64/#72 to qfits
+nesting/build fixes. No component move/split, build-system change, dependency/
+compiler upgrade, installation, new concurrency or scientific change starts
+from the audit alone. Compile-only analysis in disposable agent copies does
+not qualify Mac/chapman3 builds or replace native runtime/scientific tests.
+
+Preserve the two static-library boundaries and algorithm baselines while
+assessing options. A modular C library and thin command interfaces are possible;
+do not assume separate processes/repositories, a language rewrite or CMake is
+already chosen. The roadmap must define stage contracts, ownership, detector
+identity, units, masks, uncertainty/QC/provenance, error/restart and equivalence
+gates. Source findings #74/#75/#76 remain uncorrected; existing installation/
+native issues stay open. Later scientific parameter tuning remains deferred.
+
 ## Current authorized native installation audit, 25 October 2026
 
 Fernando changed the order: bring roadmap point 5 forward, beginning with an

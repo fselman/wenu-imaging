@@ -1,0 +1,4 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/fits_h.c: In function ‘qfits_header_dump_hdr’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/fits_h.c:1274:22: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1274 |         fprintf(out, line) ;
+      |                      ^~~~

@@ -1,0 +1,2927 @@
+[
+  {
+    "source": "mefpp2/ins/mef/recipes/mefpp.c",
+    "function": "main",
+    "calls": [
+      "debug_active",
+      "eclipse_init",
+      "mef_bb_del",
+      "mef_bb_load",
+      "mef_engine",
+      "printf",
+      "puts",
+      "usage",
+      "xmemory_status_"
+    ],
+    "references": [
+      "recipe_version"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/recipes/mefpp.c",
+    "function": "mef_bb_load",
+    "calls": [
+      "__isoc99_sscanf",
+      "atof",
+      "atoi",
+      "e_comment",
+      "e_error",
+      "eclipse_display_license",
+      "get_datetime_iso8601",
+      "internal_getopt_long",
+      "mef_bb_del",
+      "mef_bb_dump",
+      "mef_bb_new",
+      "print_eclipse_version",
+      "printf",
+      "puts",
+      "qfits_version",
+      "usage",
+      "xmemory_strdup"
+    ],
+    "references": [
+      "internal_optarg",
+      "internal_optind",
+      "long_options",
+      "recipe_version",
+      "stdout"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/recipes/mefpp.c",
+    "function": "mef_engine",
+    "calls": [
+      "atof",
+      "cube_del",
+      "cube_div_im",
+      "cube_sub_im",
+      "e_comment",
+      "e_error",
+      "fits_header_merge",
+      "framelist_del",
+      "framelist_load",
+      "framelist_new",
+      "get_basename",
+      "get_eclipse_version",
+      "get_rootname",
+      "image_del",
+      "image_getmean",
+      "image_getmedian",
+      "image_getstdev",
+      "is_fits_file",
+      "mef_bb_del",
+      "mef_build_bpm",
+      "mef_build_cal",
+      "mef_create_orig_filename",
+      "mef_cube_load",
+      "mef_cube_overscan_correction",
+      "mef_ff_combine",
+      "mef_get_output_filename",
+      "mef_hdrpix_dump",
+      "mef_header_ext",
+      "mef_header_mainsubset",
+      "mef_header_primary",
+      "mef_load_ext",
+      "mef_saturation_check",
+      "mef_save",
+      "mef_split",
+      "mef_valid_subset",
+      "pixelmap_del",
+      "pixelmap_loadext",
+      "qfits_header_add",
+      "qfits_header_add_after",
+      "qfits_header_del",
+      "qfits_header_destroy",
+      "qfits_header_getstr",
+      "qfits_header_mod",
+      "qfits_header_read",
+      "qfits_header_readext",
+      "sleep",
+      "sprintf",
+      "xmemory_free",
+      "xmemory_malloc",
+      "xmemory_strdup"
+    ],
+    "references": [
+      "recipe_version"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/recipes/mefpp.c",
+    "function": "usage",
+    "calls": [
+      "exit",
+      "hello_world",
+      "printf",
+      "puts"
+    ],
+    "references": [
+      "prog_desc"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "fits_header_merge",
+    "calls": [
+      "e_error",
+      "qfits_header_add",
+      "qfits_header_copy",
+      "qfits_header_getitem",
+      "qfits_header_getstr",
+      "qfits_header_mod",
+      "strncmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_bb_del",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_bb_dump",
+    "calls": [
+      "fprintf"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_bb_new",
+    "calls": [
+      "atof",
+      "atoi",
+      "debug_active",
+      "e_comment",
+      "memcpy",
+      "qfits_paf_query",
+      "sprintf",
+      "xmemory_calloc",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_build_bpm",
+    "calls": [
+      "cube_create_gainmap_proportional",
+      "cube_create_gainmap_robust",
+      "cube_del",
+      "cube_sub_im",
+      "debug_active",
+      "e_comment",
+      "e_error",
+      "framelist_load",
+      "get_eclipse_version",
+      "image_del",
+      "image_getmean",
+      "image_getstdev",
+      "image_normalize",
+      "image_threshold2pixelmap",
+      "mef_create_orig_filename",
+      "mef_cube_load",
+      "mef_cube_overscan_correction",
+      "mef_get_output_filename",
+      "pixelmap_dump",
+      "qfits_header_add",
+      "qfits_header_add_after",
+      "qfits_header_consoledump",
+      "qfits_header_copy",
+      "qfits_header_default",
+      "qfits_header_del",
+      "qfits_header_destroy",
+      "qfits_header_getstr",
+      "qfits_header_mod",
+      "qfits_header_read",
+      "qfits_header_readext",
+      "sprintf",
+      "xmemory_free",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_build_cal",
+    "calls": [
+      "compute_status",
+      "cube_avg_median",
+      "cube_del",
+      "cube_reject_planes",
+      "double_rms",
+      "e_comment",
+      "e_error",
+      "image_cst_op_local",
+      "image_getmean",
+      "image_getmedian",
+      "image_getstdev",
+      "median_pixelvalue",
+      "mef_cube_load",
+      "mef_cube_overscan_correction",
+      "memcpy",
+      "pixel2double_array",
+      "pow",
+      "sqrt",
+      "strcmp",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_create_orig_filename",
+    "calls": [
+      "e_comment",
+      "e_error",
+      "get_datetimemili_iso8601",
+      "sprintf",
+      "strcmp",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_cube_framelist_load",
+    "calls": [
+      "cube_del",
+      "cube_load_strings",
+      "cube_new",
+      "debug_active",
+      "e_comment",
+      "e_error",
+      "framelist_del",
+      "image_getmean",
+      "mef_load_ext",
+      "qfits_query_n_ext",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_cube_load",
+    "calls": [
+      "debug_active",
+      "e_comment",
+      "e_error",
+      "framelist_load",
+      "mef_cube_framelist_load"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_cube_overscan_correction",
+    "calls": [
+      "compute_status",
+      "cube_del",
+      "debug_active",
+      "e_comment",
+      "e_error",
+      "image_del",
+      "mef_overscan_correction"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_ff_combine",
+    "calls": [
+      "e_comment",
+      "e_error",
+      "image_cst_op",
+      "image_div_local",
+      "image_filter_flat",
+      "image_getmedian",
+      "image_getstdev",
+      "image_mul_local",
+      "image_sub_local",
+      "mef_image_filter_flat"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_get_headers_for",
+    "calls": [
+      "e_comment",
+      "e_error",
+      "fits_header_merge",
+      "mef_get_input_filename",
+      "mef_get_output_filename",
+      "mef_header_eclipse",
+      "mef_header_esophase3",
+      "mef_header_ext",
+      "mef_header_mainsubset",
+      "mef_header_primary",
+      "qfits_header_add",
+      "qfits_header_add_after",
+      "qfits_header_del",
+      "qfits_header_destroy",
+      "qfits_header_mod",
+      "sprintf",
+      "strcmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_get_input_filename",
+    "calls": [
+      "e_error",
+      "strcmp",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_get_output_filename",
+    "calls": [
+      "e_error",
+      "sprintf",
+      "strcmp",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_hdrpix_dump",
+    "calls": [
+      "e_comment",
+      "fclose",
+      "fopen",
+      "qfits_header_dump",
+      "qfits_pixdump",
+      "qfits_zeropad"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_header_eclipse",
+    "calls": [
+      "atof",
+      "e_comment",
+      "e_error",
+      "e_warning",
+      "framelist_del",
+      "framelist_load",
+      "framelist_new",
+      "get_basename",
+      "get_eclipse_version",
+      "is_fits_file",
+      "mef_header_primary",
+      "qfits_header_add",
+      "qfits_header_default",
+      "qfits_header_destroy",
+      "qfits_header_getstr",
+      "sprintf",
+      "strcmp",
+      "xmemory_strdup"
+    ],
+    "references": [
+      "recipe_version"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_header_esophase3",
+    "calls": [
+      "atof",
+      "e_comment",
+      "e_error",
+      "qfits_header_add",
+      "qfits_header_add_after",
+      "qfits_header_default",
+      "qfits_header_del",
+      "qfits_header_getstr",
+      "sprintf",
+      "strcmp"
+    ],
+    "references": [
+      "recipe_version"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_header_ext",
+    "calls": [
+      "e_comment",
+      "e_error",
+      "framelist_firstname",
+      "is_fits_file",
+      "qfits_header_add_after",
+      "qfits_header_del",
+      "qfits_header_getstr",
+      "qfits_header_mod",
+      "qfits_header_read",
+      "qfits_header_readext",
+      "sprintf"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_header_mainsubset",
+    "calls": [
+      "e_error",
+      "mef_header_primary",
+      "qfits_header_add",
+      "qfits_header_default",
+      "qfits_header_destroy",
+      "qfits_header_getstr",
+      "sprintf"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_header_primary",
+    "calls": [
+      "e_error",
+      "framelist_firstname",
+      "is_fits_file",
+      "qfits_header_mod",
+      "qfits_header_read",
+      "sprintf"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_image_filter_flat",
+    "calls": [
+      "compute_status",
+      "image_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_load_ext",
+    "calls": [
+      "debug_active",
+      "e_comment",
+      "qfits_loadpix",
+      "qfitsloader_init",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_overscan_correction",
+    "calls": [
+      "double_rms",
+      "e_comment",
+      "e_error",
+      "function1d_average_reject",
+      "get_basename",
+      "image_getvig",
+      "median_pixelvalue",
+      "pixel2double_array",
+      "strcmp",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_saturation_check",
+    "calls": [
+      "compute_status",
+      "e_comment",
+      "e_error"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_save",
+    "calls": [
+      "e_comment",
+      "mef_create_orig_filename",
+      "mef_get_headers_for",
+      "mef_get_output_filename",
+      "mef_hdrpix_dump",
+      "qfits_header_getstr"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_split",
+    "calls": [
+      "e_comment",
+      "e_error",
+      "fclose",
+      "fits_header_merge",
+      "fopen",
+      "fwrite",
+      "is_fits_file",
+      "qfits_get_datinfo",
+      "qfits_header_destroy",
+      "qfits_header_dump",
+      "qfits_header_getint",
+      "qfits_header_read",
+      "qfits_header_readext",
+      "qfits_query_n_ext",
+      "qfits_zeropad",
+      "sprintf",
+      "xmemory_falloc",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "mef_valid_subset",
+    "calls": [
+      "atoi",
+      "e_comment",
+      "e_error",
+      "framelist_firstname",
+      "framelist_load",
+      "framelist_new",
+      "is_fits_file",
+      "mef_get_output_filename",
+      "mef_header_primary",
+      "qfits_header_destroy",
+      "qfits_header_getstr",
+      "qfits_header_read",
+      "simplifyFilterName",
+      "sprintf",
+      "strcmp",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/ins/mef/common/mefp_lib.c",
+    "function": "simplifyFilterName",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube2image.c",
+    "function": "cube_avg_median",
+    "calls": [
+      "e_error",
+      "image_new",
+      "median_pixelvalue",
+      "xmemory_calloc",
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_arith.c",
+    "function": "cube_div_im",
+    "calls": [
+      "e_error",
+      "image_div_local"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_arith.c",
+    "function": "cube_sub_im",
+    "calls": [
+      "e_error",
+      "image_sub_local"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_handling.c",
+    "function": "cube_del",
+    "calls": [
+      "cube_del_contents",
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_handling.c",
+    "function": "cube_del_contents",
+    "calls": [
+      "image_del",
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_handling.c",
+    "function": "cube_del_shallow",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_handling.c",
+    "function": "cube_new",
+    "calls": [
+      "e_error",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_handling.c",
+    "function": "cube_reject_planes",
+    "calls": [
+      "cube_del",
+      "cube_del_shallow",
+      "cube_new",
+      "image_del"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/cube_load.c",
+    "function": "cube_load_strings",
+    "calls": [
+      "compute_status",
+      "cube_del",
+      "cube_new",
+      "e_error",
+      "qfits_loadpix",
+      "qfitsloader_init",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/detector.c",
+    "function": "cube_create_gainmap_proportional",
+    "calls": [
+      "compute_status",
+      "double3_del",
+      "double3_new",
+      "fit_proportional",
+      "image_getmedian",
+      "image_new",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/detector.c",
+    "function": "cube_create_gainmap_robust",
+    "calls": [
+      "compute_status",
+      "double3_del",
+      "double3_new",
+      "e_comment",
+      "fit_slope_robust",
+      "image_getmedian",
+      "image_new",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/extraction.c",
+    "function": "image_getvig",
+    "calls": [
+      "e_error",
+      "image_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/framelist.c",
+    "function": "framelist_del",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/framelist.c",
+    "function": "framelist_firstname",
+    "calls": [
+      "framelist_del",
+      "framelist_load",
+      "strcpy"
+    ],
+    "references": [
+      "firstname"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/framelist.c",
+    "function": "framelist_load",
+    "calls": [
+      "charmatrix_del",
+      "charmatrix_read",
+      "e_error",
+      "file_exists",
+      "framelist_new",
+      "is_ascii_list",
+      "strlwc",
+      "xmemory_free",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/framelist.c",
+    "function": "framelist_new",
+    "calls": [
+      "xmemory_calloc",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/framelist.c",
+    "function": "is_ascii_list",
+    "calls": [
+      "__isoc99_sscanf",
+      "fclose",
+      "fgets",
+      "file_exists",
+      "fopen",
+      "stat",
+      "strlen",
+      "strstrip"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_arith.c",
+    "function": "image_cst_op",
+    "calls": [
+      "e_error",
+      "image_new",
+      "log",
+      "pow"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_arith.c",
+    "function": "image_cst_op_local",
+    "calls": [
+      "e_error",
+      "log",
+      "pow"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_arith.c",
+    "function": "image_div_local",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_arith.c",
+    "function": "image_mul_local",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_arith.c",
+    "function": "image_normalize",
+    "calls": [
+      "e_error",
+      "image_cst_op",
+      "image_getstats",
+      "image_new",
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_arith.c",
+    "function": "image_sub_local",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_filters.c",
+    "function": "image_filter_flat",
+    "calls": [
+      "image_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_handling.c",
+    "function": "image_del",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_handling.c",
+    "function": "image_from_shmem",
+    "calls": [
+      "e_error",
+      "perror",
+      "qfits_pixin_float",
+      "shmat",
+      "shmdt",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_handling.c",
+    "function": "image_new",
+    "calls": [
+      "e_error",
+      "xmemory_calloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_io.c",
+    "function": "image_loadext",
+    "calls": [
+      "e_error",
+      "is_fits_file",
+      "qfits_loadpix",
+      "qfitsloader_init",
+      "rtd_image_get",
+      "strcmp",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_rtd.c",
+    "function": "rtd_image_get",
+    "calls": [
+      "__isoc99_sscanf",
+      "atoi",
+      "e_error",
+      "image_from_shmem",
+      "rtd_connect",
+      "rtd_disconnect",
+      "rtd_send"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_stats.c",
+    "function": "image_getmean",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_stats.c",
+    "function": "image_getmedian",
+    "calls": [
+      "median_pixelvalue",
+      "memcpy",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_stats.c",
+    "function": "image_getstats",
+    "calls": [
+      "image_getmedian",
+      "sqrt",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/image_stats.c",
+    "function": "image_getstdev",
+    "calls": [
+      "sqrt"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/pixel_handling.c",
+    "function": "pixel2double_array",
+    "calls": [
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/pixel_handling.c",
+    "function": "pixel_qsort",
+    "calls": [
+      "e_error",
+      "exit"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/pixelmaps.c",
+    "function": "image_threshold2pixelmap",
+    "calls": [
+      "pixelmap_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/pixelmaps.c",
+    "function": "pixelmap_del",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/pixelmaps.c",
+    "function": "pixelmap_dump",
+    "calls": [
+      "e_comment",
+      "e_error",
+      "fclose",
+      "fopen",
+      "fwrite",
+      "qfits_header_add",
+      "qfits_header_consoledump",
+      "qfits_header_default",
+      "qfits_header_dump",
+      "qfits_zeropad",
+      "sprintf",
+      "strcmp"
+    ],
+    "references": [
+      "stdout"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/pixelmaps.c",
+    "function": "pixelmap_loadext",
+    "calls": [
+      "atoi",
+      "e_error",
+      "image_del",
+      "image_loadext",
+      "pixelmap_new",
+      "qfits_query_hdr"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/iproc/pixelmaps.c",
+    "function": "pixelmap_new",
+    "calls": [
+      "e_error",
+      "memset",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/doubles.c",
+    "function": "double3_del",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/doubles.c",
+    "function": "double3_new",
+    "calls": [
+      "xmemory_calloc",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/dstats.c",
+    "function": "double_kth_smallest",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/dstats.c",
+    "function": "double_median",
+    "calls": [
+      "double_kth_smallest"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/dstats.c",
+    "function": "double_rms",
+    "calls": [
+      "sqrt"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/fit_curve.c",
+    "function": "fit_proportional",
+    "calls": [
+      "double_median",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/fit_curve.c",
+    "function": "fit_slope_robust",
+    "calls": [
+      "robust_linear_fit",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/fit_curve.c",
+    "function": "robust_linear_fit",
+    "calls": [
+      "double_median",
+      "sqrt",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/function_1d.c",
+    "function": "function1d_average_reject",
+    "calls": [
+      "memcpy",
+      "pixel_qsort",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/median.c",
+    "function": "kth_smallest",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/median.c",
+    "function": "median_pixelvalue",
+    "calls": [
+      "kth_smallest",
+      "opt_med25",
+      "opt_med3",
+      "opt_med5",
+      "opt_med7",
+      "opt_med9"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/median.c",
+    "function": "opt_med25",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/median.c",
+    "function": "opt_med3",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/median.c",
+    "function": "opt_med5",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/median.c",
+    "function": "opt_med7",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/math/median.c",
+    "function": "opt_med9",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/charmatrix.c",
+    "function": "charmatrix_del",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/charmatrix.c",
+    "function": "charmatrix_new",
+    "calls": [
+      "xmemory_calloc",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/charmatrix.c",
+    "function": "charmatrix_read",
+    "calls": [
+      "charmatrix_new",
+      "e_error",
+      "fclose",
+      "fgets",
+      "fopen",
+      "free_tokens",
+      "rewind",
+      "tokenize_line",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "ansiterm_init",
+    "calls": [
+      "getenv",
+      "strncmp"
+    ],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "chop_r",
+    "calls": [
+      "strlen"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "compute_status",
+    "calls": [
+      "e_logfile",
+      "fflush",
+      "fprintf",
+      "fputc",
+      "sprintf"
+    ],
+    "references": [
+      "comm_config",
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "debug_active",
+    "calls": [],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "e_comment",
+    "calls": [
+      "__builtin_va_end",
+      "__builtin_va_start",
+      "chop_r",
+      "e_logfile",
+      "fflush",
+      "fputc",
+      "free",
+      "strdup",
+      "vfprintf",
+      "vsprintf"
+    ],
+    "references": [
+      "comm_config",
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "e_error",
+    "calls": [
+      "__builtin_va_end",
+      "__builtin_va_start",
+      "ansiterm_init",
+      "chop_r",
+      "e_logfile",
+      "fflush",
+      "fputc",
+      "free",
+      "fwrite",
+      "strdup",
+      "vfprintf",
+      "vsprintf"
+    ],
+    "references": [
+      "comm_config",
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "e_logfile",
+    "calls": [
+      "atexit",
+      "e_logfile_start",
+      "fclose",
+      "fopen",
+      "fprintf"
+    ],
+    "references": [
+      "comm_config",
+      "e_logfile_stop",
+      "logfile_started"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "e_logfile_start",
+    "calls": [
+      "chop_r",
+      "create_logtimestamp",
+      "ctime",
+      "fclose",
+      "fopen",
+      "fprintf",
+      "fwrite",
+      "sprintf",
+      "strcpy",
+      "time"
+    ],
+    "references": [
+      "comm_config",
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "e_logfile_stop",
+    "calls": [
+      "chop_r",
+      "ctime",
+      "fclose",
+      "fopen",
+      "fprintf",
+      "sprintf",
+      "time"
+    ],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "e_warning",
+    "calls": [
+      "__builtin_va_end",
+      "__builtin_va_start",
+      "ansiterm_init",
+      "chop_r",
+      "e_logfile",
+      "fflush",
+      "free",
+      "fwrite",
+      "strdup",
+      "vfprintf",
+      "vsprintf"
+    ],
+    "references": [
+      "comm_config",
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "get_logfilename",
+    "calls": [],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "hello_world",
+    "calls": [
+      "fprintf"
+    ],
+    "references": [
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "logfile_active",
+    "calls": [],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "set_debug",
+    "calls": [],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "set_logfile",
+    "calls": [],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "set_logfilename",
+    "calls": [
+      "strcpy"
+    ],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "set_verbose",
+    "calls": [],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/comm.c",
+    "function": "verbose_active",
+    "calls": [],
+    "references": [
+      "comm_config"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/e_config.c",
+    "function": "eclipse_init",
+    "calls": [
+      "atoi",
+      "debug_active",
+      "fprintf",
+      "fwrite",
+      "get_logfilename",
+      "getenv",
+      "logfile_active",
+      "set_debug",
+      "set_logfile",
+      "set_logfilename",
+      "set_verbose",
+      "verbose_active"
+    ],
+    "references": [
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/e_version.c",
+    "function": "eclipse_display_license",
+    "calls": [
+      "fputs"
+    ],
+    "references": [
+      "eclipse_logo1",
+      "eclipse_logo2",
+      "eclipse_logo3",
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/e_version.c",
+    "function": "get_eclipse_version",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/e_version.c",
+    "function": "print_eclipse_version",
+    "calls": [
+      "fprintf",
+      "get_eclipse_version"
+    ],
+    "references": [
+      "stdout"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/file_handling.c",
+    "function": "file_exists",
+    "calls": [
+      "stat"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/filename.c",
+    "function": "get_basename",
+    "calls": [
+      "strrchr"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/filename.c",
+    "function": "get_rootname",
+    "calls": [
+      "strcmp",
+      "strcpy",
+      "strlen",
+      "strrchr"
+    ],
+    "references": [
+      "path"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/getopt.c",
+    "function": "getopt_internal",
+    "calls": [
+      "fprintf",
+      "getenv",
+      "is_option",
+      "memcmp",
+      "permute",
+      "strchr",
+      "strcmp",
+      "strlen"
+    ],
+    "references": [
+      "internal_optarg",
+      "internal_opterr",
+      "internal_optind",
+      "internal_optopt",
+      "optwhere",
+      "stderr"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/getopt.c",
+    "function": "internal_getopt_long",
+    "calls": [
+      "getopt_internal"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/getopt.c",
+    "function": "is_option",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/getopt.c",
+    "function": "permute",
+    "calls": [
+      "reverse_argv_elements"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/getopt.c",
+    "function": "reverse_argv_elements",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/parse_tok.c",
+    "function": "free_tokens",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/parse_tok.c",
+    "function": "tokenize_line",
+    "calls": [
+      "strtok",
+      "xmemory_calloc",
+      "xmemory_free",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "get_rtd_info",
+    "calls": [
+      "__isoc99_fscanf",
+      "e_error",
+      "fclose",
+      "fopen",
+      "getenv",
+      "gethostname",
+      "kill",
+      "perror",
+      "sprintf",
+      "strcmp"
+    ],
+    "references": [
+      "rtd_info"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "read_line",
+    "calls": [
+      "read"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "read_socket",
+    "calls": [
+      "read"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "rtd_connect",
+    "calls": [
+      "connect",
+      "debug_active",
+      "e_error",
+      "get_rtd_info",
+      "gethostbyname",
+      "htons",
+      "memset",
+      "perror",
+      "socket",
+      "strncpy"
+    ],
+    "references": [
+      "rtd_info"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "rtd_disconnect",
+    "calls": [
+      "close"
+    ],
+    "references": [
+      "rtd_info"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "rtd_get_result",
+    "calls": [
+      "__isoc99_sscanf",
+      "e_error",
+      "free",
+      "malloc",
+      "read_line",
+      "read_socket"
+    ],
+    "references": [
+      "buf",
+      "rbuf",
+      "rbufsize"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "rtd_send",
+    "calls": [
+      "e_error",
+      "rtd_get_result",
+      "rtd_send_engine"
+    ],
+    "references": [
+      "rtd_info"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "rtd_send_engine",
+    "calls": [
+      "e_error",
+      "write_line"
+    ],
+    "references": [
+      "rtd_info"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "write_line",
+    "calls": [
+      "strlen",
+      "write_socket"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/rtd_i.c",
+    "function": "write_socket",
+    "calls": [
+      "write"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/strlib.c",
+    "function": "strlwc",
+    "calls": [
+      "memset",
+      "tolower"
+    ],
+    "references": [
+      "l"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/strlib.c",
+    "function": "strstrip",
+    "calls": [
+      "__ctype_b_loc",
+      "memset",
+      "strcpy",
+      "strlen"
+    ],
+    "references": [
+      "l"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/t_iso8601.c",
+    "function": "date_now",
+    "calls": [
+      "time",
+      "timer_to_date"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/t_iso8601.c",
+    "function": "get_datetime_iso8601",
+    "calls": [
+      "date_now",
+      "sprintf",
+      "time_now"
+    ],
+    "references": [
+      "date_iso8601"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/t_iso8601.c",
+    "function": "get_datetimemili_iso8601",
+    "calls": [
+      "date_now",
+      "sprintf",
+      "time_now"
+    ],
+    "references": [
+      "date_iso8601"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/t_iso8601.c",
+    "function": "time_now",
+    "calls": [
+      "gettimeofday",
+      "timer_to_time"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/t_iso8601.c",
+    "function": "timer_to_date",
+    "calls": [
+      "localtime"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/t_iso8601.c",
+    "function": "timer_to_time",
+    "calls": [
+      "localtime"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/t_stamp.c",
+    "function": "create_logtimestamp",
+    "calls": [
+      "get_login_name",
+      "gethostname",
+      "getpid",
+      "sprintf"
+    ],
+    "references": [
+      "timestamp"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "mefpp2/src/unix/userid.c",
+    "function": "get_login_name",
+    "calls": [
+      "getpwuid",
+      "getuid",
+      "strcpy"
+    ],
+    "references": [
+      "name"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/byteswap.c",
+    "function": "swap_bytes",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/byteswap.c",
+    "function": "swap_bytes_16",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/byteswap.c",
+    "function": "swap_bytes_32",
+    "calls": [],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/cache.c",
+    "function": "qfits_cache_activate",
+    "calls": [
+      "atexit"
+    ],
+    "references": [
+      "qfits_cache",
+      "qfits_cache_purge"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/cache.c",
+    "function": "qfits_cache_add",
+    "calls": [
+      "atoi",
+      "fclose",
+      "fopen",
+      "fread",
+      "fseek",
+      "qfits_cache_activate",
+      "qfits_getvalue",
+      "rewind",
+      "stat",
+      "xmemory_free",
+      "xmemory_malloc",
+      "xmemory_strdup"
+    ],
+    "references": [
+      "qfits_cache",
+      "qfits_cache_entries",
+      "qfits_cache_init",
+      "qfits_cache_last"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/cache.c",
+    "function": "qfits_cache_purge",
+    "calls": [
+      "exit",
+      "xmemory_free"
+    ],
+    "references": [
+      "qfits_cache",
+      "qfits_cache_entries",
+      "qfits_cache_last"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/cache.c",
+    "function": "qfits_is_cached",
+    "calls": [
+      "stat"
+    ],
+    "references": [
+      "qfits_cache",
+      "qfits_cache_entries"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/cache.c",
+    "function": "qfits_query",
+    "calls": [
+      "qfits_cache_add",
+      "qfits_is_cached"
+    ],
+    "references": [
+      "qfits_cache"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/expkey.c",
+    "function": "expkey_strupc",
+    "calls": [
+      "memset",
+      "toupper"
+    ],
+    "references": [
+      "l"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/expkey.c",
+    "function": "qfits_expand_keyword",
+    "calls": [
+      "expkey_strupc",
+      "memcpy",
+      "sprintf",
+      "strcat",
+      "strchr",
+      "strcpy",
+      "strlen",
+      "strtok"
+    ],
+    "references": [
+      "expanded"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "keytuple2str",
+    "calls": [
+      "memcpy",
+      "memset",
+      "qfits_is_boolean",
+      "qfits_is_complex",
+      "qfits_is_float",
+      "qfits_is_int",
+      "qfits_pretty_string",
+      "sprintf",
+      "strcmp",
+      "strcpy",
+      "strlen",
+      "strncmp",
+      "strncpy"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "keytuple_del",
+    "calls": [
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "keytuple_dmp",
+    "calls": [
+      "printf",
+      "putchar"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "keytuple_new",
+    "calls": [
+      "keytuple_type",
+      "qfits_expand_keyword",
+      "xmemory_malloc",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "keytuple_type",
+    "calls": [
+      "strcmp",
+      "strlen",
+      "strncmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_add",
+    "calls": [
+      "keytuple_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_add_after",
+    "calls": [
+      "keytuple_new",
+      "qfits_expand_keyword",
+      "strcmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_append",
+    "calls": [
+      "keytuple_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_consoledump",
+    "calls": [
+      "keytuple_dmp",
+      "puts"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_copy",
+    "calls": [
+      "qfits_header_append",
+      "qfits_header_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_default",
+    "calls": [
+      "qfits_header_append",
+      "qfits_header_new"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_del",
+    "calls": [
+      "keytuple_del",
+      "qfits_expand_keyword",
+      "strcmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_destroy",
+    "calls": [
+      "keytuple_del",
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_dump",
+    "calls": [
+      "fwrite",
+      "memset",
+      "qfits_header_makeline"
+    ],
+    "references": [
+      "stderr",
+      "stdout"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_getint",
+    "calls": [
+      "__isoc99_sscanf",
+      "qfits_header_getstr"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_getitem",
+    "calls": [
+      "strcpy"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_getstr",
+    "calls": [
+      "qfits_expand_keyword",
+      "strcmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_makeline",
+    "calls": [
+      "keytuple2str",
+      "memcpy",
+      "memset"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_mod",
+    "calls": [
+      "qfits_expand_keyword",
+      "strcmp",
+      "xmemory_free",
+      "xmemory_strdup"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_h.c",
+    "function": "qfits_header_new",
+    "calls": [
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_p.c",
+    "function": "qfits_getcomment",
+    "calls": [
+      "memset",
+      "strncmp",
+      "strncpy"
+    ],
+    "references": [
+      "comment"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_p.c",
+    "function": "qfits_getkey",
+    "calls": [
+      "memcpy",
+      "memset",
+      "strncmp",
+      "strncpy"
+    ],
+    "references": [
+      "key"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_p.c",
+    "function": "qfits_getvalue",
+    "calls": [
+      "memset",
+      "strncmp",
+      "strncpy"
+    ],
+    "references": [
+      "value"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_rw.c",
+    "function": "is_blank_line",
+    "calls": [
+      "strlen"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_rw.c",
+    "function": "is_fits_file",
+    "calls": [
+      "fclose",
+      "fopen",
+      "fread",
+      "qfits_error",
+      "strstr",
+      "xmemory_calloc",
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_rw.c",
+    "function": "qfits_header_read",
+    "calls": [
+      "qfits_header_readext"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_rw.c",
+    "function": "qfits_header_readext",
+    "calls": [
+      "is_blank_line",
+      "memcpy",
+      "qfits_get_hdrinfo",
+      "qfits_getcomment",
+      "qfits_getkey",
+      "qfits_getvalue",
+      "qfits_header_append",
+      "qfits_header_destroy",
+      "qfits_header_new",
+      "qfits_query_n_ext",
+      "strlen",
+      "xmemory_falloc",
+      "xmemory_fdealloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/fits_rw.c",
+    "function": "qfits_zeropad",
+    "calls": [
+      "fclose",
+      "fopen",
+      "fwrite",
+      "stat",
+      "xmemory_calloc",
+      "xmemory_free"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pafs.c",
+    "function": "qfits_is_paf_file",
+    "calls": [
+      "fclose",
+      "fgets",
+      "fopen",
+      "qfits_error",
+      "strncmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pafs.c",
+    "function": "qfits_paf_query",
+    "calls": [
+      "__isoc99_sscanf",
+      "fclose",
+      "fgets",
+      "fopen",
+      "qfits_error",
+      "qfits_is_paf_file",
+      "qfits_strcrop",
+      "strcmp",
+      "strcpy",
+      "strlen",
+      "strncpy"
+    ],
+    "references": [
+      "value"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pafs.c",
+    "function": "qfits_strcrop",
+    "calls": [
+      "__ctype_b_loc",
+      "memset",
+      "strcpy",
+      "strlen"
+    ],
+    "references": [
+      "l"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_loadpix",
+    "calls": [
+      "qfits_loadpix_window"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_loadpix_window",
+    "calls": [
+      "fclose",
+      "fopen",
+      "fread",
+      "fseek",
+      "qfits_error",
+      "qfits_pixin_double",
+      "qfits_pixin_float",
+      "qfits_pixin_int",
+      "xmemory_falloc",
+      "xmemory_fdealloc",
+      "xmemory_free",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_pixdump",
+    "calls": [
+      "fclose",
+      "fopen",
+      "fwrite",
+      "qfits_error",
+      "qfits_pixdump_double",
+      "qfits_pixdump_float",
+      "qfits_pixdump_int",
+      "strncmp",
+      "xmemory_free"
+    ],
+    "references": [
+      "stdout"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_pixdump_double",
+    "calls": [
+      "memcpy",
+      "qfits_error",
+      "swap_bytes",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_pixdump_float",
+    "calls": [
+      "memcpy",
+      "qfits_error",
+      "swap_bytes",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_pixdump_int",
+    "calls": [
+      "memcpy",
+      "qfits_error",
+      "swap_bytes",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_pixin_double",
+    "calls": [
+      "swap_bytes",
+      "swap_bytes_16",
+      "swap_bytes_32",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_pixin_float",
+    "calls": [
+      "swap_bytes",
+      "swap_bytes_16",
+      "swap_bytes_32",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfits_pixin_int",
+    "calls": [
+      "swap_bytes",
+      "swap_bytes_16",
+      "swap_bytes_32",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/pixio.c",
+    "function": "qfitsloader_init",
+    "calls": [
+      "atof",
+      "is_fits_file",
+      "qfits_error",
+      "qfits_get_datinfo",
+      "qfits_header_destroy",
+      "qfits_header_getint",
+      "qfits_header_getstr",
+      "qfits_header_readext",
+      "qfits_pretty_string",
+      "qfits_query_n_ext",
+      "stat",
+      "strcmp"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/qerror.c",
+    "function": "qfits_err_main_display",
+    "calls": [],
+    "references": [
+      "qfits_err_control"
+    ],
+    "indirect_call_present": true
+  },
+  {
+    "source": "qfits52/src/qerror.c",
+    "function": "qfits_error",
+    "calls": [
+      "__builtin_va_end",
+      "__builtin_va_start",
+      "qfits_err_main_display",
+      "sprintf",
+      "vsprintf"
+    ],
+    "references": [
+      "qfits_err_control"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_get_datinfo",
+    "calls": [
+      "qfits_query"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_get_hdrinfo",
+    "calls": [
+      "qfits_query"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_is_boolean",
+    "calls": [
+      "strlen"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_is_complex",
+    "calls": [
+      "exit",
+      "qfits_error",
+      "regcomp",
+      "regexec",
+      "regfree"
+    ],
+    "references": [
+      "regex_cmp"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_is_float",
+    "calls": [
+      "exit",
+      "qfits_error",
+      "regcomp",
+      "regexec",
+      "regfree"
+    ],
+    "references": [
+      "regex_float"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_is_int",
+    "calls": [
+      "exit",
+      "qfits_error",
+      "regcomp",
+      "regexec",
+      "regfree"
+    ],
+    "references": [
+      "regex_int"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_pretty_string",
+    "calls": [
+      "strlen"
+    ],
+    "references": [
+      "flip",
+      "pretty_buf"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_query_ext",
+    "calls": [
+      "qfits_expand_keyword",
+      "qfits_get_hdrinfo",
+      "qfits_getvalue",
+      "strlen",
+      "xmemory_falloc",
+      "xmemory_fdealloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_query_hdr",
+    "calls": [
+      "qfits_query_ext"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/simple.c",
+    "function": "qfits_query_n_ext",
+    "calls": [
+      "qfits_query"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/version.c",
+    "function": "qfits_version",
+    "calls": [],
+    "references": [
+      "_qfits_version"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_addcell",
+    "calls": [
+      "exit",
+      "fprintf",
+      "strncpy",
+      "xmemory_hash"
+    ],
+    "references": [
+      "stderr",
+      "xmemory_p_memtype",
+      "xmemory_p_mm_filename",
+      "xmemory_p_mm_hash",
+      "xmemory_p_mm_refcount",
+      "xmemory_p_size",
+      "xmemory_p_swapfd",
+      "xmemory_p_swapfileid",
+      "xmemory_p_val",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_calloc",
+    "calls": [
+      "memset",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_cleanup",
+    "calls": [
+      "remove",
+      "xmemory_tmpfilename"
+    ],
+    "references": [
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_dumpcell",
+    "calls": [
+      "fprintf",
+      "fputc",
+      "xmemory_tmpfilename"
+    ],
+    "references": [
+      "xmemory_p_memtype",
+      "xmemory_p_mm_filename",
+      "xmemory_p_size",
+      "xmemory_p_swapfd",
+      "xmemory_p_swapfileid",
+      "xmemory_p_val"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_falloc",
+    "calls": [
+      "close",
+      "mmap",
+      "open",
+      "stat",
+      "strncmp",
+      "xmemory_addcell",
+      "xmemory_hash",
+      "xmemory_init"
+    ],
+    "references": [
+      "xmemory_initialized",
+      "xmemory_p_mm_filename",
+      "xmemory_p_mm_hash",
+      "xmemory_p_mm_refcount",
+      "xmemory_p_size",
+      "xmemory_p_val",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_fdealloc",
+    "calls": [
+      "close",
+      "fprintf",
+      "free",
+      "munmap",
+      "remove",
+      "xmemory_remcell",
+      "xmemory_tmpfilename"
+    ],
+    "references": [
+      "stderr",
+      "xmemory_p_memtype",
+      "xmemory_p_mm_refcount",
+      "xmemory_p_size",
+      "xmemory_p_swapfd",
+      "xmemory_p_swapfileid",
+      "xmemory_p_val",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_free",
+    "calls": [
+      "close",
+      "fprintf",
+      "free",
+      "munmap",
+      "remove",
+      "xmemory_remcell",
+      "xmemory_tmpfilename"
+    ],
+    "references": [
+      "stderr",
+      "xmemory_p_memtype",
+      "xmemory_p_mm_refcount",
+      "xmemory_p_size",
+      "xmemory_p_swapfd",
+      "xmemory_p_swapfileid",
+      "xmemory_p_val",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_hash",
+    "calls": [
+      "strlen"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_init",
+    "calls": [
+      "atexit",
+      "getpagesize",
+      "getrlimit",
+      "memset",
+      "setrlimit"
+    ],
+    "references": [
+      "xmemory_cleanup",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_malloc",
+    "calls": [
+      "close",
+      "exit",
+      "fchmod",
+      "fwrite",
+      "malloc",
+      "memset",
+      "mmap",
+      "open",
+      "perror",
+      "remove",
+      "write",
+      "xmemory_addcell",
+      "xmemory_init",
+      "xmemory_tmpfilename"
+    ],
+    "references": [
+      "stderr",
+      "xmemory_initialized",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_remcell",
+    "calls": [],
+    "references": [
+      "xmemory_p_val",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_status_",
+    "calls": [
+      "fprintf",
+      "fwrite",
+      "xmemory_dumpcell"
+    ],
+    "references": [
+      "stderr",
+      "xmemory_table"
+    ],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_strdup",
+    "calls": [
+      "strcpy",
+      "strlen",
+      "xmemory_malloc"
+    ],
+    "references": [],
+    "indirect_call_present": false
+  },
+  {
+    "source": "qfits52/src/xmemory.c",
+    "function": "xmemory_tmpfilename",
+    "calls": [
+      "getpid",
+      "sprintf"
+    ],
+    "references": [
+      "xmem_tmpfilename",
+      "xmemory_tmpdirname"
+    ],
+    "indirect_call_present": false
+  }
+]

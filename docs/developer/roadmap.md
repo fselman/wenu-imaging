@@ -1,5 +1,31 @@
 # wenu-imaging roadmap
 
+## Architecture audit and full roadmap before native modification, 25 October 2026
+
+Fernando explicitly requires the [native architecture audit](native-architecture-audit-2026-10-25.md)
+before a full roadmap, and that roadmap before implementation. This supersedes
+starting the qfits move/build fixes immediately after the installation audit.
+#73 tracks the architecture/modern-practice assessment and Eclipse usage map.
+The audit includes 99 compile-only analysis units and static symbol/call
+evidence: Eclipse 79 built units, 33 potential-call units and 53 conservative
+object-closure units; qfits 18/12/14. These are agent Linux analysis results,
+not target linking/runtime coverage or authorization to delete code.
+
+The requested future component candidates are bias, BPM, non-linearity
+determination and application, dome flat, sky flat, master flat and science
+processing, with shared detector/image/FITS/configuration/QC/provenance services.
+Existing functions provide partial foundations; non-linearity routines exist
+in Eclipse but are not reached by the current mefpp workflow.
+The next deliverable after audit review is the full roadmap: explicit component
+contracts and dependency decisions, build/install options, behavior-preservation
+tests and Mac-first/chapman3 acceptance. No framework/language rewrite, API,
+scientific dependency order or component implementation is selected yet.
+
+Keep #64/#65–#71 installation work and new #74–#76 source findings recorded,
+but make no native source/layout/build/installed-selection changes until the
+roadmap is reviewed and agreed. The earlier installation-first sequence below
+remains the background objective, subject to this new review gate.
+
 ## Approved reordering: mefpp/qfits installation audit first, 25 October 2026
 
 Fernando explicitly brings point 5 forward now: audit mefpp and qfits build/

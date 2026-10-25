@@ -1,0 +1,12 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_valid_subset’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c:1853:25: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1853 |                         sprintf(name_i, bb->name_bpm) ;
+      |                         ^~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_bpm’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c:2226:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2226 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c:3197:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3197 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
