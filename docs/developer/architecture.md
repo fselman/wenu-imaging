@@ -1,5 +1,11 @@
 # wenu-imaging architecture
 
+Roadmap revision 1.1 adds observatory/archive data-model examples, required native
+Apple Silicon qualification, and a provisional assessment of intra-detector CPU
+threads/GPU backends. These do not change the observed architecture: mefpp is
+still serial and no new format or accelerator is implemented. See the versioned
+native roadmap for gates, CPU fallback, precision and platform requirements.
+
 Data-representation review added to native roadmap v1, 25 October 2026: insert
 stage 2A immediately after memory qualification and before component contracts.
 Review current accepted formats/metadata models and in-memory structures,

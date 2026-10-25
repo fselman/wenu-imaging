@@ -1,6 +1,6 @@
 # mefpp modernization roadmap — version 1
 
-Date: 25 October 2026. Status: first proposal for Fernando's review.
+Date: 25 October 2026. Revision: 1.1. Status: first roadmap, amended for review.
 Documentation baseline: b2867c1da3ae4567cc7168c2f0ca13021aea2f33.
 Owner: Fernando Selman; canonical development repository: fselman/wenu-imaging.
 
@@ -47,12 +47,13 @@ Tracking parents: #64 (build/install) and #73 (architecture/roadmap).
 | 4 | Missing calibration services | Linearity/shutter/gain/RON, dark and fringes have defined products and separately qualified methods |
 | 5 | Single-detector CCD service | Primary-image and single-extension layouts, geometry and calibration behavior pass dedicated tests |
 | 6 | Parallel mosaic service | Serial/parallel equivalence, resource limits, failure isolation and restart tests pass |
-| 7 | Native Windows qualification | Clean native build/install and supported serial/parallel functional suite on a real Windows target |
+| 6A | Optional accelerator assessment | Profiled CPU/thread/GPU comparison and explicit adopt/defer decision; CPU fallback retained |
+| 7 | Native platform completion | Native Apple Silicon and Windows build/install and supported serial/parallel suite on actual targets; remaining Ubuntu qualification recorded |
 | 8 | CMOS review and services | Camera/mode-specific acquisition, calibration, timing, masks and uncertainty contracts reviewed and tested |
 
 Windows portability checks begin in stages 0–1; stage 7 is full target acceptance,
-not permission to defer all platform design until then. Existing Apple Silicon
-and Ubuntu requirements remain in the compatibility matrix with pending status.
+not permission to defer all platform design until then. Native Apple Silicon is a required support target, alongside Intel Mac, chapman3,
+Windows and Ubuntu; record real target results with pending status until tested.
 No dates or throughput promises are assigned before representative measurements.
 
 ## Stage 0 — Select tools and freeze the comparison baseline
@@ -115,7 +116,11 @@ products are useful evidence, not complete calibration or WFI certification.
 Mac first: fresh source/private prefix; record compiler/SDK/archive/resource
 identities, run small native and representative reduction tests through the
 installed Pycavi wrapper with explicit paths. Preserve the selected old engine.
-Then repeat on chapman3 using its actual allocation/filesystem/toolchain. An
+Then repeat on chapman3 using its actual allocation/filesystem/toolchain. Add
+a native arm64 Apple Silicon build/install lane as soon as a target is available;
+verify executable/library architecture, SDK/dependencies and installed runtime,
+without an accidental Rosetta/x86_64 dependency. Do not assume all newer Macs or
+macOS releases pass because the Intel Mac passed. An
 agent-host Linux compile is not acceptance of either machine. Select a candidate
 as the normal engine only after its target gate; retain rollback information.
 Build graph parallelism and runtime detector parallelism are separate questions.
@@ -168,6 +173,33 @@ must be checked separately, not inferred from an internal format choice.
 | ASDF | Astronomy-oriented schema-based hierarchical metadata and arrays; relevant WCS/model serialization | Establish suitable C access or Python-owned boundary, schema/plugin availability and interoperability |
 | Zarr v3 | Chunked arrays and sharding with multiple language implementations | Verify actual C feature/codec support, shared-filesystem file counts, write ownership and version compatibility |
 | Relevant IVOA models | Metadata semantics, discovery/interoperability and provenance review | Distinguish approved Recommendations from drafts/notes; these are not substitute array containers |
+
+### Observatory and archive practices required in the review
+
+Investigate JWST, Roman, Rubin, ELT and public future ESO archive proposals, not
+only generic container specifications. For each record source/date/version,
+raw/intermediate/delivered product types, metadata/WCS and uncertainty/mask model,
+internal abstraction versus physical serialization, adopted versus proposed
+status, access patterns and implications for a portable C core/Python client.
+
+Preliminary official-source pointers, checked 25 October 2026 (not the completed
+stage-2A audit):
+
+| System | Current documented direction / question for the audit |
+|---|---|
+| JWST | Pipeline products are predominantly FITS, with ASDF metadata/WCS and some standalone ASDF reference files; study the data-model abstraction rather than treating this as universal FITS replacement |
+| Roman | WFI science products use ASDF; inspect schemas, arrays, WCS, calibration provenance and supported implementations. Roman WFI is distinct from ESO's WFI instrument |
+| Rubin | Published DP1 raw/deep-coadd images are FITS; Butler abstracts storage/retrieval. Study image/variance/mask objects, dataset identity and storage adapters; Butler is not a file format |
+| ELT | Public ICS Data Acquisition manual ESO-396401 v3 (2024-12-11) describes FITS data products; investigate instrument/product-specific requirements instead of inferring all future ELT formats |
+| ESO archive evolution | Review current DIC, Phase 3 product standard and public archive/ELT plans; distinguish binding releases, drafts and research proposals |
+
+ESO's DIC page identifies version 8, released 5 March 2025, as the official
+version at the time of this check. Current public Phase 3 guidance describes FITS
+products. No adopted archive-wide FITS replacement was established by this initial
+search. Recheck during the full audit; if future documents/drafts are unavailable,
+record that uncertainty rather than inventing policy or contacting ESO without
+Fernando's instruction. A new internal representation must not silently change
+the delivery format required by ESO or other consumers.
 
 This is a shortlist, not an exhaustive standards audit or a claim of one accepted
 successor to FITS. During the review verify current specification status, adoption,
@@ -347,7 +379,71 @@ Stay within one node and account for outer processes times internal tool/BLAS
 threads. No MPI or new threading requirement is implied. Most arithmetic may be
 independent; the current implementation is not thereby already concurrency-safe.
 
-## Stage 7 — Native Windows build and installation
+### Threads inside each detector
+
+Evaluate detector processes and intra-detector threads separately. First qualify
+one CPU thread per worker; then benchmark representative pure numerical kernels
+with controlled threading. Candidate work includes pixel arithmetic, filtering,
+per-pixel fits and stack reductions. Use tiling/halos where neighborhood operations
+require them. Keep FITS I/O, shared qfits/Eclipse state and final writers outside
+threaded regions unless explicitly made and tested thread-safe.
+
+OpenMP is a candidate optional C threading interface, not a selected requirement;
+check compiler/runtime support on all targets, especially Apple Clang. Preserve a
+serial build without its runtime. Compare workers x threads configurations under
+a global CPU/memory budget; external tool/BLAS threads count too. More threads per
+detector is not a universal default: memory bandwidth, small tasks, shared cache,
+I/O and nested parallelism can limit gains. A single detector or few exposures may
+benefit differently from a full mosaic. Require race, reproducibility and failure
+checks in addition to speed measurements; memory-leak checks alone do not test races.
+
+## Stage 6A — Optional GPU and accelerator assessment
+
+This is an assessment deliverable, not a GPU implementation commitment or a new
+prerequisite for CPU functionality. GPUs are valid scientific computing devices;
+benefit and accuracy depend on algorithm, precision, backend and actual hardware.
+Profile first. Candidate kernels include repeated large pixel operations,
+convolutions/filtering and batched per-pixel fits; small fits, FITS parsing, metadata
+and filesystem work are unlikely first targets. Even large simple arithmetic may
+be limited by memory traffic rather than computation.
+
+Compare serial/vectorized CPU, detector processes, controlled CPU threads and
+selected GPU kernels on the same workloads. Include transfer/conversion, kernel
+launch, synchronization, memory allocation and end-to-end I/O costs; measure peak
+memory and throughput with the shared mosaic normalization preserved. Unified
+memory does not remove bandwidth, synchronization or layout costs.
+
+Keep the portable ANSI-C CPU core mandatory and any accelerator behind a narrow
+optional backend. CUDA/NVIDIA and Metal/Apple are different ecosystems; shader or
+GPU-specific code is not itself portable ANSI C. Do not introduce C++ as a core
+requirement by selecting a backend silently. Investigate alternatives only against
+actual supported hardware, toolchains, dependency/licensing and maintenance cost.
+No NVIDIA GPU on chapman3 or GPU on the Intel Mac is assumed from existing records.
+
+Define precision per operation, especially accumulation, variance, fitting and
+rejection decisions. Verify FP32/FP64 support and throughput on each target; do
+not infer double-precision compute from 64-bit integer or address support or from
+CPU double support. No automatic FP64-to-FP32 conversion or fast-math change.
+Compare pixel/calibration/QC results and selection boundaries against the CPU
+reference with reviewed tolerances; deterministic reductions and reproducibility
+policy must be explicit. Retain CPU fallback for unavailable/unsupported devices.
+
+Gate: a measured adopt/defer recommendation with scope, precision, platform matrix,
+CPU fallback, scientific equivalence and cost. GPU implementation, if worthwhile,
+gets its own approved plan and may be deferred without blocking CMOS design or
+other CPU-only deliverables. No hardware purchase or GPU dependency is implied.
+
+## Stage 7 — Native Apple Silicon and Windows qualification
+
+Apple Silicon is an explicit supported-platform requirement, not optional GPU
+support. Qualify native arm64 source build, bundled libraries/resources, installation,
+C/Python boundary and representative serial/single-detector/parallel paths on an
+identified current machine/macOS/compiler. Inspect binary/dependency architectures;
+Rosetta execution is not arm64 acceptance. Record minimum OS/SDK and tested hardware;
+new Apple Silicon generations remain targets to qualify rather than an unbounded
+claim of compatibility. CPU-only operation must work without a GPU backend.
+
+### Windows build and installation
 
 Audit paths, process launching, temporary files, permissions, getopt, shell helpers,
 Unix sockets/shared memory and other POSIX dependencies. Isolate/disable optional
@@ -430,6 +526,7 @@ were already installed. Discuss scope/order changes before dependent work.
 | Version | Date | Change | Status |
 |---|---|---|---|
 | 1 | 2026-10-25 | Initial build -> memory -> data review -> components -> single-detector -> parallel -> Windows -> CMOS plan, with calibration contracts | Proposed for review; no implementation started |
+| 1.1 | 2026-10-25 | Observatory/archive scope for data review; explicit native Apple Silicon acceptance; optional intra-detector threading and GPU assessment | Planning amendment; no implementation or GPU backend selected |
 
 ## Primary references informing the design
 
@@ -455,3 +552,17 @@ were already installed. Discuss scope/order changes before dependent work.
 - [Alarcon et al. 2023, astronomical IMX455/IMX411 characterization](https://arxiv.org/abs/2302.03700),
   [pixel-dependent CMOS characterization](https://www.nature.com/articles/s41467-022-30907-2)
   and [Andor exposure-mode explanation](https://andor.oxinst.com/learning/view/article/rolling-and-global-shutter).
+
+### Additional primary references for revision 1.1
+
+- [JWST processing products](https://jwst-pipeline.readthedocs.io/en/stable/jwst/data_products/stages.html).
+- [Roman ASDF information](https://roman-docs.stsci.edu/data-handbook/wfi-data-levels-and-products/asdf-format-information).
+- [Rubin DP1 raw FITS exposures](https://dp1.lsst.io/products/images/raw_exposure.html),
+  [deep coadds](https://dp1.lsst.io/products/images/deep_coadd.html) and
+  [Butler/pipeline design](https://arxiv.org/abs/2303.03313).
+- [ELT ICS Data Acquisition manual, v3](https://ftp.eso.org/pub/elt/documents/ESO-396401-ELT_ICS_Framework_-_Data_Acquisition_-_User_Manual.pdf).
+- [ESO Data Interface Control status](https://www.eso.org/cms/tools-documentation/eso-data-interface-control.html)
+  and [Phase 3 product guidance](https://support.eso.org/en-US/kb/articles/description-of-reduced-data-products-in-the-eso-science-archive).
+- [OpenMP overview](https://www.openmp.org/spec-html/5.2/openmpch1.html),
+  [NVIDIA floating-point guidance](https://docs.nvidia.com/cuda/floating-point/index.html)
+  and [Apple Metal compute](https://developer.apple.com/metal/).

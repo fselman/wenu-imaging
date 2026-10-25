@@ -1,5 +1,15 @@
 # wenu-imaging roadmap
 
+Roadmap v1 revision 1.1, 25 October 2026: extend data review to JWST, Roman,
+Rubin, ELT and publicly documented future ESO archive plans, distinguishing
+adopted standards from proposals/unknowns. Native Apple Silicon arm64 build/install
+and functional acceptance is required; Rosetta is not acceptance. Extend the
+parallel design assessment to optional threads within detectors and optional GPU
+backends only after profiling/equivalence evidence, retaining a portable ANSI-C
+CPU baseline, global resource limits and shared mosaic normalization. This is
+planning authorization, not permission to add threading/GPU dependencies or run
+new workloads. No accelerator backend or hardware purchase is selected.
+
 Data-representation review added to native roadmap v1, 25 October 2026: insert
 stage 2A immediately after memory qualification and before component contracts.
 Review current accepted formats/metadata models and in-memory structures,
