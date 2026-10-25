@@ -1,5 +1,13 @@
 # wenu-imaging
 
+Current priority, approved 25 October 2026: Fernando defers pip-versus-Conda/
+micromamba packaging as a TODO and resumes the existing native qualification.
+See [current next work](docs/developer/roadmap.md) and native roadmap revision 1.4. Next is the
+read-only CP Pup fixture/installed-candidate preflight, then isolated native
+output comparison and remaining Stage 1 gates. Do not start package-manager
+prototypes, provisioning, publication or bulk document moves as a prerequisite.
+Preserve the qualified private installs and selected historical engine.
+
 Documentation audience correction, 25 October 2026: Fernando requests a short
 [user installation entry point](docs/installation.md) directly under docs; keep detailed
 build/test/install material in [the developer guide](docs/developer/native-installation.md). Maintain

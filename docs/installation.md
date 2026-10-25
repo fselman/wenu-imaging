@@ -63,9 +63,9 @@ reference data; these are separate from the native mefpp prerequisites.
 ## Simplifying this further
 
 A packaged Mac/Linux installation is the next distribution design task. Proposed
-first option: a Conda package for native mefpp and a compatible application
-environment, installable with Conda or micromamba after recipes/binaries exist.
-This is not implemented or selected as a new dependency. See the
+deferred TODO: compare pip platform wheels with Conda/micromamba packages for
+native mefpp and the application environment. No package manager is selected;
+this work does not block the current native qualification. See the
 [package-manager assessment](developer/native-distribution-options.md).
 
 Keep this page short: prerequisites, install/use and links. Keep compiler probes,

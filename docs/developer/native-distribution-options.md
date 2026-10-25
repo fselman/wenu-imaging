@@ -5,6 +5,13 @@ developer qualification, and review of a shared Mac/Linux package manager before
 continuing the observational comparison. No package manager is selected or installed
 by this documentation change.
 
+## Deferred TODO status
+
+Fernando explicitly defers selection/implementation while current native
+regression and chapman3 qualification proceed. Compare pip platform wheels with
+Conda/micromamba; the earlier first-choice recommendation below is superseded by
+this comparison requirement. No package manager is selected.
+
 ## Roles
 
 CMake configures/builds/installs the source. find_package locates dependencies;
@@ -23,7 +30,8 @@ external astronomy executables and reference datasets. Do not conflate them.
 
 | Tool | Relevant role | Assessment for this project |
 |---|---|---|
-| Conda / micromamba | Language-independent binary packages and isolated environments | Recommended first evaluation for user distribution: one native recipe plus a compatible Python/application environment; already familiar to Fernando |
+| pip / platform wheels | Binary executable/resources distributed through Python packaging | Candidate for native mefpp alongside the existing Pycavi wheel; qualify wheel layout, resource discovery and platform compatibility |
+| Conda / micromamba | Language-independent binary packages and isolated environments | Candidate for user distribution: one native recipe plus a compatible Python/application environment; compare against pip before selection |
 | Conan | C/C++ package recipes, dependencies and binary packages, CMake integration | Strong candidate if the native library dependency graph grows; does not alone define the entire Pycavi application environment |
 | vcpkg | C/C++ dependency ports/manifests and binary caching across Mac/Linux/Windows | Another native-development option; not a requirement merely because CMake is used |
 | Spack | Scientific/HPC packages, compiler variants and environments | Particularly relevant to chapman3 and toolchain qualification; assess whether its operational overhead is justified for user distribution |
@@ -38,9 +46,9 @@ qualification, not an assumed platform pass.
 
 ## Recommendation for review
 
-Retain CMake/CTest as the canonical build/test layer. First evaluate a Conda
-native-mefpp recipe and an environment definition for the full application,
-consumable by Conda/micromamba. Keep the core C code and bundled numerical
+Retain CMake/CTest as the canonical build/test layer. When this deferred TODO
+resumes, evaluate pip wheels and Conda/micromamba recipes side by side rather
+than treating the earlier Conda recommendation as an approved selection. Keep the core C code and bundled numerical
 libraries unchanged. Resolve dependencies declared by the recipe, not hidden
 configure-time downloads or implicit changes to working environments.
 
@@ -81,6 +89,8 @@ stable entry points. No bulk relocation of historical records is performed here.
 
 - [CMake 3.29 dependencies](https://cmake.org/cmake/help/v3.29/guide/using-dependencies/index.html)
   and [CPack](https://cmake.org/cmake/help/v3.29/module/CPack.html).
+- [Wheel distribution format](https://packaging.python.org/en/latest/specifications/binary-distribution-format/)
+  and [platform compatibility](https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/).
 - [Conda](https://docs.conda.io/), [non-Python packages](https://conda.org/learn/faq)
   and [recipe model](https://docs.conda.io/projects/conda-build/en/stable/concepts/recipe.html).
 - [Micromamba](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html).

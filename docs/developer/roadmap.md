@@ -1,5 +1,31 @@
 # wenu-imaging roadmap
 
+## Current next work and deferred packaging TODO — 25 October 2026
+
+Fernando defers the pip-versus-Conda/micromamba decision. Keep it as a TODO:
+compare platform wheels and Conda recipes for native mefpp and integration with
+Pycavi; assess dependencies, resources/relocation, Mac/Linux artifacts, chapman3
+glibc compatibility, fresh-user installation and maintenance before selecting a
+distribution route. Local package tests can precede any public hosting decision.
+No package prototype, publication or manager installation starts now.
+
+Resume the existing Stage 1 qualification, in this order:
+
+1. Read-only preflight of retained CP Pup raw/master/PAF/native-reference hashes,
+   detector layouts and both qualified private installed candidates.
+2. Prepare fresh copies, then compare native C90/C17 candidate outputs with the
+   historical native output across all detector pixels and relevant metadata.
+   Keep Python normalization separate; do not invent tolerances to pass differences.
+3. Qualify the installed Pycavi wrapper and remaining relevant fixture/failure
+   gates; then repeat build/install qualification on chapman3 with its verified
+   compatible toolchain. Do not declare Stage 1 complete from the Mac CLI alone.
+4. Memory qualification remains the next major stage after build/install gates.
+
+This is functional regression work, not scientific parameter tuning. Preserve
+working engines, configurations and observations; no normal engine switch,
+merge or cleanup is implicit. Packaging and physical documentation relocation
+do not block the current native comparison.
+
 ## User installation and documentation review — 25 October 2026
 
 Fernando requests a short [user installation guide](../installation.md), detailed
@@ -7,12 +33,13 @@ procedures under docs/developer, and clearer topical navigation. The native
 source-install gate passed on Intel Mac; simple end-user distribution is a
 separate Stage 1 usability deliverable. Review
 [Mac/Linux package-manager options](native-distribution-options.md), with
-Conda/micromamba the first recommended evaluation for native mefpp plus the Python
-application environment. No recipe, channel, binary publication or new dependency
+pip platform wheels versus Conda/micromamba both deferred for evaluation; no
+user-distribution package manager is selected. No recipe, channel, binary publication or new dependency
 is selected/installed by this review. Qualify relocation, platform/glibc compatibility
 and fresh-user installation before advertising a one-command install.
 A physical developer-document move follows an inbound-link inventory; topic-grouped
-navigation is the first change. Observational comparison is paused for this review.
+navigation is the first change. The temporary review pause ended with Fernando's
+instruction to defer packaging and resume the current native qualification.
 
 Intel Mac native acceptance, 25 October 2026: Fernando reports C90/C17 native
 builds, three CTest entries per mode, exact OCAM/WFI BPM pixels, checksum metadata

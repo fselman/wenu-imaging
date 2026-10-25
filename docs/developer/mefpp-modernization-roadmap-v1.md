@@ -1,6 +1,6 @@
 # mefpp modernization roadmap — version 1
 
-Date: 25 October 2026. Revision: 1.3. Status: first roadmap, amended for review.
+Date: 25 October 2026. Revision: 1.4. Status: first roadmap, amended for review.
 Documentation baseline: b2867c1da3ae4567cc7168c2f0ca13021aea2f33.
 Owner: Fernando Selman; canonical development repository: fselman/wenu-imaging.
 
@@ -155,6 +155,22 @@ macOS releases pass because the Intel Mac passed. An
 agent-host Linux compile is not acceptance of either machine. Select a candidate
 as the normal engine only after its target gate; retain rollback information.
 Build graph parallelism and runtime detector parallelism are separate questions.
+
+### Deferred TODO — simple user distribution
+
+Fernando defers the pip-versus-Conda/micromamba selection while the current native
+qualification continues. Compare a platform-specific mefpp wheel plus the existing
+Pycavi wheel against a Conda native recipe/application environment. Review build
+and runtime dependencies, resource layout/relocation, platform/OS/glibc constraints,
+fresh-user installation, updates/removal and maintenance cost. Retain CMake/CTest
+and the portable C core regardless of the distribution route.
+
+Keep this as a Stage 1 distribution-usability TODO before advertising a simple
+public installer; it does not block the current CP Pup native regression or
+chapman3 build/install qualification. No recipe implementation, package manager
+installation, channel/account registration or publication is selected by this TODO.
+The short user guide stays under docs; detailed qualification stays under
+docs/developer. Physical document relocation follows a separate link inventory.
 
 ## Stage 2 — Memory, ownership and failure correctness
 
@@ -603,6 +619,7 @@ were already installed. Discuss scope/order changes before dependent work.
 | 1.1 | 2026-10-25 | Observatory/archive scope for data review; explicit native Apple Silicon acceptance; optional intra-detector threading and GPU assessment | Planning amendment; no implementation or GPU backend selected |
 | 1.2 | 2026-10-25 | C89/C90 portable source baseline with explicit C17 compilation and behavior checks; actual chapman3 toolchain constraint | Policy clarification; source compliance and target qualification pending |
 | 1.3 | 2026-10-25 | Fernando adds per-pixel frame-variance creation and propagation to Stage 4, including calibration uncertainty, common normalization and downstream handoffs | Planning requirement; no variance implementation or new processing |
+| 1.4 | 2026-10-25 | Defer pip-versus-Conda/micromamba distribution evaluation as a TODO; resume current native regression/build-install gates | No package manager selected or package implementation started |
 
 ## Primary references informing the design
 
