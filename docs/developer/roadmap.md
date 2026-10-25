@@ -1,5 +1,31 @@
 # wenu-imaging roadmap
 
+Data-representation review added to native roadmap v1, 25 October 2026: insert
+stage 2A immediately after memory qualification and before component contracts.
+Review current accepted formats/metadata models and in-memory structures,
+including FITS, HDF5, ASDF and Zarr, without preselecting a replacement. Preserve
+FITS ingestion/interchange and originals; compare actual performance/fidelity
+and ANSI-C/platform/dependency costs. Any new backend needs a separate reviewed
+migration and renewed memory checks. See the version-1 native roadmap.
+
+## Native modernization roadmap version 1 — 25 October 2026
+
+The first [native roadmap](mefpp-modernization-roadmap-v1.md) records Fernando's
+revised priorities, completion gates, proposed tools, component/calibration
+contracts, platform requirements and revision procedure. Its companion
+[current architecture](mefpp-current-architecture.md) describes observed mefpp
+structure separately from the target design. These are review documents; no
+implementation or target install is authorized by their publication.
+
+Planning order: reproducible serial build/install (Mac, then chapman3), memory
+correctness, components/new calibration services, single-detector CCD support,
+parallel mosaics, native Windows qualification and CMOS services last. Windows
+portability begins with the build design. Preserve common mosaic normalization;
+include shutter/gain/RON characterization, measured/default science metadata
+and fringe construction with separate Python subtraction. Earlier stages below
+remain the wider project context; the dated native sequence controls this newly
+prioritized work and does not close Python, science or Phase 3 gates.
+
 ## Architecture audit and full roadmap before native modification, 25 October 2026
 
 Fernando explicitly requires the [native architecture audit](native-architecture-audit-2026-10-25.md)

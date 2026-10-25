@@ -1,5 +1,25 @@
 # wenu-imaging architecture
 
+Data-representation review added to native roadmap v1, 25 October 2026: insert
+stage 2A immediately after memory qualification and before component contracts.
+Review current accepted formats/metadata models and in-memory structures,
+including FITS, HDF5, ASDF and Zarr, without preselecting a replacement. Preserve
+FITS ingestion/interchange and originals; compare actual performance/fidelity
+and ANSI-C/platform/dependency costs. Any new backend needs a separate reviewed
+migration and renewed memory checks. See the version-1 native roadmap.
+
+## Current native architecture and provisional target — 25 October 2026
+
+Read the versioned [current mefpp architecture](mefpp-current-architecture.md)
+for actual source, library, state, processing and normalization boundaries.
+The [native roadmap v1](mefpp-modernization-roadmap-v1.md) separately proposes
+component services and staged qualification, retaining ANSI C and adding native
+Windows as an explicit requirement. Older Windows/WSL and sequencing paragraphs
+below are historical where superseded: WSL does not establish native Windows
+support. Shared mosaic normalization is a required scientific invariant.
+Target APIs, build tools and implementation details remain revisable proposals;
+no source relocation or installation is performed by these documents.
+
 ## Architecture audit before component redesign, 25 October 2026
 
 The [native architecture audit](native-architecture-audit-2026-10-25.md) records
