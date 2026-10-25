@@ -1,0 +1,9 @@
+mkdir -p ./bin
+cd main ; make ; cd ..
+make[1]: Entering directory '/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-child-failure/main'
+AUDIT_CHILD_FAILURE
+make[1]: *** [Makefile:3: all] Error 23
+make[1]: Leaving directory '/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-child-failure/main'
+cd saft ; make ; cd ..
+make[1]: Entering directory '/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-child-failure/saft'
+make[1]: Leaving directory '/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-child-failure/saft'

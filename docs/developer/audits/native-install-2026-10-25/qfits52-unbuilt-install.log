@@ -1,0 +1,7 @@
+Now execute: export PATH=/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install/installed/bin:ATH
+echo "Installing library in " /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install/installed
+Installing library in  /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install/installed
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install/installed
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install/installed/lib
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install/installed/include
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install/installed/bin

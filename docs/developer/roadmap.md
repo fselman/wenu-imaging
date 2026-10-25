@@ -1,5 +1,35 @@
 # wenu-imaging roadmap
 
+## Approved reordering: mefpp/qfits installation audit first, 25 October 2026
+
+Fernando explicitly brings point 5 forward now: audit mefpp and qfits build/
+installation, establish a reproducible Intel Mac build/install first, then
+chapman3, and move qfits under mefpp. The first deliverable is the
+[native installation audit](native-installation-audit-2026-10-25.md), tracking
+[#64](https://github.com/fselman/wenu-imaging/issues/64) and findings #65–#71.
+The report records source inspection and disposable agent-host probes, not a
+successful target build. No source layout/algorithm or working installation
+was changed by this audit.
+
+Current sequence: read-only Mac compiler/install inventory -> bounded bundled
+qfits/build/install correction -> isolated Mac build/install/smoke acceptance ->
+chapman3 inventory and corresponding acceptance -> resume the remaining
+thin-notebook/config-script/Python-audit stages. This overrides earlier
+instructions to defer all native work until after those stages only for the
+bounded installation task; the full numerical/detector/scientific mefpp audit
+does not automatically begin. Preserve the working engines, source history,
+licenses, configs, static masks and all accepted reduction data.
+Recommended destination is mefpp2/qfits5 with one canonical qfits source copy
+and explicit qfits -> Eclipse -> mefpp build dependencies. A bare directory move
+is insufficient; prefix/staging, failure propagation, compiler selection,
+resources, clean rebuilds and real checks must be qualified.
+
+No compiler/library upgrades, runtime parallelization or scientific tuning is
+included. Target changes are isolated until accepted and explicitly selected.
+The prior thin-notebook-first handoff below is historical where it conflicts
+with this user-approved reordering. PRs #57/#60/#63 are merged and cleaned;
+Mac main was verified at 2cd54c1206ccb7b68b2eb0a5f70d9b28f1188cde.
+
 ## Intel Mac selected functional paths 03–09 accepted, 25 October 2026
 
 The [CP Pup Mac pilot](pilots/mac-cp-pup-2017-03-13/README.md) records installed
@@ -747,3 +777,4 @@ syntax check, no-op `make check`, or editable install is not a release gate.
 This roadmap is intentionally sequential at approval boundaries. Independent
 documentation and evidence gathering may proceed together; implementation must
 remain within the stage Fernando has approved.
+

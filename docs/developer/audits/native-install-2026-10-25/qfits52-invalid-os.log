@@ -1,0 +1,4 @@
+configuring qfits...
+compiled sysconf successfully
+unsupported OS: invalid-audit-os
+mv: cannot stat 'config.h': No such file or directory

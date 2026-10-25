@@ -1,0 +1,171 @@
+{
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "source": "/workspace/scratch/cfd51ba369c2/wenu-imaging-packaging",
+  "records": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja",
+  "source_files_unchanged": true,
+  "source_sha256": {
+    "/workspace/scratch/cfd51ba369c2/wenu-imaging-packaging/qfits52/configure": "3aa242991934e03039c288d98aeaec49709be5b42502eba2d051a1d76dd48ff6",
+    "/workspace/scratch/cfd51ba369c2/wenu-imaging-packaging/mefpp2/configure": "444cf059f56acff48b41a0a490084e82d95c3b3f750fb4fc9d3c366a749a4192",
+    "/workspace/scratch/cfd51ba369c2/wenu-imaging-packaging/qfits52/sysconf.c": "287887b5eec2a2db00c44bb23e80a645240e0d109141e2ab6a85f7fb31d72c09",
+    "/workspace/scratch/cfd51ba369c2/wenu-imaging-packaging/mefpp2/sysconf.c": "6763d50b5e7d333ba9b4e40c53af6d4fd5bce6f984387f86eda764ba496ba4aa",
+    "/workspace/scratch/cfd51ba369c2/wenu-imaging-packaging/qfits52/Makefile": "a37473563e3cafe331bf7c866ae37883c4303441450927111f728a9f2678680e",
+    "/workspace/scratch/cfd51ba369c2/wenu-imaging-packaging/mefpp2/Makefile": "f0955cd1b015cb512ebe60b0db8d63507ef815f0fec52983d73ce7b0bca2c715"
+  },
+  "results": [
+    {
+      "name": "qfits52-no-compiler",
+      "command": [
+        "/bin/sh",
+        "./configure"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-no-compiler",
+      "returncode": 0,
+      "log": "qfits52-no-compiler.log",
+      "failure_reported": true,
+      "failure_hidden_by_zero_exit": true
+    },
+    {
+      "name": "mefpp2-no-compiler",
+      "command": [
+        "/bin/sh",
+        "./configure"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-no-compiler",
+      "returncode": 0,
+      "log": "mefpp2-no-compiler.log",
+      "failure_reported": true,
+      "failure_hidden_by_zero_exit": true
+    },
+    {
+      "name": "qfits52-invalid-os",
+      "command": [
+        "/bin/sh",
+        "./configure",
+        "--os=invalid-audit-os"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-invalid-os",
+      "returncode": 0,
+      "log": "qfits52-invalid-os.log",
+      "failure_reported": true,
+      "failure_hidden_by_zero_exit": true
+    },
+    {
+      "name": "qfits52-help",
+      "command": [
+        "/bin/sh",
+        "./configure",
+        "--help"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-invalid-os",
+      "returncode": 0,
+      "log": "qfits52-help.log",
+      "spurious_header_move_error": true
+    },
+    {
+      "name": "mefpp2-invalid-os",
+      "command": [
+        "/bin/sh",
+        "./configure",
+        "--os=invalid-audit-os"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-invalid-os",
+      "returncode": 0,
+      "log": "mefpp2-invalid-os.log",
+      "failure_reported": true,
+      "failure_hidden_by_zero_exit": true
+    },
+    {
+      "name": "mefpp2-help",
+      "command": [
+        "/bin/sh",
+        "./configure",
+        "--help"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-invalid-os",
+      "returncode": 0,
+      "log": "mefpp2-help.log",
+      "spurious_header_move_error": true
+    },
+    {
+      "name": "qfits-darwin-cc",
+      "command": [
+        "/bin/sh",
+        "./configure",
+        "--with-cc",
+        "--os=darwin"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-generator",
+      "returncode": 0,
+      "log": "qfits-darwin-cc.log",
+      "generated_config": "CC      = cc\nCFLAGS  = -g -O3 RELOC   = -fPIC\nSHARED  = -shared\nLFLAGS  = \nDYNSUF  = so\nSTRIP   = strip\nTARGETS = static\nprefix  = /opt/local/qfits5\n",
+      "CC_environment_ignored": true,
+      "RELOC_appended_to_CFLAGS": true
+    },
+    {
+      "name": "linux-Wa-q",
+      "command": [
+        "gcc",
+        "-Wa,-q",
+        "-c",
+        "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-generator/empty.c",
+        "-o",
+        "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-generator/empty.o"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-generator",
+      "returncode": 0,
+      "log": "linux-Wa-q.log",
+      "flag_rejected": false
+    },
+    {
+      "name": "qfits52-unbuilt-install",
+      "command": [
+        "make",
+        "install"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits52-unbuilt-install",
+      "returncode": 0,
+      "log": "qfits52-unbuilt-install.log",
+      "installed_files": [],
+      "incomplete_install_returns_success": true
+    },
+    {
+      "name": "mefpp2-unbuilt-install",
+      "command": [
+        "make",
+        "install"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install",
+      "returncode": 0,
+      "log": "mefpp2-unbuilt-install.log",
+      "installed_files": [],
+      "incomplete_install_returns_success": true
+    },
+    {
+      "name": "qfits-no-tests",
+      "command": [
+        "make",
+        "check"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-no-tests",
+      "returncode": 0,
+      "log": "qfits-no-tests.log",
+      "no_test_directory_in_source": true,
+      "empty_check_returns_success": true
+    },
+    {
+      "name": "qfits-child-failure",
+      "command": [
+        "make",
+        "progs"
+      ],
+      "cwd": "/workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/qfits-child-failure",
+      "returncode": 0,
+      "log": "qfits-child-failure.log",
+      "child_failure_hidden": true
+    }
+  ],
+  "scope": "Agent-host disposable installation audit probes; no Mac/chapman3 build qualification",
+  "compiler_observed": "GCC 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04)",
+  "make_observed": "GNU Make 4.3",
+  "probe_count": 12
+}

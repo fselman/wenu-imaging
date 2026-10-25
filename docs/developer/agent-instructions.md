@@ -1,5 +1,33 @@
 # wenu-imaging agent instructions
 
+## Current authorized native installation audit, 25 October 2026
+
+Fernando changed the order: bring roadmap point 5 forward, beginning with an
+audit of mefpp/qfits installation and moving qfits under mefpp. Prioritize
+Intel Mac clean build/install qualification, then chapman3. Read
+[native installation audit](native-installation-audit-2026-10-25.md) and #64.
+Initial audit probes are agent-host fixture evidence, not target qualification;
+#65–#71 remain open. Proposed source location is mefpp2/qfits5, one canonical
+copy, with retained APIs/licenses and explicit qfits -> Eclipse -> mefpp order.
+The initial audit changes no native source layout/build or installed engine.
+
+This explicit direction supersedes older deferral of all native work until
+notebook/Python refactoring only for the bounded build/install task. The next
+target action is read-only Mac compiler/resource/checkout inventory. Subsequent
+corrections must be scoped to installation, preserve numerical behavior and
+working native selections, use fresh source copies/private prefixes and record
+actual compiler/archive/resource provenance. Do not upgrade compilers/libraries,
+add native concurrency, change detector/science algorithms, or silently expand
+into the complete mefpp audit. Mac acceptance precedes chapman3; an agent Linux
+build is neither. Existing #23/#24/#13 and runtime finding #71 are separate
+bounds; a successful exit alone never establishes native scientific success.
+
+Resume remaining notebook/config-script/Python-audit work after this task;
+scientific parameter tuning stays deferred until all fields are reduced.
+PRs #57/#60/#63 are merged; the old review-branch wording below is historical.
+Retain fresh actual-target guards and matching test explanations/comments.
+No target install/source move is claimed by documentation delivery.
+
 ## Current Mac functional acceptance and handoff, 25 October 2026
 
 Selected installed-library paths corresponding to notebooks 03–09 passed on
@@ -592,3 +620,4 @@ support for single-CCD and single-CMOS reductions as separate work items. Audit
 format assumptions and detector-specific calibration/noise behavior before
 claiming single-detector support. Neither future item may delay the urgent
 OmegaCAM production path without an explicit scope decision.
+

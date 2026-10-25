@@ -1,5 +1,19 @@
 # wenu-imaging architecture
 
+## Approved native packaging direction, 25 October 2026
+
+Fernando requests qfits as a bundled source dependency within mefpp, and brings
+the build/install audit forward before the remaining Pycavi refactoring stages.
+The [installation audit](native-installation-audit-2026-10-25.md) recommends
+mefpp2/qfits5, retaining a distinct C-library/license boundary and one canonical
+source copy. Current source still uses sibling mefpp2/qfits52; this document is
+not evidence that the move or target build has happened. Build/install
+qualification is Intel Mac first, then chapman3, with existing API/numerical
+behavior and native selections preserved. The earlier three-directory layout
+below describes the current/historical source until migration is implemented.
+This direction does not authorize the full scientific native audit, upgrades
+or runtime parallelism. Other earlier architectural constraints remain.
+
 ## Current direction, 21 October 2026
 
 Latest clarification: discard the old reduction-script implementation path;
@@ -247,3 +261,4 @@ After the system works correctly for the operational OmegaCAM milestone:
 The detector generalization should reuse instrument/configuration boundaries
 where practical. It must not trigger a premature rewrite of the urgent OmegaCAM
 workflow.
+

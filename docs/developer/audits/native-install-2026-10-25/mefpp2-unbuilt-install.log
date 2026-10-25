@@ -1,0 +1,9 @@
+echo "Installing eclipse and mefpp in " /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed
+Installing eclipse and mefpp in  /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed/bin
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed/include
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed/lib
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed/config
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed/static_cal
+mkdir -p /workspace/scratch/cfd51ba369c2/native-install-probes-q3m74uja/mefpp2-unbuilt-install/installed/man
