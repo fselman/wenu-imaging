@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+Mac normal installation accepted, 25 October 2026: Fernando reports the default
+C90 ./configure; make; make install route, optional make check (four CTest entries),
+complete installed payload/BPM pixels/checksums/CLI, byte-identical repeat install
+and DESTDIR staging passed at source 7c5238f848284033bcef416ec5970a8004550afd.
+See [frontend acceptance](native-frontend.md). Close bounded #84; preserve
+the private installation at ~/wenu-mac-simple-install.7en8H834/install and the
+selected historical engine/configuration. Next is CP Pup read-only preflight,
+then isolated native regression; do not repeat installation checks unnecessarily.
+No automatic observation run, engine switch, merge or cleanup is authorized.
+
 Simple installation interface, approved 25 October 2026: Fernando requires
 ./configure; make; make install to remain the normal supported interface.
 The new root/component wrappers delegate to CMake, select tools/check prerequisites

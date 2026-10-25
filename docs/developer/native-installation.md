@@ -48,8 +48,10 @@ suite has four CTest entries: frontend contract (nine cases), install contract
 Agent Linux GCC 13.3/CMake 3.29.6 real C90/C17 integration passed configure/make/
 make check/make install, repeats, C17 DESTDIR and the direct CMake route. These
 integration installs used synthetic empty-FITS decompressor fixtures, not actual
-OCAM/WFI data, because the agent has no funpack. Actual Mac frontend/resource
-qualification remains pending. See [the frontend status](native-frontend.md).
+OCAM/WFI data, because the agent has no funpack. The actual Intel Mac normal C90 frontend/resource/installed-payload/check/repeat/
+staging gate subsequently passed at source 7c5238f8. See
+[the frontend acceptance](native-frontend.md) for exact evidence and remaining
+platform/runtime gates.
 The previous direct CMake Mac acceptance below remains evidence for its pinned
 source; it does not qualify the restored frontend automatically.
 

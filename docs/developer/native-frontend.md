@@ -65,18 +65,51 @@ were processed and no user's installation/environment was touched.
 records the scope. Full agent logs remain in its retained integration directory.
 Do not call these actual Mac/chapman3 qualification.
 
-## Next actual target gate
+## Actual Intel Mac default-frontend acceptance — 25 October 2026
 
-Sync the new source from Fernando's last inspected clean Mac revision
-efd5df6eacf6355175500edfeac64a8a84a623ff. He explicitly did not run the separate
-roadmap-only db33a643 update; include that ancestry in the single new sync.
+Fernando reports successful execution on MC02VV0HPHTDG, macOS 13.7.8 x86_64,
+at source 7c5238f848284033bcef416ec5970a8004550afd. This is actual target
+evidence, distinct from the agent integration above.
 
-Test the normal frontend on a fresh source export/private prefix on the actual
-Mac, including default selection, make check, real distributed BPMs, repeat/staged
-installation and unchanged historical engine/configuration. Preserve earlier
-qualified private installs at source 41c8e6a... as comparison evidence. #84 stays
-open until the frontend target gate passes. The previous direct-CMake Mac
-[acceptance](native-mac-build-install-acceptance.md) is not automatically frontend
-acceptance. Then resume the retained CP Pup preflight/regression and broader
-Stage 1/chapman3 gates. No normal engine switch, observation run or merge starts
-from this source delivery.
+Records: /Users/fselman/wenu-mac-simple-install.7en8H834.
+Private executable: install/bin/mefpp under that directory.
+SHA256: 7eefb5a6f1ae108fc9987420bbd9b85cc5c9092e8a4aef5b1db0c501dcc8f92c.
+Reported compiler: active Xcode AppleClang at
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang.
+
+- Fresh full source export, ./configure with private prefix/source identity,
+  make and make install passed using default C90/Debug selection.
+- Optional make check enabled testing and passed all four CTest entries:
+  frontend contract, install contract, native primitives and CLI usage.
+- Installed file set/hashes, source/build/manifest agreement and generated-header
+  identities passed. The installed binary was Mach-O x86_64, had system-only
+  dynamic dependencies and provided expected no-argument CLI usage.
+- All installed OCAM (32 HDUs) and WFI (8 HDUs) BPM pixels matched the compressed
+  sources exactly, with expected geometry/dtype/names, finite values and valid
+  FITS checksums/datasums.
+- Repeated make install was byte-identical for the complete installed payload/
+  manifest. Actual make install with DESTDIR staged identical bytes once under
+  the staging root and retained the runtime prefix in provenance.
+- Historical engine and saved configuration remained unchanged. No normal engine
+  selection, observational processing, query or Python normalization occurred.
+
+Retained configure.log, make.log, install.log and make-check.log document execution.
+frontend-installation-check.json records payload/resource/CLI verification.
+frontend-repeat-stage-check.json plus frontend-repeat-install.log and
+frontend-staged-install.log record repeat/staging verification. Evidence is
+Fernando's returned output; the agent did not independently access his Mac.
+
+This closes the bounded normal-interface defect #84 on the unmerged candidate.
+C17 frontend/component integration was tested on the agent, not separately
+claimed on the Mac; earlier direct-CMake C17 Mac acceptance remains separate.
+chapman3, Apple Silicon and Windows qualification remain pending.
+
+## Next current roadmap gate
+
+Resume the read-only CP Pup fixture/installed-candidate preflight, then prepare
+the isolated native regression comparison. Preserve all earlier accepted builds
+and the selected historical engine. Observational equivalence, installed Pycavi
+wrapper, broader calibration/WFI fixtures, native failure/memory work and chapman3
+remain open Stage 1/later gates. No additional installation test is required to
+close this bounded Mac frontend gate. No reduction, engine switch, merge or
+cleanup starts automatically from this acceptance record.

@@ -32,10 +32,10 @@ runs developer tests and needs Python 3; Python is not required for the ordinary
 native build/runtime. See [developer installation](developer/native-installation.md)
 for qualification, staging, diagnostics and platform evidence.
 
-**Status:** the underlying direct CMake C90/C17 build/install passed on Intel
-macOS 13.7.8. The restored configure/make frontend passes agent Linux tests;
-actual Mac frontend qualification and chapman3 qualification remain pending.
-Apple Silicon and native Windows are later qualification targets.
+**Status:** the normal C90 configure/make/install route, optional checks,
+installed resources, repeat installation and staging passed on Intel macOS 13.7.8
+at source 7c5238f8. Direct CMake C90/C17 acceptance is recorded separately.
+chapman3, Apple Silicon and native Windows qualification remain pending.
 
 ## Pycavi
 

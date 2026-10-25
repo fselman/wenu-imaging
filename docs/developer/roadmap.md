@@ -1,5 +1,18 @@
 # wenu-imaging roadmap
 
+## Current gate: CP Pup native regression preflight — 25 October 2026
+
+The normal Mac C90 installation interface is accepted at source
+7c5238f848284033bcef416ec5970a8004550afd: configure/make/install, optional four-entry
+CTest suite, exact installed BPM/payload/provenance/CLI, repeat install and
+DESTDIR passed. See [frontend acceptance](native-frontend.md). This completes
+bounded #84; no more installation tests are needed for that gate.
+Next: verify retained raw/master/PAF/native-reference hashes and the installed
+candidate, prepare fresh copies, then compare all native detector pixels/metadata.
+Historical engine/configuration remain selected/unchanged. Broader Stage 1,
+chapman3 and memory gates stay open. Packaging remains a deferred TODO.
+Earlier frontend-pending statuses below describe the preceding implementation phase.
+
 ## Current priority: finish the normal installation interface — 25 October 2026
 
 Fernando authorizes restoring ./configure; make; make install before the next
