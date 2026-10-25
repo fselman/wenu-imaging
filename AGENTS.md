@@ -1,5 +1,12 @@
 # wenu-imaging
 
+Maintained installation guide, approved 25 October 2026: Fernando requires
+[the native installation guide](docs/developer/native-installation.md) under docs to stay current.
+Update it in the same PR as changes to build/install tools, entry points,
+platforms, resources/layout, selection, upgrade/rollback or qualification status.
+Keep the Python installation hub, root README and build reference linked and
+consistent; distinguish tested procedures from pending platform work.
+
 Intel Mac native acceptance, 25 October 2026: Fernando reports C90/C17 native
 builds, three CTest entries per mode, exact OCAM/WFI BPM pixels, checksum metadata
 accounting, real private installations/repeats/installed CLI and C17 DESTDIR passed

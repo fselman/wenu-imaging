@@ -8,6 +8,8 @@ Updated for the subsequent decision to consolidate into one repository.
 | [Agent instructions](agent-instructions.md) | Current shared working rules and scientific invariants |
 | [Architecture](architecture.md) | Existing components, interfaces and agreed direction |
 | [Migration](migration.md) | Repository consolidation, checks and merge requirements |
+| [Native mefpp installation guide](native-installation.md) | Maintained build/install prerequisites, verified Intel Mac procedure, resources, staging/rollback and pending platforms |
+| [Intel Mac native acceptance](native-mac-build-install-acceptance.md) | Qualified source, actual target evidence and remaining runtime gates |
 | [Python installation and packaging evidence](installation.md) | Root install, resources, setup, external paths, platform facts and outstanding acceptance |
 | [Roadmap](roadmap.md) | Platform priorities, operational OmegaCAM delivery and later capabilities |
 | [Original audit, 20 October 2026](audit-2026-10-20.md) | Original source-based findings and historical proposals, preserved unchanged |

@@ -1,5 +1,9 @@
 # Candidate native CMake build
 
+For the maintained installation procedure and platform status, read the
+[native installation guide](../docs/developer/native-installation.md).
+Keep this build reference and that guide consistent when installation changes.
+
 Status: first stage-1 candidate; Intel Mac and chapman3 qualification is pending.
 This builds the existing serial mefpp recipe, the complete 79-source Eclipse
 archive and complete 18-source qfits archive. qfits lives in `mefpp2/qfits5`;
