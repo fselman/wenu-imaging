@@ -122,6 +122,9 @@ endif()
 
 if(BUILD_TESTING)
   find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  add_test(NAME native_frontend_contract
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/frontend_contract.py"
+      "${CMAKE_CURRENT_SOURCE_DIR}")
   add_test(NAME native_install_contract
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/install_contract.py"
       "${CMAKE_COMMAND}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/install_runtime.cmake.in")
@@ -142,7 +145,7 @@ file(GLOB_RECURSE manifest_inputs CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_SO
   "src/*.c" "src/*.h" "ins/mef/*.c" "ins/mef/*.h"
   "ins/mef/config/*.paf" "ins/mef/static_cal/*.fits.fz"
   "qfits5/src/*.c" "qfits5/src/*.h" "qfits5/include/*.h"
-  "CMakeLists.txt" "configure" "cmake/*" "tests/*" "LICENSE" "qfits5/LICENSE")
+  "CMakeLists.txt" "Makefile" "configure" "cmake/*" "tests/*" "LICENSE" "qfits5/LICENSE")
 set(source_inventory "")
 foreach(input IN LISTS manifest_inputs)
   file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/${input}" digest)

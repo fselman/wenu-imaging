@@ -14,6 +14,7 @@ The latest dated policy/acceptance record controls; old audits remain historical
 ## Installation and portability
 
 - [Native build/install/qualification guide](native-installation.md)
+- [Configure/make frontend status and target gate](native-frontend.md)
 - [Detailed Python installation and packaging](installation.md)
 - [Intel Mac native build/install acceptance](native-mac-build-install-acceptance.md)
 - [Mac/Linux package-manager assessment](native-distribution-options.md)

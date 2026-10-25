@@ -1,73 +1,48 @@
 # Installation — quick start
 
-Last updated: 25 October 2026. This page is for users; build diagnostics and
-qualification records belong in [the developer guide](developer/native-installation.md).
+Last updated: 25 October 2026. The current native candidate is on
+`fix/native-cmake-build` ([PR #81](https://github.com/fselman/wenu-imaging/pull/81));
+it is not yet merged into main.
 
-**Current status:** native mefpp source build/private installation has passed on
-Intel macOS 13.7.8. Linux/chapman3 is pending. The candidate is on
-`fix/native-cmake-build` ([PR #81](https://github.com/fselman/wenu-imaging/pull/81)),
-not yet main. There is no published mefpp Conda package or one-command installer.
+## Native mefpp
 
-## Native mefpp: current source-install route
+Prerequisites: a C compiler, CMake >=3.29, Make and `funpack` (CFITSIO tools).
+Eclipse, qfits, configuration templates and compressed BPM resources are included.
+No dependency packages are downloaded automatically. The frontend checks required
+tools and explains missing prerequisites; macOS selects the active Xcode tools
+and SDK, while Linux defaults to `cc`. Explicit overrides are optional.
 
-1. Obtain the candidate source and install prerequisites: Xcode tools,
-   CMake >=3.29, a Make build tool and `funpack`. Eclipse, qfits, PAF templates
-   and compressed BPMs are already included in the source.
-2. From the repository root, configure, build and install into a new private
-   prefix. This basic user build omits developer tests and therefore needs no
-   Python interpreter. It is not the full qualification procedure.
-3. Use the printed `bin/mefpp` path when a reduction has been qualified. Installation
-   alone does not change the engine selected by Pycavi.
+From the repository root (or from `mefpp2`), the normal procedure is:
 
-The following block is for an Intel Mac. It checks the platform and keeps the
-build outside the checkout. Other platforms must wait for their tested instructions.
-
-```bash
-(
-set -eu
-actual="$(uname -s):$(uname -m)"
-test "$actual" = "Darwin:x86_64" || {
-    echo "STOP: these instructions require an Intel Mac; detected $actual." >&2
-    exit 1
-}
-test -f mefpp2/CMakeLists.txt || { echo "STOP: run from the candidate repository root." >&2; exit 1; }
-test -z "$(git status --porcelain)" || { echo "STOP: preserve and inspect local changes." >&2; exit 1; }
-build="$(mktemp -d "$HOME/mefpp-build.XXXXXXXX")"
-prefix="$HOME/.local/mefpp-candidate"
-test ! -e "$prefix" && test ! -L "$prefix" || { echo "STOP: choose a fresh private prefix." >&2; exit 1; }
-# Configure/build/install: bundled native sources and distributed resources, C90, serial.
-cmake -S mefpp2 -B "$build" -G "Unix Makefiles" \
-    -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_BUILD_TYPE=Debug \
-    "-DCMAKE_C_COMPILER=$(xcrun --find clang)" "-DCMAKE_AR=$(xcrun --find ar)" \
-    "-DCMAKE_RANLIB=$(xcrun --find ranlib)" "-DCMAKE_LINKER=$(xcrun --find ld)" \
-    "-DCMAKE_OSX_SYSROOT=$(xcrun --show-sdk-path)" -DCMAKE_OSX_ARCHITECTURES=x86_64 \
-    -DMEFPP_C_STANDARD=90 -DBUILD_TESTING=OFF "-DMEFPP_FUNPACK=$(command -v funpack)" \
-    "-DMEFPP_SOURCE_REVISION=$(git rev-parse HEAD)" "-DCMAKE_INSTALL_PREFIX=$prefix"
-nice -n 10 cmake --build "$build" --parallel 1
-nice -n 10 cmake --install "$build"
-echo "Private executable: $prefix/bin/mefpp"
-)
+```sh
+./configure --prefix="$HOME/.local/mefpp"
+make
+make install
 ```
 
-This basic source installation omits developer tests. For full acceptance use
-the developer procedure; the recipe above is not a new target qualification run.
+Use a fresh private prefix; sudo is unnecessary. The default prefix, when omitted,
+is `$HOME/.local/mefpp`. Configuration defaults to C90 and a serial Debug build;
+`make install` ensures the build is complete before installing. The executable is
+`PREFIX/bin/mefpp`; its PAFs and masks are in `PREFIX/config` and `PREFIX/static_cal`.
+Existing edited/conflicting files are preserved by refusing the installation.
+Installation does not change the engine selected by Pycavi or process observations.
 
-## Pycavi and the full application
+`./configure --help` lists optional compiler/build-path settings. `make check`
+runs developer tests and needs Python 3; Python is not required for the ordinary
+native build/runtime. See [developer installation](developer/native-installation.md)
+for qualification, staging, diagnostics and platform evidence.
 
-Use [Python installation instructions](developer/installation.md) with the
-established Python 3.11 environment and reviewed dependency versions. The Python
-wheel does not install mefpp or the external astronomy engines. Full-application
-installation also needs the selected SExtractor, SCAMP, SWarp, Astrometry.net and
-reference data; these are separate from the native mefpp prerequisites.
+**Status:** the underlying direct CMake C90/C17 build/install passed on Intel
+macOS 13.7.8. The restored configure/make frontend passes agent Linux tests;
+actual Mac frontend qualification and chapman3 qualification remain pending.
+Apple Silicon and native Windows are later qualification targets.
 
-## Simplifying this further
+## Pycavi
 
-A packaged Mac/Linux installation is the next distribution design task. Proposed
-deferred TODO: compare pip platform wheels with Conda/micromamba packages for
-native mefpp and the application environment. No package manager is selected;
-this work does not block the current native qualification. See the
-[package-manager assessment](developer/native-distribution-options.md).
+Use the separate [Python installation guide](developer/installation.md) with the
+established Python 3.11 environment and reviewed dependency versions. Its wheel
+does not install mefpp, SExtractor, SCAMP, SWarp, Astrometry.net or reference data.
 
-Keep this page short: prerequisites, install/use and links. Keep compiler probes,
-long verification scripts, defect histories and acceptance ledgers under
-`docs/developer`.
+A pip-versus-Conda/micromamba distribution is a deferred [roadmap TODO](developer/roadmap.md).
+No mefpp package has been published through either route. Detailed tests, build
+flags and acceptance histories stay under `docs/developer`.

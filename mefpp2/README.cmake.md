@@ -4,20 +4,27 @@ For the maintained installation procedure and platform status, read the
 [native installation guide](../docs/developer/native-installation.md).
 Keep this build reference and that guide consistent when installation changes.
 
-Status: first stage-1 candidate; Intel Mac and chapman3 qualification is pending.
+Status: stage-1 candidate. The direct CMake Intel Mac build/install was qualified
+at source 41c8e6a...; restored frontend Mac acceptance and chapman3 remain pending.
 This builds the existing serial mefpp recipe, the complete 79-source Eclipse
 archive and complete 18-source qfits archive. qfits lives in `mefpp2/qfits5`;
 no historical installed native library or tracked binary is a build input.
 Numerical algorithms and qfits allocator mode 2 / 2,000,000 entries are retained.
 
-CMake and CTest >=3.29 are required. Initial supported build hosts are Darwin
+CMake >=3.29 is required; CTest/Python 3 are used for developer tests. Initial supported build hosts are Darwin
 and Linux with the existing POSIX services. Windows is explicitly rejected until
 its platform adapters are qualified. Apple Silicon has not yet been tested.
 Choose C90 or C17 explicitly in separate binary directories. This does not claim
 strict ISO conformance of the legacy dependency sources: POSIX interfaces and
 existing warnings remain. Only the new small primitive test uses pedantic errors.
 
-Configure from repository root or directly from `mefpp2`. Example variables below
+The normal interface is now ./configure --prefix=PRIVATE_PREFIX; make; make install,
+from the repository root or mefpp2. The wrappers select tools/check prerequisites
+and delegate to CMake; make check is optional developer qualification. Defaults
+are C90/Debug, serial build and testing OFF. No packages are automatically downloaded.
+Actual Mac frontend qualification is pending; see docs/developer/native-frontend.md.
+
+Direct CMake configuration remains available. Example variables below
 are deliberately placeholders, not a command to run on an unverified machine:
 
 ```
@@ -39,13 +46,12 @@ through the compiler driver; recording CMAKE_LINKER alone does not prove which
 subordinate linker the driver invokes. C17 requires a sufficiently recent compiler;
 chapman3's system GCC 4.8.5 is not that qualification compiler.
 
-The `mefpp2/configure` executable is now a small CMake compatibility launcher;
-`--help` lists supported arguments. It propagates CMake failures. Old recursive
-Makefiles, sysconf/e_setup binaries, and independent qfits configure scripts are
-historical sources, not supported entry points for this candidate. They are
-preserved for audit/history and may still contain obsolete sibling paths.
-The compatibility launcher does not run those scripts. Prefer direct CMake for
-complete control. Do not run the old top-level make/install procedure.
+The root and mefpp2 configure/Makefile entry points are supported thin frontends.
+They record ignored local state in .mefpp-config and default binary output in
+build-native. Failed configuration prevents using stale state. make install builds
+first, then invokes the existing installer with DESTDIR preserved. make clean
+cleans only the configured build. Internal legacy Makefiles, sysconf/e_setup and
+independent qfits configure scripts remain historical unsupported entry points.
 
 Runtime installation contains only bin/mefpp, three config/*.paf templates,
 two uncompressed static_cal/*.fits masks, both original license texts and build
@@ -76,6 +82,10 @@ against ordinary mistakes, not an atomic transaction against concurrent changes.
 
 ## Executed test sections and boundaries
 
+- `native_frontend_contract` exercises nine public-interface cases using a recorded
+  fake backend, including error propagation, paths, state and platform selection.
+  Real build/install integration is separately identified; simulated Mac selection
+  does not qualify the Mac.
 - `native_primitives` calls image_new, image_getmean and image_del with three known
   pixels, qfits_paf_query with a tiny PAF, and qfits_pixdump_float / qfits_pixin_float
   for exact float pixel conversion. It also checks C17 retains the inline keyword
@@ -96,5 +106,6 @@ ignored engine status, warning/lifecycle and PAF/argument-order behavior. This
 build candidate must not be described as memory-clean or scientifically validated.
 
 The recipe's seven C++-style line comments were converted to block comments for
-explicit C90 mode (#80); executable tokens were preserved. All other active C
-source changes select the generated configuration header by name.
+explicit C90 mode (#80); executable tokens were preserved. Other compatibility changes select the generated
+configuration header by name and restrict the inline fallback to pre-C99 modes
+(#83). The frontend itself changes no numerical C source.

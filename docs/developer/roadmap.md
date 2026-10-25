@@ -1,5 +1,17 @@
 # wenu-imaging roadmap
 
+## Current priority: finish the normal installation interface — 25 October 2026
+
+Fernando authorizes restoring ./configure; make; make install before the next
+CP Pup step. Implement thin root/component frontends over the existing CMake
+graph/installer, automatic platform tool selection and clear prerequisite/error
+handling. Keep compiler overrides and direct CMake available; developer validation
+belongs in optional make check and docs/developer, not the ordinary user route.
+[Frontend status](native-frontend.md) records agent evidence and pending actual-Mac
+qualification. The native numerical source and working installations are unchanged.
+After this frontend gate, resume the CP Pup preflight/comparison and remaining
+Stage 1/chapman3 work below. pip-versus-Conda remains a deferred TODO.
+
 ## Current next work and deferred packaging TODO — 25 October 2026
 
 Fernando defers the pip-versus-Conda/micromamba decision. Keep it as a TODO:

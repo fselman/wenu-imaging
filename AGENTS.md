@@ -1,5 +1,15 @@
 # wenu-imaging
 
+Simple installation interface, approved 25 October 2026: Fernando requires
+./configure; make; make install to remain the normal supported interface.
+The new root/component wrappers delegate to CMake, select tools/check prerequisites
+and propagate errors; optional make check is developer qualification. See
+[frontend status](docs/developer/native-frontend.md). This is current Stage 1 work before
+CP Pup comparison. Package-manager evaluation remains deferred. Agent Linux
+frontend tests/integration passed with explicitly synthetic resource fixtures;
+actual Mac frontend qualification is pending. Preserve existing private installs
+and normal engine selection; no observation rerun, merge or cleanup starts here.
+
 Current priority, approved 25 October 2026: Fernando defers pip-versus-Conda/
 micromamba packaging as a TODO and resumes the existing native qualification.
 See [current next work](docs/developer/roadmap.md) and native roadmap revision 1.4. Next is the

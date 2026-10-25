@@ -1,6 +1,6 @@
 # mefpp modernization roadmap — version 1
 
-Date: 25 October 2026. Revision: 1.4. Status: first roadmap, amended for review.
+Date: 25 October 2026. Revision: 1.5. Status: first roadmap, amended for review.
 Documentation baseline: b2867c1da3ae4567cc7168c2f0ca13021aea2f33.
 Owner: Fernando Selman; canonical development repository: fselman/wenu-imaging.
 
@@ -83,7 +83,8 @@ mefpp numerical core. Require explicit C90 and C17 compilation/behavior checks;
 C17 is a compatibility target, not permission to introduce C17-only constructs.
 This supersedes the conversational recommendation to make C17 the source baseline.
 Any newer-language facility requires an explicit reviewed exception or revision.
-No language mode change has yet been applied to source/build files.
+Explicit language-mode selection has since been implemented in the candidate;
+acceptance is bounded by the dated build/resource/runtime records.
 
 Use explicit compiler modes (for example -std=c90 and -std=c17 on GCC/Clang),
 classify pedantic diagnostics, and inventory existing GNU/vendor extensions.
@@ -102,7 +103,9 @@ or justification for an unapproved compiler upgrade. Revisit the baseline only
 when a concrete benefit and complete platform/dependency evidence justify it.
 
 Apple Clang 15 and the reported GNU GCC 13 installations on the Mac support a
-C17 language mode; mefpp's own compatibility remains untested. The fresh chapman3
+C17 language mode. The actual Intel Mac direct CMake C90/C17 build/resource/
+private-install checks passed at source 41c8e6a..., while observational equivalence
+and the restored frontend target gate remain pending. The fresh chapman3
 inventory reports CentOS 7 x86_64, glibc 2.17, GCC 4.8.5 and Clang 3.4.2, with no
 newer compiler shown by that inventory. Those system compilers cannot serve as
 the C17 qualification toolchain. Investigate an isolated compatible toolchain;
@@ -121,6 +124,14 @@ running changed code. The existing Mac one-exposure and chapman3 functional
 products are useful evidence, not complete calibration or WFI certification.
 
 ## Stage 1 — Build and install the current serial software
+
+Fernando requires ./configure; make; make install as the normal supported user
+interface. Thin frontends delegate to CMake, which remains the sole build graph
+and installer. Select platform tools and check prerequisites automatically, retain
+explicit overrides, propagate failures and reject stale failed configuration.
+Keep optional make check and detailed qualification in developer documentation.
+The restored frontend needs actual target acceptance before resuming CP Pup
+comparison; it is not a package-manager implementation.
 
 1. Move qfits52 to the proposed mefpp2/qfits5 as one canonical source copy,
    retaining history, notices, licenses and public names. Coordinate path/docs
@@ -620,6 +631,7 @@ were already installed. Discuss scope/order changes before dependent work.
 | 1.2 | 2026-10-25 | C89/C90 portable source baseline with explicit C17 compilation and behavior checks; actual chapman3 toolchain constraint | Policy clarification; source compliance and target qualification pending |
 | 1.3 | 2026-10-25 | Fernando adds per-pixel frame-variance creation and propagation to Stage 4, including calibration uncertainty, common normalization and downstream handoffs | Planning requirement; no variance implementation or new processing |
 | 1.4 | 2026-10-25 | Defer pip-versus-Conda/micromamba distribution evaluation as a TODO; resume current native regression/build-install gates | No package manager selected or package implementation started |
+| 1.5 | 2026-10-25 | Restore configure/make/install as the normal thin CMake frontend; auto-select/check tools and keep developer qualification separate | Agent tests passed; actual Mac frontend gate pending before CP Pup comparison |
 
 ## Primary references informing the design
 

@@ -14,6 +14,45 @@ notebooks and external-engine selection. Installing the wheel does not build the
 native engine; building the native engine does not install those Python components
 or SExtractor, SCAMP, SWarp, Astrometry.net or their reference data.
 
+## Normal interface restored (#84)
+
+From the repository root or from mefpp2, the supported user interface is
+./configure --prefix=PRIVATE_PREFIX, then make, then make install. Root and
+component Makefiles are thin dispatchers; CMake remains the sole build graph and
+installer. The ordinary path defaults to serial C90/Debug with testing OFF, so it
+does not add a Python dependency to native compilation or runtime. No prerequisite
+is downloaded automatically.
+
+Mac configuration selects the active Xcode compiler/archive tools, SDK and
+architecture; Linux defaults to cc and Make. Help lists CC/CMAKE/MAKE/AR/RANLIB/LD/
+FUNPACK/PYTHON and explicit configure overrides. Toolchain changes need fresh
+binary directories. Default binary output is build-native in the invocation
+directory; .mefpp-config contains ignored local state. These are the only new
+frontend configuration outputs in the checkout; host headers remain binary-tree
+products. Source input hashes now include the component Makefile and frontend.
+
+make install builds first and forwards Unix DESTDIR to the existing safe installer.
+make clean cleans the configured build without deleting prefixes or source.
+make check enables tests, builds and invokes the CTest beside the selected CMake.
+It requires Python 3 and fails when tests are empty or unsuccessful. Failed
+configuration blocks stale state; build/install failures remain nonzero. Root and
+component invocations have independent state. Help changes no configuration.
+
+The frontend contract test has nine cases covering defaults, both entry locations,
+literal spaced paths, prerequisite/configure/build/install failures, optional tests,
+source-directory rejection and simulated Xcode selection. It uses a recorded fake
+backend; platform simulation is not actual Mac qualification. The current full
+suite has four CTest entries: frontend contract (nine cases), install contract
+(seven cases), native primitives and CLI usage.
+
+Agent Linux GCC 13.3/CMake 3.29.6 real C90/C17 integration passed configure/make/
+make check/make install, repeats, C17 DESTDIR and the direct CMake route. These
+integration installs used synthetic empty-FITS decompressor fixtures, not actual
+OCAM/WFI data, because the agent has no funpack. Actual Mac frontend/resource
+qualification remains pending. See [the frontend status](native-frontend.md).
+The previous direct CMake Mac acceptance below remains evidence for its pinned
+source; it does not qualify the restored frontend automatically.
+
 ## Qualification status
 
 | Target | Current evidence | Remaining work |
@@ -52,8 +91,10 @@ prerequisite is absent, inventory it and qualify an isolated installation first.
 On chapman3, GCC 4.8.5/Clang 3.4.2 cannot supply the C17 lane; do not replace system
 tools or glibc. Its actual installation command sequence is pending qualification.
 
-## Intel Mac: isolated source build and private installation
+## Historical direct-CMake qualification procedure (pinned source)
 
+This retained developer reproduction block targets the previously qualified source
+41c8e6a544c1bc5122dc558e0c8cc7904214e1d0 and does not exercise the new frontend.
 The following complete block is specifically for Fernando's verified Intel Mac.
 It intentionally stops on another machine. It builds the pinned qualified source,
 not whatever happens to be the checkout HEAD. Review any source update before
@@ -282,9 +323,10 @@ the runtime prefix, not the staging root. Do not stage over a real installation.
 MEFPP_BUILD_RESOURCES=OFF is a code-only development option; a complete runtime
 install from that build is deliberately rejected. The runtime requires both BPMs
 and all PAFs. Optional legacy utilities/development archives are not installed.
-The mefpp2/configure compatibility launcher delegates to CMake; historical recursive
-Makefiles, sysconf/e_setup binaries and independent qfits configure scripts are
-not supported entry points for this candidate. Do not run their old install rules.
+The supported root/component configure and Makefile frontends delegate to CMake.
+Historical internal recursive Makefiles under src/ins/qfits, sysconf/e_setup binaries
+and independent qfits configure scripts are not supported entry points. Do not run
+those old internal install rules.
 
 No uninstaller is supplied. Before removing a disposable prefix, inspect its exact
 path, manifest and any user changes; never recursively remove a historical/shared
