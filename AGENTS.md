@@ -1,5 +1,15 @@
 # wenu-imaging
 
+Intel Mac native acceptance, 25 October 2026: Fernando reports C90/C17 native
+builds, three CTest entries per mode, exact OCAM/WFI BPM pixels, checksum metadata
+accounting, real private installations/repeats/installed CLI and C17 DESTDIR passed
+at source 41c8e6a544c1bc5122dc558e0c8cc7904214e1d0. See
+[the acceptance record](docs/developer/native-mac-build-install-acceptance.md). Historical engine and configuration
+remain selected/unchanged. Observational pixel equivalence, installed wrapper,
+calibration/WFI fixtures, failure/memory and chapman3 gates remain pending.
+Prepare immutable observational fixtures next; publication starts no reduction,
+engine switch, merge or branch cleanup. Earlier pending statuses below are historical.
+
 Stage 4 amendment, 25 October 2026: Fernando requires creation and propagation
 of per-pixel frame variances for science and calibration products. Follow
 [roadmap revision 1.3](docs/developer/mefpp-modernization-roadmap-v1.md): squared units, masks, gain/RON,

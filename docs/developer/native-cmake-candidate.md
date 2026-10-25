@@ -123,3 +123,13 @@ actual-source C90/C17 builds and three CTest entries per mode passed after the
 correction. This is a preprocessor compatibility change, not numerical refactoring.
 Actual Mac C17 link/CTest/BPM acceptance and renewed C90 checks remain pending.
 Preserve both previous attempt directories as evidence.
+
+## Qualified Intel Mac build/resources/private installs
+
+At source 41c8e6a544c1bc5122dc558e0c8cc7904214e1d0, Fernando reports both
+C90/C17 builds/tests, complete BPM pixel/checksum checks and real private runtime
+installation/repeat/installed CLI/C17 staging passed. See the
+[acceptance record](native-mac-build-install-acceptance.md) for exact evidence,
+resource hashes and remaining gates. This supersedes the pending Intel Mac
+build/install statuses in the historical attempts above; observational and
+chapman3 qualification are still pending. Main and the selected engine are unchanged.
