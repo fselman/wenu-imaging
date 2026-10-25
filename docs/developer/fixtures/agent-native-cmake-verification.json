@@ -1,0 +1,32 @@
+{
+  "platform": "agent Linux x86_64, not chapman3 or Mac",
+  "compiler": "GCC 13.3.0",
+  "cmake": "3.29.6",
+  "modes": {
+    "90": {
+      "compiled_translation_units": 100,
+      "ctest_passed": 3,
+      "resources_built": false
+    },
+    "17": {
+      "compiled_translation_units": 100,
+      "ctest_passed": 3,
+      "resources_built": false
+    }
+  },
+  "source_token_check_files": [
+    "mefpp2/src/iproc/image_handling.c",
+    "mefpp2/src/iproc/intimage.c",
+    "mefpp2/src/iproc/generate.c",
+    "mefpp2/src/math/random.c",
+    "mefpp2/src/include/eclipse.h",
+    "mefpp2/src/include/local_types.h",
+    "mefpp2/qfits5/src/byteswap.c",
+    "mefpp2/qfits5/src/tfits.c",
+    "mefpp2/qfits5/src/pixio.c",
+    "mefpp2/qfits5/src/ieeefp-compat.c",
+    "mefpp2/ins/mef/recipes/mefpp.c"
+  ],
+  "install_contract_cases": 5,
+  "scope": "code-only native builds and synthetic tests; no actual BPM decompression, observational processing or target installation"
+}

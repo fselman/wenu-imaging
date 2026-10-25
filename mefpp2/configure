@@ -1,18 +1,25 @@
 #!/bin/sh
-#
-# Bootstrap script: it tries to compile a simple C script using cc or
-# gcc and launches it to create config.h and config.make files.
-#
-
-echo "configuring eclipse..."
-if (cc -o sysconf sysconf.c 2> /dev/null) ; then
-	echo "compiled sysconf successfully"
-elif (gcc -o sysconf sysconf.c 2> /dev/null) ; then
-	echo "compiled sysconf successfully"
-else echo "cannot find cc or gcc: aborting" ; exit
-fi
-./sysconf $*
-mv config.h ./src/include
-rm -f sysconf
-
-
+# Compatibility launcher: explicit inputs, truthful errors, no legacy sysconf execution.
+set -eu
+source_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+build_dir="$source_dir/build"
+prefix="${HOME}/.local/mefpp"
+compiler=""
+standard=90
+for argument in "$@"; do
+    case "$argument" in
+        --help|-h)
+            echo "Usage: ./configure [--prefix=PATH] [--with-cc=PATH] [--build-dir=PATH] [--c-standard=90|17]"
+            echo "Delegates to CMake >=3.29; build/install explicitly with cmake. No source configuration is generated."
+            exit 0 ;;
+        --prefix=*) prefix=${argument#*=} ;;
+        --with-cc=*) compiler=${argument#*=} ;;
+        --build-dir=*) build_dir=${argument#*=} ;;
+        --c-standard=*) standard=${argument#*=} ;;
+        *) echo "ERROR: unsupported configure option: $argument; use --help or direct CMake options" >&2; exit 2 ;;
+    esac
+done
+command -v cmake >/dev/null 2>&1 || { echo "ERROR: CMake >=3.29 is required" >&2; exit 1; }
+set -- -S "$source_dir" -B "$build_dir" "-DCMAKE_INSTALL_PREFIX=$prefix" "-DMEFPP_C_STANDARD=$standard"
+if test -n "$compiler"; then set -- "$@" "-DCMAKE_C_COMPILER=$compiler"; fi
+exec cmake "$@"

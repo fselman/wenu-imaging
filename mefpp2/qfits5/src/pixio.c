@@ -25,7 +25,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "config.h"
+#include "qfits_platform_config.h"
 #include "pixio.h"
 #include "fits_rw.h"
 #include "fits_h.h"

@@ -387,13 +387,13 @@ int mef_engine(mef_bb * bb)
 
 	/* First the calibrating frames ... */
            
-           //if (mef_valid_subset(bb,"bpm")) {
-           //     e_error("Inconsistent data set. Either invalid FITS files,");
-           //     e_error("multiple filters, or multiple binning factors in the data set.");
-           //     mef_bb_del(bb);
-           //     return -1;
-           //}
-           //
+           /*if (mef_valid_subset(bb,"bpm")) { */
+           /*     e_error("Inconsistent data set. Either invalid FITS files,"); */
+           /*     e_error("multiple filters, or multiple binning factors in the data set."); */
+           /*     mef_bb_del(bb); */
+           /*     return -1; */
+           /*} */
+           /* */
           
             /* the validation of the bias subset must come first because
              * all processings need a bias frame, except the BPM, but when

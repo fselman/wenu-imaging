@@ -1,0 +1,20 @@
+set(QFITS_SOURCES
+  qfits5/src/byteswap.c
+  qfits5/src/cache.c
+  qfits5/src/expkey.c
+  qfits5/src/fits_h.c
+  qfits5/src/fits_md5.c
+  qfits5/src/fits_p.c
+  qfits5/src/fits_rw.c
+  qfits5/src/get_name.c
+  qfits5/src/ieeefp-compat.c
+  qfits5/src/md5.c
+  qfits5/src/pafs.c
+  qfits5/src/pixio.c
+  qfits5/src/qerror.c
+  qfits5/src/simple.c
+  qfits5/src/t_iso8601.c
+  qfits5/src/tfits.c
+  qfits5/src/version.c
+  qfits5/src/xmemory.c
+)

@@ -1,0 +1,13 @@
+#ifndef @CONFIG_GUARD@
+#define @CONFIG_GUARD@
+#include <limits.h>
+#define SIZEOF_CHAR @SIZEOF_CHAR@
+#define SIZEOF_SHORT @SIZEOF_SHORT@
+#define SIZEOF_INT @SIZEOF_INT@
+#define SIZEOF_LONG @SIZEOF_LONG@
+#define SIZEOF_FLOAT @SIZEOF_FLOAT@
+#define SIZEOF_DOUBLE @SIZEOF_DOUBLE@
+#cmakedefine WORDS_BIGENDIAN 1
+#cmakedefine OS_LINUX 1
+#cmakedefine OS_DARWIN 1
+#endif

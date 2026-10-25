@@ -1,5 +1,18 @@
 # wenu-imaging
 
+Stage 1 candidate implementation, 25 October 2026: Fernando authorized the isolated
+bundled-source CMake build after reviewing stage 0 and reporting actual-Mac
+fixture settings. See [candidate status](docs/developer/native-cmake-candidate.md)
+and mefpp2/README.cmake.md. qfits is now under mefpp2/qfits5 in this candidate;
+retain all 18 qfits and 79 Eclipse archive sources. Numerical algorithms,
+allocator policy, existing installations and data remain unchanged. Agent Linux
+GCC 13.3/CMake 3.29.6 code-only C90/C17 builds and three CTest entries per mode
+passed; this is not Mac/chapman3 qualification. Actual BPM decompression, complete
+runtime install and observational pixel equivalence are pending on the Mac.
+No engine switch, observation rerun, memory-clean claim, merge or branch deletion
+is authorized by this implementation. Earlier audit-only holds below are historical
+where superseded by this bounded authorization.
+
 Stage 0 native build specification, 25 October 2026: read
 [the specification](docs/developer/native-build-specification-v1.md) before
 implementation. It defines the minimum static target graph, runtime payload,

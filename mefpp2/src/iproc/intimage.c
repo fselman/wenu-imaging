@@ -19,7 +19,7 @@
    								Includes
  ---------------------------------------------------------------------------*/
 
-#include "config.h"
+#include "mefpp_platform_config.h"
 
 #include "qfits.h"
 #include "intimage.h"

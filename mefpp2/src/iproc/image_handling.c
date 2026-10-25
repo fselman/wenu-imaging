@@ -29,7 +29,7 @@
 #include "qfits.h"
 
 /* Get the definition of CHAR_BIT */
-#include "config.h"
+#include "mefpp_platform_config.h"
 
 /*---------------------------------------------------------------------------
   							Function codes
