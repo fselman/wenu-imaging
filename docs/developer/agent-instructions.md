@@ -1,5 +1,12 @@
 # wenu-imaging agent instructions
 
+Stage 4 amendment, 25 October 2026: Fernando requires creation and propagation
+of per-pixel frame variances for science and calibration products. Follow
+[roadmap revision 1.3](mefpp-modernization-roadmap-v1.md): squared units, masks, gain/RON,
+calibration/parameter uncertainties, shared-normalization correlations and
+Pycavi/resampling/photometry handoffs, with independent recovery tests. This is
+future Stage 4 scope; preserve the current Stage 1 build-only boundary.
+
 ## Stage 1 isolated candidate, 25 October 2026
 
 Stage 1 candidate implementation, 25 October 2026: Fernando authorized the isolated

@@ -1,6 +1,6 @@
 # mefpp modernization roadmap — version 1
 
-Date: 25 October 2026. Revision: 1.2. Status: first roadmap, amended for review.
+Date: 25 October 2026. Revision: 1.3. Status: first roadmap, amended for review.
 Documentation baseline: b2867c1da3ae4567cc7168c2f0ca13021aea2f33.
 Owner: Fernando Selman; canonical development repository: fselman/wenu-imaging.
 
@@ -27,6 +27,8 @@ Tracking parents: #64 (build/install) and #73 (architecture/roadmap).
   extraction. Preserve the current serial algorithm baseline through these phases.
 - Components for BPM, linearity/shutter/gain/RON, bias, dark, dome/sky/master flats,
   fringe-frame determination and science preprocessing.
+- Stage 4 must create per-pixel frame variances and propagate them through
+  calibration and science processing, with explicit units, masks and provenance.
 - Preserve common mosaic flat normalization and relative detector response. This
   encodes acquisition information; independent per-detector renormalization is
   not an optimization and is not authorized.
@@ -44,7 +46,7 @@ Tracking parents: #64 (build/install) and #73 (architecture/roadmap).
 | 2 | Memory and failure correctness | No unexplained memory diagnostics or leaks on the declared normal/error/repeat suite; cleanup and status tests pass |
 | 2A | Data standards, storage and representation audit | Reviewed format-neutral data contract and retain/adopt decision before component interfaces are fixed |
 | 3 | Component contracts and extraction of existing behavior | Serial legacy/component comparisons pass with agreed tolerances; ownership, metadata and normalization preserved |
-| 4 | Missing calibration services | Linearity/shutter/gain/RON, dark and fringes have defined products and separately qualified methods |
+| 4 | Calibration services and frame variances | Linearity/shutter/gain/RON, dark, fringes and variance creation/propagation have defined products and separately qualified methods |
 | 5 | Single-detector CCD service | Primary-image and single-extension layouts, geometry and calibration behavior pass dedicated tests |
 | 6 | Parallel mosaic service | Serial/parallel equivalence, resource limits, failure isolation and restart tests pass |
 | 6A | Optional accelerator assessment | Profiled CPU/thread/GPU comparison and explicit adopt/defer decision; CPU fallback retained |
@@ -311,6 +313,49 @@ physical-flux distinctions and define propagated variance/mask semantics.
 
 ## Stage 4 — Calibration characterization and missing services
 
+### Frame variance creation and propagation
+
+Create variance planes for science exposures and calibration products, per detector
+and per amplifier where relevant. Bind their geometry, masks, units and processing
+state to the associated image. Define variance in squared image units; distinguish
+it explicitly from standard deviation, inverse variance, exposure/coverage maps
+and arbitrary weights. Missing uncertainty is flagged as unknown, never silently
+represented by zero variance or infinite statistical weight.
+
+Define the initial noise model using compatible measured gain/readout noise
+(or the documented default/fallback policy), appropriate Poisson terms and other
+identified noise contributions. Specify bias/background treatment, valid signal
+range, saturated/bad pixels and handling of negative background-subtracted values.
+Keep this distinct from the paired-flat variance estimator used to characterize
+detectors: one global gain or sample variance is not a frame variance plane.
+
+Propagate image and calibration uncertainty through overscan/bias/dark subtraction,
+non-linearity and shutter corrections, dome/sky/master-flat construction and
+application, shared mosaic normalization, gain/exposure/flux scaling, and fringe
+template construction and subsequent Python amplitude fitting/subtraction.
+Every component must state its propagation rule, independence/covariance
+assumptions, rejected-pixel behavior and uncertainty in fitted parameters or
+calibration reference quantities. Include correlations introduced by shared
+calibrations and mosaic normalization; do not silently assume all pixels or
+detectors are independent. Preserve the common flat reference and relative
+detector responses.
+
+Use the stage-2A logical data contract and stage-3 component interfaces to carry
+science, variance, masks and provenance together. Define the handoff to Pycavi,
+resampling/coaddition and photometry, including correlated-noise limitations and
+conversion to tool-specific weight maps. A SWarp weight product alone does not
+establish propagated physical variance. Storage layout and any covariance
+representation remain reviewed design decisions, not a new selected file format.
+
+Acceptance must include independently calculated small fixtures for noise
+initialization, subtraction, multiplicative scaling, flat division, calibration
+combination and shared normalization; test units, masks, unknown/invalid values
+and uncertainty provenance. Assess resampling correlations and validate the
+adopted approximation on representative data, with suitable statistical recovery
+tests. Document which uncertainty terms are modeled and which remain unsupported.
+This is Stage 4 work; it does not add variance algorithms to the current build
+migration or claim that existing frames already have qualified variance products.
+
 ### Paired flat sequence: linearity, shutter, gain and readout noise
 
 Fernando specifies OCAM/WFI sequences: at least two initial bias exposures;
@@ -374,7 +419,7 @@ The proposed usual placement is after compatible bias/flat corrections and befor
 resampling/coaddition, but exact ordering relative to other corrections belongs
 to the reviewed product contract. Preserve astronomical extended structure.
 
-Gate for new services: synthetic recovery tests, independent reference checks,
+Gate for new services, including variance creation/propagation: synthetic recovery tests, independent reference checks,
 representative instrument data and Fernando's scientific acceptance of methods.
 Existing functional notebook success is not this gate. Keep method validation
 separate from later scientific parameter optimization across all survey fields.
@@ -557,6 +602,7 @@ were already installed. Discuss scope/order changes before dependent work.
 | 1 | 2026-10-25 | Initial build -> memory -> data review -> components -> single-detector -> parallel -> Windows -> CMOS plan, with calibration contracts | Proposed for review; no implementation started |
 | 1.1 | 2026-10-25 | Observatory/archive scope for data review; explicit native Apple Silicon acceptance; optional intra-detector threading and GPU assessment | Planning amendment; no implementation or GPU backend selected |
 | 1.2 | 2026-10-25 | C89/C90 portable source baseline with explicit C17 compilation and behavior checks; actual chapman3 toolchain constraint | Policy clarification; source compliance and target qualification pending |
+| 1.3 | 2026-10-25 | Fernando adds per-pixel frame-variance creation and propagation to Stage 4, including calibration uncertainty, common normalization and downstream handoffs | Planning requirement; no variance implementation or new processing |
 
 ## Primary references informing the design
 
