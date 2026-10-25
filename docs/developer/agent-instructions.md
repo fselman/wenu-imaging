@@ -1,5 +1,29 @@
 # wenu-imaging agent instructions
 
+## Explain every functional and result-verification test, 25 October 2026
+
+Fernando requires an explanation before every functional test and every test
+that verifies results, including preflight checks, synthetic checks, installed
+package checks, observational runs and read-only output checks. Give the
+explanation before the command group or agent execution, not only when asked.
+Keep it concise and specific to the test being proposed:
+
+- State the purpose, inputs and settings, actions performed, and whether the
+  test processes data, queries a service, writes outputs or only reads results.
+- Name the actual Pycavi modules and subroutines/methods exercised, including
+  relevant indirect calls and native programs. Distinguish production routines
+  from orchestration and verification helpers; do not imply that a helper's
+  independent calculation exercises a production implementation.
+- State expected outputs, pass criteria and the test's limits. Distinguish
+  wrapper completion, native execution, output integrity and scientific
+  validation. Do not claim coverage of routines that the test does not call.
+- After execution, explain what actually ran, what passed or failed, evidence
+  and remaining limitations. Clearly identify checks still pending; a launch
+  or zero wrapper exit code alone is not acceptance of the outputs.
+
+These explanations do not authorize scientific tuning, broader validation,
+extra processing or changes outside the currently approved task.
+
 ## Current authorized integration/cleanup, 24 October 2026
 
 Fernando instructed merge and cleanup of the five qualified PRs #43, #45, #47,
