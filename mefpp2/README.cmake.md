@@ -60,8 +60,9 @@ BPM products independently; framing is not full semantic FITS validation.
 installation fails visibly. Testing requires Python 3 (standard library only);
 Python is not a dependency of the installed native executable.
 
-The installer preflights the whole payload. It rejects missing files, symlink
-paths, conflicting parent types and different existing contents before copying.
+The installer preflights the whole payload. It resolves existing ancestors outside the requested prefix (including macOS
+/var), then rejects linked prefixes, symlinks within the payload, missing files,
+conflicting parent types and different existing contents before copying.
 An identical repeated install is allowed. Use a private absolute prefix and never
 point this candidate at the historical installation. Unix DESTDIR is applied once;
 the staging root is excluded from the recorded runtime prefix. Installation does
@@ -78,7 +79,8 @@ against ordinary mistakes, not an atomic transaction against concurrent changes.
   plus its usage text. This does not establish truthful reduction-failure exits.
 - `native_install_contract` runs the production install template with synthetic
   resources: complete/repeated install, DESTDIR, edited-file preservation, symlink
-  rejection, missing-resource rejection and non-directory-parent rejection.
+  rejection, missing-resource rejection, non-directory-parent rejection, support
+  for an external ancestor alias and rejection of a linked prefix.
   It does not decompress or certify the distributed BPMs.
 
 Each corresponding script section is commented. F1 is partial; F2–F7 and the

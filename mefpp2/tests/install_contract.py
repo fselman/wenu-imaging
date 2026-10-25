@@ -108,6 +108,29 @@ class InstallContract(unittest.TestCase):
         self.assertEqual(list(elsewhere.iterdir()), [])
         self.assertFalse((self.prefix / 'bin').exists())
 
+    def test_external_ancestor_alias_is_supported(self):
+        # Platform alias: allow a symlink above the prefix, like macOS /var.
+        physical = self.root / 'physical'
+        physical.mkdir()
+        alias = self.root / 'alias'
+        alias.symlink_to(physical, target_is_directory=True)
+        self.prefix = alias / 'new-parent/prefix'
+        result = self.install()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(self.snapshot(physical / 'new-parent/prefix')), 10)
+        manifest = json.loads((self.prefix / 'share/mefpp/build-manifest.json').read_text())
+        self.assertEqual(manifest['install_prefix'], str(self.prefix))
+
+    def test_prefix_symlink_is_rejected(self):
+        # Prefix link: resolving external ancestors must not allow a linked prefix.
+        elsewhere = self.root / 'elsewhere'
+        elsewhere.mkdir()
+        self.prefix.symlink_to(elsewhere, target_is_directory=True)
+        result = self.install()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Refusing symlink', result.stderr)
+        self.assertEqual(list(elsewhere.iterdir()), [])
+
     def test_missing_resource_rejects_before_copy(self):
         # Incomplete payload: require both BPM products before any installation.
         (self.build / 'resources/WFI_BPM_1x1.fits').unlink()

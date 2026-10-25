@@ -81,3 +81,21 @@ calibration construction. Recheck hashes immediately before a future candidate r
 
 Stage 1 stays open. The next Mac command group is synchronization only; inspect
 its output before giving the dependent build/install qualification group.
+
+## First Intel Mac attempt and installer correction (#82)
+
+Fernando reports /Users/fselman/wenu-mac-native-build-6v088xmj at source
+8af83052b0f169f18411047b7d0ffa94cb32b4e8: C90 configuration/build passed,
+as did native_primitives and native_cli_usage. Four of five installation cases
+failed because macOS temporary directories pass through /var, a normal ancestor
+symlink. The script stopped at that gate; C17 and independent BPM pixel checks
+were not executed. Nothing was installed by the qualification runner.
+
+The correction resolves ancestors outside the requested installation prefix;
+links at the prefix itself and inside its payload remain rejected. The runtime
+prefix recorded in provenance is retained, without the DESTDIR staging root.
+Two regression cases add an external ancestor alias with a not-yet-created
+parent, and an explicitly linked prefix. All seven installation cases plus the
+native tests pass under agent Linux for both existing C90/C17 build directories.
+This changes installer/tests/docs only; native C sources are unchanged. Actual
+Mac rerun remains pending, and #82 stays open until its target acceptance.
