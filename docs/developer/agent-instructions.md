@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
+source baseline and explicitly qualify compilation and behavior in C17 mode.
+C17 is a compatibility target, not a new source-feature baseline. Inventory
+legacy/dependency extensions and isolate platform APIs; do not claim existing
+strict compliance. Newer facilities need a reviewed exception. C23 checks are
+optional. Mac compiler support is distinct from unperformed mefpp tests;
+chapman3's inventoried GCC 4.8.5/Clang 3.4.2 cannot provide the C17 lane. Qualify
+an isolated compatible compiler without implicitly replacing system tools or
+upgrading glibc. This clarification authorizes documentation, not installation.
+
 Roadmap v1 revision 1.1, 25 October 2026: extend data review to JWST, Roman,
 Rubin, ELT and publicly documented future ESO archive plans, distinguishing
 adopted standards from proposals/unknowns. Native Apple Silicon arm64 build/install

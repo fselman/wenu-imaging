@@ -1,6 +1,6 @@
 # mefpp modernization roadmap — version 1
 
-Date: 25 October 2026. Revision: 1.1. Status: first roadmap, amended for review.
+Date: 25 October 2026. Revision: 1.2. Status: first roadmap, amended for review.
 Documentation baseline: b2867c1da3ae4567cc7168c2f0ca13021aea2f33.
 Owner: Fernando Selman; canonical development repository: fselman/wenu-imaging.
 
@@ -74,14 +74,43 @@ Retain the old source snapshot and instructions as comparison evidence while
 qualifying the selected replacement. A compatibility configure launcher, if
 wanted, must delegate rather than duplicate platform detection logic.
 
-Keep the C language; make the intended C89/C90 baseline explicit and audit actual
-extensions. Isolate necessary platform APIs behind focused adapters. Do not
-claim strict ANSI compliance merely because a compiler accepts the files.
-Proposed initial compilers: Apple Clang on the Mac, a verified site-supported C
-compiler on chapman3, and MSVC or clang-cl for native Windows. Final compiler,
-archiver, linker, SDK and build-tool paths/versions are recorded per target.
-C++ implementation, new Python bindings, compiler upgrades and engine upgrades
-are not prerequisites unless separately justified.
+### Language policy: C89/C90 source and C17 compatibility
+
+Retain ANSI C89/C90 as the portable source baseline for code maintained in the
+mefpp numerical core. Require explicit C90 and C17 compilation/behavior checks;
+C17 is a compatibility target, not permission to introduce C17-only constructs.
+This supersedes the conversational recommendation to make C17 the source baseline.
+Any newer-language facility requires an explicit reviewed exception or revision.
+No language mode change has yet been applied to source/build files.
+
+Use explicit compiler modes (for example -std=c90 and -std=c17 on GCC/Clang),
+classify pedantic diagnostics, and inventory existing GNU/vendor extensions.
+Do not declare legacy Eclipse/qfits strictly C90-compliant before that audit.
+Keep dependency requirements, optional accelerator/OpenMP code and necessary
+POSIX/Windows APIs separately documented; isolate exceptions behind interfaces
+rather than treating C90 syntax as proof of operating-system portability.
+Compiler flags differ on Windows: qualify available conformance diagnostics and
+record any inability to enforce a strict C90 mode rather than claiming parity.
+
+Run the same representative numerical, FITS/metadata, failure/cleanup and memory
+checks for qualified C90 and C17 builds, with agreed comparison tolerances.
+Compilation alone does not establish equivalent behavior. C23 is an optional
+forward-compatibility diagnostic lane when available, not a release requirement
+or justification for an unapproved compiler upgrade. Revisit the baseline only
+when a concrete benefit and complete platform/dependency evidence justify it.
+
+Apple Clang 15 and the reported GNU GCC 13 installations on the Mac support a
+C17 language mode; mefpp's own compatibility remains untested. The fresh chapman3
+inventory reports CentOS 7 x86_64, glibc 2.17, GCC 4.8.5 and Clang 3.4.2, with no
+newer compiler shown by that inventory. Those system compilers cannot serve as
+the C17 qualification toolchain. Investigate an isolated compatible toolchain;
+do not replace system tools, upgrade glibc or modify the working imaging
+environment implicitly. A candidate compiler is not qualified until tested there.
+
+Proposed initial compiler families: Apple Clang on Mac, a verified compatible
+modern GCC on chapman3, and MSVC or clang-cl for native Windows. Record compiler,
+archiver, linker, SDK/library and build-tool paths/versions per target. C++
+implementation, new bindings and unrelated engine upgrades are not prerequisites.
 
 Capture immutable observational and small synthetic fixtures for bias, BPM,
 flats and science, including header/unit expectations and detector mapping.
@@ -527,6 +556,7 @@ were already installed. Discuss scope/order changes before dependent work.
 |---|---|---|---|
 | 1 | 2026-10-25 | Initial build -> memory -> data review -> components -> single-detector -> parallel -> Windows -> CMOS plan, with calibration contracts | Proposed for review; no implementation started |
 | 1.1 | 2026-10-25 | Observatory/archive scope for data review; explicit native Apple Silicon acceptance; optional intra-detector threading and GPU assessment | Planning amendment; no implementation or GPU backend selected |
+| 1.2 | 2026-10-25 | C89/C90 portable source baseline with explicit C17 compilation and behavior checks; actual chapman3 toolchain constraint | Policy clarification; source compliance and target qualification pending |
 
 ## Primary references informing the design
 
