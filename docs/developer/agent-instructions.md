@@ -1,5 +1,35 @@
 # wenu-imaging agent instructions
 
+## Current Mac functional acceptance and handoff, 25 October 2026
+
+Selected installed-library paths corresponding to notebooks 03–09 passed on
+MC02VV0HPHTDG for one 20 s CP Pup r_SDSS exposure (32 detectors), including
+plotting-enabled SCAMP, both illumination models, saved-grid readback, exact-ID
+catalogues, two separate magnitude-only corrections and twelve decoded QC PNGs.
+See [the Mac pilot](pilots/mac-cp-pup-2017-03-13/README.md) for evidence, hashes,
+actual routines, settings and limits. Preserve all originals and accepted outputs.
+Do not describe this as full notebook orchestration, multi-exposure stacking,
+multi-filter Mac acceptance or scientific validation.
+
+#61 closed as a bounded investigation: unchanged stars/parameters reproduce
+the first-run equivalent solution within the observed numerical precision;
+there is no externally imposed target zero point and no new algorithm/factor
+change. Repeated flux scaling/serialization limits remain explicitly recorded.
+#62 remains open for parameter-domain investigation; current Gaussian negative
+RANGE and historical candidate fixed nugget ~0.015 are evidence, not approved
+defaults. Fernando deferred scientific tuning until all fields are reduced.
+SCAMP astrometry DR2 and calibration DR3/GSPC must not be conflated.
+
+The current task is acceptance/roadmap documentation, not further processing.
+Continue the agreed thin-notebook, derived configuration-script, used-library
+audit, then mefpp sequence only within a separately agreed bounded next task.
+Mac multi-exposure/filter checks, other platforms, WFI, native gaps and Phase 3
+remain open. Earlier 24 October integration handoffs are historical: the five
+qualified branches were merged/cleaned at main0591ba0. PRs #57/#60 and the Mac
+acceptance documentation remain separate review branches; do not merge/delete
+them without instruction. Obtain fresh actual Mac Git/environment evidence
+before any synchronization or installation. Docs-only delivery needs no reinstall.
+
 ## Explain every functional and result-verification test, 25 October 2026
 
 Fernando requires an explanation before every functional test and every test

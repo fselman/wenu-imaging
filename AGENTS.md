@@ -1,5 +1,16 @@
 # wenu-imaging
 
+Current Mac handoff, 25 October 2026: selected installed-library paths for one
+CP Pup r_SDSS exposure (32 detectors) passed through notebooks 03–09, including
+both model applications and twelve catalogue QC PNGs. See
+[the Mac pilot](docs/developer/pilots/mac-cp-pup-2017-03-13/README.md).
+This is not full notebook orchestration, multi-exposure/filter Mac acceptance or
+scientific validation. #62 parameter investigation and scientific tuning wait
+until the agreed later stage after all fields are reduced. Current work records
+acceptance/roadmap only; preserve outputs, and do not start refactoring, reruns,
+upgrades or merge/cleanup without the applicable instruction. Earlier dated
+handoffs below are historical; follow the newest canonical instructions.
+
 Test explanations, approved 25 October 2026: before every functional test or
 result-verification test, explain its purpose, inputs, actions, the actual
 Pycavi subroutines/methods and native tools exercised, and expected outputs and

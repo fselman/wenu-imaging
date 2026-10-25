@@ -1,5 +1,35 @@
 # wenu-imaging roadmap
 
+## Intel Mac selected functional paths 03–09 accepted, 25 October 2026
+
+The [CP Pup Mac pilot](pilots/mac-cp-pup-2017-03-13/README.md) records installed
+functional checks for one 20 s r_SDSS exposure and 32 detectors, through native
+reduction/normalization, solves, SCAMP (eight PDFs), single-exposure SWarp,
+DR3/GSPC calibration, 07b, both model fits/readback, catalogue applications and
+twelve decoded catalogue QC PNGs. Baseline: 47543 rows, 14654 exact Gaia
+associations / 14652 distinct IDs, with 32889 missing masks. Both correction
+writers preserve masks/unrelated data and have byte-identical repeat calls.
+Source/settings, product hashes, record paths and per-stage limits are linked.
+
+This accepts selected installed-library paths, not full notebook orchestration
+or all Mac/platform/science gates. #56/#59 are target-qualified and closed;
+#61 is a closed investigation of first-solution repeatability/rounding, not a
+new correction or arbitrary-repeat convergence claim. #62 remains open with
+the current negative Gaussian RANGE and historical fixed-nugget ~0.015 feedback.
+Scientific tuning waits until all fields are reduced; no new defaults or
+model ranking are accepted. SCAMP's DR2 astrometric reference is distinct from
+the DR3/GSPC photometric calibration.
+
+Next: record/review/integrate qualified changes when instructed, then agree the
+next bounded software task under the existing thin-notebook -> shared-library
+scripts -> Python-library audit -> mefpp sequence. Multi-exposure/multi-filter
+Mac acceptance remains pending; inventory and agree any next dataset run before
+launching it. No refactor, processing, upgrade, merge or cleanup is authorized
+by the documentation update. Independent accuracy, flux/error consistency,
+#37/#38/#51, native gaps, WFI, other platforms and Phase 3 remain separate.
+The dated 24 October sections below are historical: PRs #43/#45/#47/#50/#52
+were merged and cleaned on main0591ba0; PRs #57/#60 remain separate review work.
+
 ## Authorized merge/cleanup handoff, 24 October 2026
 
 Fernando authorized integrating the five qualified PRs into main in order:
