@@ -1,0 +1,43 @@
+configuring eclipse...
+compiled sysconf successfully
+
+
+***** eclipse configure help
+Use: configure [options]
+
+options are:
+
+	--qfits=PATH     Force path to qfits (absolute)
+
+	--debug          Compile in debug mode
+	--help           Get this help
+
+	--with-cc        Force compilation with local cc
+	--with-gcc       Force compilation with gcc
+
+	--prefix=PATH    Install in PATH (must be absolute)
+	--mt             Compile with multithreading support
+
+Options specific to compilation with gcc (for developpers):
+	--lint           Compile with -Wall option
+	--trace          Compile function tracing capabilities
+
+If your platform is not or incorrectly recognized, you
+can force a given configuration with this option:
+
+	--os=NAME        Where NAME is one of the following:
+
+	linux      - Linux systems (any processor type)
+	cygwin     - Cygwin (UNIX environment for Windows)
+	hp08       - HPUX version 8.x
+	hp09       - HPUX version 9.x
+	hp10       - HPUX version 10.x
+	hp11       - HPUX version 11.x
+	irix       - SGI IRIX64
+	aix        - IBM AIX (any version)
+	dec        - Dec OSF/1 or Tru64 Unix
+	solaris    - Sun Solaris >=2.5
+	bsd        - BSD compatible Unix
+	darwin     - Darwin (BSD compatible on Mac)
+
+mv: cannot stat 'config.h': No such file or directory

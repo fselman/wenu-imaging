@@ -1,5 +1,15 @@
 # wenu-imaging
 
+Current scope override, 25 October 2026: Fernando explicitly brings point 5
+forward for a mefpp/qfits build and installation audit, Intel Mac first and
+chapman3 second, with qfits to move under mefpp. See
+[the native installation audit](docs/developer/native-installation-audit-2026-10-25.md)
+and #64. First audit is read-only source review/disposable fixture probes;
+native source migration and target build/install acceptance remain pending.
+This overrides earlier native-work deferral only for the bounded installation
+task. Preserve existing engines/data; no numerical changes, upgrades, new
+runtime parallelism or scientific tuning. Follow the latest canonical scope.
+
 Current Mac handoff, 25 October 2026: selected installed-library paths for one
 CP Pup r_SDSS exposure (32 detectors) passed through notebooks 03–09, including
 both model applications and twelve catalogue QC PNGs. See

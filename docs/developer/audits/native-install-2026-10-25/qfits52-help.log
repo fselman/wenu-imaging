@@ -1,0 +1,53 @@
+configuring qfits...
+compiled sysconf successfully
+
+
+***** qfits configure help
+Use: configure [options]
+
+options are:
+	--debug            Compile modules in debug mode
+	--help             Get this help
+
+	--with-cc          Force compilation with local cc
+	--with-gcc         Force compilation with gcc
+
+	--enable-static    Compile static library (default)
+	--enable-shared    Compile shared library
+	--disable-shared   Do not compile shared library (default)
+	--disable-static   Do not compile static library
+
+	--xmemory-mode=M   M=0 switches off the internal xmemory
+	                   handling, M=1 exits the program
+	                   whenever a memory allocation fails,
+	                   M=2 switches on the internal xmemory
+	                   handling.
+
+	--max-ptrs=MAXPTRS Set MAXPTRS as the maximum number of
+	                   pointers allowed
+
+	--prefix=PATH      Install in PATH (must be absolute)
+	--mt               Compile with multithreading support
+
+options specific to compilation with gcc (for developers):
+	--lint             Compile with -Wall
+
+If your platform is not or incorrectly recognized, you
+can force a given configuration with this option:
+
+	--os=NAME        Where NAME is one of the following:
+
+	linux      - Linux systems (any processor type)
+	cygwin     - Cygwin (UNIX environment for Windows)
+	hp08       - HPUX version 8.x
+	hp09       - HPUX version 9.x
+	hp10       - HPUX version 10.x
+	hp11       - HPUX version 11.x
+	irix       - SGI IRIX64
+	aix        - IBM AIX (any version)
+	dec        - Dec OSF/1 or Tru64 Unix
+	solaris    - Sun Solaris >=2.5
+	bsd        - BSD compatible Unix
+	darwin     - Darwin (BSD compatible on Mac)
+
+mv: cannot stat 'config.h': No such file or directory

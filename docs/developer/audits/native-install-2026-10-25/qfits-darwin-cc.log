@@ -1,0 +1,19 @@
+configuring qfits...
+compiled sysconf successfully
+forcing config for OS.......... Darwin  - darwin
+detected x86 architecture...... no
+computing bits per byte........ 8
+detecting byte-order........... little endian (intel)
+looking for a C compiler....... using [/usr/bin/cc]
+                                all optimizations on
+static library................. yes
+shared library................. no
+setting installation prefix as: [/opt/local/qfits5]
+detecting basic size types
+sizeof(char)................... 1
+sizeof(short).................. 2
+sizeof(int).................... 4
+sizeof(long)................... 8
+sizeof(float).................. 4
+sizeof(double)................. 8
+done
