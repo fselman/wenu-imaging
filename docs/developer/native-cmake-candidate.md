@@ -141,3 +141,21 @@ The focused failure/configuration correction adds the nonempty CTest entry
 engines and normal selection remain unchanged. Source regression checks passed;
 rebuilt target build/install, installed-wrapper and observational acceptance remain
 pending. See [the correction record](native-failure-correction-2026-10-26.md).
+
+## Bounded Mac correction acceptance, 26 October 2026
+
+Mac correction acceptance, 26 October 2026: Fernando reports source
+4ade8c52027c736a49b65da3bdb31f11b036693b passed fresh C90/C17 configure/make,
+all five CTest entries per mode, both private runtime installations and installed
+failure suites, isolated Python imports/five wrapper regressions, and complete
+CP Pup direct and corrected-wrapper comparisons in both modes. All 32 detector
+arrays are exact/finite, with matching structure and only generated primary
+ORIGFILE timestamp differences in raw headers. Protected engines, input files,
+Python packages and checkout remained unchanged. See
+[the correction record](native-failure-correction-2026-10-26.md).
+This is bounded Intel Mac acceptance using prebuilt calibrations. Stage 1 stays
+open for calibration-building fixtures and Chapman3; WFI observational, memory,
+other platform and scientific/Phase 3 gates remain open. Keep #75's broader
+ownership/memory gate and the applicable linked target requirements open.
+No normal engine/package switch, merge or cleanup has been performed. Documentation-
+only acceptance updates need no reinstall or repeated processing.

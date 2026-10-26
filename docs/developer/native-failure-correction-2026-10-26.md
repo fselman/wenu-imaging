@@ -3,8 +3,41 @@
 Parent: 03861a5460370cb03f257f4119c972b2c35021a3 (fix/native-cmake-build).
 Issues: #71 (status), #75 (context ownership), #76 (configuration), #85 (split),
 #86 (Pycavi subprocess), #87 (PAF stale value). Status: implementation/source
-verification; rebuilt actual-Mac and Chapman3 acceptance pending. No merge,
+verification and bounded actual-Mac acceptance passed; Chapman3 and the remaining
+Stage 1 gates are pending. No merge,
 replacement of working engines or full memory qualification is claimed.
+
+## Actual Mac acceptance of the corrected source
+
+Fernando reports the following at code commit
+4ade8c52027c736a49b65da3bdb31f11b036693b on MC02VV0HPHTDG, macOS 13.7.8,
+Xcode Apple Clang and SDK, CMake 3.29.3, imaging Python 3.11.14. These are
+returned terminal reports; the agent has not read the Mac JSON files directly.
+
+| Check | Reported result | Actual Mac evidence |
+|---|---|---|
+| Fresh frontend builds | 100 translation units with explicit mode flags, all five CTest entries passed in C90 and C17 | /Users/fselman/wenu-mac-failure-build-u021mf2l/build-check.json |
+| Private installed runtimes | Exact complete manifest payload, matching Mach-O x86_64 binaries, ten installed failure-test methods passed per mode; payload preserved | Same directory, installation-check.json |
+| Direct observational regression | Every pixel of all 32 detector arrays exact and finite in C90/C17; structure matches, raw headers differ only in generated primary ORIGFILE | /Users/fselman/Pictures/OCAM/mac-native-cppup-corrected-1y_n625f/comparison.json |
+| Isolated Python wheel/install | No dependency download/upgrade; exact installed module identity/full imports and five wrapper regressions passed, original package preserved | /Users/fselman/wenu-mac-python-failure-test-trbc6ykz/installation-check.json |
+| Corrected installed wrapper plus native engines | Production Instrument/ExposuresPartition/mefpp_reduce_science/copy_paf/check_mef_bpm/run_commands, explicit private engine per mode; all 32 detector arrays exact/finite and structure matched in C90/C17, raw-header difference only ORIGFILE; cwd restored | /Users/fselman/Pictures/OCAM/mac-corrected-wrapper-cppup-76_e3753/wrapper-comparison.json |
+
+The expected ERROR log lines in the five wrapper regressions come from deliberately
+failing subprocess fixtures, not failed tests. The observational wrapper runs
+used the actual corrected installed modules and real retained raw/master/BPM/PAF
+copies; they are distinct from the earlier helper-based wrapper regressions.
+No Python normalization, new calibration construction, parameter tuning or
+independent scientific validation occurred. Native/Python working selections
+were not changed. Protected inputs/engines/packages and checkout were preserved.
+Both direct and wrapper C90/C17 results compared against the historical native
+reference, not a Python-normalized image.
+
+These results supersede pending Mac build/installed/observational statuses in the
+historical source-verification/handoff sections below for this correction only.
+The remaining work is calibration-building fixtures and Chapman3 qualification,
+plus the separately gated broader memory/platform/science work. No issue is closed
+by this documentation alone. Machine-readable attributed summary:
+[Mac correction acceptance](fixtures/mac-native-failure-acceptance-2026-10-26.json).
 
 ## Actual Mac evidence before the correction
 
