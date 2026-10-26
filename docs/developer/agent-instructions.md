@@ -1,5 +1,23 @@
 # wenu-imaging agent instructions
 
+Chapman3 installed Pycavi acceptance, 26 October 2026: Fernando reports an
+isolated wheel/target installation from source 805e6c63dea20e7f5e5ade816f6a6ddc90702d86
+passed actual installed imports and all five wrapper failure regressions.
+Actual installed Instrument/SciencePartition, copy_paf/check_mef_bpm,
+mefpp_reduce_science and run_commands then passed four serial CN Ori runs
+(C90/C17, NB_659/r_SDSS). Each selected the correct private engine and restored
+cwd. Complete comparisons against the accepted direct-native outputs have exact
+finite pixels in all 32 detectors, matching structure/scaling, and raw headers
+differ only in generated primary ORIGFILE timestamps; MJD-END matches exactly.
+Protected originals, references, staged inputs, installations and normal selections
+were unchanged. See the current Chapman3 acceptance record for exact paths.
+This completes the bounded installed-wrapper target gate; calibration construction,
+broader memory/ownership, WFI/other platforms and scientific/Phase 3 gates remain
+open. Review the stacked native PRs for integration; no merge or Git branch
+deletion is authorized or performed by recording this result.
+
+[Current acceptance and limits](chapman3-native-acceptance-2026-10-26.md).
+
 Chapman3 installed/native acceptance and workspace completion, 26 October 2026:
 Fernando reports source 805e6c63dea20e7f5e5ade816f6a6ddc90702d86 passed complete
 private C90/C17 installations, manifest hashes and ten installed native failure
@@ -8,7 +26,7 @@ all 32 detector arrays exact and finite with matching structure/scaling.
 Raw headers differ only in generated ORIGFILE and reviewed MJD-END; independent
 decimal arithmetic confirms the candidate values, while historical endpoints
 match binary32 rounding. #24 stays open because common calibration-header time
-variables remain float. Installed corrected Pycavi on Chapman3 is the next gate;
+variables remain float. The installed corrected Pycavi gate subsequently passed as recorded above;
 calibration construction, memory and broader scientific/platform gates remain open.
 
 Permanent reusable CMake/CTest 3.29.6 now live at ~/opt/cmake-3.29.6/bin/;

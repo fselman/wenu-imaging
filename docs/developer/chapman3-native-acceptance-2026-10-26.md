@@ -91,16 +91,53 @@ The original native retry now resides in that archive; its build-check.json,
 logs and source exports remain evidence. The failed 579kejl8 attempt is there
 too. No Git branch cleanup occurred.
 
-## Next acceptance gate and limits
+## Installed Pycavi qualification
 
-Next: export the pinned Python source, build/install its wheel without dependency
-downloads into a fresh target under the workspace, verify installed imports and
-run the five wrapper failure regressions. Then exercise the actual installed
-Pycavi science wrapper with the corrected engines on isolated inputs and compare
-the resulting pixels/headers. Do not replace the normal package or engine.
+The pinned Python source at 805e6c63 was exported without modifying the checkout.
+pip --isolated wheel --no-index --no-deps --no-build-isolation and a separate
+--target installation produced pycavi-0.1.0-py3-none-any.whl without dependency
+downloads or replacement of the normal package. Work directory:
+`/home/fselman/Software/build/wenu-imaging/chapman3-python-failure-53lep1l8`.
 
-This accepts bounded Chapman3 native build/install/failure/direct-science behavior
-with prebuilt calibrations. Installed corrected Pycavi on Chapman3, calibration
-construction, broader ownership/memory, WFI observations, other platforms and
+Actual installed reduction/instrument imports matched the exported source bytes.
+All five wrapper regression methods passed: silent nonzero exit, success/legacy
+error text, verbose pipe draining, spawn failure/log closure, and science-wrapper
+failure/cwd recovery. These exercise production function bodies with real bounded
+children; the science-failure setup uses helper fixtures, separately from the
+actual observational wrapper execution below. Deliberate ERROR logs are expected
+test output. Working module/configuration hashes and checkout remained unchanged.
+Records: installation-check.json and installed-wrapper-check.json.
+
+Actual installed production Instrument and SciencePartition objects, copy_paf,
+check_mef_bpm, mefpp_reduce_science and run_commands were then exercised with the
+real corrected C90/C17 engines, one CN Ori exposure per filter, serially at niceness
+10. No production function was replaced; no normalization was called.
+Each of four calls completed, restored cwd, recorded the correct private engine
+command and produced a 1,070,553,600-byte output.
+
+Wrapper work:
+`/home/fselman/Software/build/wenu-imaging/chapman3-wrapper-cnori-9_5yguif`.
+Records: wrapper-run-record.json and wrapper-output-comparison.json; per-run
+wrapper.log, mefpp.log and mefpp_command.txt remain with their outputs.
+All 32 detector arrays in each of four comparisons are exactly equal and finite
+against the already accepted direct-native counterpart. Identity/order, dtype,
+shape and scaling match. Complete raw header comparison permits only primary
+ORIGFILE changes; the returned reports show exactly that generated timestamp
+difference in each output. MJD-END is identical to the direct-native value.
+Recorded installed modules/engines, original/staged inputs, references and outputs
+remained unchanged during verification. Normal engine/package selection remains
+unchanged.
+
+## Integration review and limits
+
+The bounded Mac and Chapman3 installed-wrapper/direct-native gates are now
+recorded for their tested commits. Next is review of the stacked PRs and issue
+acceptance criteria for integration. Merge and Git branch deletion require the
+applicable explicit instruction; no additional reduction is started by this
+documentation update. Broader Stage 1 is not declared complete.
+
+This accepts bounded Chapman3 native build/install/failure/direct-science and
+installed Pycavi behavior with prebuilt calibrations. Calibration construction,
+broader ownership/memory, WFI observations, other platforms and
 independent scientific/Phase 3 gates remain open. No merge, release, normal
 selection switch or further production processing is implied.

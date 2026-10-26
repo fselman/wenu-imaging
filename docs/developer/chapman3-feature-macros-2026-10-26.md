@@ -2,8 +2,8 @@
 
 Issue: #89. Parent: 81a2f742ad439245739601444e7ffe70cb119037.
 Status: actual Chapman3 C90/C17 build, installed failure and direct CN Ori
-checks passed at source 805e6c63. Installed corrected Pycavi qualification remains
-pending. See [current acceptance](chapman3-native-acceptance-2026-10-26.md) for
+checks passed at source 805e6c63. Installed corrected Pycavi imports/failure
+regressions and four two-filter/C90/C17 observational comparisons also passed. See [current acceptance](chapman3-native-acceptance-2026-10-26.md) for
 returned target evidence, reviewed timing differences and relocation maps.
 Earlier pending statements below describe the preceding implementation phase.
 
