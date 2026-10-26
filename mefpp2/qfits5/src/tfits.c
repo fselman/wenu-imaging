@@ -33,7 +33,7 @@
 #include "byteswap.h"
 #include "simple.h"
 #include "t_iso8601.h"
-#include "config.h"
+#include "qfits_platform_config.h"
 #include "fits_rw.h"
 #include "fits_md5.h"
 #include "xmemory.h"

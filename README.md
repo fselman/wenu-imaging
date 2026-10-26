@@ -1,5 +1,8 @@
 # wenu-imaging
 
+Start with the [quick installation guide](docs/installation.md).
+Detailed build/test procedures are in [developer documentation](docs/developer/README.md).
+
 wenu-imaging coordinates Pycavi (Python), mefpp and qfits for astronomical image
 reduction. The Python distribution and imports retain the name **pycavi**.
 
@@ -27,11 +30,13 @@ mefpp, qfits or the external astronomy engines, download astrometry indexes,
 create calibrations or establish scientific validity. WFI resources are retained;
 WFI implementation and dedicated validation are deferred.
 
-See [installation and validation](docs/developer/installation.md) for external
-software, reference constraints, Mac/Linux instructions and known blockers.
-The [roadmap](docs/developer/roadmap.md) governs subsequent notebook thinning,
-configuration-driven scripts, the Pycavi Python library audit, then the mefpp audit.
-No scientific-library or external-engine upgrades are part of this packaging work.
+See [Python installation and validation](docs/developer/installation.md) and the
+maintained [native mefpp installation guide](docs/developer/native-installation.md).
+The native CMake candidate bundles qfits under mefpp2/qfits5. Intel Mac C90/C17
+build/resource/private-install checks passed; observational and other-platform
+qualification remain pending. Installing a private candidate does not select it
+for normal processing. The latest dated [roadmap](docs/developer/roadmap.md)
+controls the work order and qualification gates.
 
 ## Licensing
 

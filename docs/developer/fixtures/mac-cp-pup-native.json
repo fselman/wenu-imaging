@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "evidence": "Fernando's read-only actual-Mac reports, 25 October 2026; no agent access to these data",
+  "host": "MC02VV0HPHTDG",
+  "staging_directory": "/Users/fselman/Pictures/OCAM/mac-notebook03-one-8nmbomu1/science",
+  "inputs": [
+    {"name":"OMEGA.2017-03-13T02:35:52.825.fits", "source":"/Users/fselman/Pictures/OCAM/raw_files/CPPup_raw/OMEGA.2017-03-13T02:35:52.825.fits", "sha256":"7eba367e4a9683a90fd672e95ca11b40ccb999f9d9cd031594f040a8ac31e076"},
+    {"name":"OCAM_MB_1x1.fits", "resolved_source":"/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/calib/bias/574184/2017-03-13T09:44:19/OCAM_MB_1x1.fits", "sha256":"62b4cda6634ddad8c39251775fb36b8a1f8391e5dda85edd32fe75ea96005bb2"},
+    {"name":"OCAM_MFF_r_SDSS_1x1.fits", "resolved_source":"/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/calib/sky/200253584/r_SDSS/2017-03-13T23:12:13/OCAM_MFF_r_SDSS_1x1.fits", "sha256":"dcefca2b7d5cf9737acff9af6cb9d1951323f7910ca7431dd181d4a964582fc5"},
+    {"name":"OCAM_BPM_1x1.fits", "resolved_source":"/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/static_calib/bpm/OCAM_BPM_1x1.fits", "sha256":"bcc5e05e63f275b3b0e4d2de0b4b21f315691cca717bdd80fcd010bf5ca324bd"},
+    {"name":"mefpp.paf", "source":"/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/science/CP_Pup/r_SDSS/2017-03-13T01:57:49/mefpp.paf", "sha256":"709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"}
+  ],
+  "historical_engine": {"path":"/Users/fselman/opt/local/mefpp/bin/mefpp", "sha256":"8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"},
+  "historical_command": "nohup /Users/fselman/opt/local/mefpp/bin/mefpp  --bias OCAM_MB_1x1.fits  --mff OCAM_MFF_r_SDSS_1x1.fits  --science science.list",
+  "science_list": ["/Users/fselman/Pictures/OCAM/mac-notebook03-one-8nmbomu1/science/OMEGA.2017-03-13T02:35:52.825.fits"],
+  "native_reference": {"name":"OMEGA.2017-03-13T02:35:52.825_pre.fits", "sha256":"7382711b31a2e895307573fa1614b7d2f782246718d32b161c1220f389ee08b6", "detectors":32, "shape_per_detector":[4091,2044], "normalized":false},
+  "normalized_reference": {"path":"/Users/fselman/Pictures/OCAM/mac-notebook03-normalize-0ydag_rc/science/OMEGA.2017-03-13T02:35:52.825_pre.fits", "sha256":"92877d2f22280491fc148425d9748a59c1555dd8fd9dc3fc5bfd76e96298d465"},
+  "limitations": "Prebuilt masters: does not exercise calibration construction. BPM staged, not explicitly passed in the historical command. Native exit propagation separately tracked. Future runs need fresh hash checks and independent pixel comparisons."
+}

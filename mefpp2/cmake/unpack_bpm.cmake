@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.29)
+# Resource preparation: decompress into a temporary file, never into an installed prefix.
+file(REMOVE "${OUTPUT}.partial")
+execute_process(COMMAND "${FUNPACK}" -O "${OUTPUT}.partial" "${INPUT}" RESULT_VARIABLE result OUTPUT_VARIABLE output ERROR_VARIABLE error)
+if(NOT "${result}" STREQUAL "0" OR NOT EXISTS "${OUTPUT}.partial")
+  file(REMOVE "${OUTPUT}.partial")
+  message(FATAL_ERROR "BPM decompression failed: ${result}: ${output}${error}")
+endif()
+# FITS framing: reject empty/truncated/non-FITS output; pixel acceptance is a target test.
+file(SIZE "${OUTPUT}.partial" size)
+file(READ "${OUTPUT}.partial" magic LIMIT 9)
+math(EXPR remainder "${size} % 2880")
+if(size LESS 2880 OR NOT remainder EQUAL 0 OR NOT magic STREQUAL "SIMPLE  =")
+  file(REMOVE "${OUTPUT}.partial")
+  message(FATAL_ERROR "BPM decompressor produced invalid FITS framing")
+endif()
+file(RENAME "${OUTPUT}.partial" "${OUTPUT}")

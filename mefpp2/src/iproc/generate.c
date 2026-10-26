@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include "config.h"
+#include "mefpp_platform_config.h"
 #include "generate.h"
 #include "polygon.h"
 #include "random.h"

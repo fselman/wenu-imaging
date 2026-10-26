@@ -29,19 +29,20 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "config.h"
+#include "mefpp_platform_config.h"
 #include "cube_defs.h"
 
 /*----------------------------------------------------------------------------
    								Defines
  *--------------------------------------------------------------------------*/
 
-/*
- * this makes use of "inline" invisible to compilers that do not support it
+/* Retain the legacy fallback only before inline became a C language keyword.
+ * Defining it away in C99+ can change subsequently included system headers.
  */
-
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
 #ifndef inline
 #define inline
+#endif
 #endif
 
 

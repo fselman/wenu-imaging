@@ -1,5 +1,79 @@
 # wenu-imaging
 
+Mac normal installation accepted, 25 October 2026: Fernando reports the default
+C90 ./configure; make; make install route, optional make check (four CTest entries),
+complete installed payload/BPM pixels/checksums/CLI, byte-identical repeat install
+and DESTDIR staging passed at source 7c5238f848284033bcef416ec5970a8004550afd.
+See [frontend acceptance](docs/developer/native-frontend.md). Close bounded #84; preserve
+the private installation at ~/wenu-mac-simple-install.7en8H834/install and the
+selected historical engine/configuration. Next is CP Pup read-only preflight,
+then isolated native regression; do not repeat installation checks unnecessarily.
+No automatic observation run, engine switch, merge or cleanup is authorized.
+
+Simple installation interface, approved 25 October 2026: Fernando requires
+./configure; make; make install to remain the normal supported interface.
+The new root/component wrappers delegate to CMake, select tools/check prerequisites
+and propagate errors; optional make check is developer qualification. See
+[frontend status](docs/developer/native-frontend.md). This is current Stage 1 work before
+CP Pup comparison. Package-manager evaluation remains deferred. Agent Linux
+frontend tests/integration passed with explicitly synthetic resource fixtures;
+actual Mac frontend qualification is pending. Preserve existing private installs
+and normal engine selection; no observation rerun, merge or cleanup starts here.
+
+Current priority, approved 25 October 2026: Fernando defers pip-versus-Conda/
+micromamba packaging as a TODO and resumes the existing native qualification.
+See [current next work](docs/developer/roadmap.md) and native roadmap revision 1.4. Next is the
+read-only CP Pup fixture/installed-candidate preflight, then isolated native
+output comparison and remaining Stage 1 gates. Do not start package-manager
+prototypes, provisioning, publication or bulk document moves as a prerequisite.
+Preserve the qualified private installs and selected historical engine.
+
+Documentation audience correction, 25 October 2026: Fernando requests a short
+[user installation entry point](docs/installation.md) directly under docs; keep detailed
+build/test/install material in [the developer guide](docs/developer/native-installation.md). Maintain
+both with installation changes. Group developer navigation by topic; any later
+physical move must update inbound links together. Package-manager review is a
+proposal, not authorization to install/provision dependencies or publish binaries.
+Conda/micromamba is the first recommended user-distribution evaluation; preserve
+the existing CMake/CTest build and current working environments.
+
+Maintained installation guide, approved 25 October 2026: Fernando requires
+[the native installation guide](docs/developer/native-installation.md) under docs to stay current.
+Update it in the same PR as changes to build/install tools, entry points,
+platforms, resources/layout, selection, upgrade/rollback or qualification status.
+Keep the Python installation hub, root README and build reference linked and
+consistent; distinguish tested procedures from pending platform work.
+
+Intel Mac native acceptance, 25 October 2026: Fernando reports C90/C17 native
+builds, three CTest entries per mode, exact OCAM/WFI BPM pixels, checksum metadata
+accounting, real private installations/repeats/installed CLI and C17 DESTDIR passed
+at source 41c8e6a544c1bc5122dc558e0c8cc7904214e1d0. See
+[the acceptance record](docs/developer/native-mac-build-install-acceptance.md). Historical engine and configuration
+remain selected/unchanged. Observational pixel equivalence, installed wrapper,
+calibration/WFI fixtures, failure/memory and chapman3 gates remain pending.
+Prepare immutable observational fixtures next; publication starts no reduction,
+engine switch, merge or branch cleanup. Earlier pending statuses below are historical.
+
+Stage 4 amendment, 25 October 2026: Fernando requires creation and propagation
+of per-pixel frame variances for science and calibration products. Follow
+[roadmap revision 1.3](docs/developer/mefpp-modernization-roadmap-v1.md): squared units, masks, gain/RON,
+calibration/parameter uncertainties, shared-normalization correlations and
+Pycavi/resampling/photometry handoffs, with independent recovery tests. This is
+future Stage 4 scope; preserve the current Stage 1 build-only boundary.
+
+Stage 1 candidate implementation, 25 October 2026: Fernando authorized the isolated
+bundled-source CMake build after reviewing stage 0 and reporting actual-Mac
+fixture settings. See [candidate status](docs/developer/native-cmake-candidate.md)
+and mefpp2/README.cmake.md. qfits is now under mefpp2/qfits5 in this candidate;
+retain all 18 qfits and 79 Eclipse archive sources. Numerical algorithms,
+allocator policy, existing installations and data remain unchanged. Agent Linux
+GCC 13.3/CMake 3.29.6 code-only C90/C17 builds and three CTest entries per mode
+passed; this is not Mac/chapman3 qualification. Actual BPM decompression, complete
+runtime install and observational pixel equivalence are pending on the Mac.
+No engine switch, observation rerun, memory-clean claim, merge or branch deletion
+is authorized by this implementation. Earlier audit-only holds below are historical
+where superseded by this bounded authorization.
+
 Stage 0 native build specification, 25 October 2026: read
 [the specification](docs/developer/native-build-specification-v1.md) before
 implementation. It defines the minimum static target graph, runtime payload,

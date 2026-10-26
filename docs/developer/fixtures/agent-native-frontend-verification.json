@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "platform": "agent Linux x86_64, GCC 13.3/CMake 3.29.6",
+  "scope": "frontend actual C90/C17 native build/tests/install forwarding with synthetic decompressor framing only; not actual BPM or Mac qualification",
+  "results": {
+    "90": {
+      "entry_point": "repository root",
+      "ctest_entries": 4,
+      "installed_files": 10,
+      "repeat_byte_identical": true
+    },
+    "17": {
+      "entry_point": "mefpp2",
+      "ctest_entries": 4,
+      "installed_files": 10,
+      "repeat_byte_identical": true
+    }
+  },
+  "work": "/workspace/scratch/cfd51ba369c2/native frontend integration xrfd3frm",
+  "code_only_install_rejected": true,
+  "clean_preserves_sources_and_installed_prefix": true,
+  "default_configure_make_install_passed": true,
+  "default_native_build_does_not_discover_python": true
+}

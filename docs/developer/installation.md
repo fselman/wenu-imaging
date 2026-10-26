@@ -1,4 +1,21 @@
-# Python packaging and installation
+# Developer installation: Python and native components
+
+For ordinary users, start with the [quick installation guide](../installation.md).
+This page retains detailed Python packaging and validation information.
+
+## Maintained native installation guide, 25 October 2026
+
+Use [the native mefpp installation guide](native-installation.md) for the bundled
+CMake build, resources, private installation, verification, staging and rollback.
+Intel Mac C90/C17 build/resource/private-install acceptance passed at source
+41c8e6a544c1bc5122dc558e0c8cc7904214e1d0; see the
+[acceptance record](native-mac-build-install-acceptance.md). Observational and
+chapman3 qualification remain pending, and the historical engine stays selected.
+Native installation does not install the Python wheel or other astronomy engines.
+
+The sections below cover Python packaging and retain dated evidence. Their
+historical platform-pending statements do not override newer pilot/acceptance
+records or the maintained native guide. Update both guides with relevant changes.
 
 ## Current chapman3 evidence, 23 October 2026
 
@@ -18,8 +35,9 @@ Any deviation from the roadmap requires discussion and Fernando's approval first
 
 One canonical `pyproject.toml` and `MANIFEST.in` now live at the monorepo root.
 Install from that root, not `Pycavi2`. The distribution name stays `pycavi`, the
-imports stay `pycavi.*`, and the component source directories have not moved.
-Native components still have their own builds. The Python source archive is not
+imports stay `pycavi.*`, and the Python component source layout is unchanged.
+The native CMake candidate nests qfits under `mefpp2/qfits5`; its build/install
+is described in the maintained native guide. The Python source archive is not
 a complete native wenu-imaging source release; obtain native code from Git.
 
 Existing scientific dependency ranges are retained. IPython and scikit-image are

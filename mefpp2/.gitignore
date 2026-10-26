@@ -76,3 +76,7 @@ instance/
 .webassets-cache
 
 
+
+# Local native configure/make state and default binary tree
+/.mefpp-config/
+/build-native/

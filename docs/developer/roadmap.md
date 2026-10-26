@@ -1,5 +1,103 @@
 # wenu-imaging roadmap
 
+## Current gate: CP Pup native regression preflight — 25 October 2026
+
+The normal Mac C90 installation interface is accepted at source
+7c5238f848284033bcef416ec5970a8004550afd: configure/make/install, optional four-entry
+CTest suite, exact installed BPM/payload/provenance/CLI, repeat install and
+DESTDIR passed. See [frontend acceptance](native-frontend.md). This completes
+bounded #84; no more installation tests are needed for that gate.
+Next: verify retained raw/master/PAF/native-reference hashes and the installed
+candidate, prepare fresh copies, then compare all native detector pixels/metadata.
+Historical engine/configuration remain selected/unchanged. Broader Stage 1,
+chapman3 and memory gates stay open. Packaging remains a deferred TODO.
+Earlier frontend-pending statuses below describe the preceding implementation phase.
+
+## Current priority: finish the normal installation interface — 25 October 2026
+
+Fernando authorizes restoring ./configure; make; make install before the next
+CP Pup step. Implement thin root/component frontends over the existing CMake
+graph/installer, automatic platform tool selection and clear prerequisite/error
+handling. Keep compiler overrides and direct CMake available; developer validation
+belongs in optional make check and docs/developer, not the ordinary user route.
+[Frontend status](native-frontend.md) records agent evidence and pending actual-Mac
+qualification. The native numerical source and working installations are unchanged.
+After this frontend gate, resume the CP Pup preflight/comparison and remaining
+Stage 1/chapman3 work below. pip-versus-Conda remains a deferred TODO.
+
+## Current next work and deferred packaging TODO — 25 October 2026
+
+Fernando defers the pip-versus-Conda/micromamba decision. Keep it as a TODO:
+compare platform wheels and Conda recipes for native mefpp and integration with
+Pycavi; assess dependencies, resources/relocation, Mac/Linux artifacts, chapman3
+glibc compatibility, fresh-user installation and maintenance before selecting a
+distribution route. Local package tests can precede any public hosting decision.
+No package prototype, publication or manager installation starts now.
+
+Resume the existing Stage 1 qualification, in this order:
+
+1. Read-only preflight of retained CP Pup raw/master/PAF/native-reference hashes,
+   detector layouts and both qualified private installed candidates.
+2. Prepare fresh copies, then compare native C90/C17 candidate outputs with the
+   historical native output across all detector pixels and relevant metadata.
+   Keep Python normalization separate; do not invent tolerances to pass differences.
+3. Qualify the installed Pycavi wrapper and remaining relevant fixture/failure
+   gates; then repeat build/install qualification on chapman3 with its verified
+   compatible toolchain. Do not declare Stage 1 complete from the Mac CLI alone.
+4. Memory qualification remains the next major stage after build/install gates.
+
+This is functional regression work, not scientific parameter tuning. Preserve
+working engines, configurations and observations; no normal engine switch,
+merge or cleanup is implicit. Packaging and physical documentation relocation
+do not block the current native comparison.
+
+## User installation and documentation review — 25 October 2026
+
+Fernando requests a short [user installation guide](../installation.md), detailed
+procedures under docs/developer, and clearer topical navigation. The native
+source-install gate passed on Intel Mac; simple end-user distribution is a
+separate Stage 1 usability deliverable. Review
+[Mac/Linux package-manager options](native-distribution-options.md), with
+pip platform wheels versus Conda/micromamba both deferred for evaluation; no
+user-distribution package manager is selected. No recipe, channel, binary publication or new dependency
+is selected/installed by this review. Qualify relocation, platform/glibc compatibility
+and fresh-user installation before advertising a one-command install.
+A physical developer-document move follows an inbound-link inventory; topic-grouped
+navigation is the first change. The temporary review pause ended with Fernando's
+instruction to defer packaging and resume the current native qualification.
+
+Intel Mac native acceptance, 25 October 2026: Fernando reports C90/C17 native
+builds, three CTest entries per mode, exact OCAM/WFI BPM pixels, checksum metadata
+accounting, real private installations/repeats/installed CLI and C17 DESTDIR passed
+at source 41c8e6a544c1bc5122dc558e0c8cc7904214e1d0. See
+[the acceptance record](native-mac-build-install-acceptance.md). Historical engine and configuration
+remain selected/unchanged. Observational pixel equivalence, installed wrapper,
+calibration/WFI fixtures, failure/memory and chapman3 gates remain pending.
+Prepare immutable observational fixtures next; publication starts no reduction,
+engine switch, merge or branch cleanup. Earlier pending statuses below are historical.
+
+Stage 4 amendment, 25 October 2026: Fernando requires creation and propagation
+of per-pixel frame variances for science and calibration products. Follow
+[roadmap revision 1.3](mefpp-modernization-roadmap-v1.md): squared units, masks, gain/RON,
+calibration/parameter uncertainties, shared-normalization correlations and
+Pycavi/resampling/photometry handoffs, with independent recovery tests. This is
+future Stage 4 scope; preserve the current Stage 1 build-only boundary.
+
+## Stage 1 isolated candidate — 25 October 2026
+
+Stage 1 candidate implementation, 25 October 2026: Fernando authorized the isolated
+bundled-source CMake build after reviewing stage 0 and reporting actual-Mac
+fixture settings. See [candidate status](native-cmake-candidate.md)
+and mefpp2/README.cmake.md. qfits is now under mefpp2/qfits5 in this candidate;
+retain all 18 qfits and 79 Eclipse archive sources. Numerical algorithms,
+allocator policy, existing installations and data remain unchanged. Agent Linux
+GCC 13.3/CMake 3.29.6 code-only C90/C17 builds and three CTest entries per mode
+passed; this is not Mac/chapman3 qualification. Actual BPM decompression, complete
+runtime install and observational pixel equivalence are pending on the Mac.
+No engine switch, observation rerun, memory-clean claim, merge or branch deletion
+is authorized by this implementation. Earlier audit-only holds below are historical
+where superseded by this bounded authorization.
+
 ## Stage 0 build specification — 25 October 2026
 
 [Native build specification v1](native-build-specification-v1.md) defines the

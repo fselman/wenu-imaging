@@ -1,18 +1,5 @@
 #!/bin/sh
-#
-# Bootstrap script: it tries to compile a simple C script using cc or
-# gcc and launches it to create config.h and config.make files.
-#
-
-echo "configuring eclipse..."
-if (cc -o sysconf sysconf.c 2> /dev/null) ; then
-	echo "compiled sysconf successfully"
-elif (gcc -o sysconf sysconf.c 2> /dev/null) ; then
-	echo "compiled sysconf successfully"
-else echo "cannot find cc or gcc: aborting" ; exit
-fi
-./sysconf $*
-mv config.h ./src/include
-rm -f sysconf
-
-
+# Keep the familiar entry point; all configuration policy is in the shared frontend.
+set -eu
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+exec "$script_dir/cmake/frontend.sh" configure "$@"

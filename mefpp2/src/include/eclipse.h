@@ -2,7 +2,7 @@
 #define _ECLIPSE_ALL_INCLUDES_
 
 /* Unix includes come first, in this order */
-#include "config.h"
+#include "mefpp_platform_config.h"
 
 #include "calendar.h"
 #include "charmatrix.h"
