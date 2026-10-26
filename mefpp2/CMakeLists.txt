@@ -134,6 +134,9 @@ if(BUILD_TESTING)
   file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test-work")
   add_test(NAME native_primitives COMMAND native_smoke)
   set_tests_properties(native_primitives PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+  add_test(NAME native_failure_contract
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/failure_contract.py"
+      "$<TARGET_FILE:mefpp>" "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/omegacam.paf")
   add_test(NAME native_cli_usage COMMAND "${CMAKE_COMMAND}" -DEXECUTABLE=$<TARGET_FILE:mefpp> -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cli_usage.cmake")
 endif()
 

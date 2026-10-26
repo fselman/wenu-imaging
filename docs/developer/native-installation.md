@@ -354,3 +354,11 @@ upgrade/rollback or qualification status. Record the actual tested source commit
 platform, commands/results and limitations; label untested procedures as pending.
 Keep the installation hub, root README, build reference and acceptance records
 consistent. Preserve dated historical audits; do not rewrite old failures as passes.
+
+## Failure-handling candidate, 26 October 2026
+
+The focused failure/configuration correction adds the nonempty CTest entry
+`native_failure_contract`; run it in both C90/C17 builds. Existing private Mac
+engines and normal selection remain unchanged. Source regression checks passed;
+rebuilt target build/install, installed-wrapper and observational acceptance remain
+pending. See [the correction record](native-failure-correction-2026-10-26.md).

@@ -1,5 +1,20 @@
 # wenu-imaging roadmap
 
+## Current Stage 1 correction, 26 October 2026
+
+Fernando reports exact historical native CP Pup pixels in all 32 detectors for
+C90 direct, C90 installed Pycavi wrapper and C17 direct runs; shapes/types/identity
+match, raw headers differ only in the generated primary ORIGFILE timestamp,
+and protected files remain unchanged. These runs used prebuilt calibrations.
+Both language modes then failed the missing-PAF/input/invalid-satmax negative
+cases. Stage 1 remains open. Fernando authorized the focused configuration,
+exit-status, split-error, context-ownership and Python propagation correction
+described in [the correction record](native-failure-correction-2026-10-26.md).
+Implement and verify this bounded slice before dependent qualification. Preserve
+the working engines and accepted products; Mac rebuilt-candidate/installed checks,
+renewed observational comparisons and Chapman3 remain pending. Calibration-building,
+memory and wider roadmap gates are not closed by these source tests.
+
 ## Current gate: CP Pup native regression preflight — 25 October 2026
 
 The normal Mac C90 installation interface is accepted at source

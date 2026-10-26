@@ -720,87 +720,46 @@ def associate_bpm(partition, bpm_partitions,instrument):
 # A utility function
 # ======================================================================
 def run_commands(str_cmd, p_shell=True, my_env=None, logfile=None):
+    """Run a native command; return 0 on success and 1 on failure.
+
+    Preserve the command/log files and legacy error-text checks. The actual
+    process return code is authoritative even when no error text is printed.
     """
-    A wrapper to run system commands.
-
-    Parameters
-    ----------
-    str_cmd: str
-      Command string to be executed in the shell
-
-    p_shell: bool
-      If True (default), command will be executed through the shell, and all
-      cout/cerr messages will be available.
-      If False, exception is the only way to find out problems during the call.
-
-    logfile: str
-        If given will define the path of the file where the stdout and stderr will be printed.
-
-    Returns
-    -------
-      0 if some error, or 1 if all was OK
-
-    """
-
-    logging.info("run_command: Running command: {0}".format(str_cmd))
-    log_path = subprocess.PIPE if logfile is None else open(logfile, "w+")
-    univ_lines = None if logfile is None else True
-
-    # We save the command in the directory where it is running
+    logging.info("run_command: Running command: %s", str_cmd)
     with open("mefpp_command.txt", "w") as text_file:
         text_file.write("{}".format(str_cmd))
 
+    log_stream = None
     try:
-        if my_env is None:
-            p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE, stdout=log_path,
-                                 stderr=log_path, close_fds=True, universal_newlines=univ_lines)
-        else:
-            p = subprocess.Popen(str_cmd, bufsize=0, shell=p_shell, stdin=subprocess.PIPE, stdout=log_path,
-                                 stderr=log_path, close_fds=True, universal_newlines=univ_lines, env=my_env)
-    except Exception as e:
-        logging.info("Some error while running command...")
-        print(e)
-        raise
-
-    # wait for the process to finish
-    while True:
-        if p.poll() is not None:
-            break
-
-    if logfile is not None:
-        log_path.close()
-
-    # Warning
-    # We use communicate() rather than .stdin.write, .stdout.read or .stderr.read
-    # to avoid deadlocks due to any of the other OS pipe buffers filling up and
-    # blocking the child process.(Python Ref.doc)
-
-    # modified by me (Lientur) to allow the creation of a txt logfile somewhere
-    # reads this logfile and look for the errors
+        if logfile is not None:
+            log_stream = open(logfile, "w+")
+        process = subprocess.Popen(
+            str_cmd, shell=p_shell, stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE if log_stream is None else log_stream,
+            stderr=subprocess.STDOUT, close_fds=True, env=my_env,
+        )
+        # Drain pipes while waiting; waiting first can deadlock a verbose child.
+        output, _ = process.communicate()
+    finally:
+        if log_stream is not None:
+            log_stream.close()
 
     if logfile is None:
-        (stdoutdata, stderrdata) = p.communicate()
-        err = stdoutdata.decode('utf-8') + " " + stderrdata.decode('utf-8')
-
-        # IMPORTANT: Next checking (only available when shell=True) not always detect all kind of errors !!
-        if (err.count('ERROR ') or err.count('error ') or err.count("Error ") \
-              or err.count('*Error*')
-              or err.count('Segmentation fault') or err.count("command not found")
-              or err.count("No such file or directory")):
-            logging.info("An error happened while running command --> {0}".format(err))
-            logging.info(stderrdata.decode("ascii"))
-            return 1  # ERROR
-        else:
-            logging.info(stdoutdata.decode('utf-8'))
-            return 0  # NO ERROR
+        text = output.decode("utf-8", errors="replace")
+        logging.info("%s", text)
+        legacy_error = any(marker in text for marker in (
+            "ERROR ", "error ", "Error ", "*Error*", "Segmentation fault",
+            "command not found", "No such file or directory",
+        ))
     else:
-        with open(logfile, "r") as f:
-            err = f.readlines()
-        for line in err:
-            if "Error" in line:
-                logging.info("An error happened while running command --> {0}".format(line[:-1]))
-                return 1
-        return 0
+        with open(logfile, "r", errors="replace") as stream:
+            text = stream.read()
+        legacy_error = any("Error" in line for line in text.splitlines())
+    if process.returncode != 0 or legacy_error:
+        logging.error("Native command failed (exit %s): %s", process.returncode, str_cmd)
+        return 1
+    return 0
+
 
 def runCmd(str_cmd, basepath, p_shell=True):
     """
@@ -1305,15 +1264,17 @@ def mefpp_reduce_science(mefpp_dir, sci_part_list, instrument):
                            ' --science ' + sci_list_name
             print('\n', command_line)
             os.chdir(basepath)
+            try:
+                my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
+                rcode =  run_commands(command_line, p_shell=True, logfile='mefpp.log', my_env=my_env)
+    
+                if rcode == 1:
+                    raise Exception('Error running ' + command_line)
+                else:
+                    print('success running ' + command_line)
+            finally:
+                os.chdir(cwd)
 
-            my_env = {**os.environ, 'E_VERBOSE': '1' , 'E_DEBUG': '1'}
-            rcode =  run_commands(command_line, p_shell=True, logfile='mefpp.log', my_env=my_env)
-
-            if rcode == 1:
-                raise Exception('Error running ' + command_line)
-            else:
-                print('success running ' + command_line)
-            os.chdir(cwd)
         else:
             print('skipping reduction')
 

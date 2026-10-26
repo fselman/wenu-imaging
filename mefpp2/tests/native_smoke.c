@@ -31,10 +31,14 @@ int main(void)
     /* PAF parsing: call the production reader on a controlled configuration. */
     stream = fopen("probe.paf", "w");
     if (stream == NULL) return 3;
-    if (fputs("PAF.HDR.START ;\nPROBE.VALUE 17;\n", stream) == EOF) return 4;
+    if (fputs("PAF.HDR.START ;\nPROBE.VALUE 17;\nPROBE.EMPTY \"\";\nPROBE.MISSING \n", stream) == EOF) return 4;
     if (fclose(stream) != 0) return 5;
     answer = qfits_paf_query("probe.paf", "PROBE.VALUE");
     if (answer == NULL || atoi(answer) != 17) return 6;
+    /* Missing PAF values cannot reuse a previous query; quoted empty stays valid. */
+    if (qfits_paf_query("probe.paf", "PROBE.MISSING") != NULL) return 12;
+    answer = qfits_paf_query("probe.paf", "PROBE.EMPTY");
+    if (answer == NULL || answer[0] != '\0') return 13;
     /* FITS pixel conversion: exercise native big-endian serialization/readback. */
     pixels[0] = -2.0f; pixels[1] = 0.0f; pixels[2] = 7.5f;
     bytes = qfits_pixdump_float(pixels, 3, BPP_IEEE_FLOAT);

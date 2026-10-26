@@ -1,5 +1,28 @@
 # wenu-imaging agent instructions
 
+## Change traceability, agreed 26 October 2026
+
+Every code-changing commit must identify the relevant issue(s), explain its
+purpose and record AI assistance in an Assisted-by trailer. Include the exact
+model identifier only when reliably available; otherwise explicitly record that
+it is unavailable. Never invent a model identity. Preserve these fields when
+squashing. PR descriptions state scope, verification and remaining limitations.
+Source comments explain reasons, assumptions and constraints; add issue references
+where useful, without repetitive author/model markers beside every edit.
+
+## Authorized failure correction, 26 October 2026
+
+Fernando approved the described focused correction for #71/#75/#76/#85 and
+Pycavi propagation (#86): checked default/explicit PAF loading; informational
+requests without configuration; truthful parser/engine/split exits; one owner
+for the published context; checked split writes/cleanup; native return-code
+handling and cwd restoration in the science wrapper. The necessary PAF query
+stale-value guard is #87. Preserve valid conversions, scientific arithmetic,
+calibration parameters, shared normalization and current working installations.
+See [the correction record](native-failure-correction-2026-10-26.md).
+Keep issues open until their actual target gates pass. No merge, normal-engine
+switch, full memory qualification or broad refactor is authorized by this item.
+
 Mac normal installation accepted, 25 October 2026: Fernando reports the default
 C90 ./configure; make; make install route, optional make check (four CTest entries),
 complete installed payload/BPM pixels/checksums/CLI, byte-identical repeat install

@@ -1,5 +1,13 @@
 # wenu-imaging
 
+Latest scope, 26 October 2026: implement the approved bounded failure/configuration/
+ownership and Pycavi propagation correction (#71/#75/#76/#85/#86/#87). Follow
+the canonical developer instructions and correction record. Every code-changing
+commit requires issue references and an Assisted-by trailer with verified model
+identity or an explicit unavailable marker. Use source comments for technical
+reasons, not repetitive authorship tags. Earlier dated handoffs are historical
+where superseded; target acceptance, merge and engine selection remain separate.
+
 Mac normal installation accepted, 25 October 2026: Fernando reports the default
 C90 ./configure; make; make install route, optional make check (four CTest entries),
 complete installed payload/BPM pixels/checksums/CLI, byte-identical repeat install

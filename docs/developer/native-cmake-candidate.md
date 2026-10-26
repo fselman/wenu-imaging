@@ -133,3 +133,11 @@ installation/repeat/installed CLI/C17 staging passed. See the
 resource hashes and remaining gates. This supersedes the pending Intel Mac
 build/install statuses in the historical attempts above; observational and
 chapman3 qualification are still pending. Main and the selected engine are unchanged.
+
+## Failure-handling follow-up, 26 October 2026
+
+The focused failure/configuration correction adds the nonempty CTest entry
+`native_failure_contract`; run it in both C90/C17 builds. Existing private Mac
+engines and normal selection remain unchanged. Source regression checks passed;
+rebuilt target build/install, installed-wrapper and observational acceptance remain
+pending. See [the correction record](native-failure-correction-2026-10-26.md).
