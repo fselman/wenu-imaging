@@ -399,3 +399,28 @@ Repeat fresh actual Chapman3 builds/tests before installed/observational work.
 See [the portability record](chapman3-feature-macros-2026-10-26.md). This does not
 invalidate the separately recorded original Mac results at their tested commit;
 new Linux target acceptance remains pending until returned actual-host evidence.
+
+## Chapman3 build result and workspace location, 26 October 2026
+
+Chapman3 native build acceptance, 26 October 2026: Fernando reports source
+805e6c63dea20e7f5e5ade816f6a6ddc90702d86 passed both required M_PI/shmget
+configuration checks, 100-unit C90/C17 builds with the declared feature/language
+flags, and all five CTest entries per mode. Evidence is
+/home/fselman/wenu-chapman3-native-retry-xkuuu6qu/build-check.json and mode logs.
+Protected tools, previous failed-run evidence, working Pycavi package and checkout
+remained unchanged. This is build/test acceptance only: no installation or
+observational reduction ran. Keep installed/native/Pycavi/calibration/memory and
+wider Stage 1 gates distinct; no merge or normal selection switch is implied.
+
+Chapman3 workspace location, requested 26 October 2026: put all future
+wenu-imaging build/qualification work under ~/Software/build/wenu-imaging/,
+not new ~/wenu-* directories. Use tools/ for private tool bundles and archive/
+for retired/failed evidence, with task-specific source/build/prefix directories.
+Do not blindly move active CMake trees or toolchains: caches/frontend state and
+install scripts retain absolute paths. Inventory existing ~/wenu-* directories,
+identify active consumers and preserve evidence before relocating finished work.
+Use guarded reversible moves; never wildcard-delete runs, packages or data.
+This housekeeping request does not authorize Git branch deletion or removal of
+working Pycavi/native installations. Preserve original evidence paths in records
+and map any relocation explicitly. Existing home runs remain unchanged until
+inspected; the just-qualified native retry still needs its install/regression gate.
