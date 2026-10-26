@@ -1,0 +1,76 @@
+{
+  "project": "wenu-imaging",
+  "branch": "test/shared-flat-normalization",
+  "parent_commit": "7468626cd518e74287344cac1ff105b90e0af065",
+  "dirty": true,
+  "purpose": "Agent Linux diagnostic of preserved driver and new runner; no CMake qualification",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "runs": [
+    {
+      "mode": "90",
+      "kind": "dome",
+      "order": "0",
+      "exit_status": 0
+    },
+    {
+      "mode": "90",
+      "kind": "dome",
+      "order": "1",
+      "exit_status": 0
+    },
+    {
+      "mode": "90",
+      "kind": "sky",
+      "order": "0",
+      "exit_status": 0
+    },
+    {
+      "mode": "90",
+      "kind": "sky",
+      "order": "1",
+      "exit_status": 0
+    },
+    {
+      "mode": "17",
+      "kind": "dome",
+      "order": "0",
+      "exit_status": 0
+    },
+    {
+      "mode": "17",
+      "kind": "dome",
+      "order": "1",
+      "exit_status": 0
+    },
+    {
+      "mode": "17",
+      "kind": "sky",
+      "order": "0",
+      "exit_status": 0
+    },
+    {
+      "mode": "17",
+      "kind": "sky",
+      "order": "1",
+      "exit_status": 0
+    }
+  ],
+  "pixels_checked": 2592,
+  "fixture_corruption_rejected": true,
+  "limits": [
+    "Existing agent native diagnostic objects reused",
+    "No CMake executable available; new CTest integration pending actual Mac"
+  ],
+  "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "native_archive_sha256": {
+    "build-c90/common_ins_mef_common_mefp_lib.c.o": "a6ccacdd66182db9097fb9621da7437be5aec7777f6593fc86567fb492b0306a",
+    "build-c90/libeclipse.a": "75c77270cc13b0a4715527d65b8636a40647325ecd38e2d5f2c8d07551fc4df1",
+    "build-c90/libqfits.a": "a39119576eb471f613d1f303fdfb310d1881f8a2c58d24c663b62d98e8d3e3e4",
+    "build-c17/common_ins_mef_common_mefp_lib.c.o": "d78b97527e11f4322bfd989bfe5d349aae440bea53d29e07c99e7a7715627393",
+    "build-c17/libeclipse.a": "2284253cef09f860acbf4b1a4684ba945e5030cf5223701b35e2211ee48cb0b6",
+    "build-c17/libqfits.a": "20e06b176ab1ed1f5c58ac54ac7e9edde7bc0fb833de36f2ea47f61b23da085b"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "source_revision": "2ace67a08f4b5bd916d270b91afa3c6db62f4dff",
+  "files": {
+    "shared_normalization_probe.c": "65197f209c93326c331fa333520758ad49b0d44b497bbe2e3d19e021d54376ba",
+    "mac-normalization-check.json": "51854e237aa6d9e6cc63a61a6df60d3f695b6732470ae68ea97c4a6e31038f25",
+    "order-0/frame0.fits": "43c5dc7cc90c308d0b324b7f76580684bb55537e15336fdd64a31572273ee2a3",
+    "order-0/frame1.fits": "8ca40a4937b4890a8b80d70bfc8f13e4f0c9cd9d2f8361b2ab6d84bcfaef7669",
+    "order-0/frame2.fits": "bf8b303f4c8382cb82de776db7621b99fa266c7223c5ee164fafc771237c8db3",
+    "order-0/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+    "order-1/frame0.fits": "349c90156879810b748725e2b6fc23defa428175941c21c33cfa45db3691e527",
+    "order-1/frame1.fits": "3da257b9fc360cc7d38facf2320e55984212fc6ab99e2f2f8d14eaf241e83679",
+    "order-1/frame2.fits": "4e40b354271b4b9b3cfd81612f4a511545452b7090bc651aa800946b4a3031b6",
+    "order-1/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+  }
+}

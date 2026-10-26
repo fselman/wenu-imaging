@@ -1,5 +1,12 @@
 # Developer guide: native mefpp build, installation and qualification
 
+Shared-normalization regression candidate (#94): BUILD_TESTING now retains the
+qualified four-detector dome/sky fixture as four additional CTest cases, using
+isolated recorded attempts. This raises the current five-entry suite to nine.
+The original Mac/Chapman3 fixture passed; fresh qualification of the CTest
+integration is pending. Production algorithms and normal installations are
+unchanged. See [test contract and qualification](shared-normalization-regression.md).
+
 Current qualification update, 26 October 2026: the merged native build/failure
 corrections and reported Mac/Chapman3 private-install results remain valid.
 Additional Chapman3 bias/dome/sky/master-flat reproduction and Mac/Chapman3

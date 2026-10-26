@@ -156,6 +156,26 @@ if(BUILD_TESTING)
   add_test(NAME native_failure_contract
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/failure_contract.py"
       "$<TARGET_FILE:mefpp>" "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/omegacam.paf")
+  # Preserve the Mac/Chapman3-qualified response-ratio fixture unchanged.
+  set(MEFPP_SOURCE_BRANCH "unknown" CACHE STRING "Source branch for test provenance")
+  add_executable(shared_normalization_probe
+    tests/fixtures/shared-normalization/shared_normalization_probe.c)
+  target_link_libraries(shared_normalization_probe PRIVATE mefpp_common)
+  target_compile_definitions(shared_normalization_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  foreach(kind IN ITEMS dome sky)
+    foreach(order IN ITEMS 0 1)
+      add_test(NAME native_shared_normalization_${kind}_order${order}
+        COMMAND "${Python3_EXECUTABLE}"
+          "${CMAKE_CURRENT_SOURCE_DIR}/tests/shared_normalization_contract.py"
+          "$<TARGET_FILE:shared_normalization_probe>"
+          "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/shared-normalization"
+          "${kind}" "${order}"
+          "${CMAKE_CURRENT_BINARY_DIR}/test-work/shared-normalization"
+          "${MEFPP_SOURCE_REVISION}" "${MEFPP_SOURCE_BRANCH}")
+      set_tests_properties(native_shared_normalization_${kind}_order${order}
+        PROPERTIES TIMEOUT 90 LABELS "native;normalization")
+    endforeach()
+  endforeach()
   add_test(NAME native_cli_usage COMMAND "${CMAKE_COMMAND}" -DEXECUTABLE=$<TARGET_FILE:mefpp> -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cli_usage.cmake")
 endif()
 
