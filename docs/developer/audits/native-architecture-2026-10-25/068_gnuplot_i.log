@@ -1,0 +1,30 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_x’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:400:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  400 |         sprintf(line, "%s \"%s\" title \"%s\" with %s", cmd, name,
+      |                          ^~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:400:9: note: ‘sprintf’ output 19 or more bytes (assuming 2224) into a destination of size 2048
+  400 |         sprintf(line, "%s \"%s\" title \"%s\" with %s", cmd, name,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  401 |                       title, handle->pstyle) ;
+      |                       ~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:398:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  398 |         sprintf(line, "%s \"%s\" with %s", cmd, name, handle->pstyle) ;
+      |                          ^~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:398:9: note: ‘sprintf’ output between 10 and 2215 bytes into a destination of size 2048
+  398 |         sprintf(line, "%s \"%s\" with %s", cmd, name, handle->pstyle) ;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_xy’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:491:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  491 |         sprintf(line, "%s \"%s\" title \"%s\" with %s", cmd, name,
+      |                          ^~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:491:9: note: ‘sprintf’ output 19 or more bytes (assuming 2224) into a destination of size 2048
+  491 |         sprintf(line, "%s \"%s\" title \"%s\" with %s", cmd, name,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  492 |                       title, handle->pstyle) ;
+      |                       ~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:489:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  489 |         sprintf(line, "%s \"%s\" with %s", cmd, name, handle->pstyle) ;
+      |                          ^~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:489:9: note: ‘sprintf’ output between 10 and 2215 bytes into a destination of size 2048
+  489 |         sprintf(line, "%s \"%s\" with %s", cmd, name, handle->pstyle) ;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

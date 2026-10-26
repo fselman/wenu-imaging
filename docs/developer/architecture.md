@@ -1,5 +1,23 @@
 # wenu-imaging architecture
 
+## Architecture audit before component redesign, 25 October 2026
+
+The [native architecture audit](native-architecture-audit-2026-10-25.md) records
+current diagrams, actual source boundaries, compiler-assisted Eclipse/qfits
+usage and modern-practice gaps. The workflow is concentrated in the recipe
+and common MEF C units, linked with Eclipse and qfits static libraries; it is
+not literally one standalone C library. Whole-object inclusion and potential
+function calls are distinct from runtime use and safe removability.
+
+Fernando requests eventual bias/BPM/non-linearity/dome/sky/master-flat/science
+components. Treat them as candidate interfaces over reusable numerical code,
+with shared infrastructure and explicit state/ownership/product contracts.
+Whether they become modular C targets, subcommands or separate executables
+is a full-roadmap decision, not something an audit should silently implement.
+The architecture audit precedes that full roadmap; no source nesting, build
+change or component extraction begins before roadmap review/agreement.
+The prior installation migration proposal remains unimplemented.
+
 ## Approved native packaging direction, 25 October 2026
 
 Fernando requests qfits as a bundled source dependency within mefpp, and brings

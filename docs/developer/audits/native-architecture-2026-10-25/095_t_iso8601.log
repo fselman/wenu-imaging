@@ -1,0 +1,22 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/t_iso8601.c: In function ‘qfits_get_datetime_iso8601’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/t_iso8601.c:236:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/t_iso8601.c:236:27: note: directive argument in the range [-99, 99]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/t_iso8601.c:236:5: note: ‘sprintf’ output between 20 and 40 bytes into a destination of size 20
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  237 |             GET_CCYEAR(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  238 |             GET_MONTH(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~
+  239 |             GET_DAY(curdate),
+      |             ~~~~~~~~~~~~~~~~~
+  240 |             GET_HOUR(curtime),
+      |             ~~~~~~~~~~~~~~~~~~
+  241 |             GET_MINUTE(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  242 |             GET_SECOND(curtime));
+      |             ~~~~~~~~~~~~~~~~~~~~

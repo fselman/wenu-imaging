@@ -1,0 +1,7 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/iproc/image_rtd.c: In function ‘rtd_swapfilename’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/iproc/image_rtd.c:225:26: warning: ‘/eclipse-rtd.swp’ directive writing 16 bytes into a region of size between 1 and 512 [-Wformat-overflow=]
+  225 |     sprintf(swapname, "%s/eclipse-rtd.swp", cwd);
+      |                          ^~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/iproc/image_rtd.c:225:5: note: ‘sprintf’ output between 17 and 528 bytes into a destination of size 512
+  225 |     sprintf(swapname, "%s/eclipse-rtd.swp", cwd);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,0 +1,13 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/xmemory.c:505:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/xmemory.c:505:31: note: directive argument in the range [-2147483648, 2147483647]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/xmemory.c:505:31: note: using the range [0, 4294967295] for directive argument
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/xmemory.c:505:5: note: ‘sprintf’ output between 20 and 1052 bytes into a destination of size 1024
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  506 |             (long)getpid(), reg) ;
+      |             ~~~~~~~~~~~~~~~~~~~~

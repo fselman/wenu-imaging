@@ -1,0 +1,34 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2161:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                          ^~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2161:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                         ^~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2161:43: note: ‘sprintf’ output between 3 and 13 bytes into a destination of size 10
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                           ^~~~~~~~~~~~~~~~~~~~
+ 2162 |                                        (int)(col->atom_nb/2)) ; break ;
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2159:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                          ^~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2159:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                         ^~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2159:43: note: ‘sprintf’ output between 3 and 13 bytes into a destination of size 10
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                           ^~~~~~~~~~~~~~~~~~~~
+ 2160 |                                        (int)(col->atom_nb/2)) ; break ;
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2155:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                          ^~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2155:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                         ^~~~~
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2155:43: note: ‘sprintf’ output between 3 and 13 bytes into a destination of size 10
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                           ^~~~~~~~~~~~~~~~~~~~
+ 2156 |                                        (int)(col->atom_nb/2)) ; break ;
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~

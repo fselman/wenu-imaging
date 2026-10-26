@@ -1,5 +1,14 @@
 # wenu-imaging
 
+Current hold before native modifications, 25 October 2026: Fernando requires
+an expanded architecture/modern-practice/Eclipse-usage audit first, then a full
+roadmap for review before any implementation. See
+[the architecture audit](docs/developer/native-architecture-audit-2026-10-25.md)
+and #73. Do not proceed directly from installation audit #64/#72 to moving
+qfits, fixing builds or extracting components. Bias/BPM/non-linearity/dome/sky/
+master-flat/science components are design candidates, not approved changes.
+Current work is audit evidence/diagrams only; preserve source and installations.
+
 Current scope override, 25 October 2026: Fernando explicitly brings point 5
 forward for a mefpp/qfits build and installation audit, Intel Mac first and
 chapman3 second, with qfits to move under mefpp. See

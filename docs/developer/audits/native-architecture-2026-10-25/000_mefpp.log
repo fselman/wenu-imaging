@@ -1,0 +1,4 @@
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/recipes/mefpp.c: In function ‘mef_engine’:
+/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/recipes/mefpp.c:1187:30: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1187 |                sprintf(cval, recipe_version);
+      |                              ^~~~~~~~~~~~~~
