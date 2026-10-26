@@ -42,7 +42,7 @@ pending are historical. No reinstall is required for documentation-only changes.
 | Shared dome/sky normalization | Both platforms, both modes, both detector orders: 2592 pixels per platform exactly match independent expectations | Direct mef_build_cal fixture; not a general covariance/variance or full pipeline test |
 | Historical BPM identity | Mac reference and CP Pup project have identical binary masks, detector order/geometry and valid header counts | Downstream exclusion remains unqualified |
 | Native BPM construction | Mac C90/C17 robust reconstruction: every mask pixel matches history; C17 also matches C90; only generated ORIGFILE differs | Mac robust mode only; threshold quality, proportional mode and downstream exclusion remain open |
-| Downstream mask/weight propagation | Saved Mac settings use NONE; installed SExtractor/SWarp synthetic tests retain flagged signals with NONE and exclude them with explicit MAP_WEIGHT | #91 open; native/cross-stage mapping, adapters and Chapman3 verification pending |
+| Downstream mask/weight propagation | Saved Mac settings use NONE; installed SExtractor/SWarp tests retain flagged signals with NONE and exclude them with MAP_WEIGHT; native detector-1 BPM toggles leave science pixels unchanged in C90/C17 | #91 open; cross-stage mapping, adapters and Chapman3 verification pending |
 | Proportional BPM cleanup | Source contract mismatch confirmed; separate #90 opened | No returned actual-target sanitizer reproduction or correction acceptance |
 | Stage 2 memory/ownership | Some focused cleanup/status repairs passed earlier tests | #75/#90 and broader declared memory suite remain open |
 
@@ -293,3 +293,41 @@ manifests under the evidence-before-merge rule; this summary does not certify
 that all required reports have been imported or that cleanup gates are complete.
 No merge or branch deletion is implied. The native science BPM toggle test
 remains pending and must use the relocated native prefixes.
+
+
+## Mac native direct-science BPM toggle result
+
+Fernando returned four successful native runs from
+~/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/.
+Record: native-mask-check.json; root/inputs/masks/runs and each run have
+run-provenance.json. Native payload source 4ade8c52027c736a49b65da3bdb31f11b036693b
+was verified in both relocated C90/C17 prefixes.
+
+One selected CP Pup raw exposure, its bias and prebuilt master flat were fixed.
+The command explicitly selected detector 1 (ESO_CCD_#65) and supplied a BPM.
+A disposable mask variant changed two previously good pixels from 1 to 0,
+retaining an unflagged control. Count cards were updated and edited FITS
+checksums verified. Astropy HIERARCH warnings concerned the long count keyword
+names in the copied mask; no original FITS file was edited.
+
+C90 original versus edited mask: zero unequal detector output pixels.
+C17 original versus edited mask: zero unequal detector output pixels.
+C90 versus C17 original-mask outputs: zero unequal detector output pixels.
+All samples were identical across the four runs:
+- flagged_a: 168.7005157470703
+- flagged_b: 170.7981719970703
+- control: 180.66717529296875
+
+This characterizes the missing direct science exclusion for this detector and
+fixed-prebuilt-flat path, consistent with the source trace through mef_engine,
+pixelmap_loadext, overscan/trim, bias subtraction and flat division.
+It does not test the BPM-aware flat-building/smoothing path, every detector,
+individual-pixel resampling support or full notebook/mask coordinate propagation.
+
+Together with the separate SExtractor/SWarp sentinels, this establishes the
+bounded masking characterization; it does not implement the #91 correction.
+Keep #91 open. No science/variance/mask representation choice or changed
+production weighting policy follows automatically. Required actual-host JSON
+reports must still be collected, reviewed and committed before accepting the
+evidence-preservation merge gate; reported terminal summaries are not a claim
+that this ingestion has happened. No new reduction is needed to collect them.
