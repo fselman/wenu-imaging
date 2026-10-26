@@ -1,5 +1,13 @@
 # wenu-imaging
 
+Stage 0 native build specification, 25 October 2026: read
+[the specification](docs/developer/native-build-specification-v1.md) before
+implementation. It defines the minimum static target graph, runtime payload,
+fixtures and pending gates. Mac synthetic C90/C17 CMake/CTest probe passed;
+real native builds, fixture manifests and chapman3 toolchain remain pending.
+Initial candidate tools: CMake/CTest 3.29, Unix Makefiles, explicit Xcode tools.
+No native source/build/install change is made by this documentation delivery.
+
 Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
 source baseline and explicitly qualify compilation and behavior in C17 mode.
 C17 is a compatibility target, not a new source-feature baseline. Inventory

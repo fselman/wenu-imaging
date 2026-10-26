@@ -1,5 +1,22 @@
 # wenu-imaging agent instructions
 
+## Stage 0 native build specification, 25 October 2026
+
+Read [native build specification v1](native-build-specification-v1.md): minimum
+static qfits -> Eclipse -> MEF/common -> mefpp targets; required PAF/BPM/license/
+manifest payload; no optional legacy utilities in the first default candidate.
+Retain full archive source lists; no pruning based on reachability. Generated
+config headers must actually replace stale tracked include resolution.
+
+Mac synthetic probe in wenu-mac-toolchain-01j1s5dt passed strict C90/C17 static
+build/link and 2 CTest checks using explicit Xcode tools and CMake/CTest 3.29.3.
+This is not native mefpp qualification. Proposed initial minimum is CMake 3.29;
+record a reviewed change if chapman3 constraints justify another version.
+Fresh observational manifests, real C90/C17 builds and Linux toolchain evidence
+remain pending. The document defines tests/fixtures, not executed native coverage.
+Preserve current engines, sources and products; implementation follows the
+bounded stage-1 decision after specification review, not this documentation push.
+
 Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
 source baseline and explicitly qualify compilation and behavior in C17 mode.
 C17 is a compatibility target, not a new source-feature baseline. Inventory

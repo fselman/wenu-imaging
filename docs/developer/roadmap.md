@@ -1,5 +1,15 @@
 # wenu-imaging roadmap
 
+## Stage 0 build specification — 25 October 2026
+
+[Native build specification v1](native-build-specification-v1.md) defines the
+candidate targets, payload and regression fixtures for roadmap 1.2. Mac synthetic
+CMake/CTest 3.29.3 and Xcode Apple Clang 15 passed strict C90/C17 build/link and
+2 CTest checks; mefpp was not built, run or installed. Initial candidate minimum
+is CMake 3.29, with explicit Xcode tools and Unix Makefiles. Real native source
+qualification, observational manifests and compatible chapman3 toolchain remain
+pending. Stage 0 is not declared complete by this small synthetic success.
+
 Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
 source baseline and explicitly qualify compilation and behavior in C17 mode.
 C17 is a compatibility target, not a new source-feature baseline. Inventory
