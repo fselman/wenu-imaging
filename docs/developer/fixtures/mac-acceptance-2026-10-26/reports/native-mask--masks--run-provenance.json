@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "branch": "main",
+  "commit": "7e8b771f196c71283280bb35181515da45670684",
+  "dirty": false,
+  "purpose": "Two-pixel BPM toggle; original science and masters fixed",
+  "created_utc": "2026-10-26T22:48:20.590206+00:00",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "parent_provenance": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/run-provenance.json",
+  "positions_zero_based_xy": {
+    "flagged_a": [
+      317,
+      509
+    ],
+    "flagged_b": [
+      1431,
+      2917
+    ],
+    "control": [
+      937,
+      1709
+    ]
+  },
+  "sha256": "93339bf3a8705b2a8c51cdbf2fe07047a505ca0aafc4d2ce627d6660d720cb57"
+}

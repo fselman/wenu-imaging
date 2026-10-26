@@ -1,0 +1,283 @@
+{
+  "checkout_head": "7e8b771f196c71283280bb35181515da45670684",
+  "native_source_revision": "4ade8c52027c736a49b65da3bdb31f11b036693b",
+  "mode": "17",
+  "engine": "/Users/fselman/wenu-mac-failure-build-u021mf2l/prefix-c17/bin/mefpp",
+  "engine_sha256": "865f5884d59e5d6f509b19c3921bb01408cd5df0060f02426d2666bda3f58206",
+  "manifest": "/Users/fselman/wenu-mac-failure-build-u021mf2l/prefix-c17/share/mefpp/build-manifest.json",
+  "c90_run_record": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/bpm-run-record.json",
+  "c90_run_record_sha256": "abb3eb2a2008ff9ace88651c23c3a5a6c01982c430f008ed63fb102831d1d1b8",
+  "c90_comparison": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/bpm-c90-comparison.json",
+  "c90_comparison_sha256": "e0ac002f48b5e44d74d1a0e73191aa1a9bb221f2aa497354b4700df5c779c9fb",
+  "reference": "/Users/fselman/Pictures/OCAM/bpm/OCAM_BPM_1x1.fits",
+  "reference_sha256": "d7aeb7d6041fd2e03d48785298b338ba61860e145a08a4aeb29e0fc9b5a13532",
+  "inputs": {
+    "OMEGA.2017-03-13T09:50:05.624.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:50:05.624.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:50:05.624.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:50:05.624.fits",
+      "sha256": "62b2f46ae44520cc6d3eb5fb7c87399ebfb77e31ba82311231e791adec70a6d2",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:50:48.373.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:50:48.373.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:50:48.373.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:50:48.373.fits",
+      "sha256": "a594bc53b30bca61eed09f3f33e66943c4a60f4099074318552bf071c776aa47",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:51:31.403.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:51:31.403.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:51:31.403.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:51:31.403.fits",
+      "sha256": "fe7119364f3233184aacce3f8f8b62b86e6819c2bf11ef21106a19b1aee9d10c",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:52:14.404.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:52:14.404.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:52:14.404.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:52:14.404.fits",
+      "sha256": "0bcc149007020465d85a2058506a67f3eb9281d2ed1d948258407ee2a076eda5",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:52:57.394.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:52:57.394.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:52:57.394.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:52:57.394.fits",
+      "sha256": "183fdc42c15f0a505ea813227eebd8717861bc511ee1dc65219d06894dd67e89",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:53:40.384.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:53:40.384.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:53:40.384.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:53:40.384.fits",
+      "sha256": "c88e698fbef4638d3bffd3b72267f376330cdc86ad22bbbb64e6c8204a075945",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:54:23.384.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:54:23.384.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:54:23.384.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:54:23.384.fits",
+      "sha256": "4fb7e8142d1d246a15bef6ad74b4bb3ffd96f414b402662d133a45affcd07e8b",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:55:06.394.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:55:06.394.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:55:06.394.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:55:06.394.fits",
+      "sha256": "c6e27f07236058ee310780e4cf9063b2e64bbaaac86911794c3bb069e480ff9f",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:55:49.384.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:55:49.384.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:55:49.384.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:55:49.384.fits",
+      "sha256": "e1d2d83bd6b0c90b10e9908add6b53b6c4ad16986e04b7897348c9df32f33fec",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T09:56:31.804.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:56:31.804.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T09:56:31.804.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T09:56:31.804.fits",
+      "sha256": "f069be58e3ca87518125eee5079b96a4475b91aede43ab65e907a7d003a15dca",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:39:40.380.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:39:40.380.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:39:40.380.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:39:40.380.fits",
+      "sha256": "691e5877935fd50a82f3bf585901f2e4913727f8ccf3f1c8e9ae4ab052d50db2",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:53:40.483.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:53:40.483.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:53:40.483.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:53:40.483.fits",
+      "sha256": "9931552a971d31c54e6d48de947b376c0b1b5991897c7e4fa9e84eed30bc51f9",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:34:43.759.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:34:43.759.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:34:43.759.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:34:43.759.fits",
+      "sha256": "bcd609e3d91ab571837b6e517eff29defcd130dfb11c4c3f497d65f631031664",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:58:45.683.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:58:45.683.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:58:45.683.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:58:45.683.fits",
+      "sha256": "f7c1b372779866fea6ad5a8b19c8cfda7066b7e046f1a4561428d7ec4b94bf79",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:41:50.391.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:41:50.391.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:41:50.391.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:41:50.391.fits",
+      "sha256": "f65e561c84504ad6262e041ff46ca10331b780b0e14ba1ec800619af6f9d50da",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:51:20.392.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:51:20.392.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:51:20.392.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:51:20.392.fits",
+      "sha256": "e408948cbde4e1e3eb86ec1a8ac050163b66e050ffff95fae886cfb7e72b7e5e",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:40:35.390.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:40:35.390.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:40:35.390.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:40:35.390.fits",
+      "sha256": "d82e39b1fe49e29e65df5f93bf6b0bbe41cf6db40da563419b7b5671977d25a4",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:52:25.393.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:52:25.393.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:52:25.393.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:52:25.393.fits",
+      "sha256": "7f5443dc90756855d729cbba6ec33da917ef343f72078ee86af67cd349afb82a",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:37:25.420.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:37:25.420.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:37:25.420.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:37:25.420.fits",
+      "sha256": "a706ec9a2c84182a40f6eb5202052327d1e59122f2f1453ce299d25d8c4c5635",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:55:25.563.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:55:25.563.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:55:25.563.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:55:25.563.fits",
+      "sha256": "14620285f029efa62dea13b088e264fd1ed3658d20faa9c4b6a4eb4dddf78997",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:38:50.390.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:38:50.390.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:38:50.390.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:38:50.390.fits",
+      "sha256": "0d37b57ceebccee383ca9e28b6994ad1113803227e150dd2afe8df8d375b10bb",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:54:35.393.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:54:35.393.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:54:35.393.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:54:35.393.fits",
+      "sha256": "cee37955db4db407c3fc0087693a68ca50d5f3d6ed066c156ddfec77bf0052b2",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:42:55.391.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:42:55.391.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:42:55.391.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:42:55.391.fits",
+      "sha256": "10bbe4d80f8819892f3501b4148ea580cc1f4fbbb1d442b0cb53375c5dd2c675",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:49:45.392.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:49:45.392.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:49:45.392.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:49:45.392.fits",
+      "sha256": "6edfd28f2485f1b4458d812fa497d0b664d6f890a05880a797e6778ce499557e",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:44:30.391.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:44:30.391.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:44:30.391.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:44:30.391.fits",
+      "sha256": "2e8e1fe0bde8df05bed4bb18e040cd9a2a0d69f8ae82e01ef8655b4a9e7a7459",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:48:00.392.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:48:00.392.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:48:00.392.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:48:00.392.fits",
+      "sha256": "d813371a77c365981b290aa68d937a927480ba78c37894c7ee493bbb22ee81e1",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:46:16.391.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:46:16.391.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:46:16.391.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:46:16.391.fits",
+      "sha256": "e1b13790f4d86eb6d1ca27c0965886f0f6692c02eac28fcfff0704909b6a468c",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:47:08.392.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:47:08.392.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:47:08.392.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:47:08.392.fits",
+      "sha256": "345346d6d1d2e30f223768709c824e0c79cacefe6ee3df8bd8dbb00b0e6629a0",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:35:30.570.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:35:30.570.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:35:30.570.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:35:30.570.fits",
+      "sha256": "2fcd77778c443bf18be0199f1d705ff66b877900c3f9666ca8f69c6f3e93b5bf",
+      "bytes": 576604800
+    },
+    "OMEGA.2017-03-13T11:56:50.383.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:56:50.383.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/OMEGA.2017-03-13T11:56:50.383.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/OMEGA.2017-03-13T11:56:50.383.fits",
+      "sha256": "88292fbc1f1b45dde2015914c725ff6ad2e1957beb96898b4aae25b84339929c",
+      "bytes": 576604800
+    },
+    "mefpp.paf": {
+      "source": "/Users/fselman/Pictures/OCAM/bpm/mefpp.paf",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/bpm/mefpp.paf",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/inputs/mefpp.paf",
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "bytes": 30380
+    }
+  },
+  "raw_order": [
+    "OMEGA.2017-03-13T09:50:05.624.fits",
+    "OMEGA.2017-03-13T09:50:48.373.fits",
+    "OMEGA.2017-03-13T09:51:31.403.fits",
+    "OMEGA.2017-03-13T09:52:14.404.fits",
+    "OMEGA.2017-03-13T09:52:57.394.fits",
+    "OMEGA.2017-03-13T09:53:40.384.fits",
+    "OMEGA.2017-03-13T09:54:23.384.fits",
+    "OMEGA.2017-03-13T09:55:06.394.fits",
+    "OMEGA.2017-03-13T09:55:49.384.fits",
+    "OMEGA.2017-03-13T09:56:31.804.fits",
+    "OMEGA.2017-03-13T11:39:40.380.fits",
+    "OMEGA.2017-03-13T11:53:40.483.fits",
+    "OMEGA.2017-03-13T11:34:43.759.fits",
+    "OMEGA.2017-03-13T11:58:45.683.fits",
+    "OMEGA.2017-03-13T11:41:50.391.fits",
+    "OMEGA.2017-03-13T11:51:20.392.fits",
+    "OMEGA.2017-03-13T11:40:35.390.fits",
+    "OMEGA.2017-03-13T11:52:25.393.fits",
+    "OMEGA.2017-03-13T11:37:25.420.fits",
+    "OMEGA.2017-03-13T11:55:25.563.fits",
+    "OMEGA.2017-03-13T11:38:50.390.fits",
+    "OMEGA.2017-03-13T11:54:35.393.fits",
+    "OMEGA.2017-03-13T11:42:55.391.fits",
+    "OMEGA.2017-03-13T11:49:45.392.fits",
+    "OMEGA.2017-03-13T11:44:30.391.fits",
+    "OMEGA.2017-03-13T11:48:00.392.fits",
+    "OMEGA.2017-03-13T11:46:16.391.fits",
+    "OMEGA.2017-03-13T11:47:08.392.fits",
+    "OMEGA.2017-03-13T11:35:30.570.fits",
+    "OMEGA.2017-03-13T11:56:50.383.fits"
+  ],
+  "separate_master_bias_supplied": false,
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/c17",
+  "command": [
+    "/Users/fselman/wenu-mac-failure-build-u021mf2l/prefix-c17/bin/mefpp",
+    "--bpm",
+    "bpm.list"
+  ],
+  "bpm_list_sha256": "dd2659808b785835d14bf5f00830ad35c9cce42a50aa84e0de193ba21d19529e",
+  "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/c17/mefpp.log",
+  "output": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/c17/OCAM_BPM_1x1.fits",
+  "started_utc": "2026-10-26T19:41:07.487827+00:00",
+  "completed": true,
+  "exit_status": 0,
+  "output_exists": true,
+  "output_bytes": 267822720,
+  "output_sha256": "d4b60aa9f006d37297f1a276ea59d6537d1532c018812405ff55d6d48f347873",
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true
+}

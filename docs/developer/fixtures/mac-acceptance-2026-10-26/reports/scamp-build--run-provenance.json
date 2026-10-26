@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "run_id": "mac-scamp-permanent-t1z9pz70",
+  "retrospective": true,
+  "recorded_utc": "2026-10-26T22:35:53.667435+00:00",
+  "run_created_utc": null,
+  "host": "MC02VV0HPHTDG",
+  "purpose": "Relocate SCAMP installation using a permanent compiled prefix",
+  "orchestration": {
+    "branch": "main",
+    "commit": "7e8b771f196c71283280bb35181515da45670684",
+    "dirty": false,
+    "basis": "Required by the original build command's checkout guards"
+  },
+  "tested_component": {
+    "name": "SCAMP",
+    "version": "2.10.0",
+    "branch": null,
+    "commit": null,
+    "dirty": null,
+    "unknown_reason": "External local source; Git identity not recorded",
+    "source": "/Users/fselman/Software/scamp-2.10.0",
+    "installed_engine": "/Users/fselman/opt/scamp-2.10.0-wenu-imaging/bin/scamp",
+    "installed_engine_sha256": "cd2f6b1657de5dab3e43aee80deed4e5aee58ea122a86d90727e6c97f05b219a"
+  },
+  "commands": [
+    {
+      "label": "distclean-copy",
+      "argv": [
+        "/usr/bin/make",
+        "distclean"
+      ],
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/distclean-copy.log"
+    },
+    {
+      "label": "configure",
+      "argv": [
+        "./configure",
+        "--prefix=/Users/fselman/opt/scamp-2.10.0-wenu-imaging",
+        "--with-fftw-libdir=/opt/local/lib",
+        "--with-fftw-incdir=/opt/local/include",
+        "--with-openblas-libdir=/opt/local/lib",
+        "--with-openblas-incdir=/opt/local/include/openblas",
+        "--enable-openblas",
+        "--enable-plplot",
+        "CC=/opt/local/bin/gcc"
+      ],
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/configure.log"
+    },
+    {
+      "label": "build",
+      "argv": [
+        "/usr/bin/make",
+        "-j1"
+      ],
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/build.log"
+    },
+    {
+      "label": "install",
+      "argv": [
+        "/usr/bin/make",
+        "install"
+      ],
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/install.log"
+    }
+  ],
+  "inputs": {
+    "source": "/Users/fselman/Software/scamp-2.10.0"
+  },
+  "outputs": {
+    "installation_prefix": "/Users/fselman/opt/scamp-2.10.0-wenu-imaging"
+  },
+  "acceptance_record": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/build-check.json",
+  "acceptance_record_sha256": "75b419bcf29b9d416c6a608fb2a3a9f6e8ed7568e30e6d1544da94e7d1e3bb20",
+  "limitations": [
+    "Build/install checks passed; functional plotting test pending",
+    "Normal SCAMP selection remains at the old installation"
+  ],
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70",
+  "directory_role": "build_and_test_record",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "status": "passed",
+  "status_scope": "Build/install checks only"
+}

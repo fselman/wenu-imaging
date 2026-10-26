@@ -1,0 +1,67 @@
+{
+  "purpose": "Synthetic installed SExtractor masking characterization",
+  "positions_zero_based_xy": {
+    "flagged": [
+      67,
+      83
+    ],
+    "control": [
+      181,
+      157
+    ]
+  },
+  "fixture_sha256": {
+    "bpm.fits": "bb08425bd964da9d4ee1213267f0d77251a07091fb39c231eff0e0188aeb89db",
+    "masked.weight.fits": "c67cff4ae76ff1eed37467fb07ce53da6f5da75d37848a2827eb698115f969da",
+    "all-good.weight.fits": "f4d215ed307412986b4fb552d7e65cfe32b7c0ba1a871c70016792a9e2827981",
+    "science.fits": "69bc67cf532bb822fac25253f71ab7a4c81d8a1b403fe8c5b0efd7063a8d6dd7"
+  },
+  "protected_sha256": {
+    "/Users/fselman/anaconda3/envs/wenu-imaging/lib/python3.11/site-packages/pycavi/papi/papi_sextractor.py": "462310e1391b25dd6fd79a219b70b534afefbcea5f0b16b1e649183c1240bd93",
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "1f7b9af793f8d906b111d90c5db58336fc3a83bb034d0093e85c102a21201156"
+  },
+  "cases": {
+    "none_good": {
+      "weight_type": "NONE",
+      "program": "/opt/local/bin/source-extractor",
+      "program_sha256": "8d3a84644aa9bc7d45826e97007dd3bae4b29c92e926217e67df78691a882ddd",
+      "version": "2.28.0",
+      "catalogue_rows": 2,
+      "detections": {
+        "flagged": true,
+        "control": true
+      }
+    },
+    "none_masked": {
+      "weight_type": "NONE",
+      "program": "/opt/local/bin/source-extractor",
+      "program_sha256": "8d3a84644aa9bc7d45826e97007dd3bae4b29c92e926217e67df78691a882ddd",
+      "version": "2.28.0",
+      "catalogue_rows": 2,
+      "detections": {
+        "flagged": true,
+        "control": true
+      }
+    },
+    "map_weight": {
+      "weight_type": "MAP_WEIGHT",
+      "program": "/opt/local/bin/source-extractor",
+      "program_sha256": "8d3a84644aa9bc7d45826e97007dd3bae4b29c92e926217e67df78691a882ddd",
+      "version": "2.28.0",
+      "catalogue_rows": 1,
+      "detections": {
+        "flagged": false,
+        "control": true
+      }
+    }
+  },
+  "none_catalogues_identical": true,
+  "none_detects_both": true,
+  "explicit_mask_excludes_flagged_retains_control": true,
+  "protected_and_fixture_files_unchanged": true,
+  "limits": [
+    "Binary usability weights, not physical inverse variance",
+    "Synthetic wrapper test, not full pipeline or native/SWarp acceptance",
+    "Production configurations unchanged"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "binary": "/Users/fselman/wenu-mac-scamp-build-offrbigl/install/bin/scamp",
+  "binary_sha256": "e3b7b3312f08308003c9f4ddb7ec31d03ab7d00aa662ff7073d12cb1382eccaf",
+  "synthetic_fit": {
+    "synthetic_sources": 100,
+    "reference_mode": "FILE",
+    "initial_rms_arcsec": 2.5982501129308218,
+    "final_rms_arcsec": 7.018607418689289e-06,
+    "catalogue_inputs_unchanged": true,
+    "native_header_sha256": "d3570650a6a17cb45605c83f31d4164f23c003127f7e93dd418b2b63e2f6a9a2",
+    "non_ascii_commentary_excluded_from_in_memory_wcs": [
+      {
+        "card_type": "COMMENT",
+        "bytes_hex": "434f4d4d454e5420202028632920323031302d3230313820536f72626f6e6e6520556e69766572736974c3a92f556e69766572736974c3a920646520426f7264656175782f434e5253",
+        "text": "COMMENT   (c) 2010-2018 Sorbonne Universit\u00e9/Universit\u00e9 de Bordeaux/CNRS"
+      }
+    ],
+    "scope": "existing single-detector synthetic fit with FGROUPS PDF enabled"
+  },
+  "pdf": "/Users/fselman/wenu-mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/fgroups_1.pdf",
+  "pdf_bytes": 63728,
+  "pdf_sha256": "7912eb8f39127049e5cb3fec980f7c8b773217c64eca56e5e6330cc7770e8819",
+  "scope": "offline synthetic fit and complete PDF framing; no observational processing"
+}

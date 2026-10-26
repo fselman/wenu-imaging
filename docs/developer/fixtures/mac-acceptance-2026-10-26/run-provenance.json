@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "main",
+  "commit": "7e8b771f196c71283280bb35181515da45670684",
+  "dirty": false,
+  "review_branch": "docs/mac-bpm-acceptance",
+  "review_commit": "0040d34b3db1063547fe99d5746d300279f11ee5",
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-26T22:55:42.596451+00:00",
+  "purpose": "Collect existing Mac acceptance evidence before merge",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "processing_launched": false,
+  "scope": "Selected reports and small synthetic SCAMP fixtures; not all run files",
+  "files_collected": 32,
+  "manifest_sha256": "17868ce0b0f4d581006719234a062ef549278f77b8e68c8be775e6d57a3e34ac",
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-acceptance-evidence-sv04dan4"
+}

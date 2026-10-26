@@ -331,3 +331,20 @@ production weighting policy follows automatically. Required actual-host JSON
 reports must still be collected, reviewed and committed before accepting the
 evidence-preservation merge gate; reported terminal summaries are not a claim
 that this ingestion has happened. No new reduction is needed to collect them.
+
+
+## Imported actual-host evidence
+
+Fernando supplied the Mac acceptance bundle; all 32 manifest file entries and
+archive SHA256 verified. The exact reports, collection provenance, small SCAMP
+synthetic fixtures and plot are now retained in
+[the reviewed evidence directory](fixtures/mac-acceptance-2026-10-26/README.md).
+The review independently reconciles BPM report hashes/header changes and SCAMP
+header coefficients, and records the stale native provenance status_note without
+altering the original bytes. These imported files are stronger evidence than the
+earlier terminal-only attribution. Host processing was not rerun by the agent.
+
+The supplied Mac report set is preserved, but external large-data/log retention
+and permanent normalization-driver coverage remain separate. This import neither
+authorizes run-directory deletion nor asserts complete Stage 1/memory/Phase 3
+acceptance. Keep PR #93 and the unresolved implementation gates open for review.

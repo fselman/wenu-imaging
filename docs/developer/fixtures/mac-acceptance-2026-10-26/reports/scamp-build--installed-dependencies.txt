@@ -1,0 +1,7 @@
+/Users/fselman/opt/scamp-2.10.0-wenu-imaging/bin/scamp:
+	/opt/local/lib/libcurl.4.dylib (compatibility version 13.0.0, current version 13.0.0)
+	/opt/local/lib/libopenblas.0.dylib (compatibility version 0.0.0, current version 0.3.0)
+	/opt/local/lib/libfftw3f_threads.3.dylib (compatibility version 10.0.0, current version 10.10.0)
+	/opt/local/lib/libfftw3f.3.dylib (compatibility version 10.0.0, current version 10.10.0)
+	/opt/local/lib/libplplot.17.dylib (compatibility version 17.0.0, current version 17.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1319.100.3)

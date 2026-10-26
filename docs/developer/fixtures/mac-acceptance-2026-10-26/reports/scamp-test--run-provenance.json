@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "run_id": "mac-scamp-permanent-test-2fznyl5p",
+  "created_utc": "2026-10-26T22:37:47.553646+00:00",
+  "host": "MC02VV0HPHTDG",
+  "purpose": "Offline SCAMP fit and PDF plotting after permanent installation",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "tested_component": {
+    "name": "SCAMP",
+    "version": "2.10.0",
+    "branch": null,
+    "commit": null,
+    "identity_note": "External source; see linked build provenance",
+    "binary": "/Users/fselman/opt/scamp-2.10.0-wenu-imaging/bin/scamp",
+    "sha256": "cd2f6b1657de5dab3e43aee80deed4e5aee58ea122a86d90727e6c97f05b219a"
+  },
+  "related_directories": [
+    "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70",
+    "/Users/fselman/wenu-mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h"
+  ],
+  "inputs": {
+    "input.cat": {
+      "source": "/Users/fselman/wenu-mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/input.cat",
+      "sha256": "fed3469de347c533f7cd20486ae9656d12940217e35bdbe61662c2ad15655704"
+    },
+    "reference.cat": {
+      "source": "/Users/fselman/wenu-mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/reference.cat",
+      "sha256": "0675d7c7adc601fa78f4bc84ab939d6b4f3c7661d5147deded3fa66fa5e8f6aa"
+    },
+    "default.scamp": {
+      "source": "/Users/fselman/wenu-mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/default.scamp",
+      "sha256": "93759c0b92bb1231c20e6c47b9a64a86cffd354c3afe16273a26c742f594a0b6"
+    }
+  },
+  "commands": [
+    [
+      "/Users/fselman/opt/scamp-2.10.0-wenu-imaging/bin/scamp",
+      "input.cat",
+      "-c",
+      "default.scamp",
+      "-ASTREFCENT_KEYS",
+      "X_WORLD,Y_WORLD",
+      "-ASTREFERR_KEYS",
+      "ERRA_WORLD,ERRB_WORLD,ERRTHETA_WORLD",
+      "-ASTREFMAG_KEY",
+      "MAG",
+      "-ASTREFMAGERR_KEY",
+      "MAGERR",
+      "-MATCH",
+      "N",
+      "-CROSSID_RADIUS",
+      "10",
+      "-DISTORT_DEGREES",
+      "1",
+      "-MOSAIC_TYPE",
+      "UNCHANGED",
+      "-SOLVE_PHOTOM",
+      "N",
+      "-SN_THRESHOLDS",
+      "5,20",
+      "-WRITE_XML",
+      "Y",
+      "-XML_NAME",
+      "scamp.xml",
+      "-ASTREF_CATALOG",
+      "FILE",
+      "-ASTREFCAT_NAME",
+      "reference.cat",
+      "-CHECKPLOT_TYPE",
+      "FGROUPS",
+      "-CHECKPLOT_DEV",
+      "PDF",
+      "-CHECKPLOT_NAME",
+      "fgroups",
+      "-NTHREADS",
+      "1"
+    ]
+  ],
+  "updated_utc": "2026-10-26T22:37:48.286597+00:00",
+  "exit_status": 0,
+  "wcs_matches_previous_exactly": true,
+  "pdfs": [
+    {
+      "path": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-test-2fznyl5p/scamp/fgroups_1.pdf",
+      "bytes": 63728,
+      "sha256": "7912eb8f39127049e5cb3fec980f7c8b773217c64eca56e5e6330cc7770e8819"
+    }
+  ],
+  "protected_files_unchanged": true,
+  "limits": [
+    "Offline single-detector synthetic fit",
+    "Exact comparison against prior accepted WCS, not independent science validation",
+    "PDF generation/framing checked; visual rendering not reviewed",
+    "Pycavi selection unchanged"
+  ],
+  "directory_role": "test_record"
+}
