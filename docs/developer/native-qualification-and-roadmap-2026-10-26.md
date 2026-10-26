@@ -42,7 +42,7 @@ pending are historical. No reinstall is required for documentation-only changes.
 | Shared dome/sky normalization | Both platforms, both modes, both detector orders: 2592 pixels per platform exactly match independent expectations | Direct mef_build_cal fixture; not a general covariance/variance or full pipeline test |
 | Historical BPM identity | Mac reference and CP Pup project have identical binary masks, detector order/geometry and valid header counts | Downstream exclusion remains unqualified |
 | Native BPM construction | Mac C90/C17 robust reconstruction: every mask pixel matches history; C17 also matches C90; only generated ORIGFILE differs | Mac robust mode only; threshold quality, proportional mode and downstream exclusion remain open |
-| Downstream mask/weight propagation | Source/default-path gap plus actual saved Mac configurations show input weights NONE | #91 open; exclusion sentinel and implementation pending |
+| Downstream mask/weight propagation | Saved Mac settings use NONE; installed SExtractor/SWarp synthetic tests retain flagged signals with NONE and exclude them with explicit MAP_WEIGHT | #91 open; native/cross-stage mapping, adapters and Chapman3 verification pending |
 | Proportional BPM cleanup | Source contract mismatch confirmed; separate #90 opened | No returned actual-target sanitizer reproduction or correction acceptance |
 | Stage 2 memory/ownership | Some focused cleanup/status repairs passed earlier tests | #75/#90 and broader declared memory suite remain open |
 
@@ -204,3 +204,43 @@ This bounded characterization records #91 behavior and adapter requirements;
 it does not silently enable new weights, alter scientific defaults, implement
 variance propagation or close #91. Write/qualify the concrete driver on the Mac
 before delivering it unchanged for Chapman3 verification.
+
+
+## Mac extraction and coaddition masking characterization
+
+Fernando returned actual installed-wrapper test results on 26 October 2026.
+These are disposable synthetic fixtures, not a change to the observational
+pipeline or evidence of automatic BPM propagation.
+
+SExtractor: ~/Software/build/wenu-imaging/mac-extraction-mask-_sf3gj63/
+extraction-mask-check.json. Installed papi_sextractor.SExtractor.run selected
+source-extractor. Both NONE cases detected the flagged source and unflagged
+control, with identical catalogues despite different input weight maps.
+Explicit MAP_WEIGHT with INTERP_TYPE NONE excluded the flagged source while
+retaining the control. The synthetic zero-weight region came from a binary
+usability mask; no electronic gain or physical variance was estimated.
+
+SWarp: ~/Software/build/wenu-imaging/mac-swarp-mask-nkfoopz_/
+swarp-mask-check.json. Installed papi_swarp.SWarp.run invoked
+/opt/local/bin/swarp in four serial one-thread cases: NONE/all-good,
+NONE/masked, MAP_WEIGHT/masked and clean-reference-only. Median combination
+and Lanczos3 resampling were retained; background subtraction was disabled to
+isolate masking, and RESCALE_WEIGHTS Y was recorded. Identical-grid two-exposure
+fixtures used asymmetric flagged/control positions and a clean contribution.
+
+The two NONE output images and weights matched exactly. At the flagged center,
+NONE retained +100 relative to the clean reference; MAP_WEIGHT matched the clean
+reference exactly, with positive output weight minimum 0.25679343938827515.
+The unflagged control retained +100 with either weighting configuration, with
+MAP_WEIGHT output weight minimum 0.5135354399681091. These output weights are
+diagnostic tool products, not independently calibrated inverse variances.
+Protected files and input fixtures remained unchanged.
+
+This confirms the characterized exclusion gap with NONE and explicit binary
+weight capability in each installed tool. It does not establish pixel-scale
+single-defect behavior, shifted-grid/interpolation footprints, native science
+masking, detector-to-WCS mask transformations, full notebook orchestration,
+automatic BPM adapters, physical variance or Chapman3 acceptance.
+#91 remains open. Next isolate native science BPM toggling with fixed science,
+bias and prebuilt flat inputs; do not rebuild those calibrations or alter the
+normal selected mask. Keep the broader cross-stage mapping and Stage 2 gates open.
