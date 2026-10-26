@@ -1,5 +1,27 @@
 # wenu-imaging roadmap
 
+## Chapman3 current acceptance and permanent tool location
+
+Chapman3 installed/native acceptance and workspace completion, 26 October 2026:
+Fernando reports source 805e6c63dea20e7f5e5ade816f6a6ddc90702d86 passed complete
+private C90/C17 installations, manifest hashes and ten installed native failure
+methods per mode. Direct CN Ori NB_659/r_SDSS comparisons passed in both modes:
+all 32 detector arrays exact and finite with matching structure/scaling.
+Raw headers differ only in generated ORIGFILE and reviewed MJD-END; independent
+decimal arithmetic confirms the candidate values, while historical endpoints
+match binary32 rounding. #24 stays open because common calibration-header time
+variables remain float. Installed corrected Pycavi on Chapman3 is the next gate;
+calibration construction, memory and broader scientific/platform gates remain open.
+
+Permanent reusable CMake/CTest 3.29.6 now live at ~/opt/cmake-3.29.6/bin/;
+PATH/system tools are unchanged. Future builds, private qualification prefixes,
+logs and retired evidence belong under ~/Software/build/wenu-imaging/.
+All home wenu-* runs were reversibly relocated with journals; none remain.
+Archived build trees retain historical absolute paths and are evidence only.
+No normal engine/package switch, merge or Git branch cleanup occurred.
+
+See [the current Chapman3 acceptance record](chapman3-native-acceptance-2026-10-26.md).
+
 ## Chapman3 Stage 1 build correction, 26 October 2026
 
 Chapman3 build portability correction, 26 October 2026 (#89): the first native

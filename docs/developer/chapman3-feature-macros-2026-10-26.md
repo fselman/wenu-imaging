@@ -1,9 +1,11 @@
 # Chapman3 legacy-glibc build correction — 26 October 2026
 
 Issue: #89. Parent: 81a2f742ad439245739601444e7ffe70cb119037.
-Status: implementation and modern-Linux diagnostic checks passed; actual
-Chapman3/glibc 2.17 retry pending. No install, observation run or merge is
-performed by this delivery.
+Status: actual Chapman3 C90/C17 build, installed failure and direct CN Ori
+checks passed at source 805e6c63. Installed corrected Pycavi qualification remains
+pending. See [current acceptance](chapman3-native-acceptance-2026-10-26.md) for
+returned target evidence, reviewed timing differences and relocation maps.
+Earlier pending statements below describe the preceding implementation phase.
 
 ## Actual target evidence
 
