@@ -1,5 +1,16 @@
 # wenu-imaging
 
+Run provenance and cleanup rule, agreed 26 October 2026: every new build,
+test and generated-output directory needs run-provenance.json identifying the
+actual tested repository/branch/commit, dirty state, purpose, status and retention
+role. New imaging work belongs under ~/Software/build/wenu-imaging/ on both
+machines. Review and preserve unique data and required acceptance evidence in
+the branch before merge; large external data need verified retained copies and
+committed hash/location manifests. Verify evidence reached main before branch
+deletion. Merging alone never authorizes deleting run directories or active
+installations. Historical unknowns must remain explicit.
+See [run provenance and evidence retention](docs/developer/run-provenance-and-retention.md).
+
 Agreed roadmap revision, 26 October 2026: finish the bounded Stage 1
 qualification, then Stage 2 memory/ownership qualification, then stop for a review
 with Fernando before Stage 2A or component extraction. Start an early requirements
