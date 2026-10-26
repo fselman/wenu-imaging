@@ -5,8 +5,9 @@ corrections and reported Mac/Chapman3 private-install results remain valid.
 Additional Chapman3 bias/dome/sky/master-flat reproduction and Mac/Chapman3
 shared-normalization tests passed as recorded in the
 [current ledger](native-qualification-and-roadmap-2026-10-26.md).
-BPM reconstruction, downstream exclusion and broader memory/scientific gates
-remain open. No reinstall or engine switch is required by this documentation
+Mac robust BPM reconstruction subsequently passed in C90/C17: all mask pixels
+match history, and only generated ORIGFILE identifiers differ. Downstream
+exclusion, proportional BPM cleanup and broader memory/scientific gates remain open. No reinstall or engine switch is required by this documentation
 update. Follow [roadmap revision 1.6](mefpp-modernization-roadmap-v1.md), including
 the early Phase 3 requirements audit and review with Fernando after Stage 2.
 Older status entries below are historical where superseded.

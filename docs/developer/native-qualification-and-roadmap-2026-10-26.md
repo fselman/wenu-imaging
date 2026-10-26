@@ -40,8 +40,8 @@ pending are historical. No reinstall is required for documentation-only changes.
 | Chapman3 dome construction | Both filters/modes exact finite pixels; complete version/generated-name review | r_SDSS uses the recorded 55000 functional dome limit; no new tuning |
 | Chapman3 SKYFF/MFF construction | Eight products exact finite pixels across all 32 detectors; reviewed raw header changes only | Existing project-BPM reference reproduction, not independent calibration quality |
 | Shared dome/sky normalization | Both platforms, both modes, both detector orders: 2592 pixels per platform exactly match independent expectations | Direct mef_build_cal fixture; not a general covariance/variance or full pipeline test |
-| Historical BPM identity | Mac reference and CP Pup project have identical binary masks, detector order/geometry and valid header counts | Native reconstruction and downstream exclusion still unqualified |
-| Native BPM construction | Inputs and provenance inventoried; robust mode selected | Reproduction pending; master-bias invocation not established |
+| Historical BPM identity | Mac reference and CP Pup project have identical binary masks, detector order/geometry and valid header counts | Downstream exclusion remains unqualified |
+| Native BPM construction | Mac C90/C17 robust reconstruction: every mask pixel matches history; C17 also matches C90; only generated ORIGFILE differs | Mac robust mode only; threshold quality, proportional mode and downstream exclusion remain open |
 | Downstream mask/weight propagation | Source/default-path gap plus actual saved Mac configurations show input weights NONE | #91 open; exclusion sentinel and implementation pending |
 | Proportional BPM cleanup | Source contract mismatch confirmed; separate #90 opened | No returned actual-target sanitizer reproduction or correction acceptance |
 | Stage 2 memory/ownership | Some focused cleanup/status repairs passed earlier tests | #75/#90 and broader declared memory suite remain open |
@@ -104,7 +104,11 @@ response; that slope is not electronic conversion gain in e-/ADU.
 Eclipse detector.c also contains separate non-linearity fit/application routines,
 but current BPM construction does not invoke those separate services.
 The log prints 'bias subtracting BPM cube' even when its bias argument is NULL;
-the original master-bias invocation therefore remains unresolved.
+the exact historical command line remains unavailable. A complete log has 32 BPM
+stages starting at Part 1, with no bias stage or bias-load evidence. Fernando's
+subsequent isolated reconstruction without a separate master bias reproduced
+all historical mask pixels in both language modes. This establishes a reproducible
+invocation, not recovery of the unavailable original command line.
 
 The inspected native path uses the mask to exclude neighbors while filtering
 the sky/dome ratio. Native science subtraction/division does not apply a science
@@ -119,13 +123,13 @@ exclusion mask directly. Actual saved CP Pup configurations show:
 
 Track the bounded propagation gap in #91 and proportional two-pointer cleanup
 defect in #90. Broader BPM generation/integration remains #13. No source
-correction, threshold change, sentinel test or observational BPM rebuild was
-performed by these read-only inventories.
+correction, threshold change or sentinel test was performed by those read-only
+inventories. The subsequent isolated observational BPM reconstruction is recorded below.
 
 ## Next bounded work and review boundary
 
-1. Finish robust BPM fixture/invocation preflight, then isolated reconstruction
-   with original inputs/settings and complete pixel/header comparison.
+1. Robust BPM reconstruction on the Mac is accepted as recorded below. Retain
+   its inputs, run records and comparisons; do not repeat the expensive builds.
 2. Finish the masking audit with a bounded known-flagged-pixel/unflagged-control
    test. Record behavior and requirements; this does not implement all variances.
 3. Retain the successful shared-normalization driver as a permanent regression.
@@ -137,3 +141,66 @@ performed by these read-only inventories.
 Do not declare full Stage 1, scientific calibration quality, WFI observational,
 new platform or Phase 3 acceptance from these bounded results. Do not begin
 Stage 2A implementation or component extraction automatically at Stage 2 completion.
+
+
+## Mac robust BPM reconstruction acceptance
+
+Fernando returned complete C90 and C17 run/comparison output on 26 October 2026.
+This is attributed actual-host evidence; the agent has not read the host JSON
+files directly. Source checkout was main 7e8b771f196c71283280bb35181515da45670684
+(documentation-only successor of 2ace67a); installed native source was
+4ade8c52027c736a49b65da3bdb31f11b036693b, separately qualified in both modes.
+
+Work: ~/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/.
+Records: bpm-run-record.json, bpm-c90-comparison.json,
+bpm-c17-run-record.json and bpm-c17-comparison.json.
+Independent staged copies preserved all 30 inputs in their original order and
+the original PAF. Both serial commands were mefpp --bpm bpm.list, without a
+separate --bias argument; overscan/trim and robust 0.5–1.5 settings were retained.
+The ten raw bias frames remained regression inputs. Native mef_build_bpm uses
+the Eclipse robust response fit; this does not qualify its proportional branch.
+
+Both runs exited zero and wrote 267822720-byte products. All 32 detector masks
+match history exactly, including all 34122 zero-valued bad pixels, binary values,
+geometry/order and actual header counts. C17 also matches C90 exactly.
+The complete raw-header comparison finds only ORIGFILE in all 33 HDUs:
+historical CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits becomes
+CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits (C90) or
+CMDP.OMEGACAM.2026-10-26T16:42:47.772.fits (C17).
+These generated identifiers are reviewed and accepted. Protected files remained
+unchanged. No current project mask or selected engine was replaced.
+
+This accepts historical robust-mask reproduction on this Intel Mac. It does not
+validate the loose response thresholds, electronic gain/RON, non-linearity,
+downstream exclusion, proportional cleanup, memory safety or Phase 3 products.
+Issues #13, #90 and #91 remain open.
+
+## Next masking sentinel: test contract, not an executed result
+
+Prepare on the Mac, preserving production code and normal configurations.
+Use fresh disposable fixtures and the actual installed routines/tools, recording
+their paths, hashes, configuration and commands. First inventory available
+SExtractor/SWarp and installed Pycavi wrapper locations; do not install or upgrade.
+
+Use paired identical science fixtures with known flagged and unflagged control
+coordinates, deliberately asymmetric positions to detect axis/extension mistakes,
+and a baseline without the injected signal. Keep the injected amplitude below
+saturation/non-linearity limits and record that choice. For a native probe,
+change only a disposable BPM between good/bad states, leaving science, bias and
+flat fixed; distinguish the direct science path from BPM-aware flat smoothing.
+Then exercise the production extraction/coadd wrapper path with current NONE
+weight settings. Report whether sentinel contributions survive, rather than
+requiring an exclusion pass from a known unweighted configuration.
+
+A separate explicit diagnostic input mask/weight experiment may demonstrate tool
+capability, but must be labeled separately from current pipeline behavior.
+Include a zero-weight flagged sentinel, a nonzero-weight control and a clean
+reference contribution at the same sky position for coaddition. Check catalogue
+detections/flags and output pixels/coverage; quantify interpolation support and
+avoid attributing neighboring resampling effects to a coordinate error.
+A binary usability weight is not a propagated physical inverse variance.
+
+This bounded characterization records #91 behavior and adapter requirements;
+it does not silently enable new weights, alter scientific defaults, implement
+variance propagation or close #91. Write/qualify the concrete driver on the Mac
+before delivering it unchanged for Chapman3 verification.
