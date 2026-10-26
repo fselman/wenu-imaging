@@ -1,5 +1,20 @@
 # wenu-imaging agent instructions
 
+Agreed roadmap revision, 26 October 2026: finish the bounded Stage 1
+qualification, then Stage 2 memory/ownership qualification, then stop for a review
+with Fernando before Stage 2A or component extraction. Start an early requirements
+audit of ESO Phase 3 instructions to inform changes from their design, rather
+than leaving compliance to final export. Treat ESO_Phase3 as a proposed named
+reduction/product profile, with other profiles possible later; no profile engine
+or compliance claim exists yet. Preserve common scientific correctness across
+profiles. Extend Stage 2A product semantics, Stage 3 interfaces and Stage 4A–4D
+characterization/variance/mask/final-product implementation as agreed.
+Development and corrections are on the Mac; Chapman3 verifies target behavior.
+Keep originals, normal installations and current 0.5–1.5 BPM bounds unchanged.
+See [the current decision and qualification ledger](native-qualification-and-roadmap-2026-10-26.md).
+Earlier dated pending/merge statements below are historical where superseded.
+
+
 Chapman3 installed Pycavi acceptance, 26 October 2026: Fernando reports an
 isolated wheel/target installation from source 805e6c63dea20e7f5e5ade816f6a6ddc90702d86
 passed actual installed imports and all five wrapper failure regressions.

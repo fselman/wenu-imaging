@@ -1,0 +1,139 @@
+# Native qualification and roadmap decision — 26 October 2026
+
+Owner: Fernando Selman. Baseline: merged main
+2ace67a08f4b5bd916d270b91afa3c6db62f4dff.
+Evidence below is Fernando's returned terminal output and supplied transcripts,
+not agent access to the actual Mac/Chapman3 JSON files. No new reduction,
+installation or normal engine selection occurred in this documentation update.
+
+## Agreed scope and sequencing
+
+Finish the bounded serial qualification, then Stage 2 memory/ownership checks.
+After Stage 2, stop for a review with Fernando before Stage 2A representation
+prototypes or component extraction. Start an early audit of applicable ESO Phase 3
+instructions as requirements work alongside current qualification; use its gap
+matrix to inform changes from design onward. The audit and profile implementation
+remain pending. ESO_Phase3 is a proposed named reduction/product profile; other
+profiles can follow. Keep scientific correctness common to all profiles.
+
+Develop corrections and test drivers on the Mac; verify unchanged deliverables
+on Chapman3. Future work directories are ~/Software/build/wenu-imaging/;
+permanent Chapman3 CMake/CTest are ~/opt/cmake-3.29.6/bin/.
+Do not confuse fselman/wenu with fselman/wenu-imaging.
+
+## Integration and current baseline
+
+PRs #72, #77, #78, #79, #81 and #88 were merged in dependency order.
+Main 2ace67a has tree ea2978a41fab5dad91e13f5ea9aadcbde1aad072,
+equal to the qualified native-failure-contract head c7907fe tree.
+Fernando reported Mac and Chapman3 synchronization to main and deletion of the
+six merged branches. Earlier instructions/statuses saying merge/cleanup remain
+pending are historical. No reinstall is required for documentation-only changes.
+
+## Bounded gate ledger
+
+| Gate | Actual reported evidence | Remaining limitation |
+|---|---|---|
+| Mac/Chapman3 C90/C17 build and private installation | Existing native and installation acceptance records; installed failure tests passed | Other platforms and broader memory suite pending |
+| Installed Pycavi and direct science | CP Pup on Mac and selected CN Ori NB_659/r_SDSS on Chapman3 passed exact finite 32-detector comparisons | Selected functional paths; not independent scientific/Phase 3 acceptance |
+| Chapman3 bias construction | Both language modes exact finite pixels; only reviewed version/generated-name header changes | Representative March 11 fixture, not every calibration |
+| Chapman3 dome construction | Both filters/modes exact finite pixels; complete version/generated-name review | r_SDSS uses the recorded 55000 functional dome limit; no new tuning |
+| Chapman3 SKYFF/MFF construction | Eight products exact finite pixels across all 32 detectors; reviewed raw header changes only | Existing project-BPM reference reproduction, not independent calibration quality |
+| Shared dome/sky normalization | Both platforms, both modes, both detector orders: 2592 pixels per platform exactly match independent expectations | Direct mef_build_cal fixture; not a general covariance/variance or full pipeline test |
+| Historical BPM identity | Mac reference and CP Pup project have identical binary masks, detector order/geometry and valid header counts | Native reconstruction and downstream exclusion still unqualified |
+| Native BPM construction | Inputs and provenance inventoried; robust mode selected | Reproduction pending; master-bias invocation not established |
+| Downstream mask/weight propagation | Source/default-path gap plus actual saved Mac configurations show input weights NONE | #91 open; exclusion sentinel and implementation pending |
+| Proportional BPM cleanup | Source contract mismatch confirmed; separate #90 opened | No returned actual-target sanitizer reproduction or correction acceptance |
+| Stage 2 memory/ownership | Some focused cleanup/status repairs passed earlier tests | #75/#90 and broader declared memory suite remain open |
+
+## Exact retained calibration and normalization evidence
+
+Chapman3:
+- ~/Software/build/wenu-imaging/chapman3-bias-native-prjulwmp/
+  bias-run-record.json, bias-output-comparison.json, bias-header-review.json.
+- ~/Software/build/wenu-imaging/chapman3-dome-native-tk9l_c16/
+  dome-run-record.json, dome-output-comparison.json.
+- ~/Software/build/wenu-imaging/chapman3-sky-mff-native-fotiqam6/
+  sky-mff-run-record.json, sky-mff-output-comparison.json.
+- ~/Software/build/wenu-imaging/chapman3-shared-normalization-wd701qfx/
+  normalization-check.json.
+
+Mac:
+- ~/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/
+  normalization-check.json and shared-normalization-mac-qualified.tar.gz.
+- Transferred archive SHA256:
+  16f0bba19bb09e2f3d8e8626b8f4c4d5d51c3b7d2aec9b29e9a84b8e8e2afa7a.
+  Chapman3 verified the same archive before building its driver.
+
+Bias/dome/SKYFF version header changes are PROCSOFT and recipe RECVERS
+mefpp-2.0.0 to mefpp-2.0.3, plus generated ORIGFILE. Each MFF also updates
+MSKY in all 33 HDUs to the corresponding newly generated SKYFF identifier.
+No unexplained reported raw header differences remain for these comparisons.
+Calibration MJD-END precision remains a known separate issue #24, unchanged by
+this reproduction work. Version-label consistency remains separate (#69).
+
+## BPM fixtures, provenance and actual masking gap
+
+Mac data: ~/Pictures/OCAM/bpm/.
+The retained bpm.list has 30 inputs: 10 zero-second bias frames and 20
+FLAT,DOME,DETGAIN exposures, paired at 2, 5, 7, 10, 20, 30, 40, 50, 60 and
+70 seconds. Preserve listed order. Header template is OMEGACAM_img_cal_gain;
+do not rename this as a confirmed distinct linearity template.
+
+PAF SHA256: 709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f.
+Robust BPM mode PROPFLAG=0 and normalized-response thresholds 0.5–1.5
+are confirmed in configuration/log/reference headers. Good response is strictly
+inside those bounds in the current threshold routine. Preserve these settings
+for reproduction; suitability is a separate calibration-quality question.
+
+Historical BPM:
+~/Pictures/OCAM/bpm/OCAM_BPM_1x1.fits
+SHA256 d7aeb7d6041fd2e03d48785298b338ba61860e145a08a4aeb29e0fc9b5a13532.
+
+CP Pup project BPM:
+~/Pictures/OCAM/CPPup-wenu-imaging-test/static_calib/bpm/OCAM_BPM_1x1.fits
+SHA256 bcc5e05e63f275b3b0e4d2de0b4b21f315691cca717bdd80fcd010bf5ca324bd.
+
+All 32 arrays match exactly, with 0=bad and 1=good, no other values.
+34122 bad pixels comprise 0.012751877420771385 percent of the mosaic; actual
+counts match each extension's headers. Full non-pixel differences between these
+two files have not been reviewed. A different file hash is not pixel inequality.
+
+Native BPM routines fit pixel signal against frame median to measure relative
+response; that slope is not electronic conversion gain in e-/ADU.
+Eclipse detector.c also contains separate non-linearity fit/application routines,
+but current BPM construction does not invoke those separate services.
+The log prints 'bias subtracting BPM cube' even when its bias argument is NULL;
+the original master-bias invocation therefore remains unresolved.
+
+The inspected native path uses the mask to exclude neighbors while filtering
+the sky/dome ratio. Native science subtraction/division does not apply a science
+exclusion mask directly. Actual saved CP Pup configurations show:
+- SWARP.conf: WEIGHT_TYPE NONE, empty WEIGHT_IMAGE/WEIGHT_THRESH,
+  COMBINE_TYPE MEDIAN, RESAMPLING_TYPE LANCZOS3, RESCALE_WEIGHTS Y.
+- Ten py-sextractor.sex records: WEIGHT_TYPE NONE; WEIGHT_IMAGE weight.fits
+  and FLAG_IMAGE flag.fits are configured names, not evidence of BPM exclusion.
+  MASK_TYPE CORRECT is not a substitute for supplying detector exclusions.
+- The inventory found one final SWarp output weight file. Its existence alone
+  does not establish propagated physical variance or BPM-aware input weighting.
+
+Track the bounded propagation gap in #91 and proportional two-pointer cleanup
+defect in #90. Broader BPM generation/integration remains #13. No source
+correction, threshold change, sentinel test or observational BPM rebuild was
+performed by these read-only inventories.
+
+## Next bounded work and review boundary
+
+1. Finish robust BPM fixture/invocation preflight, then isolated reconstruction
+   with original inputs/settings and complete pixel/header comparison.
+2. Finish the masking audit with a bounded known-flagged-pixel/unflagged-control
+   test. Record behavior and requirements; this does not implement all variances.
+3. Retain the successful shared-normalization driver as a permanent regression.
+4. Keep this ledger current and perform the declared Stage 2 memory suite,
+   including #90. Preserve selected installations and original products.
+5. Review with Fernando after Stage 2: remaining findings, early ESO Phase 3
+   requirements/gaps, product/profile contract, priorities and next authorized scope.
+
+Do not declare full Stage 1, scientific calibration quality, WFI observational,
+new platform or Phase 3 acceptance from these bounded results. Do not begin
+Stage 2A implementation or component extraction automatically at Stage 2 completion.
