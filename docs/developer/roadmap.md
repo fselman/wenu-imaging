@@ -1,5 +1,36 @@
 # wenu-imaging roadmap
 
+## Current agreed sequence and Phase 3 design audit — 26 October 2026
+
+The native roadmap is now [revision 1.6](mefpp-modernization-roadmap-v1.md).
+Finish bounded Stage 1 qualification, then Stage 2 memory/ownership; stop for
+a review with Fernando after Stage 2 before representation work or component
+extraction. Start an early ESO Phase 3 instructions/requirements audit alongside
+qualification so upstream processing and metadata changes account for delivery
+requirements from their design. Audit output and compliance remain pending.
+
+ESO_Phase3 is a proposed versioned reduction/product profile, allowing other
+profiles later. It may constrain upstream processing, products, metadata,
+associations and validation; it is not merely output header decoration. Keep
+common scientific correctness independent of the chosen profile. No profile
+engine, new algorithm, variance implementation or compliance claim is introduced.
+
+Stage 2A defines science/variance/quality, gain/RON and covariance semantics;
+Stage 3 preserves those associations across components. Stage 4A–4D implement
+detector characterization/metadata, calibration/science uncertainty, mask/weight
+adapters and final-product uncertainty, respectively. Preserve background/total
+variance distinctions and actual coadd-method uncertainty. Include the later
+NB_659/r_SDSS PSF/transmission-aware continuum-subtraction design after its
+uncertainty foundation. Packaging and accelerator choices remain deferred.
+
+The [current qualification and decision ledger](native-qualification-and-roadmap-2026-10-26.md)
+records merged main/branch cleanup, today's calibration comparisons and shared
+normalization, BPM provenance, actual saved unweighted tool configurations, and
+remaining #90/#91/#13/#75/#24 gates. Earlier dated pending statuses below are
+historical where superseded. Development/corrections are on the Mac; Chapman3
+verifies target behavior. No normal installation or engine selection changed.
+
+
 ## Chapman3 installed-wrapper acceptance
 
 Chapman3 installed Pycavi acceptance, 26 October 2026: Fernando reports an

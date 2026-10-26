@@ -1,5 +1,16 @@
 # Developer guide: native mefpp build, installation and qualification
 
+Current qualification update, 26 October 2026: the merged native build/failure
+corrections and reported Mac/Chapman3 private-install results remain valid.
+Additional Chapman3 bias/dome/sky/master-flat reproduction and Mac/Chapman3
+shared-normalization tests passed as recorded in the
+[current ledger](native-qualification-and-roadmap-2026-10-26.md).
+BPM reconstruction, downstream exclusion and broader memory/scientific gates
+remain open. No reinstall or engine switch is required by this documentation
+update. Follow [roadmap revision 1.6](mefpp-modernization-roadmap-v1.md), including
+the early Phase 3 requirements audit and review with Fernando after Stage 2.
+Older status entries below are historical where superseded.
+
 ## Chapman3 installed-wrapper acceptance
 
 Chapman3 installed Pycavi acceptance, 26 October 2026: Fernando reports an

@@ -1,8 +1,12 @@
 # mefpp modernization roadmap — version 1
 
-Date: 25 October 2026. Revision: 1.5. Status: first roadmap, amended for review.
+Date: 26 October 2026. Revision: 1.6. Status: agreed sequencing and requirements amendment; implementation acceptance remains bounded.
 Documentation baseline: b2867c1da3ae4567cc7168c2f0ca13021aea2f33.
 Owner: Fernando Selman; canonical development repository: fselman/wenu-imaging.
+
+Current bounded qualification and remaining work are recorded in the
+[26 October ledger](native-qualification-and-roadmap-2026-10-26.md).
+Earlier platform/pending statements are historical where superseded by that ledger.
 
 ## Purpose and decision status
 
@@ -36,6 +40,37 @@ Tracking parents: #64 (build/install) and #73 (architecture/roadmap).
   one node. Native Windows build/install is a requirement, designed in early.
 - CMOS-specific reduction services are the final functional extension, preceded
   by a detector/readout-mode review. Keep scientific parameter tuning deferred.
+
+## Early ESO Phase 3 requirements audit and reduction profiles
+
+Approved 26 October 2026: audit the applicable ESO Phase 3 instructions now as
+requirements work alongside bounded qualification. Do not wait until final export
+to discover changes required in calibration, science metadata or associated products.
+The audit itself is pending; this roadmap records its scope, not checked compliance.
+
+Inventory official instructions/standards, product-specific rules, release-description
+guidance and validation tooling. Record exact document versions/dates and separate
+mandatory requirements, recommendations and unresolved interpretations. Build a
+requirements matrix mapping each item to the affected stage/component, raw evidence,
+planned metadata/product, test and verification status. Cover science images and
+catalogues, uncertainty/weight and quality products, associations, units, WCS/time,
+photometric calibration, provenance, coverage and release documentation as applicable.
+Do not infer that all possible companion products are universally mandatory.
+Track the delivery audit with #9 and BPM/weight behavior with #91.
+
+Propose ESO_Phase3 as a named reduction/product profile: a versioned set of
+requirements, compatible processing policies, required metadata/associated products
+and validation rules. A profile may constrain processing upstream as well as export.
+It is not a plotting style, a header-stamping option or a compliance certificate.
+Separate shared scientific correctness from profile-specific delivery constraints.
+Other profiles may be defined later without weakening mask/uncertainty guarantees.
+No profile implementation or exact configuration syntax is selected here.
+
+Publish the requirements/gap matrix early enough to inform each bounded correction.
+At the mandatory review after Stage 2, consider the audit findings before approving
+representation/interfaces or dependent implementation. Missing public guidance or
+uncertain applicability is recorded explicitly, not guessed. Final Phase 3 validation,
+release preparation and any submission remain separate from functional acceptance.
 
 ## Sequence and review gates
 
@@ -208,6 +243,14 @@ correct exit status/cleanup and equivalent scientific outputs. This is bounded
 memory evidence, not proof of absence of leaks in every possible execution.
 Broader refactoring waits for this gate. Re-run relevant checks after extraction.
 
+### Mandatory review after Stage 2
+
+After the declared memory/ownership suite has been qualified, review the situation
+with Fernando before starting Stage 2A implementation/prototypes or Stage 3
+extraction. Present current acceptance, remaining defects, the early Phase 3 gap
+matrix, product/profile requirements, resource costs and a proposed next bounded
+scope. Completion of Stage 2 does not automatically authorize later work.
+
 ## Stage 2A — Data standards, storage and representation audit
 
 Fernando adds this review immediately after memory qualification and before
@@ -291,6 +334,31 @@ and round-trip/equivalence qualification separately before dependent extraction.
 Re-run memory/ownership checks for new adapters/libraries. Do not bundle a storage
 migration into a numerical refactor. Retaining FITS is a valid review outcome.
 
+### Science, variance, quality and profile contract
+
+Define aligned science, variance and integer data-quality arrays, mask polarity,
+flag reasons and task-specific exclusion rules. Keep uncertainty in squared science
+units; distinguish total variance from background-only variance used by external
+tool adapters, inverse variance, diagnostic flags and coverage/exposure maps.
+Unknown variance must not produce infinite weight. Zero usable weight does not
+erase the original science measurement or its exclusion reason.
+
+Design local resampling/convolution covariance separately from shared calibration
+and fitted-parameter uncertainties, including cross-exposure terms. Compact local
+kernels do not by themselves represent all shared systematics. Define association,
+geometry/WCS, correction state and uncertainty provenance through all boundaries.
+
+Define acquisition electronic gain/RON per detector/amplifier with canonical units,
+source, uncertainties and measured/default status. Preserve originals and distinguish
+electronic gain from BPM relative-response slope and from processed effective gain.
+Record scale/exposure/flat transformations needed to interpret processed noise.
+The current mean-CONAD/exposure conversion is an invariant of comparisons until
+a separately reviewed change; do not silently replace it with detector gain scaling.
+
+Review how the proposed ESO_Phase3 profile constrains this logical model without
+preselecting a physical container or making profile-specific metadata the whole
+internal schema.
+
 ## Stage 3 — Explicit contracts and existing-function extraction
 
 Prefer one modular ANSI-C library, focused headers and a thin compatible CLI.
@@ -324,6 +392,13 @@ processed quantities. Extract one service at a time with before/after comparison
 Do not delete Eclipse code based on single-root reachability; optional pruning
 requires multi-root/instrument coverage and actual target linker evidence.
 
+Require each component and detector-extraction writer to preserve science/variance/
+quality associations, coordinate mapping, calibration references and uncertainty
+state. Specify metadata insertion and transformation boundaries explicitly; copying
+a raw gain keyword after pixel scaling is insufficient. Profile validation should
+report missing or inconsistent required information before dependent processing.
+Profile mechanisms remain design work, not an already implemented API.
+
 ### Mandatory mosaic and unit invariants
 
 Common flat normalization preserves relative detector response and acquisition
@@ -339,6 +414,33 @@ moving it. Never apply it twice. Preserve ADU/electron/electron-per-second versu
 physical-flux distinctions and define propagated variance/mask semantics.
 
 ## Stage 4 — Calibration characterization and missing services
+
+### Implementation subdivisions agreed 26 October 2026
+
+- **4A — Detector characterization and metadata:** qualify relative-response/BPM,
+  electronic gain/RON, non-linearity and shutter estimators; preserve sequence/pair
+  membership, establish compatible measured/default values and write their provenance
+  into native science detector products before downstream extraction.
+- **4B — Calibration and science uncertainty:** create and propagate variance through
+  calibration construction/application, normalization and Python corrections, retaining
+  shared-reference/fitted-parameter uncertainty and invalid-pixel states.
+- **4C — Mask and weight integration:** trace BPM/data-quality exclusions into
+  extraction and coaddition input weights. A bounded binary-mask sentinel test may
+  precede full physical variance implementation; binary usability weights must not
+  be advertised as calibrated inverse variance. Tool adapters must respect background
+  versus source-noise conventions, gain handling and explicit rescaling policies.
+- **4D — Final-product uncertainty:** preserve variance/quality through detector
+  extraction, resampling, combination and photometry; validate covariance approximations,
+  coverage and associations. Derive uncertainty for the actual combination method:
+  the current median coadd cannot use a weighted-mean variance formula by assumption.
+
+Each subdivision has independent known-answer and statistical recovery tests.
+Exclude flagged samples without silently replacing their science values; interpolation,
+diagnostic source flags and exclusion are distinct policies. Verify a known detector
+coordinate and an unflagged control through actual downstream tools. Do not infer
+mask use from an output weight image, a filename or the mere presence of a BPM.
+ESO_Phase3 requirements inform all four subdivisions; final validation remains a
+separate application delivery gate.
 
 ### Frame variance creation and propagation
 
@@ -450,6 +552,22 @@ Gate for new services, including variance creation/propagation: synthetic recove
 representative instrument data and Fernando's scientific acceptance of methods.
 Existing functional notebook success is not this gate. Keep method validation
 separate from later scientific parameter optimization across all survey fields.
+
+### Later science extension: NB_659 continuum subtraction
+
+Retain the requested integrated OmegaCAM NB_659/r_SDSS continuum-subtraction
+extension after the mask/uncertainty foundation, without making it a prerequisite
+for current Stage 1 qualification. Plan transmission-aware treatment of the four
+quadrant filters and detector/filter provenance, per-CCD spatial PSF models with
+PSFEx, a common target PSF, SCAMP astrometry and SWarp resampling/coaddition.
+Continuum scaling, response corrections, PSF matching and subtraction should be
+integrated before final coaddition where appropriate. Design covariance before
+implementing the PSFEx interface: C_out = A C_in A^T, compact spatially varying local
+correlations plus shared-reference/cross-exposure terms as required. Preserve masks,
+variance, line-response maps and transmission-aware weights; distinguish a
+continuum-subtracted narrowband product from calibrated H-alpha, including possible
+[N II] contamination. Review the method and acquisition requirements separately;
+no new processing or scientific defaults are selected by this planning entry.
 
 ## Stage 5 — Single-detector CCD support
 
@@ -632,6 +750,8 @@ were already installed. Discuss scope/order changes before dependent work.
 | 1.3 | 2026-10-25 | Fernando adds per-pixel frame-variance creation and propagation to Stage 4, including calibration uncertainty, common normalization and downstream handoffs | Planning requirement; no variance implementation or new processing |
 | 1.4 | 2026-10-25 | Defer pip-versus-Conda/micromamba distribution evaluation as a TODO; resume current native regression/build-install gates | No package manager selected or package implementation started |
 | 1.5 | 2026-10-25 | Restore configure/make/install as the normal thin CMake frontend; auto-select/check tools and keep developer qualification separate | Agent tests passed; actual Mac frontend gate pending before CP Pup comparison |
+| 1.6 | 2026-10-26 | Early ESO Phase 3 requirements audit and proposed reduction profiles; explicit science/variance/quality contract and Stage 4A–4D; bounded qualification ledger and mandatory review after Stage 2 | Agreed planning amendment; new profile/variance implementation pending |
+
 
 ## Primary references informing the design
 
