@@ -137,10 +137,14 @@ char * qfits_paf_query(
 	
 	found = 0 ;
 	while (fgets(line, ASCIILINESZ, paf)!=NULL) {
-		sscanf(line, "%[^ \t]", head);
+		if (sscanf(line, "%[^ \t]", head) != 1) continue;
 		if (!strcmp(head, key)) {
 			/* Get value */
-			sscanf(line, "%*[^ \t] %[^;]", value);
+			/* A missing value must not reuse the preceding query's static buffer. */
+            if (sscanf(line, "%*[^ \t] %[^;]", value) != 1) {
+                (void)fclose(paf);
+                return NULL;
+            }
 			found ++ ;
 			break ;
 		}
@@ -152,6 +156,7 @@ char * qfits_paf_query(
 	strcpy(val, qfits_strcrop(value));
 	/* Get rid of possible quotes */
 	len = strlen(val);
+    if (len == 0) return NULL;
 	if (val[0]=='\"' && val[len-1]=='\"') {
 		strncpy(value, val+1, len-2);
 		value[len-2]=(char)0;

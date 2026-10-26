@@ -57,3 +57,5 @@ must be added to the appropriate topic, not appended as an undifferentiated list
 The immediate scientific goal remains OmegaCAM products for ESO Phase 3.
 Functional acceptance, scientific validation and archive compliance are distinct.
 Native mefpp remains serial; later threading/accelerators follow reviewed gates.
+
+- [Native configuration/failure correction and 26 October evidence](native-failure-correction-2026-10-26.md).

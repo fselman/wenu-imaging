@@ -336,6 +336,7 @@ typedef struct _mef_bb_ {
   ---------------------------------------------------------------------------*/
 
 mef_bb * mef_bb_new(void);
+mef_bb * mef_bb_new_from_paf(char *pafname);
 
 void mef_bb_del(mef_bb * bb);
 

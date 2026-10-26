@@ -23,6 +23,11 @@ Description	:	MEF library utilities, from wfi
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <errno.h>
+#include <ctype.h>
+#include <float.h>
+#include <limits.h>
+#include <unistd.h>
 
 #include "eclipse.h"
 #include "mefp_lib.h"
@@ -34,7 +39,44 @@ static char recipe_version[] = "mefpp-2.0.3";
 /*---------------------------------------------------------------------------
   Function codes
   ---------------------------------------------------------------------------*/
+/* Required values must be checked before conversion; qfits owns the returned
+ * static buffer, so callers consume/copy it before the next query (#76). */
+static int mef_paf_value(char *path, char *key, int kind, char **value)
+{
+    char *end;
+    double number;
+    *value = qfits_paf_query(path, key);
+    if (*value == NULL) {
+        e_error("missing required PAF key [%s] in [%s]", key, path);
+        return -1;
+    }
+    if (kind == 0) {
+        if (strlen(*value) > 80) {
+            e_error("PAF string exceeds 80 characters: key [%s] in [%s]", key, path);
+            return -1;
+        }
+        return 0;
+    }
+    errno = 0;
+    number = strtod(*value, &end);
+    while (isspace((unsigned char)*end)) end++;
+    if (end == *value || *end != '\0' || errno == ERANGE ||
+        number != number || number > DBL_MAX || number < -DBL_MAX ||
+        (kind == 1 && (number < INT_MIN || number > INT_MAX)) ||
+        (kind == 2 && (number < -FLT_MAX || number > FLT_MAX))) {
+        e_error("invalid numeric PAF value [%s], key [%s] in [%s]", *value, key, path);
+        return -1;
+    }
+    return 0;
+}
+
+/* Retain the historical default entry point for other native callers. */
 mef_bb * mef_bb_new(void)
+{
+    return mef_bb_new_from_paf("mefpp.paf");
+}
+
+mef_bb * mef_bb_new_from_paf(char *cfgfile)
 {
 	mef_bb        *       bb ;
 	mef_ccd	      *	      ccd;
@@ -44,22 +86,48 @@ mef_bb * mef_bb_new(void)
 	int			ivalue;
 	float			fvalue;
 	double			dvalue;
-	char        		cfgfile[FILENAMESZ+1];
+	char *value;
+    char *end;
+    long nchips;
 
 	bb = calloc(1, sizeof(mef_bb));
+    if (bb == NULL) {
+        e_error("cannot allocate processing context");
+        return NULL;
+    }
+    if (cfgfile == NULL || qfits_is_paf_file(cfgfile) != 1) {
+        e_error("cannot read valid PAF configuration [%s]", cfgfile ? cfgfile : "(null)");
+        goto fail;
+    }
+    bb->name_paf = strdup(cfgfile);
+    if (bb->name_paf == NULL) goto allocation_failure;
 
 	/* testing reading from paf file */
 	/* Set default parameters for all */
 
-	strcpy(cfgfile, "mefpp.paf");
+	
 
 	sprintf(buffer,"MEF.NCHIPS");
-	ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+	if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+	errno = 0;
+    nchips = strtol(value, &end, 10);
+    while (isspace((unsigned char)*end)) end++;
+    if (end == value || *end != '\0' || errno == ERANGE || nchips <= 0 || nchips > INT_MAX) {
+        e_error("invalid detector count in PAF [%s], key MEF.NCHIPS", cfgfile);
+        goto fail;
+    }
+    ivalue = (int)nchips;
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 
-	bb->nchips		= ivalue;
+	if (ivalue <= 0 || (size_t)ivalue > (size_t)-1 / sizeof(mef_ccd)) {
+        e_error("invalid detector count in PAF [%s], key MEF.NCHIPS", cfgfile);
+        goto fail;
+    }
+    bb->nchips = ivalue;
 
-        ccd = calloc(1, sizeof(mef_ccd) * (bb->nchips) ); 
+        ccd = calloc(bb->nchips, sizeof(mef_ccd));
+    if (ccd == NULL) goto allocation_failure;
+    bb->ccd = ccd;
 
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: MEF.NCHIPS: %d\n",bb->nchips); }
 	bb->noverify		= 0 ;
@@ -74,75 +142,86 @@ mef_bb * mef_bb_new(void)
 	    e_comment(1, "mef_bb_new: Processing extnum: %d\n",(ccd+i)->extnum);
 
 	    sprintf(buffer,"MEF.PRESCAN.X.MIN.CHIP%d",i+1);
-            if (qfits_paf_query(cfgfile,buffer) == NULL) {
-               e_comment(1, "mef_bb_new: key %s not found in file %s",buffer,cfgfile);
-            }
-	    ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+	    if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+	    ivalue = atoi(value);
 	    if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->prescan_x[0]       = ivalue;
 
 	    sprintf(buffer,"MEF.PRESCAN.X.MAX.CHIP%d",i+1);
-	    ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+	    if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+	    ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->prescan_x[1]   	= ivalue;
 
 	    sprintf(buffer,"MEF.OVERSCAN.X.MIN.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->overscan_x[0]  	= ivalue;
 
 	    sprintf(buffer,"MEF.OVERSCAN.X.MAX.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->overscan_x[1]  	= ivalue;
 
 	    sprintf(buffer,"MEF.CROP.X.MIN.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->trimreg[0]     	= ivalue;
 
 	    sprintf(buffer,"MEF.CROP.X.MAX.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->trimreg[1]     	= ivalue;
 
 	    sprintf(buffer,"MEF.CROP.Y.MIN.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->trimreg[2]     	= ivalue;
 
 	    sprintf(buffer,"MEF.CROP.Y.MAX.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->trimreg[3]     	= ivalue;
 
 	    sprintf(buffer,"MEF.CCD.RON.CHIP%d",i+1);
-            fvalue = atof(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+            fvalue = atof(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,fvalue); }
 	    (ccd+i)->ron            	= fvalue;
 
 	    sprintf(buffer,"MEF.CCD.GAIN.CHIP%d",i+1);
-            fvalue = atof(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+            fvalue = atof(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,fvalue); }
 	    (ccd+i)->gain           	= fvalue;
 
 	    sprintf(buffer,"MEF.CRVAL1.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->crval1		= ivalue;
 
 	    sprintf(buffer,"MEF.CRVAL2.CHIP%d",i+1);
-            ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+            ivalue = atoi(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,ivalue); }
 	    (ccd+i)->crval2		= ivalue;
 
 	    sprintf(buffer,"MEF.CRPIX1.CHIP%d",i+1);
-            fvalue = atof(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+            fvalue = atof(value);
             if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,fvalue); }
 	    (ccd+i)->crpix1		= fvalue;
 
 	    sprintf(buffer,"MEF.CRPIX2.CHIP%d",i+1);
-            fvalue = atof(qfits_paf_query( cfgfile, buffer));
+            if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+            fvalue = atof(value);
 	    (ccd+i)->crpix2		= fvalue;
 	    if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,(ccd+i)->crpix2); }
 	
@@ -151,261 +230,360 @@ mef_bb * mef_bb_new(void)
 	bb->ccd				= ccd ;
 
 	sprintf(buffer,"MEF.ORIGIN");
-	sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+	if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+	sprintf(charval,"%s", value);
 	bb->origin			= strdup(charval);
+    if (bb->origin == NULL) goto allocation_failure;
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->origin); }
 
 	sprintf(buffer,"MEF.TELESCOPE");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->telescope			= strdup(charval) ;
+    if (bb->telescope == NULL) goto allocation_failure;
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->telescope); }
 
         sprintf(buffer,"MEF.INSTRUMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->instrument			= strdup(charval) ;
+    if (bb->instrument == NULL) goto allocation_failure;
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->instrument); }
 
         sprintf(buffer,"MEF.CORRECT.REFPIXELS");
-        ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atoi(value);
         bb->correct_ref_pix             = ivalue;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->correct_ref_pix); }
 
         sprintf(buffer,"MEF.RECIPE.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->recipe_key			= strdup(charval) ;
+    if (bb->recipe_key == NULL) goto allocation_failure;
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->recipe_key); }
 
         sprintf(buffer,"MEF.DPR.CATG.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dpr_catg_key        	= strdup(charval) ;
+    if (bb->dpr_catg_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dpr_catg_key); }
 
         sprintf(buffer,"MEF.DPR.CATG.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dpr_catg_comment    	= strdup(charval) ;
+    if (bb->dpr_catg_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dpr_catg_comment); }
 
         sprintf(buffer,"MEF.DPR.TYPE.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dpr_type_key		= strdup(charval) ;
+    if (bb->dpr_type_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dpr_type_key); }
 
         sprintf(buffer,"MEF.DPR.TYPE.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dpr_type_comment    	= strdup(charval) ;
+    if (bb->dpr_type_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dpr_type_comment); }
 
         /* ESO PHASE3 variables */
 
         sprintf(buffer,"PHASE3.PRODCATG.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_keyname            = strdup(charval) ;
+    if (bb->phase3_prodcatg_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_keyname); }
 
         sprintf(buffer,"PHASE3.PRODCATG.VAL.BIAS");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_val_bias            = strdup(charval) ;
+    if (bb->phase3_prodcatg_val_bias == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_bias); }
 
         sprintf(buffer,"PHASE3.PRODCATG.VAL.BPM");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_val_bpm            = strdup(charval) ;
+    if (bb->phase3_prodcatg_val_bpm == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_bpm); }
 
         sprintf(buffer,"PHASE3.PRODCATG.VAL.DOMEFF");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_val_domeff            = strdup(charval) ;
+    if (bb->phase3_prodcatg_val_domeff == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_domeff); }
 
         sprintf(buffer,"PHASE3.PRODCATG.VAL.SKYFF");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_val_skyff            = strdup(charval) ;
+    if (bb->phase3_prodcatg_val_skyff == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_skyff); }
 
         sprintf(buffer,"PHASE3.PRODCATG.VAL.MFF");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_val_mff            = strdup(charval) ;
+    if (bb->phase3_prodcatg_val_mff == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_mff); }
 
         sprintf(buffer,"PHASE3.PRODCATG.VAL.SCIENCE");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_val_science            = strdup(charval) ;
+    if (bb->phase3_prodcatg_val_science == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_val_science); }
 
         sprintf(buffer,"PHASE3.PRODCATG.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_prodcatg_comment        = strdup(charval) ;
+    if (bb->phase3_prodcatg_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_prodcatg_comment); }
 
         sprintf(buffer,"PHASE3.PROGID.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_progid_keyname        = strdup(charval) ;
+    if (bb->phase3_progid_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_progid_keyname); }
 
         sprintf(buffer,"PHASE3.PROGID.HDRKEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_progid_hdrkey        = strdup(charval) ;
+    if (bb->phase3_progid_hdrkey == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_progid_hdrkey); }
 
         sprintf(buffer,"PHASE3.PROGID.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_progid_comment        = strdup(charval) ;
+    if (bb->phase3_progid_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_progid_comment); }
 
         sprintf(buffer,"PHASE3.OBID.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_obid_keyname        = strdup(charval) ;
+    if (bb->phase3_obid_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obid_keyname); }
 
         sprintf(buffer,"PHASE3.OBID.HDRKEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_obid_hdrkey        = strdup(charval) ;
+    if (bb->phase3_obid_hdrkey == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obid_hdrkey); }
 
         sprintf(buffer,"PHASE3.OBID.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_obid_comment        = strdup(charval) ;
+    if (bb->phase3_obid_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obid_comment); }
 
         sprintf(buffer,"PHASE3.NCOMBINE.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_ncombine_keyname        = strdup(charval) ;
+    if (bb->phase3_ncombine_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_ncombine_keyname); }
 
         sprintf(buffer,"PHASE3.NCOMBINE.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_ncombine_comment        = strdup(charval) ;
+    if (bb->phase3_ncombine_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_ncombine_comment); }
 
         sprintf(buffer,"PHASE3.OBSTECH.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_obstech_keyname        = strdup(charval) ;
+    if (bb->phase3_obstech_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obstech_keyname); }
 
         sprintf(buffer,"PHASE3.OBSTECH.HDRKEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_obstech_hdrkey        = strdup(charval) ;
+    if (bb->phase3_obstech_hdrkey == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obstech_hdrkey); }
 
         sprintf(buffer,"PHASE3.OBSTECH.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_obstech_comment        = strdup(charval) ;
+    if (bb->phase3_obstech_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_obstech_comment); }
 
         sprintf(buffer,"PHASE3.MJDEND.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_mjdend_keyname        = strdup(charval) ;
+    if (bb->phase3_mjdend_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_mjdend_keyname); }
 
         sprintf(buffer,"PHASE3.MJDEND.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_mjdend_comment        = strdup(charval) ;
+    if (bb->phase3_mjdend_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_mjdend_comment); }
 
         sprintf(buffer,"PHASE3.PROCSOFT.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_procsoft_keyname        = strdup(charval) ;
+    if (bb->phase3_procsoft_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procsoft_keyname); }
 
         sprintf(buffer,"PHASE3.PROCSOFT.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_procsoft_comment        = strdup(charval) ;
+    if (bb->phase3_procsoft_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_procsoft_comment); }
 
         sprintf(buffer,"PHASE3.TIMESYS.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_timesys_keyname        = strdup(charval) ;
+    if (bb->phase3_timesys_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_timesys_keyname); }
 
         sprintf(buffer,"PHASE3.TIMESYS.VAL");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_timesys_val        = strdup(charval) ;
+    if (bb->phase3_timesys_val == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_timesys_val); }
         
         sprintf(buffer,"PHASE3.TIMESYS.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_timesys_comment        = strdup(charval) ;
+    if (bb->phase3_timesys_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_timesys_comment); }
 
         sprintf(buffer,"PHASE3.FILTER.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_filter_keyname        = strdup(charval) ;
+    if (bb->phase3_filter_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_filter_keyname); }
 
         sprintf(buffer,"PHASE3.FILTER.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_filter_comment        = strdup(charval) ;
+    if (bb->phase3_filter_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_filter_comment); }
 
         sprintf(buffer,"PHASE3.FLUXCAL.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_fluxcal_keyname        = strdup(charval) ;
+    if (bb->phase3_fluxcal_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_fluxcal_keyname); }
 
         sprintf(buffer,"PHASE3.FLUXCAL.VAL");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_fluxcal_val        = strdup(charval) ;
+    if (bb->phase3_fluxcal_val == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_fluxcal_val); }
 
         sprintf(buffer,"PHASE3.FLUXCAL.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_fluxcal_comment        = strdup(charval) ;
+    if (bb->phase3_fluxcal_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_fluxcal_comment); }
 
         sprintf(buffer,"PHASE3.RADESYS.KEY.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_radesys_keyname        = strdup(charval) ;
+    if (bb->phase3_radesys_keyname == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_radesys_keyname); }
 
         sprintf(buffer,"PHASE3.RADESYS.HDRKEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_radesys_hdrkey        = strdup(charval) ;
+    if (bb->phase3_radesys_hdrkey == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_radesys_hdrkey); }
 
         sprintf(buffer,"PHASE3.RADESYS.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->phase3_radesys_comment        = strdup(charval) ;
+    if (bb->phase3_radesys_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->phase3_radesys_comment); }
 
         sprintf(buffer,"MEF.USE.PRESCAN");
-        ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atoi(value);
 	bb->use_prescan			= ivalue;
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->use_prescan); }
 
         sprintf(buffer,"MEF.USE.OVERSCAN");
-        ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atoi(value);
 	bb->use_overscan		= ivalue;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->use_overscan); }
 
         sprintf(buffer,"MEF.BIAS.FRAME.I.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->bias_frame_i_key   		= strdup(charval) ;
+    if (bb->bias_frame_i_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bias_frame_i_key); }
 
         sprintf(buffer,"MEF.BIAS.FRAME.I.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
         bb->bias_frame_i_comment   	= strdup(charval) ;
+    if (bb->bias_frame_i_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bias_frame_i_comment); }
 	
         /* FITS key to identify bias product used to produce flats and science products. */
         sprintf(buffer,"MEF.MASTER.BIAS.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->master_bias_key		= strdup(charval) ;
+    if (bb->master_bias_key == NULL) goto allocation_failure;
 	if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_bias_key); }
 
         sprintf(buffer,"MEF.MASTER.BIAS.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->master_bias_comment 	= strdup(charval) ;
+    if (bb->master_bias_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_bias_comment); }
 
 	sprintf(buffer,"MEF.BIAS.NAME.O");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->name_bias_o			= strdup(charval);
+    if (bb->name_bias_o == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_bias_o); }
 
         sprintf(buffer,"MEF.BPM.NAME.O");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->name_bpm_o			= strdup(charval);
+    if (bb->name_bpm_o == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_bpm_o); }
 
    /*
@@ -426,415 +604,554 @@ mef_bb * mef_bb_new(void)
    */
 
         sprintf(buffer,"MEF.BPM.NAME");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->name_bpm			= strdup(charval);
+    if (bb->name_bpm == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_bpm); }
 
         sprintf(buffer,"MEF.BPM.FRAME.I.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_frame_i_key            = strdup(charval);
+    if (bb->bpm_frame_i_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_frame_i_key); }
 
         sprintf(buffer,"MEF.BPM.FRAME.I.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_frame_i_comment            = strdup(charval);
+    if (bb->bpm_frame_i_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_frame_i_comment); }
 
         sprintf(buffer,"MEF.BPM.PROPFLAG.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_propflag_key            = strdup(charval);
+    if (bb->bpm_propflag_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_propflag_key); }
 
         sprintf(buffer,"MEF.BPM.PROPFLAG.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_propflag_comment            = strdup(charval);
+    if (bb->bpm_propflag_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_propflag_comment); }
 
         sprintf(buffer,"MEF.BPM.LGAINTHR.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_lgainthr_key            = strdup(charval);
+    if (bb->bpm_lgainthr_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_lgainthr_key); }
 
         sprintf(buffer,"MEF.BPM.LGAINTHR.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_lgainthr_comment            = strdup(charval);
+    if (bb->bpm_lgainthr_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_lgainthr_comment); }
 
         sprintf(buffer,"MEF.BPM.HGAINTHR.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_hgainthr_key            = strdup(charval);
+    if (bb->bpm_hgainthr_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_hgainthr_key); }
 
         sprintf(buffer,"MEF.BPM.HGAINTHR.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->bpm_hgainthr_comment            = strdup(charval);
+    if (bb->bpm_hgainthr_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->bpm_hgainthr_comment); }
 
         sprintf(buffer,"MEF.MASTER.BPM.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_bpm_key     = strdup(charval) ;
+    if (bb->master_bpm_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_bpm_key); }
 
         sprintf(buffer,"MEF.MASTER.BPM.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_bpm_comment     = strdup(charval) ;
+    if (bb->master_bpm_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_bpm_comment); }
 
 
         /* FITS key to identify dome product used to produce combined master flat. */
         sprintf(buffer,"MEF.MASTER.DOME.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_dome_key     = strdup(charval) ;
+    if (bb->master_dome_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_dome_key); }
 
         sprintf(buffer,"MEF.MASTER.DOME.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_dome_comment     = strdup(charval) ;
+    if (bb->master_dome_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_dome_comment); }
 
         sprintf(buffer,"MEF.DOMEFF.NAME.O");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->name_dome_o			= strdup(charval) ;
+    if (bb->name_dome_o == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_dome_o); }
 
         /* FITS keys to identify sky product used to produce combined master flat. */
         sprintf(buffer,"MEF.MASTER.SKY.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_sky_key     = strdup(charval) ;
+    if (bb->master_sky_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_sky_key); }
 
         sprintf(buffer,"MEF.MASTER.SKY.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_sky_comment     = strdup(charval) ;
+    if (bb->master_sky_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_sky_comment); }
 
         sprintf(buffer,"MEF.SKYFF.NAME.O");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->name_sky_o			= strdup(charval) ;
+    if (bb->name_sky_o == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_sky_o); }
 
         sprintf(buffer,"MEF.MFF.NAME.O");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->name_mf_o			= strdup(charval) ;
+    if (bb->name_mf_o == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->name_mf_o); }
 
 
         /* FITS keys to identify master flat product used to reduce the science frames. */
         sprintf(buffer,"MEF.MASTER.FLAT.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_flat_key         = strdup(charval) ;
+    if (bb->master_flat_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_flat_key); }
 
         sprintf(buffer,"MEF.MASTER.FLAT.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
     bb->master_flat_comment     = strdup(charval) ;
+    if (bb->master_flat_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->master_flat_comment); }
 
 
         sprintf(buffer,"MEF.REFPIX.X");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->refpix_x			= fvalue;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->refpix_x); }
 
         sprintf(buffer,"MEF.REFPIX.Y");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->refpix_y			= fvalue;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->refpix_y); }
 
         sprintf(buffer,"MEF.FILTER.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->filter_key			= strdup(charval) ;
+    if (bb->filter_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->filter_key); }
 
 	bb->filter_val			= NULL ;
 
         sprintf(buffer,"MEF.BINX.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->binx_key			= strdup(charval) ;
+    if (bb->binx_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->binx_key); }
 
 	bb->binx_val			= NULL ;
 
         sprintf(buffer,"MEF.BINY.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->biny_key			= strdup(charval) ;
+    if (bb->biny_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->biny_key); }
 
 	bb->biny_val			= NULL ;
 
         sprintf(buffer,"MEF.BIAS.KAPPA1");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->bias_kappa1			= fvalue;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->bias_kappa1); }
 
         sprintf(buffer,"MEF.BIAS.FRAMENUM.MIN");
-        ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atoi(value);
 	bb->bias_minframe		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->bias_minframe); }
 
         sprintf(buffer,"MEF.BPM.PROPFLAG");
-        ivalue = atoi(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atoi(value);
 	bb->bpm_proportional_flag	= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->bpm_proportional_flag); }
 
         sprintf(buffer,"MEF.BPM.LGAINTHR");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->bpm_gainthr_lo		= fvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->bpm_gainthr_lo); }
 
         sprintf(buffer,"MEF.BPM.HGAINTHR");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->bpm_gainthr_hi		= fvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->bpm_gainthr_hi); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAME.I.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->domeff_frame_i_key   	= strdup(charval) ;
+    if (bb->domeff_frame_i_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->domeff_frame_i_key); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAME.I.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->domeff_frame_i_comment   	= strdup(charval) ;
+    if (bb->domeff_frame_i_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->domeff_frame_i_comment); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMETHR.LO.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dome_framethr_lo_key 	= strdup(charval) ;
+    if (bb->dome_framethr_lo_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dome_framethr_lo_key); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMETHR.LO.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
         bb->dome_framethr_lo_comment 	= strdup(charval) ;
+    if (bb->dome_framethr_lo_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dome_framethr_lo_comment); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMETHR.LO");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->dome_framethr_lo 		= fvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->dome_framethr_lo); }
 
 
         sprintf(buffer,"MEF.DOMEFF.FRAMETHR.HI.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dome_framethr_hi_key 	= strdup(charval) ;
+    if (bb->dome_framethr_hi_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dome_framethr_hi_key); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMETHR.HI.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
         bb->dome_framethr_hi_comment 	= strdup(charval) ;
+    if (bb->dome_framethr_hi_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dome_framethr_hi_comment); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMETHR.HI");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->dome_framethr_hi 		= fvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->dome_framethr_hi); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMENUM.MIN.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dome_minframe_key		= strdup(charval) ;
+    if (bb->dome_minframe_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dome_minframe_key); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMENUM.MIN.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->dome_minframe_comment   	= strdup(charval) ;
+    if (bb->dome_minframe_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->dome_minframe_comment); }
 
         sprintf(buffer,"MEF.DOMEFF.FRAMENUM.MIN");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->dome_minframe    		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->dome_minframe); }
 
         sprintf(buffer,"MEF.SKYFF.FRAME.I.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->skyff_frame_i_key		= strdup(charval) ;
+    if (bb->skyff_frame_i_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->skyff_frame_i_key); }
 
         sprintf(buffer,"MEF.SKYFF.FRAME.I.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->skyff_frame_i_comment   	= strdup(charval) ;
+    if (bb->skyff_frame_i_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->skyff_frame_i_comment); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMETHR.LO.KEY");
-	sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+	if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+	sprintf(charval,"%s", value);
 	bb->sky_framethr_lo_key 	= strdup(charval) ;
+    if (bb->sky_framethr_lo_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->sky_framethr_lo_key); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMETHR.LO.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->sky_framethr_lo_comment 	= strdup(charval) ;
+    if (bb->sky_framethr_lo_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->sky_framethr_lo_comment); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMETHR.LO");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->sky_framethr_lo  		= fvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->sky_framethr_lo); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMETHR.HI.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->sky_framethr_hi_key 	= strdup(charval) ;
+    if (bb->sky_framethr_hi_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->sky_framethr_hi_key); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMETHR.HI.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->sky_framethr_hi_comment 	= strdup(charval) ;
+    if (bb->sky_framethr_hi_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->sky_framethr_hi_comment); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMETHR.HI");
-        fvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
+        fvalue = atof(value);
 	bb->sky_framethr_hi  		= fvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->sky_framethr_hi); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMENUM.MIN.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->sky_minframe_key		= strdup(charval) ;
+    if (bb->sky_minframe_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->sky_minframe_key); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMENUM.MIN.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->sky_minframe_comment    	= strdup(charval) ;
+    if (bb->sky_minframe_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->sky_minframe_comment); }
 
         sprintf(buffer,"MEF.SKYFF.FRAMENUM.MIN");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->sky_minframe     		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->sky_minframe); }
 
         sprintf(buffer,"MEF.PRESCAN.X.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->prescan_x_key		= strdup(charval) ;
+    if (bb->prescan_x_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->prescan_x_key); }
 
         sprintf(buffer,"MEF.PRESCAN.X.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->prescan_x_comment   	= strdup(charval) ;
+    if (bb->prescan_x_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->prescan_x_comment); }
 
 	sprintf(buffer,"MEF.OVERSCAN.X.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->overscan_x_key       	= strdup(charval) ;
+    if (bb->overscan_x_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->overscan_x_key); }
 
 	sprintf(buffer,"MEF.OVERSCAN.X.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->overscan_x_comment   	= strdup(charval) ;
+    if (bb->overscan_x_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->overscan_x_comment); }
 
         sprintf(buffer,"MEF.SCANREJ.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->scanrej_key			= strdup(charval) ;
+    if (bb->scanrej_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scanrej_key); }
 
         sprintf(buffer,"MEF.SCANREJ.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->scanrej_comment		= strdup(charval) ;
+    if (bb->scanrej_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->scanrej_comment); }
 
         sprintf(buffer,"MEF.SCANREJ.MIN");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->scanrej[0]          	= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->scanrej[0]); }
 
         sprintf(buffer,"MEF.SCANREJ.MAX");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->scanrej[1]          	= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->scanrej[1]); }
 
         sprintf(buffer,"MEF.TRIMREG.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->trimreg_key			= strdup(charval) ;
+    if (bb->trimreg_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->trimreg_key); }
 
         sprintf(buffer,"MEF.TRIMREG.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->trimreg_comment		= strdup(charval) ;
+    if (bb->trimreg_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->trimreg_comment); }
 
         sprintf(buffer,"MEF.CCD.RON.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->ccd_ron_key			= strdup(charval) ;
+    if (bb->ccd_ron_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->ccd_ron_key); }
 
         sprintf(buffer,"MEF.CCD.RON.I.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->ccd_ron_i_key		= strdup(charval) ;
+    if (bb->ccd_ron_i_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->ccd_ron_i_key); }
 
         sprintf(buffer,"MEF.CCD.RON.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->ccd_ron_comment		= strdup(charval) ;
+    if (bb->ccd_ron_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->ccd_ron_comment); }
 
         sprintf(buffer,"MEF.CCD.GAIN.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->ccd_gain_key		= strdup(charval) ;
+    if (bb->ccd_gain_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->ccd_gain_key); }
 
         sprintf(buffer,"MEF.CCD.GAIN.I.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->ccd_gain_i_key        	= strdup(charval) ;
+    if (bb->ccd_gain_i_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->ccd_gain_i_key); }
 
         sprintf(buffer,"MEF.CCD.GAIN.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->ccd_gain_comment		= strdup(charval) ;
+    if (bb->ccd_gain_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->ccd_gain_comment); }
 
         sprintf(buffer,"MEF.PIXREJ.SIGMA.LO.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->pixrej_lo_key		= strdup(charval) ;
+    if (bb->pixrej_lo_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->pixrej_lo_key); }
 
         sprintf(buffer,"MEF.PIXREJ.SIGMA.LO.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->pixrej_lo_comment		= strdup(charval) ;
+    if (bb->pixrej_lo_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->pixrej_lo_comment); }
 
         sprintf(buffer,"MEF.PIXREJ.SIGMA.LO");
-        dvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 3, &value) != 0) goto fail;
+        dvalue = atof(value);
 	bb->pixrej_lo   		= dvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->pixrej_lo); }
 
         sprintf(buffer,"MEF.PIXREJ.SIGMA.HI.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->pixrej_hi_key		= strdup(charval) ;
+    if (bb->pixrej_hi_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->pixrej_hi_key); }
 
         sprintf(buffer,"MEF.PIXREJ.SIGMA.HI.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->pixrej_hi_comment   	= strdup(charval) ;
+    if (bb->pixrej_hi_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->pixrej_hi_comment); }
 
         sprintf(buffer,"MEF.PIXREJ.SIGMA.HI");
-        dvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 3, &value) != 0) goto fail;
+        dvalue = atof(value);
 	bb->pixrej_hi   		= dvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->pixrej_hi); }
 
         sprintf(buffer,"MEF.MEDIAN.REG.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->median_reg_key		= strdup(charval) ;
+    if (bb->median_reg_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->median_reg_key); }
 
         sprintf(buffer,"MEF.MEDIAN.REG.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->median_reg_comment  	= strdup(charval) ;
+    if (bb->median_reg_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->median_reg_comment); }
 
         sprintf(buffer,"MEF.MEDIAN.REG.X1");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->median_reg[0] 		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->median_reg[0]); }
 
         sprintf(buffer,"MEF.MEDIAN.REG.X2");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->median_reg[1] 		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->median_reg[1]); }
 
         sprintf(buffer,"MEF.MEDIAN.REG.Y1");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->median_reg[2] 		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->median_reg[2]); }
 
         sprintf(buffer,"MEF.MEDIAN.REG.Y2");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->median_reg[3] 		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->median_reg[3]); }
 
@@ -843,17 +1160,22 @@ mef_bb * mef_bb_new(void)
 						(bb->median_reg[3]-bb->median_reg[2]+1);
 
         sprintf(buffer,"MEF.KERN.HSIZE.KEY");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->kern_hsize_key		= strdup(charval) ;
+    if (bb->kern_hsize_key == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->kern_hsize_key); }
 
         sprintf(buffer,"MEF.KERN.HSIZE.COMMENT");
-        sprintf(charval,"%s", qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 0, &value) != 0) goto fail;
+        sprintf(charval,"%s", value);
 	bb->kern_hsize_comment		= strdup(charval) ;
+    if (bb->kern_hsize_comment == NULL) goto allocation_failure;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %s\n",buffer,bb->kern_hsize_comment); }
 
         sprintf(buffer,"MEF.KERN.HSIZE");
-        ivalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 1, &value) != 0) goto fail;
+        ivalue = atof(value);
 	bb->kern_hsize  		= ivalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %d\n",buffer,bb->kern_hsize); }
 
@@ -861,17 +1183,24 @@ mef_bb * mef_bb_new(void)
 	bb->sat_check			= 1;
 
         sprintf(buffer,"MEF.SATLEVEL");
-        dvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 3, &value) != 0) goto fail;
+        dvalue = atof(value);
 	bb->sat_level			= dvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->sat_level); }
 
         sprintf(buffer,"MEF.SATMAX");
-        dvalue = atof(qfits_paf_query( cfgfile, buffer));
+        if (mef_paf_value(cfgfile, buffer, 3, &value) != 0) goto fail;
+        dvalue = atof(value);
 	bb->sat_max			= dvalue ;
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->sat_max); }
 
 
-	return bb ;
+    return bb;
+allocation_failure:
+    e_error("cannot allocate context while reading PAF [%s]", cfgfile);
+fail:
+    mef_bb_del(bb);
+    return NULL;
 }
 
 void mef_bb_del(mef_bb * bb)
@@ -879,6 +1208,7 @@ void mef_bb_del(mef_bb * bb)
 	int	i ;
 
 	if (bb==NULL) return ;
+    if (bb->name_paf) free(bb->name_paf);
 
 	if (bb->origin)				free(bb->origin) ;
 	if (bb->telescope)			free(bb->telescope) ;
@@ -1167,114 +1497,130 @@ qfits_header *fits_header_merge(qfits_header *base, qfits_header *update)
 	return merged_header;
 }
 
-int mef_split(char * name_i, char * name_o, int xtnum)
+/* A completed extension is published only after all writes/close succeed.
+ * Earlier completed extensions remain on a later failure; callers receive -1. */
+int mef_split(char *name_i, char *name_o, int xtnum)
 {
-	qfits_header*	h_main ;
-	qfits_header*	h_ext ;
-	qfits_header*   h_todump;
-	int				i ;
-	int				n_ext ;
-	char			ext_name_o[FILENAMESZ];
-	FILE		*	extension ;
-	int				data_beg, data_size ;
-	int				naxis1, naxis2, bitpix ;
-	int			*	xts ;
-	int				nxts ;
-	char		*	fdata ;
-	size_t			fsize ;
+    qfits_header *h_main = NULL;
+    qfits_header *h_ext = NULL;
+    qfits_header *h_todump = NULL;
+    FILE *extension = NULL;
+    char *fdata = NULL;
+    char output[FILENAMESZ];
+    char temporary[FILENAMESZ];
+    char zeros[FITS_BLOCK_SIZE];
+    int n_ext, first, last, i, fd, data_beg;
+    int naxis1, naxis2, bitpix;
+    int result = -1;
+    int temporary_exists = 0;
+    size_t fsize, data_size, bytes_per_pixel, padding;
+    long position;
 
-	/* Sanity checks */
-	if (is_fits_file(name_i)!=1) {
-		e_error("cannot find file [%s]", name_i);
-		return -1 ;
-	}
-
-	/* Read main header */
-	e_comment(0, "reading main header");
-	h_main = qfits_header_read(name_i);
-	if (h_main==NULL) {
-		e_error("reading main header from [%s]", name_i);
-		return -1 ;
-	}
-
-	/* Find out how many extensions are in the file */
-	e_comment(0, "finding number of extensions");
-	n_ext = qfits_query_n_ext(name_i);
-	if (n_ext<1) {
-		e_error("no extension found in [%s]", name_i);
-		return -1 ;
-	}
-	e_comment(0, "[%d] extensions found in file", n_ext);
-
-	if (xtnum<1) {
-		nxts = n_ext ;
-		xts = malloc(nxts * sizeof(int)) ;
-		for (i=0 ; i<nxts ; i++) {
-			xts[i]=i+1 ;
-		}
-	} else {
-		nxts = 1 ;
-		xts = malloc(nxts * sizeof(int)) ;
-		xts[0] = xtnum ;
-	}
-
-	/* Go extension after extension */
-	for (i=0 ; i<nxts ; i++) {
-		/* Read extension header */
-		e_comment(1, "reading extension [%d]", xts[i]);
-		h_ext = qfits_header_readext(name_i, xts[i]);
-		if (h_ext==NULL) {
-			e_error("reading extension header #%d", xts[i]);
-			continue;
-		}
-		/* Compute data size in bytes */
-		naxis1 = qfits_header_getint(h_ext, "NAXIS1", 0);
-		naxis2 = qfits_header_getint(h_ext, "NAXIS2", 0);
-		bitpix = qfits_header_getint(h_ext, "BITPIX", 0);
-
-		data_size = naxis1 * naxis2 * BYTESPERPIXEL(bitpix);
-		if (data_size<1) {
-			e_error("cannot determine data size in bytes in ext[%d]",xts[i]);
-			qfits_header_destroy(h_ext);
-			continue ;
-		}
-
-		/* Output new header to file */
-		sprintf(ext_name_o, "%s_%02d.fits", name_o, xts[i]);
-		if ((extension=fopen(ext_name_o, "w"))==NULL) {
-			e_error("cannot output to file [%s]", ext_name_o);
-			continue ;
-		}
-
-		h_todump = fits_header_merge(h_main,h_ext);
-		qfits_header_dump(h_todump, extension);
-		qfits_header_destroy(h_todump);
-
-		/* Find out pixels in main belonging to this extension */
-		if (qfits_get_datinfo(name_i, xts[i], &data_beg, NULL)!=0) {
-			e_error("getting offset to extension %d", xts[i]);
-			continue ;
-		}
-		/* Map input file */
-		fdata = falloc(name_i, 0, &fsize);
-		if (fdata==NULL) {
-			e_error("mapping input file [%s]", name_i);
-			continue ;
-		}
-		/* Dump pixels from one file to the other */
-		e_comment(1, "copying extension [%d]", xts[i]);
-		fwrite(fdata+data_beg, 1, data_size, extension);
-
-		/* Close file pointers */
-		free(fdata);
-		fclose(extension);
-
-		/* zero-padding */
-		qfits_zeropad(ext_name_o);
-	}
-	qfits_header_destroy(h_main);
-	free(xts);
-	return 0 ;
+    if (name_i == NULL || name_o == NULL || is_fits_file(name_i) != 1) {
+        e_error("cannot find FITS input [%s]", name_i ? name_i : "(null)");
+        goto cleanup;
+    }
+    h_main = qfits_header_read(name_i);
+    n_ext = qfits_query_n_ext(name_i);
+    if (h_main == NULL || n_ext < 1 || xtnum > n_ext) {
+        e_error("cannot read requested extensions of [%s]", name_i);
+        goto cleanup;
+    }
+    if (strlen(name_o) + 40 >= sizeof(output)) {
+        e_error("split output name too long [%s]", name_o);
+        goto cleanup;
+    }
+    first = xtnum < 1 ? 1 : xtnum;
+    last = xtnum < 1 ? n_ext : xtnum;
+    fdata = falloc(name_i, 0, &fsize);
+    if (fdata == NULL) {
+        e_error("cannot map input [%s]", name_i);
+        goto cleanup;
+    }
+    memset(zeros, 0, sizeof(zeros));
+    for (i = first; i <= last; i++) {
+        h_ext = qfits_header_readext(name_i, i);
+        if (h_ext == NULL) {
+            e_error("cannot read extension %d of [%s]", i, name_i);
+            goto cleanup;
+        }
+        naxis1 = qfits_header_getint(h_ext, "NAXIS1", 0);
+        naxis2 = qfits_header_getint(h_ext, "NAXIS2", 0);
+        bitpix = qfits_header_getint(h_ext, "BITPIX", 0);
+        if (naxis1 <= 0 || naxis2 <= 0 ||
+            (bitpix != 8 && bitpix != 16 && bitpix != 32 && bitpix != 64 &&
+             bitpix != -32 && bitpix != -64)) {
+            e_error("invalid image geometry/type in [%s] extension %d", name_i, i);
+            goto cleanup;
+        }
+        bytes_per_pixel = BYTESPERPIXEL(bitpix);
+        if ((size_t)naxis1 > (size_t)-1 / (size_t)naxis2 ||
+            (size_t)naxis1 * (size_t)naxis2 > (size_t)-1 / bytes_per_pixel) {
+            e_error("image byte count overflow in [%s] extension %d", name_i, i);
+            goto cleanup;
+        }
+        data_size = (size_t)naxis1 * (size_t)naxis2 * bytes_per_pixel;
+        if (qfits_get_datinfo(name_i, i, &data_beg, NULL) != 0 || data_beg < 0 ||
+            (size_t)data_beg > fsize || data_size > fsize - (size_t)data_beg) {
+            e_error("invalid/truncated data in [%s] extension %d", name_i, i);
+            goto cleanup;
+        }
+        sprintf(output, "%s_%02d.fits", name_o, i);
+        sprintf(temporary, "%s.tmp.XXXXXX", output);
+        fd = mkstemp(temporary);
+        if (fd < 0) {
+            e_error("cannot create temporary output for [%s]", output);
+            goto cleanup;
+        }
+        temporary_exists = 1;
+        extension = fdopen(fd, "wb");
+        if (extension == NULL) {
+            close(fd);
+            e_error("cannot open temporary output for [%s]", output);
+            goto cleanup;
+        }
+        h_todump = fits_header_merge(h_main, h_ext);
+        if (h_todump == NULL || qfits_header_dump(h_todump, extension) != 0 ||
+            fwrite(fdata + data_beg, 1, data_size, extension) != data_size) {
+            e_error("cannot write split output [%s]", output);
+            goto cleanup;
+        }
+        position = ftell(extension);
+        if (position < 0) {
+            e_error("cannot determine output size [%s]", output);
+            goto cleanup;
+        }
+        padding = (FITS_BLOCK_SIZE - (position % FITS_BLOCK_SIZE)) % FITS_BLOCK_SIZE;
+        if (fwrite(zeros, 1, padding, extension) != padding || fflush(extension) != 0) {
+            e_error("cannot finish split output [%s]", output);
+            goto cleanup;
+        }
+        if (fclose(extension) != 0) {
+            extension = NULL;
+            e_error("cannot close split output [%s]", output);
+            goto cleanup;
+        }
+        extension = NULL;
+        if (rename(temporary, output) != 0) {
+            e_error("cannot publish split output [%s]", output);
+            goto cleanup;
+        }
+        temporary_exists = 0;
+        qfits_header_destroy(h_todump);
+        h_todump = NULL;
+        qfits_header_destroy(h_ext);
+        h_ext = NULL;
+    }
+    result = 0;
+cleanup:
+    if (extension != NULL) fclose(extension);
+    if (temporary_exists && unlink(temporary) != 0)
+        e_error("cannot remove incomplete output [%s]", temporary);
+    if (h_todump != NULL) qfits_header_destroy(h_todump);
+    if (h_ext != NULL) qfits_header_destroy(h_ext);
+    if (h_main != NULL) qfits_header_destroy(h_main);
+    if (fdata != NULL) free(fdata);
+    return result;
 }
 
 

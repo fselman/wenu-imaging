@@ -109,3 +109,11 @@ The recipe's seven C++-style line comments were converted to block comments for
 explicit C90 mode (#80); executable tokens were preserved. Other compatibility changes select the generated
 configuration header by name and restrict the inline fallback to pre-C99 modes
 (#83). The frontend itself changes no numerical C source.
+
+## Failure regression suite
+
+The focused failure/configuration correction adds the nonempty CTest entry
+`native_failure_contract`; run it in both C90/C17 builds. Existing private Mac
+engines and normal selection remain unchanged. Source regression checks passed;
+rebuilt target build/install, installed-wrapper and observational acceptance remain
+pending. See [the correction record](../docs/developer/native-failure-correction-2026-10-26.md).

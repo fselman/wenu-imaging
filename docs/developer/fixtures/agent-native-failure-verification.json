@@ -1,0 +1,46 @@
+{
+  "suites": [
+    {
+      "suite": "C90 omegacam PAF",
+      "methods": 10,
+      "exit": 0
+    },
+    {
+      "suite": "C90 wfi PAF",
+      "methods": 10,
+      "exit": 0
+    },
+    {
+      "suite": "C90 primitives",
+      "exit": 0
+    },
+    {
+      "suite": "C17 omegacam PAF",
+      "methods": 10,
+      "exit": 0
+    },
+    {
+      "suite": "C17 wfi PAF",
+      "methods": 10,
+      "exit": 0
+    },
+    {
+      "suite": "C17 primitives",
+      "exit": 0
+    },
+    {
+      "suite": "Python command/wrapper functions",
+      "methods": 5,
+      "exit": 0
+    }
+  ],
+  "valid_split_bytes_identical": true,
+  "baseline_negative": {
+    "missing_input": 0,
+    "invalid_satmax": 0,
+    "missing_paf": -11
+  },
+  "host": "agent Linux; diagnostic GCC build, not target or CMake qualification",
+  "cmake_ctest_executed": false,
+  "target_acceptance": "Mac and Chapman3 pending"
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "source_commit": "4ade8c52027c736a49b65da3bdb31f11b036693b",
+  "evidence": "Fernando's actual-Mac terminal reports on 26 October 2026; agent did not directly read Mac files",
+  "host": "MC02VV0HPHTDG",
+  "os": "macOS 13.7.8 (22H730)",
+  "cmake": "3.29.3",
+  "python": "3.11.14",
+  "status": "bounded Mac correction accepted; full Stage 1 remains open",
+  "build_install_root": "/Users/fselman/wenu-mac-failure-build-u021mf2l",
+  "build_checks": {
+    "modes": [
+      "90",
+      "17"
+    ],
+    "translation_units_per_mode": 100,
+    "ctest_entries_per_mode": 5,
+    "passed": true
+  },
+  "installed_checks": {
+    "modes": [
+      "90",
+      "17"
+    ],
+    "complete_payload_matches": true,
+    "architecture": "Mach-O x86_64",
+    "failure_test_methods_per_mode": 10,
+    "passed": true
+  },
+  "direct_comparison_report": "/Users/fselman/Pictures/OCAM/mac-native-cppup-corrected-1y_n625f/comparison.json",
+  "python_installation_report": "/Users/fselman/wenu-mac-python-failure-test-trbc6ykz/installation-check.json",
+  "wrapper_comparison_report": "/Users/fselman/Pictures/OCAM/mac-corrected-wrapper-cppup-76_e3753/wrapper-comparison.json",
+  "python_checks": {
+    "isolated_wheel_install": true,
+    "installed_modules_verified": true,
+    "full_module_imports_passed": true,
+    "wrapper_regression_methods": 5,
+    "passed": true
+  },
+  "observational_checks": {
+    "modes": [
+      "90",
+      "17"
+    ],
+    "paths": [
+      "native_direct",
+      "corrected_installed_pycavi_wrapper"
+    ],
+    "detectors": 32,
+    "all_pixels_identical_and_finite": true,
+    "structure_matches": true,
+    "raw_header_differences": [
+      "primary ORIGFILE generated timestamp"
+    ],
+    "python_normalization_invoked": false,
+    "prebuilt_calibrations": true
+  },
+  "preservation": {
+    "inputs_engines_and_packages_unchanged": true,
+    "checkout_unchanged": true,
+    "normal_engine_and_package_selection_changed": false
+  },
+  "remaining": [
+    "calibration-building fixtures",
+    "Chapman3 qualification",
+    "broader Stage 2 memory/ownership qualification",
+    "WFI observational qualification",
+    "other platforms",
+    "independent scientific validation and Phase 3"
+  ]
+}

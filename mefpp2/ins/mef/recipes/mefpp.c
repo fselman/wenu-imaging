@@ -22,6 +22,9 @@ Description	:	MEF flat-field creation recipe, from WFI by
   ---------------------------------------------------------------------------*/
 
 #include <unistd.h>
+#include <errno.h>
+#include <ctype.h>
+#include <float.h>
 #include "eclipse.h"
 #include "mefp_lib.h"
 
@@ -71,20 +74,6 @@ qfits_header *mef_header_eclipse(mef_bb *,char *);
 void save_mef_hdrdump(image_t *,char *,qfits_header *,int);
 */
 
-mef_bb * mef_bb_load (int argc, char *argv[])
-{
-	int             c ;
-	int         display_params ;
-	char * pafname ;
-    char * date_ptr;
-	mef_bb*   bb ;
-
-	display_params = 0 ;
-
-	bb = mef_bb_new();
-
-	while (1) {
-		int     option_index = 0 ;
 		static struct option long_options[] =
 		{
 			{"license",         0, 0, OPT_LICENSE},
@@ -93,7 +82,7 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 
 			{"noverify",	    0, 0, OPT_NOVERIFY},
 
-                        {"pafname",        0, 0, OPT_PAFNAME},
+                        {"pafname",        1, 0, OPT_PAFNAME},
 
 			{"xtnum",           1, 0, OPT_XTNUM},
 
@@ -133,6 +122,68 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 			{0, 0, 0, 0}
 
 		} ;
+
+/* getopt must be restarted after selecting configuration and informational
+ * requests, before applying the existing processing overrides (#76). */
+static void reset_options(void)
+{
+    /* eclipse.h maps optind to the bundled parser, on every supported OS. */
+    optind = 0;
+}
+
+mef_bb * mef_bb_load (int argc, char *argv[], int *load_status)
+{
+	int             c ;
+	int         display_params ;
+	char * pafname = "mefpp.paf";
+    char *end;
+    double satmax;
+    char * date_ptr;
+	mef_bb*   bb ;
+
+	display_params = 0 ;
+
+    /* Configuration is selected before constructing any processing context. */
+    *load_status = EXIT_FAILURE;
+    reset_options();
+    while (1) {
+        int option_index = 0;
+        c = getopt_long(argc, argv, "Ldhx:", long_options, &option_index);
+        if (c == -1) break;
+        switch (c) {
+        case OPT_HELP:
+        case 'h':
+            usage(argv[0]);
+            *load_status = EXIT_SUCCESS;
+            return NULL;
+        case OPT_VERSION:
+            print_eclipse_version();
+            printf("qfits version: %s\n", qfits_version());
+            printf("mefpp recipe version: %s\n", recipe_version);
+            *load_status = EXIT_SUCCESS;
+            return NULL;
+        case OPT_LICENSE:
+        case 'L':
+            eclipse_display_license();
+            *load_status = EXIT_SUCCESS;
+            return NULL;
+        case OPT_PAFNAME:
+            pafname = optarg;
+            break;
+        case '?':
+        case ':':
+            return NULL;
+        default:
+            break;
+        }
+    }
+    bb = mef_bb_new_from_paf(pafname);
+    if (bb == NULL) return NULL;
+    reset_options();
+
+	while (1) {
+		int     option_index = 0 ;
+
 		c = getopt_long(argc,
 				argv,
 				"Ldhx:",
@@ -143,32 +194,12 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 		switch(c)
 		{
 
-			/* Standard option: display license undocumented option */
-			case OPT_LICENSE:
-			case 'L':
-				eclipse_display_license() ;
-				return 0 ;
-
-				/* Standard option : help */
-			case OPT_HELP:
-			case 'h':
-				usage(argv[0]) ;
-				break ;
-
-				/* Standard option: version */
-			case OPT_VERSION:
-				print_eclipse_version() ;
-				printf("qfits version: %s\n",qfits_version());
-				printf("mefpp recipe version: %s\n", recipe_version);
-				printf("-----\n");
-				return NULL ;
-
 			case OPT_NOVERIFY:
 				bb->noverify = 1;
 				break ;
 
                         case OPT_PAFNAME:
-                                bb->name_paf = strdup(optarg);
+                                /* Already selected and copied during context construction. */
                                 break ;
 
 				/* Local option: extension number to consider */
@@ -282,23 +313,28 @@ mef_bb * mef_bb_load (int argc, char *argv[])
 
 
 			case OPT_SATMAX:
-				bb->sat_max = atof(optarg);
-				if ( (bb->sat_max<1e-4) || (bb->sat_max>(1.0-1e-4)) ) {
+				errno = 0;
+                satmax = strtod(optarg, &end);
+                while (isspace((unsigned char)*end)) end++;
+                if (end == optarg || *end != '\0' || errno == ERANGE ||
+                    satmax != satmax || satmax > DBL_MAX || satmax < -DBL_MAX ||
+                    satmax < 1e-4 || satmax > (1.0-1e-4)) {
 				   e_error("in --satmax option");
-				   e_error("invalid percentage: should be in [0..1]");
+				   e_error("invalid --satmax [%s]: expected a number in [0.0001..0.9999]", optarg);
 				   mef_bb_del(bb);
 				   return NULL;
-				}
-				break;
+                }
+                bb->sat_max = satmax;
+                break;
 
                         case OPT_SPLIT:
 				bb->name_split = strdup(optarg);
 				break;
 
 			default:
-				usage(argv[0]) ;
-				e_comment(0,"Using %s as PAF name",bb->name_paf);
-				break ;
+                usage(argv[0]);
+                mef_bb_del(bb);
+                return NULL;
 		}
 
 	}
@@ -313,10 +349,12 @@ mef_bb * mef_bb_load (int argc, char *argv[])
         e_comment(1,"date: %s", date_ptr);
 		mef_bb_dump(bb, stdout);
 	}
+	*load_status = EXIT_SUCCESS;
 	return bb;
 }
 
 #define ALGPARTS		10
+/* Borrowed context: the successful loader caller releases bb exactly once (#75). */
 int mef_engine(mef_bb * bb)
 {
 	cube_t *	prep=NULL;
@@ -368,7 +406,10 @@ int mef_engine(mef_bb * bb)
 		e_comment(0, "---> Splitting file %s ---> %s", 
 				get_basename(fnames->name[i]),
 				get_rootname(get_basename(fnames->name[i])));
-		mef_split(get_basename(fnames->name[i]), get_rootname(get_basename(fnames->name[i])), 0);
+        if (mef_split(fnames->name[i], get_rootname(get_basename(fnames->name[i])), 0) != 0) {
+            framelist_del(fnames);
+            return -1;
+        }
            }
            framelist_del(fnames);
 	   return 0;
@@ -379,7 +420,7 @@ int mef_engine(mef_bb * bb)
 					((bb->name_dome == NULL && bb->name_sky == NULL) || 
 					bb->name_mf == NULL))) {
 		e_error("no name provided for dome or sky");
-		mef_bb_del(bb);
+
 		return -1 ;
 	}
 
@@ -404,14 +445,14 @@ int mef_engine(mef_bb * bb)
            if (mef_valid_subset(bb,"bias")) {
                 e_error("mef_engine: valid bias: Inconsistent data set. Either invalid FITS files,");
                 e_error("mef_engine: valid bias: multiple filters, or multiple binning factors in the data set.");
-                mef_bb_del(bb);
+
                 return -1;
            }
 
            if (mef_valid_subset(bb,"bpm")) {
                 e_error("mef_engine: valid bpm: Inconsistent data set. Either invalid FITS files,");
                 e_error("mef_engine: valid bpm: multiple filters, or multiple binning factors in the data set.");
-                mef_bb_del(bb);
+
                 return -1;
            }
 
@@ -419,7 +460,7 @@ int mef_engine(mef_bb * bb)
               if (mef_valid_subset(bb,"dome")) {
                  e_error("mef_engine: valid dome: Inconsistent data set. Either invalid FITS files,");
                  e_error("mef_engine: valid dome: multiple filters, or multiple binning factors in the data set.");
-                 mef_bb_del(bb);
+
                  return -1;
               }
            }
@@ -427,7 +468,7 @@ int mef_engine(mef_bb * bb)
               if (mef_valid_subset(bb,"sky")) {
                  e_error("mef_engine: valid sky: Inconsistent data set. Either invalid FITS files,");
                  e_error("mef_engine: valid sky: multiple filters, or multiple binning factors in the data set.");
-                 mef_bb_del(bb);
+
                  return -1;
               }
            }
@@ -437,7 +478,7 @@ int mef_engine(mef_bb * bb)
 	   if (mef_valid_subset(bb,"science")) {
                 e_error("mef_engine: valid science: Inconsistent data set. Either invalid FITS files,");
                 e_error("mef_engine: valid science: multiple filters, or multiple binning factors in the data set.");
-                mef_bb_del(bb);
+
                 return -1;
            }
 
@@ -1344,12 +1385,14 @@ int main(int argc, char *argv[])
 {
 
 	mef_bb*	bb ;
+    int load_status;
+    int engine_status;
 
 	/*printf("argc = %d\n\n",argc);*/
 	printf("\n\n\n ----------> MEFPP REDUCTION ENGINE. VERSION: %s <----------\n\n\n", recipe_version);
 	if (argc == 1) {
           usage(argv[0]);
-	  return -1;
+	  return EXIT_FAILURE;
         }
 
 	/* Initialize eclipse environment */
@@ -1358,17 +1401,17 @@ int main(int argc, char *argv[])
 
 	/* Get parameters for processing */
 	printf("\nLoading parameters...\n");
-	if ( (bb = mef_bb_load(argc,argv)) == NULL ) {
-	   return 0;
-	}
+	if ( (bb = mef_bb_load(argc,argv,&load_status)) == NULL ) {
+       return load_status;
+    }
 
 	/* Startup MEF calibration  engine */
 
-	mef_engine(bb);
+	engine_status = mef_engine(bb);
 	mef_bb_del(bb);
 
 	if (debug_active()) xmemory_status() ;
-	return 0 ;
+	return engine_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 } 
 
 
@@ -1417,6 +1460,6 @@ usage(char *pname)
 			"\n"
 			"\t-d                 Print out configuration parameters and run\n"
 			"\n\n");
-	exit(1) ;
+
 } 
 

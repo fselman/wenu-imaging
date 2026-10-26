@@ -1,5 +1,107 @@
 # wenu-imaging
 
+Chapman3 installed Pycavi acceptance, 26 October 2026: Fernando reports an
+isolated wheel/target installation from source 805e6c63dea20e7f5e5ade816f6a6ddc90702d86
+passed actual installed imports and all five wrapper failure regressions.
+Actual installed Instrument/SciencePartition, copy_paf/check_mef_bpm,
+mefpp_reduce_science and run_commands then passed four serial CN Ori runs
+(C90/C17, NB_659/r_SDSS). Each selected the correct private engine and restored
+cwd. Complete comparisons against the accepted direct-native outputs have exact
+finite pixels in all 32 detectors, matching structure/scaling, and raw headers
+differ only in generated primary ORIGFILE timestamps; MJD-END matches exactly.
+Protected originals, references, staged inputs, installations and normal selections
+were unchanged. See the current Chapman3 acceptance record for exact paths.
+This completes the bounded installed-wrapper target gate; calibration construction,
+broader memory/ownership, WFI/other platforms and scientific/Phase 3 gates remain
+open. Review the stacked native PRs for integration; no merge or Git branch
+deletion is authorized or performed by recording this result.
+
+[Current acceptance and limits](docs/developer/chapman3-native-acceptance-2026-10-26.md).
+
+Chapman3 installed/native acceptance and workspace completion, 26 October 2026:
+Fernando reports source 805e6c63dea20e7f5e5ade816f6a6ddc90702d86 passed complete
+private C90/C17 installations, manifest hashes and ten installed native failure
+methods per mode. Direct CN Ori NB_659/r_SDSS comparisons passed in both modes:
+all 32 detector arrays exact and finite with matching structure/scaling.
+Raw headers differ only in generated ORIGFILE and reviewed MJD-END; independent
+decimal arithmetic confirms the candidate values, while historical endpoints
+match binary32 rounding. #24 stays open because common calibration-header time
+variables remain float. The installed corrected Pycavi gate subsequently passed as recorded above;
+calibration construction, memory and broader scientific/platform gates remain open.
+
+Permanent reusable CMake/CTest 3.29.6 now live at ~/opt/cmake-3.29.6/bin/;
+PATH/system tools are unchanged. Future builds, private qualification prefixes,
+logs and retired evidence belong under ~/Software/build/wenu-imaging/.
+All home wenu-* runs were reversibly relocated with journals; none remain.
+Archived build trees retain historical absolute paths and are evidence only.
+No normal engine/package switch, merge or Git branch cleanup occurred.
+
+See [the current Chapman3 acceptance record](docs/developer/chapman3-native-acceptance-2026-10-26.md).
+
+Chapman3 workspace location, requested 26 October 2026: put all future
+wenu-imaging build/qualification work under ~/Software/build/wenu-imaging/,
+not new ~/wenu-* directories. Use tools/ for private tool bundles and archive/
+for retired/failed evidence, with task-specific source/build/prefix directories.
+Do not blindly move active CMake trees or toolchains: caches/frontend state and
+install scripts retain absolute paths. Inventory existing ~/wenu-* directories,
+identify active consumers and preserve evidence before relocating finished work.
+Use guarded reversible moves; never wildcard-delete runs, packages or data.
+This housekeeping request does not authorize Git branch deletion or removal of
+working Pycavi/native installations. Preserve original evidence paths in records
+and map any relocation explicitly. Existing home runs remain unchanged until
+inspected; the just-qualified native retry still needs its install/regression gate.
+
+Chapman3 native build acceptance, 26 October 2026: Fernando reports source
+805e6c63dea20e7f5e5ade816f6a6ddc90702d86 passed both required M_PI/shmget
+configuration checks, 100-unit C90/C17 builds with the declared feature/language
+flags, and all five CTest entries per mode. Evidence is
+/home/fselman/wenu-chapman3-native-retry-xkuuu6qu/build-check.json and mode logs.
+Protected tools, previous failed-run evidence, working Pycavi package and checkout
+remained unchanged. This is build/test acceptance only: no installation or
+observational reduction ran. Keep installed/native/Pycavi/calibration/memory and
+wider Stage 1 gates distinct; no merge or normal selection switch is implied.
+
+Chapman3 build portability correction, 26 October 2026 (#89): the first native
+C90 build at 81a2f742ad439245739601444e7ffe70cb119037 stopped because glibc 2.17
+does not recognize _DEFAULT_SOURCE, leaving M_PI hidden; System V headers also
+warned about feature selection. Configuration passed, C17/tests/install were not
+reached, and protected tools/working Python package stayed unchanged. Preserve
+/home/fselman/wenu-chapman3-native-build-579kejl8 as failed-run evidence.
+The bounded fix adds legacy BSD/SVID and POSIX.1-2008 definitions on Linux only,
+uses the same definitions for capability probes and native targets, checks
+required M_PI/shmget declarations early, and tests Linux header availability in
+the native primitive executable. Numerical C files, explicit C90/C17 modes and
+Darwin production definitions remain unchanged. Do not hardcode a replacement
+M_PI, relax language modes, prune Eclipse or upgrade system glibc/compiler.
+Repeat fresh actual Chapman3 builds/tests before installed/observational work.
+See [the portability record](docs/developer/chapman3-feature-macros-2026-10-26.md). This does not
+invalidate the separately recorded original Mac results at their tested commit;
+new Linux target acceptance remains pending until returned actual-host evidence.
+
+Mac correction acceptance, 26 October 2026: Fernando reports source
+4ade8c52027c736a49b65da3bdb31f11b036693b passed fresh C90/C17 configure/make,
+all five CTest entries per mode, both private runtime installations and installed
+failure suites, isolated Python imports/five wrapper regressions, and complete
+CP Pup direct and corrected-wrapper comparisons in both modes. All 32 detector
+arrays are exact/finite, with matching structure and only generated primary
+ORIGFILE timestamp differences in raw headers. Protected engines, input files,
+Python packages and checkout remained unchanged. See
+[the correction record](docs/developer/native-failure-correction-2026-10-26.md).
+This is bounded Intel Mac acceptance using prebuilt calibrations. Stage 1 stays
+open for calibration-building fixtures and Chapman3; WFI observational, memory,
+other platform and scientific/Phase 3 gates remain open. Keep #75's broader
+ownership/memory gate and the applicable linked target requirements open.
+No normal engine/package switch, merge or cleanup has been performed. Documentation-
+only acceptance updates need no reinstall or repeated processing.
+
+Latest scope, 26 October 2026: implement the approved bounded failure/configuration/
+ownership and Pycavi propagation correction (#71/#75/#76/#85/#86/#87). Follow
+the canonical developer instructions and correction record. Every code-changing
+commit requires issue references and an Assisted-by trailer with verified model
+identity or an explicit unavailable marker. Use source comments for technical
+reasons, not repetitive authorship tags. Earlier dated handoffs are historical
+where superseded; target acceptance, merge and engine selection remain separate.
+
 Mac normal installation accepted, 25 October 2026: Fernando reports the default
 C90 ./configure; make; make install route, optional make check (four CTest entries),
 complete installed payload/BPM pixels/checksums/CLI, byte-identical repeat install
