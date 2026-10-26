@@ -10,6 +10,13 @@
 #endif
 #include <ctype.h>
 #include <math.h>
+#if defined(__linux__)
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#ifndef M_PI
+#error Required legacy math constants are unavailable in this language mode
+#endif
+#endif
 #include "qfits.h"
 #include "xmemory.h"
 int main(void)
@@ -20,6 +27,9 @@ int main(void)
     byte *bytes;
     float *decoded;
     float pixels[3];
+#if defined(__linux__)
+    struct shmid_ds shared_memory_descriptor;
+#endif
     /* Eclipse arithmetic: allocate an image, set pixels and measure its mean. */
     image = image_new(3, 1);
     if (image == NULL) return 1;
@@ -51,6 +61,11 @@ int main(void)
     if (remove("probe.paf") != 0) return 10;
     /* System-header integration: call ctype/math after the Eclipse includes. */
     if (toupper((unsigned char)'a') != 'A' || fabs(-2.0) != 2.0) return 11;
+#if defined(__linux__)
+    /* Header availability only: no shared memory object is created or attached. */
+    shared_memory_descriptor.shm_segsz = 0;
+    if (M_PI < 3.14 || M_PI > 3.15 || shared_memory_descriptor.shm_segsz != 0) return 14;
+#endif
     puts("PASS: Eclipse/qfits primitives and system-header integration");
     return 0;
 }

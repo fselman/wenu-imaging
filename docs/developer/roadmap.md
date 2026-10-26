@@ -1,5 +1,24 @@
 # wenu-imaging roadmap
 
+## Chapman3 Stage 1 build correction, 26 October 2026
+
+Chapman3 build portability correction, 26 October 2026 (#89): the first native
+C90 build at 81a2f742ad439245739601444e7ffe70cb119037 stopped because glibc 2.17
+does not recognize _DEFAULT_SOURCE, leaving M_PI hidden; System V headers also
+warned about feature selection. Configuration passed, C17/tests/install were not
+reached, and protected tools/working Python package stayed unchanged. Preserve
+/home/fselman/wenu-chapman3-native-build-579kejl8 as failed-run evidence.
+The bounded fix adds legacy BSD/SVID and POSIX.1-2008 definitions on Linux only,
+uses the same definitions for capability probes and native targets, checks
+required M_PI/shmget declarations early, and tests Linux header availability in
+the native primitive executable. Numerical C files, explicit C90/C17 modes and
+Darwin production definitions remain unchanged. Do not hardcode a replacement
+M_PI, relax language modes, prune Eclipse or upgrade system glibc/compiler.
+Repeat fresh actual Chapman3 builds/tests before installed/observational work.
+See [the portability record](chapman3-feature-macros-2026-10-26.md). This does not
+invalidate the separately recorded original Mac results at their tested commit;
+new Linux target acceptance remains pending until returned actual-host evidence.
+
 ## Bounded Intel Mac correction acceptance, 26 October 2026
 
 Mac correction acceptance, 26 October 2026: Fernando reports source

@@ -1,0 +1,29 @@
+{
+  "issue": 89,
+  "host": "agent Linux, modern glibc; actual Chapman3/glibc2.17 pending",
+  "modes": {
+    "17": {
+      "translation_units": 100,
+      "native_primitives": "passed",
+      "contract_methods_per_instrument": 10,
+      "instrument_pafs": [
+        "omegacam",
+        "wfi"
+      ],
+      "passed": true
+    },
+    "90": {
+      "translation_units": 100,
+      "native_primitives": "passed",
+      "contract_methods_per_instrument": 10,
+      "instrument_pafs": [
+        "omegacam",
+        "wfi"
+      ],
+      "passed": true
+    }
+  },
+  "compiler": "GCC 13.3.0 (Ubuntu)",
+  "libc": "glibc 2.39",
+  "cmake_ctest_executed": false
+}
