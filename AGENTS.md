@@ -1,5 +1,45 @@
 # wenu-imaging
 
+Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
+source baseline and explicitly qualify compilation and behavior in C17 mode.
+C17 is a compatibility target, not a new source-feature baseline. Inventory
+legacy/dependency extensions and isolate platform APIs; do not claim existing
+strict compliance. Newer facilities need a reviewed exception. C23 checks are
+optional. Mac compiler support is distinct from unperformed mefpp tests;
+chapman3's inventoried GCC 4.8.5/Clang 3.4.2 cannot provide the C17 lane. Qualify
+an isolated compatible compiler without implicitly replacing system tools or
+upgrading glibc. This clarification authorizes documentation, not installation.
+
+Roadmap v1 revision 1.1, 25 October 2026: extend data review to JWST, Roman,
+Rubin, ELT and publicly documented future ESO archive plans, distinguishing
+adopted standards from proposals/unknowns. Native Apple Silicon arm64 build/install
+and functional acceptance is required; Rosetta is not acceptance. Extend the
+parallel design assessment to optional threads within detectors and optional GPU
+backends only after profiling/equivalence evidence, retaining a portable ANSI-C
+CPU baseline, global resource limits and shared mosaic normalization. This is
+planning authorization, not permission to add threading/GPU dependencies or run
+new workloads. No accelerator backend or hardware purchase is selected.
+
+Data-representation review added to native roadmap v1, 25 October 2026: insert
+stage 2A immediately after memory qualification and before component contracts.
+Review current accepted formats/metadata models and in-memory structures,
+including FITS, HDF5, ASDF and Zarr, without preselecting a replacement. Preserve
+FITS ingestion/interchange and originals; compare actual performance/fidelity
+and ANSI-C/platform/dependency costs. Any new backend needs a separate reviewed
+migration and renewed memory checks. See the version-1 native roadmap.
+
+Current roadmap version 1, 25 October 2026: Fernando authorized documenting
+[the native roadmap](docs/developer/mefpp-modernization-roadmap-v1.md) and
+[current mefpp architecture](docs/developer/mefpp-current-architecture.md).
+These supersede older sequencing descriptions for planning: clean build/install
+Mac then chapman3, memory correctness, component extraction/new calibrations,
+single detectors, parallel mosaics, native Windows qualification, CMOS last.
+Windows portability is considered from the start. Preserve shared mosaic flat
+normalization and distinguish acquisition gain/RON from processed effective values.
+CMake/CTest and API names remain proposals; no implementation or install starts
+from publication. Review/version the plan as evidence changes. Earlier dated
+instructions below are historical where they conflict with this planning update.
+
 Current hold before native modifications, 25 October 2026: Fernando requires
 an expanded architecture/modern-practice/Eclipse-usage audit first, then a full
 roadmap for review before any implementation. See

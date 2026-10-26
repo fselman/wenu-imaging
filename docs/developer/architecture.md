@@ -1,5 +1,41 @@
 # wenu-imaging architecture
 
+Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
+source baseline and explicitly qualify compilation and behavior in C17 mode.
+C17 is a compatibility target, not a new source-feature baseline. Inventory
+legacy/dependency extensions and isolate platform APIs; do not claim existing
+strict compliance. Newer facilities need a reviewed exception. C23 checks are
+optional. Mac compiler support is distinct from unperformed mefpp tests;
+chapman3's inventoried GCC 4.8.5/Clang 3.4.2 cannot provide the C17 lane. Qualify
+an isolated compatible compiler without implicitly replacing system tools or
+upgrading glibc. This clarification authorizes documentation, not installation.
+
+Roadmap revision 1.1 adds observatory/archive data-model examples, required native
+Apple Silicon qualification, and a provisional assessment of intra-detector CPU
+threads/GPU backends. These do not change the observed architecture: mefpp is
+still serial and no new format or accelerator is implemented. See the versioned
+native roadmap for gates, CPU fallback, precision and platform requirements.
+
+Data-representation review added to native roadmap v1, 25 October 2026: insert
+stage 2A immediately after memory qualification and before component contracts.
+Review current accepted formats/metadata models and in-memory structures,
+including FITS, HDF5, ASDF and Zarr, without preselecting a replacement. Preserve
+FITS ingestion/interchange and originals; compare actual performance/fidelity
+and ANSI-C/platform/dependency costs. Any new backend needs a separate reviewed
+migration and renewed memory checks. See the version-1 native roadmap.
+
+## Current native architecture and provisional target — 25 October 2026
+
+Read the versioned [current mefpp architecture](mefpp-current-architecture.md)
+for actual source, library, state, processing and normalization boundaries.
+The [native roadmap v1](mefpp-modernization-roadmap-v1.md) separately proposes
+component services and staged qualification, retaining ANSI C and adding native
+Windows as an explicit requirement. Older Windows/WSL and sequencing paragraphs
+below are historical where superseded: WSL does not establish native Windows
+support. Shared mosaic normalization is a required scientific invariant.
+Target APIs, build tools and implementation details remain revisable proposals;
+no source relocation or installation is performed by these documents.
+
 ## Architecture audit before component redesign, 25 October 2026
 
 The [native architecture audit](native-architecture-audit-2026-10-25.md) records

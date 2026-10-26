@@ -1,5 +1,60 @@
 # wenu-imaging agent instructions
 
+Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
+source baseline and explicitly qualify compilation and behavior in C17 mode.
+C17 is a compatibility target, not a new source-feature baseline. Inventory
+legacy/dependency extensions and isolate platform APIs; do not claim existing
+strict compliance. Newer facilities need a reviewed exception. C23 checks are
+optional. Mac compiler support is distinct from unperformed mefpp tests;
+chapman3's inventoried GCC 4.8.5/Clang 3.4.2 cannot provide the C17 lane. Qualify
+an isolated compatible compiler without implicitly replacing system tools or
+upgrading glibc. This clarification authorizes documentation, not installation.
+
+Roadmap v1 revision 1.1, 25 October 2026: extend data review to JWST, Roman,
+Rubin, ELT and publicly documented future ESO archive plans, distinguishing
+adopted standards from proposals/unknowns. Native Apple Silicon arm64 build/install
+and functional acceptance is required; Rosetta is not acceptance. Extend the
+parallel design assessment to optional threads within detectors and optional GPU
+backends only after profiling/equivalence evidence, retaining a portable ANSI-C
+CPU baseline, global resource limits and shared mosaic normalization. This is
+planning authorization, not permission to add threading/GPU dependencies or run
+new workloads. No accelerator backend or hardware purchase is selected.
+
+Data-representation review added to native roadmap v1, 25 October 2026: insert
+stage 2A immediately after memory qualification and before component contracts.
+Review current accepted formats/metadata models and in-memory structures,
+including FITS, HDF5, ASDF and Zarr, without preselecting a replacement. Preserve
+FITS ingestion/interchange and originals; compare actual performance/fidelity
+and ANSI-C/platform/dependency costs. Any new backend needs a separate reviewed
+migration and renewed memory checks. See the version-1 native roadmap.
+
+## Native roadmap version 1 and current architecture, 25 October 2026
+
+Fernando authorizes the first roadmap and current-architecture documentation.
+Read [roadmap v1](mefpp-modernization-roadmap-v1.md) and
+[current mefpp architecture](mefpp-current-architecture.md). This dated planning
+update supersedes older sequence descriptions: clean build/install on Intel Mac
+then chapman3; memory/ownership/failure qualification; component contracts and
+extraction; missing calibration services; single-detector CCD support; safe mosaic
+parallelism; native Windows qualification; CMOS services last. Consider Windows
+portability from the first build decision. CMake/CTest and component signatures
+are recommendations for review, not selected/implemented tools or APIs.
+
+Preserve common mosaic flat normalization and relative detector response.
+mefpp_cal_lin is intended to cover non-linearity, shutter errors, gain and RON:
+initial bias pairs, randomized integration times with consecutive flat pairs,
+full-range acquisition to saturation, valid-range estimators and separate
+calibration products. Select compatible measured gain/RON or explicit verified
+instrument/mode defaults; record units/status/provenance. ESO CONAD/GAIN mappings
+must be explicit. Include fringe-template construction plus separate Python
+scaled subtraction. CMOS requires its own camera/mode review and qualification.
+
+The current architecture is observed; target design is provisional. Maintain
+version/revision records and discuss material changes before dependent work.
+Documentation delivery does not authorize source moves/build changes/installs,
+scientific changes, new concurrency, merges or cleanup. Existing tests and
+actual-target evidence rules continue to apply.
+
 ## Current hold: architecture audit, then full roadmap, 25 October 2026
 
 Fernando now requires an audit of how outdated the native build/organization
