@@ -67,6 +67,13 @@ reused earlier native diagnostic objects/archives; no CMake executable was
 available in the agent environment. They do not establish new CMake/CTest
 integration or actual Mac/Chapman3 acceptance.
 
-Fresh Mac C90/C17 CMake build/CTest qualification is pending, followed by
-Chapman3 verification of the unchanged delivered integration. Keep #94 open.
+Intel Mac CTest integration is accepted at c5f2bac84e39918d0a82ac1e57769f6473be0828:
+AppleClang 15.0.0.15000100, CMake 3.29.3, explicit C90/C17, nine tests passed
+per mode and all 2592 normalization pixels matched exactly. The uploaded evidence
+was independently checked against its 34-entry manifest, per-attempt log hashes,
+recorded language flags and complete CTest logs. Protected selections and the
+checkout stayed unchanged. No installation or observational processing ran.
+See [preserved Mac evidence](fixtures/mac-normalization-ctest-2026-10-26/README.md).
+
+Chapman3 verification of this CTest integration remains pending. Keep #94 open.
 No new observations, normal installation switch, merge or cleanup is required.

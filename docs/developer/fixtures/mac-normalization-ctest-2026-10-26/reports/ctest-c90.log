@@ -1,0 +1,28 @@
+Internal ctest changing into directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+Test project /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+    Start 1: native_frontend_contract
+1/9 Test #1: native_frontend_contract ..................   Passed   19.64 sec
+    Start 2: native_install_contract
+2/9 Test #2: native_install_contract ...................   Passed    0.99 sec
+    Start 3: native_primitives
+3/9 Test #3: native_primitives .........................   Passed    0.89 sec
+    Start 4: native_failure_contract
+4/9 Test #4: native_failure_contract ...................   Passed    2.23 sec
+    Start 5: native_shared_normalization_dome_order0
+5/9 Test #5: native_shared_normalization_dome_order0 ...   Passed    1.11 sec
+    Start 6: native_shared_normalization_dome_order1
+6/9 Test #6: native_shared_normalization_dome_order1 ...   Passed    0.37 sec
+    Start 7: native_shared_normalization_sky_order0
+7/9 Test #7: native_shared_normalization_sky_order0 ....   Passed    0.33 sec
+    Start 8: native_shared_normalization_sky_order1
+8/9 Test #8: native_shared_normalization_sky_order1 ....   Passed    0.37 sec
+    Start 9: native_cli_usage
+9/9 Test #9: native_cli_usage ..........................   Passed    0.06 sec
+
+100% tests passed, 0 tests failed out of 9
+
+Label Time Summary:
+native           =   2.19 sec*proc (4 tests)
+normalization    =   2.19 sec*proc (4 tests)
+
+Total Test time (real) =  26.01 sec

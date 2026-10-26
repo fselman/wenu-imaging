@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "purpose": "Container for independent shared-normalization attempts",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "test/shared-flat-normalization",
+    "commit": "c5f2bac84e39918d0a82ac1e57769f6473be0828",
+    "dirty": null,
+    "identity_note": "CMake source identity; outer build record must capture dirty state"
+  },
+  "status": "incomplete",
+  "status_note": "See each attempt for its result",
+  "retention_roles": [
+    "acceptance_evidence"
+  ]
+}

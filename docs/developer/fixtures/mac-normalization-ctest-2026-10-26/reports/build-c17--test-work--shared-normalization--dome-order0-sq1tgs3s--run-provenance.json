@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "purpose": "Production mef_build_cal shared mosaic normalization",
+  "created_utc": "2026-10-26T23:16:09.414148+00:00",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "test/shared-flat-normalization",
+    "commit": "c5f2bac84e39918d0a82ac1e57769f6473be0828",
+    "dirty": null,
+    "identity_note": "CMake source identity; outer build record must capture dirty state"
+  },
+  "kind": "dome",
+  "order": 0,
+  "commands": [
+    [
+      "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/shared_normalization_probe",
+      "dome",
+      "0"
+    ]
+  ],
+  "executable_sha256": "a897703aebbdf2fabf2ae4b41912122ebd4a0fbd83e7bdaea401715eb290da0b",
+  "fixture_manifest_sha256": "a306d3e02118441a72c331a1664a2c07f332e8bcd22aa957f0e293e284d3aeb2",
+  "fixture_manifest": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/fixtures/shared-normalization/transfer-manifest.json",
+  "inputs": {
+    "frame0.fits": "43c5dc7cc90c308d0b324b7f76580684bb55537e15336fdd64a31572273ee2a3",
+    "frame1.fits": "8ca40a4937b4890a8b80d70bfc8f13e4f0c9cd9d2f8361b2ab6d84bcfaef7669",
+    "frame2.fits": "bf8b303f4c8382cb82de776db7621b99fa266c7223c5ee164fafc771237c8db3",
+    "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+  },
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "exit_status": 0,
+  "pixels_checked": 324,
+  "fixtures_unchanged": true,
+  "log_sha256": "71670f8f31213e91dfaf15ee93e81296ed95a354b7a7aa0af6030b8f0abcaed7",
+  "completed_utc": "2026-10-26T23:16:10.593520+00:00"
+}

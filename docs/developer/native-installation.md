@@ -3,8 +3,11 @@
 Shared-normalization regression candidate (#94): BUILD_TESTING now retains the
 qualified four-detector dome/sky fixture as four additional CTest cases, using
 isolated recorded attempts. This raises the current five-entry suite to nine.
-The original Mac/Chapman3 fixture passed; fresh qualification of the CTest
-integration is pending. Production algorithms and normal installations are
+The original Mac/Chapman3 fixture passed. Fresh Intel Mac CTest integration at
+c5f2bac84e39918d0a82ac1e57769f6473be0828 passed all nine entries in both
+C90/C17 modes; 2592 normalization pixels matched exactly. The original reports,
+commands, compile flags and logs are [preserved with their manifest](fixtures/mac-normalization-ctest-2026-10-26/README.md).
+Chapman3 qualification of the CTest integration remains pending. Production algorithms and normal installations are
 unchanged. See [test contract and qualification](shared-normalization-regression.md).
 
 Current qualification update, 26 October 2026: the merged native build/failure

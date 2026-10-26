@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "branch": "test/shared-flat-normalization",
+  "commit": "c5f2bac84e39918d0a82ac1e57769f6473be0828",
+  "dirty": false,
+  "purpose": "C17 native build and CTest",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "parent_provenance": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/run-provenance.json"
+}

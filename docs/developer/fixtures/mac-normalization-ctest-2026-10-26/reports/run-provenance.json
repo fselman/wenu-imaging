@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "test/shared-flat-normalization",
+  "commit": "c5f2bac84e39918d0a82ac1e57769f6473be0828",
+  "dirty": false,
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-26T23:42:01.233202+00:00",
+  "purpose": "Preserve Mac CTest evidence without provenance filename collision",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "source_run": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h",
+  "previous_collection": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-evidence-kaea9k65",
+  "files_collected": 34,
+  "processing_launched": false,
+  "manifest_sha256": "7da40f10b4e19a3ea7145001ec3a9453caeb41ffadd0e16507cc1fed194ada65",
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-evidence-fixed-5_381zye/reports",
+  "qualification_record": "qualification-run-provenance.json"
+}

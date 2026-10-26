@@ -1,0 +1,195 @@
+Start testing: Oct 26 20:14 -03
+----------------------------------------------------------
+1/9 Testing: native_frontend_contract
+1/9 Test: native_frontend_contract
+Command: "/Users/fselman/anaconda3/envs/wenu-imaging/bin/python" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/frontend_contract.py" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_frontend_contract" start time: Oct 26 20:14 -03
+Output:
+----------------------------------------------------------
+test_build_failure_prevents_install_and_install_failure_propagates (__main__.FrontendContract.test_build_failure_prevents_install_and_install_failure_propagates) ... ok
+test_component_directory_and_literal_build_path (__main__.FrontendContract.test_component_directory_and_literal_build_path) ... ok
+test_failed_reconfigure_invalidates_selected_build (__main__.FrontendContract.test_failed_reconfigure_invalidates_selected_build) ... ok
+test_help_and_unconfigured_make (__main__.FrontendContract.test_help_and_unconfigured_make) ... ok
+test_in_source_build_directory_is_rejected_early (__main__.FrontendContract.test_in_source_build_directory_is_rejected_early) ... ok
+test_mac_defaults_use_xcode_tools (__main__.FrontendContract.test_mac_defaults_use_xcode_tools) ... ok
+test_missing_tools_are_clear_and_invalidate_configuration (__main__.FrontendContract.test_missing_tools_are_clear_and_invalidate_configuration) ... ok
+test_optional_check_enables_tests_and_uses_matching_ctest (__main__.FrontendContract.test_optional_check_enables_tests_and_uses_matching_ctest) ... ok
+test_root_build_install_and_destdir_forwarding (__main__.FrontendContract.test_root_build_install_and_destdir_forwarding) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 19.483s
+
+OK
+<end of output>
+Test time =  19.64 sec
+----------------------------------------------------------
+Test Passed.
+"native_frontend_contract" end time: Oct 26 20:15 -03
+"native_frontend_contract" time elapsed: 00:00:19
+----------------------------------------------------------
+
+2/9 Testing: native_install_contract
+2/9 Test: native_install_contract
+Command: "/Users/fselman/anaconda3/envs/wenu-imaging/bin/python" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/install_contract.py" "/opt/local/bin/cmake" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/cmake/install_runtime.cmake.in"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_install_contract" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+test_complete_repeat_and_destdir (__main__.InstallContract.test_complete_repeat_and_destdir) ... ok
+test_external_ancestor_alias_is_supported (__main__.InstallContract.test_external_ancestor_alias_is_supported) ... ok
+test_missing_resource_rejects_before_copy (__main__.InstallContract.test_missing_resource_rejects_before_copy) ... ok
+test_modified_file_is_preserved_before_any_copy (__main__.InstallContract.test_modified_file_is_preserved_before_any_copy) ... ok
+test_nondirectory_parent_rejects_before_copy (__main__.InstallContract.test_nondirectory_parent_rejects_before_copy) ... ok
+test_prefix_symlink_is_rejected (__main__.InstallContract.test_prefix_symlink_is_rejected) ... ok
+test_symlink_is_preserved (__main__.InstallContract.test_symlink_is_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.890s
+
+OK
+<end of output>
+Test time =   0.99 sec
+----------------------------------------------------------
+Test Passed.
+"native_install_contract" end time: Oct 26 20:15 -03
+"native_install_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/9 Testing: native_primitives
+3/9 Test: native_primitives
+Command: "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/native_smoke"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work
+"native_primitives" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+PASS: Eclipse/qfits primitives and system-header integration
+<end of output>
+Test time =   0.89 sec
+----------------------------------------------------------
+Test Passed.
+"native_primitives" end time: Oct 26 20:15 -03
+"native_primitives" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/9 Testing: native_failure_contract
+4/9 Test: native_failure_contract
+Command: "/Users/fselman/anaconda3/envs/wenu-imaging/bin/python" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/failure_contract.py" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/mefpp" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/config/omegacam.paf"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_failure_contract" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 2.119s
+
+OK
+<end of output>
+Test time =   2.23 sec
+----------------------------------------------------------
+Test Passed.
+"native_failure_contract" end time: Oct 26 20:15 -03
+"native_failure_contract" time elapsed: 00:00:02
+----------------------------------------------------------
+
+5/9 Testing: native_shared_normalization_dome_order0
+5/9 Test: native_shared_normalization_dome_order0
+Command: "/Users/fselman/anaconda3/envs/wenu-imaging/bin/python" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/shared_normalization_contract.py" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/shared_normalization_probe" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/fixtures/shared-normalization" "dome" "0" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization" "c5f2bac84e39918d0a82ac1e57769f6473be0828" "test/shared-flat-normalization"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_shared_normalization_dome_order0" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+Shared-normalization attempt: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization/dome-order0-3_605kok
+PASS: dome order=0 detector=1 response=1 center=2
+PASS: dome order=0 detector=2 response=2 center=4
+PASS: dome order=0 detector=3 response=4 center=8
+PASS: dome order=0 detector=4 response=0.5 center=1
+<end of output>
+Test time =   1.11 sec
+----------------------------------------------------------
+Test Passed.
+"native_shared_normalization_dome_order0" end time: Oct 26 20:15 -03
+"native_shared_normalization_dome_order0" time elapsed: 00:00:01
+----------------------------------------------------------
+
+6/9 Testing: native_shared_normalization_dome_order1
+6/9 Test: native_shared_normalization_dome_order1
+Command: "/Users/fselman/anaconda3/envs/wenu-imaging/bin/python" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/shared_normalization_contract.py" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/shared_normalization_probe" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/fixtures/shared-normalization" "dome" "1" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization" "c5f2bac84e39918d0a82ac1e57769f6473be0828" "test/shared-flat-normalization"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_shared_normalization_dome_order1" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+Shared-normalization attempt: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization/dome-order1-xt9_t24r
+PASS: dome order=1 detector=1 response=1 center=2
+PASS: dome order=1 detector=2 response=0.25 center=0.5
+PASS: dome order=1 detector=3 response=0.125 center=0.25
+PASS: dome order=1 detector=4 response=0.5 center=1
+<end of output>
+Test time =   0.37 sec
+----------------------------------------------------------
+Test Passed.
+"native_shared_normalization_dome_order1" end time: Oct 26 20:15 -03
+"native_shared_normalization_dome_order1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/9 Testing: native_shared_normalization_sky_order0
+7/9 Test: native_shared_normalization_sky_order0
+Command: "/Users/fselman/anaconda3/envs/wenu-imaging/bin/python" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/shared_normalization_contract.py" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/shared_normalization_probe" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/fixtures/shared-normalization" "sky" "0" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization" "c5f2bac84e39918d0a82ac1e57769f6473be0828" "test/shared-flat-normalization"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_shared_normalization_sky_order0" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+Shared-normalization attempt: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization/sky-order0-r1jgdlm8
+PASS: sky order=0 detector=1 response=1 center=2
+PASS: sky order=0 detector=2 response=2 center=4
+PASS: sky order=0 detector=3 response=4 center=8
+PASS: sky order=0 detector=4 response=0.5 center=1
+<end of output>
+Test time =   0.33 sec
+----------------------------------------------------------
+Test Passed.
+"native_shared_normalization_sky_order0" end time: Oct 26 20:15 -03
+"native_shared_normalization_sky_order0" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/9 Testing: native_shared_normalization_sky_order1
+8/9 Test: native_shared_normalization_sky_order1
+Command: "/Users/fselman/anaconda3/envs/wenu-imaging/bin/python" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/shared_normalization_contract.py" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/shared_normalization_probe" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/fixtures/shared-normalization" "sky" "1" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization" "c5f2bac84e39918d0a82ac1e57769f6473be0828" "test/shared-flat-normalization"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_shared_normalization_sky_order1" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+Shared-normalization attempt: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/test-work/shared-normalization/sky-order1-7h83xr83
+PASS: sky order=1 detector=1 response=1 center=2
+PASS: sky order=1 detector=2 response=0.25 center=0.5
+PASS: sky order=1 detector=3 response=0.125 center=0.25
+PASS: sky order=1 detector=4 response=0.5 center=1
+<end of output>
+Test time =   0.37 sec
+----------------------------------------------------------
+Test Passed.
+"native_shared_normalization_sky_order1" end time: Oct 26 20:15 -03
+"native_shared_normalization_sky_order1" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/9 Testing: native_cli_usage
+9/9 Test: native_cli_usage
+Command: "/opt/local/bin/cmake" "-DEXECUTABLE=/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90/mefpp" "-P" "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/cli_usage.cmake"
+Directory: /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c90
+"native_cli_usage" start time: Oct 26 20:15 -03
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"native_cli_usage" end time: Oct 26 20:15 -03
+"native_cli_usage" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 26 20:15 -03
+
+native =   2.19 sec*proc
+
+normalization =   2.19 sec*proc
+

@@ -1,0 +1,4 @@
+PASS: dome order=1 detector=1 response=1 center=2
+PASS: dome order=1 detector=2 response=0.25 center=0.5
+PASS: dome order=1 detector=3 response=0.125 center=0.25
+PASS: dome order=1 detector=4 response=0.5 center=1
