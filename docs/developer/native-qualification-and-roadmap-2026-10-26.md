@@ -244,3 +244,52 @@ automatic BPM adapters, physical variance or Chapman3 acceptance.
 #91 remains open. Next isolate native science BPM toggling with fixed science,
 bias and prebuilt flat inputs; do not rebuild those calibrations or alter the
 normal selected mask. Keep the broader cross-stage mapping and Stage 2 gates open.
+
+
+## Mac workspace cleanup and permanent SCAMP acceptance
+
+Fernando returned verified relocation and selection results on 26 October 2026.
+All thirteen home-level wenu-mac-* directories were identified as imaging
+development/dependency work. ~/wenu-output and both development checkouts were
+preserved. No directories were deleted; no home-level wenu-mac-* items remain.
+
+Current retained locations:
+- ~/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/
+  contains the unchanged qualified prefix-c90 and prefix-c17 payloads.
+- ~/Software/build/wenu-imaging/mac-python-qualification-trbc6ykz/
+  contains the isolated corrected Python installation and its evidence.
+- ~/Software/build/wenu-imaging/archive/mac-home-runs-zffi3ocd/
+  contains ten retired runs and the original relocation journal.
+- ~/Software/build/wenu-imaging/mac-relocation-nnbsx1fy/relocation.json
+  reports status verified for these three relocations, with contents manifests.
+  Original absolute paths in historical records remain unchanged.
+
+SCAMP was rebuilt from existing local 2.10.0 source with the previously recorded
+options and a permanent prefix ~/opt/scamp-2.10.0-wenu-imaging/.
+Build record: mac-scamp-permanent-t1z9pz70/build-check.json under the imaging root.
+Version/default stylesheet/dependencies passed; the old-prefix stylesheet URI
+was replaced by the permanent compiled location. The old engine and selection
+remained unchanged during build/testing.
+
+The repeated offline 100-source single-detector FILE-reference fit recovered
+all compared previous WCS coefficients exactly and generated FGROUPS PDF output
+with checked PDF framing. Visual rendering and independent scientific accuracy
+were not established. Record:
+mac-scamp-permanent-test-2fznyl5p/run-provenance.json under the imaging root.
+No observational reduction or live catalogue query ran.
+
+Selection was subsequently changed to
+~/opt/scamp-2.10.0-wenu-imaging/bin/scamp, and the old build was archived at
+~/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl/.
+All archived files/symlink targets were verified against the pre-move inventory.
+Configuration backup and operation provenance:
+mac-scamp-selection-bisr1_4f/run-provenance.json under the imaging root.
+An already-running notebook may need to reload a cached executable selection.
+
+These are attributed actual-Mac returned results, not direct agent inspection
+of the host reports. Build/test/installation provenance was added explicitly as
+retrospective where appropriate. Preserve/recover the useful host reports and
+manifests under the evidence-before-merge rule; this summary does not certify
+that all required reports have been imported or that cleanup gates are complete.
+No merge or branch deletion is implied. The native science BPM toggle test
+remains pending and must use the relocated native prefixes.
