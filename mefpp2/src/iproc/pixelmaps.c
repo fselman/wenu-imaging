@@ -264,12 +264,13 @@ void pixelmap_dump(pixelmap * p, char *	filename, qfits_header *   fextra)
 	}
     if (out == NULL) {
         e_comment(1, "pixelmap_dump: error writing to file [%s]", filename) ;
-		/* qfits_header_destroy(fh); */
+		/* Only the default header is owned here; fextra remains borrowed (#111). */
+        if (fextra == NULL) qfits_header_destroy(fh);
         return ;
     }
 
 	qfits_header_dump(fh, out);
-	/* qfits_header_destroy(fh); */
+	if (fextra == NULL) qfits_header_destroy(fh);
 
     if (p!=NULL) {
         to_write = p->lx * p->ly ; 

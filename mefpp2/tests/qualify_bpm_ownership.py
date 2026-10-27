@@ -29,6 +29,8 @@ def main():
     parser.add_argument("--compiler", type=Path, required=True)
     parser.add_argument("--sdk", type=Path, required=True)
     parser.add_argument("--cmake", type=Path, required=True)
+    parser.add_argument("--baseline-reference", type=Path,
+                        help="Retained S2-05 failed baseline report for exact corrected comparison")
     args = parser.parse_args()
     if platform.system() != "Darwin" or platform.node().split(".")[0] != "MC02VV0HPHTDG":
         raise RuntimeError("STOP: run on the qualified Intel Mac")
@@ -74,7 +76,8 @@ def main():
         raise RuntimeError("STOP: accepted BPM reference incomplete")
     references = {c["case"]: c for c in reference["cases"]}
     names = ["mefpp2/ins/mef/common/mefp_lib.c", "mefpp2/ins/mef/common/mefp_lib.h",
-             "mefpp2/src/iproc/detector.c", "mefpp2/qfits5/src/xmemory.c",
+             "mefpp2/src/iproc/detector.c", "mefpp2/src/iproc/pixelmaps.c",
+             "mefpp2/src/iproc/framelist.c", "mefpp2/qfits5/src/xmemory.c",
              "mefpp2/qfits5/include/xmemory.h", "mefpp2/qfits5/src/cache.c",
              "mefpp2/tests/bpm_ownership_probe.c", "mefpp2/tests/bpm_ownership_cases.py",
              "mefpp2/tests/qualify_bpm_ownership.py", "mefpp2/tests/qualify_split_ownership.py",
@@ -94,14 +97,32 @@ def main():
             if sources[name] != expected:
                 raise RuntimeError("STOP: allocator differs from qualified controls")
         controls[str(path.relative_to(repo))] = digest(path)
+    baseline_path = args.baseline_reference.resolve(strict=True) if args.baseline_reference else None
+    baseline_hash, baseline_cases = None, None
+    if baseline_path:
+        baseline_hash = digest(baseline_path)
+        if baseline_hash != "9013c15f23698bede23afea593e98a768aa3ac1d0a2fd3c6696a2252501a785c":
+            raise RuntimeError("STOP: failed baseline differs from inspected report")
+        baseline = json.loads(baseline_path.read_text())
+        if (baseline["tested_source"]["commit"] != "e3c6b463724725b7afb601b7cc0ebe28e24e161a" or
+                not baseline["execution_complete"] or baseline["functional_finding_cases"] != 0 or
+                len(baseline["cases"]) != 16):
+            raise RuntimeError("STOP: incomplete baseline")
+        for name, expected in baseline["source_sha256"].items():
+            if name not in ("mefpp2/ins/mef/common/mefp_lib.c", "mefpp2/tests/qualify_bpm_ownership.py"):
+                if sources.get(name) != expected:
+                    raise RuntimeError("STOP: baseline native driver/fixture/dependency changed: " + name)
+        baseline_cases = {c["case"]: c for c in baseline["cases"]}
     root = Path.home() / "Software/build/wenu-imaging"
     if not root.is_dir():
         raise RuntimeError("STOP: expected imaging build root absent")
-    work = Path(tempfile.mkdtemp(prefix="mac-stage2-bpm-baseline-", dir=root))
+    work = Path(tempfile.mkdtemp(prefix="mac-stage2-bpm-corrected-" if baseline_path else "mac-stage2-bpm-baseline-", dir=root))
     provenance = work / "run-provenance.json"
     record = dict(schema_version=1, project="wenu-imaging", tested_source=identity,
                   host=platform.node(), created_utc=datetime.now(timezone.utc).isoformat(),
-                  purpose="S2-05 BPM numerical and ownership baseline",
+                  purpose="S2-05 BPM ownership correction verification" if baseline_path else "S2-05 BPM numerical and ownership baseline",
+                  baseline_reference=str(baseline_path) if baseline_path else None,
+                  baseline_reference_sha256=baseline_hash,
                   mac_reference_report=str(reference_path), mac_reference_sha256=reference_hash,
                   fixture_manifest_sha256=digest(fixture / "manifest.json"),
                   status="running", execution_complete=False, retention_roles=["acceptance_evidence"],
@@ -245,6 +266,10 @@ def main():
                                 if (role == "ordinary" and code != 0) or markers != [str(prior["good"])]:
                                     raise RuntimeError("Native BPM completion/exit contract failed")
                                 observed["outputs"], observed["generated_origfiles"] = verify(child, inputs, prior, flag)
+                                if baseline_cases:
+                                    previous = baseline_cases[label]["roles"][role]
+                                    if observed["outputs"] != previous["outputs"] or inputs != previous["input_sha256"]:
+                                        raise RuntimeError("Corrected masks/headers/inputs differ from retained baseline")
                                 if role == "observer":
                                     rows = re.findall(r"^BPM RESULT native_exit=(\d+) constructed=(\d+) destroyed=(\d+) builds=(\d+) masks_released=(\d+) mismatch=(\d+) owner_live=(\d+) mask_live=(\d+)$", output, re.M)
                                     if rows != [("0", "1", "1", "1", "1", "0", "0", "0")]:
@@ -320,11 +345,12 @@ def main():
             (work / "source" / p).is_file() and digest(work / "source" / p) == h
             for p, h in sources.items())
         record["protected_files_unchanged"] = all(digest(Path(p)) == h for p, h in protected.items())
+        record["baseline_unchanged"] = not baseline_path or digest(baseline_path) == baseline_hash
         record["reference_unchanged"] = digest(reference_path) == reference_hash
         record["checkout_unchanged"] = (git("rev-parse", "HEAD") == identity["commit"] and
                                        not git("status", "--porcelain", "--untracked-files=all"))
         if not all(record[k] for k in ("sources_unchanged", "exported_sources_unchanged",
-                                       "protected_files_unchanged", "checkout_unchanged", "reference_unchanged")):
+                                       "protected_files_unchanged", "checkout_unchanged", "reference_unchanged", "baseline_unchanged")):
             record["status"] = "failed"
         record["completed_utc"] = datetime.now(timezone.utc).isoformat()
         save(provenance, record)
@@ -333,7 +359,7 @@ def main():
             if value["status"] == "running":
                 value.update(status=record["status"], completed_utc=record["completed_utc"])
                 save(child, value)
-    print("BPM OWNERSHIP BASELINE: cases=%d; finding cases=%d; complete=%s" %
+    print("BPM OWNERSHIP: cases=%d; finding cases=%d; complete=%s" %
           (len(record["cases"]), record.get("finding_cases", 0), record["execution_complete"]))
     print("REPORT:", provenance)
     print("Functional finding cases:", record.get("functional_finding_cases", "incomplete"))

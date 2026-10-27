@@ -1,5 +1,7 @@
 # Developer documentation
 
+Latest S2-05: [ownership correction prepared for #109–#112](stage2-bpm-ownership-correction-2026-10-27.md); failed baseline retained, fresh actual Mac verification pending.
+
 Latest S2-05: [failed Mac baseline inspected and attributed](stage2-bpm-baseline-evidence-2026-10-27.md), #109–#112; numerical checks pass, ownership repair awaits native qualification.
 
 Next S2-05: [BPM ownership baseline prepared](stage2-bpm-ownership-2026-10-27.md), unchanged accepted driver/fixtures, Mac native execution pending.

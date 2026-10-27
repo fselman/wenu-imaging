@@ -1223,6 +1223,7 @@ void mef_bb_del(mef_bb * bb)
 	if (bb->name_bias_o)        free(bb->name_bias_o);
     if (bb->name_bpm)           free(bb->name_bpm);
     if (bb->name_bpm_o)         free(bb->name_bpm_o);
+    if (bb->orig_bpm)           free(bb->orig_bpm); /* Generated BPM metadata (#112). */
 
     /*
      * bb->bpm_frame_i_key
@@ -1727,7 +1728,7 @@ cube_t * mef_cube_framelist_load(framelist *flist, int xtnum)
 		for (i=0 ; i<flist->n ; i++) {
 			e_error("mef_cube_framelist_load: frame [%s] has %d extensions", flist->name[i], exts[i]);
 		}
-		framelist_del(flist);
+		/* The caller owns flist, including on consistency failure (#109). */
 		free(exts);
 		return NULL ;
 	}
@@ -1822,6 +1823,7 @@ cube_t * mef_cube_load(char * filename, int xtnum)
 	   e_comment(1, "mef_cube_load: Done.");
 	   }
 	loaded = mef_cube_framelist_load(flist, xtnum);
+	framelist_del(flist);
 	return loaded;
 }
 
@@ -1970,6 +1972,7 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
         scan_double[j] -= medval;
     }
     stdev_val = double_rms(scan_double, mef_frame->ly);
+    free(scan_double); /* Last use of the temporary double scan (#110). */
     free(bias_line);
     free(scan_line);
 
@@ -2417,7 +2420,7 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
     qfits_header *fhdr_primary;
     qfits_header *fh;
     qfits_header *fh_ext;
-    char    *   dateobs_ptr;
+    char    *   dateobs_ptr = NULL;
     int i;
 	char 	cval[80];
     char    cval2[80];
@@ -2608,6 +2611,11 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
                 fh = qfits_header_read(flist->name[i]);
                 if (fh==NULL) {
                     e_error("reading FITS header from [%s]", flist->name[i]);
+                    if (dateobs_ptr != NULL) free(dateobs_ptr);
+                    framelist_del(flist);
+                    qfits_header_destroy(fhdr_extra);
+                    image_del(norm_gain);
+                    pixelmap_del(bp_map);
                     return NULL ;
                 }
 
@@ -2632,37 +2640,38 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
                      * PI-COI  = 'UNKNOWN '           / Name(s) of proposer(s)
                      * TELESCOP= 'MPI-2.2 '           / ESO Telescope Name
                     */
+                    /* Header insertion copies values; borrow while fh is alive (#112). */
                     if (bb->xtnum == 1) {
-                        cval_ptr = strdup(qfits_header_getstr(fh, "ORIGIN"));
+                        cval_ptr = qfits_header_getstr(fh, "ORIGIN");
                         qfits_header_add_after(fhdr_extra, "NAXIS2", "ORIGIN", cval_ptr, "European Southern Observatory", NULL);
                          e_comment(1, "mef_build_bpm: ORIGIN: %s", qfits_header_getstr(fhdr_extra, "ORIGIN"));
 
-                        cval_ptr = strdup(qfits_header_getstr(fh, "TELESCOP"));
+                        cval_ptr = qfits_header_getstr(fh, "TELESCOP");
                         qfits_header_add_after(fhdr_extra, "ORIGIN", "TELESCOP", cval_ptr, "European Southern Observatory", NULL);
                         e_comment(1, "mef_build_bpm: TELESCOP: %s", qfits_header_getstr(fhdr_extra, "TELESCOP"));
 
-                        cval_ptr = strdup(qfits_header_getstr(fh, "INSTRUME"));
+                        cval_ptr = qfits_header_getstr(fh, "INSTRUME");
                         qfits_header_add_after(fhdr_extra, "TELESCOP", "INSTRUME", cval_ptr, "European Southern Observatory", NULL);
                         e_comment(1, "mef_build_bpm: INSTRUME: %s", qfits_header_getstr(fhdr_extra, "INSTRUME"));
 
-                        cval_ptr = strdup(qfits_header_getstr(fh, "MJD-OBS"));
+                        cval_ptr = qfits_header_getstr(fh, "MJD-OBS");
                         qfits_header_add_after(fhdr_extra, "INSTRUME", "MJD-OBS", cval_ptr, "European Southern Observatory", NULL);
                         e_comment(1, "mef_build_bpm: MJD-OBS: %s", qfits_header_getstr(fhdr_extra, "MJD-OBS"));
 
-                        cval_ptr = strdup(qfits_header_getstr(fh, bb->binx_key));
+                        cval_ptr = qfits_header_getstr(fh, bb->binx_key);
                         qfits_header_add_after(fhdr_extra, "MJD-OBS", bb->binx_key, cval_ptr, "Binning factor along X", NULL);
                         e_comment(1, "mef_build_bpm: BINX: %s", qfits_header_getstr(fhdr_extra, bb->binx_key));
 
-                        cval_ptr = strdup(qfits_header_getstr(fh, bb->biny_key));
+                        cval_ptr = qfits_header_getstr(fh, bb->biny_key);
                         qfits_header_add_after(fhdr_extra, bb->binx_key, bb->biny_key, cval_ptr, "Binning factor along Y", NULL);
                         e_comment(1, "mef_build_bpm: BINY: %s", qfits_header_getstr(fhdr_extra, bb->biny_key));
 
-                        qfits_header_destroy(fh);
                     }
                     /* we read the extension name from the first frame. */
                     fh_ext = qfits_header_readext(flist->name[i],bb->xtnum);
-                    cval_ptr =  strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
+                    cval_ptr =  qfits_header_getstr(fh_ext, "EXTNAME");
                     qfits_header_add_after(fhdr_extra, "NAXIS2", "ZNAME", cval_ptr, "Original extension name", NULL);
+                    qfits_header_destroy(fh_ext);
                     e_comment(1, "mef_build_bpm: ZNAME: %s", qfits_header_getstr(fhdr_extra, "ZNAME"));
                     /*e_comment(1, "mef_build_bpm: header dump of fhdr_extra");
                     qfits_header_consoledump(fhdr_extra);*/
@@ -2671,11 +2680,14 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
                 if (debug_active() >= 1) {
                     e_comment(1, "mef_build_bpm: using frame %s",flist->name[i]);
                     }   
+                qfits_header_destroy(fh);
             }
+            framelist_del(flist);
             e_comment(1, "mef_build_bpm: DATE-OBS: %s in xtnum: %d", dateobs_ptr, bb->xtnum);
             /* e_comment(1, "mef_build_bpm: header dump of fhdr_extra");
             qfits_header_consoledump(fhdr_extra);*/
             qfits_header_add_after(fhdr_extra, "NAXIS2", "DATE-OBS", dateobs_ptr, "Date of observation of first frame", NULL);
+            free(dateobs_ptr);
             e_comment(1, "mef_build_bpm: DATE-OBS: %s", qfits_header_getstr(fhdr_extra, "DATE-OBS"));
             /*e_comment(1, "mef_build_bpm: frame: %s --  DATE-OBS: %s in %d", flist->name[i], dateobs_ptr, bb->xtnum);*/
 
@@ -2706,7 +2718,9 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
              * name_bpm_o
              *
              * */
-            sprintf(cval, "%s", mef_get_output_filename(bb,"bpm"));
+            cval_ptr = mef_get_output_filename(bb,"bpm");
+            sprintf(cval, "%s", cval_ptr);
+            free(cval_ptr);
             e_comment(1,"saving extension %d bad pixel map [%s]",bb->xtnum, cval);
             if (bb->xtnum==1) {
                 /* in the first extension we first write the primary headers */
