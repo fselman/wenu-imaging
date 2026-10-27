@@ -1,5 +1,7 @@
 # Developer documentation
 
+BPM cleanup #90, 27 October 2026: [Mac instrumented acceptance](bpm-cleanup-acceptance-2026-10-27.md) and [Chapman3 target acceptance](bpm-cleanup-chapman3-acceptance-2026-10-27.md) are verified; PR #96 awaits integration. Broader memory/scientific gates remain open.
+
 For ordinary installation, use the [short user guide](../installation.md).
 This directory contains development policy, detailed procedures and evidence.
 The latest dated policy/acceptance record controls; old audits remain historical.
