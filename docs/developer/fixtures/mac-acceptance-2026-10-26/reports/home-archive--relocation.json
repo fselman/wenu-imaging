@@ -1,0 +1,66 @@
+{
+  "created_utc": "2026-10-26T21:51:34.775100+00:00",
+  "purpose": "Reversible home-directory cleanup; no deletion",
+  "protected": [
+    "/Users/fselman/wenu-output",
+    "/Users/fselman/Developer/wenu",
+    "/Users/fselman/Developer/wenu-imaging"
+  ],
+  "retained_home_directories": [
+    "wenu-mac-failure-build-u021mf2l",
+    "wenu-mac-python-failure-test-trbc6ykz",
+    "wenu-mac-scamp-build-offrbigl"
+  ],
+  "entries": [
+    {
+      "source": "/Users/fselman/wenu-mac-c17-inline-qj56jko6",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-c17-inline-qj56jko6",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-import-banner-q6816p2o",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-import-banner-q6816p2o",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-install-guard-jxiu7hp0",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-install-guard-jxiu7hp0",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-native-build-6v088xmj",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-native-build-6v088xmj",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-native-build-9lgbhxqn",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-native-build-9lgbhxqn",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-native.i8htSO5f",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-native.i8htSO5f",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-plplot.2fCk5gjD",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-plplot.2fCk5gjD",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-simple-install.7en8H834",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-simple-install.7en8H834",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-toolchain-01j1s5dt",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-toolchain-01j1s5dt",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-wheel-2krru15a",
+      "destination": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd/wenu-mac-wheel-2krru15a",
+      "moved": true
+    }
+  ]
+}

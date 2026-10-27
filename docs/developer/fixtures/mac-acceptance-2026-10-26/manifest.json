@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "reports/bpm--bpm-run-record.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/bpm-run-record.json",
+      "bytes": 17255,
+      "sha256": "abb3eb2a2008ff9ace88651c23c3a5a6c01982c430f008ed63fb102831d1d1b8"
+    },
+    {
+      "path": "reports/bpm--bpm-c90-comparison.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/bpm-c90-comparison.json",
+      "bytes": 22114,
+      "sha256": "e0ac002f48b5e44d74d1a0e73191aa1a9bb221f2aa497354b4700df5c779c9fb"
+    },
+    {
+      "path": "reports/bpm--bpm-c17-run-record.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/bpm-c17-run-record.json",
+      "bytes": 17642,
+      "sha256": "1ea53f16f2311dade3a8e1191a6d1a0d7b7fb0ad78229ca127beae5f042de8d8"
+    },
+    {
+      "path": "reports/bpm--bpm-c17-comparison.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/bpm-c17-comparison.json",
+      "bytes": 19100,
+      "sha256": "89a7d78d4af5e75833edf41262760aaa8d88112d9f5ad1e67b13990bbcf9a681"
+    },
+    {
+      "path": "reports/normalization--normalization-check.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/normalization-check.json",
+      "bytes": 4471,
+      "sha256": "51854e237aa6d9e6cc63a61a6df60d3f695b6732470ae68ea97c4a6e31038f25"
+    },
+    {
+      "path": "reports/extraction--extraction-mask-check.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-extraction-mask-_sf3gj63/extraction-mask-check.json",
+      "bytes": 2307,
+      "sha256": "8af79e8c26d253aef33223634ab9d6db65fb947a17941937922d84ace23754cb"
+    },
+    {
+      "path": "reports/swarp--swarp-mask-check.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-swarp-mask-nkfoopz_/swarp-mask-check.json",
+      "bytes": 3288,
+      "sha256": "ce62b8e5108404f77694b9c999d42367e6ef8a81231f45577887b0055e35fa2c"
+    },
+    {
+      "path": "reports/native-mask--native-mask-check.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/native-mask-check.json",
+      "bytes": 8431,
+      "sha256": "2ed893654e41a77b44442316f653634d8223c641ad94229c8c0eeca046132e8f"
+    },
+    {
+      "path": "reports/native-mask--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/run-provenance.json",
+      "bytes": 4515,
+      "sha256": "485c9f40bba009c86d070a190a09450f0a3703c16b60984ecd2d6fabb4b3fe5f"
+    },
+    {
+      "path": "reports/native-mask--masks--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/masks/run-provenance.json",
+      "bytes": 722,
+      "sha256": "bdc75f3c8f8c478a3fd14055a8cd3a4e965c544b4bf992c7e10fbed969f9ac6b"
+    },
+    {
+      "path": "reports/native-mask--runs--c90-original--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/runs/c90-original/run-provenance.json",
+      "bytes": 1364,
+      "sha256": "51a2bbd103404bddabbd076a2ae91d9884a52505d8eee4e38f566170d8116f8c"
+    },
+    {
+      "path": "reports/native-mask--runs--c90-masked--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/runs/c90-masked/run-provenance.json",
+      "bytes": 1364,
+      "sha256": "1c1ebf1214ba2d0136aba3d2fbe058bd1f969bfdbeec3557d3f0870e5b63a845"
+    },
+    {
+      "path": "reports/native-mask--runs--c17-original--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/runs/c17-original/run-provenance.json",
+      "bytes": 1364,
+      "sha256": "0aa52992cb4d681c512fb4a299a9a4d5ab0c0ef8f8c1bfe1f77d9c519485ef20"
+    },
+    {
+      "path": "reports/native-mask--runs--c17-masked--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/runs/c17-masked/run-provenance.json",
+      "bytes": 1364,
+      "sha256": "2d0e58c7de891b8c0dc5309ffa2d27258ad1c21a2a0c4def7f2102bb5284c149"
+    },
+    {
+      "path": "reports/scamp-build--build-check.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/build-check.json",
+      "bytes": 2074,
+      "sha256": "75b419bcf29b9d416c6a608fb2a3a9f6e8ed7568e30e6d1544da94e7d1e3bb20"
+    },
+    {
+      "path": "reports/scamp-build--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/run-provenance.json",
+      "bytes": 3090,
+      "sha256": "1b0118256f8680ee71c41bd4bdf4c484fa21b733bcd97055344977d74bc0686b"
+    },
+    {
+      "path": "reports/scamp-build--installed-defaults.txt",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/installed-defaults.txt",
+      "bytes": 10214,
+      "sha256": "64e2b134f565557065b8f9cc9b3a5f6187302a4c14dfd7cba36c6a2af0e7d77c"
+    },
+    {
+      "path": "reports/scamp-build--installed-dependencies.txt",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-t1z9pz70/installed-dependencies.txt",
+      "bytes": 596,
+      "sha256": "4d3217eb511b0f4f57070ad01a296514134fd8064eb366ba76e669e52e7c3b6a"
+    },
+    {
+      "path": "reports/scamp-test--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-test-2fznyl5p/run-provenance.json",
+      "bytes": 3170,
+      "sha256": "e8312cf68a0a2ccee0dc48e14b6edea2656bd44941c5eed270f2063937f6c1b3"
+    },
+    {
+      "path": "reports/scamp-test--scamp--input.head",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-test-2fznyl5p/scamp/input.head",
+      "bytes": 2162,
+      "sha256": "dc0ef600edc89f6ce54262f7525f27bb12cf0936d7992b7892e26708b62db411"
+    },
+    {
+      "path": "reports/scamp-test--scamp--fgroups_1.pdf",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-test-2fznyl5p/scamp/fgroups_1.pdf",
+      "bytes": 63728,
+      "sha256": "7912eb8f39127049e5cb3fec980f7c8b773217c64eca56e5e6330cc7770e8819"
+    },
+    {
+      "path": "reports/scamp-reference--commands.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/commands.json",
+      "bytes": 1032,
+      "sha256": "4f5ffbdd1ade49a96ae37dbc07c35ade264caa6718d1a79968a63e39607000e0"
+    },
+    {
+      "path": "reports/scamp-reference--output-check.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/output-check.json",
+      "bytes": 1266,
+      "sha256": "2f0f31fcf7d30b85b437ab2d80d0836905da0a50b438305bfe693e3ea9a9e6e4"
+    },
+    {
+      "path": "reports/scamp-reference--scamp--input.cat",
+      "source": "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/input.cat",
+      "bytes": 20160,
+      "sha256": "fed3469de347c533f7cd20486ae9656d12940217e35bdbe61662c2ad15655704"
+    },
+    {
+      "path": "reports/scamp-reference--scamp--reference.cat",
+      "source": "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/reference.cat",
+      "bytes": 11520,
+      "sha256": "0675d7c7adc601fa78f4bc84ab939d6b4f3c7661d5147deded3fa66fa5e8f6aa"
+    },
+    {
+      "path": "reports/scamp-reference--scamp--default.scamp",
+      "source": "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/default.scamp",
+      "bytes": 10222,
+      "sha256": "93759c0b92bb1231c20e6c47b9a64a86cffd354c3afe16273a26c742f594a0b6"
+    },
+    {
+      "path": "reports/scamp-reference--scamp--input.head",
+      "source": "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl/offline-plot-check-yd41y_3h/scamp/input.head",
+      "bytes": 2162,
+      "sha256": "d3570650a6a17cb45605c83f31d4164f23c003127f7e93dd418b2b63e2f6a9a2"
+    },
+    {
+      "path": "reports/scamp-selection--run-provenance.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-selection-bisr1_4f/run-provenance.json",
+      "bytes": 1480,
+      "sha256": "c841f7f4be805debd9ebe8328b812a744dcacf4b45e38e7045f50f7fff5f1cb7"
+    },
+    {
+      "path": "reports/relocation--relocation.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-relocation-nnbsx1fy/relocation.json",
+      "bytes": 1132,
+      "sha256": "853b7c4de778639f4adfaede444c3f8652f0a654fec79fdc34535bf9e6e562f0"
+    },
+    {
+      "path": "reports/home-archive--relocation.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/archive/mac-home-runs-zffi3ocd/relocation.json",
+      "bytes": 2533,
+      "sha256": "2115c2635a6eadcb835da226dadd5719c9119cadd3d721ed5d77c06fbc438da7"
+    },
+    {
+      "path": "reports/native-c90--share--mefpp--build-manifest.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c90/share/mefpp/build-manifest.json",
+      "bytes": 2579,
+      "sha256": "ca6d00c84dabf44b6dfec03202ce09162aa3d966ff7bf8e2e45578a9f0f7b001"
+    },
+    {
+      "path": "reports/native-c17--share--mefpp--build-manifest.json",
+      "source": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c17/share/mefpp/build-manifest.json",
+      "bytes": 2579,
+      "sha256": "a6e3709e0d9dafdcf9c0060d3a56efd5ec12665c0e21fe881d51c68091731c21"
+    }
+  ]
+}

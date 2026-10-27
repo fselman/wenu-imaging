@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "branch": "main",
+  "commit": "7e8b771f196c71283280bb35181515da45670684",
+  "dirty": false,
+  "tested_native": {
+    "path": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c17/bin/mefpp",
+    "sha256": "865f5884d59e5d6f509b19c3921bb01408cd5df0060f02426d2666bda3f58206",
+    "manifest": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c17/share/mefpp/build-manifest.json",
+    "manifest_sha256": "a6e3709e0d9dafdcf9c0060d3a56efd5ec12665c0e21fe881d51c68091731c21",
+    "source_revision": "4ade8c52027c736a49b65da3bdb31f11b036693b"
+  },
+  "purpose": "Detector-1 science BPM toggle characterization",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "parent_provenance": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/run-provenance.json",
+  "bpm_sha256": "93339bf3a8705b2a8c51cdbf2fe07047a505ca0aafc4d2ce627d6660d720cb57",
+  "commands": [
+    [
+      "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c17/bin/mefpp",
+      "--xtnum",
+      "1",
+      "--bpm",
+      "OCAM_BPM_1x1.fits",
+      "--bias",
+      "OCAM_MB_1x1.fits",
+      "--mff",
+      "OCAM_MFF_r_SDSS_1x1.fits",
+      "--science",
+      "science.list"
+    ]
+  ],
+  "exit_status": 0
+}

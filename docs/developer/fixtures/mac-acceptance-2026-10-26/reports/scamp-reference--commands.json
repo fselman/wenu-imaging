@@ -1,0 +1,54 @@
+[
+  {
+    "argv": [
+      "/Users/fselman/wenu-mac-scamp-build-offrbigl/install/bin/scamp",
+      "-dd"
+    ],
+    "exit_code": 0
+  },
+  {
+    "argv": [
+      "/Users/fselman/wenu-mac-scamp-build-offrbigl/install/bin/scamp",
+      "input.cat",
+      "-c",
+      "default.scamp",
+      "-ASTREF_CATALOG",
+      "FILE",
+      "-ASTREFCAT_NAME",
+      "reference.cat",
+      "-ASTREFCENT_KEYS",
+      "X_WORLD,Y_WORLD",
+      "-ASTREFERR_KEYS",
+      "ERRA_WORLD,ERRB_WORLD,ERRTHETA_WORLD",
+      "-ASTREFMAG_KEY",
+      "MAG",
+      "-ASTREFMAGERR_KEY",
+      "MAGERR",
+      "-MATCH",
+      "N",
+      "-CROSSID_RADIUS",
+      "10",
+      "-DISTORT_DEGREES",
+      "1",
+      "-MOSAIC_TYPE",
+      "UNCHANGED",
+      "-SOLVE_PHOTOM",
+      "N",
+      "-SN_THRESHOLDS",
+      "5,20",
+      "-CHECKPLOT_TYPE",
+      "FGROUPS",
+      "-CHECKPLOT_DEV",
+      "PDF",
+      "-WRITE_XML",
+      "Y",
+      "-XML_NAME",
+      "scamp.xml",
+      "-NTHREADS",
+      "1",
+      "-CHECKPLOT_NAME",
+      "fgroups"
+    ],
+    "exit_code": 0
+  }
+]

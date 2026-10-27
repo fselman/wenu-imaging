@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "main",
+  "commit": "7e8b771f196c71283280bb35181515da45670684",
+  "dirty": false,
+  "purpose": "Select qualified permanent SCAMP and archive old build",
+  "created_utc": "2026-10-26T22:39:02.628828+00:00",
+  "host": "MC02VV0HPHTDG",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "acceptance_record": "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-test-2fznyl5p/run-provenance.json",
+  "old_executable": "/Users/fselman/wenu-mac-scamp-build-offrbigl/install/bin/scamp",
+  "new_executable": "/Users/fselman/opt/scamp-2.10.0-wenu-imaging/bin/scamp",
+  "new_executable_sha256": "cd2f6b1657de5dab3e43aee80deed4e5aee58ea122a86d90727e6c97f05b219a",
+  "archive_source": "/Users/fselman/wenu-mac-scamp-build-offrbigl",
+  "archive_destination": "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl",
+  "related_directories": [
+    "/Users/fselman/Software/build/wenu-imaging/mac-scamp-permanent-test-2fznyl5p",
+    "/Users/fselman/Software/build/wenu-imaging/archive/mac-scamp-build-offrbigl"
+  ],
+  "commands": [
+    [
+      "/Users/fselman/opt/scamp-2.10.0-wenu-imaging/bin/scamp",
+      "-v"
+    ]
+  ],
+  "version_output": "SCAMP version 2.10.0 (2026-10-26)",
+  "archive_verified": true,
+  "configuration_after_sha256": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b"
+}

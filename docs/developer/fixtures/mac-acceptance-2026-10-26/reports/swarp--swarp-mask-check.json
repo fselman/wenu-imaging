@@ -1,0 +1,83 @@
+{
+  "purpose": "Synthetic installed SWarp masking characterization",
+  "positions_zero_based_xy": {
+    "flagged": [
+      67,
+      83
+    ],
+    "control": [
+      181,
+      157
+    ]
+  },
+  "fixture_sha256": {
+    "good.weight.fits": "b661d25e2a50578a99779e69361b45613cabb4cd253506efb57e119820fe7f74",
+    "masked.weight.fits": "b4e697430cb55181a3917ffc3264f911db13ba64d59e52807051030bfc24b112",
+    "reference.fits": "7a40355e59927ac3c88ea39731acecd56d128ca59794ca90f1f1cd2b0968618a",
+    "dirty.fits": "ce1f535be4c4a3f843d1b04556735b954d0b6156f918a5871d2dbc02bdbe12a4"
+  },
+  "protected_sha256": {
+    "/Users/fselman/anaconda3/envs/wenu-imaging/lib/python3.11/site-packages/pycavi/papi/papi_swarp.py": "4ca3d2972ea1b40b1f777d94224000ced73f8bad4ca823543b1286e9273d7650",
+    "/opt/local/bin/swarp": "9a5045848557e4093cd451f0885f9afc7d7d0d70de1808503933161bf8cab9dd",
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "1f7b9af793f8d906b111d90c5db58336fc3a83bb034d0093e85c102a21201156"
+  },
+  "runs": {
+    "none_good": {
+      "program": "/opt/local/bin/swarp",
+      "version": "2.38.0",
+      "weight_type": "NONE",
+      "image_sha256": "805da9fa97b8ea4fd23b8245a64218afd37b50a433f0ac94205872e37001b993",
+      "weight_sha256": "2a5b461c52505d49e9ea08d00a15a9a34b09957e581d543e86b48bf95870ea5f"
+    },
+    "none_masked": {
+      "program": "/opt/local/bin/swarp",
+      "version": "2.38.0",
+      "weight_type": "NONE",
+      "image_sha256": "805da9fa97b8ea4fd23b8245a64218afd37b50a433f0ac94205872e37001b993",
+      "weight_sha256": "2a5b461c52505d49e9ea08d00a15a9a34b09957e581d543e86b48bf95870ea5f"
+    },
+    "map_weight": {
+      "program": "/opt/local/bin/swarp",
+      "version": "2.38.0",
+      "weight_type": "MAP_WEIGHT",
+      "image_sha256": "4be3828d0696d2cf8e0b66612f71e480df5ff19d4cfac4d0a81ccec47068d59e",
+      "weight_sha256": "126736aa2dbaa0e0b9a9658b5c5d24087ba77cb8d08f8e3cd29b8aa5965676c3"
+    },
+    "reference_only": {
+      "program": "/opt/local/bin/swarp",
+      "version": "2.38.0",
+      "weight_type": "NONE",
+      "image_sha256": "c77c19b255b9aed6e82c742fee4bf927a1ae4784948fff3faf648f0f4dc9c02d",
+      "weight_sha256": "2c1a8fa87d801f5a6e932c4098a6f9f591c7be08dd6df4dd218d0c2e4b7cd9c3"
+    }
+  },
+  "measurements": {
+    "flagged": {
+      "none_minus_reference_mean": 100.0,
+      "masked_minus_reference_mean": 0.0,
+      "masked_equals_reference_exactly": true,
+      "masked_output_weight_min": 0.25679343938827515
+    },
+    "control": {
+      "none_minus_reference_mean": 100.0,
+      "masked_minus_reference_mean": 100.0,
+      "masked_equals_reference_exactly": false,
+      "masked_output_weight_min": 0.5135354399681091
+    }
+  },
+  "checks": {
+    "none_images_identical": true,
+    "none_output_weights_identical": true,
+    "flagged_signal_survives_NONE": true,
+    "explicit_mask_matches_clean_reference_exactly": true,
+    "unflagged_control_survives": true,
+    "clean_reference_supplies_flagged_region": true
+  },
+  "protected_and_fixture_files_unchanged": true,
+  "limits": [
+    "Binary usability weights, not propagated physical inverse variance",
+    "Synthetic direct SWarp wrapper test, not full pipeline acceptance",
+    "Background subtraction disabled to isolate masking",
+    "Production configurations unchanged"
+  ]
+}

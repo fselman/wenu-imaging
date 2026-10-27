@@ -1,5 +1,13 @@
 # wenu-imaging roadmap
 
+Mac robust BPM update, 26 October 2026: C90/C17 reconstruction without a separate
+master bias exactly reproduces all historical mask pixels and 34122 bad pixels.
+Complete raw-header differences are reviewed generated ORIGFILE values only.
+See the [acceptance and next masking-test contract](native-qualification-and-roadmap-2026-10-26.md#mac-robust-bpm-reconstruction-acceptance).
+The next bounded task characterizes flagged-pixel exclusion with unflagged
+controls; current unweighted configurations are not an exclusion guarantee.
+Threshold quality, #90/#91, memory and scientific gates remain open.
+
 ## Current agreed sequence and Phase 3 design audit — 26 October 2026
 
 The native roadmap is now [revision 1.6](mefpp-modernization-roadmap-v1.md).

@@ -1,0 +1,99 @@
+{
+  "source_revision": "2ace67a08f4b5bd916d270b91afa3c6db62f4dff",
+  "compiler": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+  "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+  "driver_sha256": "65197f209c93326c331fa333520758ad49b0d44b497bbe2e3d19e021d54376ba",
+  "fixture_sha256": {
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-0/frame0.fits": "43c5dc7cc90c308d0b324b7f76580684bb55537e15336fdd64a31572273ee2a3",
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-0/frame1.fits": "8ca40a4937b4890a8b80d70bfc8f13e4f0c9cd9d2f8361b2ab6d84bcfaef7669",
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-0/frame2.fits": "bf8b303f4c8382cb82de776db7621b99fa266c7223c5ee164fafc771237c8db3",
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-0/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-1/frame0.fits": "349c90156879810b748725e2b6fc23defa428175941c21c33cfa45db3691e527",
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-1/frame1.fits": "3da257b9fc360cc7d38facf2320e55984212fc6ab99e2f2f8d14eaf241e83679",
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-1/frame2.fits": "4e40b354271b4b9b3cfd81612f4a511545452b7090bc651aa800946b4a3031b6",
+    "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/order-1/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+  },
+  "expected_backgrounds": [
+    [
+      1.0,
+      2.0,
+      4.0,
+      0.5
+    ],
+    [
+      1.0,
+      0.25,
+      0.125,
+      0.5
+    ]
+  ],
+  "runs": [
+    {
+      "c_standard": "90",
+      "kind": "dome",
+      "order": 0,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c90-dome-order0.log",
+      "passed": true
+    },
+    {
+      "c_standard": "90",
+      "kind": "sky",
+      "order": 0,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c90-sky-order0.log",
+      "passed": true
+    },
+    {
+      "c_standard": "90",
+      "kind": "dome",
+      "order": 1,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c90-dome-order1.log",
+      "passed": true
+    },
+    {
+      "c_standard": "90",
+      "kind": "sky",
+      "order": 1,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c90-sky-order1.log",
+      "passed": true
+    },
+    {
+      "c_standard": "17",
+      "kind": "dome",
+      "order": 0,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c17-dome-order0.log",
+      "passed": true
+    },
+    {
+      "c_standard": "17",
+      "kind": "sky",
+      "order": 0,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c17-sky-order0.log",
+      "passed": true
+    },
+    {
+      "c_standard": "17",
+      "kind": "dome",
+      "order": 1,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c17-dome-order1.log",
+      "passed": true
+    },
+    {
+      "c_standard": "17",
+      "kind": "sky",
+      "order": 1,
+      "executable_sha256": "87c0720b1cc6bc7271af63db1d10aa4fea6628e8a03139c6be88bf6f7cf434b2",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-shared-normalization-hpvn6d8s/c17-sky-order1.log",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "fixtures_unchanged": true,
+  "checkout_unchanged": true
+}

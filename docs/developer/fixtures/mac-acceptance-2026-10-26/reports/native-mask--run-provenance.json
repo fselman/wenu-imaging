@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "main",
+  "commit": "7e8b771f196c71283280bb35181515da45670684",
+  "dirty": false,
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-26T22:44:48.633437+00:00",
+  "purpose": "Prepare fixed science/bias/flat inputs for native BPM toggle test",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "engines": {
+    "90": {
+      "path": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c90/bin/mefpp",
+      "sha256": "6c8e623906cf3f9b2746c05d8cafdbf3755e1791adbe566f882b797fc1f64b8e",
+      "manifest": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c90/share/mefpp/build-manifest.json",
+      "manifest_sha256": "ca6d00c84dabf44b6dfec03202ce09162aa3d966ff7bf8e2e45578a9f0f7b001",
+      "source_revision": "4ade8c52027c736a49b65da3bdb31f11b036693b"
+    },
+    "17": {
+      "path": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c17/bin/mefpp",
+      "sha256": "865f5884d59e5d6f509b19c3921bb01408cd5df0060f02426d2666bda3f58206",
+      "manifest": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l/prefix-c17/share/mefpp/build-manifest.json",
+      "manifest_sha256": "a6e3709e0d9dafdcf9c0060d3a56efd5ec12665c0e21fe881d51c68091731c21",
+      "source_revision": "4ade8c52027c736a49b65da3bdb31f11b036693b"
+    }
+  },
+  "inputs": {
+    "OMEGA.2017-03-13T02:35:52.825.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/raw_files/CPPup_raw/OMEGA.2017-03-13T02:35:52.825.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/raw_files/CPPup_raw/OMEGA.2017-03-13T02:35:52.825.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/inputs/OMEGA.2017-03-13T02:35:52.825.fits",
+      "sha256": "7eba367e4a9683a90fd672e95ca11b40ccb999f9d9cd031594f040a8ac31e076",
+      "bytes": 576604800
+    },
+    "OCAM_MB_1x1.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/science/CP_Pup/r_SDSS/2017-03-13T01:57:49/OCAM_MB_1x1.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/calib/bias/574184/2017-03-13T09:44:19/OCAM_MB_1x1.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/inputs/OCAM_MB_1x1.fits",
+      "sha256": "62b4cda6634ddad8c39251775fb36b8a1f8391e5dda85edd32fe75ea96005bb2",
+      "bytes": 1070637120
+    },
+    "OCAM_MFF_r_SDSS_1x1.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/science/CP_Pup/r_SDSS/2017-03-13T01:57:49/OCAM_MFF_r_SDSS_1x1.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/calib/sky/200253584/r_SDSS/2017-03-13T23:12:13/OCAM_MFF_r_SDSS_1x1.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/inputs/OCAM_MFF_r_SDSS_1x1.fits",
+      "sha256": "dcefca2b7d5cf9737acff9af6cb9d1951323f7910ca7431dd181d4a964582fc5",
+      "bytes": 1070642880
+    },
+    "OCAM_BPM_1x1.fits": {
+      "source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/science/CP_Pup/r_SDSS/2017-03-13T01:57:49/OCAM_BPM_1x1.fits",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/static_calib/bpm/OCAM_BPM_1x1.fits",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/inputs/OCAM_BPM_1x1.fits",
+      "sha256": "bcc5e05e63f275b3b0e4d2de0b4b21f315691cca717bdd80fcd010bf5ca324bd",
+      "bytes": 267822720
+    },
+    "mefpp.paf": {
+      "source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/science/CP_Pup/r_SDSS/2017-03-13T01:57:49/mefpp.paf",
+      "resolved_source": "/Users/fselman/Pictures/OCAM/CPPup-wenu-imaging-test/science/CP_Pup/r_SDSS/2017-03-13T01:57:49/mefpp.paf",
+      "staged": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/inputs/mefpp.paf",
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "bytes": 30380
+    }
+  },
+  "commands": [],
+  "processing_launched": true,
+  "preparation_complete": true,
+  "status_note": "Inputs staged; native masking runs not yet launched",
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy",
+  "updated_utc": "2026-10-26T22:48:20.563681+00:00",
+  "native_test_report": "/Users/fselman/Software/build/wenu-imaging/mac-native-mask-v4bcn1hy/native-mask-check.json"
+}

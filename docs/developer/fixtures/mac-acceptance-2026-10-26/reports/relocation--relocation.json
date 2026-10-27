@@ -1,0 +1,25 @@
+{
+  "created_utc": "2026-10-26T22:03:39.004264+00:00",
+  "entries": [
+    {
+      "source": "/Users/fselman/wenu-mac-failure-build-u021mf2l",
+      "destination": "/Users/fselman/Software/build/wenu-imaging/mac-native-qualification-u021mf2l",
+      "contents_manifest": "/Users/fselman/Software/build/wenu-imaging/mac-relocation-nnbsx1fy/contents-0.json",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/wenu-mac-python-failure-test-trbc6ykz",
+      "destination": "/Users/fselman/Software/build/wenu-imaging/mac-python-qualification-trbc6ykz",
+      "contents_manifest": "/Users/fselman/Software/build/wenu-imaging/mac-relocation-nnbsx1fy/contents-1.json",
+      "moved": true
+    },
+    {
+      "source": "/Users/fselman/Software/build/archive/mac-home-runs-zffi3ocd",
+      "destination": "/Users/fselman/Software/build/wenu-imaging/archive/mac-home-runs-zffi3ocd",
+      "contents_manifest": "/Users/fselman/Software/build/wenu-imaging/mac-relocation-nnbsx1fy/contents-2.json",
+      "moved": true
+    }
+  ],
+  "status": "verified",
+  "note": "Original manifests and historical absolute paths are preserved."
+}

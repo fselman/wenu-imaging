@@ -1,0 +1,799 @@
+{
+  "run_record": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/bpm-run-record.json",
+  "run_record_sha256": "abb3eb2a2008ff9ace88651c23c3a5a6c01982c430f008ed63fb102831d1d1b8",
+  "reference": "/Users/fselman/Pictures/OCAM/bpm/OCAM_BPM_1x1.fits",
+  "candidate": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-native-4fv4236r/c90/OCAM_BPM_1x1.fits",
+  "detectors": [
+    {
+      "hdu": 1,
+      "name": "ESO_CCD_#65",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 113,
+      "candidate_bad": 113,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 2,
+      "name": "ESO_CCD_#66",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 539,
+      "candidate_bad": 539,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 3,
+      "name": "ESO_CCD_#67",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 15,
+      "candidate_bad": 15,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 4,
+      "name": "ESO_CCD_#68",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 176,
+      "candidate_bad": 176,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 5,
+      "name": "ESO_CCD_#73",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 65,
+      "candidate_bad": 65,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 6,
+      "name": "ESO_CCD_#74",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 27,
+      "candidate_bad": 27,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 7,
+      "name": "ESO_CCD_#75",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 30,
+      "candidate_bad": 30,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 8,
+      "name": "ESO_CCD_#76",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 47,
+      "candidate_bad": 47,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 9,
+      "name": "ESO_CCD_#81",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 4909,
+      "candidate_bad": 4909,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 10,
+      "name": "ESO_CCD_#82",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 63,
+      "candidate_bad": 63,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 11,
+      "name": "ESO_CCD_#83",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 5817,
+      "candidate_bad": 5817,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 12,
+      "name": "ESO_CCD_#84",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 2382,
+      "candidate_bad": 2382,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 13,
+      "name": "ESO_CCD_#89",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 139,
+      "candidate_bad": 139,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 14,
+      "name": "ESO_CCD_#90",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 1844,
+      "candidate_bad": 1844,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 15,
+      "name": "ESO_CCD_#91",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 1592,
+      "candidate_bad": 1592,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 16,
+      "name": "ESO_CCD_#92",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 70,
+      "candidate_bad": 70,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 17,
+      "name": "ESO_CCD_#69",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 149,
+      "candidate_bad": 149,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 18,
+      "name": "ESO_CCD_#70",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 92,
+      "candidate_bad": 92,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 19,
+      "name": "ESO_CCD_#71",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 1599,
+      "candidate_bad": 1599,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 20,
+      "name": "ESO_CCD_#72",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 240,
+      "candidate_bad": 240,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 21,
+      "name": "ESO_CCD_#77",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 13,
+      "candidate_bad": 13,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 22,
+      "name": "ESO_CCD_#78",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 14,
+      "candidate_bad": 14,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 23,
+      "name": "ESO_CCD_#79",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 22,
+      "candidate_bad": 22,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 24,
+      "name": "ESO_CCD_#80",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 1155,
+      "candidate_bad": 1155,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 25,
+      "name": "ESO_CCD_#85",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 765,
+      "candidate_bad": 765,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 26,
+      "name": "ESO_CCD_#86",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 3263,
+      "candidate_bad": 3263,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 27,
+      "name": "ESO_CCD_#87",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 3417,
+      "candidate_bad": 3417,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 28,
+      "name": "ESO_CCD_#88",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 69,
+      "candidate_bad": 69,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 29,
+      "name": "ESO_CCD_#93",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 298,
+      "candidate_bad": 298,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 30,
+      "name": "ESO_CCD_#94",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 4148,
+      "candidate_bad": 4148,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 31,
+      "name": "ESO_CCD_#95",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 904,
+      "candidate_bad": 904,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    },
+    {
+      "hdu": 32,
+      "name": "ESO_CCD_#96",
+      "structure_matches": true,
+      "unequal": 0,
+      "reference_bad": 146,
+      "candidate_bad": 146,
+      "reference_nonbinary": 0,
+      "candidate_nonbinary": 0,
+      "bad_to_good": 0,
+      "good_to_bad": 0,
+      "header_counts_match": true,
+      "difference_examples": []
+    }
+  ],
+  "raw_header_differences": [
+    {
+      "hdu": 0,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 1,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 2,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 3,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 4,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 5,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 6,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 7,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 8,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 9,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 10,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 11,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 12,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 13,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 14,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 15,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 16,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 17,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 18,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 19,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 20,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 21,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 22,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 23,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 24,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 25,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 26,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 27,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 28,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 29,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 30,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 31,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    },
+    {
+      "hdu": 32,
+      "operation": "replace",
+      "reference_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2024-08-09T10:04:30.087.fits' / Original file name     "
+      ],
+      "candidate_cards": [
+        "ORIGFILE= 'CMDP.OMEGACAM.2026-10-26T15:40:21.100.fits' / Original file name     "
+      ]
+    }
+  ],
+  "hdu_counts": [
+    33,
+    33
+  ],
+  "structure_matches": true,
+  "all_mask_pixels_identical": true,
+  "all_masks_binary": true,
+  "all_header_counts_match": true,
+  "protected_files_unchanged": true,
+  "pixel_comparison_passed": true,
+  "header_review_required": true
+}
