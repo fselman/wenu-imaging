@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include "mefp_lib.h"
 #include "xmemory.h"
+#include "qfits.h"
 
 static mef_bb *observed_owner;
 static int constructed, destroyed, mismatch;
@@ -171,5 +172,22 @@ int main(int argc, char **argv)
            before, after, after >= 0 && before_identity == after_identity);
     fflush(stdout);
     if (after < 0) return 2;
+    if (getenv("S2_SPLIT_CACHE_CONTROL") != NULL) {
+        /* Diagnostic intervention only: keep the original after-cli state.
+         * Repeat the public purge to test its empty-cache behavior as well. */
+        qfits_cache_purge();
+        account("after-purge");
+        after = descriptors(&after_identity);
+        printf("CACHE DESCRIPTORS after-purge before=%d after=%d identity_equal=%d\n",
+               before, after, after >= 0 && before_identity == after_identity);
+        if (after < 0) return 2;
+        qfits_cache_purge();
+        account("after-second-purge");
+        after = descriptors(&after_identity);
+        printf("CACHE DESCRIPTORS after-second-purge before=%d after=%d identity_equal=%d\n",
+               before, after, after >= 0 && before_identity == after_identity);
+        fflush(stdout);
+        if (after < 0) return 2;
+    }
     return 0;
 }

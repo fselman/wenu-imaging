@@ -46,6 +46,8 @@ def main():
     parser.add_argument("--compiler", type=Path, required=True)
     parser.add_argument("--sdk", type=Path, required=True)
     parser.add_argument("--cmake", type=Path, required=True)
+    parser.add_argument("--cache-reference", type=Path,
+                        help="Retained repaired-observer report for controlled cache attribution")
     args = parser.parse_args()
     if platform.system() != "Darwin" or platform.node().split(".")[0] != "MC02VV0HPHTDG":
         raise RuntimeError("STOP: run on the qualified Intel Mac")
@@ -95,14 +97,32 @@ def main():
             if sources[name] != expected:
                 raise RuntimeError("STOP: allocator differs from qualified controls")
         controls[str(path.relative_to(repo))] = digest(path)
+    reference_path = args.cache_reference.resolve(strict=True) if args.cache_reference else None
+    reference_hash, reference_cases = None, None
+    if reference_path:
+        reference_hash = digest(reference_path)
+        reference = json.loads(reference_path.read_text())
+        if (reference["tested_source"]["commit"] != "97c086aaf301e7ae782c23ec9d67de1427351a8b" or
+                not reference["execution_complete"] or reference["functional_finding_cases"] != 0 or
+                reference["finding_cases"] != 64):
+            raise RuntimeError("STOP: unexpected cache reference")
+        for name, expected in sources.items():
+            if name not in ("mefpp2/tests/split_ownership_probe.c", "mefpp2/tests/qualify_split_ownership.py"):
+                if reference["source_sha256"].get(name) != expected:
+                    raise RuntimeError("STOP: reference source differs: " + name)
+        reference_cases = {c["case"]: c for c in reference["cases"]}
+        if len(reference_cases) != 80:
+            raise RuntimeError("STOP: incomplete cache reference matrix")
     root = Path.home() / "Software/build/wenu-imaging"
     if not root.is_dir():
         raise RuntimeError("STOP: expected imaging build root absent")
-    work = Path(tempfile.mkdtemp(prefix="mac-stage2-split-baseline-", dir=root))
+    work = Path(tempfile.mkdtemp(prefix="mac-stage2-split-cache-" if reference_path else "mac-stage2-split-baseline-", dir=root))
     provenance = work / "run-provenance.json"
     record = dict(schema_version=1, project="wenu-imaging", tested_source=identity,
                   host=platform.node(), created_utc=datetime.now(timezone.utc).isoformat(),
-                  purpose="S2-04 synthetic split I/O/publication ownership baseline",
+                  purpose="S2-04 controlled cache attribution" if reference_path else "S2-04 synthetic split I/O/publication ownership baseline",
+                  cache_reference=str(reference_path) if reference_path else None,
+                  cache_reference_sha256=reference_hash,
                   status="running", execution_complete=False, retention_roles=["acceptance_evidence"],
                   source_sha256=sources, protected_sha256=protected, commands=[], cases=[],
                   qualified_tool_reports_sha256=controls,
@@ -111,6 +131,7 @@ def main():
                   installation_performed=False, observational_processing_performed=False,
                   limits=["Synthetic two-detector splitting only; no calibration/science reduction or Pycavi",
                           "One CLI call per process; no same-process repeated-stage qualification",
+                          "Cache control preserves after-cli then calls the public purge twice" if reference_path else
                           "No explicit cache purge: outstanding registrations require attribution",
                           "Only mappings exercised by split; no general mmap/swap allocator qualification",
                           "Descriptor identity/count observed across CLI; no syscall-level exhaustive I/O injection",
@@ -166,7 +187,7 @@ def main():
         record["diagnostic_cmake_sha256"] = digest(wiring)
         env = os.environ.copy()
         removed = ["ASAN_OPTIONS", "UBSAN_OPTIONS", "LSAN_OPTIONS", "DYLD_INSERT_LIBRARIES",
-                   "DYLD_LIBRARY_PATH", "MallocStackLogging", "MallocScribble", "MallocStackLoggingNoCompact", "S2_SPLIT_WRITE_LIMIT"]
+                   "DYLD_LIBRARY_PATH", "MallocStackLogging", "MallocScribble", "MallocStackLoggingNoCompact", "S2_SPLIT_WRITE_LIMIT", "S2_SPLIT_CACHE_CONTROL"]
         for key in removed:
             env.pop(key, None)
         env.update(E_VERBOSE="0", E_DEBUG="0")
@@ -226,6 +247,8 @@ def main():
                             command = [executable, *argv]
                             child_env = dict(case_env)
                             preexec_fn = None
+                            if role == "observer" and reference_path:
+                                child_env["S2_SPLIT_CACHE_CONTROL"] = "1"
                             if variant == "failed-write":
                                 if role == "ordinary":
                                     preexec_fn = restrict_output
@@ -250,6 +273,12 @@ def main():
                                 if diagnostic and diagnostic.lower() not in output.lower():
                                     raise RuntimeError("missing expected diagnostic: " + diagnostic)
                                 observed["outputs"] = verify(child, inputs, expected_outputs)
+                                if reference_cases:
+                                    prior = reference_cases[label]["roles"][role]
+                                    if (observed["outputs"] != prior["outputs"] or
+                                            inputs != prior["input_sha256"] or
+                                            expected_exit != prior["expected_native_exit"]):
+                                        raise RuntimeError("retained reference input/output/exit mismatch")
                                 observed["functional_status"] = "passed"
                             except Exception as error:
                                 observed["functional_status"] = "failed"
@@ -263,7 +292,7 @@ def main():
                                     for boundary in ("process-start", "after-cli"):
                                         state = allocation_state(output, boundary)
                                         observed[boundary + "_accounting"] = state
-                                        if any(state.values()):
+                                        if any(state.values()) and not (reference_path and boundary == "after-cli"):
                                             observed["findings"].append("unattributed live allocation/mapping at " + boundary)
                                     rows = re.findall(r"^DESCRIPTORS before=(\d+) after=(\d+) identity_equal=(\d+)$", output, re.M)
                                     if len(rows) != 1 or rows[0][0] != rows[0][1] or rows[0][2] != "1":
@@ -273,6 +302,25 @@ def main():
                                     if len(limits) != 2 or [x[0] for x in limits] != ["before", "after"]:
                                         raise RuntimeError("descriptor limit observation incomplete")
                                     observed["descriptor_limits"] = [list(x) for x in limits]
+                                    if reference_path:
+                                        state = observed["after-cli_accounting"]
+                                        cached = variant not in ("missing-input", "non-fits")
+                                        filename = argv[1] if variant == "valid-absolute" else "mosaic.fits"
+                                        expected = dict(pointers=5 if cached else 0,
+                                                        bytes=len(filename.encode()) + 1 + 16 * (2 if variant == "truncated-data" else 3) if cached else 0,
+                                                        mapped_files=0, mapped_references=0, swap_bytes=0)
+                                        if state != expected:
+                                            raise RuntimeError("after-cli state differs from cache-size prediction")
+                                        for boundary in ("after-purge", "after-second-purge"):
+                                            state = allocation_state(output, boundary)
+                                            observed[boundary + "_accounting"] = state
+                                            if any(state.values()):
+                                                raise RuntimeError("nonzero resource state at " + boundary)
+                                            rows = re.findall(r"^CACHE DESCRIPTORS " + boundary + r" before=(\d+) after=(\d+) identity_equal=(\d+)$", output, re.M)
+                                            if len(rows) != 1 or rows[0][0] != rows[0][1] or rows[0][2] != "1":
+                                                raise RuntimeError("cache purge descriptor contract mismatch at " + boundary)
+                                            observed[boundary + "_descriptors"] = list(rows[0])
+                                        observed["cache_attribution"] = "passed"
                                     if lane == "leaks":
                                         summaries = re.findall(r"\b(\d+) leaks? for (\d+) total leaked bytes\b", output)
                                         if len(summaries) != 1:
@@ -314,10 +362,11 @@ def main():
             (work / "source" / p).is_file() and digest(work / "source" / p) == h
             for p, h in sources.items())
         record["protected_files_unchanged"] = all(digest(Path(p)) == h for p, h in protected.items())
+        record["cache_reference_unchanged"] = not reference_path or digest(reference_path) == reference_hash
         record["checkout_unchanged"] = (git("rev-parse", "HEAD") == identity["commit"] and
                                        not git("status", "--porcelain", "--untracked-files=all"))
         if not all(record[k] for k in ("sources_unchanged", "exported_sources_unchanged",
-                                       "protected_files_unchanged", "checkout_unchanged")):
+                                       "protected_files_unchanged", "checkout_unchanged", "cache_reference_unchanged")):
             record["status"] = "failed"
         record["completed_utc"] = datetime.now(timezone.utc).isoformat()
         save(provenance, record)

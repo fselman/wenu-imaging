@@ -1,0 +1,66 @@
+{
+  "purpose": "Inspect supplied Mac evidence only; no native execution",
+  "archive_sha256": "6eb3014d7adb3ea02fa39e0ef2edd69077953fcc074e15fe0198217187d5e817",
+  "status": "passed",
+  "verified_files": 933,
+  "verified_role_directories": 160,
+  "observer_contracts": 80,
+  "zero_leak_summaries": 40,
+  "retained_candidate_cases": 64,
+  "descriptor_limits": [
+    {
+      "rows": [
+        [
+          "before",
+          "256",
+          "9223372036854775807",
+          "0"
+        ],
+        [
+          "after",
+          "9223372036854775807",
+          "9223372036854775807",
+          "1"
+        ]
+      ],
+      "cases": 80
+    }
+  ],
+  "allocation_states": [
+    {
+      "pointers": 5,
+      "bytes": 60,
+      "cases": 48
+    },
+    {
+      "pointers": 5,
+      "bytes": 188,
+      "cases": 2
+    },
+    {
+      "pointers": 0,
+      "bytes": 0,
+      "cases": 16
+    },
+    {
+      "pointers": 5,
+      "bytes": 44,
+      "cases": 8
+    },
+    {
+      "pointers": 5,
+      "bytes": 183,
+      "cases": 2
+    },
+    {
+      "pointers": 5,
+      "bytes": 181,
+      "cases": 2
+    },
+    {
+      "pointers": 5,
+      "bytes": 176,
+      "cases": 2
+    }
+  ]
+}

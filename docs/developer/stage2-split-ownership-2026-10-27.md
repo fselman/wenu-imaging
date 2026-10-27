@@ -1,5 +1,7 @@
 # S2-04 split I/O/publication ownership baseline — 27 October 2026
 
+Latest: [repaired observer evidence inspected and controlled cache attribution prepared](stage2-split-observed-evidence-2026-10-27.md). The baseline has 80 functional passes and 64 retained-state findings; its cache-attribution extension is not executed. Earlier preparation/scan statements below are historical.
+
 Current status: [first Mac baseline inspected; test-only observer repair prepared](stage2-split-baseline-evidence-2026-10-27.md). The numbered-range descriptor scan described below belongs to the original attempt and is superseded by actual descriptor enumeration in #106; no production policy changes.
 
 Status: prepared; actual Mac native compilation/execution pending. Tracking:
@@ -53,11 +55,12 @@ Partial construction internals remain unmodified.
 
 The probe snapshots qfits registrations before CLI entry and after return,
 including RAM bytes, mapped-file/reference counts and swap bytes if present.
-It also scans open file descriptors using F_GETFD/fstat without acquiring a
-descriptor or qfits memory; count and identity fingerprint must match at return.
+It enumerates actual open file descriptors using F_GETFD/fstat, excluding and
+closing only its own enumeration descriptor; no qfits allocation is acquired.
+Count and identity fingerprint must match at return.
 The recorded identity covers descriptor number/flags, device, inode and mode,
 not file size/content. Unsupported/incomplete descriptor observation fails;
-the scan explicitly rejects an unlimited or greater-than-1048576 soft limit.
+actual descriptor enumeration works independently of the changed soft limit (#106).
 This detects changes across the call; it is not a syscall-by-syscall lifetime proof.
 
 Instrumented builds use the qualified ASan/UBSan settings. Separate uninstrumented
