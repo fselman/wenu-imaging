@@ -1,5 +1,7 @@
 # S2-04 repaired Mac observer and cache control — 27 October 2026
 
+Latest: [controlled Mac cache attribution accepted; unchanged-driver target verification prepared](stage2-split-mac-acceptance-2026-10-27.md). Earlier pending-control statements below describe the retained prior attempts.
+
 ## Inspected actual-host evidence
 
 Clean tested source `97c086aaf301e7ae782c23ec9d67de1427351a8b`, branch
