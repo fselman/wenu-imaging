@@ -216,7 +216,9 @@ static int getopt_internal(int argc, char **argv, char *shortopts,
         else
             match_chars = (possible_arg - argv[internal_optind]) - optwhere;
         for (optindex = 0; longopts[optindex].name != NULL; optindex++) {
-            if (memcmp(argv[internal_optind] + optwhere,
+            /* Registered names can be shorter than the supplied option (#103).
+             * Stop at their NUL while retaining prefix/ambiguity semantics. */
+            if (strncmp(argv[internal_optind] + optwhere,
                        longopts[optindex].name,
                        match_chars) == 0) {
                 /* do we have an exact match? */

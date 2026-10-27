@@ -1,0 +1,2297 @@
+{
+  "schema_version": 1,
+  "purpose": "S2-03 Chapman3 functional/accounting acceptance evidence",
+  "source_directory": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-cli-71v4syfj",
+  "files": [
+    {
+      "path": "build-c17-functional/CMakeCache.txt",
+      "bytes": 15436,
+      "sha256": "6cd5a0fd4d5f50c3a3ca6f9acbc776e609913334cc55c6474b8351374bb8ce0b"
+    },
+    {
+      "path": "build-c17-functional/build-info.json",
+      "bytes": 1188,
+      "sha256": "e672296789043bebdbcc114de4bf57610f0ed6e4431f2530c65e8d83ff17d05a"
+    },
+    {
+      "path": "build-c17-functional/compile_commands.json",
+      "bytes": 98203,
+      "sha256": "b7dc3d5b0526ed7c267faac769527fc7284b512af1d0d6362f3785943c18fcba"
+    },
+    {
+      "path": "build-c17-functional/run-provenance.json",
+      "bytes": 577,
+      "sha256": "69ce7cfd6e8ca25c9e64bcebe1144a6b452e94985a756fc21be27c22f76833df"
+    },
+    {
+      "path": "build-c17-functional/source-sha256.txt",
+      "bytes": 30367,
+      "sha256": "a48ff4610e3652af0b4006f4a9bca238198be2593844213e080a39daf98e33e1"
+    },
+    {
+      "path": "build-c17-functional.log",
+      "bytes": 35377,
+      "sha256": "def112ed0338dabb84a0a73ec81417f4a23c8eff501c0c51133ee3947e2092e2"
+    },
+    {
+      "path": "build-c90-functional/CMakeCache.txt",
+      "bytes": 15436,
+      "sha256": "204fb8602df52c73cb9892ec41a0560ac6ee7f3552eab8a50501bb5d75554061"
+    },
+    {
+      "path": "build-c90-functional/build-info.json",
+      "bytes": 1188,
+      "sha256": "6b155ef109474bd433bd544690c97e6d07153b4657c5319c1a9e659bc0e882cb"
+    },
+    {
+      "path": "build-c90-functional/compile_commands.json",
+      "bytes": 98203,
+      "sha256": "5ff57d6c4ca83bb31a60cca122e930b0f72c8b8dc13fed0080f39e3348494430"
+    },
+    {
+      "path": "build-c90-functional/run-provenance.json",
+      "bytes": 577,
+      "sha256": "e06eb0bc8fa842000f2805831560a35aef19ab6d850f712ff27cfa8ea3f8a30c"
+    },
+    {
+      "path": "build-c90-functional/source-sha256.txt",
+      "bytes": 30367,
+      "sha256": "a48ff4610e3652af0b4006f4a9bca238198be2593844213e080a39daf98e33e1"
+    },
+    {
+      "path": "build-c90-functional.log",
+      "bytes": 34975,
+      "sha256": "dcd92752b5daf5bcf8744be436c1ac461ffa9c174365d18de74d1c7f4bcd7d02"
+    },
+    {
+      "path": "c17-functional-omegacam-help/run-provenance.json",
+      "bytes": 1326,
+      "sha256": "458601a410458c7120f96e558cf41010befc87ceed37ef87ac56c0638fac0a8b"
+    },
+    {
+      "path": "c17-functional-omegacam-help-observer.log",
+      "bytes": 1963,
+      "sha256": "4f378cabd3bddbee8554b25b5a04d75703753d70df0914f7bb14230658a6fa90"
+    },
+    {
+      "path": "c17-functional-omegacam-help-ordinary.log",
+      "bytes": 1748,
+      "sha256": "584478c1fd617befcecc3f88912d633abce3c123484f0a0363e21c80ab9ac877"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-0/mefpp.paf",
+      "bytes": 30350,
+      "sha256": "6c24fbcf11a78ac7ba076d60a21e8dec4e688db712b52ddb52e7a8018b2d9d2f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-0/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "89063d7cc8264632fa7b62f5b199bcc44f11f249098aaf766fe5e49cd9035836"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-0-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-0-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-1/mefpp.paf",
+      "bytes": 30351,
+      "sha256": "b321a03886483b8b13eca7fb3539d2763a2f7d273025a4ee1d9fbd214ebae89b"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-1/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "5a3c13bd018e9904a90035fe3c41b7c32fd82e4514bd4f80c54d39ed120d0d54"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-1-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-1-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-2/mefpp.paf",
+      "bytes": 30353,
+      "sha256": "363ee70e9dde8dc12da95af444981fe5f53d184cbd9510a5ca5f57981c05c033"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-2/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "5419c30d3dcd9a7b00a4640bb353281e6f11cdf4fb501e099ad121c3aeb7e624"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-2-observer.log",
+      "bytes": 399,
+      "sha256": "53becb1d4d5bf1396c15ef207b1d3c790ad79fab0099a04ee926d97e2ddd3030"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-2-ordinary.log",
+      "bytes": 212,
+      "sha256": "d9eb49317223f379aa96b6cf41122fc0aba4198802a9f5bc98291609f53790de"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-3/mefpp.paf",
+      "bytes": 30352,
+      "sha256": "7f52ade5f5f225d7b8a5e2123837f213bfccfee3adaa3b2f27aec380b18bb4dc"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-3/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "9ee070e41c2a67af63a2d4111a050523d876a168b4457e34e283baf8bb304d3e"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-3-observer.log",
+      "bytes": 398,
+      "sha256": "fc5cbcd32228b1bd1011c533055db5d1b50d998ea756a0a81fdeee9dfbbda45a"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-3-ordinary.log",
+      "bytes": 211,
+      "sha256": "43c817ddff07d9b8aac727394f01525c070f07e7deb0b979433351a46e58e687"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-4/mefpp.paf",
+      "bytes": 30354,
+      "sha256": "9145698fef1a41dc5818db1bd2a85adcbfd82091227174dc38f656bf8dde7a61"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-4/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "e6da0f7ef9179b964d75b81f466e5d3aa53024c0b4b2846108b402400800aaa6"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-4-observer.log",
+      "bytes": 400,
+      "sha256": "9862662f31e3a3533de431266850795410f259e91f2621dfa1c61acf3551f396"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-4-ordinary.log",
+      "bytes": 213,
+      "sha256": "09796ff1c1f7917bb8de88d9db4e3c9e69f4cd44c6d07148e11353481b2e74a8"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-5/mefpp.paf",
+      "bytes": 30359,
+      "sha256": "aec245c4dd0707978ff074464b07b8f4020f2405ac9b90fba90e1eb3aa463905"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-5/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "0e90d61d23c8dfcd770176962fa6dbea0005e7ae8e78e3ce8b65acb7da8558e3"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-5-observer.log",
+      "bytes": 405,
+      "sha256": "918e756e899e1cb68abfe4016d6e674a26e23ec4fa58e29ffc8a72beead8ff0b"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-5-ordinary.log",
+      "bytes": 218,
+      "sha256": "1f3b5b049a85514ffd8f53c9661e27ee849d1bd422c8a24b8ac70625590d049f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-6/mefpp.paf",
+      "bytes": 30352,
+      "sha256": "d592b1a4a6c289d18d810cf475d7bf948feebfab533b3e2b8f7843daf5700975"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-6/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "4f1be8a4c0ff59dffb5c5c60890fb7577bbc7289bd0a8af70970b5996bf0a3e7"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-6-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-count-6-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-0/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-0/run-provenance.json",
+      "bytes": 1423,
+      "sha256": "6c3e449c5e082c9b39ea358c329fcd6f249bcd907517efd61a3fc89a54bc66a9"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-0-observer.log",
+      "bytes": 427,
+      "sha256": "facb2449f078f18d14c3bea0ee3be0056841b776edf1b5ffe917404abb9b0f1a"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-0-ordinary.log",
+      "bytes": 240,
+      "sha256": "c4cb71787eb1a4d0b7a81edce6642eaa135307336f8b36057932c7e340ee2fe8"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-1/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-1/run-provenance.json",
+      "bytes": 1424,
+      "sha256": "edfe1fc1bda717f95f5a18ec68568f433daa897e52f74a01aa0c47457fd3be40"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-1-observer.log",
+      "bytes": 428,
+      "sha256": "d37041f9beef570d168b0687bc6cb6978796009a53f8a4fa6468dca67b697162"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-1-ordinary.log",
+      "bytes": 241,
+      "sha256": "6b0c1a55c5eb6d37e384c1ebd4f7cb1d5c1ba3b12a5ec0d0bf622ee9c7a86d15"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-2/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-2/run-provenance.json",
+      "bytes": 1426,
+      "sha256": "ddfd6c255f460770d5a03a713615853f8c80c8cdec3cdf45a1c411fd02a9ca4b"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-2-observer.log",
+      "bytes": 430,
+      "sha256": "9997ededd06070a8ce668315503627c03c594333e336aa7009f3c209d8effa20"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-2-ordinary.log",
+      "bytes": 243,
+      "sha256": "c3165419c6aa093843736fd09ded507f648a4ddd53bb1b030c7b4fded7cf1bd4"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-3/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-3/run-provenance.json",
+      "bytes": 1425,
+      "sha256": "7905731939e1fedd1db072786795647498372a8c371c6f5c8314dbce8b2c4657"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-3-observer.log",
+      "bytes": 429,
+      "sha256": "e78181af037ca979d9f7c9d8d8be3e9017cc012a559601612582b142032385dd"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-3-ordinary.log",
+      "bytes": 242,
+      "sha256": "4c8abb130b07f21714bec07b6b7c64a8c27ebd5424f1e86f10ac14a56b64282f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-4/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-4/run-provenance.json",
+      "bytes": 1425,
+      "sha256": "8bc357b44ff715386a6cafd9347efe83ab35505f498c7bdc1ad2a631a5be645a"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-4-observer.log",
+      "bytes": 429,
+      "sha256": "6eb92c93a34d1433d082f6ae90206de824fd91829da6b816d1b6dc1caed597e5"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-4-ordinary.log",
+      "bytes": 242,
+      "sha256": "908b82f476549c2495e88a0c49105a0ad6607860a419588297524c73ea376f7b"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-5/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-5/run-provenance.json",
+      "bytes": 1429,
+      "sha256": "0f3cfad91fd2b4457cfad59bb55e3a5809f8d2bfe51be0c2252cd86c406b0411"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-5-observer.log",
+      "bytes": 433,
+      "sha256": "02bf23d00283e0c1d85f14c6a4afbe14a8ca299f8854c74ea900fe7c213bb50a"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-5-ordinary.log",
+      "bytes": 246,
+      "sha256": "436242e2295c12d176181f6ab46faddde248d97b1dccdce7448d3847688193e6"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-6/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-6/run-provenance.json",
+      "bytes": 1429,
+      "sha256": "bbe71bebc7a31a6c3b2059da67ee0cfcaf244ae599a00b76dbcb4f87baae5b2a"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-6-observer.log",
+      "bytes": 433,
+      "sha256": "a0d8ed3c0fb8a73de9f961eb8a349780499dc1707b54e4b93249c6b9252ba15d"
+    },
+    {
+      "path": "c17-functional-omegacam-invalid-satmax-6-ordinary.log",
+      "bytes": 246,
+      "sha256": "5125552cea051b82b8734fea2b628391780b640a67a7b42aed9d6cc252f0823d"
+    },
+    {
+      "path": "c17-functional-omegacam-license/run-provenance.json",
+      "bytes": 1335,
+      "sha256": "b87845df7a884215cf7056b77a163c6b4c9a7109769faf0bc17fee1751083a71"
+    },
+    {
+      "path": "c17-functional-omegacam-license-observer.log",
+      "bytes": 1549,
+      "sha256": "e9eb79851e477c15a915cbdaf8f8ddf7e7852ee8ebfffb9d2ecd41357deafc09"
+    },
+    {
+      "path": "c17-functional-omegacam-license-ordinary.log",
+      "bytes": 1362,
+      "sha256": "f0182e2dff422f6713dae9c323f04290e57fe5e7266ee51c9b6ba5050227ead4"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-crop-y-max-chip2/mefpp.paf",
+      "bytes": 30334,
+      "sha256": "66e737b4bc42a4d6851fff9a6676ac5bc77462e34ee70fada434608d743a019b"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-crop-y-max-chip2/run-provenance.json",
+      "bytes": 1457,
+      "sha256": "20c00d81636c9006f151e06cebc58f01eeb9f031fa61b4f9679c65c02b2fe05a"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-crop-y-max-chip2-observer.log",
+      "bytes": 396,
+      "sha256": "57592eda23aa7edfb5bc1fba9b8ec5fe9c07ae123ad2601a7969ce8ddcbc7f36"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-crop-y-max-chip2-ordinary.log",
+      "bytes": 209,
+      "sha256": "ee0617f2853335b4b7881559c6baccbf8ac2efd215b2056cc0ba6b8747daef74"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-nchips/mefpp.paf",
+      "bytes": 30336,
+      "sha256": "c1297c1d6fe2dfcf5411bbb07ef635c4174d84801edad37e0b0f2b44cc09381e"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-nchips/run-provenance.json",
+      "bytes": 1437,
+      "sha256": "57bc289d7c399068f530c0aa6adfe23c70cb569882fa1840e0134b9872f16df7"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-nchips-observer.log",
+      "bytes": 386,
+      "sha256": "dbbcca0550f65e71b086cebe8246d3e6cd89db6f7e023d4288f669ed6148df8b"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-nchips-ordinary.log",
+      "bytes": 199,
+      "sha256": "54081ca2e2e9bf6cfcbd994822bfdb8671ec12cce2a72d22bb04987c4c2e9ab6"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-satmax/mefpp.paf",
+      "bytes": 30333,
+      "sha256": "23e1a1db570cdb5f5682f9cf175550bda8ecd8dc6bbf3172c5f53bb010b1bb25"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-satmax/run-provenance.json",
+      "bytes": 1437,
+      "sha256": "7686adf8bf5dbfbce9a8733d00504a2b0236af0e7b487265b7ff25688b133274"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-mef-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-option-value/run-provenance.json",
+      "bytes": 1361,
+      "sha256": "39645f346ff5ae5620bdff098680aca6e443548569b47f7108c78b8b895c2cf6"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-option-value-observer.log",
+      "bytes": 472,
+      "sha256": "2da09edbc9df1c5fec28f4e0bb659366f3d65bb4e98a5bc145f67f8bb390ea6a"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-option-value-ordinary.log",
+      "bytes": 271,
+      "sha256": "8aad3bec9a73905fee31441847968b1da7634a10681f0921c3844bbbc73f92cb"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-science-calibrations/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-science-calibrations/run-provenance.json",
+      "bytes": 1459,
+      "sha256": "f3f7ff40cda6bf283f3fa828c2db42272190a391707dcc0789f4a831f32dc955"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-science-calibrations-observer.log",
+      "bytes": 366,
+      "sha256": "52e9d8ddc955a0ade02d8f53c28c95e66798f8200d7183bf78ea1dde0bae9f6d"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-science-calibrations-ordinary.log",
+      "bytes": 179,
+      "sha256": "b77646791f8bdc5d5e1588b5706a9b3427b517762f0aca5f66f49df27dc8b253"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-split-input/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-split-input/run-provenance.json",
+      "bytes": 1439,
+      "sha256": "4699a082bd0a627070177a585525a24ed37eee69cca832afb06788794abd0e03"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-split-input-observer.log",
+      "bytes": 371,
+      "sha256": "887d37659e9d899d1242bcef06769efbbbfa308072ade42562afe1a1b2733de4"
+    },
+    {
+      "path": "c17-functional-omegacam-missing-split-input-ordinary.log",
+      "bytes": 184,
+      "sha256": "17ad863941cd924747893425cd7163c02ad4a8932f33aefecb58d2b921a197f5"
+    },
+    {
+      "path": "c17-functional-omegacam-no-arguments/run-provenance.json",
+      "bytes": 1326,
+      "sha256": "4e4435e32f2fe4c3cd1602703ce62619d164f30d093dd95b90b3dcc72ae6186b"
+    },
+    {
+      "path": "c17-functional-omegacam-no-arguments-observer.log",
+      "bytes": 1907,
+      "sha256": "8d400368eaf7950acf7bea08b673e038d6989261b36b452abb65c4dfc5bd2b4b"
+    },
+    {
+      "path": "c17-functional-omegacam-no-arguments-ordinary.log",
+      "bytes": 1692,
+      "sha256": "9650bd04abd720c988aabed5ba393e79cf5077d227657a554b31affaf4c216b7"
+    },
+    {
+      "path": "c17-functional-omegacam-paf-absent/run-provenance.json",
+      "bytes": 1359,
+      "sha256": "c009317c18314c268b375ab376a3d94bce17f0778f5b756101672f585945be64"
+    },
+    {
+      "path": "c17-functional-omegacam-paf-absent-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c17-functional-omegacam-paf-absent-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c17-functional-omegacam-paf-malformed/mefpp.paf",
+      "bytes": 18,
+      "sha256": "783455ad5a364d286b23d4dbcbf7ddfd77a18869931dde2ecd28f42d11072bd4"
+    },
+    {
+      "path": "c17-functional-omegacam-paf-malformed/run-provenance.json",
+      "bytes": 1427,
+      "sha256": "9467674fcb04e5b7938fbca7818d1b3213ca384cd2588c2814267ef6665d4613"
+    },
+    {
+      "path": "c17-functional-omegacam-paf-malformed-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c17-functional-omegacam-paf-malformed-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c17-functional-omegacam-unknown-option/run-provenance.json",
+      "bytes": 1349,
+      "sha256": "9ef9d4fc0060522e7d0c883a13ef1550eb3bfa4da908bcc51633805ac4b58a12"
+    },
+    {
+      "path": "c17-functional-omegacam-unknown-option-observer.log",
+      "bytes": 454,
+      "sha256": "ea259a1b1a51133a5d9659724b85ac6ecbe813db53aa8baeeb9e082a6d06d7d0"
+    },
+    {
+      "path": "c17-functional-omegacam-unknown-option-ordinary.log",
+      "bytes": 253,
+      "sha256": "aa5a752d5c55b60b9c6eb030070a48dc294618609d8ab966be2e38775105297b"
+    },
+    {
+      "path": "c17-functional-omegacam-valueless-satmax/mefpp.paf",
+      "bytes": 30345,
+      "sha256": "85789d3da951b7f0ec214de235abdcf6f2d948f73283c4626a2789424da397f1"
+    },
+    {
+      "path": "c17-functional-omegacam-valueless-satmax/run-provenance.json",
+      "bytes": 1433,
+      "sha256": "34355dfa2b7810b91b9c568bf10d200ac7f49bf4914cabfb19eb3d77c5a29247"
+    },
+    {
+      "path": "c17-functional-omegacam-valueless-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c17-functional-omegacam-valueless-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c17-functional-omegacam-version/run-provenance.json",
+      "bytes": 1335,
+      "sha256": "d43c32de1f412201407337dd6466120af0bc10eef9eae9348fe350a7960554cf"
+    },
+    {
+      "path": "c17-functional-omegacam-version-observer.log",
+      "bytes": 396,
+      "sha256": "8a2644d3cc2a907e2789230aee732081466e37c1b5ff5bba4bcf3df10071630f"
+    },
+    {
+      "path": "c17-functional-omegacam-version-ordinary.log",
+      "bytes": 209,
+      "sha256": "c1aeedae42f3880af0c0fe69ffbb770d53ba647ddbf10d253f3186b75d5e4ba1"
+    },
+    {
+      "path": "c17-functional-parser-contract/run-provenance.json",
+      "bytes": 664,
+      "sha256": "c31934b04cdb871e399e8a48f29604b4a13fee05b49f49e470cb7f6dfa64e134"
+    },
+    {
+      "path": "c17-functional-parser-contract.log",
+      "bytes": 390,
+      "sha256": "4c1e852ec21a0a5ee9e7a2b07f075dead7063dfb6c86f2d38218b45d88f988e8"
+    },
+    {
+      "path": "c17-functional-wfi-help/run-provenance.json",
+      "bytes": 1316,
+      "sha256": "ffceaf1e03c55f1f3d70c50a03bc1422e746da32943b876afe736b0dc8130e31"
+    },
+    {
+      "path": "c17-functional-wfi-help-observer.log",
+      "bytes": 1963,
+      "sha256": "4f378cabd3bddbee8554b25b5a04d75703753d70df0914f7bb14230658a6fa90"
+    },
+    {
+      "path": "c17-functional-wfi-help-ordinary.log",
+      "bytes": 1748,
+      "sha256": "584478c1fd617befcecc3f88912d633abce3c123484f0a0363e21c80ab9ac877"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-0/mefpp.paf",
+      "bytes": 15332,
+      "sha256": "f2bb9fc0d6e407fcb43f365d4be780099f9d980edf17592e91b92dffeff5f690"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-0/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "558863542d5a428e9725e5e16682f7e76a84e105338a3e49ab8bb90cf9e2ae71"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-0-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-0-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-1/mefpp.paf",
+      "bytes": 15333,
+      "sha256": "621da32741d6f29590960ad6da481178e0d964542278ee05de65212bb222f108"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-1/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "fc646feb4cf01e7249430dec73698a423d4d228cea9c9e64c6b58a4b23fa1871"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-1-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-1-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-2/mefpp.paf",
+      "bytes": 15335,
+      "sha256": "c73f004414bb4805a730afe6c6573a1685445bcf2dcb7dc42659c930ebe5edf1"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-2/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "1ed04e08e4f3d13aa3a9fc91a26257ad8928b3bf1784cd4292951d993f827545"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-2-observer.log",
+      "bytes": 399,
+      "sha256": "53becb1d4d5bf1396c15ef207b1d3c790ad79fab0099a04ee926d97e2ddd3030"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-2-ordinary.log",
+      "bytes": 212,
+      "sha256": "d9eb49317223f379aa96b6cf41122fc0aba4198802a9f5bc98291609f53790de"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-3/mefpp.paf",
+      "bytes": 15334,
+      "sha256": "e27f805f010d07d9a268e58c58fda2082a449acb1d754ada995d899dcf766245"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-3/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "d1f756f09b5d57affe3b195e4cd7afd147079c8bd29b60aba1d53311665575b2"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-3-observer.log",
+      "bytes": 398,
+      "sha256": "fc5cbcd32228b1bd1011c533055db5d1b50d998ea756a0a81fdeee9dfbbda45a"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-3-ordinary.log",
+      "bytes": 211,
+      "sha256": "43c817ddff07d9b8aac727394f01525c070f07e7deb0b979433351a46e58e687"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-4/mefpp.paf",
+      "bytes": 15336,
+      "sha256": "f29cca34b2a332718a3f6ee1f9b45890efc5428ab7520bfe3d84e19663ce42d3"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-4/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "557235af59c3043dc9c9ba0d8535d2b975ade2a48aaf63f0f0b068805e373803"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-4-observer.log",
+      "bytes": 400,
+      "sha256": "9862662f31e3a3533de431266850795410f259e91f2621dfa1c61acf3551f396"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-4-ordinary.log",
+      "bytes": 213,
+      "sha256": "09796ff1c1f7917bb8de88d9db4e3c9e69f4cd44c6d07148e11353481b2e74a8"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-5/mefpp.paf",
+      "bytes": 15341,
+      "sha256": "01552848635a99618ce333a79a48760338ce4437343248724898dcc7f1c314e4"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-5/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "c3106bf940bd096e6790e23197993c8216a7b2e7177847a1ebf71617d45b4bef"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-5-observer.log",
+      "bytes": 405,
+      "sha256": "918e756e899e1cb68abfe4016d6e674a26e23ec4fa58e29ffc8a72beead8ff0b"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-5-ordinary.log",
+      "bytes": 218,
+      "sha256": "1f3b5b049a85514ffd8f53c9661e27ee849d1bd422c8a24b8ac70625590d049f"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-6/mefpp.paf",
+      "bytes": 15334,
+      "sha256": "e017c8e26b6a63902d994270f6cee66f081daae3338f08ae1d604fffa594136c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-6/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "cea21c5ee5052b9f59ab109a0f73a2cb71e7568bf3f4c884faa33774d8708947"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-6-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-count-6-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-0/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-0/run-provenance.json",
+      "bytes": 1413,
+      "sha256": "d55e11429a73ff4d9a89c4c03858bff3aa89f0a3f797b33c7ebc25c7f4ef0ea4"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-0-observer.log",
+      "bytes": 427,
+      "sha256": "facb2449f078f18d14c3bea0ee3be0056841b776edf1b5ffe917404abb9b0f1a"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-0-ordinary.log",
+      "bytes": 240,
+      "sha256": "c4cb71787eb1a4d0b7a81edce6642eaa135307336f8b36057932c7e340ee2fe8"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-1/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-1/run-provenance.json",
+      "bytes": 1414,
+      "sha256": "5d7a7f26cedeec7cd9f647c48ad473a69f59a4e3ec322ef6a4fdf490551406d6"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-1-observer.log",
+      "bytes": 428,
+      "sha256": "d37041f9beef570d168b0687bc6cb6978796009a53f8a4fa6468dca67b697162"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-1-ordinary.log",
+      "bytes": 241,
+      "sha256": "6b0c1a55c5eb6d37e384c1ebd4f7cb1d5c1ba3b12a5ec0d0bf622ee9c7a86d15"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-2/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-2/run-provenance.json",
+      "bytes": 1416,
+      "sha256": "902057f9e0b449abb3957f376d524cb53a377c0e36bbb3cd8fe467685e8a5f38"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-2-observer.log",
+      "bytes": 430,
+      "sha256": "9997ededd06070a8ce668315503627c03c594333e336aa7009f3c209d8effa20"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-2-ordinary.log",
+      "bytes": 243,
+      "sha256": "c3165419c6aa093843736fd09ded507f648a4ddd53bb1b030c7b4fded7cf1bd4"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-3/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-3/run-provenance.json",
+      "bytes": 1415,
+      "sha256": "2f83f3ce082662371589a28b0dd6254941cd48aa8487347db9f5fd173d2ccca7"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-3-observer.log",
+      "bytes": 429,
+      "sha256": "e78181af037ca979d9f7c9d8d8be3e9017cc012a559601612582b142032385dd"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-3-ordinary.log",
+      "bytes": 242,
+      "sha256": "4c8abb130b07f21714bec07b6b7c64a8c27ebd5424f1e86f10ac14a56b64282f"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-4/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-4/run-provenance.json",
+      "bytes": 1415,
+      "sha256": "cd50a6564880b3080377dae0ba102e6e8a3038ce9a427b56fe95c2a915daf848"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-4-observer.log",
+      "bytes": 429,
+      "sha256": "6eb92c93a34d1433d082f6ae90206de824fd91829da6b816d1b6dc1caed597e5"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-4-ordinary.log",
+      "bytes": 242,
+      "sha256": "908b82f476549c2495e88a0c49105a0ad6607860a419588297524c73ea376f7b"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-5/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-5/run-provenance.json",
+      "bytes": 1419,
+      "sha256": "3514d7e7fdff1e75bc95d0581ecd42c9c5d8d07f7006ac9107a93cf17151a4fc"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-5-observer.log",
+      "bytes": 433,
+      "sha256": "02bf23d00283e0c1d85f14c6a4afbe14a8ca299f8854c74ea900fe7c213bb50a"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-5-ordinary.log",
+      "bytes": 246,
+      "sha256": "436242e2295c12d176181f6ab46faddde248d97b1dccdce7448d3847688193e6"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-6/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-6/run-provenance.json",
+      "bytes": 1419,
+      "sha256": "c4825cf60cf4152a606fa6b3f2b2fa0661419cae6d0eb32db5d2ecd0fa436afe"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-6-observer.log",
+      "bytes": 433,
+      "sha256": "a0d8ed3c0fb8a73de9f961eb8a349780499dc1707b54e4b93249c6b9252ba15d"
+    },
+    {
+      "path": "c17-functional-wfi-invalid-satmax-6-ordinary.log",
+      "bytes": 246,
+      "sha256": "5125552cea051b82b8734fea2b628391780b640a67a7b42aed9d6cc252f0823d"
+    },
+    {
+      "path": "c17-functional-wfi-license/run-provenance.json",
+      "bytes": 1325,
+      "sha256": "397e86ed4c900b106b1f1cd6250368a0ea253eedb5bd8839781dd39aafb6474d"
+    },
+    {
+      "path": "c17-functional-wfi-license-observer.log",
+      "bytes": 1549,
+      "sha256": "e9eb79851e477c15a915cbdaf8f8ddf7e7852ee8ebfffb9d2ecd41357deafc09"
+    },
+    {
+      "path": "c17-functional-wfi-license-ordinary.log",
+      "bytes": 1362,
+      "sha256": "f0182e2dff422f6713dae9c323f04290e57fe5e7266ee51c9b6ba5050227ead4"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-crop-y-max-chip2/mefpp.paf",
+      "bytes": 15315,
+      "sha256": "218c7d6cc087b95e547caa93c627947279a4ff02cc759b616a3f93aa5f1e7c17"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-crop-y-max-chip2/run-provenance.json",
+      "bytes": 1447,
+      "sha256": "2f0e80ade501ef6ceefd9c2465e71416b7a173ed1930c065064d36830873fc73"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-crop-y-max-chip2-observer.log",
+      "bytes": 396,
+      "sha256": "57592eda23aa7edfb5bc1fba9b8ec5fe9c07ae123ad2601a7969ce8ddcbc7f36"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-crop-y-max-chip2-ordinary.log",
+      "bytes": 209,
+      "sha256": "ee0617f2853335b4b7881559c6baccbf8ac2efd215b2056cc0ba6b8747daef74"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-nchips/mefpp.paf",
+      "bytes": 15318,
+      "sha256": "7872ffee191671296c2e0b785e370f95660eb4a94781ba344e3a5d9e9d79142f"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-nchips/run-provenance.json",
+      "bytes": 1427,
+      "sha256": "8515de9be578433534a97946511eb2f8d4120ef78ad0dc23ed90159a37060bf4"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-nchips-observer.log",
+      "bytes": 386,
+      "sha256": "dbbcca0550f65e71b086cebe8246d3e6cd89db6f7e023d4288f669ed6148df8b"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-nchips-ordinary.log",
+      "bytes": 199,
+      "sha256": "54081ca2e2e9bf6cfcbd994822bfdb8671ec12cce2a72d22bb04987c4c2e9ab6"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-satmax/mefpp.paf",
+      "bytes": 15314,
+      "sha256": "ca028918bbea7b4020a36077c13f1af4d6447949ba10394d66a636bcb73d4c8d"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-satmax/run-provenance.json",
+      "bytes": 1427,
+      "sha256": "849f49935b490da2a499b1c44764f4581887ab9688cb710d2417a07e83fd5d38"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c17-functional-wfi-missing-mef-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c17-functional-wfi-missing-option-value/run-provenance.json",
+      "bytes": 1351,
+      "sha256": "470c6aeefc74f53316759b1927388f1a00af23c6911b98cd2deaf36d6f11cd1c"
+    },
+    {
+      "path": "c17-functional-wfi-missing-option-value-observer.log",
+      "bytes": 472,
+      "sha256": "2da09edbc9df1c5fec28f4e0bb659366f3d65bb4e98a5bc145f67f8bb390ea6a"
+    },
+    {
+      "path": "c17-functional-wfi-missing-option-value-ordinary.log",
+      "bytes": 271,
+      "sha256": "8aad3bec9a73905fee31441847968b1da7634a10681f0921c3844bbbc73f92cb"
+    },
+    {
+      "path": "c17-functional-wfi-missing-science-calibrations/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-missing-science-calibrations/run-provenance.json",
+      "bytes": 1449,
+      "sha256": "867eeaa3126036aec4ccb3dd873ee0c5821367050bb0596bf490b8a3d4e2666b"
+    },
+    {
+      "path": "c17-functional-wfi-missing-science-calibrations-observer.log",
+      "bytes": 366,
+      "sha256": "52e9d8ddc955a0ade02d8f53c28c95e66798f8200d7183bf78ea1dde0bae9f6d"
+    },
+    {
+      "path": "c17-functional-wfi-missing-science-calibrations-ordinary.log",
+      "bytes": 179,
+      "sha256": "b77646791f8bdc5d5e1588b5706a9b3427b517762f0aca5f66f49df27dc8b253"
+    },
+    {
+      "path": "c17-functional-wfi-missing-split-input/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c17-functional-wfi-missing-split-input/run-provenance.json",
+      "bytes": 1429,
+      "sha256": "060bd212140111f4a2bcef1353d86634d5b1cb1728da1a660cd6d32ea088f181"
+    },
+    {
+      "path": "c17-functional-wfi-missing-split-input-observer.log",
+      "bytes": 371,
+      "sha256": "887d37659e9d899d1242bcef06769efbbbfa308072ade42562afe1a1b2733de4"
+    },
+    {
+      "path": "c17-functional-wfi-missing-split-input-ordinary.log",
+      "bytes": 184,
+      "sha256": "17ad863941cd924747893425cd7163c02ad4a8932f33aefecb58d2b921a197f5"
+    },
+    {
+      "path": "c17-functional-wfi-no-arguments/run-provenance.json",
+      "bytes": 1316,
+      "sha256": "bb9e4022090f5404d48f3ca8339050761e1820737389584db97bc97a3ebfaa2b"
+    },
+    {
+      "path": "c17-functional-wfi-no-arguments-observer.log",
+      "bytes": 1907,
+      "sha256": "8d400368eaf7950acf7bea08b673e038d6989261b36b452abb65c4dfc5bd2b4b"
+    },
+    {
+      "path": "c17-functional-wfi-no-arguments-ordinary.log",
+      "bytes": 1692,
+      "sha256": "9650bd04abd720c988aabed5ba393e79cf5077d227657a554b31affaf4c216b7"
+    },
+    {
+      "path": "c17-functional-wfi-paf-absent/run-provenance.json",
+      "bytes": 1349,
+      "sha256": "689508e93432ddc232bbf670e87f27a03d61f21d3f01ef67fd6e765c654ca272"
+    },
+    {
+      "path": "c17-functional-wfi-paf-absent-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c17-functional-wfi-paf-absent-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c17-functional-wfi-paf-malformed/mefpp.paf",
+      "bytes": 18,
+      "sha256": "783455ad5a364d286b23d4dbcbf7ddfd77a18869931dde2ecd28f42d11072bd4"
+    },
+    {
+      "path": "c17-functional-wfi-paf-malformed/run-provenance.json",
+      "bytes": 1417,
+      "sha256": "451bc64bfec34f0f8dceca0f1d800f138b65dca9c4a255d80a9b4e5991246df0"
+    },
+    {
+      "path": "c17-functional-wfi-paf-malformed-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c17-functional-wfi-paf-malformed-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c17-functional-wfi-unknown-option/run-provenance.json",
+      "bytes": 1339,
+      "sha256": "3f92f7b1c749cc0912c19bf9d4bee1c6a4da9b076bb2e4881523d88ead183b8d"
+    },
+    {
+      "path": "c17-functional-wfi-unknown-option-observer.log",
+      "bytes": 454,
+      "sha256": "ea259a1b1a51133a5d9659724b85ac6ecbe813db53aa8baeeb9e082a6d06d7d0"
+    },
+    {
+      "path": "c17-functional-wfi-unknown-option-ordinary.log",
+      "bytes": 253,
+      "sha256": "aa5a752d5c55b60b9c6eb030070a48dc294618609d8ab966be2e38775105297b"
+    },
+    {
+      "path": "c17-functional-wfi-valueless-satmax/mefpp.paf",
+      "bytes": 15326,
+      "sha256": "e84398bba788aad2c07306923a047444b1ba5ff41d8d1fe72753cd333a0fd66a"
+    },
+    {
+      "path": "c17-functional-wfi-valueless-satmax/run-provenance.json",
+      "bytes": 1423,
+      "sha256": "4d9f6ab08212628022e142499ed12687223f45a711475a0e20ce55360ae26cd6"
+    },
+    {
+      "path": "c17-functional-wfi-valueless-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c17-functional-wfi-valueless-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c17-functional-wfi-version/run-provenance.json",
+      "bytes": 1325,
+      "sha256": "c3fb99049293dec2a42e48b4ac19fd4fdf4f6b51023df9f3fe506186a23bd6b4"
+    },
+    {
+      "path": "c17-functional-wfi-version-observer.log",
+      "bytes": 396,
+      "sha256": "8a2644d3cc2a907e2789230aee732081466e37c1b5ff5bba4bcf3df10071630f"
+    },
+    {
+      "path": "c17-functional-wfi-version-ordinary.log",
+      "bytes": 209,
+      "sha256": "c1aeedae42f3880af0c0fe69ffbb770d53ba647ddbf10d253f3186b75d5e4ba1"
+    },
+    {
+      "path": "c90-functional-omegacam-help/run-provenance.json",
+      "bytes": 1326,
+      "sha256": "b77be43d5f7e93249b0a7a7e214b0a79c1411693e031e2a1249161c34db8b1be"
+    },
+    {
+      "path": "c90-functional-omegacam-help-observer.log",
+      "bytes": 1963,
+      "sha256": "fee2b776025603066c270a38ac9ecafc0c9f6d95c438ae49cd6d456844f79e94"
+    },
+    {
+      "path": "c90-functional-omegacam-help-ordinary.log",
+      "bytes": 1748,
+      "sha256": "5e21ece308785f2aeaabdb923fd112ff82a7d0baf94af3991db1978a630b2a39"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-0/mefpp.paf",
+      "bytes": 30350,
+      "sha256": "6c24fbcf11a78ac7ba076d60a21e8dec4e688db712b52ddb52e7a8018b2d9d2f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-0/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "603c189d79e36608a5739a299ea5fcd78c27a2cce64ef613aa8d54d6ecdea1cb"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-0-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-0-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-1/mefpp.paf",
+      "bytes": 30351,
+      "sha256": "b321a03886483b8b13eca7fb3539d2763a2f7d273025a4ee1d9fbd214ebae89b"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-1/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "0639265c28f9ff01dc6d3c0060e34654948afda60abcab446c9a978ae9387595"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-1-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-1-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-2/mefpp.paf",
+      "bytes": 30353,
+      "sha256": "363ee70e9dde8dc12da95af444981fe5f53d184cbd9510a5ca5f57981c05c033"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-2/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "e2283a1a7aa463c2b0fecc8a7afa777b40be162a3f4f251e09aebe6da8acb5bc"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-2-observer.log",
+      "bytes": 399,
+      "sha256": "53becb1d4d5bf1396c15ef207b1d3c790ad79fab0099a04ee926d97e2ddd3030"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-2-ordinary.log",
+      "bytes": 212,
+      "sha256": "d9eb49317223f379aa96b6cf41122fc0aba4198802a9f5bc98291609f53790de"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-3/mefpp.paf",
+      "bytes": 30352,
+      "sha256": "7f52ade5f5f225d7b8a5e2123837f213bfccfee3adaa3b2f27aec380b18bb4dc"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-3/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "e4899eb031c352544a1522a692b5dd1bc802657d55a3fe1fede59997d651504b"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-3-observer.log",
+      "bytes": 398,
+      "sha256": "fc5cbcd32228b1bd1011c533055db5d1b50d998ea756a0a81fdeee9dfbbda45a"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-3-ordinary.log",
+      "bytes": 211,
+      "sha256": "43c817ddff07d9b8aac727394f01525c070f07e7deb0b979433351a46e58e687"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-4/mefpp.paf",
+      "bytes": 30354,
+      "sha256": "9145698fef1a41dc5818db1bd2a85adcbfd82091227174dc38f656bf8dde7a61"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-4/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "f79df58a8646bdbe22d1004107de7e876e0ca77a6eb9f54ad6d92018fc913b81"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-4-observer.log",
+      "bytes": 400,
+      "sha256": "9862662f31e3a3533de431266850795410f259e91f2621dfa1c61acf3551f396"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-4-ordinary.log",
+      "bytes": 213,
+      "sha256": "09796ff1c1f7917bb8de88d9db4e3c9e69f4cd44c6d07148e11353481b2e74a8"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-5/mefpp.paf",
+      "bytes": 30359,
+      "sha256": "aec245c4dd0707978ff074464b07b8f4020f2405ac9b90fba90e1eb3aa463905"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-5/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "fceee2e5f02e46957fd0b257c6b16242b5931416898b3f7c5f9a2ac0a3a39aa3"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-5-observer.log",
+      "bytes": 405,
+      "sha256": "918e756e899e1cb68abfe4016d6e674a26e23ec4fa58e29ffc8a72beead8ff0b"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-5-ordinary.log",
+      "bytes": 218,
+      "sha256": "1f3b5b049a85514ffd8f53c9661e27ee849d1bd422c8a24b8ac70625590d049f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-6/mefpp.paf",
+      "bytes": 30352,
+      "sha256": "d592b1a4a6c289d18d810cf475d7bf948feebfab533b3e2b8f7843daf5700975"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-6/run-provenance.json",
+      "bytes": 1431,
+      "sha256": "83b7094f20a159f6fe34aae2d6f10ced2f54ce2dc3045f9c8cc4198467d563b7"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-6-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-count-6-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-0/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-0/run-provenance.json",
+      "bytes": 1423,
+      "sha256": "8a2c43b860ada164c03e06657f1c61a2d09d822ec4c9ee4ae422ca27776b3b00"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-0-observer.log",
+      "bytes": 427,
+      "sha256": "facb2449f078f18d14c3bea0ee3be0056841b776edf1b5ffe917404abb9b0f1a"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-0-ordinary.log",
+      "bytes": 240,
+      "sha256": "c4cb71787eb1a4d0b7a81edce6642eaa135307336f8b36057932c7e340ee2fe8"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-1/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-1/run-provenance.json",
+      "bytes": 1424,
+      "sha256": "30b497eb9cff9bac3e504e3cb747a45f4a6557d903833b7f13c0bea96d5fd359"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-1-observer.log",
+      "bytes": 428,
+      "sha256": "d37041f9beef570d168b0687bc6cb6978796009a53f8a4fa6468dca67b697162"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-1-ordinary.log",
+      "bytes": 241,
+      "sha256": "6b0c1a55c5eb6d37e384c1ebd4f7cb1d5c1ba3b12a5ec0d0bf622ee9c7a86d15"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-2/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-2/run-provenance.json",
+      "bytes": 1426,
+      "sha256": "ae678d8b965cecf1320fce1da73840f5ad0cc1f67596e0806f46660260913bd9"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-2-observer.log",
+      "bytes": 430,
+      "sha256": "9997ededd06070a8ce668315503627c03c594333e336aa7009f3c209d8effa20"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-2-ordinary.log",
+      "bytes": 243,
+      "sha256": "c3165419c6aa093843736fd09ded507f648a4ddd53bb1b030c7b4fded7cf1bd4"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-3/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-3/run-provenance.json",
+      "bytes": 1425,
+      "sha256": "17e2a7a9a4cfedf482a0d96353c18755b01f6952d08d29cdd51d26474d99fb0e"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-3-observer.log",
+      "bytes": 429,
+      "sha256": "e78181af037ca979d9f7c9d8d8be3e9017cc012a559601612582b142032385dd"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-3-ordinary.log",
+      "bytes": 242,
+      "sha256": "4c8abb130b07f21714bec07b6b7c64a8c27ebd5424f1e86f10ac14a56b64282f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-4/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-4/run-provenance.json",
+      "bytes": 1425,
+      "sha256": "f865d3953facf1c8e55894cf38ac89b4bff4d60f4db36de5d0bb0864f254f463"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-4-observer.log",
+      "bytes": 429,
+      "sha256": "6eb92c93a34d1433d082f6ae90206de824fd91829da6b816d1b6dc1caed597e5"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-4-ordinary.log",
+      "bytes": 242,
+      "sha256": "908b82f476549c2495e88a0c49105a0ad6607860a419588297524c73ea376f7b"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-5/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-5/run-provenance.json",
+      "bytes": 1429,
+      "sha256": "d1eb131d2079832ddc5792b80c82362e08829e55cc6c8160e152ec94c2508cc0"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-5-observer.log",
+      "bytes": 433,
+      "sha256": "02bf23d00283e0c1d85f14c6a4afbe14a8ca299f8854c74ea900fe7c213bb50a"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-5-ordinary.log",
+      "bytes": 246,
+      "sha256": "436242e2295c12d176181f6ab46faddde248d97b1dccdce7448d3847688193e6"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-6/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-6/run-provenance.json",
+      "bytes": 1429,
+      "sha256": "10cba465dc8313906fba78fae4b21d20b31ba436997dfa4a78bc8e4ac2704a13"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-6-observer.log",
+      "bytes": 433,
+      "sha256": "a0d8ed3c0fb8a73de9f961eb8a349780499dc1707b54e4b93249c6b9252ba15d"
+    },
+    {
+      "path": "c90-functional-omegacam-invalid-satmax-6-ordinary.log",
+      "bytes": 246,
+      "sha256": "5125552cea051b82b8734fea2b628391780b640a67a7b42aed9d6cc252f0823d"
+    },
+    {
+      "path": "c90-functional-omegacam-license/run-provenance.json",
+      "bytes": 1335,
+      "sha256": "e5128182ccaf64e29aed85c944917bc75a0df8862ff4eeeb9b20e950dcae85ac"
+    },
+    {
+      "path": "c90-functional-omegacam-license-observer.log",
+      "bytes": 1549,
+      "sha256": "e9eb79851e477c15a915cbdaf8f8ddf7e7852ee8ebfffb9d2ecd41357deafc09"
+    },
+    {
+      "path": "c90-functional-omegacam-license-ordinary.log",
+      "bytes": 1362,
+      "sha256": "f0182e2dff422f6713dae9c323f04290e57fe5e7266ee51c9b6ba5050227ead4"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-crop-y-max-chip2/mefpp.paf",
+      "bytes": 30334,
+      "sha256": "66e737b4bc42a4d6851fff9a6676ac5bc77462e34ee70fada434608d743a019b"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-crop-y-max-chip2/run-provenance.json",
+      "bytes": 1457,
+      "sha256": "48203015f573b21bf90773d62f1d4f7d7d079d09225428b96ad3abe5c08d33a5"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-crop-y-max-chip2-observer.log",
+      "bytes": 396,
+      "sha256": "57592eda23aa7edfb5bc1fba9b8ec5fe9c07ae123ad2601a7969ce8ddcbc7f36"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-crop-y-max-chip2-ordinary.log",
+      "bytes": 209,
+      "sha256": "ee0617f2853335b4b7881559c6baccbf8ac2efd215b2056cc0ba6b8747daef74"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-nchips/mefpp.paf",
+      "bytes": 30336,
+      "sha256": "c1297c1d6fe2dfcf5411bbb07ef635c4174d84801edad37e0b0f2b44cc09381e"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-nchips/run-provenance.json",
+      "bytes": 1437,
+      "sha256": "45c2ab82113115b118e32b2ac64e87226fb83e556fc4a3676141bb926a11ddb0"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-nchips-observer.log",
+      "bytes": 386,
+      "sha256": "dbbcca0550f65e71b086cebe8246d3e6cd89db6f7e023d4288f669ed6148df8b"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-nchips-ordinary.log",
+      "bytes": 199,
+      "sha256": "54081ca2e2e9bf6cfcbd994822bfdb8671ec12cce2a72d22bb04987c4c2e9ab6"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-satmax/mefpp.paf",
+      "bytes": 30333,
+      "sha256": "23e1a1db570cdb5f5682f9cf175550bda8ecd8dc6bbf3172c5f53bb010b1bb25"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-satmax/run-provenance.json",
+      "bytes": 1437,
+      "sha256": "ebdca3b85f949df26039cde970baf3b49af239c9c70cec669e0dc0c94455c7a5"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-mef-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-option-value/run-provenance.json",
+      "bytes": 1361,
+      "sha256": "b994827e026f1b005df35ffb4ecaa87e08be75595dbfb53e9ec38fb9814ff3c8"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-option-value-observer.log",
+      "bytes": 472,
+      "sha256": "61767be258db4fcc6e65e918d5b59e1a8dd1566cdcbb8c38f1ff32d275a4f73b"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-option-value-ordinary.log",
+      "bytes": 271,
+      "sha256": "d26d269120f811adbb2c64a38cea9978124461eb1ce745ae0ec5af3a608a5d5d"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-science-calibrations/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-science-calibrations/run-provenance.json",
+      "bytes": 1459,
+      "sha256": "91077123d50762aa19e406416e9bf3106e25fdb3fda54f024057e34b99fc6355"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-science-calibrations-observer.log",
+      "bytes": 366,
+      "sha256": "52e9d8ddc955a0ade02d8f53c28c95e66798f8200d7183bf78ea1dde0bae9f6d"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-science-calibrations-ordinary.log",
+      "bytes": 179,
+      "sha256": "b77646791f8bdc5d5e1588b5706a9b3427b517762f0aca5f66f49df27dc8b253"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-split-input/mefpp.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-split-input/run-provenance.json",
+      "bytes": 1439,
+      "sha256": "af779d932492462574181e4392b8213129b92da792196bb7193a5d8b41e3bd40"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-split-input-observer.log",
+      "bytes": 371,
+      "sha256": "887d37659e9d899d1242bcef06769efbbbfa308072ade42562afe1a1b2733de4"
+    },
+    {
+      "path": "c90-functional-omegacam-missing-split-input-ordinary.log",
+      "bytes": 184,
+      "sha256": "17ad863941cd924747893425cd7163c02ad4a8932f33aefecb58d2b921a197f5"
+    },
+    {
+      "path": "c90-functional-omegacam-no-arguments/run-provenance.json",
+      "bytes": 1326,
+      "sha256": "0f19d3334ac03f711c270cc9888b93e5a9f7edbe6c41f75c13276f58df8edacb"
+    },
+    {
+      "path": "c90-functional-omegacam-no-arguments-observer.log",
+      "bytes": 1907,
+      "sha256": "925f6322741110802c9daabf4998dfa69468ed2e5eadb3757e7791e094f86801"
+    },
+    {
+      "path": "c90-functional-omegacam-no-arguments-ordinary.log",
+      "bytes": 1692,
+      "sha256": "6265601cd8d82d6525c7fa02ab4a0cc64898353e080ab5ffe2f8cd3b5b80242b"
+    },
+    {
+      "path": "c90-functional-omegacam-paf-absent/run-provenance.json",
+      "bytes": 1359,
+      "sha256": "da0dbd67c2a06c7b2ab5d77db859bb236cfe3578ff1fcae82db0276f718203b0"
+    },
+    {
+      "path": "c90-functional-omegacam-paf-absent-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c90-functional-omegacam-paf-absent-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c90-functional-omegacam-paf-malformed/mefpp.paf",
+      "bytes": 18,
+      "sha256": "783455ad5a364d286b23d4dbcbf7ddfd77a18869931dde2ecd28f42d11072bd4"
+    },
+    {
+      "path": "c90-functional-omegacam-paf-malformed/run-provenance.json",
+      "bytes": 1427,
+      "sha256": "cccaca9cc40bea49e6c5e5fd8418c254b493bacc49f14b6a8e1d1102ce4bf5a2"
+    },
+    {
+      "path": "c90-functional-omegacam-paf-malformed-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c90-functional-omegacam-paf-malformed-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c90-functional-omegacam-unknown-option/run-provenance.json",
+      "bytes": 1349,
+      "sha256": "107beb30e4c597b9379f179243047ca3078be4ff436f8917512a678f810bc173"
+    },
+    {
+      "path": "c90-functional-omegacam-unknown-option-observer.log",
+      "bytes": 454,
+      "sha256": "743581a4c5b07b6a52d20bf22e31d805a7fa632e4bd9f6f22254c8aa4bc562e6"
+    },
+    {
+      "path": "c90-functional-omegacam-unknown-option-ordinary.log",
+      "bytes": 253,
+      "sha256": "9d6aadff14cca34da68c1388293760ea2df4676ba72d6ecd2619ab7a346227f3"
+    },
+    {
+      "path": "c90-functional-omegacam-valueless-satmax/mefpp.paf",
+      "bytes": 30345,
+      "sha256": "85789d3da951b7f0ec214de235abdcf6f2d948f73283c4626a2789424da397f1"
+    },
+    {
+      "path": "c90-functional-omegacam-valueless-satmax/run-provenance.json",
+      "bytes": 1433,
+      "sha256": "02e8941f86958b325642fcd4acaaa56da441cd7dd6b0d4bf52e7c2953b0fa9cc"
+    },
+    {
+      "path": "c90-functional-omegacam-valueless-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c90-functional-omegacam-valueless-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c90-functional-omegacam-version/run-provenance.json",
+      "bytes": 1335,
+      "sha256": "e2fc069b1f7fac18f1e6d96e12099c1e055681b4e15f572b493fc6a2202d0c19"
+    },
+    {
+      "path": "c90-functional-omegacam-version-observer.log",
+      "bytes": 396,
+      "sha256": "8a2644d3cc2a907e2789230aee732081466e37c1b5ff5bba4bcf3df10071630f"
+    },
+    {
+      "path": "c90-functional-omegacam-version-ordinary.log",
+      "bytes": 209,
+      "sha256": "c1aeedae42f3880af0c0fe69ffbb770d53ba647ddbf10d253f3186b75d5e4ba1"
+    },
+    {
+      "path": "c90-functional-parser-contract/run-provenance.json",
+      "bytes": 664,
+      "sha256": "51f256e433f0e0af1459832b5a145726a8db67223a8e6414d7c53d903274f9ff"
+    },
+    {
+      "path": "c90-functional-parser-contract.log",
+      "bytes": 390,
+      "sha256": "4c1e852ec21a0a5ee9e7a2b07f075dead7063dfb6c86f2d38218b45d88f988e8"
+    },
+    {
+      "path": "c90-functional-wfi-help/run-provenance.json",
+      "bytes": 1316,
+      "sha256": "37f181703674bc074f521d27e820fff4c77aff8b40295bace4c314591b545aa3"
+    },
+    {
+      "path": "c90-functional-wfi-help-observer.log",
+      "bytes": 1963,
+      "sha256": "fee2b776025603066c270a38ac9ecafc0c9f6d95c438ae49cd6d456844f79e94"
+    },
+    {
+      "path": "c90-functional-wfi-help-ordinary.log",
+      "bytes": 1748,
+      "sha256": "5e21ece308785f2aeaabdb923fd112ff82a7d0baf94af3991db1978a630b2a39"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-0/mefpp.paf",
+      "bytes": 15332,
+      "sha256": "f2bb9fc0d6e407fcb43f365d4be780099f9d980edf17592e91b92dffeff5f690"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-0/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "635ec942f640cd9b4bac5ccdb15f817117bb599a995dcd936f9e0219592e04cb"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-0-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-0-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-1/mefpp.paf",
+      "bytes": 15333,
+      "sha256": "621da32741d6f29590960ad6da481178e0d964542278ee05de65212bb222f108"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-1/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "326576104f3e720ab9ef5ca77d0254d80700aa5cb00021a79155f06dfc134a8a"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-1-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-1-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-2/mefpp.paf",
+      "bytes": 15335,
+      "sha256": "c73f004414bb4805a730afe6c6573a1685445bcf2dcb7dc42659c930ebe5edf1"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-2/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "f350a61b8adf2d221913fbe89ac1a4c890629289246d1a6355d3981ee7ee5ba5"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-2-observer.log",
+      "bytes": 399,
+      "sha256": "53becb1d4d5bf1396c15ef207b1d3c790ad79fab0099a04ee926d97e2ddd3030"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-2-ordinary.log",
+      "bytes": 212,
+      "sha256": "d9eb49317223f379aa96b6cf41122fc0aba4198802a9f5bc98291609f53790de"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-3/mefpp.paf",
+      "bytes": 15334,
+      "sha256": "e27f805f010d07d9a268e58c58fda2082a449acb1d754ada995d899dcf766245"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-3/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "346d9a6eb4018fdd0954474f5d2f3f028dac36f3bc194c75a30ddb85079c076f"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-3-observer.log",
+      "bytes": 398,
+      "sha256": "fc5cbcd32228b1bd1011c533055db5d1b50d998ea756a0a81fdeee9dfbbda45a"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-3-ordinary.log",
+      "bytes": 211,
+      "sha256": "43c817ddff07d9b8aac727394f01525c070f07e7deb0b979433351a46e58e687"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-4/mefpp.paf",
+      "bytes": 15336,
+      "sha256": "f29cca34b2a332718a3f6ee1f9b45890efc5428ab7520bfe3d84e19663ce42d3"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-4/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "2900c4149461b64c37d077d44f0f3460251e06f9218dc5df0262c388dc0d9907"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-4-observer.log",
+      "bytes": 400,
+      "sha256": "9862662f31e3a3533de431266850795410f259e91f2621dfa1c61acf3551f396"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-4-ordinary.log",
+      "bytes": 213,
+      "sha256": "09796ff1c1f7917bb8de88d9db4e3c9e69f4cd44c6d07148e11353481b2e74a8"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-5/mefpp.paf",
+      "bytes": 15341,
+      "sha256": "01552848635a99618ce333a79a48760338ce4437343248724898dcc7f1c314e4"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-5/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "c3072532aa518de12299695b1b82ce2941dfdc059c919177d7a5e95e7dfe382c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-5-observer.log",
+      "bytes": 405,
+      "sha256": "918e756e899e1cb68abfe4016d6e674a26e23ec4fa58e29ffc8a72beead8ff0b"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-5-ordinary.log",
+      "bytes": 218,
+      "sha256": "1f3b5b049a85514ffd8f53c9661e27ee849d1bd422c8a24b8ac70625590d049f"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-6/mefpp.paf",
+      "bytes": 15334,
+      "sha256": "e017c8e26b6a63902d994270f6cee66f081daae3338f08ae1d604fffa594136c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-6/run-provenance.json",
+      "bytes": 1421,
+      "sha256": "2a060b4d84bd50c375deacedca0b9e75804571bb76ffe377a2e1fdfb46c18a94"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-6-observer.log",
+      "bytes": 391,
+      "sha256": "cc8f87798dff3d5ddf15d4f2469f1bfa9949b1c5968e5557560183f4688b6da5"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-count-6-ordinary.log",
+      "bytes": 204,
+      "sha256": "c1a9ae19e4ea34d3fb88cfb4990344ab42311dfe04b48103eabafe6665883d72"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-0/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-0/run-provenance.json",
+      "bytes": 1413,
+      "sha256": "290a03ae1894086b587337e46ce623facd3e7ee4c909cabd6d5eab4debf4e85b"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-0-observer.log",
+      "bytes": 427,
+      "sha256": "facb2449f078f18d14c3bea0ee3be0056841b776edf1b5ffe917404abb9b0f1a"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-0-ordinary.log",
+      "bytes": 240,
+      "sha256": "c4cb71787eb1a4d0b7a81edce6642eaa135307336f8b36057932c7e340ee2fe8"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-1/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-1/run-provenance.json",
+      "bytes": 1414,
+      "sha256": "ad3a95cc005dd3d12ae61fa655fcfac7ad3aa5f18a7257dbed428e1260ddeb3b"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-1-observer.log",
+      "bytes": 428,
+      "sha256": "d37041f9beef570d168b0687bc6cb6978796009a53f8a4fa6468dca67b697162"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-1-ordinary.log",
+      "bytes": 241,
+      "sha256": "6b0c1a55c5eb6d37e384c1ebd4f7cb1d5c1ba3b12a5ec0d0bf622ee9c7a86d15"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-2/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-2/run-provenance.json",
+      "bytes": 1416,
+      "sha256": "cca9b2d3554ce74eed4c28fb717ef550e394fc352d9f15ded1338b11cac88751"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-2-observer.log",
+      "bytes": 430,
+      "sha256": "9997ededd06070a8ce668315503627c03c594333e336aa7009f3c209d8effa20"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-2-ordinary.log",
+      "bytes": 243,
+      "sha256": "c3165419c6aa093843736fd09ded507f648a4ddd53bb1b030c7b4fded7cf1bd4"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-3/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-3/run-provenance.json",
+      "bytes": 1415,
+      "sha256": "a3e9552a70402b54390bed338a3bcd9418a8ae7dba1d2e08f934b6e6487c4eb2"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-3-observer.log",
+      "bytes": 429,
+      "sha256": "e78181af037ca979d9f7c9d8d8be3e9017cc012a559601612582b142032385dd"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-3-ordinary.log",
+      "bytes": 242,
+      "sha256": "4c8abb130b07f21714bec07b6b7c64a8c27ebd5424f1e86f10ac14a56b64282f"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-4/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-4/run-provenance.json",
+      "bytes": 1415,
+      "sha256": "ec5f74303858cc2182f644624a3769cc51743222aa75b43f94e719426b8bccfc"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-4-observer.log",
+      "bytes": 429,
+      "sha256": "6eb92c93a34d1433d082f6ae90206de824fd91829da6b816d1b6dc1caed597e5"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-4-ordinary.log",
+      "bytes": 242,
+      "sha256": "908b82f476549c2495e88a0c49105a0ad6607860a419588297524c73ea376f7b"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-5/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-5/run-provenance.json",
+      "bytes": 1419,
+      "sha256": "508404f6f5ab0693570a9d7b20cc4ab7b0d78d79266cc172d3d6c1d0e9851a1d"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-5-observer.log",
+      "bytes": 433,
+      "sha256": "02bf23d00283e0c1d85f14c6a4afbe14a8ca299f8854c74ea900fe7c213bb50a"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-5-ordinary.log",
+      "bytes": 246,
+      "sha256": "436242e2295c12d176181f6ab46faddde248d97b1dccdce7448d3847688193e6"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-6/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-6/run-provenance.json",
+      "bytes": 1419,
+      "sha256": "e6f843b9e536990ad59172bb207cb4902c4d3b448f34f09089f0fd330a645972"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-6-observer.log",
+      "bytes": 433,
+      "sha256": "a0d8ed3c0fb8a73de9f961eb8a349780499dc1707b54e4b93249c6b9252ba15d"
+    },
+    {
+      "path": "c90-functional-wfi-invalid-satmax-6-ordinary.log",
+      "bytes": 246,
+      "sha256": "5125552cea051b82b8734fea2b628391780b640a67a7b42aed9d6cc252f0823d"
+    },
+    {
+      "path": "c90-functional-wfi-license/run-provenance.json",
+      "bytes": 1325,
+      "sha256": "18162ad98b54de76d3e8b42ca9eb7020ace7abfaf8df508136f0d441eb3ca08f"
+    },
+    {
+      "path": "c90-functional-wfi-license-observer.log",
+      "bytes": 1549,
+      "sha256": "e9eb79851e477c15a915cbdaf8f8ddf7e7852ee8ebfffb9d2ecd41357deafc09"
+    },
+    {
+      "path": "c90-functional-wfi-license-ordinary.log",
+      "bytes": 1362,
+      "sha256": "f0182e2dff422f6713dae9c323f04290e57fe5e7266ee51c9b6ba5050227ead4"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-crop-y-max-chip2/mefpp.paf",
+      "bytes": 15315,
+      "sha256": "218c7d6cc087b95e547caa93c627947279a4ff02cc759b616a3f93aa5f1e7c17"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-crop-y-max-chip2/run-provenance.json",
+      "bytes": 1447,
+      "sha256": "15638b9cb0d3362b63dc823a58a6d56ffadd69e698967734b2190cccd22f703c"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-crop-y-max-chip2-observer.log",
+      "bytes": 396,
+      "sha256": "57592eda23aa7edfb5bc1fba9b8ec5fe9c07ae123ad2601a7969ce8ddcbc7f36"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-crop-y-max-chip2-ordinary.log",
+      "bytes": 209,
+      "sha256": "ee0617f2853335b4b7881559c6baccbf8ac2efd215b2056cc0ba6b8747daef74"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-nchips/mefpp.paf",
+      "bytes": 15318,
+      "sha256": "7872ffee191671296c2e0b785e370f95660eb4a94781ba344e3a5d9e9d79142f"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-nchips/run-provenance.json",
+      "bytes": 1427,
+      "sha256": "4e805325aa62f42b0b59232b4c4943092c1ccacbb4394dbaa5c7b5302893e0f2"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-nchips-observer.log",
+      "bytes": 386,
+      "sha256": "dbbcca0550f65e71b086cebe8246d3e6cd89db6f7e023d4288f669ed6148df8b"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-nchips-ordinary.log",
+      "bytes": 199,
+      "sha256": "54081ca2e2e9bf6cfcbd994822bfdb8671ec12cce2a72d22bb04987c4c2e9ab6"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-satmax/mefpp.paf",
+      "bytes": 15314,
+      "sha256": "ca028918bbea7b4020a36077c13f1af4d6447949ba10394d66a636bcb73d4c8d"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-satmax/run-provenance.json",
+      "bytes": 1427,
+      "sha256": "6cc296f96f36b09e8fb088f1eb7c45f2d8218db8bb38aa1c05ea758db8a9834e"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c90-functional-wfi-missing-mef-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c90-functional-wfi-missing-option-value/run-provenance.json",
+      "bytes": 1351,
+      "sha256": "50f21b3b35705bdd4ee4f07e08173272f410927d35eb96f5fd63163812ccccff"
+    },
+    {
+      "path": "c90-functional-wfi-missing-option-value-observer.log",
+      "bytes": 472,
+      "sha256": "61767be258db4fcc6e65e918d5b59e1a8dd1566cdcbb8c38f1ff32d275a4f73b"
+    },
+    {
+      "path": "c90-functional-wfi-missing-option-value-ordinary.log",
+      "bytes": 271,
+      "sha256": "d26d269120f811adbb2c64a38cea9978124461eb1ce745ae0ec5af3a608a5d5d"
+    },
+    {
+      "path": "c90-functional-wfi-missing-science-calibrations/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-missing-science-calibrations/run-provenance.json",
+      "bytes": 1449,
+      "sha256": "b742af88ad28b371bdc9fbf55466afeffae3d144a7097daa0100f577d5769294"
+    },
+    {
+      "path": "c90-functional-wfi-missing-science-calibrations-observer.log",
+      "bytes": 366,
+      "sha256": "52e9d8ddc955a0ade02d8f53c28c95e66798f8200d7183bf78ea1dde0bae9f6d"
+    },
+    {
+      "path": "c90-functional-wfi-missing-science-calibrations-ordinary.log",
+      "bytes": 179,
+      "sha256": "b77646791f8bdc5d5e1588b5706a9b3427b517762f0aca5f66f49df27dc8b253"
+    },
+    {
+      "path": "c90-functional-wfi-missing-split-input/mefpp.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "c90-functional-wfi-missing-split-input/run-provenance.json",
+      "bytes": 1429,
+      "sha256": "be9af14c332a634025c63a9b52b9063808a27417542503efdded795250f43c44"
+    },
+    {
+      "path": "c90-functional-wfi-missing-split-input-observer.log",
+      "bytes": 371,
+      "sha256": "887d37659e9d899d1242bcef06769efbbbfa308072ade42562afe1a1b2733de4"
+    },
+    {
+      "path": "c90-functional-wfi-missing-split-input-ordinary.log",
+      "bytes": 184,
+      "sha256": "17ad863941cd924747893425cd7163c02ad4a8932f33aefecb58d2b921a197f5"
+    },
+    {
+      "path": "c90-functional-wfi-no-arguments/run-provenance.json",
+      "bytes": 1316,
+      "sha256": "a280ab85913047dec9bdad37233a9a9a43127d532f8eb0aae4a1639d65094602"
+    },
+    {
+      "path": "c90-functional-wfi-no-arguments-observer.log",
+      "bytes": 1907,
+      "sha256": "925f6322741110802c9daabf4998dfa69468ed2e5eadb3757e7791e094f86801"
+    },
+    {
+      "path": "c90-functional-wfi-no-arguments-ordinary.log",
+      "bytes": 1692,
+      "sha256": "6265601cd8d82d6525c7fa02ab4a0cc64898353e080ab5ffe2f8cd3b5b80242b"
+    },
+    {
+      "path": "c90-functional-wfi-paf-absent/run-provenance.json",
+      "bytes": 1349,
+      "sha256": "735a85910eb694a8b239ecbd1f433afa2043be011fb94226a290b04bd0759117"
+    },
+    {
+      "path": "c90-functional-wfi-paf-absent-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c90-functional-wfi-paf-absent-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c90-functional-wfi-paf-malformed/mefpp.paf",
+      "bytes": 18,
+      "sha256": "783455ad5a364d286b23d4dbcbf7ddfd77a18869931dde2ecd28f42d11072bd4"
+    },
+    {
+      "path": "c90-functional-wfi-paf-malformed/run-provenance.json",
+      "bytes": 1417,
+      "sha256": "ce3ecb8a9e84e96f81bb93f64ea61db812ab6ba1c71b804a302517fada1453ce"
+    },
+    {
+      "path": "c90-functional-wfi-paf-malformed-observer.log",
+      "bytes": 381,
+      "sha256": "7ed743076083fe480c4f4df106094f6955d9484ab036e583cd6bfe1b9a3a1bb3"
+    },
+    {
+      "path": "c90-functional-wfi-paf-malformed-ordinary.log",
+      "bytes": 194,
+      "sha256": "45aa2aae2c0cf19d2f5cb43712edd9ac3cc8b202f9d8e86b827c314e0fab6f76"
+    },
+    {
+      "path": "c90-functional-wfi-unknown-option/run-provenance.json",
+      "bytes": 1339,
+      "sha256": "6e1b5c04261d66b0b2bef6f5c59085e1c78178c72db05fd6a2297b9a8e3c6e16"
+    },
+    {
+      "path": "c90-functional-wfi-unknown-option-observer.log",
+      "bytes": 454,
+      "sha256": "743581a4c5b07b6a52d20bf22e31d805a7fa632e4bd9f6f22254c8aa4bc562e6"
+    },
+    {
+      "path": "c90-functional-wfi-unknown-option-ordinary.log",
+      "bytes": 253,
+      "sha256": "9d6aadff14cca34da68c1388293760ea2df4676ba72d6ecd2619ab7a346227f3"
+    },
+    {
+      "path": "c90-functional-wfi-valueless-satmax/mefpp.paf",
+      "bytes": 15326,
+      "sha256": "e84398bba788aad2c07306923a047444b1ba5ff41d8d1fe72753cd333a0fd66a"
+    },
+    {
+      "path": "c90-functional-wfi-valueless-satmax/run-provenance.json",
+      "bytes": 1423,
+      "sha256": "74b672ced4b36ec79e32d4a749151419690244e7033d8c26045acc730b22e4a8"
+    },
+    {
+      "path": "c90-functional-wfi-valueless-satmax-observer.log",
+      "bytes": 386,
+      "sha256": "dce737c236c4712844bb50f13dfce57487d7d71221bc90b0a0736e846141bb2c"
+    },
+    {
+      "path": "c90-functional-wfi-valueless-satmax-ordinary.log",
+      "bytes": 199,
+      "sha256": "38c37b9c5310edf7c74e0ebf223a080ebff6c94d854addf512311c0bb03fa548"
+    },
+    {
+      "path": "c90-functional-wfi-version/run-provenance.json",
+      "bytes": 1325,
+      "sha256": "f087b34596c01d49bbb1586ba8a4065139239a86c7ca0f4a53088fc16db6d560"
+    },
+    {
+      "path": "c90-functional-wfi-version-observer.log",
+      "bytes": 396,
+      "sha256": "8a2644d3cc2a907e2789230aee732081466e37c1b5ff5bba4bcf3df10071630f"
+    },
+    {
+      "path": "c90-functional-wfi-version-ordinary.log",
+      "bytes": 209,
+      "sha256": "c1aeedae42f3880af0c0fe69ffbb770d53ba647ddbf10d253f3186b75d5e4ba1"
+    },
+    {
+      "path": "cmake-version.log",
+      "bytes": 91,
+      "sha256": "6750f1708963ba7653df8327146a722a51a4f273b22487167d28c1b2497b3bac"
+    },
+    {
+      "path": "compiler-version.log",
+      "bytes": 248,
+      "sha256": "6c9570e8bc49f3cc036575edace02b346aa5df76213c978aec8541020471c9b8"
+    },
+    {
+      "path": "configure-c17-functional.log",
+      "bytes": 1829,
+      "sha256": "08d928bd2420e548f5b37db32f05501b8eaf8b75001e0bd34d3beb650037cff1"
+    },
+    {
+      "path": "configure-c90-functional.log",
+      "bytes": 1829,
+      "sha256": "289bd2d6074520a849ecbc6b8f855aa9222290390944bdfb1890a5ed49e585f5"
+    },
+    {
+      "path": "os-version.log",
+      "bytes": 121,
+      "sha256": "9b57c51d43c179b18dfd975b93659ac3dc617ce2b04e90bbe7c0ecf8005aa819"
+    },
+    {
+      "path": "run-provenance.json",
+      "bytes": 280972,
+      "sha256": "84dceca8119118c9349dd45e9e0de5867178f9d6e5a5da5cdc858e460482e7ae"
+    },
+    {
+      "path": "source/mefpp2/CMakeLists.txt",
+      "bytes": 11904,
+      "sha256": "697b826c6d74f1c12ba627fbcb9d992f5d2b8162f1fb3bcfc113d40de5298093"
+    },
+    {
+      "path": "source/mefpp2/ins/mef/common/mefp_lib.c",
+      "bytes": 183836,
+      "sha256": "1aa8edd7ff5703d22cf6c85cbc81590336b1faca7d2b79cb18b8c145a6fc1bd9"
+    },
+    {
+      "path": "source/mefpp2/ins/mef/common/mefp_lib.h",
+      "bytes": 11466,
+      "sha256": "ca848eebf90225f39abfa6eab5b6480d74a1e7f7d77020e8493773a91501ee25"
+    },
+    {
+      "path": "source/mefpp2/ins/mef/config/omegacam.paf",
+      "bytes": 30380,
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+    },
+    {
+      "path": "source/mefpp2/ins/mef/config/wfi.paf",
+      "bytes": 15361,
+      "sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+    },
+    {
+      "path": "source/mefpp2/ins/mef/recipes/mefpp.c",
+      "bytes": 56414,
+      "sha256": "db902cc79880fad5eb7ec7f40e732f66cafbe338435f0e72dd1eff3f61f5d0eb"
+    },
+    {
+      "path": "source/mefpp2/qfits5/include/xmemory.h",
+      "bytes": 3162,
+      "sha256": "815e8e839323c6f20dae3a7117941c2e45ccdb7e1f387af6ebd461c728dc1340"
+    },
+    {
+      "path": "source/mefpp2/qfits5/src/xmemory.c",
+      "bytes": 48250,
+      "sha256": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87"
+    },
+    {
+      "path": "source/mefpp2/src/unix/getopt.c",
+      "bytes": 12517,
+      "sha256": "c9ded22ca98f924f8c040523b34b7051b4f5b735913c74aad8a1c4c969858ea5"
+    },
+    {
+      "path": "source/mefpp2/tests/cli_ownership_probe.c",
+      "bytes": 1871,
+      "sha256": "a368ea6ebc4e0f0894255ba577db04b82ca18cbdd9dad8e4b89e675eac723e86"
+    },
+    {
+      "path": "source/mefpp2/tests/failure_contract.py",
+      "bytes": 8988,
+      "sha256": "1939bdd505bb52d526aa08a9c9ff812d5615438d6beef8ca59c27ead055a3055"
+    },
+    {
+      "path": "source/mefpp2/tests/getopt_name_probe.c",
+      "bytes": 2681,
+      "sha256": "b497ff40458ad578e29266f62c30bc7546870e12a0dd64377afb0810c5cc4c67"
+    },
+    {
+      "path": "source/mefpp2/tests/qualify_cli_chapman3.py",
+      "bytes": 20398,
+      "sha256": "e0024d48653503b29ab7a8509bb39187d511e64fdbc77909bce49113106c9629"
+    },
+    {
+      "path": "source/mefpp2/tests/qualify_cli_ownership.py",
+      "bytes": 25981,
+      "sha256": "bbba242ce073d1f0659d72c659dc278b96b7f8e0fd38a7535b00273c61c921d2"
+    },
+    {
+      "path": "source/mefpp2/tests/qualify_mac_leaks.py",
+      "bytes": 12290,
+      "sha256": "b91c19bffc5721377d74cb90f49ef243a2e412039aed76ec62d7fe53c6dbee85"
+    },
+    {
+      "path": "source/run-provenance.json",
+      "bytes": 570,
+      "sha256": "67994dffc813d615e1533ab212cd41e9ca4c0c8905aa5a0bd537f218279a855b"
+    }
+  ]
+}

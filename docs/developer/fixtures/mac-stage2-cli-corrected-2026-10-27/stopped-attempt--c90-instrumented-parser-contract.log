@@ -1,0 +1,14 @@
+PARSER FAIL missing-value code=58
+PARSER PASS exact-after-short-name
+PARSER PASS exact-wins-over-prefix
+PARSER PASS exact-version
+PARSER PASS unique-prefix
+PARSER PASS ambiguous-prefix
+PARSER PASS longer-unknown
+PARSER PASS unknown
+PARSER PASS equals-value
+PARSER PASS separate-value
+PARSER PASS prefix-with-value
+PARSER PASS short-option
+PARSER PASS end-options
+PARSER COMPLETE checks=13 failed=1
