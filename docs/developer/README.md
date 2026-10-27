@@ -1,5 +1,7 @@
 # Developer documentation
 
+Latest S2-05: [failed Mac baseline inspected and attributed](stage2-bpm-baseline-evidence-2026-10-27.md), #109–#112; numerical checks pass, ownership repair awaits native qualification.
+
 Next S2-05: [BPM ownership baseline prepared](stage2-bpm-ownership-2026-10-27.md), unchanged accepted driver/fixtures, Mac native execution pending.
 
 [Full agreed S2 milestone and current status](stage2-memory-qualification-2026-10-27.md#declared-test-matrix): departures require prior agreement with Fernando and documentation before implementation.

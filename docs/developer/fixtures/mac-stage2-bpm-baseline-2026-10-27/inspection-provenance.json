@@ -1,0 +1,12 @@
+{
+  "purpose": "Inspect actual Mac S2-05 baseline; no native execution",
+  "archive_sha256": "9e54fff6b0cabc247623e55d20920bef0b914effdca48fc60bae9f98cf01ae67",
+  "status": "passed",
+  "verified_files": 367,
+  "verified_role_directories": 32,
+  "all_reference_masks_exact": true,
+  "unexplained_postpurge_pointers": 140,
+  "unexplained_postpurge_bytes": 4472,
+  "affected_cases": 16,
+  "zero_external_leak_summaries": 8
+}
