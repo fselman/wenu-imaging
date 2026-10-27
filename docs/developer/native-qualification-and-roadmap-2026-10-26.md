@@ -1,5 +1,8 @@
 # Native qualification and roadmap decision — 26 October 2026
 
+Current Stage 2 acceptance, 27 October 2026: [context cleanup #99 is verified](stage2-context-chapman3-acceptance-2026-10-27.md) on Mac C90/C17 (48 cases) and Chapman3 C90/C17 (24 functional/accounting cases). Tool controls, failed baseline and corrected evidence are retained. PR stack #97/#98/#100/#101 awaits integration. #75 and the remaining Stage 2 normal/error/repeat, cache, allocation-failure and mapped/swap gates stay open; Chapman3 sanitizer/leak-tool coverage is not claimed. Next after integration is S2-03 CLI/parser/engine failure ownership, not Stage 2A/extraction. Keep run directories, archives and installations preserved. This status supersedes earlier pending context-cleanup statements below.
+
+
 Current Stage 2 preparation, 27 October 2026: PRs #93/#95/#96 are merged; main e29a6201f01200708dc55c3439434a640cdc9ed0 contains the inspected normalization and BPM cleanup evidence. #90 is closed; its merged branch is deleted on GitHub, Mac and Chapman3. Both user checkouts are clean on that main. Run directories, archives and selected installations remain preserved. Next is the [Stage 2 ownership and test matrix](stage2-memory-qualification-2026-10-27.md): qualify leak/allocator visibility and the normal/error/repeat suite, Mac first and unchanged drivers/fixtures on Chapman3. #75 remains open; the earlier context-owner correction is already merged, not a new unfixed duplicate-destruction claim. Chapman3 functional #90 checks are not sanitizer acceptance. This preparation launches no build/test/install and changes no production allocator or numerical policy. Stop for the agreed review after Stage 2 before Stage 2A/extraction; the early Phase 3 audit remains pending.
 
 
@@ -73,7 +76,8 @@ pending are historical. No reinstall is required for documentation-only changes.
 | Native BPM construction | Mac C90/C17 robust reconstruction: every mask pixel matches history; C17 also matches C90; only generated ORIGFILE differs | Mac robust mode only; threshold quality, proportional mode and downstream exclusion remain open |
 | Downstream mask/weight propagation | Saved Mac settings use NONE; installed SExtractor/SWarp tests retain flagged signals with NONE and exclude them with MAP_WEIGHT; native detector-1 BPM toggles leave science pixels unchanged in C90/C17 | #91 open; cross-stage mapping, adapters and Chapman3 verification pending |
 | Proportional BPM cleanup | #90 closed; #96 merged. Mac C90/C17 instrumented cases and unchanged-driver Chapman3 functional cases passed; inspected evidence preserved | No Chapman3 sanitizer or Mac leak-clean claim; see linked acceptance records |
-| Stage 2 memory/ownership | Context-owner correction and #90 cleanup are merged; initial ownership/test matrix prepared | #75, leak/allocator visibility and broader normal/error/repeat suite remain open |
+| Context-owned configuration cleanup | #99: original 29/550-per-call retention measured; 48 corrected Mac and 24 Chapman3 cases pass with exact context/input agreement and zero ownership snapshots; inspected evidence retained | Bounded S2-02; PR #101 pending integration, not a general memory-clean claim |
+| Stage 2 memory/ownership | #90 merged; Mac tool controls and bounded context cleanup accepted; initial source/test matrix prepared | #75, remaining normal/error/repeat/cache/mapped paths and target diagnostic tooling stay open |
 
 ## Exact retained calibration and normalization evidence
 
