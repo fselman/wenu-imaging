@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "purpose": "S2-05 deterministic populated-header derivatives; unchanged pixels/native driver",
+  "parent_manifest": "mefpp2/tests/fixtures/bpm-cleanup/manifest.json",
+  "parent_manifest_sha256": "8a7e3e20b42f48fdb80da49985a4504c57befb8e5c4297105c84a75be14e703d",
+  "source_commit": "f377642ebfd8a8c0a43a99007f5543af34ff9c54",
+  "primary_metadata_by_frame": [
+    {
+      "ORIGIN": "ESO S2 METADATA 0",
+      "TELESCOP": "VST-META-0",
+      "INSTRUME": "OMEGACAM-META-0",
+      "MJD-OBS": 61314.125,
+      "DATE-OBS": "2026-10-01T01:02:03.125",
+      "ESO DET WIN1 BINX": 1,
+      "ESO DET WIN1 BINY": 1
+    },
+    {
+      "ORIGIN": "ESO S2 METADATA 1",
+      "TELESCOP": "VST-META-1",
+      "INSTRUME": "OMEGACAM-META-1",
+      "MJD-OBS": 61314.375,
+      "DATE-OBS": "2026-10-01T01:02:04.125",
+      "ESO DET WIN1 BINX": 1,
+      "ESO DET WIN1 BINY": 1
+    },
+    {
+      "ORIGIN": "ESO S2 METADATA 2",
+      "TELESCOP": "VST-META-2",
+      "INSTRUME": "OMEGACAM-META-2",
+      "MJD-OBS": 61314.625,
+      "DATE-OBS": "2026-10-01T01:02:05.125",
+      "ESO DET WIN1 BINX": 1,
+      "ESO DET WIN1 BINY": 1
+    }
+  ],
+  "extension_metadata": {
+    "EXTNAME": "META_CCD_17"
+  },
+  "cases": {
+    "retained": {
+      "inputs_sha256": {
+        "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+        "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+        "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      },
+      "pixels_unchanged": true
+    },
+    "known-response": {
+      "inputs_sha256": {
+        "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+        "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+        "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      },
+      "pixels_unchanged": true
+    }
+  }
+}

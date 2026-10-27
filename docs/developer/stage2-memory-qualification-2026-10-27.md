@@ -1,5 +1,7 @@
 # Stage 2 memory and ownership qualification — 27 October 2026
 
+Current update: the first S2-05 subset and #109–#112 correction are integrated through main f377642ebfd8a8c0a43a99007f5543af34ff9c54. [Populated metadata qualification](stage2-bpm-metadata-2026-10-27.md) is prepared next, not native-executed. Full S2-05/#75 and target external diagnostics remain open; earlier baseline status paragraphs below are historical where superseded here.
+
 ## Current agreed milestone and change control
 
 Status as of 27 October 2026: S2-02/03/04 are verified within their declared
@@ -130,12 +132,12 @@ The core matrix calls native routines, not Pycavi, unless explicitly stated.
 | S2-02 | Valid OmegaCAM/WFI PAF and early/late missing/invalid keys; mef_bb_new_from_paf / mef_bb_del | Correct owners and cleanup on complete and partial construction; no unexplained retained allocations or diagnostics | Verified and integrated; owned-string correction #99 accepted on Mac/Chapman3 |
 | S2-03 | CLI/parser/engine ownership; main / mef_bb_load / mef_engine | Correct exits, diagnostics and one context destruction for information, parser rejection and engine-validation paths | Verified and integrated; parser correction #103 accepted |
 | S2-04 | Valid/missing/corrupt split input, blocked output/publication; mef_split / mef_engine | Exact reference products; truthful failures; balanced context/list/header/mapping/descriptor ownership; protected outputs preserved | Verified and integrated: 80 Mac pairs and 40 target pairs; retained cache states attributed by controlled purges |
-| S2-05 | Retained and controlled BPM fixtures, robust and proportional constructors; mef_build_bpm | Correct temporary image/cube/result-array ownership and cleanup; preserve every reference mask pixel, extension, count and existing 0.5–1.5 thresholds | Next; #90 covers one accepted invalid-access subset, broader ownership qualification pending |
+| S2-05 | Retained and controlled BPM fixtures, robust and proportional constructors; mef_build_bpm | Correct temporary image/cube/result-array ownership and cleanup; preserve every reference mask pixel, extension, count and existing 0.5–1.5 thresholds | Current; #90 and #109–#112 first-subset corrections integrated; populated-metadata gate prepared, further ownership coverage pending |
 | S2-06 | Shared-normalization fixtures in both detector orders, dome/sky; mef_build_cal | Correct ownership of intermediate cubes/images and borrowed planes; preserve exact expected pixels and shared normalization | Ownership qualification pending; reuse accepted numerical references |
 | S2-07 | Small staged bias, sky/master-flat and science paths through actual recipe/common functions | Cover remaining ownership paths with declared known output expectations; retain existing baseline semantics | Pending |
 | S2-08 | Practical allocation and I/O failure injection in reviewed paths | Release only acquired resources; propagate truthful failures; scoped/recorded injection must preserve numerical behavior | Pending; existing failure cases provide limited coverage, not completion |
 | S2-09 | Same-process repeated constructor/stage calls; proposed counts 1, 2, 10, 50 after fixed warmup | Account per-object live ownership at each boundary; no unexplained per-call growth or stale aliases; RSS alone is insufficient | Pending; separate CLI processes do not satisfy this row |
-| S2-10 | Controlled qfits cache purge plus normal process exit | Distinguish bounded cache retention, reachable abandoned allocations and released resources; account for relevant mapped/swap paths | Partially covered by S2-04; general cache lifetimes and mmap/swap qualification pending |
+| S2-10 | Controlled qfits cache purge plus normal process exit | Distinguish bounded cache retention, reachable abandoned allocations and released resources; account for relevant mapped/swap paths | Partially covered by S2-04 and first S2-05 double-purge checks; general cache lifetimes and mmap/swap qualification pending |
 | S2-11 | Actual installed-wrapper error propagation after relevant corrections only | Preserve mefpp_reduce_science / run_commands native failure propagation and Python exit/cwd contracts | Earlier bounded checks accepted; repeat conditionally for relevant changes |
 
 S2-03/04 must reuse existing failure semantics without blindly running a helper
