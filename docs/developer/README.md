@@ -1,5 +1,15 @@
 # Developer documentation
 
+Latest S2-04: [Mac and Chapman3 split/cache acceptance inspected](stage2-split-chapman3-acceptance-2026-10-27.md). All 80 Mac and 40 target pairs pass; PR #105 awaits review/integration. Broader Stage 2 and target external diagnostics remain open.
+
+Latest S2-04: [Mac split/cache acceptance inspected; target runner prepared](stage2-split-mac-acceptance-2026-10-27.md). All 80 pairs pass with controlled cache attribution. Chapman3 verification and broader Stage 2 remain pending.
+
+Latest S2-04: [repaired observer inspected; cache-attribution control prepared](stage2-split-observed-evidence-2026-10-27.md). All 80 functional pairs pass; the resource gate remains failed in 64 cases. Fresh control and target verification pending.
+
+Latest S2-04: [inspected first baseline and descriptor-observer repair (#106)](stage2-split-baseline-evidence-2026-10-27.md); fresh actual-Mac observation remains pending.
+
+Current Stage 2 increment: [S2-04 split ownership baseline](stage2-split-ownership-2026-10-27.md), prepared after S2-03 integration; actual Mac qualification pending.
+
 Latest S2-03: [Mac and Chapman3 bounded correction acceptance](stage2-cli-chapman3-acceptance-2026-10-27.md); PRs #102/#104 await integration.
 
 Latest S2-03: [Mac correction accepted; Chapman3 verification prepared](stage2-cli-mac-acceptance-2026-10-27.md).

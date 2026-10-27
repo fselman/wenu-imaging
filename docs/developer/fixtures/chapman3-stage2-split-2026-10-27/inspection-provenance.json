@@ -1,0 +1,13 @@
+{
+  "purpose": "Inspect supplied Chapman3 evidence only; no native execution",
+  "archive_sha256": "fbdf35705b488edc22d460a1dea79ae90251243ff77308a04da3d16e6880c861",
+  "status": "passed",
+  "verified_files": 476,
+  "verified_role_directories": 80,
+  "observer_contracts": 40,
+  "cache_attributed_cases": 32,
+  "purge_boundaries_zero": 80,
+  "descriptor_boundaries_unchanged": 120,
+  "exact_mac_products": true,
+  "diagnostic_scope": "Uninstrumented target; no external sanitizer/leak-tool acceptance"
+}

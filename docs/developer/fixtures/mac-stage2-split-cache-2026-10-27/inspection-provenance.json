@@ -1,0 +1,13 @@
+{
+  "purpose": "Inspect supplied Mac cache-control evidence; no native execution",
+  "archive_sha256": "470d585cbc974ceb5542ad9235ca5bbbf0029100a95dbbc6877fcdbf384c04bc",
+  "status": "passed",
+  "verified_files": 933,
+  "verified_role_directories": 160,
+  "observer_contracts": 80,
+  "zero_leak_summaries": 40,
+  "cache_attributed_cases": 64,
+  "purge_boundaries_zero": 160,
+  "descriptor_boundaries_unchanged": 240,
+  "reference_products_exact": true
+}
