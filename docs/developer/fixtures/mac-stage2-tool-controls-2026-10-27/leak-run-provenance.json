@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "test/stage2-leak-controls",
+    "commit": "db6af6a1888e6abbe65fd4ac177f1e890d3a952a",
+    "dirty": false
+  },
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-27T14:44:50.829628+00:00",
+  "purpose": "Qualify leaks reachability and qfits allocation accounting",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "compiler": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+  "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+  "leaks": "/usr/bin/leaks",
+  "tool_sha256": {
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang": "86051fc5c41d7fb5f8998d0188a9730d0e5f6e1170aed3006fd719fc88f747f3",
+    "/usr/bin/leaks": "79a1655c859ee61f5d995a9ebae174b3631125f0357c21bdd700ba6567a5f16a"
+  },
+  "source_sha256": {
+    "leak_controls.c": "f6c98f49ca5702d30f1ac61d13cd02aeafe171914bb3f54bbbb111c581d1cfcb",
+    "xmemory.c": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87",
+    "xmemory.h": "815e8e839323c6f20dae3a7117941c2e45ccdb7e1f387af6ebd461c728dc1340"
+  },
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "allocator": {
+    "XMEMORY_MODE": 2,
+    "XMEMORY_MAXPTRS": 2000000,
+    "XMEMORY_DEBUG": 0
+  },
+  "diagnostic_environment": {
+    "MallocStackLogging": "lite",
+    "MallocScribble": "1"
+  },
+  "removed_child_environment": [
+    "ASAN_OPTIONS",
+    "UBSAN_OPTIONS",
+    "LSAN_OPTIONS",
+    "DYLD_INSERT_LIBRARIES",
+    "DYLD_LIBRARY_PATH",
+    "MallocStackLoggingNoCompact"
+  ],
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "--version"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/compiler-version.log",
+      "exit_status": 0,
+      "log_sha256": "cc55630ac23455d224f5681a3a3186d9518f805b64941b6217d82070f651adf1"
+    },
+    {
+      "label": "os-version",
+      "argv": [
+        "/usr/bin/sw_vers"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/os-version.log",
+      "exit_status": 0,
+      "log_sha256": "bc2fdeb227ac78aade92f3ce836b927a8bc5e4a6b33720448f6b91c758fdfe0a"
+    },
+    {
+      "label": "compile-c90",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-std=c90",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-D_DARWIN_C_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-DXMEMORY_DEBUG=0",
+        "-g",
+        "-O0",
+        "-fno-omit-frame-pointer",
+        "-I",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/source",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/source/leak_controls.c",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/source/xmemory.c",
+        "-o",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c90/leak_controls"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c90",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/compile-c90.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c90-system-clean",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c90/leak_controls",
+        "system-clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-system-clean",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-system-clean.log",
+      "exit_status": 0,
+      "log_sha256": "f983f24e00480172e2ac8e84b1ad861788c6f02994a5d94accafc328b029040a"
+    },
+    {
+      "label": "c90-system-unreachable",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c90/leak_controls",
+        "system-unreachable"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-system-unreachable",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-system-unreachable.log",
+      "exit_status": 1,
+      "log_sha256": "b40648ba0f13dec933a2d3ebdc5f98e23e5e0dfc371a59664be001b8a3ca6085"
+    },
+    {
+      "label": "c90-system-rooted",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c90/leak_controls",
+        "system-rooted"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-system-rooted",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-system-rooted.log",
+      "exit_status": 0,
+      "log_sha256": "a01582d2b92099dcb613fdb2a48df994a1b54cea2727e5a12a79ceb619805e32"
+    },
+    {
+      "label": "c90-qfits-clean",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c90/leak_controls",
+        "qfits-clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-qfits-clean",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-qfits-clean.log",
+      "exit_status": 0,
+      "log_sha256": "80977411ebda01302eb4e650cc5e31d0873c6f6f7ed29577eaf03782cf443ef0"
+    },
+    {
+      "label": "c90-qfits-registered",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c90/leak_controls",
+        "qfits-registered"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-qfits-registered",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c90-qfits-registered.log",
+      "exit_status": 0,
+      "log_sha256": "8bbcb686dc998de5f040b7d185c6307dc58afefe10e068c086fdd92b5ef2565c"
+    },
+    {
+      "label": "compile-c17",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-std=c17",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-D_DARWIN_C_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-DXMEMORY_DEBUG=0",
+        "-g",
+        "-O0",
+        "-fno-omit-frame-pointer",
+        "-I",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/source",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/source/leak_controls.c",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/source/xmemory.c",
+        "-o",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c17/leak_controls"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c17",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/compile-c17.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c17-system-clean",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c17/leak_controls",
+        "system-clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-system-clean",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-system-clean.log",
+      "exit_status": 0,
+      "log_sha256": "8e47a2acbdfff03bf831045e7351f628db310ccdff030abc92e3a966f76b3ad8"
+    },
+    {
+      "label": "c17-system-unreachable",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c17/leak_controls",
+        "system-unreachable"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-system-unreachable",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-system-unreachable.log",
+      "exit_status": 1,
+      "log_sha256": "5c854a9f20968d622ef2956f2c1f76a636146666b909180a73c5cc9a8e512f7f"
+    },
+    {
+      "label": "c17-system-rooted",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c17/leak_controls",
+        "system-rooted"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-system-rooted",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-system-rooted.log",
+      "exit_status": 0,
+      "log_sha256": "f1b626cbfc2859dd62a48dc0139bc0578cdcf362c63162435c8288df4786a25b"
+    },
+    {
+      "label": "c17-qfits-clean",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c17/leak_controls",
+        "qfits-clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-qfits-clean",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-qfits-clean.log",
+      "exit_status": 0,
+      "log_sha256": "780197cff09ee414af70a3473758a0d3004511ecf4721728ab0a049806ed3be4"
+    },
+    {
+      "label": "c17-qfits-registered",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/build-c17/leak_controls",
+        "qfits-registered"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-qfits-registered",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-leak-controls-8o3il223/c17-qfits-registered.log",
+      "exit_status": 0,
+      "log_sha256": "fbbf127d644bb67243b734c82952463fe430dc1be3ac71b518b8d286939e19e5"
+    }
+  ],
+  "cases": [
+    {
+      "case": "c90-system-clean",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "682cc92f6458f6cea3ade46d8a9a754231d6980917bf7a9b5b0db9006ca9e35c",
+      "log_sha256": "f983f24e00480172e2ac8e84b1ad861788c6f02994a5d94accafc328b029040a"
+    },
+    {
+      "case": "c90-system-unreachable",
+      "status": "passed",
+      "leaks_exit": 1,
+      "leaked_blocks": 1,
+      "leaked_bytes": 8704,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "682cc92f6458f6cea3ade46d8a9a754231d6980917bf7a9b5b0db9006ca9e35c",
+      "log_sha256": "b40648ba0f13dec933a2d3ebdc5f98e23e5e0dfc371a59664be001b8a3ca6085"
+    },
+    {
+      "case": "c90-system-rooted",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "682cc92f6458f6cea3ade46d8a9a754231d6980917bf7a9b5b0db9006ca9e35c",
+      "log_sha256": "a01582d2b92099dcb613fdb2a48df994a1b54cea2727e5a12a79ceb619805e32"
+    },
+    {
+      "case": "c90-qfits-clean",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "682cc92f6458f6cea3ade46d8a9a754231d6980917bf7a9b5b0db9006ca9e35c",
+      "log_sha256": "80977411ebda01302eb4e650cc5e31d0873c6f6f7ed29577eaf03782cf443ef0"
+    },
+    {
+      "case": "c90-qfits-registered",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 1,
+        "bytes": 8192
+      },
+      "executable_sha256": "682cc92f6458f6cea3ade46d8a9a754231d6980917bf7a9b5b0db9006ca9e35c",
+      "log_sha256": "8bbcb686dc998de5f040b7d185c6307dc58afefe10e068c086fdd92b5ef2565c"
+    },
+    {
+      "case": "c17-system-clean",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "0f94ab18a83846e6b13689dc8fada5e0351d8891056960b61671d1ff96441250",
+      "log_sha256": "8e47a2acbdfff03bf831045e7351f628db310ccdff030abc92e3a966f76b3ad8"
+    },
+    {
+      "case": "c17-system-unreachable",
+      "status": "passed",
+      "leaks_exit": 1,
+      "leaked_blocks": 1,
+      "leaked_bytes": 8704,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "0f94ab18a83846e6b13689dc8fada5e0351d8891056960b61671d1ff96441250",
+      "log_sha256": "5c854a9f20968d622ef2956f2c1f76a636146666b909180a73c5cc9a8e512f7f"
+    },
+    {
+      "case": "c17-system-rooted",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "0f94ab18a83846e6b13689dc8fada5e0351d8891056960b61671d1ff96441250",
+      "log_sha256": "f1b626cbfc2859dd62a48dc0139bc0578cdcf362c63162435c8288df4786a25b"
+    },
+    {
+      "case": "c17-qfits-clean",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "executable_sha256": "0f94ab18a83846e6b13689dc8fada5e0351d8891056960b61671d1ff96441250",
+      "log_sha256": "780197cff09ee414af70a3473758a0d3004511ecf4721728ab0a049806ed3be4"
+    },
+    {
+      "case": "c17-qfits-registered",
+      "status": "passed",
+      "leaks_exit": 0,
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "initial_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "final_accounting": {
+        "pointers": 1,
+        "bytes": 8192
+      },
+      "executable_sha256": "0f94ab18a83846e6b13689dc8fada5e0351d8891056960b61671d1ff96441250",
+      "log_sha256": "fbbf127d644bb67243b734c82952463fe430dc1be3ac71b518b8d286939e19e5"
+    }
+  ],
+  "installation_performed": false,
+  "observational_processing_performed": false,
+  "limits": [
+    "Uninstrumented diagnostic controls, not production memory acceptance",
+    "Small RAM allocations only; mapped/swap paths unqualified",
+    "Reachability is distinct from ownership; no suppression/exclusion rules",
+    "Existing invalid-access controls are not repeated"
+  ],
+  "allocator_sources_unchanged": true,
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "completed_utc": "2026-10-27T14:45:17.534775+00:00"
+}

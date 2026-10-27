@@ -1,6 +1,6 @@
 # Mac leak/accounting tool controls — 27 October 2026
 
-Status: candidate driver and orchestration; actual Mac execution pending.
+Status: Mac C90/C17 controls accepted from inspected evidence at db6af6a1888e6abbe65fd4ac177f1e890d3a952a. See [actual results and limitations](stage2-tool-controls-acceptance-2026-10-27.md). The declared expectations below are retained as the test contract; broader application qualification remains pending.
 Stacked on the Stage 2 preparation in PR #97. Tracking #75.
 No production allocator, numerical code, installation or scientific default is changed.
 

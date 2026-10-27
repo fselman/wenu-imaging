@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "main",
+  "commit": "7aeb454574ee35f924e5d3d024b273ebbb4dd153",
+  "dirty": false,
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-27T13:02:36.807476+00:00",
+  "purpose": "Qualify ASan/UBSan through system and qfits RAM allocation",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "compiler": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+  "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "commands": [
+    {
+      "label": "compile-c90",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-std=c90",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-D_DARWIN_C_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-g",
+        "-O0",
+        "-fno-omit-frame-pointer",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-I",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/source",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/source/memory_probe.c",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/source/xmemory.c",
+        "-o",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/compile-c90.log",
+      "log_sha256": "500d5546d48eca3da74026126ce8b1c88e25c80d27fe380b088dcffea0ae7756"
+    },
+    {
+      "label": "system-clean",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "system",
+        "clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/system-clean.log",
+      "log_sha256": "d58ce06c5a35e4660452a1658768a7aefd2a606cd860251fec1f3d126d3ce673"
+    },
+    {
+      "label": "system-bounds",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "system",
+        "bounds"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/system-bounds.log",
+      "log_sha256": "5ab274c2f19b79211e2a0978e4a9b0260fa6fa84ca4255babeed29939d1c61a7"
+    },
+    {
+      "label": "system-use-after-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "system",
+        "use-after-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/system-use-after-free.log",
+      "log_sha256": "a75706f1af161b65601b1a220f4bfaa724f98da2f4139d2bb4d817fcc9bdd70a"
+    },
+    {
+      "label": "system-double-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "system",
+        "double-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/system-double-free.log",
+      "log_sha256": "246e1876c5e002020dd02a8b750e4fca41432e65e5769bab0a990975dd9e00b7"
+    },
+    {
+      "label": "qfits-clean",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "qfits",
+        "clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/qfits-clean.log",
+      "log_sha256": "d58ce06c5a35e4660452a1658768a7aefd2a606cd860251fec1f3d126d3ce673"
+    },
+    {
+      "label": "qfits-bounds",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "qfits",
+        "bounds"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/qfits-bounds.log",
+      "log_sha256": "abea93c95786c23da59b35f59d6658d42abd0d875b1615a15bd39e211f505f04"
+    },
+    {
+      "label": "qfits-use-after-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "qfits",
+        "use-after-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/qfits-use-after-free.log",
+      "log_sha256": "59c57ddc6ed77177c8c2ebadd535bba260ee7a7b126ced9a596c9742a620c4e3"
+    },
+    {
+      "label": "qfits-double-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "qfits",
+        "double-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/qfits-double-free.log",
+      "log_sha256": "056f81138d20b0970313f7cad9210cddf58872ef8b08b3575c86de3f30341873"
+    },
+    {
+      "label": "signed-overflow",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/memory_probe",
+        "system",
+        "overflow"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c90/signed-overflow.log",
+      "log_sha256": "2abab7e54b957a6ff45eeed069befc47922d352a54911885595cfedd915a69aa"
+    },
+    {
+      "label": "compile-c17",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-std=c17",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-D_DARWIN_C_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-g",
+        "-O0",
+        "-fno-omit-frame-pointer",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-I",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/source",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/source/memory_probe.c",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/source/xmemory.c",
+        "-o",
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/compile-c17.log",
+      "log_sha256": "500d5546d48eca3da74026126ce8b1c88e25c80d27fe380b088dcffea0ae7756"
+    },
+    {
+      "label": "system-clean",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "system",
+        "clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/system-clean.log",
+      "log_sha256": "d58ce06c5a35e4660452a1658768a7aefd2a606cd860251fec1f3d126d3ce673"
+    },
+    {
+      "label": "system-bounds",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "system",
+        "bounds"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/system-bounds.log",
+      "log_sha256": "3879ec0c63c437815b78bb10906c31fe077fd327f3c49d8de4c2d2ef65f0428c"
+    },
+    {
+      "label": "system-use-after-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "system",
+        "use-after-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/system-use-after-free.log",
+      "log_sha256": "06a038b4bcf18346d19458925b0b538ae2c67459d0d0b048c19f1109546903ef"
+    },
+    {
+      "label": "system-double-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "system",
+        "double-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/system-double-free.log",
+      "log_sha256": "0741d10f4d9ae9a629e15084a0d1ac8f5900a23f24aa385d6458bfc33b4c973d"
+    },
+    {
+      "label": "qfits-clean",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "qfits",
+        "clean"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/qfits-clean.log",
+      "log_sha256": "d58ce06c5a35e4660452a1658768a7aefd2a606cd860251fec1f3d126d3ce673"
+    },
+    {
+      "label": "qfits-bounds",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "qfits",
+        "bounds"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/qfits-bounds.log",
+      "log_sha256": "75b42861fa970aba68993bd125347b17def17db4e3d57976e19c12e93d0fecd1"
+    },
+    {
+      "label": "qfits-use-after-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "qfits",
+        "use-after-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/qfits-use-after-free.log",
+      "log_sha256": "f094dd8021baa31448f9cb5e29b430783491d628adf0ef1f16ab0c95b5437f33"
+    },
+    {
+      "label": "qfits-double-free",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "qfits",
+        "double-free"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/qfits-double-free.log",
+      "log_sha256": "934d3d8819215ceb17c322e6bf7ac991a925760ba54eb89d73782254586c5f11"
+    },
+    {
+      "label": "signed-overflow",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/memory_probe",
+        "system",
+        "overflow"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/build-c17/signed-overflow.log",
+      "log_sha256": "4bd4c6b10292ea5b21c940e742c2a1b6c52d5c7752d6a23c0cca4558b87341b3"
+    }
+  ],
+  "modes": {
+    "90": {
+      "passed": true,
+      "executable_sha256": "bad67c63fec251f70c325ab0d4e51f892d8a77c8e16cceae20e04d4c22ecf423",
+      "cases": [
+        {
+          "case": "system-clean",
+          "expected_diagnostic": null,
+          "exit_status": 0,
+          "passed": true
+        },
+        {
+          "case": "system-bounds",
+          "expected_diagnostic": "heap-buffer-overflow",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "system-use-after-free",
+          "expected_diagnostic": "heap-use-after-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "system-double-free",
+          "expected_diagnostic": "double-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "qfits-clean",
+          "expected_diagnostic": null,
+          "exit_status": 0,
+          "passed": true
+        },
+        {
+          "case": "qfits-bounds",
+          "expected_diagnostic": "heap-buffer-overflow",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "qfits-use-after-free",
+          "expected_diagnostic": "heap-use-after-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "qfits-double-free",
+          "expected_diagnostic": "double-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "signed-overflow",
+          "exit_status": 86,
+          "expected_diagnostic": "signed integer overflow",
+          "passed": true
+        }
+      ]
+    },
+    "17": {
+      "passed": true,
+      "executable_sha256": "ddb2d6d21a212cc4ce60392f4643a15d9cabc228f8cc2a112aef13c4ae8eab3e",
+      "cases": [
+        {
+          "case": "system-clean",
+          "expected_diagnostic": null,
+          "exit_status": 0,
+          "passed": true
+        },
+        {
+          "case": "system-bounds",
+          "expected_diagnostic": "heap-buffer-overflow",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "system-use-after-free",
+          "expected_diagnostic": "heap-use-after-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "system-double-free",
+          "expected_diagnostic": "double-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "qfits-clean",
+          "expected_diagnostic": null,
+          "exit_status": 0,
+          "passed": true
+        },
+        {
+          "case": "qfits-bounds",
+          "expected_diagnostic": "heap-buffer-overflow",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "qfits-use-after-free",
+          "expected_diagnostic": "heap-use-after-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "qfits-double-free",
+          "expected_diagnostic": "double-free",
+          "exit_status": 86,
+          "passed": true
+        },
+        {
+          "case": "signed-overflow",
+          "exit_status": 86,
+          "expected_diagnostic": "signed integer overflow",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Disposable diagnostic probe, not a production correction",
+    "qfits XMEMORY_MODE=2 and XMEMORY_MAXPTRS=2000000 retained",
+    "Small RAM allocations only; mmap/swap paths unqualified",
+    "Leak detection disabled here and remains a separate gate",
+    "No installation or observational processing"
+  ],
+  "source_sha256": {
+    "mefpp2/qfits5/src/xmemory.c": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87",
+    "mefpp2/qfits5/include/xmemory.h": "815e8e839323c6f20dae3a7117941c2e45ccdb7e1f387af6ebd461c728dc1340"
+  },
+  "probe_sha256": "8665d5d2400251b39e6b9a4f0e001dcdd51e552e1ab6705b922299c6b9206b53",
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0:halt_on_error=1:abort_on_error=0:exitcode=86",
+    "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+  },
+  "allocator_sources_unchanged": true,
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "completed_utc": "2026-10-27T13:02:59.263170+00:00"
+}
