@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "fix/103-getopt-name-bounds",
+    "commit": "4077e6e3eb31a3fc84bd56c6650d04ada93cd7fe",
+    "dirty": false
+  },
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-27T18:34:52.919836+00:00",
+  "purpose": "S2-03 CLI/parser/engine failure ownership corrected",
+  "phase": "corrected",
+  "baseline_report": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-baseline-6nw2zx0_/run-provenance.json",
+  "baseline_report_sha256": "6e676ed600bf36c21a977cb6fca16c9478ea5a3cd1dbbac1b41525d58d625f98",
+  "status": "failed",
+  "execution_complete": false,
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "source_sha256": {
+    "mefpp2/ins/mef/recipes/mefpp.c": "db902cc79880fad5eb7ec7f40e732f66cafbe338435f0e72dd1eff3f61f5d0eb",
+    "mefpp2/ins/mef/common/mefp_lib.c": "1aa8edd7ff5703d22cf6c85cbc81590336b1faca7d2b79cb18b8c145a6fc1bd9",
+    "mefpp2/ins/mef/common/mefp_lib.h": "ca848eebf90225f39abfa6eab5b6480d74a1e7f7d77020e8493773a91501ee25",
+    "mefpp2/qfits5/src/xmemory.c": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87",
+    "mefpp2/qfits5/include/xmemory.h": "815e8e839323c6f20dae3a7117941c2e45ccdb7e1f387af6ebd461c728dc1340",
+    "mefpp2/ins/mef/config/omegacam.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "mefpp2/ins/mef/config/wfi.paf": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+    "mefpp2/tests/failure_contract.py": "1939bdd505bb52d526aa08a9c9ff812d5615438d6beef8ca59c27ead055a3055",
+    "mefpp2/tests/cli_ownership_probe.c": "a368ea6ebc4e0f0894255ba577db04b82ca18cbdd9dad8e4b89e675eac723e86",
+    "mefpp2/tests/qualify_cli_ownership.py": "bbba242ce073d1f0659d72c659dc278b96b7f8e0fd38a7535b00273c61c921d2",
+    "mefpp2/tests/qualify_mac_leaks.py": "b91c19bffc5721377d74cb90f49ef243a2e412039aed76ec62d7fe53c6dbee85",
+    "mefpp2/src/unix/getopt.c": "c9ded22ca98f924f8c040523b34b7051b4f5b735913c74aad8a1c4c969858ea5",
+    "mefpp2/tests/getopt_name_probe.c": "3ce4d7962826fb8ba4fc45406a2b8b0968ad6f8331e9e08546e5309f22dfba22"
+  },
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "--version"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/compiler-version.log",
+      "exit_status": 0,
+      "log_sha256": "cc55630ac23455d224f5681a3a3186d9518f805b64941b6217d82070f651adf1"
+    },
+    {
+      "label": "cmake-version",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--version"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/cmake-version.log",
+      "exit_status": 0,
+      "log_sha256": "deb84013ce02329ef76cee7f0bfa8555ff28c4f7a7eca12ac378012a91026b21"
+    },
+    {
+      "label": "os-version",
+      "argv": [
+        "/usr/bin/sw_vers"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/os-version.log",
+      "exit_status": 0,
+      "log_sha256": "bc2fdeb227ac78aade92f3ce836b927a8bc5e4a6b33720448f6b91c758fdfe0a"
+    },
+    {
+      "label": "configure-c90-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/build-c90-instrumented",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=4077e6e3eb31a3fc84bd56c6650d04ada93cd7fe",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/configure-c90-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "78956d2a8a069de670b4e89818b89ba6dca35263dc61544739f27856ac170e93"
+    },
+    {
+      "label": "build-c90-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/build-c90-instrumented",
+        "--target",
+        "mefpp",
+        "cli_ownership_probe",
+        "getopt_name_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/build-c90-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "c0fed552ea371922ac752d031c6956d27c6ef5e2451d1fbe0bacb471816fb0c1"
+    },
+    {
+      "label": "symbols-c90-instrumented-mefpp",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/build-c90-instrumented/mefpp"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/symbols-c90-instrumented-mefpp.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "symbols-c90-instrumented-cli_ownership_probe",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/build-c90-instrumented/cli_ownership_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/symbols-c90-instrumented-cli_ownership_probe.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c90-instrumented-parser-contract",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/build-c90-instrumented/getopt_name_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/c90-instrumented-parser-contract",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/c90-instrumented-parser-contract.log",
+      "exit_status": 1,
+      "log_sha256": "e8e3cc5076e3b6c401e31f0b883a826795b865b234b89af1647ef8b321d4fd79"
+    }
+  ],
+  "cases": [],
+  "parser_checks": [
+    {
+      "case": "c90-instrumented-parser-contract",
+      "exit_status": 1,
+      "executable_sha256": "e76931f983c51e5720d6a180c72d83af88105793c1ac121519fa0c31e5ab1f19",
+      "log_sha256": "e8e3cc5076e3b6c401e31f0b883a826795b865b234b89af1647ef8b321d4fd79",
+      "status": "failed"
+    }
+  ],
+  "qualified_tool_reports_sha256": {
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/leak-run-provenance.json": "a58380d92c769b333c7fd2c66ed8e843c0f2b797634d8e773058443bd47c4673",
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/diagnostic-run-provenance.json": "ac7f0a6e00d29fa90e5426ff383066f1cd6310a9320e1d4a3832d3720c88e8dc"
+  },
+  "allocator": {
+    "XMEMORY_MODE": 2,
+    "XMEMORY_MAXPTRS": 2000000
+  },
+  "tool_sha256": {
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang": "86051fc5c41d7fb5f8998d0188a9730d0e5f6e1170aed3006fd719fc88f747f3",
+    "/opt/local/bin/cmake": "0ed0b5ec05f6c923cbefbe0b5b3a6fa58a1124a8918ea44201eadd90154aea73",
+    "/usr/bin/leaks": "79a1655c859ee61f5d995a9ebae174b3631125f0357c21bdd700ba6567a5f16a"
+  },
+  "installation_performed": false,
+  "observational_processing_performed": false,
+  "limits": [
+    "CLI failure paths only; no successful split or image/calibration/science processing",
+    "One process per case; does not satisfy same-process repeated stages",
+    "RAM accounting; no cache purge or mapped/swap qualification",
+    "Recipe constructor/destructor references observed; common-library partial cleanup unmodified",
+    "Mac only; Chapman3 unchanged-driver verification pending"
+  ],
+  "source_archive_sha256": "4361da0b21f30023faa0059e9f3884c8fa4fcd8cc55e75605ac24a9f87d8a084",
+  "diagnostic_cmake_sha256": "697b826c6d74f1c12ba627fbcb9d992f5d2b8162f1fb3bcfc113d40de5298093",
+  "removed_child_environment": [
+    "ASAN_OPTIONS",
+    "UBSAN_OPTIONS",
+    "LSAN_OPTIONS",
+    "DYLD_INSERT_LIBRARIES",
+    "DYLD_LIBRARY_PATH",
+    "MallocStackLogging",
+    "MallocScribble",
+    "MallocStackLoggingNoCompact"
+  ],
+  "lane_environment": {
+    "instrumented": {
+      "ASAN_OPTIONS": "detect_leaks=0:halt_on_error=1:abort_on_error=0:exitcode=86",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=0"
+    },
+    "leaks": {
+      "MallocStackLogging": "lite",
+      "MallocScribble": "1"
+    }
+  },
+  "error": "Parser regression failed: /Users/fselman/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/c90-instrumented-parser-contract.log",
+  "sources_unchanged": true,
+  "baseline_report_unchanged": true,
+  "exported_sources_unchanged": true,
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "completed_utc": "2026-10-27T18:35:28.730054+00:00"
+}

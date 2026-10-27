@@ -1,5 +1,7 @@
 # Developer documentation
 
+Latest S2-03: [Mac correction accepted; Chapman3 verification prepared](stage2-cli-mac-acceptance-2026-10-27.md).
+
 Current S2-03 correction: [bounded getopt name matching (#103)](stage2-getopt-correction-2026-10-27.md), prepared for actual Mac verification; failed baseline remains retained.
 
 Current Stage 2 increment: [S2-03 CLI ownership baseline](stage2-cli-ownership-2026-10-27.md), Mac baseline completed with parser defect #103; [inspected failed evidence](stage2-cli-baseline-evidence-2026-10-27.md) is retained after integration of #97/#98/#100/#101.

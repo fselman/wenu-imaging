@@ -1,6 +1,8 @@
 # S2-03 bounded parser correction (#103) — 27 October 2026
 
-Status: correction prepared; actual Mac and Chapman3 qualification pending.
+Status: [actual Mac correction accepted](stage2-cli-mac-acceptance-2026-10-27.md);
+unchanged Chapman3 verification is prepared and pending execution.
+Earlier pending statements below document the original preparation/first attempt.
 Stacked on the inspected failed baseline in PR #102. #103 and the broader #75
 gate stay open. No installation or observational processing is requested.
 
