@@ -1,5 +1,7 @@
 # S2-05 Chapman3 BPM acceptance — 27 October 2026
 
+Integration update: Fernando authorized merging PR #108 and PR #113 and cleaning only their merged branches. Corrections #109–#112 meet the scoped issue criteria and are resolved with integration. Earlier pending-integration statements below describe the acceptance handoff; all broader S2 limits and preservation requirements remain in force.
+
 Actual clean target source `df216ca15a378f782aa7a7443f7e6d763e343611`, branch
 `fix/112-bpm-owned-resources`, Linux chapman3.sc.eso.org. GCC 10.2.1 and CMake
 3.29.6 build unchanged Mac-qualified native sources, original driver, observer,
