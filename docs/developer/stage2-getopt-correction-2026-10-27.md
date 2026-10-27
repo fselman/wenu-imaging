@@ -1,5 +1,7 @@
 # S2-03 bounded parser correction (#103) — 27 October 2026
 
+Current status: [Mac and unchanged Chapman3 verification passed](stage2-cli-chapman3-acceptance-2026-10-27.md); correction is ready for review, unmerged. Earlier pending statements below are historical preparation records.
+
 Status: [actual Mac correction accepted](stage2-cli-mac-acceptance-2026-10-27.md);
 unchanged Chapman3 verification is prepared and pending execution.
 Earlier pending statements below document the original preparation/first attempt.

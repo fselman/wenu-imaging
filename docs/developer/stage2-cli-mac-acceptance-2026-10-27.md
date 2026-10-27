@@ -1,5 +1,7 @@
 # S2-03 Mac correction acceptance — 27 October 2026
 
+Subsequent target gate: [Chapman3 verification passed](stage2-cli-chapman3-acceptance-2026-10-27.md). Earlier target-pending statements below record the Mac handoff.
+
 Actual Intel Mac source: fix/103-getopt-name-bounds at
 18a196224ba436ae6d68d43b40c25245bbbf50d3, clean. **Bounded Mac gate passed.**
 Chapman3 correction verification is pending; #103 and broader #75 stay open.
