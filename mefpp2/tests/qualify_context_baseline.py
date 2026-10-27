@@ -22,6 +22,8 @@ def main():
     parser.add_argument("--compiler", type=Path, required=True)
     parser.add_argument("--sdk", type=Path, required=True)
     parser.add_argument("--cmake", type=Path, required=True)
+    parser.add_argument("--phase", choices=("baseline", "corrected"), default="baseline")
+    parser.add_argument("--compare-baseline", type=Path)
     args = parser.parse_args()
     if platform.system() != "Darwin" or platform.node().split(".")[0] != "MC02VV0HPHTDG":
         raise RuntimeError("STOP: run on the qualified Intel Mac")
@@ -50,6 +52,22 @@ def main():
         engine = Path(shutil.which(str(engine)) or str(engine))
     engine = engine.resolve(strict=True)
     protected = {str(p): digest(p) for p in (config, engine)}
+    baseline = None
+    baseline_path = None
+    baseline_sha = None
+    baseline_cases = {}
+    if args.phase == "corrected" and args.compare_baseline is None:
+        raise RuntimeError("STOP: corrected qualification requires the reviewed baseline report")
+    if args.compare_baseline is not None:
+        baseline_path = args.compare_baseline.resolve(strict=True)
+        committed = repo / "docs/developer/fixtures/mac-stage2-context-baseline-2026-10-27/run-provenance.json"
+        baseline_sha = digest(baseline_path)
+        if baseline_sha != digest(committed):
+            raise RuntimeError("STOP: baseline differs from the inspected committed report")
+        baseline = json.loads(baseline_path.read_text())
+        if not baseline["execution_complete"] or len(baseline["cases"]) != 48:
+            raise RuntimeError("STOP: incomplete baseline")
+        baseline_cases = {c["case"]: c for c in baseline["cases"]}
     relevant = ["mefpp2/ins/mef/common/mefp_lib.c", "mefpp2/ins/mef/common/mefp_lib.h",
                 "mefpp2/qfits5/src/xmemory.c", "mefpp2/qfits5/include/xmemory.h",
                 "mefpp2/ins/mef/config/omegacam.paf", "mefpp2/ins/mef/config/wfi.paf",
@@ -58,11 +76,13 @@ def main():
     root = Path.home() / "Software/build/wenu-imaging"
     if not root.is_dir():
         raise RuntimeError("STOP: expected imaging build root is absent")
-    work = Path(tempfile.mkdtemp(prefix="mac-stage2-context-baseline-", dir=root))
+    work = Path(tempfile.mkdtemp(prefix="mac-stage2-context-" + args.phase + "-", dir=root))
     provenance = work / "run-provenance.json"
     record = dict(schema_version=1, project="wenu-imaging", tested_source=identity,
                   host=platform.node(), created_utc=datetime.now(timezone.utc).isoformat(),
-                  purpose="S2-02 unchanged context construction/destruction and rejection baseline",
+                  purpose="S2-02 context construction/destruction and rejection " + args.phase,
+                  phase=args.phase, baseline_report=str(baseline_path) if baseline_path else None,
+                  baseline_report_sha256=baseline_sha,
                   status="running", execution_complete=False,
                   retention_roles=["acceptance_evidence"], commands=[], cases=[],
                   source_sha256=source_hashes, protected_sha256=protected,
@@ -70,7 +90,7 @@ def main():
                   limits=["Context/PAF only: no mef_engine, image reduction or Pycavi",
                           "No allocator failure injection; no full repeated-stage gate",
                           "Mac RAM diagnostic/accounting lanes; target verification pending",
-                          "No correction of issue 99 applied"])
+                          "Driver does not alter production source; tested commit identifies the implementation"])
     save(provenance, record)
     print("WORK DIRECTORY:", work, flush=True)
     children = []
@@ -219,6 +239,15 @@ def main():
                                 result.update(leaked_blocks=blocks, leaked_bytes=size)
                                 if blocks or size or code:
                                     result["findings"].append("unreachable allocation reported by leaks")
+                            if baseline is not None:
+                                expected = baseline_cases.get(label)
+                                if expected is None:
+                                    raise RuntimeError("Case absent from reviewed baseline")
+                                if (input_hash != expected["input_sha256"] or
+                                        result.get("configuration_lines") != expected.get("configuration_lines") or
+                                        result.get("context_contract") != expected.get("context_contract")):
+                                    raise RuntimeError("Input/context values differ from reviewed baseline")
+                                result["baseline_values_match"] = True
                             if digest(paf) != input_hash:
                                 raise RuntimeError("Staged input changed")
                             result["status"] = "failed" if result["findings"] else "passed"
@@ -232,6 +261,11 @@ def main():
                         print(("PASS:" if result["status"] == "passed" else "FINDING:"), label,
                               "final pointers=%s bytes=%s" % (final.get("pointers", "?"), final.get("bytes", "?")),
                               flush=True)
+        if baseline is not None:
+            if (len(record["cases"]) != len(baseline_cases) or
+                    not all(c.get("baseline_values_match") for c in record["cases"])):
+                raise RuntimeError("Incomplete baseline value comparison")
+            record["baseline_values_match"] = True
         record["execution_complete"] = True
         record["finding_cases"] = sum(c["status"] != "passed" for c in record["cases"])
         record["status"] = "failed" if record["finding_cases"] else "passed"
@@ -239,11 +273,12 @@ def main():
         record.update(status="failed", error=str(error))
         raise
     finally:
+        record["baseline_report_unchanged"] = baseline_path is None or digest(baseline_path) == baseline_sha
         record["sources_unchanged"] = all(digest(repo / p) == h for p, h in source_hashes.items())
         record["protected_files_unchanged"] = all(digest(Path(p)) == h for p, h in protected.items())
         record["checkout_unchanged"] = (git("rev-parse", "HEAD") == identity["commit"]
                                        and not git("status", "--porcelain", "--untracked-files=all"))
-        if not all(record[k] for k in ("sources_unchanged", "protected_files_unchanged", "checkout_unchanged")):
+        if not all(record[k] for k in ("sources_unchanged", "protected_files_unchanged", "checkout_unchanged", "baseline_report_unchanged")):
             record["status"] = "failed"
         record["completed_utc"] = datetime.now(timezone.utc).isoformat()
         save(provenance, record)
@@ -252,7 +287,7 @@ def main():
             if value["status"] == "running":
                 value.update(status=record["status"], completed_utc=record["completed_utc"])
                 save(child, value)
-    print("CONTEXT BASELINE: cases=%d; finding cases=%d; complete=%s" %
+    print("CONTEXT " + args.phase.upper() + ": cases=%d; finding cases=%d; complete=%s" %
           (len(record["cases"]), record.get("finding_cases", 0), record["execution_complete"]))
     print("REPORT:", provenance)
     print("Memory gate:", record["status"])
