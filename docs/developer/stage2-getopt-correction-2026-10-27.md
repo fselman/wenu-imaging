@@ -4,6 +4,19 @@ Status: correction prepared; actual Mac and Chapman3 qualification pending.
 Stacked on the inspected failed baseline in PR #102. #103 and the broader #75
 gate stay open. No installation or observational processing is requested.
 
+First actual-Mac attempt at 4077e6e3eb31a3fc84bd56c6650d04ada93cd7fe
+compiled the C90 instrumented targets, then stopped before any of the 224 CLI
+pairs. User-returned report/log: 12 parser checks passed; only missing-value
+failed because the probe incorrectly expected '?' rather than the bundled
+parser's explicit ':' return in its REQUIRED_ARG branch. No sanitizer finding
+was shown. This is a diagnostic assertion error, not an added production change.
+Correct that one expected character and retain
+`~/Software/build/wenu-imaging/mac-stage2-cli-corrected-7pmo1ec_/` unchanged.
+The report states sources/export/checkout/protected files and original baseline
+unchanged. Full corrected S2-03 acceptance and target verification remain pending;
+the next run uses a fresh directory. This paragraph records returned evidence,
+not independent inspection of an uploaded archive for that attempt.
+
 The [retained baseline](stage2-cli-baseline-evidence-2026-10-27.md) contains
 100 failing instrumented case pairs, all at the same registered-name comparison
 in the bundled Eclipse `src/unix/getopt.c`. The ordinary executable also fails,

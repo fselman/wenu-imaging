@@ -57,7 +57,8 @@ int main(void)
     failed += check("unknown", 2, unknown, '?', NULL);
     failed += check("equals-value", 2, equals, 's', "2");
     failed += check("separate-value", 3, separate, 's', "2");
-    failed += check("missing-value", 2, missing, '?', NULL);
+    /* This bundled parser returns ':' for a missing required value. */
+    failed += check("missing-value", 2, missing, ':', NULL);
     failed += check("prefix-with-value", 2, prefix_value, 's', "2");
     failed += check("short-option", 2, short_option, 'h', NULL);
     failed += check("end-options", 2, end_options, EOF, NULL);
