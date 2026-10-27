@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "purpose": "Independent inspection of corrected Mac S2-05 evidence",
+  "status": "passed",
+  "created_utc": "2026-10-27T23:18:38.250353+00:00",
+  "archive_sha256": "145cd80fc5289e48ffa9b572ed7b1cd24d573c2c3e52bdb07268d5efabe947ee",
+  "archive_library_id": "libfile_8dde9b15c3fc819189dc347005f2fbd0",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "completed_utc": "2026-10-27T23:18:38.675307+00:00",
+  "member_count": 369,
+  "verified_manifest_entries": 368,
+  "report_sha256": "abb8e8d00cd93796b3b5684ca34d6c1214faaaf056f1936239a07e92c27127a5",
+  "native_roles_verified": 32,
+  "external_leak_summaries": 8,
+  "postpurge_zero_cases": 16,
+  "exact_baseline_and_90_comparisons": 32,
+  "after_driver_states": [
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    }
+  ],
+  "limitations": [
+    "Retained/controlled OmegaCAM synthetic BPM fixtures only; not WFI/observational acceptance",
+    "Both regression producers with bias=NULL and one extension; other branches remain pending",
+    "One native call per process; no same-process repeated-stage qualification",
+    "Original after-driver state retained; double purge diagnoses cache but cannot waive other live state",
+    "No allocation/I/O injection or general mmap/swap qualification",
+    "Mac first; unchanged-driver target verification remains pending"
+  ]
+}

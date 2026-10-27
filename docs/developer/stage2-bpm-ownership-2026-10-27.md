@@ -1,5 +1,7 @@
 # S2-05 BPM ownership baseline — 27 October 2026
 
+Update: [corrected Mac evidence is inspected and passes](stage2-bpm-mac-acceptance-2026-10-27.md); unchanged-driver target verification is prepared but unexecuted. Earlier pending-Mac statements below describe preparation history.
+
 Status: prepared, not native-executed. Tracking #75. Base main
 `9f09a7d8a9d09c9362c390b9351c2c2d467f986c` includes accepted S2-04 and the full
 S2 milestone/prior-agreement rule. Both actual user clones are clean on that

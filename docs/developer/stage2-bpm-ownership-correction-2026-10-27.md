@@ -1,5 +1,7 @@
 # S2-05 focused BPM ownership repair — 27 October 2026
 
+Update: [corrected Mac evidence is inspected and passes](stage2-bpm-mac-acceptance-2026-10-27.md); unchanged-driver target verification is prepared but unexecuted. Earlier pending-Mac statements below describe preparation history.
+
 Status: source repair prepared, actual native Mac compilation/execution pending.
 Tracking #109, #110, #111, #112 under #75. Stacked on the retained failed baseline
 in PR #108; no merge or branch deletion is authorized. See the
