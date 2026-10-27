@@ -1,5 +1,7 @@
 # S2-04 Mac split/cache acceptance — 27 October 2026
 
+Latest: [Chapman3 acceptance inspected; bounded S2-04 verified on both hosts](stage2-split-chapman3-acceptance-2026-10-27.md). Earlier target-pending statements below describe preparation history.
+
 ## Actual scope and result
 
 Clean source `5322bb952e6958a93594692fcf1e96c58fbf800d` on branch

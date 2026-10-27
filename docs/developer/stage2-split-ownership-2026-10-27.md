@@ -1,5 +1,7 @@
 # S2-04 split I/O/publication ownership baseline — 27 October 2026
 
+Latest: [Chapman3 acceptance inspected; bounded S2-04 verified on both hosts](stage2-split-chapman3-acceptance-2026-10-27.md). Earlier target-pending statements below describe preparation history.
+
 Latest: [controlled Mac cache attribution accepted; unchanged-driver target verification prepared](stage2-split-mac-acceptance-2026-10-27.md). Earlier pending-control statements below describe the retained prior attempts.
 
 Latest: [repaired observer evidence inspected and controlled cache attribution prepared](stage2-split-observed-evidence-2026-10-27.md). The baseline has 80 functional passes and 64 retained-state findings; its cache-attribution extension is not executed. Earlier preparation/scan statements below are historical.
