@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "purpose": "Independent inspection of Chapman3 S2-05 functional/accounting evidence",
+  "status": "passed",
+  "created_utc": "2026-10-27T23:28:34.436977+00:00",
+  "archive_sha256": "fdb62b7074f77feada39578c86a692e14a68a2ebc7b723c49bf1831ce53aa8b4",
+  "archive_library_id": "libfile_1956b527ade081919a7aef73cf884728",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "completed_utc": "2026-10-27T23:28:34.753641+00:00",
+  "member_count": 200,
+  "verified_manifest_entries": 199,
+  "report_sha256": "3a0440fed82afa0f4578de782e0567dcbd0e97bd548e50551e7ac494522e0cf8",
+  "native_roles_verified": 16,
+  "external_leak_summaries": 0,
+  "postpurge_zero_cases": 8,
+  "exact_mac_and_90_comparisons": 16,
+  "after_driver_states": [
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    }
+  ],
+  "limitations": [
+    "Retained/controlled OmegaCAM synthetic BPM fixtures only; not WFI/observational acceptance",
+    "Both regression producers with bias=NULL and one extension; other branches remain pending",
+    "One native call per process; no same-process repeated-stage qualification",
+    "Original after-driver state retained; double purge diagnoses cache but cannot waive other live state",
+    "No allocation/I/O injection or general mmap/swap qualification",
+    "Compatible target external diagnostics remain pending; this is functional/accounting only"
+  ]
+}

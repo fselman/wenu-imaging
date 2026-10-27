@@ -1,5 +1,7 @@
 # S2-05 focused BPM ownership repair — 27 October 2026
 
+Update: [Chapman3 evidence is inspected and passes the bounded functional/accounting gate](stage2-bpm-chapman3-acceptance-2026-10-27.md). Earlier target-pending statements below describe preparation history. Full S2-05 and compatible target external diagnostics remain open.
+
 Update: [corrected Mac evidence is inspected and passes](stage2-bpm-mac-acceptance-2026-10-27.md); unchanged-driver target verification is prepared but unexecuted. Earlier pending-Mac statements below describe preparation history.
 
 Status: source repair prepared, actual native Mac compilation/execution pending.

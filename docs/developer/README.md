@@ -1,5 +1,7 @@
 # Developer documentation
 
+Latest S2-05: [bounded BPM correction verified on Mac and Chapman3](stage2-bpm-chapman3-acceptance-2026-10-27.md); exact FITS products and ownership/accounting pass. PR stack awaits integration; full S2-05 and target external diagnostics remain open.
+
 Latest S2-05: [corrected Mac BPM gate accepted; target runner prepared](stage2-bpm-mac-acceptance-2026-10-27.md). Exact products preserved, double-purge resources zero; target execution and broader S2 remain pending.
 
 Latest S2-05: [ownership correction prepared for #109–#112](stage2-bpm-ownership-correction-2026-10-27.md); failed baseline retained, fresh actual Mac verification pending.
