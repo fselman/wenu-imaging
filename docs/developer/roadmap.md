@@ -1,5 +1,18 @@
 # wenu-imaging roadmap
 
+Current bounded gate, 27 October 2026: permanent shared dome/sky normalization
+CTest integration passed on Intel Mac and Chapman3 in both C90/C17 modes:
+nine tests per mode and 2592 exact normalization pixels per platform. Original
+reports/manifests are preserved in the test branch; see the
+[regression acceptance record](shared-normalization-regression.md).
+The known-mask/control characterization is also recorded; #91 remains an
+implementation gap, not a reason to repeat the completed characterization.
+Next: review stacked acceptance PR #93 and test PR #95 for integration, then
+prepare Stage 2 memory/ownership qualification (including #90). Preserve selected
+installations; merge/cleanup remain separate actions. The early Phase 3 audit
+remains pending; stop for the agreed review after Stage 2 before Stage 2A/extraction.
+Older next-step statements below are historical where superseded.
+
 Mac robust BPM update, 26 October 2026: C90/C17 reconstruction without a separate
 master bias exactly reproduces all historical mask pixels and 34122 bad pixels.
 Complete raw-header differences are reviewed generated ORIGFILE values only.

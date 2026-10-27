@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "reports/qualification-run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/run-provenance.json",
+      "bytes": 9279,
+      "sha256": "00876363b19c95586e215ab556364e548cd9265b7a1c76f31ca4441723afec36"
+    },
+    {
+      "path": "reports/source--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source/run-provenance.json",
+      "bytes": 479,
+      "sha256": "007c22e433da28b1573da23a837bbaccd8bf7e513fc7687b69980b5897812224"
+    },
+    {
+      "path": "reports/build-c90--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/run-provenance.json",
+      "bytes": 471,
+      "sha256": "8932cdfa0dcd410a95c336a8249c9b479564a7fe53249980b4ab6fc02812b7ec"
+    },
+    {
+      "path": "reports/build-c90--build-info.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/build-info.json",
+      "bytes": 1162,
+      "sha256": "6791c951644045614b26ddcce2df7a350f76a815848f4605d4d44c8f39edcc77"
+    },
+    {
+      "path": "reports/build-c90--compile_commands.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/compile_commands.json",
+      "bytes": 98332,
+      "sha256": "f66528377549ca05de9cdef0677971626a43b2997e592aaf51523afcd5ac712c"
+    },
+    {
+      "path": "reports/build-c90--Testing--Temporary--LastTest.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/Testing/Temporary/LastTest.log",
+      "bytes": 13462,
+      "sha256": "c2cfa8a17797cfd64d65fb79b087bdbe78d172a1e4c2c8082b2ddbde0ad20c81"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/run-provenance.json",
+      "bytes": 561,
+      "sha256": "6418d59b6c9f72c6641c82da76cd9deec0c77eae4a9ecb0974084d18106c3da6"
+    },
+    {
+      "path": "reports/configure-c90.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/configure-c90.log",
+      "bytes": 1951,
+      "sha256": "ae42e5ed6f693b763a9f7206bfa5d6dd9b10b1e7434aefb0dbd352885be273c0"
+    },
+    {
+      "path": "reports/build-c90.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90.log",
+      "bytes": 35934,
+      "sha256": "28c72f151f513ec52632f55f84146e097e382f67a16d5b83e1bf99b01a25acad"
+    },
+    {
+      "path": "reports/ctest-c90.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/ctest-c90.log",
+      "bytes": 1510,
+      "sha256": "049af937851c2f0798b780ad330fe921346eee4f1dc78bf54014bffc2f61672e"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--dome-order0-uuaumtn_--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/dome-order0-uuaumtn_/run-provenance.json",
+      "bytes": 1718,
+      "sha256": "aad161746ed2738247724ad12b4fd78cf2f51b7ab88381ba3cb1f100eec1ba9a"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--dome-order0-uuaumtn_--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/dome-order0-uuaumtn_/native.log",
+      "bytes": 202,
+      "sha256": "71670f8f31213e91dfaf15ee93e81296ed95a354b7a7aa0af6030b8f0abcaed7"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--dome-order1-e0f4x24u--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/dome-order1-e0f4x24u/run-provenance.json",
+      "bytes": 1718,
+      "sha256": "c402917361962ff8979fdd983930c2abc0401a678532d1d01367afd49942c9cf"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--dome-order1-e0f4x24u--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/dome-order1-e0f4x24u/native.log",
+      "bytes": 214,
+      "sha256": "a3a43cc7b8cc86ce3fbc57dfc7c04da54a6ea9da7d59bc436555dafd44fa45d6"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--sky-order0-1cvdaqjv--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/sky-order0-1cvdaqjv/run-provenance.json",
+      "bytes": 1716,
+      "sha256": "3f1ae3f17711df9933574541ee25960c7123887501afe8d2ab02265fb26d8b16"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--sky-order0-1cvdaqjv--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/sky-order0-1cvdaqjv/native.log",
+      "bytes": 198,
+      "sha256": "db6b83e7b224e1543e5eb225d80a61c6db11b5e1cdfb2dbfec0cf5e3811667ad"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--sky-order1-wlm2venh--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/sky-order1-wlm2venh/run-provenance.json",
+      "bytes": 1716,
+      "sha256": "ca63c48291326fdc35f1c7b762fb825226b0f33a8db234d04594b0c2bbfe93e4"
+    },
+    {
+      "path": "reports/build-c90--test-work--shared-normalization--sky-order1-wlm2venh--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/sky-order1-wlm2venh/native.log",
+      "bytes": 210,
+      "sha256": "d629152ef1e6788c3537ad80b705c7beb9694bb1cf9910b90317573ae074c721"
+    },
+    {
+      "path": "reports/build-c17--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/run-provenance.json",
+      "bytes": 471,
+      "sha256": "5205ba4d02d92a3a9f499f7a68efa81b313452d37bd411b36fc36014467cf170"
+    },
+    {
+      "path": "reports/build-c17--build-info.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/build-info.json",
+      "bytes": 1162,
+      "sha256": "235514fb9ec77088427cb34137008286d0e628e4e109e66a6d3c51763e15c0a0"
+    },
+    {
+      "path": "reports/build-c17--compile_commands.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/compile_commands.json",
+      "bytes": 98332,
+      "sha256": "b704ba385c6b5fbad59be6c212052d3543b2666d5bf2cc1a9ac32eb278e86478"
+    },
+    {
+      "path": "reports/build-c17--Testing--Temporary--LastTest.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/Testing/Temporary/LastTest.log",
+      "bytes": 13462,
+      "sha256": "7d9ca46c119345bc1fe4d03c51b55c2b4dad229d91be130fd0e4571afaf8ccfb"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/run-provenance.json",
+      "bytes": 561,
+      "sha256": "6418d59b6c9f72c6641c82da76cd9deec0c77eae4a9ecb0974084d18106c3da6"
+    },
+    {
+      "path": "reports/configure-c17.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/configure-c17.log",
+      "bytes": 1951,
+      "sha256": "5240c78a19f755fada04d97fec2a5d1909d3f0e16e0c5bad78c651ad1bf324ad"
+    },
+    {
+      "path": "reports/build-c17.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17.log",
+      "bytes": 36354,
+      "sha256": "7c8d4c64aa019bed65c934b3d0a489e0484fcfd4b73c056fcf6d263a9817e209"
+    },
+    {
+      "path": "reports/ctest-c17.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/ctest-c17.log",
+      "bytes": 1510,
+      "sha256": "209477d39b0edc5add2cf893fbed9714dd175d6ffeb5001f8ef60199165caeae"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--dome-order0-0fkjbfvq--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/dome-order0-0fkjbfvq/run-provenance.json",
+      "bytes": 1718,
+      "sha256": "830056062db10804b4ec896b4e0d7e4574bc764b035ac7776843d32ba2ba778a"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--dome-order0-0fkjbfvq--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/dome-order0-0fkjbfvq/native.log",
+      "bytes": 202,
+      "sha256": "71670f8f31213e91dfaf15ee93e81296ed95a354b7a7aa0af6030b8f0abcaed7"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--dome-order1-w6cmws2r--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/dome-order1-w6cmws2r/run-provenance.json",
+      "bytes": 1718,
+      "sha256": "b70101d1afc34df68f77fd79af4026928b0fa1af61e5bc27ffa726c7cbbcfa64"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--dome-order1-w6cmws2r--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/dome-order1-w6cmws2r/native.log",
+      "bytes": 214,
+      "sha256": "a3a43cc7b8cc86ce3fbc57dfc7c04da54a6ea9da7d59bc436555dafd44fa45d6"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--sky-order0-jle2qs2c--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/sky-order0-jle2qs2c/run-provenance.json",
+      "bytes": 1716,
+      "sha256": "51cdfe43d7406cafe60d66d4b78c3ae9a0ca7b525e914c4d0cd5908634bfcba1"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--sky-order0-jle2qs2c--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/sky-order0-jle2qs2c/native.log",
+      "bytes": 198,
+      "sha256": "db6b83e7b224e1543e5eb225d80a61c6db11b5e1cdfb2dbfec0cf5e3811667ad"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--sky-order1-5peun11h--run-provenance.json",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/sky-order1-5peun11h/run-provenance.json",
+      "bytes": 1716,
+      "sha256": "fcac5a99fea3bb505d2a795f56bfb2c8bae2deaa288627c4544dc39cf880b248"
+    },
+    {
+      "path": "reports/build-c17--test-work--shared-normalization--sky-order1-5peun11h--native.log",
+      "source": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/sky-order1-5peun11h/native.log",
+      "bytes": 210,
+      "sha256": "d629152ef1e6788c3537ad80b705c7beb9694bb1cf9910b90317573ae074c721"
+    }
+  ]
+}

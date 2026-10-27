@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "test/shared-flat-normalization",
+  "commit": "dbdb0a47947577a46f854591a14e527570731fc0",
+  "dirty": false,
+  "host": "chapman3.sc.eso.org",
+  "created_utc": "2026-10-27T12:07:28.878967+00:00",
+  "purpose": "Preserve Chapman3 C90/C17 CTest acceptance evidence",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "source_run": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt",
+  "files_collected": 34,
+  "processing_launched": false,
+  "manifest_sha256": "d97d25a3a12a7034d91634cc138043f3d30d30f1049be860750cd6fab6e15e0c",
+  "directory": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-evidence-hgo6d1zm/reports",
+  "qualification_record": "qualification-run-provenance.json"
+}

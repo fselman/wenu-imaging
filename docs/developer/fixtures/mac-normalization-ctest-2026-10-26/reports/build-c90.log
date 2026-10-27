@@ -1,0 +1,423 @@
+[  1%] Building C object CMakeFiles/qfits.dir/qfits5/src/byteswap.c.o
+[  2%] Building C object CMakeFiles/qfits.dir/qfits5/src/cache.c.o
+[  3%] Building C object CMakeFiles/qfits.dir/qfits5/src/expkey.c.o
+[  4%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_h.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_h.c:1274:22: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+        fprintf(out, line) ;
+                     ^~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_h.c:1274:22: note: treat the string as an argument to avoid this
+        fprintf(out, line) ;
+                     ^
+                     "%s", 
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_h.c:1264:21: warning: variable 'n_out' set but not used [-Wunused-but-set-variable]
+    int             n_out ;    
+                    ^
+2 warnings generated.
+[  5%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_md5.c.o
+[  5%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_p.c.o
+[  6%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_rw.c.o
+[  7%] Building C object CMakeFiles/qfits.dir/qfits5/src/get_name.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/get_name.c:100:18: warning: comparison of array 'path' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+    last_slash = path != NULL ? strrchr (path, '/') : NULL;
+                 ^~~~    ~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/get_name.c:185:29: warning: 'size' argument to memset is '0'; did you mean to transpose the last two arguments? [-Wmemset-transposed-args]
+    memset(path, MAXNAMESZ, 0);
+                            ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/get_name.c:185:29: note: parenthesize the third argument to silence
+2 warnings generated.
+[  8%] Building C object CMakeFiles/qfits.dir/qfits5/src/ieeefp-compat.c.o
+[  9%] Building C object CMakeFiles/qfits.dir/qfits5/src/md5.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/md5.c:165:27: warning: 'memset' call operates on objects of type 'struct MD5Context' while the size is based on a different type 'struct MD5Context *' [-Wsizeof-pointer-memaccess]
+    memset(ctx, 0, sizeof(ctx));        /* In case it's sensitive */
+           ~~~            ^~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/md5.c:165:27: note: did you mean to dereference the argument to 'sizeof' (and multiply it by the number of elements)?
+    memset(ctx, 0, sizeof(ctx));        /* In case it's sensitive */
+                          ^~~
+1 warning generated.
+[ 10%] Building C object CMakeFiles/qfits.dir/qfits5/src/pafs.c.o
+[ 11%] Building C object CMakeFiles/qfits.dir/qfits5/src/pixio.c.o
+[ 12%] Building C object CMakeFiles/qfits.dir/qfits5/src/qerror.c.o
+[ 13%] Building C object CMakeFiles/qfits.dir/qfits5/src/simple.c.o
+[ 14%] Building C object CMakeFiles/qfits.dir/qfits5/src/t_iso8601.c.o
+[ 15%] Building C object CMakeFiles/qfits.dir/qfits5/src/tfits.c.o
+[ 16%] Building C object CMakeFiles/qfits.dir/qfits5/src/version.c.o
+[ 17%] Building C object CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/xmemory.c:350:27: warning: unused parameter 'filename' [-Wunused-parameter]
+        const char    *   filename,
+                          ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/xmemory.c:351:21: warning: unused parameter 'lineno' [-Wunused-parameter]
+        int         lineno,
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/xmemory.c:536:17: warning: variable 'pos' set but not used [-Wunused-but-set-variable]
+    int         pos ;
+                ^
+3 warnings generated.
+[ 18%] Linking C static library libqfits.a
+[ 18%] Built target qfits
+[ 18%] Building C object CMakeFiles/eclipse.dir/src/iproc/corner.c.o
+[ 19%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube2image.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/corner.c:64:13: warning: variable 'pts_list' set but not used [-Wunused-but-set-variable]
+        double3  *      pts_list ;
+                        ^
+1 warning generated.
+[ 20%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_arith.c.o
+[ 21%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_filters.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_filters.c:809:16: warning: variable 'sky' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+    } else if (nb_sky == 0) {
+               ^~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_filters.c:813:9: note: uninitialized use occurs here
+    if (sky == NULL) {
+        ^~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_filters.c:809:12: note: remove the 'if' if its condition is always true
+    } else if (nb_sky == 0) {
+           ^~~~~~~~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_filters.c:780:20: note: initialize the variable 'sky' to silence this warning
+    image_t *   sky ;
+                   ^
+                    = NULL
+1 warning generated.
+[ 22%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_handling.c.o
+[ 23%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_load.c.o
+[ 24%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_save.c.o
+[ 25%] Building C object CMakeFiles/eclipse.dir/src/iproc/dead_pixels.c.o
+[ 26%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect.c.o
+[ 27%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect_ks.c.o
+[ 28%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect_sq.c.o
+[ 29%] Building C object CMakeFiles/eclipse.dir/src/iproc/detector.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detector.c:498:21: warning: variable 'npix' set but not used [-Wunused-but-set-variable]
+    int             npix ;
+                    ^
+1 warning generated.
+[ 30%] Building C object CMakeFiles/eclipse.dir/src/iproc/extraction.c.o
+[ 31%] Building C object CMakeFiles/eclipse.dir/src/iproc/fourier.c.o
+[ 32%] Building C object CMakeFiles/eclipse.dir/src/iproc/framelist.c.o
+[ 32%] Building C object CMakeFiles/eclipse.dir/src/iproc/generate.c.o
+[ 33%] Building C object CMakeFiles/eclipse.dir/src/iproc/histogram.c.o
+[ 34%] Building C object CMakeFiles/eclipse.dir/src/iproc/history.c.o
+[ 35%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_arith.c.o
+[ 36%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_filters.c.o
+[ 37%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_handling.c.o
+[ 38%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_intops.c.o
+[ 39%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_io.c.o
+[ 40%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_rtd.c.o
+[ 41%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_stats.c.o
+[ 42%] Building C object CMakeFiles/eclipse.dir/src/iproc/intimage.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_stats.c:703:17: warning: variable 'l' set but not used [-Wunused-but-set-variable]
+    int         l,
+                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_stats.c:1573:23: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+                                                        (pixelvalue)(-1<<15),
+                                                                     ~~^
+2 warnings generated.
+[ 43%] Building C object CMakeFiles/eclipse.dir/src/iproc/irstd.c.o
+[ 44%] Building C object CMakeFiles/eclipse.dir/src/iproc/matchpoint.c.o
+[ 45%] Building C object CMakeFiles/eclipse.dir/src/iproc/photometry.c.o
+In file included from /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/irstd.c:36:
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include/irtemp.h:245:13: warning: implicit conversion from 'double' to 'int' changes value from 5352.5 to 5352 [-Wliteral-conversion]
+{ "G4.5IV", 5352.5},
+~           ^~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include/irtemp.h:243:13: warning: implicit conversion from 'double' to 'int' changes value from 5457.5 to 5457 [-Wliteral-conversion]
+{ "G3.5IV", 5457.5},
+~           ^~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include/irtemp.h:241:13: warning: implicit conversion from 'double' to 'int' changes value from 5562.5 to 5562 [-Wliteral-conversion]
+{ "G2.5IV", 5562.5},
+~           ^~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include/irtemp.h:239:13: warning: implicit conversion from 'double' to 'int' changes value from 5662.5 to 5662 [-Wliteral-conversion]
+{ "G1.5IV", 5662.5},
+~           ^~~~~~
+[ 46%] Building C object CMakeFiles/eclipse.dir/src/iproc/pixel_handling.c.o
+[ 46%] Building C object CMakeFiles/eclipse.dir/src/iproc/pixelmaps.c.o
+[ 47%] Building C object CMakeFiles/eclipse.dir/src/iproc/resampling.c.o
+4 warnings generated.
+[ 48%] Building C object CMakeFiles/eclipse.dir/src/iproc/shift.c.o
+[ 49%] Building C object CMakeFiles/eclipse.dir/src/iproc/slitposition.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/slitposition.c:74:25: warning: variable 'spec_size' set but not used [-Wunused-but-set-variable]
+    int                 spec_size ;
+                        ^
+[ 50%] Building C object CMakeFiles/eclipse.dir/src/iproc/xcorrelation.c.o
+1 warning generated.
+[ 51%] Building C object CMakeFiles/eclipse.dir/src/math/chebyshev.c.o
+[ 52%] Building C object CMakeFiles/eclipse.dir/src/math/doubles.c.o
+[ 53%] Building C object CMakeFiles/eclipse.dir/src/math/dstats.c.o
+[ 54%] Building C object CMakeFiles/eclipse.dir/src/math/fft_base.c.o
+[ 55%] Building C object CMakeFiles/eclipse.dir/src/math/fit_curve.c.o
+[ 56%] Building C object CMakeFiles/eclipse.dir/src/math/function_1d.c.o
+[ 57%] Building C object CMakeFiles/eclipse.dir/src/math/ipow.c.o
+[ 58%] Building C object CMakeFiles/eclipse.dir/src/math/legendre.c.o
+[ 59%] Building C object CMakeFiles/eclipse.dir/src/math/matrix.c.o
+[ 60%] Building C object CMakeFiles/eclipse.dir/src/math/median.c.o
+[ 60%] Building C object CMakeFiles/eclipse.dir/src/math/optimization.c.o
+[ 61%] Building C object CMakeFiles/eclipse.dir/src/math/poly2d.c.o
+[ 62%] Building C object CMakeFiles/eclipse.dir/src/math/polygon.c.o
+[ 63%] Building C object CMakeFiles/eclipse.dir/src/math/random.c.o
+[ 64%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectral_lines.c.o
+[ 65%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_arcs.c.o
+[ 66%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_detect.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_detect.c:82:8: warning: variable 'objlen' set but not used [-Wunused-but-set-variable]
+        int                     objlen   = -1,
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_detect.c:72:11: warning: unused parameter 'min_spec_length' [-Wunused-parameter]
+                int                                     min_spec_length,
+                                                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_detect.c:185:10: warning: variable 'j' set but not used [-Wunused-but-set-variable]
+        int             i, j ;
+                           ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_detect.c:383:9: warning: variable 'brightest' set but not used [-Wunused-but-set-variable]
+        int                             brightest ;
+                                        ^
+4 warnings generated.
+[ 67%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_wave.c.o
+[ 68%] Building C object CMakeFiles/eclipse.dir/src/unix/calendar.c.o
+[ 69%] Building C object CMakeFiles/eclipse.dir/src/unix/charmatrix.c.o
+[ 70%] Building C object CMakeFiles/eclipse.dir/src/unix/chronos.c.o
+[ 71%] Building C object CMakeFiles/eclipse.dir/src/unix/cmdline.c.o
+[ 72%] Building C object CMakeFiles/eclipse.dir/src/unix/comm.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/cmdline.c:185:9: warning: variable 'len' set but not used [-Wunused-but-set-variable]
+        int                             len ;
+                                        ^
+1 warning generated.
+[ 73%] Building C object CMakeFiles/eclipse.dir/src/unix/dictionary.c.o
+[ 74%] Building C object CMakeFiles/eclipse.dir/src/unix/e_config.c.o
+[ 75%] Building C object CMakeFiles/eclipse.dir/src/unix/e_version.c.o
+[ 75%] Building C object CMakeFiles/eclipse.dir/src/unix/file_handling.c.o
+[ 76%] Building C object CMakeFiles/eclipse.dir/src/unix/filelock.c.o
+[ 77%] Building C object CMakeFiles/eclipse.dir/src/unix/filename.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filename.c:98:18: warning: comparison of array 'path' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+    last_slash = path != NULL ? strrchr (path, '/') : NULL;
+                 ^~~~    ~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filename.c:191:26: warning: 'size' argument to memset is '0'; did you mean to transpose the last two arguments? [-Wmemset-transposed-args]
+        memset(path, MAXNAMESZ, 0);
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filename.c:191:26: note: parenthesize the third argument to silence
+2 warnings generated.
+[ 78%] Building C object CMakeFiles/eclipse.dir/src/unix/filesys.c.o
+[ 79%] Building C object CMakeFiles/eclipse.dir/src/unix/getopt.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/getopt.c:223:33: warning: comparison of integers of different signs: 'size_t' (aka 'unsigned long') and 'int' [-Wsign-compare]
+                if (match_chars == (int)(strlen(longopts[optindex].name))) {
+                    ~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filesys.c:120:30: warning: unused parameter 'path' [-Wunused-parameter]
+long get_avail_kbytes(char * path)
+                             ^
+1 warning generated.
+[ 80%] Building C object CMakeFiles/eclipse.dir/src/unix/gnuplot_i.c.o
+[ 81%] Building C object CMakeFiles/eclipse.dir/src/unix/iniparser.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/iniparser.c:483:17: warning: variable 'lineno' set but not used [-Wunused-but-set-variable]
+    int         lineno ;
+                ^
+1 warning generated.
+[ 82%] Building C object CMakeFiles/eclipse.dir/src/unix/manpage.c.o
+[ 83%] Building C object CMakeFiles/eclipse.dir/src/unix/memstr.c.o
+[ 84%] Building C object CMakeFiles/eclipse.dir/src/unix/parse_tok.c.o
+[ 85%] Building C object CMakeFiles/eclipse.dir/src/unix/pid_i.c.o
+[ 86%] Building C object CMakeFiles/eclipse.dir/src/unix/ptrace.c.o
+[ 87%] Building C object CMakeFiles/eclipse.dir/src/unix/rtd_i.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/ptrace.c:110:47: warning: unused parameter 'call_site' [-Wunused-parameter]
+__cyg_profile_func_enter(void *this_fn, void *call_site)
+                                              ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/ptrace.c:117:46: warning: unused parameter 'call_site' [-Wunused-parameter]
+__cyg_profile_func_exit(void *this_fn, void *call_site)
+                                             ^
+2 warnings generated.
+[ 88%] Building C object CMakeFiles/eclipse.dir/src/unix/show.c.o
+[ 89%] Building C object CMakeFiles/eclipse.dir/src/unix/strlib.c.o
+[ 89%] Building C object CMakeFiles/eclipse.dir/src/unix/t_iso8601.c.o
+[ 90%] Building C object CMakeFiles/eclipse.dir/src/unix/t_stamp.c.o
+[ 91%] Building C object CMakeFiles/eclipse.dir/src/unix/userid.c.o
+[ 92%] Linking C static library libeclipse.a
+[ 92%] Built target eclipse
+[ 93%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mefp_lib.c.o
+[ 94%] Building C object CMakeFiles/native_smoke.dir/tests/native_smoke.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1634:23: warning: unused variable 'pt' [-Wunused-variable]
+        register pixelvalue *pt;
+                             ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1769:13: warning: unused variable 'mef_frame' [-Wunused-variable]
+        image_t  * mef_frame ;
+                   ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1770:23: warning: unused variable 'pt' [-Wunused-variable]
+        register pixelvalue *pt;
+                             ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1772:26: warning: unused variable 'i' [-Wunused-variable]
+        int                     i ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1773:26: warning: unused variable 'exts' [-Wunused-variable]
+        int               *     exts ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1774:26: warning: unused variable 'err' [-Wunused-variable]
+        int                     err ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1775:26: warning: unused variable 'single_frames' [-Wunused-variable]
+        int                     single_frames ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1866:21: warning: variable 'avg_filtered' set but not used [-Wunused-but-set-variable]
+    pixelvalue      avg_filtered;
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1867:21: warning: variable 'nfiltered' set but not used [-Wunused-but-set-variable]
+    int             nfiltered;
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:1875:21: warning: variable 'zIndex' set but not used [-Wunused-but-set-variable]
+    int             zIndex;
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2135:7: warning: unused variable 'zChar' [-Wunused-variable]
+        char zChar ;
+             ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2199:27: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+                        sprintf(name_i, bb->name_bpm) ;
+                                        ^~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2199:27: note: treat the string as an argument to avoid this
+                        sprintf(name_i, bb->name_bpm) ;
+                                        ^
+                                        "%s", 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2170:10: warning: unused variable 'getval' [-Wunused-variable]
+        char            *       getval ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2199:19: warning: variable 'name_i' is uninitialized when used here [-Wuninitialized]
+                        sprintf(name_i, bb->name_bpm) ;
+                                ^~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:28: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                           ^~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2167:16: note: initialize the variable 'name_i' to silence this warning
+        char            *       name_i ;
+                                      ^
+                                       = NULL
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2572:36: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+                sprintf(cval_prev, cval);
+                                   ^~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2572:36: note: treat the string as an argument to avoid this
+                sprintf(cval_prev, cval);
+                                   ^
+                                   "%s", 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2720:12: warning: unused variable 'scancorr' [-Wunused-variable]
+        image_t *       scancorr ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2721:14: warning: unused variable 'bias' [-Wunused-variable]
+        image_t *       bias ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3014:13: warning: variable 'normFactor' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+        } else if (!strcmp(what,"sky")) {
+                   ^~~~~~~~~~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3025:26: note: uninitialized use occurs here
+        image_cst_op_local(flat,normFactor,'*');        /* we normalize to the median of first extension */
+                                ^~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3014:9: note: remove the 'if' if its condition is always true
+        } else if (!strcmp(what,"sky")) {
+               ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:2745:19: note: initialize the variable 'normFactor' to silence this warning
+        float           normFactor ;
+                                  ^
+                                   = 0.0
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3241:28: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+        if ( (bb->correct_ref_pix == 1) ) {
+              ~~~~~~~~~~~~~~~~~~~~^~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3241:28: note: remove extraneous parentheses around the comparison to silence this warning
+        if ( (bb->correct_ref_pix == 1) ) {
+             ~                    ^   ~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3241:28: note: use '=' to turn this equality comparison into an assignment
+        if ( (bb->correct_ref_pix == 1) ) {
+                                  ^~
+                                  =
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3543:19: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+    sprintf(cval, recipe_version);
+                  ^~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3543:19: note: treat the string as an argument to avoid this
+    sprintf(cval, recipe_version);
+                  ^
+                  "%s", 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3413:18: warning: unused variable 'fnames' [-Wunused-variable]
+    framelist   *fnames ;
+                 ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3417:18: warning: unused variable 'getval' [-Wunused-variable]
+    char        *getval ;
+                 ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3419:17: warning: unused variable 'i' [-Wunused-variable]
+    int         i, nframes ;
+                ^
+[ 95%] Linking C executable native_smoke
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3580:16: warning: unused variable 'fh_ref' [-Wunused-variable]
+        qfits_header    *fh_ref ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3583:17: warning: variable 'exptime' set but not used [-Wunused-but-set-variable]
+    float       exptime;
+                ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3587:9: warning: unused variable 'getval' [-Wunused-variable]
+        char            *getval ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3588:7: warning: unused variable 'nchips' [-Wunused-variable]
+        int             nchips ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:3926:7: warning: unused variable 'cval' [-Wunused-variable]
+        char cval[80];
+             ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4008:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+}
+^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4077:16: warning: unused variable 'fh_main' [-Wunused-variable]
+        qfits_header    *fh_main ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4084:14: warning: unused variable 'qd' [-Wunused-variable]
+        qfitsdumper     qd ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4085:9: warning: unused variable 'out' [-Wunused-variable]
+        FILE            *out ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4088:9: warning: unused variable 'getval' [-Wunused-variable]
+        char            *getval ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4090:9: warning: unused variable 'first_name' [-Wunused-variable]
+        char            *first_name ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4091:13: warning: unused variable 'fnames' [-Wunused-variable]
+        framelist       *fnames ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c:4092:7: warning: unused variable 'nchips' [-Wunused-variable]
+        int             nchips ;
+                        ^
+36 warnings generated.
+[ 96%] Linking C static library libmefpp_common.a
+[ 96%] Built target mefpp_common
+[ 96%] Built target native_smoke
+[ 97%] Building C object CMakeFiles/mefpp.dir/ins/mef/recipes/mefpp.c.o
+[ 98%] Building C object CMakeFiles/shared_normalization_probe.dir/tests/fixtures/shared-normalization/shared_normalization_probe.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/recipes/mefpp.c:1228:30: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+               sprintf(cval, recipe_version);
+                             ^~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/recipes/mefpp.c:1228:30: note: treat the string as an argument to avoid this
+               sprintf(cval, recipe_version);
+                             ^
+                             "%s", 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h:47:56: note: expanded from macro 'sprintf'
+  __builtin___sprintf_chk (str, 0, __darwin_obsz(str), __VA_ARGS__)
+                                                       ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/recipes/mefpp.c:365:12: warning: unused variable 'bpm' [-Wunused-variable]
+        image_t         *bpm=NULL;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/recipes/mefpp.c:380:17: warning: unused variable 'bias_xtname' [-Wunused-variable]
+    char    *   bias_xtname;
+                ^
+3 warnings generated.
+[ 99%] Linking C executable shared_normalization_probe
+[100%] Linking C executable mefpp
+[100%] Built target shared_normalization_probe
+[100%] Built target mefpp

@@ -1,0 +1,608 @@
+[
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/byteswap.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/byteswap.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/byteswap.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/byteswap.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/cache.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/cache.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/cache.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/cache.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/expkey.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/expkey.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/expkey.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/expkey.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/fits_h.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_h.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_h.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/fits_h.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/fits_md5.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_md5.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_md5.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/fits_md5.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/fits_p.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_p.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_p.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/fits_p.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/fits_rw.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_rw.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/fits_rw.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/fits_rw.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/get_name.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/get_name.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/get_name.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/get_name.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/ieeefp-compat.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/ieeefp-compat.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/ieeefp-compat.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/ieeefp-compat.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/md5.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/md5.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/md5.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/md5.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/pafs.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/pafs.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/pafs.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/pafs.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/pixio.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/pixio.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/pixio.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/pixio.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/qerror.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/qerror.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/qerror.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/qerror.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/simple.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/simple.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/simple.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/simple.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/t_iso8601.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/t_iso8601.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/t_iso8601.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/t_iso8601.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/tfits.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/tfits.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/tfits.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/tfits.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/version.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/version.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/version.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/version.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -DXMEMORY_MAXPTRS=2000000 -DXMEMORY_MODE=2 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/xmemory.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/src/xmemory.c",
+  "output": "CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/corner.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/corner.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/corner.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/corner.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/cube2image.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube2image.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube2image.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/cube2image.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/cube_arith.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_arith.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_arith.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/cube_arith.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/cube_filters.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_filters.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_filters.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/cube_filters.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/cube_handling.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_handling.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_handling.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/cube_handling.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/cube_load.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_load.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_load.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/cube_load.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/cube_save.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_save.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/cube_save.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/cube_save.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/dead_pixels.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/dead_pixels.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/dead_pixels.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/dead_pixels.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/detect.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detect.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detect.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/detect.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/detect_ks.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detect_ks.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detect_ks.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/detect_ks.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/detect_sq.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detect_sq.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detect_sq.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/detect_sq.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/detector.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detector.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/detector.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/detector.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/extraction.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/extraction.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/extraction.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/extraction.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/fourier.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/fourier.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/fourier.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/fourier.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/framelist.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/framelist.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/framelist.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/framelist.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/generate.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/generate.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/generate.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/generate.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/histogram.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/histogram.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/histogram.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/histogram.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/history.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/history.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/history.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/history.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/image_arith.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_arith.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_arith.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/image_arith.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/image_filters.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_filters.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_filters.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/image_filters.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/image_handling.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_handling.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_handling.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/image_handling.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/image_intops.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_intops.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_intops.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/image_intops.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/image_io.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_io.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_io.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/image_io.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/image_rtd.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_rtd.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_rtd.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/image_rtd.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/image_stats.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_stats.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/image_stats.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/image_stats.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/intimage.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/intimage.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/intimage.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/intimage.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/irstd.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/irstd.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/irstd.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/irstd.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/matchpoint.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/matchpoint.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/matchpoint.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/matchpoint.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/photometry.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/photometry.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/photometry.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/photometry.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/pixel_handling.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/pixel_handling.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/pixel_handling.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/pixel_handling.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/pixelmaps.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/pixelmaps.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/pixelmaps.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/pixelmaps.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/resampling.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/resampling.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/resampling.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/resampling.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/shift.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/shift.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/shift.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/shift.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/slitposition.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/slitposition.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/slitposition.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/slitposition.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/iproc/xcorrelation.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/xcorrelation.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/iproc/xcorrelation.c",
+  "output": "CMakeFiles/eclipse.dir/src/iproc/xcorrelation.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/chebyshev.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/chebyshev.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/chebyshev.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/chebyshev.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/doubles.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/doubles.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/doubles.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/doubles.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/dstats.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/dstats.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/dstats.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/dstats.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/fft_base.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/fft_base.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/fft_base.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/fft_base.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/fit_curve.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/fit_curve.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/fit_curve.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/fit_curve.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/function_1d.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/function_1d.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/function_1d.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/function_1d.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/ipow.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/ipow.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/ipow.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/ipow.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/legendre.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/legendre.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/legendre.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/legendre.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/matrix.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/matrix.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/matrix.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/matrix.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/median.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/median.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/median.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/median.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/optimization.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/optimization.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/optimization.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/optimization.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/poly2d.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/poly2d.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/poly2d.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/poly2d.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/polygon.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/polygon.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/polygon.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/polygon.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/math/random.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/random.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/math/random.c",
+  "output": "CMakeFiles/eclipse.dir/src/math/random.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/spectro/spectral_lines.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectral_lines.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectral_lines.c",
+  "output": "CMakeFiles/eclipse.dir/src/spectro/spectral_lines.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/spectro/spectro_arcs.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_arcs.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_arcs.c",
+  "output": "CMakeFiles/eclipse.dir/src/spectro/spectro_arcs.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/spectro/spectro_detect.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_detect.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_detect.c",
+  "output": "CMakeFiles/eclipse.dir/src/spectro/spectro_detect.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/spectro/spectro_wave.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_wave.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/spectro/spectro_wave.c",
+  "output": "CMakeFiles/eclipse.dir/src/spectro/spectro_wave.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/calendar.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/calendar.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/calendar.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/calendar.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/charmatrix.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/charmatrix.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/charmatrix.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/charmatrix.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/chronos.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/chronos.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/chronos.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/chronos.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/cmdline.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/cmdline.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/cmdline.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/cmdline.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/comm.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/comm.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/comm.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/comm.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/dictionary.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/dictionary.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/dictionary.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/dictionary.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/e_config.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/e_config.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/e_config.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/e_config.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/e_version.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/e_version.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/e_version.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/e_version.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/file_handling.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/file_handling.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/file_handling.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/file_handling.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/filelock.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filelock.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filelock.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/filelock.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/filename.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filename.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filename.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/filename.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/filesys.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filesys.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/filesys.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/filesys.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/getopt.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/getopt.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/getopt.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/getopt.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/gnuplot_i.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/gnuplot_i.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/gnuplot_i.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/gnuplot_i.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/iniparser.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/iniparser.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/iniparser.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/iniparser.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/manpage.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/manpage.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/manpage.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/manpage.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/memstr.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/memstr.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/memstr.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/memstr.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/parse_tok.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/parse_tok.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/parse_tok.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/parse_tok.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/pid_i.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/pid_i.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/pid_i.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/pid_i.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/ptrace.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/ptrace.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/ptrace.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/ptrace.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/rtd_i.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/rtd_i.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/rtd_i.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/rtd_i.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/show.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/show.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/show.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/show.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/strlib.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/strlib.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/strlib.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/strlib.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/t_iso8601.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/t_iso8601.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/t_iso8601.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/t_iso8601.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/t_stamp.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/t_stamp.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/t_stamp.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/t_stamp.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_ECLIPSE_ -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/eclipse.dir/src/unix/userid.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/userid.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/unix/userid.c",
+  "output": "CMakeFiles/eclipse.dir/src/unix/userid.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/mefpp_common.dir/ins/mef/common/mefp_lib.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common/mefp_lib.c",
+  "output": "CMakeFiles/mefpp_common.dir/ins/mef/common/mefp_lib.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -o CMakeFiles/mefpp.dir/ins/mef/recipes/mefpp.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/recipes/mefpp.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/recipes/mefpp.c",
+  "output": "CMakeFiles/mefpp.dir/ins/mef/recipes/mefpp.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang  -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -Wall -Wextra -pedantic-errors -o CMakeFiles/native_smoke.dir/tests/native_smoke.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/native_smoke.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/native_smoke.c",
+  "output": "CMakeFiles/native_smoke.dir/tests/native_smoke.c.o"
+},
+{
+  "directory": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/ins/mef/common -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/src/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/qfits5/include -I/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/build-c17/generated -g -std=c17 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -o CMakeFiles/shared_normalization_probe.dir/tests/fixtures/shared-normalization/shared_normalization_probe.c.o -c /Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/fixtures/shared-normalization/shared_normalization_probe.c",
+  "file": "/Users/fselman/Software/build/wenu-imaging/mac-normalization-ctest-tli85v3h/source/mefpp2/tests/fixtures/shared-normalization/shared_normalization_probe.c",
+  "output": "CMakeFiles/shared_normalization_probe.dir/tests/fixtures/shared-normalization/shared_normalization_probe.c.o"
+}
+]

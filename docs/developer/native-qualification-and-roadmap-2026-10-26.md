@@ -6,6 +6,32 @@ Evidence below is Fernando's returned terminal output and supplied transcripts,
 not agent access to the actual Mac/Chapman3 JSON files. No new reduction,
 installation or normal engine selection occurred in this documentation update.
 
+## Permanent normalization regression acceptance — 27 October 2026
+
+Chapman3 CTest integration is accepted at dbdb0a47947577a46f854591a14e527570731fc0:
+GCC 10.2.1 (devtoolset-10), CMake/CTest 3.29.6, Linux x86_64, explicit
+C90/C17 Debug builds. All nine CTests passed per mode (3.90 s / 3.06 s),
+and all 2592 normalization pixels matched exactly. The 34 uploaded original
+reports, commands, compile flags and eight attempt logs verified against the
+manifest and log hashes. Protected files and checkout stayed unchanged; no
+installation or observational processing ran.
+See [preserved Chapman3 evidence](fixtures/chapman3-normalization-ctest-2026-10-27/README.md).
+
+This completes #94's bounded Mac/Chapman3 integration acceptance. Merge review
+of stacked PRs #93 then #95 is next; no merge or cleanup has been performed.
+The next substantive stage is memory/ownership qualification, including #90.
+Stage 2A/extraction still require the agreed review after Stage 2.
+
+Mac CTest acceptance at c5f2bac84e39918d0a82ac1e57769f6473be0828 is
+[preserved separately](fixtures/mac-normalization-ctest-2026-10-26/README.md).
+Unlike the earlier terminal-only summaries below, these two integration records
+have been independently reviewed from uploaded machine-readable reports/logs.
+The tests establish the declared normalization invariant, not memory safety,
+physical variance, BPM exclusion or scientific flat quality. Existing #75/#90/#91
+and broader platform/scientific gates remain open. Do not repeat expensive
+BPM construction or observational processing for this evidence-only update.
+Earlier pending next-step statements below are historical where superseded.
+
 ## Agreed scope and sequencing
 
 Finish the bounded serial qualification, then Stage 2 memory/ownership checks.
