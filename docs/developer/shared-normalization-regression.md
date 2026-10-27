@@ -75,5 +75,16 @@ recorded language flags and complete CTest logs. Protected selections and the
 checkout stayed unchanged. No installation or observational processing ran.
 See [preserved Mac evidence](fixtures/mac-normalization-ctest-2026-10-26/README.md).
 
-Chapman3 verification of this CTest integration remains pending. Keep #94 open.
-No new observations, normal installation switch, merge or cleanup is required.
+Chapman3 CTest integration is accepted at dbdb0a47947577a46f854591a14e527570731fc0:
+GCC 10.2.1 (devtoolset-10), CMake/CTest 3.29.6, Linux x86_64, explicit
+C90/C17 Debug builds. All nine CTests passed per mode (3.90 s / 3.06 s),
+and all 2592 normalization pixels matched exactly. The 34 uploaded original
+reports, commands, compile flags and eight attempt logs verified against the
+manifest and log hashes. Protected files and checkout stayed unchanged; no
+installation or observational processing ran.
+See [preserved Chapman3 evidence](fixtures/chapman3-normalization-ctest-2026-10-27/README.md).
+
+This completes #94's bounded Mac/Chapman3 integration acceptance. Merge review
+of stacked PRs #93 then #95 is next; no merge or cleanup has been performed.
+The next substantive stage is memory/ownership qualification, including #90.
+Stage 2A/extraction still require the agreed review after Stage 2.

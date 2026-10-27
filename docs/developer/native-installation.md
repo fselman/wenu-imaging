@@ -7,7 +7,10 @@ The original Mac/Chapman3 fixture passed. Fresh Intel Mac CTest integration at
 c5f2bac84e39918d0a82ac1e57769f6473be0828 passed all nine entries in both
 C90/C17 modes; 2592 normalization pixels matched exactly. The original reports,
 commands, compile flags and logs are [preserved with their manifest](fixtures/mac-normalization-ctest-2026-10-26/README.md).
-Chapman3 qualification of the CTest integration remains pending. Production algorithms and normal installations are
+Chapman3 integration at dbdb0a47947577a46f854591a14e527570731fc0 also passed
+all nine tests in both modes with GCC 10.2.1/CMake 3.29.6, including all 2592
+exact normalization pixels. Its [34 original reports and manifest](fixtures/chapman3-normalization-ctest-2026-10-27/README.md)
+are preserved. This completes the bounded #94 target gate; merge review remains separate. Production algorithms and normal installations are
 unchanged. See [test contract and qualification](shared-normalization-regression.md).
 
 Current qualification update, 26 October 2026: the merged native build/failure

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "test/shared-flat-normalization",
+  "commit": "dbdb0a47947577a46f854591a14e527570731fc0",
+  "dirty": false,
+  "purpose": "Native C17 build/CTest",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "parent_record": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/run-provenance.json"
+}

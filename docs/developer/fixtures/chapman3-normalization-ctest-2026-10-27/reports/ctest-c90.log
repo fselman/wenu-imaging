@@ -1,0 +1,28 @@
+Internal ctest changing into directory: /home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90
+Test project /home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90
+    Start 1: native_frontend_contract
+1/9 Test #1: native_frontend_contract ..................   Passed    1.58 sec
+    Start 2: native_install_contract
+2/9 Test #2: native_install_contract ...................   Passed    0.16 sec
+    Start 3: native_primitives
+3/9 Test #3: native_primitives .........................   Passed    0.00 sec
+    Start 4: native_failure_contract
+4/9 Test #4: native_failure_contract ...................   Passed    0.98 sec
+    Start 5: native_shared_normalization_dome_order0
+5/9 Test #5: native_shared_normalization_dome_order0 ...   Passed    0.33 sec
+    Start 6: native_shared_normalization_dome_order1
+6/9 Test #6: native_shared_normalization_dome_order1 ...   Passed    0.28 sec
+    Start 7: native_shared_normalization_sky_order0
+7/9 Test #7: native_shared_normalization_sky_order0 ....   Passed    0.28 sec
+    Start 8: native_shared_normalization_sky_order1
+8/9 Test #8: native_shared_normalization_sky_order1 ....   Passed    0.27 sec
+    Start 9: native_cli_usage
+9/9 Test #9: native_cli_usage ..........................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 9
+
+Label Time Summary:
+native           =   1.16 sec*proc (4 tests)
+normalization    =   1.16 sec*proc (4 tests)
+
+Total Test time (real) =   3.90 sec

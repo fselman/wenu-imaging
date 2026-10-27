@@ -1,0 +1,57 @@
+-- The C compiler identification is GNU 10.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/devtoolset-10/root/usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of char
+-- Check size of char - done
+-- Check size of short
+-- Check size of short - done
+-- Check size of int
+-- Check size of int - done
+-- Check size of long
+-- Check size of long - done
+-- Check size of float
+-- Check size of float - done
+-- Check size of double
+-- Check size of double - done
+-- Looking for unistd.h
+-- Looking for unistd.h - found
+-- Looking for sys/mman.h
+-- Looking for sys/mman.h - found
+-- Looking for sys/resource.h
+-- Looking for sys/resource.h - found
+-- Looking for sys/socket.h
+-- Looking for sys/socket.h - found
+-- Looking for sys/shm.h
+-- Looking for sys/shm.h - found
+-- Looking for sys/time.h
+-- Looking for sys/time.h - found
+-- Performing Test HAVE_EIGHT_BIT_BYTES
+-- Performing Test HAVE_EIGHT_BIT_BYTES - Success
+-- Looking for M_PI
+-- Looking for M_PI - found
+-- Looking for shmget
+-- Looking for shmget - found
+-- Looking for mmap
+-- Looking for mmap - found
+-- Looking for munmap
+-- Looking for munmap - found
+-- Check size of off_t
+-- Check size of off_t - done
+-- Looking for sqrt
+-- Looking for sqrt - not found
+-- Looking for sqrt
+-- Looking for sqrt - found
+-- Found Python3: /home/fselman/.conda/envs/wenu-imaging/bin/python (found version "3.11.14") found components: Interpreter
+-- Candidate mefpp: C90; /opt/rh/devtoolset-10/root/usr/bin/gcc; resources=OFF
+-- Configuring done (3.5s)
+-- Generating done (0.2s)
+-- Build files have been written to: /home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90

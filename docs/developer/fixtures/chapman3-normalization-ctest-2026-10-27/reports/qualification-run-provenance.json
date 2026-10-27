@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "test/shared-flat-normalization",
+  "commit": "dbdb0a47947577a46f854591a14e527570731fc0",
+  "dirty": false,
+  "host": "chapman3.sc.eso.org",
+  "created_utc": "2026-10-27T11:58:47.093105+00:00",
+  "purpose": "Chapman3 C90/C17 nine-entry CTest qualification",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "protected_sha256": {
+    "/home/fselman/.pycavi/pycavi_astrosoft.cfg": "9127dc7b2225799af763ba7f8a558f1fa9c358dfcd2059fdf69fc935555f0e52",
+    "/home/fselman/opt/local/mefpp/bin/mefpp": "06dde5281aa10a8bc874f55cd5838299deb3b59a815136df30d09c37d1d61265",
+    "/home/fselman/Software/build/wenu-imaging/chapman3-installed-xogkdst_/prefix-c90/bin/mefpp": "603864ba2650e6116fd979c0180c96bccb12bdcf2b562be3df67f4a860033023",
+    "/home/fselman/Software/build/wenu-imaging/chapman3-installed-xogkdst_/prefix-c17/bin/mefpp": "a5c56fc020a3d606573a4fbacf74386f64195b75ab8f4b8a6767b5b97ecda32a"
+  },
+  "commands": [
+    {
+      "label": "source-export",
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source.tar",
+        "dbdb0a47947577a46f854591a14e527570731fc0"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source-export.log",
+      "exit_status": 0
+    },
+    {
+      "label": "source-extract",
+      "argv": [
+        "/usr/bin/tar",
+        "-xf",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source.tar",
+        "-C",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source-extract.log",
+      "exit_status": 0
+    },
+    {
+      "label": "configure-c90",
+      "argv": [
+        "/home/fselman/opt/cmake-3.29.6/bin/cmake",
+        "-S",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source/mefpp2",
+        "-B",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_MAKE_PROGRAM=/usr/bin/make",
+        "-DCMAKE_C_COMPILER=/opt/rh/devtoolset-10/root/usr/bin/gcc",
+        "-DCMAKE_AR=/opt/rh/devtoolset-10/root/usr/bin/ar",
+        "-DCMAKE_RANLIB=/opt/rh/devtoolset-10/root/usr/bin/ranlib",
+        "-DCMAKE_LINKER=/opt/rh/devtoolset-10/root/usr/bin/ld.bfd",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DMEFPP_SOURCE_REVISION=dbdb0a47947577a46f854591a14e527570731fc0",
+        "-DMEFPP_SOURCE_BRANCH=test/shared-flat-normalization",
+        "-DBUILD_TESTING=ON",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DPython3_EXECUTABLE=/home/fselman/.conda/envs/wenu-imaging/bin/python"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/configure-c90.log",
+      "exit_status": 0
+    },
+    {
+      "label": "build-c90",
+      "argv": [
+        "/home/fselman/opt/cmake-3.29.6/bin/cmake",
+        "--build",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90.log",
+      "exit_status": 0
+    },
+    {
+      "label": "ctest-c90",
+      "argv": [
+        "/home/fselman/opt/cmake-3.29.6/bin/ctest",
+        "--test-dir",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90",
+        "--parallel",
+        "1",
+        "--output-on-failure",
+        "--no-tests=error"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/ctest-c90.log",
+      "exit_status": 0
+    },
+    {
+      "label": "configure-c17",
+      "argv": [
+        "/home/fselman/opt/cmake-3.29.6/bin/cmake",
+        "-S",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/source/mefpp2",
+        "-B",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_MAKE_PROGRAM=/usr/bin/make",
+        "-DCMAKE_C_COMPILER=/opt/rh/devtoolset-10/root/usr/bin/gcc",
+        "-DCMAKE_AR=/opt/rh/devtoolset-10/root/usr/bin/ar",
+        "-DCMAKE_RANLIB=/opt/rh/devtoolset-10/root/usr/bin/ranlib",
+        "-DCMAKE_LINKER=/opt/rh/devtoolset-10/root/usr/bin/ld.bfd",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DMEFPP_SOURCE_REVISION=dbdb0a47947577a46f854591a14e527570731fc0",
+        "-DMEFPP_SOURCE_BRANCH=test/shared-flat-normalization",
+        "-DBUILD_TESTING=ON",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DPython3_EXECUTABLE=/home/fselman/.conda/envs/wenu-imaging/bin/python"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/configure-c17.log",
+      "exit_status": 0
+    },
+    {
+      "label": "build-c17",
+      "argv": [
+        "/home/fselman/opt/cmake-3.29.6/bin/cmake",
+        "--build",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17.log",
+      "exit_status": 0
+    },
+    {
+      "label": "ctest-c17",
+      "argv": [
+        "/home/fselman/opt/cmake-3.29.6/bin/ctest",
+        "--test-dir",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17",
+        "--parallel",
+        "1",
+        "--output-on-failure",
+        "--no-tests=error"
+      ],
+      "cwd": "/home1/fselman/Software/wenu-imaging",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/ctest-c17.log",
+      "exit_status": 0
+    }
+  ],
+  "modes": {
+    "90": {
+      "passed": true,
+      "ctest_entries": [
+        "native_cli_usage",
+        "native_failure_contract",
+        "native_frontend_contract",
+        "native_install_contract",
+        "native_primitives",
+        "native_shared_normalization_dome_order0",
+        "native_shared_normalization_dome_order1",
+        "native_shared_normalization_sky_order0",
+        "native_shared_normalization_sky_order1"
+      ],
+      "normalization_attempts": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/dome-order0-uuaumtn_/run-provenance.json",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/dome-order1-e0f4x24u/run-provenance.json",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/sky-order0-1cvdaqjv/run-provenance.json",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c90/test-work/shared-normalization/sky-order1-wlm2venh/run-provenance.json"
+      ],
+      "normalization_pixels_checked": 1296
+    },
+    "17": {
+      "passed": true,
+      "ctest_entries": [
+        "native_cli_usage",
+        "native_failure_contract",
+        "native_frontend_contract",
+        "native_install_contract",
+        "native_primitives",
+        "native_shared_normalization_dome_order0",
+        "native_shared_normalization_dome_order1",
+        "native_shared_normalization_sky_order0",
+        "native_shared_normalization_sky_order1"
+      ],
+      "normalization_attempts": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/dome-order0-0fkjbfvq/run-provenance.json",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/dome-order1-w6cmws2r/run-provenance.json",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/sky-order0-jle2qs2c/run-provenance.json",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-normalization-ctest-mex5jiwt/build-c17/test-work/shared-normalization/sky-order1-5peun11h/run-provenance.json"
+      ],
+      "normalization_pixels_checked": 1296
+    }
+  },
+  "installation_performed": false,
+  "observational_processing_performed": false,
+  "source_archive_sha256": "ae9d0dd5798117b8a483d8968cf42cf1b5d409678211c045a19aa7ccc2ee62e2",
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "completed_utc": "2026-10-27T11:59:19.370268+00:00"
+}
