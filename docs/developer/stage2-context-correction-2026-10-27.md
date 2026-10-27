@@ -1,6 +1,6 @@
 # Context-owned string cleanup correction — 27 October 2026
 
-Issue #99; Stage 2 S2-02 / broader #75. Candidate, not target acceptance.
+Issue #99; Stage 2 S2-02 / broader #75. Mac correction accepted; Chapman3 target acceptance pending. See [inspected Mac results](stage2-context-mac-acceptance-2026-10-27.md).
 Stacked on the inspected unchanged baseline in PR #100.
 
 ## Demonstrated defect and bounded change
@@ -53,11 +53,11 @@ Preserve logs and failed attempts; the original failed baseline remains untouche
 The script name qualify_context_baseline.py is retained to reuse its matrix;
 the --phase field and actual tested commit identify the corrected attempt.
 
-No actual corrected Mac build/run has happened in this delivery.
-Validation so far is source ownership/byte attribution, review that production
-changes stay within mef_bb_del with exactly 29 new guarded releases and no
-duplicate release sites for these members, and Python syntax inspection.
-That is not runtime acceptance.
+The original candidate preparation reviewed source ownership/byte attribution,
+exactly 29 added guarded releases restricted to mef_bb_del, and Python syntax.
+Actual corrected Mac execution has since passed all 48 cases; the linked
+acceptance record preserves the independently inspected runtime evidence.
+Chapman3 target verification remains pending.
 
 ## Target gate and remaining scope
 
