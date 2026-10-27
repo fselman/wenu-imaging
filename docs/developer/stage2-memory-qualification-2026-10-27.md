@@ -1,5 +1,23 @@
 # Stage 2 memory and ownership qualification — 27 October 2026
 
+## Current agreed milestone and change control
+
+Status as of 27 October 2026: S2-02/03/04 are verified within their declared
+scope and integrated through main `0bc059e4bdc7f98facaf8a1279f8133a5f2c4e52`.
+Mac and Chapman3 are clean on that main; PR #105 is merged and its branch was
+removed on GitHub and both hosts. All evidence, runs and installations remain
+preserved. Broader Stage 2 and compatible target external diagnostics remain
+open. S2-05 is next, followed by S2-06; no new workload starts with this update.
+
+Departures from the agreed S2 scope, row order, required coverage or completion criteria must be agreed with Fernando in advance and recorded before implementation. This includes deferring, omitting, substituting or weakening a gate. An unavailable tool or a proposed bounded milestone does not by itself authorize a departure. No departure is approved by this documentation update.
+
+The table under **Declared test matrix** is the full agreed S2 milestone with
+current bounded status. It is a revisable plan governed by the prior-agreement
+rule above, not automatic permission to reduce its coverage. The mandatory
+review before Stage 2A/component extraction remains in force. Earlier baseline
+and preparation statements below are historical where superseded here.
+
+
 Status: preparation and source inventory; no new diagnostic workload has run.
 Baseline: merged main e29a6201f01200708dc55c3439434a640cdc9ed0.
 Tracking: #75 (context ownership / broader memory gate), #74 where applicable;
@@ -99,25 +117,26 @@ not substitutes for an unavailable target leak detector.
 
 ## Declared test matrix
 
-Every row starts pending unless the limited existing evidence is stated.
+The current bounded status is stated per row; it does not imply broader
+platform or scientific acceptance.
 For each row, announce purpose, input, actual native methods/tools and expected
 outputs before execution; put corresponding section comments in its driver.
 The core matrix calls native routines, not Pycavi, unless explicitly stated.
 
-| ID | Input and native path | Required observation / pass criteria |
-|---|---|---|
-| S2-00 | Source, tool, fixture and selected installation manifests | Exact branch/commit/dirty identity, protected hashes, allocator mode and diagnostic build identities; no hidden source patch |
-| S2-01 | Balanced and known-invalid allocation/lifetime/leak controls, ordinary allocator and xmemory | Tool behavior demonstrated per C90/C17; failures detected, balanced controls clean; unsupported coverage explicitly blocked |
-| S2-02 | Valid OCAM/WFI PAF and early/late missing/invalid required keys; mef_bb_new_from_paf / mef_bb_del | Construction/destruction and partial construction have declared owners, no unexplained live allocations or diagnostics |
-| S2-03 | Existing failure_contract.py case semantics: mef_bb_load/main/mef_engine | Information-only paths, parser rejection and engine validation errors have correct exits and one context destruction; retain diagnostics per case |
-| S2-04 | Synthetic valid/missing/corrupt split input and blocked output/publication; mef_split / mef_engine | Exact reference pixels/headers on success, failure propagates, no leaked file/mapping/list/header ownership or overwritten protected output |
-| S2-05 | Qualified retained and controlled BPM fixtures, both regression producers; mef_build_bpm | Preserve every Mac-qualified mask pixel/extension/count and 0.5–1.5 thresholds; inspect all temporary ownership; #90 invalid-access subset already accepted |
-| S2-06 | Shared-normalization fixtures in both detector orders, dome/sky; mef_build_cal | Preserve exact existing expected pixels and shared reference; inspect intermediate cubes/images and borrowed planes |
-| S2-07 | Small staged bias, sky/master-flat and science paths through actual recipe/common functions | Add uncovered ownership paths with declared known output expectations before execution; retain existing baseline semantics |
-| S2-08 | Practical allocation and I/O failure points in reviewed paths | Release only acquired resources and retain truthful failure; injection mechanism must be scoped/recorded and not change numerical behavior |
-| S2-09 | Same-process repeated constructor/stage calls; proposed counts 1, 2, 10, 50 after fixed warmup | Per-object live ownership accounted at each boundary; no unexplained per-call growth or stale aliases; RSS alone is insufficient |
-| S2-10 | Explicit controlled qfits cache purge plus normal process exit | Attribute cache state and allocator registrations; distinguish bounded cache retention, reachable abandoned blocks and genuinely released resources |
-| S2-11 | Actual installed-wrapper error propagation after relevant corrections only | Reuse established Pycavi mefpp_reduce_science / run_commands exit/cwd contracts; trigger only for affected changes, not every planning update |
+| ID | Scope and actual native path | Required observation / pass criteria | Current bounded status |
+|---|---|---|---|
+| S2-00 | Source, tool, fixture and selected installation manifests | Exact branch/commit/dirty identity, protected hashes, allocator settings and diagnostic build identities; no hidden source patch | Established for completed increments; required for every new run |
+| S2-01 | Balanced and known-invalid allocation/lifetime/leak controls, system allocator and actual qfits xmemory | Balanced controls pass; deliberate bounds/lifetime/leak controls are detected in C90/C17; unsupported coverage is explicit | Mac controls qualified; compatible Chapman3 external diagnostics unresolved |
+| S2-02 | Valid OmegaCAM/WFI PAF and early/late missing/invalid keys; mef_bb_new_from_paf / mef_bb_del | Correct owners and cleanup on complete and partial construction; no unexplained retained allocations or diagnostics | Verified and integrated; owned-string correction #99 accepted on Mac/Chapman3 |
+| S2-03 | CLI/parser/engine ownership; main / mef_bb_load / mef_engine | Correct exits, diagnostics and one context destruction for information, parser rejection and engine-validation paths | Verified and integrated; parser correction #103 accepted |
+| S2-04 | Valid/missing/corrupt split input, blocked output/publication; mef_split / mef_engine | Exact reference products; truthful failures; balanced context/list/header/mapping/descriptor ownership; protected outputs preserved | Verified and integrated: 80 Mac pairs and 40 target pairs; retained cache states attributed by controlled purges |
+| S2-05 | Retained and controlled BPM fixtures, robust and proportional constructors; mef_build_bpm | Correct temporary image/cube/result-array ownership and cleanup; preserve every reference mask pixel, extension, count and existing 0.5–1.5 thresholds | Next; #90 covers one accepted invalid-access subset, broader ownership qualification pending |
+| S2-06 | Shared-normalization fixtures in both detector orders, dome/sky; mef_build_cal | Correct ownership of intermediate cubes/images and borrowed planes; preserve exact expected pixels and shared normalization | Ownership qualification pending; reuse accepted numerical references |
+| S2-07 | Small staged bias, sky/master-flat and science paths through actual recipe/common functions | Cover remaining ownership paths with declared known output expectations; retain existing baseline semantics | Pending |
+| S2-08 | Practical allocation and I/O failure injection in reviewed paths | Release only acquired resources; propagate truthful failures; scoped/recorded injection must preserve numerical behavior | Pending; existing failure cases provide limited coverage, not completion |
+| S2-09 | Same-process repeated constructor/stage calls; proposed counts 1, 2, 10, 50 after fixed warmup | Account per-object live ownership at each boundary; no unexplained per-call growth or stale aliases; RSS alone is insufficient | Pending; separate CLI processes do not satisfy this row |
+| S2-10 | Controlled qfits cache purge plus normal process exit | Distinguish bounded cache retention, reachable abandoned allocations and released resources; account for relevant mapped/swap paths | Partially covered by S2-04; general cache lifetimes and mmap/swap qualification pending |
+| S2-11 | Actual installed-wrapper error propagation after relevant corrections only | Preserve mefpp_reduce_science / run_commands native failure propagation and Python exit/cwd contracts | Earlier bounded checks accepted; repeat conditionally for relevant changes |
 
 S2-03/04 must reuse existing failure semantics without blindly running a helper
 that deletes its TemporaryDirectory evidence. Prepare retention/provenance-aware
@@ -140,10 +159,10 @@ the Mac; Chapman3 receives unchanged qualified drivers/fixture bytes.
 
 | Host / lane | Present evidence | Stage 2 status |
 |---|---|---|
-| Intel Mac C90/C17 address/undefined checks | #90 reproduction/correction accepted; selected prior failure behavior accepted | Broader normal/error/repeat suite and leak visibility pending |
-| Intel Mac leak and allocator accounting | No accepted leak run; qfits tracking can retain reachability roots | Qualify controls/tool and baseline accounting first |
-| Chapman3 C90/C17 functional regression | GCC 10.2.1, CMake 3.29.6; exact #90 mask agreement | Reuse unchanged drivers after Mac qualification |
-| Chapman3 compatible memory/leak diagnostic lane | GCC 10 runtimes not located in inspected paths | Explicit tooling gap; do not report Stage 2 complete while unresolved |
+| Intel Mac C90/C17 address/undefined checks | Qualified controls and bounded BPM/context/CLI/split evidence | Remaining application/failure/repeat rows pending |
+| Intel Mac leak and allocator accounting | Controls qualified; context/CLI/split runs accepted, including bounded cache attribution | Remaining application/failure/repeat and broader cache coverage pending |
+| Chapman3 C90/C17 functional/qfits-accounting regression | Exact accepted BPM/context/CLI/split references within documented scope | Continue unchanged Mac-qualified drivers/fixtures; no external diagnostic claim |
+| Chapman3 compatible external memory/leak diagnostics | Compatible GCC 10 runtimes unavailable in inspected locations | Open tooling gap; no implicit waiver of the S2 exit gate |
 
 For every new test/build/output directory, create run-provenance.json before
 workload execution under ~/Software/build/wenu-imaging/. Record creation/update
