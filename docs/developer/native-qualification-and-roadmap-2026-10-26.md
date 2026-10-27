@@ -1,5 +1,8 @@
 # Native qualification and roadmap decision — 26 October 2026
 
+Current Stage 2 preparation, 27 October 2026: PRs #93/#95/#96 are merged; main e29a6201f01200708dc55c3439434a640cdc9ed0 contains the inspected normalization and BPM cleanup evidence. #90 is closed; its merged branch is deleted on GitHub, Mac and Chapman3. Both user checkouts are clean on that main. Run directories, archives and selected installations remain preserved. Next is the [Stage 2 ownership and test matrix](stage2-memory-qualification-2026-10-27.md): qualify leak/allocator visibility and the normal/error/repeat suite, Mac first and unchanged drivers/fixtures on Chapman3. #75 remains open; the earlier context-owner correction is already merged, not a new unfixed duplicate-destruction claim. Chapman3 functional #90 checks are not sanitizer acceptance. This preparation launches no build/test/install and changes no production allocator or numerical policy. Stop for the agreed review after Stage 2 before Stage 2A/extraction; the early Phase 3 audit remains pending.
+
+
 Owner: Fernando Selman. Baseline: merged main
 2ace67a08f4b5bd916d270b91afa3c6db62f4dff.
 Evidence below is Fernando's returned terminal output and supplied transcripts,
@@ -17,9 +20,9 @@ manifest and log hashes. Protected files and checkout stayed unchanged; no
 installation or observational processing ran.
 See [preserved Chapman3 evidence](fixtures/chapman3-normalization-ctest-2026-10-27/README.md).
 
-This completes #94's bounded Mac/Chapman3 integration acceptance. Merge review
-of stacked PRs #93 then #95 is next; no merge or cleanup has been performed.
-The next substantive stage is memory/ownership qualification, including #90.
+This completes #94's bounded Mac/Chapman3 integration acceptance. PRs #93/#95
+were subsequently merged, followed by #96 for #90. The next substantive work
+is the declared Stage 2 memory/ownership suite; #90's bounded repair is complete.
 Stage 2A/extraction still require the agreed review after Stage 2.
 
 Mac CTest acceptance at c5f2bac84e39918d0a82ac1e57769f6473be0828 is
@@ -27,8 +30,8 @@ Mac CTest acceptance at c5f2bac84e39918d0a82ac1e57769f6473be0828 is
 Unlike the earlier terminal-only summaries below, these two integration records
 have been independently reviewed from uploaded machine-readable reports/logs.
 The tests establish the declared normalization invariant, not memory safety,
-physical variance, BPM exclusion or scientific flat quality. Existing #75/#90/#91
-and broader platform/scientific gates remain open. Do not repeat expensive
+physical variance, BPM exclusion or scientific flat quality. Existing #75/#91
+and broader platform/scientific gates remain open; #90 is separately resolved. Do not repeat expensive
 BPM construction or observational processing for this evidence-only update.
 Earlier pending next-step statements below are historical where superseded.
 
@@ -69,8 +72,8 @@ pending are historical. No reinstall is required for documentation-only changes.
 | Historical BPM identity | Mac reference and CP Pup project have identical binary masks, detector order/geometry and valid header counts | Downstream exclusion remains unqualified |
 | Native BPM construction | Mac C90/C17 robust reconstruction: every mask pixel matches history; C17 also matches C90; only generated ORIGFILE differs | Mac robust mode only; threshold quality, proportional mode and downstream exclusion remain open |
 | Downstream mask/weight propagation | Saved Mac settings use NONE; installed SExtractor/SWarp tests retain flagged signals with NONE and exclude them with MAP_WEIGHT; native detector-1 BPM toggles leave science pixels unchanged in C90/C17 | #91 open; cross-stage mapping, adapters and Chapman3 verification pending |
-| Proportional BPM cleanup | Source contract mismatch confirmed; separate #90 opened | No returned actual-target sanitizer reproduction or correction acceptance |
-| Stage 2 memory/ownership | Some focused cleanup/status repairs passed earlier tests | #75/#90 and broader declared memory suite remain open |
+| Proportional BPM cleanup | #90 closed; #96 merged. Mac C90/C17 instrumented cases and unchanged-driver Chapman3 functional cases passed; inspected evidence preserved | No Chapman3 sanitizer or Mac leak-clean claim; see linked acceptance records |
+| Stage 2 memory/ownership | Context-owner correction and #90 cleanup are merged; initial ownership/test matrix prepared | #75, leak/allocator visibility and broader normal/error/repeat suite remain open |
 
 ## Exact retained calibration and normalization evidence
 

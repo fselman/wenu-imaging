@@ -1,17 +1,8 @@
 # wenu-imaging roadmap
 
-Current bounded gate, 27 October 2026: permanent shared dome/sky normalization
-CTest integration passed on Intel Mac and Chapman3 in both C90/C17 modes:
-nine tests per mode and 2592 exact normalization pixels per platform. Original
-reports/manifests are preserved in the test branch; see the
-[regression acceptance record](shared-normalization-regression.md).
-The known-mask/control characterization is also recorded; #91 remains an
-implementation gap, not a reason to repeat the completed characterization.
-Next: review stacked acceptance PR #93 and test PR #95 for integration, then
-prepare Stage 2 memory/ownership qualification (including #90). Preserve selected
-installations; merge/cleanup remain separate actions. The early Phase 3 audit
-remains pending; stop for the agreed review after Stage 2 before Stage 2A/extraction.
-Older next-step statements below are historical where superseded.
+Current Stage 2 preparation, 27 October 2026: PRs #93/#95/#96 are merged; main e29a6201f01200708dc55c3439434a640cdc9ed0 contains the inspected normalization and BPM cleanup evidence. #90 is closed; its merged branch is deleted on GitHub, Mac and Chapman3. Both user checkouts are clean on that main. Run directories, archives and selected installations remain preserved. Next is the [Stage 2 ownership and test matrix](stage2-memory-qualification-2026-10-27.md): qualify leak/allocator visibility and the normal/error/repeat suite, Mac first and unchanged drivers/fixtures on Chapman3. #75 remains open; the earlier context-owner correction is already merged, not a new unfixed duplicate-destruction claim. Chapman3 functional #90 checks are not sanitizer acceptance. This preparation launches no build/test/install and changes no production allocator or numerical policy. Stop for the agreed review after Stage 2 before Stage 2A/extraction; the early Phase 3 audit remains pending.
+
+Earlier dated pending statements below are historical where superseded by this update and the linked acceptance records.
 
 Mac robust BPM update, 26 October 2026: C90/C17 reconstruction without a separate
 master bias exactly reproduces all historical mask pixels and 34122 bad pixels.
