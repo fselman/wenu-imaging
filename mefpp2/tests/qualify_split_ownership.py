@@ -269,6 +269,10 @@ def main():
                                     if len(rows) != 1 or rows[0][0] != rows[0][1] or rows[0][2] != "1":
                                         raise RuntimeError("open-descriptor state changed or observation incomplete")
                                     observed["descriptors"] = list(rows[0])
+                                    limits = re.findall(r"^DESCRIPTOR LIMIT (before|after) soft=(\d+) hard=(\d+) soft_unlimited=(\d+)$", output, re.M)
+                                    if len(limits) != 2 or [x[0] for x in limits] != ["before", "after"]:
+                                        raise RuntimeError("descriptor limit observation incomplete")
+                                    observed["descriptor_limits"] = [list(x) for x in limits]
                                     if lane == "leaks":
                                         summaries = re.findall(r"\b(\d+) leaks? for (\d+) total leaked bytes\b", output)
                                         if len(summaries) != 1:

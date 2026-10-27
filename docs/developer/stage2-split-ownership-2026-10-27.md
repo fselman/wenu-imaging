@@ -1,5 +1,7 @@
 # S2-04 split I/O/publication ownership baseline — 27 October 2026
 
+Current status: [first Mac baseline inspected; test-only observer repair prepared](stage2-split-baseline-evidence-2026-10-27.md). The numbered-range descriptor scan described below belongs to the original attempt and is superseded by actual descriptor enumeration in #106; no production policy changes.
+
 Status: prepared; actual Mac native compilation/execution pending. Tracking:
 #75. Baseline main f042b38d4018af28e04e20134fc8f2b375c489e4 contains merged
 S2-03 PRs #102/#104. Both user clones are clean on that main, the merged
