@@ -1,0 +1,32 @@
+{
+  "method": "Source ownership plus independent raw FITS field-size reconstruction; exact final allocation-size multiset match, not stack traces",
+  "mac_abi": {
+    "qfits_header": 24,
+    "keytuple": 56,
+    "framelist": 40,
+    "pointer": 8,
+    "double": 8,
+    "int": 4
+  },
+  "verified_cases": 16,
+  "groups": {
+    "cube_loader_frame_list": {
+      "pointers": 7,
+      "bytes": 124
+    },
+    "overscan_double_arrays": {
+      "pointers": 3,
+      "bytes": 216
+    },
+    "default_pixelmap_header": {
+      "pointers": 23,
+      "bytes": 462
+    },
+    "bpm_publication_and_context": {
+      "pointers": 107,
+      "bytes": 3670
+    }
+  },
+  "pointers": 140,
+  "bytes": 4472
+}
