@@ -1,4 +1,4 @@
-"""Retained S2-03 CLI ownership baseline on the qualified Intel Mac (#75).
+"""Retained S2-03 CLI ownership qualification on the Intel Mac (#75, #103).
 
 Calls the actual main/mef_bb_load/mef_engine; no Pycavi or image processing.
 Functional completion and memory acceptance are reported separately.
@@ -79,6 +79,8 @@ def main():
     parser.add_argument("--compiler", type=Path, required=True)
     parser.add_argument("--sdk", type=Path, required=True)
     parser.add_argument("--cmake", type=Path, required=True)
+    parser.add_argument("--phase", choices=("baseline", "corrected"), default="baseline")
+    parser.add_argument("--compare-baseline", type=Path)
     args = parser.parse_args()
     if platform.system() != "Darwin" or platform.node().split(".")[0] != "MC02VV0HPHTDG":
         raise RuntimeError("STOP: run on the qualified Intel Mac")
@@ -115,6 +117,27 @@ def main():
              "mefpp2/tests/cli_ownership_probe.c", "mefpp2/tests/qualify_cli_ownership.py",
              "mefpp2/tests/qualify_mac_leaks.py"]
     sources = {p: digest(repo / p) for p in names}
+    for name in ("mefpp2/src/unix/getopt.c", "mefpp2/tests/getopt_name_probe.c"):
+        sources[name] = digest(repo / name)
+    baseline_path, baseline_sha, reference = None, None, {}
+    if args.phase == "corrected":
+        if args.compare_baseline is None:
+            raise RuntimeError("STOP: corrected qualification requires the retained baseline report")
+        baseline_path = args.compare_baseline.resolve(strict=True)
+        committed = repo / "docs/developer/fixtures/mac-stage2-cli-baseline-2026-10-27/run-provenance.json"
+        baseline_sha = digest(baseline_path)
+        if baseline_sha != digest(committed):
+            raise RuntimeError("STOP: baseline differs from the inspected committed report")
+        baseline = json.loads(baseline_path.read_text())
+        if (not baseline["execution_complete"] or len(baseline["cases"]) != 224 or
+                baseline["status"] != "failed" or baseline["finding_cases"] != 100):
+            raise RuntimeError("STOP: unexpected reviewed baseline")
+        for name, expected in baseline["source_sha256"].items():
+            if name != "mefpp2/tests/qualify_cli_ownership.py" and sources[name] != expected:
+                raise RuntimeError("STOP: baseline driver/recipe/PAF/allocator changed: " + name)
+        reference = {c["case"]: c for c in baseline["cases"] if c["lane"] == "leaks"}
+        if len(reference) != 112 or any(c["status"] != "passed" for c in reference.values()):
+            raise RuntimeError("STOP: baseline functional reference incomplete")
     controls = {}
     for kind in ("leak", "diagnostic"):
         path = repo / ("docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/" +
@@ -130,13 +153,15 @@ def main():
     root = Path.home() / "Software/build/wenu-imaging"
     if not root.is_dir():
         raise RuntimeError("STOP: expected imaging build root absent")
-    work = Path(tempfile.mkdtemp(prefix="mac-stage2-cli-baseline-", dir=root))
+    work = Path(tempfile.mkdtemp(prefix="mac-stage2-cli-" + args.phase + "-", dir=root))
     provenance = work / "run-provenance.json"
     record = dict(schema_version=1, project="wenu-imaging", tested_source=identity,
                   host=platform.node(), created_utc=datetime.now(timezone.utc).isoformat(),
-                  purpose="S2-03 unchanged CLI/parser/engine failure ownership baseline",
+                  purpose="S2-03 CLI/parser/engine failure ownership " + args.phase,
+                  phase=args.phase, baseline_report=str(baseline_path) if baseline_path else None,
+                  baseline_report_sha256=baseline_sha,
                   status="running", execution_complete=False, retention_roles=["acceptance_evidence"],
-                  source_sha256=sources, protected_sha256=protected, commands=[], cases=[],
+                  source_sha256=sources, protected_sha256=protected, commands=[], cases=[], parser_checks=[],
                   qualified_tool_reports_sha256=controls,
                   allocator=dict(XMEMORY_MODE=2, XMEMORY_MAXPTRS=2000000),
                   tool_sha256={str(p): digest(p) for p in (compiler, cmake, leaks)},
@@ -193,7 +218,10 @@ def main():
         wiring.write_text(wiring.read_text() + '\n# S2-03 private observer, not installed.\n'
                           'add_executable(cli_ownership_probe tests/cli_ownership_probe.c)\n'
                           'target_link_libraries(cli_ownership_probe PRIVATE mefpp_common)\n'
-                          'target_compile_definitions(cli_ownership_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})\n')
+                          'target_compile_definitions(cli_ownership_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})\n'
+                          'add_executable(getopt_name_probe tests/getopt_name_probe.c)\n'
+                          'target_link_libraries(getopt_name_probe PRIVATE eclipse)\n'
+                          'target_compile_definitions(getopt_name_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})\n')
         record["diagnostic_cmake_sha256"] = digest(wiring)
         env = os.environ.copy()
         removed = ["ASAN_OPTIONS", "UBSAN_OPTIONS", "LSAN_OPTIONS", "DYLD_INSERT_LIBRARIES",
@@ -228,7 +256,7 @@ def main():
                            "-DMEFPP_SOURCE_REVISION=" + identity["commit"],
                            "-DCMAKE_C_FLAGS=" + flags, "-DCMAKE_EXE_LINKER_FLAGS=" + link]
                 for label, argv in (("configure-" + tag, command), ("build-" + tag,
-                                     [cmake, "--build", build, "--target", "mefpp", "cli_ownership_probe", "--parallel", "2"])):
+                                     [cmake, "--build", build, "--target", "mefpp", "cli_ownership_probe", "getopt_name_probe", "--parallel", "2"])):
                     code, log = run(label, argv, work, env)
                     if code:
                         raise RuntimeError("Build/configuration failed: " + str(log))
@@ -243,6 +271,25 @@ def main():
                         if code:
                             raise RuntimeError("Debug symbols failed: " + str(log))
                 case_env = dict(env, **lane_env[lane])
+                # #103 regression: exact/unique/ambiguous prefixes, required
+                # argument forms, unknown options and unchanged short parsing.
+                parser_case = directory(tag + "-parser-contract", "Thirteen bundled getopt matching contracts")
+                parser_executable = build / "getopt_name_probe"
+                parser_code, parser_log = run(tag + "-parser-contract", [parser_executable], parser_case, case_env)
+                parser_output = parser_log.read_text(errors="replace")
+                parser_result = dict(case=tag + "-parser-contract", exit_status=parser_code,
+                                     executable_sha256=digest(parser_executable), log_sha256=digest(parser_log),
+                                     status="passed" if parser_code == 0 and
+                                     parser_output.count("PARSER COMPLETE checks=13 failed=0") == 1 and
+                                     len(re.findall(r"^PARSER PASS ", parser_output, re.M)) == 13 and
+                                     "ERROR: AddressSanitizer" not in parser_output and
+                                     "runtime error:" not in parser_output else "failed")
+                record["parser_checks"].append(parser_result)
+                save(parser_case / "run-provenance.json", dict(parser_result, schema_version=1,
+                     tested_source=identity, parent_manifest=str(provenance), retention_roles=["acceptance_evidence"]))
+                save(provenance, record)
+                if parser_result["status"] != "passed":
+                    raise RuntimeError("Parser regression failed: " + str(parser_log))
                 for instrument in ("omegacam", "wfi"):
                     original = (source / ("mefpp2/ins/mef/config/" + instrument + ".paf")).read_text()
                     for name, argv, kind, key, value, expected_exit, expected_owners, diagnostic in cases():
@@ -301,6 +348,13 @@ def main():
                             result["findings"].append(str(error))
                         if (digest(paf) if paf.exists() else None) != input_sha:
                             result["findings"].append("staged PAF changed")
+                        if reference:
+                            expected = reference[label.replace("-instrumented-", "-leaks-")]
+                            keys = ("arguments", "input_sha256", "expected_exit", "expected_owners",
+                                    "ordinary_exit", "ownership_contract", "after-cli_accounting")
+                            result["baseline_values_match"] = all(result.get(k) == expected.get(k) for k in keys)
+                            if not result["baseline_values_match"]:
+                                result["findings"].append("CLI/input/ownership values differ from reviewed baseline")
                         if sorted(p.name for p in case.iterdir()) != (["mefpp.paf", "run-provenance.json"] if text is not None else ["run-provenance.json"]):
                             result["findings"].append("unexpected generated output")
                         result["status"] = "failed" if result["findings"] else "passed"
@@ -310,6 +364,8 @@ def main():
                         save(provenance, record)
                         print(("PASS:" if result["status"] == "passed" else "FINDING:"), label, flush=True)
         record["execution_complete"] = len(record["cases"]) == len(cases()) * 8
+        if reference:
+            record["baseline_values_match"] = all(c.get("baseline_values_match") for c in record["cases"])
         record["finding_cases"] = sum(c["status"] != "passed" for c in record["cases"])
         record["status"] = "passed" if record["execution_complete"] and not record["finding_cases"] else "failed"
     except BaseException as error:
@@ -317,6 +373,7 @@ def main():
         raise
     finally:
         record["sources_unchanged"] = all(digest(repo / p) == h for p, h in sources.items())
+        record["baseline_report_unchanged"] = baseline_path is None or digest(baseline_path) == baseline_sha
         record["exported_sources_unchanged"] = all(
             (work / "source" / p).is_file() and digest(work / "source" / p) == h
             for p, h in sources.items())
@@ -324,7 +381,7 @@ def main():
         record["checkout_unchanged"] = (git("rev-parse", "HEAD") == identity["commit"] and
                                        not git("status", "--porcelain", "--untracked-files=all"))
         if not all(record[k] for k in ("sources_unchanged", "exported_sources_unchanged",
-                                       "protected_files_unchanged", "checkout_unchanged")):
+                                       "protected_files_unchanged", "checkout_unchanged", "baseline_report_unchanged")):
             record["status"] = "failed"
         record["completed_utc"] = datetime.now(timezone.utc).isoformat()
         save(provenance, record)
@@ -333,7 +390,7 @@ def main():
             if value["status"] == "running":
                 value.update(status=record["status"], completed_utc=record["completed_utc"])
                 save(child, value)
-    print("CLI BASELINE: cases=%d; finding cases=%d; complete=%s" %
+    print("CLI " + args.phase.upper() + ": cases=%d; finding cases=%d; complete=%s" %
           (len(record["cases"]), record.get("finding_cases", 0), record["execution_complete"]))
     print("REPORT:", provenance)
     print("Memory gate:", record["status"])
