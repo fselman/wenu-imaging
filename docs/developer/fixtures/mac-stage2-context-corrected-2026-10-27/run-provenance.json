@@ -1,0 +1,2586 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "fix/99-context-owned-strings",
+    "commit": "6efb77ac258579a8f2c699b9c34b982045a46637",
+    "dirty": false
+  },
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-27T17:06:45.271524+00:00",
+  "purpose": "S2-02 context construction/destruction and rejection corrected",
+  "phase": "corrected",
+  "baseline_report": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-baseline-zhrgko0z/run-provenance.json",
+  "baseline_report_sha256": "ccb50aaa2a18a9ab65caf8a9fffbbd1c388bb988e14ea41d60f6e71d0422f43e",
+  "status": "passed",
+  "execution_complete": true,
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "commands": [
+    {
+      "label": "configure-c90-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=6efb77ac258579a8f2c699b9c34b982045a46637",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/configure-c90-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "0f3e806d6c2e4e200ced6628f21d7c52fe2f065f970c2ab4039898801b34e124"
+    },
+    {
+      "label": "build-c90-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented",
+        "--target",
+        "context_ownership_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "79a3ec8cd87211e505ab2b58f9cf0c921b40f6036f8f38ad1706a9769879adbf"
+    },
+    {
+      "label": "symbols-c90-instrumented",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/symbols-c90-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c90-instrumented-omegacam-valid-1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "32",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "f323632136d3291ac6d8cea939a4b2ece689b7a55f58170d56c0986998999457"
+    },
+    {
+      "label": "c90-instrumented-omegacam-valid-3",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "32",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "ff2054ca5e510145ddeaccf1dce60d573311f908e11cc34821632c9768ba44aa"
+    },
+    {
+      "label": "c90-instrumented-omegacam-missing-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20"
+    },
+    {
+      "label": "c90-instrumented-omegacam-missing-geometry",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec"
+    },
+    {
+      "label": "c90-instrumented-omegacam-missing-final",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8"
+    },
+    {
+      "label": "c90-instrumented-omegacam-invalid-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-omegacam-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e"
+    },
+    {
+      "label": "c90-instrumented-wfi-valid-1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "8",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "416bbd584f5c93e26f8d9974b29e3792c5fe0726cccf30601d6a02e1e0fa9fa0"
+    },
+    {
+      "label": "c90-instrumented-wfi-valid-3",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "8",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "0d646f73a9ddb6bec57245622235cb437faf43def9d872924bf8be201e1568b9"
+    },
+    {
+      "label": "c90-instrumented-wfi-missing-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20"
+    },
+    {
+      "label": "c90-instrumented-wfi-missing-geometry",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec"
+    },
+    {
+      "label": "c90-instrumented-wfi-missing-final",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8"
+    },
+    {
+      "label": "c90-instrumented-wfi-invalid-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-instrumented-wfi-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e"
+    },
+    {
+      "label": "configure-c90-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=6efb77ac258579a8f2c699b9c34b982045a46637",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/configure-c90-leaks.log",
+      "exit_status": 0,
+      "log_sha256": "8acfced0a89afbaeaa3d2d819673f9acc2c4932a9ca606a1dff21119bb8d6fcb"
+    },
+    {
+      "label": "build-c90-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks",
+        "--target",
+        "context_ownership_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks.log",
+      "exit_status": 0,
+      "log_sha256": "21c2287cd54696322cf0de0c8f6294dddc176162a3662a60143f5811c3d35471"
+    },
+    {
+      "label": "c90-leaks-omegacam-valid-1",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "32",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "ae03832327e7a6d9cb6528122d17f9362041c4921e1cd73e41b4b690d8a5a437"
+    },
+    {
+      "label": "c90-leaks-omegacam-valid-3",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "32",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "c3cb9ec42de1cb177ec7e6be87ebe4319c8f0ee914b27f80de3da58a9e2ae986"
+    },
+    {
+      "label": "c90-leaks-omegacam-missing-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "6decf3551e5d31f1e0459ef137ae734bc52405c9d01f8dc2615f053f3b3f7ae5"
+    },
+    {
+      "label": "c90-leaks-omegacam-missing-geometry",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "2ce864eb7d041e301b910c721d92e47f807987d2add17352d07f6c884212c8d4"
+    },
+    {
+      "label": "c90-leaks-omegacam-missing-final",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "a5f5d36bf4eb94e4c80f4255d0198b3ee272e429a741f3a4bd7b3122355405d8"
+    },
+    {
+      "label": "c90-leaks-omegacam-invalid-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-omegacam-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "d66f3bb3c40db4f72110e88a3822eeb9d81c8125be4c991dafb88e73fda28ca9"
+    },
+    {
+      "label": "c90-leaks-wfi-valid-1",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "8",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "4b8454993623cabd5d8179844d49f43a9c2db0f16a1c2c1bf8e57ba37b3b7906"
+    },
+    {
+      "label": "c90-leaks-wfi-valid-3",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "8",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "49b850fa5c4f77ef6b8cb781577f87640ed38921fa606d5a63dbf0479d70353f"
+    },
+    {
+      "label": "c90-leaks-wfi-missing-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "d67ade1f280f1a8c4be82b8633039d1423ed5c558d5a43c18c8fc17061b893d5"
+    },
+    {
+      "label": "c90-leaks-wfi-missing-geometry",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "63102e1c868c31becbce209cc9a2a6aa363beddce57ea210111ef17fcd4287a8"
+    },
+    {
+      "label": "c90-leaks-wfi-missing-final",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "af331f446c7ba6af798f8e5efef2baf094917a657c0c0ede28c697ab053b6ea8"
+    },
+    {
+      "label": "c90-leaks-wfi-invalid-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c90-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c90-leaks-wfi-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "ae64d682e4f01f1ac7cb043ab3edb1ae3718a16f14992560e1d774d66b8ab610"
+    },
+    {
+      "label": "configure-c17-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=6efb77ac258579a8f2c699b9c34b982045a46637",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/configure-c17-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "358a4045613fda95bdc6242db8b100a898f5b72c578575e1c85ab5ea7e27e41d"
+    },
+    {
+      "label": "build-c17-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented",
+        "--target",
+        "context_ownership_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "37cc416a33f324b57560cf6288d5e11de455ec77edd43d7a8bfdde9efbb7aa08"
+    },
+    {
+      "label": "symbols-c17-instrumented",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/symbols-c17-instrumented.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c17-instrumented-omegacam-valid-1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "32",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "f323632136d3291ac6d8cea939a4b2ece689b7a55f58170d56c0986998999457"
+    },
+    {
+      "label": "c17-instrumented-omegacam-valid-3",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "32",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "ff2054ca5e510145ddeaccf1dce60d573311f908e11cc34821632c9768ba44aa"
+    },
+    {
+      "label": "c17-instrumented-omegacam-missing-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20"
+    },
+    {
+      "label": "c17-instrumented-omegacam-missing-geometry",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec"
+    },
+    {
+      "label": "c17-instrumented-omegacam-missing-final",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8"
+    },
+    {
+      "label": "c17-instrumented-omegacam-invalid-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-omegacam-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e"
+    },
+    {
+      "label": "c17-instrumented-wfi-valid-1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "8",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "416bbd584f5c93e26f8d9974b29e3792c5fe0726cccf30601d6a02e1e0fa9fa0"
+    },
+    {
+      "label": "c17-instrumented-wfi-valid-3",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "8",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "0d646f73a9ddb6bec57245622235cb437faf43def9d872924bf8be201e1568b9"
+    },
+    {
+      "label": "c17-instrumented-wfi-missing-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20"
+    },
+    {
+      "label": "c17-instrumented-wfi-missing-geometry",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec"
+    },
+    {
+      "label": "c17-instrumented-wfi-missing-final",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8"
+    },
+    {
+      "label": "c17-instrumented-wfi-invalid-count",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-instrumented/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-instrumented-wfi-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e"
+    },
+    {
+      "label": "configure-c17-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=6efb77ac258579a8f2c699b9c34b982045a46637",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/configure-c17-leaks.log",
+      "exit_status": 0,
+      "log_sha256": "7827cf9b424cf6fd9bc9b6fd44a7c31d579ab7f7453ea77c84c525dc9d157694"
+    },
+    {
+      "label": "build-c17-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks",
+        "--target",
+        "context_ownership_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks.log",
+      "exit_status": 0,
+      "log_sha256": "21c2287cd54696322cf0de0c8f6294dddc176162a3662a60143f5811c3d35471"
+    },
+    {
+      "label": "c17-leaks-omegacam-valid-1",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "32",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "dcf5cdda7d77f2c22f3d112ff572883c35fc64fb20aae0be5428f3936d175202"
+    },
+    {
+      "label": "c17-leaks-omegacam-valid-3",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "32",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "a3b9e2ed03d71983d93ff3740df9665ce61e0b082fb976963515f76e60f5425f"
+    },
+    {
+      "label": "c17-leaks-omegacam-missing-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "5fda3d286537141ed7ae24ea1ece7c3bd19f6cfeeb7b899d8530d45fba7376c7"
+    },
+    {
+      "label": "c17-leaks-omegacam-missing-geometry",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "4eaa10af7f8d9fb827401956b4dd90a61aceff9d9a788680168ee81fb9e961a8"
+    },
+    {
+      "label": "c17-leaks-omegacam-missing-final",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "9677f16947a35ec1c51e8e7e004368d7e0cfe950e2eabb8bc2702dffb1df36dd"
+    },
+    {
+      "label": "c17-leaks-omegacam-invalid-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-omegacam-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "96d356eb7ebc9e486169ed7742ee140841c419ce534a2e2d3559873895aadfd9"
+    },
+    {
+      "label": "c17-leaks-wfi-valid-1",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "8",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-valid-1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-valid-1.log",
+      "exit_status": 0,
+      "log_sha256": "e5c4eb4c8288a105320ebd1507528bec9e8d099471eb3176f2f19fd3ee32c873"
+    },
+    {
+      "label": "c17-leaks-wfi-valid-3",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "8",
+        "3"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-valid-3",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-valid-3.log",
+      "exit_status": 0,
+      "log_sha256": "9fe81460878bc3636c7e89eeaec1b4fdd946b3e7cab50111f06f15a98eedd73c"
+    },
+    {
+      "label": "c17-leaks-wfi-missing-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-missing-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-missing-count.log",
+      "exit_status": 0,
+      "log_sha256": "d1a540e322d5df65cf81c8b7de4138be7fb2d4f87e50ada0486bfccb96418b3d"
+    },
+    {
+      "label": "c17-leaks-wfi-missing-geometry",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-missing-geometry",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-missing-geometry.log",
+      "exit_status": 0,
+      "log_sha256": "104540bac000e5122d542c67daf7736f80c8b81970f12b37bd02d655ab050414"
+    },
+    {
+      "label": "c17-leaks-wfi-missing-final",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-missing-final",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-missing-final.log",
+      "exit_status": 0,
+      "log_sha256": "8b80b91668be9c95eed8b11f7663012490ef148813a43713206935e345af142d"
+    },
+    {
+      "label": "c17-leaks-wfi-invalid-count",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/build-c17-leaks/context_ownership_probe",
+        "context.paf",
+        "0",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-invalid-count",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-context-corrected-87a1olms/c17-leaks-wfi-invalid-count.log",
+      "exit_status": 0,
+      "log_sha256": "3a1ac63a566cd2658765555d313fac4a755d10306a8654806847948e3030df96"
+    }
+  ],
+  "cases": [
+    {
+      "case": "c90-instrumented-omegacam-valid-1",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "f323632136d3291ac6d8cea939a4b2ece689b7a55f58170d56c0986998999457",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-omegacam-valid-3",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "ff2054ca5e510145ddeaccf1dce60d573311f908e11cc34821632c9768ba44aa",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=2 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=3 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-omegacam-missing-count",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c1297c1d6fe2dfcf5411bbb07ef635c4174d84801edad37e0b0f2b44cc09381e",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-omegacam-missing-geometry",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "66e737b4bc42a4d6851fff9a6676ac5bc77462e34ee70fada434608d743a019b",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-omegacam-missing-final",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "23e1a1db570cdb5f5682f9cf175550bda8ecd8dc6bbf3172c5f53bb010b1bb25",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-omegacam-invalid-count",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "363ee70e9dde8dc12da95af444981fe5f53d184cbd9510a5ca5f57981c05c033",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-wfi-valid-1",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "416bbd584f5c93e26f8d9974b29e3792c5fe0726cccf30601d6a02e1e0fa9fa0",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-wfi-valid-3",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "0d646f73a9ddb6bec57245622235cb437faf43def9d872924bf8be201e1568b9",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=2 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=3 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-wfi-missing-count",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7872ffee191671296c2e0b785e370f95660eb4a94781ba344e3a5d9e9d79142f",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-wfi-missing-geometry",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "218c7d6cc087b95e547caa93c627947279a4ff02cc759b616a3f93aa5f1e7c17",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-wfi-missing-final",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "ca028918bbea7b4020a36077c13f1af4d6447949ba10394d66a636bcb73d4c8d",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-instrumented-wfi-invalid-count",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c73f004414bb4805a730afe6c6573a1685445bcf2dcb7dc42659c930ebe5edf1",
+      "executable_sha256": "c210c1e2b9bd2f18688c889c8bd677c365fbb29c18f98aa62b54bff662b9cf5b",
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-omegacam-valid-1",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "ae03832327e7a6d9cb6528122d17f9362041c4921e1cd73e41b4b690d8a5a437",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-omegacam-valid-3",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "c3cb9ec42de1cb177ec7e6be87ebe4319c8f0ee914b27f80de3da58a9e2ae986",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=2 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=3 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-omegacam-missing-count",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c1297c1d6fe2dfcf5411bbb07ef635c4174d84801edad37e0b0f2b44cc09381e",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "6decf3551e5d31f1e0459ef137ae734bc52405c9d01f8dc2615f053f3b3f7ae5",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-omegacam-missing-geometry",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "66e737b4bc42a4d6851fff9a6676ac5bc77462e34ee70fada434608d743a019b",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "2ce864eb7d041e301b910c721d92e47f807987d2add17352d07f6c884212c8d4",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-omegacam-missing-final",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "23e1a1db570cdb5f5682f9cf175550bda8ecd8dc6bbf3172c5f53bb010b1bb25",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "a5f5d36bf4eb94e4c80f4255d0198b3ee272e429a741f3a4bd7b3122355405d8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-omegacam-invalid-count",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "363ee70e9dde8dc12da95af444981fe5f53d184cbd9510a5ca5f57981c05c033",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "d66f3bb3c40db4f72110e88a3822eeb9d81c8125be4c991dafb88e73fda28ca9",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-wfi-valid-1",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "4b8454993623cabd5d8179844d49f43a9c2db0f16a1c2c1bf8e57ba37b3b7906",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-wfi-valid-3",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "49b850fa5c4f77ef6b8cb781577f87640ed38921fa606d5a63dbf0479d70353f",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=2 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=3 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-wfi-missing-count",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7872ffee191671296c2e0b785e370f95660eb4a94781ba344e3a5d9e9d79142f",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "d67ade1f280f1a8c4be82b8633039d1423ed5c558d5a43c18c8fc17061b893d5",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-wfi-missing-geometry",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "218c7d6cc087b95e547caa93c627947279a4ff02cc759b616a3f93aa5f1e7c17",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "63102e1c868c31becbce209cc9a2a6aa363beddce57ea210111ef17fcd4287a8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-wfi-missing-final",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "ca028918bbea7b4020a36077c13f1af4d6447949ba10394d66a636bcb73d4c8d",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "af331f446c7ba6af798f8e5efef2baf094917a657c0c0ede28c697ab053b6ea8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c90-leaks-wfi-invalid-count",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c73f004414bb4805a730afe6c6573a1685445bcf2dcb7dc42659c930ebe5edf1",
+      "executable_sha256": "e6c8dc47d8b763abc1b7cda78e9c59d6d23c6adf16149657105ef789fd7dd15f",
+      "log_sha256": "ae64d682e4f01f1ac7cb043ab3edb1ae3718a16f14992560e1d774d66b8ab610",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-omegacam-valid-1",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "f323632136d3291ac6d8cea939a4b2ece689b7a55f58170d56c0986998999457",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-omegacam-valid-3",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "ff2054ca5e510145ddeaccf1dce60d573311f908e11cc34821632c9768ba44aa",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=2 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=3 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-omegacam-missing-count",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c1297c1d6fe2dfcf5411bbb07ef635c4174d84801edad37e0b0f2b44cc09381e",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-omegacam-missing-geometry",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "66e737b4bc42a4d6851fff9a6676ac5bc77462e34ee70fada434608d743a019b",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-omegacam-missing-final",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "23e1a1db570cdb5f5682f9cf175550bda8ecd8dc6bbf3172c5f53bb010b1bb25",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-omegacam-invalid-count",
+      "lane": "instrumented",
+      "instrument": "omegacam",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "363ee70e9dde8dc12da95af444981fe5f53d184cbd9510a5ca5f57981c05c033",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-wfi-valid-1",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "416bbd584f5c93e26f8d9974b29e3792c5fe0726cccf30601d6a02e1e0fa9fa0",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-wfi-valid-3",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "0d646f73a9ddb6bec57245622235cb437faf43def9d872924bf8be201e1568b9",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=2 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=3 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-wfi-missing-count",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7872ffee191671296c2e0b785e370f95660eb4a94781ba344e3a5d9e9d79142f",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "3c66267f576f5c76640afad097895fe5c0e9454a1621e2df220e5895856a1b20",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-wfi-missing-geometry",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "218c7d6cc087b95e547caa93c627947279a4ff02cc759b616a3f93aa5f1e7c17",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "f01e229e27dd87a640efb646bca0a47b205280515f4b51bf355f60ccaba799ec",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-wfi-missing-final",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "ca028918bbea7b4020a36077c13f1af4d6447949ba10394d66a636bcb73d4c8d",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "0d4a33c2882e1d61e2144037d8c3252d970ba4b3e3b10d1f541955b43c5950d8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-instrumented-wfi-invalid-count",
+      "lane": "instrumented",
+      "instrument": "wfi",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c73f004414bb4805a730afe6c6573a1685445bcf2dcb7dc42659c930ebe5edf1",
+      "executable_sha256": "ae51a16faffdc9afe9b244eb2082a0be17299af97e51e4256c836d9b0e17056b",
+      "log_sha256": "10b5760f4d323b651026a41ff6bd2d3de9a2b9a4fb4b18309e857e7407f3d23e",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-omegacam-valid-1",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "dcf5cdda7d77f2c22f3d112ff572883c35fc64fb20aae0be5428f3936d175202",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-omegacam-valid-3",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "a3b9e2ed03d71983d93ff3740df9665ce61e0b082fb976963515f76e60f5425f",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=2 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM",
+        "CONFIG iteration=3 chips=32 proportional=0 lo=0.5 hi=1.5 instrument=OMEGACAM"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-omegacam-missing-count",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c1297c1d6fe2dfcf5411bbb07ef635c4174d84801edad37e0b0f2b44cc09381e",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "5fda3d286537141ed7ae24ea1ece7c3bd19f6cfeeb7b899d8530d45fba7376c7",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-omegacam-missing-geometry",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "66e737b4bc42a4d6851fff9a6676ac5bc77462e34ee70fada434608d743a019b",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "4eaa10af7f8d9fb827401956b4dd90a61aceff9d9a788680168ee81fb9e961a8",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-omegacam-missing-final",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "23e1a1db570cdb5f5682f9cf175550bda8ecd8dc6bbf3172c5f53bb010b1bb25",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "9677f16947a35ec1c51e8e7e004368d7e0cfe950e2eabb8bc2702dffb1df36dd",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-omegacam-invalid-count",
+      "lane": "leaks",
+      "instrument": "omegacam",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "363ee70e9dde8dc12da95af444981fe5f53d184cbd9510a5ca5f57981c05c033",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "96d356eb7ebc9e486169ed7742ee140841c419ce534a2e2d3559873895aadfd9",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-wfi-valid-1",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "valid-1",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "e5c4eb4c8288a105320ebd1507528bec9e8d099471eb3176f2f19fd3ee32c873",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-wfi-valid-3",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "valid-3",
+      "repeats": 3,
+      "exit_status": 0,
+      "input_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "9fe81460878bc3636c7e89eeaec1b4fdd946b3e7cab50111f06f15a98eedd73c",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [
+        "CONFIG iteration=1 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=2 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI",
+        "CONFIG iteration=3 chips=8 proportional=0 lo=0.5 hi=2 instrument=WFI"
+      ],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        },
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-wfi-missing-count",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "missing-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "7872ffee191671296c2e0b785e370f95660eb4a94781ba344e3a5d9e9d79142f",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "d1a540e322d5df65cf81c8b7de4138be7fb2d4f87e50ada0486bfccb96418b3d",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-wfi-missing-geometry",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "missing-geometry",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "218c7d6cc087b95e547caa93c627947279a4ff02cc759b616a3f93aa5f1e7c17",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "104540bac000e5122d542c67daf7736f80c8b81970f12b37bd02d655ab050414",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-wfi-missing-final",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "missing-final",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "ca028918bbea7b4020a36077c13f1af4d6447949ba10394d66a636bcb73d4c8d",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "8b80b91668be9c95eed8b11f7663012490ef148813a43713206935e345af142d",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    },
+    {
+      "case": "c17-leaks-wfi-invalid-count",
+      "lane": "leaks",
+      "instrument": "wfi",
+      "variant": "invalid-count",
+      "repeats": 1,
+      "exit_status": 0,
+      "input_sha256": "c73f004414bb4805a730afe6c6573a1685445bcf2dcb7dc42659c930ebe5edf1",
+      "executable_sha256": "7fbdc7570c5f090cf49281dd57b798ae7a36b3781f080d73501042ae7e6b3053",
+      "log_sha256": "3a1ac63a566cd2658765555d313fac4a755d10306a8654806847948e3030df96",
+      "status": "passed",
+      "findings": [],
+      "context_contract": "passed",
+      "configuration_lines": [],
+      "baseline_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "after_calls": [
+        {
+          "pointers": 0,
+          "bytes": 0
+        }
+      ],
+      "final_accounting": {
+        "pointers": 0,
+        "bytes": 0
+      },
+      "leaked_blocks": 0,
+      "leaked_bytes": 0,
+      "baseline_values_match": true
+    }
+  ],
+  "source_sha256": {
+    "mefpp2/ins/mef/common/mefp_lib.c": "1aa8edd7ff5703d22cf6c85cbc81590336b1faca7d2b79cb18b8c145a6fc1bd9",
+    "mefpp2/ins/mef/common/mefp_lib.h": "ca848eebf90225f39abfa6eab5b6480d74a1e7f7d77020e8493773a91501ee25",
+    "mefpp2/qfits5/src/xmemory.c": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87",
+    "mefpp2/qfits5/include/xmemory.h": "815e8e839323c6f20dae3a7117941c2e45ccdb7e1f387af6ebd461c728dc1340",
+    "mefpp2/ins/mef/config/omegacam.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "mefpp2/ins/mef/config/wfi.paf": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+    "mefpp2/tests/context_ownership_probe.c": "a284a1893f33c0368f4d221dfe604dca8a031b009fb8110ef2c245a939bd97e1",
+    "mefpp2/tests/qualify_mac_leaks.py": "b91c19bffc5721377d74cb90f49ef243a2e412039aed76ec62d7fe53c6dbee85"
+  },
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "installation_performed": false,
+  "observational_processing_performed": false,
+  "limits": [
+    "Context/PAF only: no mef_engine, image reduction or Pycavi",
+    "No allocator failure injection; no full repeated-stage gate",
+    "Mac RAM diagnostic/accounting lanes; target verification pending",
+    "Driver does not alter production source; tested commit identifies the implementation"
+  ],
+  "source_archive_sha256": "901d522c9056cec084929385b1a32d1129819dc1b5bb306a76425d66ae925a97",
+  "diagnostic_cmake_sha256": "327c8a444c8f77109266c720a0e71718f332433b00ca94a24b1701d923d4e192",
+  "removed_child_environment": [
+    "ASAN_OPTIONS",
+    "UBSAN_OPTIONS",
+    "LSAN_OPTIONS",
+    "DYLD_INSERT_LIBRARIES",
+    "DYLD_LIBRARY_PATH",
+    "MallocStackLogging",
+    "MallocScribble",
+    "MallocStackLoggingNoCompact"
+  ],
+  "lane_environment": {
+    "instrumented": {
+      "ASAN_OPTIONS": "detect_leaks=0:halt_on_error=1:abort_on_error=0:exitcode=86",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=0"
+    },
+    "leaks": {
+      "MallocStackLogging": "lite",
+      "MallocScribble": "1"
+    }
+  },
+  "baseline_values_match": true,
+  "finding_cases": 0,
+  "baseline_report_unchanged": true,
+  "sources_unchanged": true,
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "completed_utc": "2026-10-27T17:08:56.727994+00:00"
+}

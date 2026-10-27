@@ -1262,11 +1262,41 @@ void mef_bb_del(mef_bb * bb)
 
     if (bb->phase3_prodcatg_keyname)               free(bb->phase3_prodcatg_keyname);
     if (bb->phase3_prodcatg_val_bias)               free(bb->phase3_prodcatg_val_bias);
+    if (bb->phase3_prodcatg_val_bpm) free(bb->phase3_prodcatg_val_bpm);
     if (bb->phase3_prodcatg_val_domeff)               free(bb->phase3_prodcatg_val_domeff);
     if (bb->phase3_prodcatg_val_skyff)               free(bb->phase3_prodcatg_val_skyff);
     if (bb->phase3_prodcatg_val_mff)               free(bb->phase3_prodcatg_val_mff);
     if (bb->phase3_prodcatg_val_science)               free(bb->phase3_prodcatg_val_science);
     if (bb->phase3_prodcatg_comment)           free(bb->phase3_prodcatg_comment) ;
+
+    /* These configuration strings have independent strdup ownership.
+     * Guard releases because PAF construction can fail partway (#99). */
+    if (bb->phase3_progid_keyname) free(bb->phase3_progid_keyname);
+    if (bb->phase3_progid_hdrkey) free(bb->phase3_progid_hdrkey);
+    if (bb->phase3_progid_comment) free(bb->phase3_progid_comment);
+    if (bb->phase3_obid_keyname) free(bb->phase3_obid_keyname);
+    if (bb->phase3_obid_hdrkey) free(bb->phase3_obid_hdrkey);
+    if (bb->phase3_obid_comment) free(bb->phase3_obid_comment);
+    if (bb->phase3_ncombine_keyname) free(bb->phase3_ncombine_keyname);
+    if (bb->phase3_ncombine_comment) free(bb->phase3_ncombine_comment);
+    if (bb->phase3_obstech_keyname) free(bb->phase3_obstech_keyname);
+    if (bb->phase3_obstech_hdrkey) free(bb->phase3_obstech_hdrkey);
+    if (bb->phase3_obstech_comment) free(bb->phase3_obstech_comment);
+    if (bb->phase3_mjdend_keyname) free(bb->phase3_mjdend_keyname);
+    if (bb->phase3_mjdend_comment) free(bb->phase3_mjdend_comment);
+    if (bb->phase3_procsoft_keyname) free(bb->phase3_procsoft_keyname);
+    if (bb->phase3_procsoft_comment) free(bb->phase3_procsoft_comment);
+    if (bb->phase3_timesys_keyname) free(bb->phase3_timesys_keyname);
+    if (bb->phase3_timesys_val) free(bb->phase3_timesys_val);
+    if (bb->phase3_timesys_comment) free(bb->phase3_timesys_comment);
+    if (bb->phase3_filter_keyname) free(bb->phase3_filter_keyname);
+    if (bb->phase3_filter_comment) free(bb->phase3_filter_comment);
+    if (bb->phase3_fluxcal_keyname) free(bb->phase3_fluxcal_keyname);
+    if (bb->phase3_fluxcal_val) free(bb->phase3_fluxcal_val);
+    if (bb->phase3_fluxcal_comment) free(bb->phase3_fluxcal_comment);
+    if (bb->phase3_radesys_keyname) free(bb->phase3_radesys_keyname);
+    if (bb->phase3_radesys_hdrkey) free(bb->phase3_radesys_hdrkey);
+    if (bb->phase3_radesys_comment) free(bb->phase3_radesys_comment);
 	
 	if (bb->filter_key) 			    free(bb->filter_key);
 	if (bb->filter_val) 			    free(bb->filter_val);
@@ -1281,6 +1311,8 @@ void mef_bb_del(mef_bb * bb)
 
     if (bb->master_bias_key)            free(bb->master_bias_key);
     if (bb->master_bias_comment)        free(bb->master_bias_comment);
+    if (bb->master_flat_key) free(bb->master_flat_key);
+    if (bb->master_flat_comment) free(bb->master_flat_comment);
 	if (bb->bias_frame_i_key)		    free(bb->bias_frame_i_key);
 	if (bb->bias_frame_i_comment)		free(bb->bias_frame_i_comment);
 	if (bb->bias_median)			    free(bb->bias_median);
