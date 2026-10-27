@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "source_commit": "3211d9982b925f691213ec31c7a419050b8cccfd",
+  "method": "Pair constructor strdup fields with destructor frees and original PAF query keys; count UTF-8 value bytes plus terminator using the retained whitespace/paired-ASCII-quote semantics",
+  "fields": [
+    {
+      "field": "master_flat_comment",
+      "key": "MEF.MASTER.FLAT.COMMENT",
+      "bytes_including_nul": 18
+    },
+    {
+      "field": "master_flat_key",
+      "key": "MEF.MASTER.FLAT.KEY",
+      "bytes_including_nul": 21
+    },
+    {
+      "field": "phase3_filter_comment",
+      "key": "PHASE3.FILTER.COMMENT",
+      "bytes_including_nul": 29
+    },
+    {
+      "field": "phase3_filter_keyname",
+      "key": "PHASE3.FILTER.KEY.NAME",
+      "bytes_including_nul": 7
+    },
+    {
+      "field": "phase3_fluxcal_comment",
+      "key": "PHASE3.FLUXCAL.COMMENT",
+      "bytes_including_nul": 47
+    },
+    {
+      "field": "phase3_fluxcal_keyname",
+      "key": "PHASE3.FLUXCAL.KEY.NAME",
+      "bytes_including_nul": 8
+    },
+    {
+      "field": "phase3_fluxcal_val",
+      "key": "PHASE3.FLUXCAL.VAL",
+      "bytes_including_nul": 13
+    },
+    {
+      "field": "phase3_mjdend_comment",
+      "key": "PHASE3.MJDEND.COMMENT",
+      "bytes_including_nul": 34
+    },
+    {
+      "field": "phase3_mjdend_keyname",
+      "key": "PHASE3.MJDEND.KEY.NAME",
+      "bytes_including_nul": 8
+    },
+    {
+      "field": "phase3_ncombine_comment",
+      "key": "PHASE3.NCOMBINE.COMMENT",
+      "bytes_including_nul": 39
+    },
+    {
+      "field": "phase3_ncombine_keyname",
+      "key": "PHASE3.NCOMBINE.KEY.NAME",
+      "bytes_including_nul": 9
+    },
+    {
+      "field": "phase3_obid_comment",
+      "key": "PHASE3.OBID.COMMENT",
+      "bytes_including_nul": 22
+    },
+    {
+      "field": "phase3_obid_hdrkey",
+      "key": "PHASE3.OBID.HDRKEY",
+      "bytes_including_nul": 20
+    },
+    {
+      "field": "phase3_obid_keyname",
+      "key": "PHASE3.OBID.KEY.NAME",
+      "bytes_including_nul": 6
+    },
+    {
+      "field": "phase3_obstech_comment",
+      "key": "PHASE3.OBSTECH.COMMENT",
+      "bytes_including_nul": 29
+    },
+    {
+      "field": "phase3_obstech_hdrkey",
+      "key": "PHASE3.OBSTECH.HDRKEY",
+      "bytes_including_nul": 22
+    },
+    {
+      "field": "phase3_obstech_keyname",
+      "key": "PHASE3.OBSTECH.KEY.NAME",
+      "bytes_including_nul": 8
+    },
+    {
+      "field": "phase3_procsoft_comment",
+      "key": "PHASE3.PROCSOFT.COMMENT",
+      "bytes_including_nul": 35
+    },
+    {
+      "field": "phase3_procsoft_keyname",
+      "key": "PHASE3.PROCSOFT.KEY.NAME",
+      "bytes_including_nul": 9
+    },
+    {
+      "field": "phase3_prodcatg_val_bpm",
+      "key": "PHASE3.PRODCATG.VAL.BPM",
+      "bytes_including_nul": 10
+    },
+    {
+      "field": "phase3_progid_comment",
+      "key": "PHASE3.PROGID.COMMENT",
+      "bytes_including_nul": 32
+    },
+    {
+      "field": "phase3_progid_hdrkey",
+      "key": "PHASE3.PROGID.HDRKEY",
+      "bytes_including_nul": 25
+    },
+    {
+      "field": "phase3_progid_keyname",
+      "key": "PHASE3.PROGID.KEY.NAME",
+      "bytes_including_nul": 8
+    },
+    {
+      "field": "phase3_radesys_comment",
+      "key": "PHASE3.RADESYS.COMMENT",
+      "bytes_including_nul": 34
+    },
+    {
+      "field": "phase3_radesys_hdrkey",
+      "key": "PHASE3.RADESYS.HDRKEY",
+      "bytes_including_nul": 13
+    },
+    {
+      "field": "phase3_radesys_keyname",
+      "key": "PHASE3.RADESYS.KEY.NAME",
+      "bytes_including_nul": 8
+    },
+    {
+      "field": "phase3_timesys_comment",
+      "key": "PHASE3.TIMESYS.COMMENT",
+      "bytes_including_nul": 24
+    },
+    {
+      "field": "phase3_timesys_keyname",
+      "key": "PHASE3.TIMESYS.KEY.NAME",
+      "bytes_including_nul": 8
+    },
+    {
+      "field": "phase3_timesys_val",
+      "key": "PHASE3.TIMESYS.VAL",
+      "bytes_including_nul": 4
+    }
+  ],
+  "totals": {
+    "omegacam": {
+      "fields": 29,
+      "bytes": 550
+    },
+    "wfi": {
+      "fields": 29,
+      "bytes": 550
+    }
+  }
+}
