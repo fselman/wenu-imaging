@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "fix/90-bpm-result-cleanup",
+    "commit": "b394a99bbfb57f45d1c982b578f39e003c329540",
+    "dirty": false
+  },
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-27T13:36:25.090377+00:00",
+  "purpose": "Issue 90 corrected constructors and mask regression",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "baseline": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu",
+  "baseline_provenance_sha256": "7bb2f73d0438e8cd97e658e8c07b8eec678e818b1d8a64bb29ea3be7ed9cb7cf",
+  "commands": [
+    {
+      "label": "configure-c90",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=b394a99bbfb57f45d1c982b578f39e003c329540",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/configure-c90.log",
+      "exit_status": 0,
+      "log_sha256": "ce8150e90337efde7ab488650f434c67fe76e46c4b50feb091a34941731d973e"
+    },
+    {
+      "label": "build-c90",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90",
+        "--target",
+        "bpm_cleanup_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90.log",
+      "exit_status": 0,
+      "log_sha256": "c3b73871446e0761a54313846abb3a8fff3dd3da342ad3e0b9144c28c29c9a55"
+    },
+    {
+      "label": "symbols-c90",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90/bpm_cleanup_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/symbols-c90.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c90-retained-flag0",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90/bpm_cleanup_probe",
+        "0"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-retained-flag0",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-retained-flag0.log",
+      "exit_status": 0,
+      "log_sha256": "97c07cd8f1b00618bfa0fae765507d95aca8f4634b2978f13768d2094297fb0e"
+    },
+    {
+      "label": "c90-retained-flag1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90/bpm_cleanup_probe",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-retained-flag1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-retained-flag1.log",
+      "exit_status": 0,
+      "log_sha256": "f4b75c3de59fa0fc79b2e6d690a0b4d89d3edee75e393f3155e0f8101ae385ff"
+    },
+    {
+      "label": "c90-known-response-flag0",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90/bpm_cleanup_probe",
+        "0"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-known-response-flag0",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-known-response-flag0.log",
+      "exit_status": 0,
+      "log_sha256": "a6bf08fe592d1c8ada3e8de9ecb85d826aa33a27b8fbbac87399d1c72a31c865"
+    },
+    {
+      "label": "c90-known-response-flag1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c90/bpm_cleanup_probe",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-known-response-flag1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c90-known-response-flag1.log",
+      "exit_status": 0,
+      "log_sha256": "c6158ad6127bc28fcdff4d28ca9a2fcf9caf897278de6ac420fd7b644d597702"
+    },
+    {
+      "label": "configure-c17",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=b394a99bbfb57f45d1c982b578f39e003c329540",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/configure-c17.log",
+      "exit_status": 0,
+      "log_sha256": "6b8f8a6e38e342767e97770a5d40901a55009dff2f09c9abed187f9f4fbf1a3f"
+    },
+    {
+      "label": "build-c17",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17",
+        "--target",
+        "bpm_cleanup_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17.log",
+      "exit_status": 0,
+      "log_sha256": "8adea64ed6c8a069b46b1a32ee8459109a81b9ce657ec9fde598dc77b516ee02"
+    },
+    {
+      "label": "symbols-c17",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17/bpm_cleanup_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/symbols-c17.log",
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c17-retained-flag0",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17/bpm_cleanup_probe",
+        "0"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-retained-flag0",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-retained-flag0.log",
+      "exit_status": 0,
+      "log_sha256": "cba34b05d57a4dea795cc27d9c74429dc8ccbf7b84459362c18193f909b30da3"
+    },
+    {
+      "label": "c17-retained-flag1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17/bpm_cleanup_probe",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-retained-flag1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-retained-flag1.log",
+      "exit_status": 0,
+      "log_sha256": "2e93126c1a02f908121a4a9aea09abf11697c1210bc0c14b7fefddb7f98b297c"
+    },
+    {
+      "label": "c17-known-response-flag0",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17/bpm_cleanup_probe",
+        "0"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-known-response-flag0",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-known-response-flag0.log",
+      "exit_status": 0,
+      "log_sha256": "168b5705874ca135662295b7332e36e72bb222a0b4f21ea67272915d13ec0faa"
+    },
+    {
+      "label": "c17-known-response-flag1",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/build-c17/bpm_cleanup_probe",
+        "1"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-known-response-flag1",
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-corrected-dqxrrtzz/c17-known-response-flag1.log",
+      "exit_status": 0,
+      "log_sha256": "845e5977ef076ae2d9d4bf278567e5158fe860120fde0643eed0a57b5972c315"
+    }
+  ],
+  "cases": [
+    {
+      "case": "c90-retained-flag0",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "bb94e4c77e98278a84d439fe3ec9f14771c58a05f6416f5644e1d78a0dafcbde",
+        "frame1.fits": "b790db943dc8c713637c1af1f1767b98e540506ff3c4193b416e51e06fced97c",
+        "frame0.fits": "0f9d03d7967e7792a0e7c067c997e038ae93f92ebb1e69c00bd14093998b3305",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609",
+      "saved_sha256": "b19044b40b50752feb44ebe2ad700ff3453fe8ddeaad6f1f46840ec0f062f847",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+      "known_response_checked": false
+    },
+    {
+      "case": "c90-retained-flag1",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "bb94e4c77e98278a84d439fe3ec9f14771c58a05f6416f5644e1d78a0dafcbde",
+        "frame1.fits": "b790db943dc8c713637c1af1f1767b98e540506ff3c4193b416e51e06fced97c",
+        "frame0.fits": "0f9d03d7967e7792a0e7c067c997e038ae93f92ebb1e69c00bd14093998b3305",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609",
+      "saved_sha256": "6bf9b0f8dfd87766db08f0476a4cce715dd8c4a49b8474ba67269aef92e901e7",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+      "known_response_checked": false
+    },
+    {
+      "case": "c90-known-response-flag0",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "c5e8c335eea545e3aa98d3f27fe62974a51234552f15c0f6f97d2b83e33cbf28",
+        "frame1.fits": "7b495ec716013512b9c7f5abb3039238ed81084245daf6500a12e55c420563a7",
+        "frame0.fits": "9f0f6990faf95c97420feee64a2151ac20ebb2c0b03f4e7da1f16c48cad93ad0",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d",
+      "saved_sha256": "6334bf3c97799d60e913ea11915a2d71b8d8f3e32741a860af70b555a7b3a0b3",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+      "known_response_checked": true
+    },
+    {
+      "case": "c90-known-response-flag1",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "c5e8c335eea545e3aa98d3f27fe62974a51234552f15c0f6f97d2b83e33cbf28",
+        "frame1.fits": "7b495ec716013512b9c7f5abb3039238ed81084245daf6500a12e55c420563a7",
+        "frame0.fits": "9f0f6990faf95c97420feee64a2151ac20ebb2c0b03f4e7da1f16c48cad93ad0",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d",
+      "saved_sha256": "78bcbdef27d1217ab36718e1d5548a2b555de8540dcaff896dd77a49848a26fa",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+      "known_response_checked": true
+    },
+    {
+      "case": "c17-retained-flag0",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "bb94e4c77e98278a84d439fe3ec9f14771c58a05f6416f5644e1d78a0dafcbde",
+        "frame1.fits": "b790db943dc8c713637c1af1f1767b98e540506ff3c4193b416e51e06fced97c",
+        "frame0.fits": "0f9d03d7967e7792a0e7c067c997e038ae93f92ebb1e69c00bd14093998b3305",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609",
+      "saved_sha256": "0accebb290985324e048d7ce5235a872b286eee1b5211b2fbe5b51f019eeeb6c",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+      "known_response_checked": false
+    },
+    {
+      "case": "c17-retained-flag1",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "bb94e4c77e98278a84d439fe3ec9f14771c58a05f6416f5644e1d78a0dafcbde",
+        "frame1.fits": "b790db943dc8c713637c1af1f1767b98e540506ff3c4193b416e51e06fced97c",
+        "frame0.fits": "0f9d03d7967e7792a0e7c067c997e038ae93f92ebb1e69c00bd14093998b3305",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609",
+      "saved_sha256": "f668ff244551345082f2309564f64e7a374574984fbf20db7b32674480560e85",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+      "known_response_checked": false
+    },
+    {
+      "case": "c17-known-response-flag0",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "c5e8c335eea545e3aa98d3f27fe62974a51234552f15c0f6f97d2b83e33cbf28",
+        "frame1.fits": "7b495ec716013512b9c7f5abb3039238ed81084245daf6500a12e55c420563a7",
+        "frame0.fits": "9f0f6990faf95c97420feee64a2151ac20ebb2c0b03f4e7da1f16c48cad93ad0",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d",
+      "saved_sha256": "930436c839347bb2ad23eaf0cacbea0d71834f095bea482ac7304addb39c767b",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+      "known_response_checked": true
+    },
+    {
+      "case": "c17-known-response-flag1",
+      "status": "passed",
+      "inputs_sha256": {
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+        "frame2.fits": "c5e8c335eea545e3aa98d3f27fe62974a51234552f15c0f6f97d2b83e33cbf28",
+        "frame1.fits": "7b495ec716013512b9c7f5abb3039238ed81084245daf6500a12e55c420563a7",
+        "frame0.fits": "9f0f6990faf95c97420feee64a2151ac20ebb2c0b03f4e7da1f16c48cad93ad0",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+      },
+      "returned_sha256": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d",
+      "saved_sha256": "51adade049f1ce5b0f4aeea958074d725209d44859b1b751eed82e41fa4e8fdc",
+      "good": 79,
+      "bad": 2,
+      "pixels_checked": 81,
+      "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+      "known_response_checked": true
+    }
+  ],
+  "installation_performed": false,
+  "observational_processing_performed": false,
+  "diagnostic_scope": "Address/undefined checks; leak detection disabled",
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "diagnostic_sha256": {
+    "driver": "cd8b33603ce2d18a12e4db4f3dcd80b9c78e78c745ad86dd58fd8eb8c143162d",
+    "cmake": "a8709db008a489d4fd90a3be4d6b44892f3e8b5016f402e6593cb55db62b1038"
+  },
+  "protected_files_unchanged": true,
+  "baseline_inputs_unchanged": true,
+  "completed_utc": "2026-10-27T13:37:23.435239+00:00"
+}
