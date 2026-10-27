@@ -1,5 +1,7 @@
 # Developer documentation
 
+Next S2-05: [BPM ownership baseline prepared](stage2-bpm-ownership-2026-10-27.md), unchanged accepted driver/fixtures, Mac native execution pending.
+
 [Full agreed S2 milestone and current status](stage2-memory-qualification-2026-10-27.md#declared-test-matrix): departures require prior agreement with Fernando and documentation before implementation.
 
 Latest S2-04: [Mac and Chapman3 split/cache acceptance inspected](stage2-split-chapman3-acceptance-2026-10-27.md). All 80 Mac and 40 target pairs pass; PR #105 awaits review/integration. Broader Stage 2 and target external diagnostics remain open.
