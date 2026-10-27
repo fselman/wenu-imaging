@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "origin_archive_sha256": "63cd5411470e605fd47cfeaf268d719ba51441c3f8545787ac5bc434f143f6dd",
+  "files": {
+    "retained/mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "retained/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+    "retained/frame0.fits": "0f9d03d7967e7792a0e7c067c997e038ae93f92ebb1e69c00bd14093998b3305",
+    "retained/frame1.fits": "b790db943dc8c713637c1af1f1767b98e540506ff3c4193b416e51e06fced97c",
+    "retained/frame2.fits": "bb94e4c77e98278a84d439fe3ec9f14771c58a05f6416f5644e1d78a0dafcbde",
+    "known-response/mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "known-response/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+    "known-response/frame0.fits": "9f0f6990faf95c97420feee64a2151ac20ebb2c0b03f4e7da1f16c48cad93ad0",
+    "known-response/frame1.fits": "7b495ec716013512b9c7f5abb3039238ed81084245daf6500a12e55c420563a7",
+    "known-response/frame2.fits": "c5e8c335eea545e3aa98d3f27fe62974a51234552f15c0f6f97d2b83e33cbf28",
+    "bpm_cleanup_probe.c": "cd8b33603ce2d18a12e4db4f3dcd80b9c78e78c745ad86dd58fd8eb8c143162d"
+  }
+}

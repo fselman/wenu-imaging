@@ -2430,7 +2430,9 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
                         image_getmean(norm_gain),image_getstdev(norm_gain));
         if (results[0] != NULL) image_del (results[0]);
         if (results[1] != NULL) image_del (results[1]);
-        if (results[2] != NULL) image_del (results[2]);
+        /* Only the robust constructor returns a third image (#90). */
+        if (!bb->bpm_proportional_flag && results[2] != NULL)
+            image_del (results[2]);
         if (results != NULL) free(results);
 
         if ( (bp_map = image_threshold2pixelmap(norm_gain, bb->bpm_gainthr_lo, bb->bpm_gainthr_hi)) == NULL) {

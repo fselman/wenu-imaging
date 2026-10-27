@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "repository": "https://github.com/fselman/wenu-imaging",
+  "branch": "main",
+  "commit": "7aeb454574ee35f924e5d3d024b273ebbb4dd153",
+  "dirty": false,
+  "host": "MC02VV0HPHTDG",
+  "created_utc": "2026-10-27T13:06:38.669875+00:00",
+  "purpose": "Reproduce issue 90 in unchanged mef_build_bpm",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "tool_qualification": "/Users/fselman/Software/build/wenu-imaging/mac-memory-toolcheck-2tk86jc0/run-provenance.json",
+  "commands": [
+    {
+      "label": "export",
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/source.tar",
+        "7aeb454574ee35f924e5d3d024b273ebbb4dd153",
+        "mefpp2"
+      ],
+      "cwd": "/Users/fselman/Developer/wenu-imaging",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/export.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "extract",
+      "argv": [
+        "/usr/bin/tar",
+        "-xf",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/source.tar",
+        "-C",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/source"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/extract.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "configure",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/build-c90",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=7aeb454574ee35f924e5d3d024b273ebbb4dd153",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/configure.log",
+      "log_sha256": "fa1313d2fa25d5a312484978ca4343e9b0d8f81559c8247efe97953edea9163c"
+    },
+    {
+      "label": "build",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/build-c90",
+        "--target",
+        "bpm_cleanup_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/build.log",
+      "log_sha256": "9977fb26641920c2fd5cc7a6d1f2e8a04cfba91f9d8ce3aacf5003340af8600a"
+    },
+    {
+      "label": "debug-symbols",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/build-c90/bpm_cleanup_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/debug-symbols.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "proportional-baseline",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/build-c90/bpm_cleanup_probe"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/inputs",
+      "exit_status": 86,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-cleanup-baseline-n06whasu/proportional-baseline.log",
+      "log_sha256": "2674edb8478b4ecad461b1d94e8f7b495465dbb89ff6136eb1b17e0ee82884d1"
+    }
+  ],
+  "installation_performed": false,
+  "observational_processing_performed": false,
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "diagnostic_source_sha256": {
+    "driver": "6b6abb20eae099bc73b980028a34ff26be83006ae1f4148c787e4329b16ec422",
+    "disposable_cmake": "e4399c577a12c1adc3b4e5a8918cf5734e0198386fc1fb2e51e51da4fd30118f",
+    "unchanged_mefp_lib.c": "98e12092b4d6b7dc6603b67c7691a551f47c60ac83bacab4406ce2fa5c839968"
+  },
+  "inputs_sha256": {
+    "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "frame2.fits": "bb94e4c77e98278a84d439fe3ec9f14771c58a05f6416f5644e1d78a0dafcbde",
+    "frame1.fits": "b790db943dc8c713637c1af1f1767b98e540506ff3c4193b416e51e06fced97c",
+    "frame0.fits": "0f9d03d7967e7792a0e7c067c997e038ae93f92ebb1e69c00bd14093998b3305",
+    "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6"
+  },
+  "expected_fault_reproduced": true,
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "completed_utc": "2026-10-27T13:07:08.326852+00:00"
+}
