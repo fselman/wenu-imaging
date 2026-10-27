@@ -1,7 +1,8 @@
 # S2-03 CLI/parser/engine ownership baseline — 27 October 2026
 
-Status: driver prepared; actual Mac compilation and execution pending. No new
-application memory acceptance or production correction is claimed.
+Status: actual Mac baseline completed and failed in 100 of 224 case pairs.
+See [inspected baseline evidence](stage2-cli-baseline-evidence-2026-10-27.md)
+and #103. No production correction or S2-03 acceptance is claimed.
 Parent gate: #75. Baseline: integrated main
 9118ffaaec077eefb0d82a50d232721a9d280a3f. PRs #97/#98/#100/#101 are merged and
 their branches removed on GitHub, Mac and Chapman3. Both user clones are clean
