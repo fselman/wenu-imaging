@@ -1,0 +1,13 @@
+{
+  "purpose": "Independent readback of both supplied-bias native Mac runs",
+  "archive_library_file_id": "libfile_67921576ba2c8191b1c10ea6c6ae6eae",
+  "archive_sha256": "dbe6ba9429abd33e7fafe1619db79404b5343b455f67deae5bd8bd100a02082b",
+  "archive_local_source": "/Users/fselman/Software/build/wenu-imaging/mac-bpm-bias-transfer-lkvr01p0/mac-bpm-bias-both-runs.tar.gz",
+  "archive_member_files_verified": 823,
+  "manifest_itself_verified": true,
+  "status": "inspected; original descriptor finding unresolved",
+  "native_execution_performed": false,
+  "inspection_script_sha256": "963d7d32fc4e5069b692eb2210e8b0e1f1fa1c5f5d3e3bb1a712b1688414a19c",
+  "inspection_script_paths": "Original inspector paths identify retained scratch extraction and source checkout; not a user runner",
+  "original_runs_preserved": true
+}

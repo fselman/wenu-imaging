@@ -1,0 +1,743 @@
+{
+  "archive_sha256": "dbe6ba9429abd33e7fafe1619db79404b5343b455f67deae5bd8bd100a02082b",
+  "manifest_files_verified": 823,
+  "manifest_itself_verified": true,
+  "runs": {
+    "mac-stage2-bpm-bias-w21bs79o": {
+      "commit": "c49123908c9a401eee41cccf006b6cf2d1f75b78",
+      "report_sha256": "eb7b590cd4993ecfb72224e51da2093da179d3be7fdd8299099f5d26f8539df5",
+      "status": "passed",
+      "roles_verified": 32,
+      "case_pairs": 16,
+      "input_frame_checks": 96,
+      "mask_pixels_verified": 5184,
+      "leak_summaries_verified": 8,
+      "commands_verified": 47,
+      "builds": [
+        {
+          "name": "build-c17-instrumented",
+          "translation_units": 101,
+          "c_standard": 17,
+          "info_sha256": "7013e1553b84ab9fc92ba9e6e7838284e70fe4b9ff118c2cd22f616eaf053db3"
+        },
+        {
+          "name": "build-c17-leaks",
+          "translation_units": 101,
+          "c_standard": 17,
+          "info_sha256": "c668eb3e3cb2cf92b844e1213b14a7c6f2f6bdedbd2b3ebe4d23a96bf2c29d74"
+        },
+        {
+          "name": "build-c90-instrumented",
+          "translation_units": 101,
+          "c_standard": 90,
+          "info_sha256": "da87ac35e792417a9fff16295921c8ef441f20fb9d4d7d623c2e838e21bc0e02"
+        },
+        {
+          "name": "build-c90-leaks",
+          "translation_units": 101,
+          "c_standard": 90,
+          "info_sha256": "33db454bb795eff92eac7d099b1911aee8cde73fd450aecd3d1623c295e7d991"
+        }
+      ],
+      "descriptor_boundaries": [
+        {
+          "case": "c90-instrumented-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-instrumented-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-instrumented-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-instrumented-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        }
+      ],
+      "findings": [],
+      "canonical_output_count": 32
+    },
+    "mac-stage2-bpm-bias-zutw0_xe": {
+      "commit": "e7e8fbdcff5af70bdcb4ea8d5521efe4a030e62f",
+      "report_sha256": "0538aa557c0e1e66d7e51417b11c44a8ad166cc8e812b3a9448811d94b62e3eb",
+      "status": "failed",
+      "roles_verified": 32,
+      "case_pairs": 16,
+      "input_frame_checks": 96,
+      "mask_pixels_verified": 5184,
+      "leak_summaries_verified": 8,
+      "commands_verified": 47,
+      "builds": [
+        {
+          "name": "build-c17-instrumented",
+          "translation_units": 101,
+          "c_standard": 17,
+          "info_sha256": "95d5c34fc9a099248cb197b2edd4ce6278720b30f17056aa49f85fd5f83d4fdc"
+        },
+        {
+          "name": "build-c17-leaks",
+          "translation_units": 101,
+          "c_standard": 17,
+          "info_sha256": "56b0fd70484117ccd59405ba8f2c48eb4b9fb12c23309add2be68bccde7b903a"
+        },
+        {
+          "name": "build-c90-instrumented",
+          "translation_units": 101,
+          "c_standard": 90,
+          "info_sha256": "95e94a0ef5951a332d10a1ae8b651279796380e16debf65c3fb61ecf620212ed"
+        },
+        {
+          "name": "build-c90-leaks",
+          "translation_units": 101,
+          "c_standard": 90,
+          "info_sha256": "61f4efb1a0ac1614654f5356706dc6331eca9e7c37c5631f80313334d1795c76"
+        }
+      ],
+      "descriptor_boundaries": [
+        {
+          "case": "c90-instrumented-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "0"
+            ],
+            [
+              "4",
+              "4",
+              "0"
+            ],
+            [
+              "4",
+              "4",
+              "0"
+            ]
+          ]
+        },
+        {
+          "case": "c90-instrumented-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-instrumented-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-instrumented-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-leaks-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-instrumented-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-retained-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-retained-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-known-response-flag0",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-leaks-known-response-flag1",
+          "boundaries": [
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ],
+            [
+              "4",
+              "4",
+              "1"
+            ]
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "case": "c90-instrumented-retained-flag0",
+          "kind": "descriptor-identity-mismatch",
+          "attribution": "unavailable in original observer"
+        }
+      ],
+      "canonical_output_count": 32
+    }
+  },
+  "native_execution_performed": false,
+  "cross_run_canonical_products_identical": true,
+  "changed_selected_sources": [
+    "mefpp2/tests/bpm_bias_ownership_probe.c",
+    "mefpp2/tests/descriptor_snapshots.py",
+    "mefpp2/tests/qualify_bpm_bias.py"
+  ],
+  "status": "passed-inspection-with-original-finding-open"
+}

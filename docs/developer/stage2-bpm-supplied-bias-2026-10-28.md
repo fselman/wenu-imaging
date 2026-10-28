@@ -1,5 +1,10 @@
 # S2-05 supplied-bias ownership qualification — 28 October 2026
 
+Update: [both actual Mac runs independently inspected](stage2-bpm-bias-mac-inspection-2026-10-28.md).
+The diagnostic run passes all 16 pairs; the original descriptor mismatch remains
+unattributed and #116 stays open. Earlier pending-inspection/execution statements
+are historical. No broader acceptance or target advance is authorized.
+
 Actual Mac run has one unresolved descriptor-identity finding; see
 [issue #116 diagnostic preparation](stage2-bpm-bias-descriptor-diagnostic-2026-10-28.md).
 Earlier native-pending statements describe preparation history. No Mac acceptance

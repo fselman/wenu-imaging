@@ -1,5 +1,10 @@
 # S2-05 supplied-bias descriptor diagnostic — 28 October 2026
 
+Update: [both actual Mac runs independently inspected](stage2-bpm-bias-mac-inspection-2026-10-28.md).
+The diagnostic run passes all 16 pairs; the original descriptor mismatch remains
+unattributed and #116 stays open. Earlier pending-inspection/execution statements
+are historical. No broader acceptance or target advance is authorized.
+
 Tracking: #116 and broader #75, draft PR #115. Status: test-only diagnostic
 prepared; actual Mac execution pending. No production correction or gate waiver.
 
