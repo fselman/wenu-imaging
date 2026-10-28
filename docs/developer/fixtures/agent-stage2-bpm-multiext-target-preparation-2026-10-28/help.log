@@ -1,0 +1,11 @@
+usage: qualify_bpm_multiext_chapman3.py [-h] --compiler COMPILER --cmake CMAKE
+
+Chapman3 S2-05 two-extension OmegaCAM/WFI functional/accounting checks
+(#75/#116). Unchanged Mac-qualified native observer, driver, fixtures and
+numerical oracle. Uninstrumented target; compatible external diagnostics
+remain an open gate.
+
+options:
+  -h, --help           show this help message and exit
+  --compiler COMPILER
+  --cmake CMAKE

@@ -1,5 +1,7 @@
 # S2-05 two-extension OmegaCAM/WFI BPM ownership — 28 October 2026
 
+Update: [complete Mac evidence is inspected](stage2-bpm-multiext-mac-acceptance-2026-10-28.md); all 32 pairs pass. The unchanged-native-driver Chapman3 runner is prepared; actual target execution is pending. Earlier preparation status below is historical. Full S2-05/#75 and #116 remain open.
+
 Status: test-only preparation from merged main
 `664f501fe723a924b6a2395d00f70cba1fb03ab7`, following Fernando's instruction to
 proceed. Actual Mac processing and subsequent unchanged-driver Chapman3

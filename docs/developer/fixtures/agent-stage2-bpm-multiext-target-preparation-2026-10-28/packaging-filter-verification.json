@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "native_execution": false,
+  "source_sha256": "110c66d6569d8117dc76d0699a1c784fe1a982fde0c9c18ae7e46fbb53d62034",
+  "actual_run_file_selection_checked": true,
+  "selected_files": 1263,
+  "command_logs_preserved": 79,
+  "previously_omitted_logs_preserved": 4,
+  "build_records_and_executables_preserved": true,
+  "intermediate_object_excluded": true
+}
