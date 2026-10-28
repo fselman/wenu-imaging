@@ -2664,7 +2664,8 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             for (i=0 ; i<flist->n ; i++) {
                 sprintf(cval,"%s FRAME%03d", bb->bpm_frame_i_key, i+1);
                 e_comment(1, "mef_build_bpm: adding key %s",cval);
-                qfits_header_add_after(fhdr_extra,cval_prev, cval, flist->name[i], bb->bpm_frame_i_comment,NULL);
+                /* Record the filename, as for bias/dome/sky provenance. */
+                qfits_header_add_after(fhdr_extra,cval_prev, cval, get_basename(flist->name[i]), bb->bpm_frame_i_comment,NULL);
                 sprintf(cval_prev, cval);
 
                 fh = qfits_header_read(flist->name[i]);

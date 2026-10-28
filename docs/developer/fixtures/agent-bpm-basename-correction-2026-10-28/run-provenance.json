@@ -1,0 +1,52 @@
+{
+  "status": "prepared-not-Mac-qualified",
+  "issues": [
+    125,
+    126
+  ],
+  "checks": {
+    "c90_syntax": "passed",
+    "c17_syntax": "passed",
+    "basename_controls": "passed"
+  },
+  "commands": [
+    [
+      "cc",
+      "-std=c90",
+      "-fsyntax-only",
+      "-D_DEFAULT_SOURCE",
+      "-D_BSD_SOURCE",
+      "-D_SVID_SOURCE",
+      "-D_POSIX_C_SOURCE=200809L",
+      "-Imefpp2/ins/mef/common",
+      "-Imefpp2/src/include",
+      "-Imefpp2/qfits5/include",
+      "-Idocs/developer/fixtures/agent-stage2-bpm-descriptor-preparation-2026-10-28",
+      "mefpp2/ins/mef/common/mefp_lib.c"
+    ],
+    [
+      "cc",
+      "-std=c17",
+      "-fsyntax-only",
+      "-D_DEFAULT_SOURCE",
+      "-D_BSD_SOURCE",
+      "-D_SVID_SOURCE",
+      "-D_POSIX_C_SOURCE=200809L",
+      "-Imefpp2/ins/mef/common",
+      "-Imefpp2/src/include",
+      "-Imefpp2/qfits5/include",
+      "-Idocs/developer/fixtures/agent-stage2-bpm-descriptor-preparation-2026-10-28",
+      "mefpp2/ins/mef/common/mefp_lib.c"
+    ]
+  ],
+  "source_sha256": {
+    "mefpp2/ins/mef/common/mefp_lib.c": "0e81b2d7bfe106970bf2f813767946ae88d75f00046960e0c8bd92f99cf2d0cf",
+    "mefpp2/qfits5/src/fits_h.c": "d8213dbfcc7ce7b3fd865cf48482a1bf657cdb373ce7c578f83955b8244c054b",
+    "mefpp2/tests/fixtures/integrated-campaign/wfi-selection.json": "edfa2e80077a654b7621dbd69fca682de3e7b6188d97ea8da6e8877a74bba42f"
+  },
+  "native_engine_launches": 0,
+  "limitations": [
+    "Agent Linux syntax/helper checks only; actual Mac F2 retry pending",
+    "No qfits changes or CONTINUE support added"
+  ]
+}
