@@ -9,7 +9,8 @@
   "analytic_fixture_expectations_checked": true,
   "production_native_execution": false,
   "source_sha256": {
-    "inventory_wfi_campaign.py": "a9a02eeb10d4bdb9dda3991c8718772f0662bb882782e5feefe0d0690a0d05c9",
+    "inventory_wfi_campaign.py": "61b3d0abcb67dc4150f6580907a1e65fe84db2d6d620658eca1629b15f04e16c",
     "prepare_integrated_campaign_fixture.py": "9f025a01de888b95fdb8a98cc376144b6561997a1a197530bdde220e3cb2a2b4"
-  }
+  },
+  "unreadable_file_recorded_without_aborting_inventory": true
 }

@@ -32,7 +32,10 @@ def values(header, keys):
 
 def inspect(path):
     # Header/stat readback only: never request hdu.data or checksum the pixel payload.
-    before = path.stat()
+    try:
+        before = path.stat()
+    except OSError as error:
+        return dict(path=str(path), error=str(error), stat_unchanged=None)
     row = dict(path=str(path), resolved_path=str(path.resolve()), size=before.st_size,
                mtime_ns=before.st_mtime_ns, inode=before.st_ino)
     try:
