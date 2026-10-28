@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "0ee502ce3380799b67fca89541c824e8664927dd991aee1257900033752fc61d",
+  "archive_name": "integrated-f1-f2-evidence.tar.gz",
+  "attachment": "libfile_5ec3f514eae48191b48740b182e07624",
+  "files_verified": 416,
+  "command_logs_verified": 52,
+  "inspector": "verify_f1_f2_evidence.py",
+  "native_launches_during_inspection": 0,
+  "large_WFI_products_transferred": false
+}
