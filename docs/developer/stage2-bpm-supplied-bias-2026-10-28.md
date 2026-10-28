@@ -1,5 +1,13 @@
 # S2-05 supplied-bias ownership qualification — 28 October 2026
 
+Additional agent preparation, 28 October 2026: the existing PR #115 source
+`465848f493abff0a8af85f0319f96c6ec6c0d727` now passes independent Astropy
+fixture/product-oracle checks (16 constructed products, 48 deliberate corruption
+rejections) and C90/C17 syntax-only checks for both retained new drivers. No
+production source, native driver, fixture or Mac qualification runner changed.
+Actual native Mac qualification remains pending. This supplements the older
+Astropy-unavailable preparation statement below; it is not native acceptance.
+
 Status: preparation complete; actual native Mac execution pending. Baseline main
 `bf1c6afe0063ae62833efd04a9109ae5a3982cef`, after merged PR #114. Fernando
 reports both hosts synchronized and authorized continuing S2-05. The most recent
@@ -111,3 +119,34 @@ coverage and compatible target external diagnostics remain open. No gate is
 waived; no departure from agreed scope/order/completion criteria or S2-06 advance
 is approved. Preserve all runs/archives/transfer copies/installations. No merge
 or branch deletion is authorized; mandatory review precedes Stage 2A/extraction.
+
+## Additional fixture/oracle checks — 28 October 2026
+
+`mefpp2/tests/check_bpm_bias_preparation.py` independently reads both deterministic
+fixture kinds with Astropy: exact bias pixels/type, float32 cancellation back to
+the accepted science pixels, unchanged overscan, raw populated headers and padding.
+The declared input hashes match the existing manifest. An independent median-ratio
+calculation checks the known-good proportional sentinel at [4,5]. Robust masks
+with fitted intercepts can be insensitive to additive offsets; a robust mask alone
+is not evidence that subtraction occurred. No production estimator is exercised
+by this Python calculation.
+
+All 16 metadata case mappings pass constructed-product readback with the existing
+`bpm_bias_cases.verify` / accepted metadata and mask oracles. Each case rejects
+a deliberately changed mask pixel, first-frame metadata value and bias pixel
+(48 total). Rejected bytes, restored constructed inputs/products, provenance and
+source identities are retained. This checks the output oracle, not mefpp.
+
+Both existing new C drivers pass GCC C90/C17 syntax-only checks using private
+Linux platform declarations. No linking, native constructor, Mac compiler,
+installation or observational processing ran. The full evidence archive and
+member hashes are committed under
+`fixtures/agent-stage2-bpm-bias-oracle-2026-10-28/`. All earlier preparation and
+acceptance evidence remains preserved.
+
+Fresh user preflight identifies the clean Mac checkout as
+`/Users/fselman/Developer/wenu-imaging`, main at bf1c6afe, existing Python prefix
+`/Users/fselman/anaconda3`. Chapman3 was also clean at bf1c6afe. Chapman4 currently
+lacks the shared-home mount; Fernando will request IT repair and prefers
+Chapman3 continuation. No target workload has started here; resolve the recorded
+host-status obligation before later target execution. Mac qualification is next.

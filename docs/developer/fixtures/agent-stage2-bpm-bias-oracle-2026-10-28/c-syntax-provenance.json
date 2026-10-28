@@ -1,0 +1,76 @@
+{
+  "purpose": "C90/C17 syntax-only checks of PR115 drivers; no linking/native execution",
+  "tested_source": "465848f493abff0a8af85f0319f96c6ec6c0d727",
+  "status": "passed",
+  "native_execution": false,
+  "commands": [
+    {
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c90",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-existing-c-syntax",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_bias_probe.c"
+      ],
+      "exit_status": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c90",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-existing-c-syntax",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_bias_ownership_probe.c"
+      ],
+      "exit_status": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c17",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-existing-c-syntax",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_bias_probe.c"
+      ],
+      "exit_status": 0
+    },
+    {
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c17",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-existing-c-syntax",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_bias_ownership_probe.c"
+      ],
+      "exit_status": 0
+    }
+  ],
+  "source_sha256": {
+    "mefpp2/tests/bpm_bias_probe.c": "6e77d9759b1fa910c2e9a1788657e77ef780c4df3f1aec749059bc8373fc738c",
+    "mefpp2/tests/bpm_bias_ownership_probe.c": "ec550b215749ffada64e144a0ff7099f7f0e85423a7115fc94e892ad8677366a"
+  }
+}
