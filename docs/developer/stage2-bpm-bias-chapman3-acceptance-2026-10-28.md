@@ -1,5 +1,7 @@
 # Bounded Chapman3 supplied-bias acceptance — 28 October 2026
 
+Integration authorized, 28 October 2026: Fernando explicitly instructed "merge, sync, and clean" for PR #115 after inspecting Mac and Chapman3 supplied-bias evidence. Integrate the reviewed test/documentation increment, synchronize both hosts by guarded fast-forward, and remove only test/stage2-bpm-supplied-bias after verifying main ancestry and retained evidence. Preserve every run, archive, transfer copy, raw frame and installation. #116, full S2-05/#75, target external diagnostics and remaining coverage stay open; no S2-06 advance. This supersedes earlier no-merge/deletion-authorization statements for this branch only.
+
 Actual clean target source `10b3ca8285f886694fd0aa54197b8ba46f9cd1e4`,
 branch `test/stage2-bpm-supplied-bias`, Chapman3. All eight ordinary/observer
 pairs / 16 native roles pass independent evidence inspection. This accepts the
