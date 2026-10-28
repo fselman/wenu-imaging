@@ -9,7 +9,7 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | Owner acceptance of concrete frozen proposal | Accepted 28 October 2026 | Fernando: "proceed", after v2.1 request; see acceptance record |
 | Prior accepted build/context/parser/split/BPM work | Accepted and preserved | Main b0061b55b9ff8dc2d185c3c403c5119a25b606a5; PRs #115/#117 and earlier receipts |
 | One input inventory/reference lock | Preparation started; waiting for actual Mac header inventory | WFI at /Users/fselman/Pictures/WFI; tiny OmegaCAM fixture to be fixed once |
-| F1 integrated tiny OmegaCAM | Pending | Maximum 3 planned launches |
+| F1 integrated tiny OmegaCAM | Python-only fixture prepared; native runs pending | 17 MEF inputs / 34 extensions checked; maximum 3 planned native launches |
 | F2 integrated selected WFI | Pending | Maximum 3 planned launches |
 | F3 five fixed failure cases | Pending / reuse applicable accepted evidence | Maximum 10 planned launches |
 | F4 fixed same-process repetition | Pending | Maximum 1 planned launch, warmup plus ten measured cycles |

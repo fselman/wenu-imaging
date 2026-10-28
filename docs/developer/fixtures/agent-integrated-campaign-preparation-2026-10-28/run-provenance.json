@@ -1,0 +1,15 @@
+{
+  "purpose": "Python-only input/header helper checks; no native execution",
+  "status": "passed",
+  "native_execution": false,
+  "native_launches_consumed": 0,
+  "input_mef_files_checked": 17,
+  "extensions_checked": 34,
+  "header_only_helper_checked": true,
+  "analytic_fixture_expectations_checked": true,
+  "production_native_execution": false,
+  "source_sha256": {
+    "inventory_wfi_campaign.py": "a9a02eeb10d4bdb9dda3991c8718772f0662bb882782e5feefe0d0690a0d05c9",
+    "prepare_integrated_campaign_fixture.py": "9f025a01de888b95fdb8a98cc376144b6561997a1a197530bdde220e3cb2a2b4"
+  }
+}
