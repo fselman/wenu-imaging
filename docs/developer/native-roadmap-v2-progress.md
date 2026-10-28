@@ -1,6 +1,6 @@
-# Frozen v2.0 progress ledger
+# Frozen roadmap v2 progress ledger
 
-Controlling contract: [frozen roadmap v2.0](native-roadmap-frozen-v2.0-2026-10-28.md).
+Controlling contract: [frozen roadmap v2.0](native-roadmap-frozen-v2.0-2026-10-28.md), with [owner-requested amendment v2.1](native-roadmap-amendment-v2.1-2026-10-28.md). The amended campaign cap is 19 planned native launches.
 This ledger may update status and evidence links. It must not add requirements,
 rows, launches, repair rounds or completion gates. Amendments are separate files.
 
@@ -13,7 +13,7 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | F2 integrated selected WFI | Pending | Maximum 3 planned launches |
 | F3 five fixed failure cases | Pending / reuse applicable accepted evidence | Maximum 10 planned launches |
 | F4 fixed same-process repetition | Pending | Maximum 1 planned launch, warmup plus ten measured cycles |
-| F5 compact Chapman3 regression | Pending | Maximum 1 planned C17 launch; no target external-memory qualification |
+| F5 compact Chapman3 regression | Pending | Maximum 2 planned launches: one C17 and one C90 together at the end, per v2.1; no target external-memory qualification |
 | Final C90 compatibility checkpoint | Conditional | One compile/build if native source changes; no duplicate runtime matrix |
 | Correction/retest budget | 0 of 2 rounds used | Global Stage 2 limit |
 | #116 disposition | Open | Original descriptor identity mismatch remains unattributed/non-reproduced |
