@@ -1,0 +1,17 @@
+mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_bpm’:
+mefpp2/ins/mef/common/mefp_lib.c:2670:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2670 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+mefpp2/ins/mef/common/mefp_lib.c:3667:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3667 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
+mefpp2/ins/mef/recipes/mefpp.c: In function ‘mef_engine’:
+mefpp2/ins/mef/recipes/mefpp.c:1251:30: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1251 |                sprintf(cval, recipe_version);
+      |                              ^~~~~~~~~~~~~~
+In file included from mefpp2/tests/integrated_calibration_observer.c:42:
+mefpp2/tests/../ins/mef/recipes/mefpp.c: In function ‘mef_engine’:
+mefpp2/tests/../ins/mef/recipes/mefpp.c:1251:30: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1251 |                sprintf(cval, recipe_version);
+      |                              ^~~~~~~~~~~~~~

@@ -11,11 +11,11 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | One input inventory/reference lock | Locked; header inventory and selected-content report inspected | WFI at /Users/fselman/Pictures/WFI; 11 reported SHA256 identities and fixed lists; see integrated runner record |
 | F1 integrated tiny OmegaCAM | Accepted at 9242174: all three Mac lanes | Archived exact FITS and diagnostic logs independently checked; inherited at later source |
 | F2 integrated selected WFI | Accepted at f5afd08: all three Mac lanes after filename correction | Six products/eight detectors; host pixel/header reports agree, archived diagnostics pass; large FITS stay on Mac |
-| F3 five fixed failure cases | Blocked: blocked-output instrumented falsely returns success, #127 | First four roles reportedly pass; exact blocker/absent master bias confirmed, five roles remain unrun; full archive pending |
+| F3 five fixed failure cases | Original blocked at #127; approved v2.4 repair/resume prepared | Four original roles reportedly pass; two added retests then five original roles, stop at finding; actual correction pending |
 | F4 fixed same-process repetition | Pending | Maximum 1 planned launch, warmup plus ten measured cycles |
 | F5 compact Chapman3 regression | Pending | Maximum 2 planned launches: one C17 and one C90 together at the end, per v2.1; no target external-memory qualification |
 | Final C90 compatibility checkpoint | Required at final stable source | Native corrections #121–#124; one final Mac C90 build, no duplicate runtime matrix |
-| Correction/retest budget | 2/2 consumed; v2.2 and v2.3 consumed | 11 planned + 6 retests = 17 actual launches; new repair/retry requires explicit owner decision |
+| Correction/retest budget | 2/2 consumed; v2.2/v2.3 consumed, separate v2.4 approved/prepared | Current 11 planned + 6 retests = 17 actual; at most two added retests, maximum after F3 24 actual |
 | #116 disposition | Open | Original descriptor identity mismatch remains unattributed/non-reproduced |
 | Target external diagnostics | Limitation remains open | Accepted v2.0 removes it as an automatic block to the Mac-led campaign |
 | Final Stage 2 owner review / Phase 3 gap matrix | Pending | Completion, accepted named limitations, or explicit blocked decision |
@@ -37,3 +37,5 @@ Latest accepted status: [integrated F1/F2 evidence receipt](stage2-integrated-f1
 [F3 one-use runner prepared](stage2-integrated-f3-preparation-2026-10-28.md), no production changes or native launches. At most ten originally planned cases; current total remains 12, potential total after F3 is 22. Stop at first finding with the exhausted repair budget unchanged.
 
 Latest blocker: [F3 publication false-success and bounded decision](stage2-integrated-f3-publication-blocker-2026-10-28.md), #127. No correction/retry or later-row execution occurred; current actual count 17. Four F3 roles reportedly pass; remaining five are unrun, not failed.
+
+[Approved v2.4 publication repair/resume prepared](stage2-integrated-publication-repair-2026-10-28.md). Agent syntax/helper/guard checks pass, no recipe launch. Actual corrected F3 execution is pending at 17 cumulative launches. Prior blocked decision above is superseded only for this exact approved exception; later findings still stop without automatic repair.

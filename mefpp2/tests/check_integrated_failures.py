@@ -3,7 +3,7 @@ from copy import deepcopy
 from pathlib import Path
 import json,re,tempfile
 from unittest.mock import patch
-from qualify_integrated_failures_mac import inject,PATCHES,failure_diagnostics
+from qualify_integrated_failures_mac import inject,PATCHES,failure_diagnostics,publication_parent,PUBLICATION_SEQUENCE
 
 
 def output(lane):
@@ -46,6 +46,27 @@ def main():
         try:inject(root)
         except RuntimeError:pass
         else:raise AssertionError('Duplicate/changed injection anchor accepted')
+    # v2.4 admits only this reviewed failure and its exhausted original counters.
+    passed=dict(status='passed',exit_status=0,findings=[])
+    cases=[]
+    for variant,lane in [('missing-list','instrumented'),('missing-list','leaks'),('corrupt-frame','instrumented'),('corrupt-frame','leaks')]:
+        case=deepcopy(passed);case.update(variant=variant,lane=lane);cases.append(case)
+    cases.append(dict(variant='blocked-output',lane='instrumented',status='failed',exit_status=0,
+        findings=['Native failure status not propagated'],diagnostics=dict(ownership=dict(native_exit=0)),
+        partial_products={name:'hash' for name in ('science0_pre.fits','OCAM_SKYFF_S2_1x1.fits','OCAM_BPM_1x1.fits','OCAM_MFF_S2_1x1.fits','OCAM_DOMEFF_S2_1x1.fits')}))
+    parent=dict(source=dict(commit='c7223105e402f197d9c0a2b7be9021ee76da7e9c'),status='stopped',execution_complete=False,
+        planned_launches_consumed=11,retest_launches_consumed=6,native_launches_consumed=17,correction_rounds_consumed=2,
+        cases=cases,protected_files_unchanged=True,checkout_unchanged=True,previous_evidence_unchanged=True,fixture_inputs_unchanged=True)
+    publication_parent(parent)
+    for mutate in (lambda r:r.update(native_launches_consumed=0),lambda r:r.update(correction_rounds_consumed=3),
+                   lambda r:r['cases'][-1].update(findings=[]),lambda r:r['cases'][0].update(status='failed'),
+                   lambda r:r.update(fixture_inputs_unchanged=False),lambda r:r['cases'][-1].update(partial_products={})):
+        bad=deepcopy(parent);mutate(bad)
+        try:publication_parent(bad)
+        except RuntimeError:pass
+        else:raise AssertionError('Unreviewed publication parent accepted')
+    assert len(PUBLICATION_SEQUENCE)==7 and PUBLICATION_SEQUENCE[:2]==(('blocked-output','instrumented'),('publication-smoke','instrumented'))
+    assert PUBLICATION_SEQUENCE[2:]==(('blocked-output','leaks'),('context-allocation','instrumented'),('context-allocation','leaks'),('cube-allocation','instrumented'),('cube-allocation','leaks'))
     print('F3 parser/injection controls passed; native launches: 0')
 
 

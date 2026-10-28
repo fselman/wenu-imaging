@@ -3,11 +3,13 @@ import argparse, hashlib, io, json, os, platform, re, resource, subprocess, sys,
 from pathlib import Path
 from prepare_integrated_campaign_fixture import prepare
 from integrated_campaign_products import file_hash
-from qualify_integrated_campaign_mac import ARGV, FROZEN, save
+from qualify_integrated_campaign_mac import ARGV, FROZEN, save, diagnostic, comparable
+from integrated_campaign_products import verify
 from qualify_split_ownership import allocation_state
 from descriptor_snapshots import snapshots
 
 CASES=('missing-list','corrupt-frame','blocked-output','context-allocation','cube-allocation')
+PUBLICATION_SEQUENCE=(('blocked-output','instrumented'),('publication-smoke','instrumented'),('blocked-output','leaks'),('context-allocation','instrumented'),('context-allocation','leaks'),('cube-allocation','instrumented'),('cube-allocation','leaks'))
 PATCHES=(('ins/mef/common/mefp_lib.c','bb = calloc(1, sizeof(mef_bb));','bb = (getenv("S2_F3_ALLOC") != NULL && !strcmp(getenv("S2_F3_ALLOC"), "context")) ? (fprintf(stderr, "F3 INJECT context allocation\\n"), (void *)0) : calloc(1, sizeof(mef_bb));'),
          ('src/iproc/cube_handling.c','n = malloc(sizeof(cube_t)) ;','n = (getenv("S2_F3_ALLOC") != NULL && !strcmp(getenv("S2_F3_ALLOC"), "cube")) ? (fprintf(stderr, "F3 INJECT cube allocation\\n"), (void *)0) : malloc(sizeof(cube_t)) ;'))
 
@@ -56,9 +58,30 @@ def failure_diagnostics(output,lane,variant):
     return result,findings
 
 
+
+def publication_parent(old):
+    """Admit only the reviewed false-success F3 parent, never reset its budget."""
+    if (old['source']['commit']!='c7223105e402f197d9c0a2b7be9021ee76da7e9c'
+        or old['status']!='stopped' or old['execution_complete']
+        or [old[k] for k in ('planned_launches_consumed','retest_launches_consumed','native_launches_consumed','correction_rounds_consumed')]!=[11,6,17,2]):
+        raise RuntimeError('STOP: unreviewed publication parent/counters')
+    expected=[('missing-list','instrumented'),('missing-list','leaks'),('corrupt-frame','instrumented'),('corrupt-frame','leaks'),('blocked-output','instrumented')]
+    if [(c['variant'],c['lane']) for c in old['cases']]!=expected:raise RuntimeError('STOP: parent case order differs')
+    for case in old['cases'][:4]:
+        if case['status']!='passed' or case['findings'] or case['exit_status']!=0:raise RuntimeError('STOP: parent early case not passed')
+    failed=old['cases'][-1]
+    if (failed['status']!='failed' or failed['exit_status']!=0 or failed['findings']!=['Native failure status not propagated']
+        or failed['diagnostics']['ownership']['native_exit']!=0):raise RuntimeError('STOP: not reviewed false success')
+    for key in ('protected_files_unchanged','checkout_unchanged','previous_evidence_unchanged','fixture_inputs_unchanged'):
+        if not old[key]:raise RuntimeError('STOP: parent preservation finding')
+    if set(failed['partial_products'])!={'science0_pre.fits','OCAM_SKYFF_S2_1x1.fits','OCAM_BPM_1x1.fits','OCAM_MFF_S2_1x1.fits','OCAM_DOMEFF_S2_1x1.fits'}:
+        raise RuntimeError('STOP: reviewed partial product set differs')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('compiler','sdk','cmake'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--resume-publication',action='store_true',help='Approved one-use v2.4 publication repair only')
     args=p.parse_args()
     # Actual-host/source guards and inherited successful campaign; no processing here.
     if platform.system()!='Darwin' or platform.node().split('.')[0]!='MC02VV0HPHTDG':raise RuntimeError('STOP: qualified Mac required')
@@ -70,17 +93,27 @@ def main():
     if git('symbolic-ref','--short','HEAD')!='test/stage2-integrated-campaign':raise RuntimeError('STOP: wrong branch')
     commit=git('rev-parse','HEAD')
     changed=git('diff','--name-only','f5afd08fbfb35a8a50409c92352f9061c92c1f69',commit,'--','mefpp2').splitlines()
-    if any(not name.startswith('mefpp2/tests/') for name in changed):raise RuntimeError('STOP: qualified production source changed')
+    native=[name for name in changed if not name.startswith('mefpp2/tests/')]
+    allowed=['mefpp2/ins/mef/common/mefp_lib.c','mefpp2/ins/mef/common/mefp_lib.h','mefpp2/ins/mef/recipes/mefpp.c']
+    if args.resume_publication:
+        if native!=allowed:raise RuntimeError('STOP: repair source scope differs')
+        receipt=json.loads((repo/'docs/developer/fixtures/agent-publication-repair-2026-10-28/run-provenance.json').read_text())
+        if any(file_hash(repo/name)!=receipt['native_source_sha256'][name] for name in allowed):raise RuntimeError('STOP: repair source identity differs')
+        if file_hash(repo/'docs/developer/native-roadmap-amendment-v2.4-2026-10-28.md')!='937609ff2945d3abbdd12b382a053556f7c6e06748c37055e37d8f1f36ac3c1c':raise RuntimeError('STOP: v2.4 changed')
+    elif native:raise RuntimeError('STOP: qualified production source changed')
     for name,h in FROZEN.items():
         if file_hash(repo/'docs/developer'/name)!=h:raise RuntimeError('STOP: frozen contract changed')
     parent=Path.home()/'Software/build/wenu-imaging';campaign=parent/'mac-stage2-integrated-du1sqj06'
-    prior=campaign/'v2.3-bpm-filenames/run-provenance.json';old=json.loads(prior.read_text())
+    prior=campaign/('F3-failures/run-provenance.json' if args.resume_publication else 'v2.3-bpm-filenames/run-provenance.json');old=json.loads(prior.read_text())
     pointer=parent/'stage2-integrated-active-campaign.json'
     if Path(json.loads(pointer.read_text())['report']).resolve()!=prior.resolve():raise RuntimeError('STOP: campaign already advanced')
-    if old['source']['commit']!='f5afd08fbfb35a8a50409c92352f9061c92c1f69' or old['status']!='F1-F2-passed-awaiting-review' or not old['execution_complete']:raise RuntimeError('STOP: F1/F2 acceptance parent differs')
-    if [old[k] for k in ('planned_launches_consumed','retest_launches_consumed','native_launches_consumed','correction_rounds_consumed')]!=[6,6,12,2]:raise RuntimeError('STOP: inherited counters differ')
-    for key in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved','previous_report_unchanged','inherited_evidence_unchanged'):
-        if not old[key]:raise RuntimeError('STOP: parent preservation finding')
+    if args.resume_publication:
+        publication_parent(old)
+    else:
+        if old['source']['commit']!='f5afd08fbfb35a8a50409c92352f9061c92c1f69' or old['status']!='F1-F2-passed-awaiting-review' or not old['execution_complete']:raise RuntimeError('STOP: F1/F2 acceptance parent differs')
+        if [old[k] for k in ('planned_launches_consumed','retest_launches_consumed','native_launches_consumed','correction_rounds_consumed')]!=[6,6,12,2]:raise RuntimeError('STOP: inherited counters differ')
+        for key in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved','previous_report_unchanged','inherited_evidence_unchanged'):
+            if not old[key]:raise RuntimeError('STOP: parent preservation finding')
     protected=old['protected_sha256']
     if not all(file_hash(Path(k))==h for k,h in protected.items()):raise RuntimeError('STOP: selected installation changed')
     compiler,sdk,cmake=[a.resolve(strict=True) for a in (args.compiler,args.sdk,args.cmake)]
@@ -92,13 +125,32 @@ def main():
     for command in old['commands']:
         if file_hash(Path(command['log']))!=command['log_sha256']:raise RuntimeError('STOP: prior command log changed')
         preserved[command['log']]=command['log_sha256']
-    work=campaign/'F3-failures';work.mkdir(exist_ok=False)
+    smoke_reference=None;smoke_inputs=None
+    if args.resume_publication:
+        logs={c['label']:Path(c['log']) for c in old['commands']}
+        for case in old['cases']:
+            for name,h in case['input_sha256'].items():
+                path=Path(case['directory'])/name
+                if file_hash(path)!=h:raise RuntimeError('STOP: prior fixture changed')
+                preserved[str(path)]=h
+            for name,h in case['partial_products'].items():
+                path=Path(case['directory'])/name
+                if file_hash(path)!=h:raise RuntimeError('STOP: prior partial output changed')
+                preserved[str(path)]=h
+            state,findings=failure_diagnostics(logs[case['variant']+'-'+case['lane']].read_text(errors='replace'),case['lane'],case['variant'])
+            if findings!=case['findings'] or json.loads(json.dumps(state))!=case['diagnostics']:raise RuntimeError('STOP: retained F3 diagnostics differ')
+        ancestor=old['previous_attempt'];path=Path(ancestor['report'])
+        if file_hash(path)!=ancestor['sha256']:raise RuntimeError('STOP: F2 ancestor changed')
+        preserved[str(path)]=ancestor['sha256'];accepted=json.loads(path.read_text())['inherited_cases'][0]
+        smoke_reference=accepted['products'];smoke_inputs=accepted['input_sha256']
+    work=campaign/('v2.4-publication' if args.resume_publication else 'F3-failures');work.mkdir(exist_ok=False)
     record=dict(schema_version=1,source=dict(commit=commit,dirty=False),fixed_row='F3',status='running',execution_complete=False,
-        previous_attempt=dict(report=str(prior),sha256=file_hash(prior)),planned_launches_consumed=6,retest_launches_consumed=6,
-        native_launches_consumed=12,correction_rounds_consumed=2,planned_native_launch_limit=19,commands=[],cases=[],
+        previous_attempt=dict(report=str(prior),sha256=file_hash(prior)),planned_launches_consumed=old['planned_launches_consumed'],retest_launches_consumed=old['retest_launches_consumed'],
+        native_launches_consumed=old['native_launches_consumed'],correction_rounds_consumed=2,planned_native_launch_limit=19,commands=[],cases=[],
         selected_cases=list(CASES),lane_order=['instrumented','leaks'],protected_sha256=protected,
         inherited_source=old['source'],installation_performed=False,scientific_acceptance_claimed=False,
         raw_WFI_opened=False,tool_sha256={str(t):file_hash(t) for t in (compiler,cmake,leaks)})
+    record['publication_exception_consumed']=args.resume_publication
     report=work/'run-provenance.json';save(report,record);save(pointer,dict(report=str(report),source=commit))
     print('WORK DIRECTORY:',work,flush=True)
     env={k:v for k,v in os.environ.items() if not k.startswith(('S2_','Malloc','DYLD_')) and k not in ('ASAN_OPTIONS','UBSAN_OPTIONS','LSAN_OPTIONS')}
@@ -108,7 +160,12 @@ def main():
         item=dict(label=label,argv=list(map(str,argv)),cwd=str(cwd),native=native);record['commands'].append(item)
         if native:
             if len(record['cases'])>10 or record['planned_launches_consumed']>=16:raise RuntimeError('STOP: F3 launch cap')
-            record['planned_launches_consumed']+=1;record['native_launches_consumed']+=1
+            if args.resume_publication and label in ('blocked-output-instrumented','publication-smoke-instrumented'):
+                if record['retest_launches_consumed']>=8:raise RuntimeError('STOP: publication retests consumed')
+                record['retest_launches_consumed']+=1;item['purpose']='v2.4 approved retest'
+            else:
+                record['planned_launches_consumed']+=1;item['purpose']='original fixed F3 role'
+            record['native_launches_consumed']+=1
         log=work/(label+'.log');save(report,record);print('Running:',label,flush=True)
         with log.open('w') as stream:code=subprocess.run(item['argv'],cwd=cwd,env=child,stdout=stream,stderr=subprocess.STDOUT).returncode
         item.update(exit_status=code,log=str(log),log_sha256=file_hash(log));save(report,record)
@@ -137,32 +194,40 @@ def main():
                 code,_=run('dsym-leaks',['/usr/bin/dsymutil',binary],work,env)
                 if code:raise RuntimeError('dsymutil failed')
         record['binary_sha256']={k:file_hash(v) for k,v in builds.items()}
-        for variant in CASES:
-            for lane in ('instrumented','leaks'):
-                label=variant+'-'+lane;directory=work/label;fixture=prepare(directory,source);argv=list(ARGV);child=env.copy()
-                # The intentional failure is set before input identities are locked.
-                if variant=='missing-list':argv[argv.index('--bias')+1]='missing-bias.list'
-                if variant=='corrupt-frame':(directory/'bias0.fits').write_bytes(b'F3 deliberately corrupt selected input\n')
-                if variant=='blocked-output':
-                    block=directory/'OCAM_MB_1x1.fits';block.mkdir();(block/'preserve-marker.txt').write_text('F3 protected output blocker\n')
-                if variant in ('context-allocation','cube-allocation'):child['S2_F3_ALLOC']=variant.split('-')[0]
-                inputs={str(p.relative_to(directory)):file_hash(p) for p in directory.rglob('*') if p.is_file()}
-                case=dict(variant=variant,lane=lane,directory=str(directory),input_sha256=inputs,status='running',findings=[])
-                record['cases'].append(case);save(report,record)
-                if lane=='instrumented':child.update(ASAN_OPTIONS='detect_leaks=0:halt_on_error=1:abort_on_error=0:exitcode=86',UBSAN_OPTIONS='halt_on_error=1:print_stacktrace=0')
-                else:child.update(MallocStackLogging='lite',MallocScribble='1')
-                command=[builds[lane],*argv]
-                if lane=='leaks':command=[leaks,'-quiet','-atExit','--',*command]
-                code,output=run(label,command,directory,child,True);case['exit_status']=code
-                if code:case['findings'].append('Observer/tool exited nonzero (not a clean observed native failure)')
-                try:
-                    case['diagnostics'],findings=failure_diagnostics(output,lane,variant);case['findings'].extend(findings)
-                except Exception as error:case['findings'].append(str(error))
-                if not all(file_hash(directory/n)==h for n,h in inputs.items()):case['findings'].append('Protected fixture/blocker changed')
-                case['partial_products']={p.name:file_hash(p) for p in directory.glob('*.fits') if p.is_file() and p.name not in inputs}
-                if variant!='blocked-output' and case['partial_products']:case['findings'].append('Unexpected products before declared early failure')
-                case['status']='failed' if case['findings'] else 'passed';save(report,record);print(variant,lane,case['status'],flush=True)
-                if case['findings']:raise RuntimeError('STOP: '+label+': '+'; '.join(case['findings']))
+        sequence=(PUBLICATION_SEQUENCE if args.resume_publication else [(v,l) for v in CASES for l in ('instrumented','leaks')])
+        record['execution_sequence']=sequence;save(report,record)
+        for variant,lane in sequence:
+            label=variant+'-'+lane;directory=work/label;fixture=prepare(directory,source);argv=list(ARGV);child=env.copy()
+            # The intentional failure is set before input identities are locked.
+            if variant=='missing-list':argv[argv.index('--bias')+1]='missing-bias.list'
+            if variant=='corrupt-frame':(directory/'bias0.fits').write_bytes(b'F3 deliberately corrupt selected input\n')
+            if variant=='blocked-output':
+                block=directory/'OCAM_MB_1x1.fits';block.mkdir();(block/'preserve-marker.txt').write_text('F3 protected output blocker\n')
+            if variant in ('context-allocation','cube-allocation'):child['S2_F3_ALLOC']=variant.split('-')[0]
+            inputs={str(p.relative_to(directory)):file_hash(p) for p in directory.rglob('*') if p.is_file()}
+            case=dict(variant=variant,lane=lane,directory=str(directory),input_sha256=inputs,status='running',findings=[])
+            record['cases'].append(case);save(report,record)
+            if lane=='instrumented':child.update(ASAN_OPTIONS='detect_leaks=0:halt_on_error=1:abort_on_error=0:exitcode=86',UBSAN_OPTIONS='halt_on_error=1:print_stacktrace=0')
+            else:child.update(MallocStackLogging='lite',MallocScribble='1')
+            command=[builds[lane],*argv]
+            if lane=='leaks':command=[leaks,'-quiet','-atExit','--',*command]
+            code,output=run(label,command,directory,child,True);case['exit_status']=code
+            if code:case['findings'].append('Observer/tool exited nonzero (not a clean observed native failure)')
+            try:
+                if variant=='publication-smoke':
+                    if fixture['input_sha256']!=smoke_inputs:raise RuntimeError('Smoke fixture/expectations changed')
+                    case['products']=verify(directory,fixture['input_sha256'],2,True,['F1_CCD_A','F1_CCD_B'])
+                    if comparable(case['products'])!=comparable(smoke_reference):raise RuntimeError('Smoke canonical products differ from accepted F1')
+                    case['diagnostics'],findings=diagnostic(output,2,lane)
+                else:
+                    case['diagnostics'],findings=failure_diagnostics(output,lane,variant)
+                case['findings'].extend(findings)
+            except Exception as error:case['findings'].append(str(error))
+            if not all(file_hash(directory/n)==h for n,h in inputs.items()):case['findings'].append('Protected fixture/blocker changed')
+            case['partial_products']={p.name:file_hash(p) for p in directory.glob('*.fits') if p.is_file() and p.name not in inputs}
+            if variant!='publication-smoke' and (variant!='blocked-output' or args.resume_publication) and case['partial_products']:case['findings'].append('Unexpected products before declared early failure')
+            case['status']='failed' if case['findings'] else 'passed';save(report,record);print(variant,lane,case['status'],flush=True)
+            if case['findings']:raise RuntimeError('STOP: '+label+': '+'; '.join(case['findings']))
         record.update(status='F3-passed-awaiting-review',execution_complete=True)
     except BaseException as error:record.update(status='stopped',error=str(error));print(str(error),flush=True)
     finally:

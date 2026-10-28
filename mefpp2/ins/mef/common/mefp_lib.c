@@ -28,6 +28,7 @@ Description	:	MEF library utilities, from wfi
 #include <float.h>
 #include <limits.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "eclipse.h"
 #include "mefp_lib.h"
@@ -4627,71 +4628,89 @@ header_fail:
 
 }
 
-void mef_save(mef_bb *bb, image_t *zImage, char *what)
+/* Publication returns 0 only after checked writes and close (#127). */
+int mef_save(mef_bb *bb, image_t *zImage, char *what)
 {
-	char *name_o ;
-	qfits_header    *fh_aux;
+    char *name_o;
+    qfits_header *fh_aux;
+    int status;
 
-	name_o = mef_get_output_filename(bb,what);
-
-	e_comment(1, "saving %s [%s]",what,name_o);
-	if (bb->xtnum == 1) {
-	    /* saving primary headers after creating the value to go into key ORIGFILE */
+    name_o = NULL;
+    fh_aux = NULL;
+    status = -1;
+    if (bb == NULL || zImage == NULL || what == NULL) goto done;
+    name_o = mef_get_output_filename(bb, what);
+    if (name_o == NULL) goto done;
+    if (bb->xtnum == 1) {
         mef_create_orig_filename(bb, what);
-	    fh_aux =  mef_get_headers_for(what,bb,NULL);
-
-        e_comment(1, "Creating file %s with ORIGFILE: %s ", name_o, qfits_header_getstr(fh_aux,"ORIGFILE"));
-
-	    mef_hdrpix_dump(NULL,name_o,fh_aux,BPP_DEFAULT);
+        fh_aux = mef_get_headers_for(what, bb, NULL);
+        if (fh_aux == NULL || mef_hdrpix_dump(NULL, name_o, fh_aux, BPP_DEFAULT) != 0) goto done;
         qfits_header_destroy(fh_aux);
- 	}
-	/* saving extension headers and data */
-   	fh_aux = mef_get_headers_for(what,bb,zImage);
-   	mef_hdrpix_dump(zImage,name_o,fh_aux,BPP_DEFAULT);
-    qfits_header_destroy(fh_aux);
-    free(name_o);
-	return;
+        fh_aux = NULL;
+    }
+    fh_aux = mef_get_headers_for(what, bb, zImage);
+    if (fh_aux == NULL) goto done;
+    status = mef_hdrpix_dump(zImage, name_o, fh_aux, BPP_DEFAULT);
+done:
+    if (fh_aux != NULL) qfits_header_destroy(fh_aux);
+    if (name_o != NULL) free(name_o);
+    return status;
 }
 
-
-void mef_hdrpix_dump(image_t *image,char *filename,qfits_header *fh,int bpp)
+/* Always close the acquired stream, including after a write failure. */
+static int mef_close_output(FILE *out, int status)
 {
-	FILE		*out;
-	qfitsdumper 	qd;
-
-
-	if (image == NULL) {
-		e_comment(1,"save_mef_hdrdump: no pixel data. Dumping headers only");
-		out = fopen(filename,"w");
-		qfits_header_dump(fh,out);
-		fclose(out);
-		e_comment(1, "save_mef_hdrdump: done");
-		return;
-	}
-
-	/*
-	 *  We use the qfits routine to copy to file filename
-	 */
-	qd.filename = filename ;
-	qd.npix = image->lx*image->ly;
-#ifdef DOUBLEPIX
-	qd.ptype = PTYPE_DOUBLE;
-	qd.dbuf  = image->data ;
-#else
-	qd.ptype = PTYPE_FLOAT;
-	qd.fbuf  = image->data ;
-#endif
-	qd.out_ptype = BPP_DEFAULT ;
-
-	e_comment(1, "Appending extension headers onto file %s",filename);
-	out = fopen(filename,"a");
-	qfits_header_dump(fh,out);
-	fclose(out);
-	e_comment(1, "Done");
-	e_comment(1, "Appending pixel data onto file %s (BPP_DEFAULT=%d)",filename,bpp);
-	qfits_pixdump(&qd);
-	qfits_zeropad(filename);
-	e_comment(1, "Done");
-	return;
+    if (fflush(out) != 0 || ferror(out)) status = -1;
+    if (fclose(out) != 0) status = -1;
+    return status == 0 ? 0 : -1;
 }
 
+int mef_hdrpix_dump(image_t *image, char *filename, qfits_header *fh, int bpp)
+{
+    FILE *out;
+    qfitsdumper qd;
+    struct stat before, after;
+    off_t expected;
+    size_t remaining;
+    char padding[FITS_BLOCK_SIZE];
+    int status;
+
+    /* Retain the legacy BPP_DEFAULT storage policy; bpp was never used. */
+    (void)bpp;
+    if (filename == NULL || fh == NULL) return -1;
+    out = fopen(filename, image == NULL ? "w" : "a");
+    if (out == NULL) goto failed;
+    status = qfits_header_dump(fh, out);
+    if (mef_close_output(out, status) != 0) goto failed;
+    if (image == NULL) return 0;
+
+    qd.filename = filename;
+    qd.npix = image->lx * image->ly;
+#ifdef DOUBLEPIX
+    qd.ptype = PTYPE_DOUBLE;
+    qd.dbuf = image->data;
+#else
+    qd.ptype = PTYPE_FLOAT;
+    qd.fbuf = image->data;
+#endif
+    qd.out_ptype = BPP_DEFAULT;
+    if (stat(filename, &before) != 0 || !S_ISREG(before.st_mode)) goto failed;
+    expected = before.st_size + (off_t)qd.npix * BYTESPERPIXEL(qd.out_ptype);
+    /* The legacy pixel writer ignores some write/close errors: verify its size. */
+    if (qfits_pixdump(&qd) != 0 || stat(filename, &after) != 0 || after.st_size != expected) goto failed;
+
+    /* Identical zero padding, with checked writes/close instead of void zeropad. */
+    remaining = (size_t)((FITS_BLOCK_SIZE - expected % FITS_BLOCK_SIZE) % FITS_BLOCK_SIZE);
+    if (remaining != 0) {
+        memset(padding, 0, sizeof(padding));
+        out = fopen(filename, "a");
+        if (out == NULL) goto failed;
+        status = fwrite(padding, 1, remaining, out) == remaining ? 0 : -1;
+        if (mef_close_output(out, status) != 0) goto failed;
+    }
+    if (stat(filename, &after) != 0 || after.st_size != expected + (off_t)remaining) goto failed;
+    return 0;
+failed:
+    e_error("cannot publish FITS output [%s]", filename);
+    return -1;
+}

@@ -373,15 +373,15 @@ int mef_engine(mef_bb * bb)
 	image_t *	bias=NULL;
 	image_t 	*bpm=NULL;
 	pixelmap	*bp_map=NULL;
-	framelist *	flist ;
+	framelist *	flist = NULL ;
 	framelist	*fnames;
-	qfits_header	*fh;
-    qfits_header    *fh_ext;
-	qfits_header	*fh_aux1, *fh_aux2;
+	qfits_header	*fh = NULL;
+    qfits_header    *fh_ext = NULL;
+	qfits_header	*fh_aux1 = NULL, *fh_aux2 = NULL;
 	int		part ;
 	int		xtnum;
 	int		nxts;
-	int	*	xts ;
+	int	*	xts = NULL ;
 	int		i, j ;
 	int		zIndex ;
 	int		p;
@@ -603,7 +603,7 @@ int mef_engine(mef_bb * bb)
                 free(bb->name_bpm);
                 bb->name_bpm = strdup(cval);
                 e_comment(1, "mef_engine: using BPM file %s with ORIGFILE: %s", bb->name_bpm, bb->orig_bpm);
-                qfits_header_destroy(fh);
+                qfits_header_destroy(fh); fh = NULL;
             }
         }
 
@@ -627,7 +627,7 @@ int mef_engine(mef_bb * bb)
                 }
                 free(bb->orig_bias);
                 bb->orig_bias = strdup(qfits_header_getstr(fh,"ORIGFILE"));
-                qfits_header_destroy(fh);
+                qfits_header_destroy(fh); fh = NULL;
                 e_comment(1,"mef_engine: using bias FITS frame with ORIGFILE: %s", bb->orig_bias);
 
 
@@ -636,7 +636,7 @@ int mef_engine(mef_bb * bb)
 
                     bb->xtname =  strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
                     e_comment(1,"mef_engine: working on extension %s", bb->xtname);
-                    qfits_header_destroy(fh_ext);
+                    qfits_header_destroy(fh_ext); fh_ext = NULL;
                 }
     
                 bias = mef_load_ext(bb->name_bias,bb->xtnum);
@@ -665,12 +665,12 @@ int mef_engine(mef_bb * bb)
 
                             bb->xtname =  strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
                             e_comment(1,"mef_engine: working on extension %s", bb->xtname);
-                            qfits_header_destroy(fh_ext);
+                            qfits_header_destroy(fh_ext); fh_ext = NULL;
                         }
                     }
                     e_comment(1,"Frame %d: %s",i,bb->bias_frame_name[i]);
                 }
-                framelist_del(flist); 
+                framelist_del(flist); flist = NULL;
 
 
 		        bias = mef_build_cal(bb, "bias");
@@ -680,7 +680,7 @@ int mef_engine(mef_bb * bb)
                 free(xts); return -1 ;
 		        }
 		        if (bb->bias_save) {
-			    mef_save(bb,bias,"bias");
+			    if (mef_save(bb,bias,"bias") != 0) goto publication_failed;
 		        }
 		        e_comment(1,"       bias_median = %f  bias_nplanes = %d",\
 				        bb->bias_median[j], bb->bias_nplanes[j]);
@@ -711,7 +711,7 @@ int mef_engine(mef_bb * bb)
                     free(bb->orig_bpm);
                     bb->orig_bpm = strdup(qfits_header_getstr(fh,"ORIGFILE"));
                 }
-                qfits_header_destroy(fh);
+                qfits_header_destroy(fh); fh = NULL;
 
                 /* we get the extension name from the extension headers */
                 if ((fh_ext = qfits_header_readext(bb->name_bpm, bb->xtnum)) == NULL) {
@@ -719,7 +719,7 @@ int mef_engine(mef_bb * bb)
                     free(xts); return -1;
                 }
                 bpm_xtname = strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
-                qfits_header_destroy(fh_ext);
+                qfits_header_destroy(fh_ext); fh_ext = NULL;
 
                 if (bb->xtname == NULL) {
 
@@ -761,15 +761,15 @@ int mef_engine(mef_bb * bb)
                         bpm_xtname =  strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
                         e_comment(1,"mef_engine: working on extension %s -- should be: %s", bpm_xtname, bb->xtname);
                     }
-                    qfits_header_destroy(fh_ext);
+                    qfits_header_destroy(fh_ext); fh_ext = NULL;
                 }
 
 
                 bp_map = (pixelmap *) mef_build_bpm(bb,bias);
-                framelist_del(flist);
+                framelist_del(flist); flist = NULL;
 		        if (bp_map == NULL) {
 			        e_error("in BPM production: aborting");
-			        if (bias != NULL) image_del(bias);
+			        if (bias != NULL) image_del(bias); bias = NULL;
                         free(xts); return -1;
 		        } else {
                     e_comment(1,"BPM created");
@@ -797,7 +797,7 @@ int mef_engine(mef_bb * bb)
                     }
                     free(bb->orig_dome);
                     bb->orig_dome = strdup(qfits_header_getstr(fh,"ORIGFILE"));
-                    qfits_header_destroy(fh);
+                    qfits_header_destroy(fh); fh = NULL;
 
 
                     /* we check the extension name 
@@ -807,7 +807,7 @@ int mef_engine(mef_bb * bb)
                         free(xts); return -1;
                     }   
                     dome_xtname = strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
-                    qfits_header_destroy(fh_ext);
+                    qfits_header_destroy(fh_ext); fh_ext = NULL;
                     if (bb->xtname == NULL) {
                         e_comment(1, "mef_engine: EXTNAME should not be NULL at this point", dome_xtname);
                     } else {
@@ -851,7 +851,7 @@ int mef_engine(mef_bb * bb)
 
                                 dome_xtname =  strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
                                 e_comment(1,"mef_engine: working on dome flat field extension %s -- should be %s", dome_xtname, bb->xtname);
-                                qfits_header_destroy(fh_ext);
+                                qfits_header_destroy(fh_ext); fh_ext = NULL;
                             }
                         }
 
@@ -864,7 +864,7 @@ int mef_engine(mef_bb * bb)
                     free(xts); return -1 ;
 		            }
 		            if (bb->dome_save) {
-		   	            mef_save(bb, flat_dome, "dome");
+                if (mef_save(bb, flat_dome, "dome") != 0) goto publication_failed;
 		            }
 		            e_comment(1,"       dome_median = %f  dome_nplanes = %d",\
 				    bb->dome_median[j], bb->dome_nplanes[j]);
@@ -877,7 +877,7 @@ int mef_engine(mef_bb * bb)
                     free(bb->individual_frame_avg); bb->individual_frame_avg = NULL;
                     free(bb->individual_frame_median); bb->individual_frame_median = NULL;
                     free(bb->individual_frame_sigma); bb->individual_frame_sigma = NULL;
-                    framelist_del(flist);
+                    framelist_del(flist); flist = NULL;
 
 		        }
 		    } else {
@@ -909,7 +909,7 @@ int mef_engine(mef_bb * bb)
                     }
                     free(bb->orig_sky);
                     bb->orig_sky = strdup(qfits_header_getstr(fh,"ORIGFILE"));
-                    qfits_header_destroy(fh);
+                    qfits_header_destroy(fh); fh = NULL;
                     e_comment(1,"mef_engine: using sky FITS frame with ORIGFILE: %s", bb->orig_sky);
 
                     /* we check the extension name 
@@ -919,7 +919,7 @@ int mef_engine(mef_bb * bb)
                         free(xts); return -1;
                     }  
                     sky_xtname = strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
-                    qfits_header_destroy(fh_ext);
+                    qfits_header_destroy(fh_ext); fh_ext = NULL;
                     if (bb->xtname == NULL) {
                         e_comment(1, "mef_engine: EXTNAME should not be NULL at this point", sky_xtname);
                     } else {
@@ -958,24 +958,24 @@ int mef_engine(mef_bb * bb)
 
                                 sky_xtname =  strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
                                 e_comment(1,"mef_engine: working on sky flat field extension %s -- should be %s", sky_xtname, bb->xtname);
-                                qfits_header_destroy(fh_ext);
+                                qfits_header_destroy(fh_ext); fh_ext = NULL;
                             }
                         }
 
 
                         e_comment(1,"Frame %d: %s",i,bb->sky_frame_name[i]);
                     }
-                    framelist_del(flist);
+                    framelist_del(flist); flist = NULL;
 
 
 		           flat_sky = mef_build_cal(bb, "sky");
 		           if (flat_sky==NULL) {
 			           e_error("in sky flat production: aborting");
-			           image_del(flat_dome);
+			           image_del(flat_dome); flat_dome = NULL;
                        free(xts); return -1 ;
 		           }
 		           if (bb->sky_save) {
-		   	       mef_save(bb, flat_sky, "sky");
+                if (mef_save(bb, flat_sky, "sky") != 0) goto publication_failed;
 		           }
 		           e_comment(1,"       sky_median = %f  sky_nplanes = %d",\
 		    		bb->sky_median[j], bb->sky_nplanes[j]);
@@ -990,7 +990,7 @@ int mef_engine(mef_bb * bb)
               }
               free(bb->orig_mff);
               bb->orig_mff = strdup(qfits_header_getstr(fh,"ORIGFILE"));
-              qfits_header_destroy(fh);
+              qfits_header_destroy(fh); fh = NULL;
               e_comment(1,"mef_engine: using master flat FITS frame with ORIGFILE: %s", bb->orig_mff);
 		    }
 		}
@@ -1012,7 +1012,7 @@ int mef_engine(mef_bb * bb)
                 }
                 free(bb->orig_mff);
                 bb->orig_mff = strdup(qfits_header_getstr(fh,"ORIGFILE"));
-                qfits_header_destroy(fh);
+                qfits_header_destroy(fh); fh = NULL;
                 e_comment(1,"mef_engine: using bias FITS frame with ORIGFILE: %s", bb->orig_mff);
 
 
@@ -1023,7 +1023,7 @@ int mef_engine(mef_bb * bb)
                     free(xts); return -1;
                 }  
                 mff_xtname = strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
-                qfits_header_destroy(fh_ext);
+                qfits_header_destroy(fh_ext); fh_ext = NULL;
                 if (bb->xtname == NULL) {
                     e_comment(1, "mef_engine: EXTNAME should not be NULL at this point");
                 } else { 
@@ -1048,9 +1048,9 @@ int mef_engine(mef_bb * bb)
 		    	    e_error("combining dome and sky to make flat");
                     free(xts); return -1 ;
 		        }
-		        mef_save(bb, flat_combined, "combined");
-		        if (flat_dome != NULL) { image_del(flat_dome);}
-		        if (flat_sky != NULL) {image_del(flat_sky);}
+		        if (mef_save(bb, flat_combined, "combined") != 0) goto publication_failed;
+		        if (flat_dome != NULL) { image_del(flat_dome); flat_dome = NULL;}
+		        if (flat_sky != NULL) {image_del(flat_sky); flat_sky = NULL;}
 		    }
 		}
 
@@ -1097,7 +1097,7 @@ int mef_engine(mef_bb * bb)
                             free(xts); return -1;
                         }
                         sci_xtname = strdup(qfits_header_getstr(fh_ext, "EXTNAME"));
-                        qfits_header_destroy(fh_ext);
+                        qfits_header_destroy(fh_ext); fh_ext = NULL;
                         if (bb->xtname == NULL) {
                             e_comment(1, "mef_engine: EXTNAME should not be NULL at this point");
                         } else {
@@ -1107,7 +1107,7 @@ int mef_engine(mef_bb * bb)
 		               e_comment(1,"Frame %d: %s",i,bb->science_frame_name[i]);
                        free(sci_xtname); sci_xtname = NULL;
                     }
-	            framelist_del(flist); 
+	            framelist_del(flist); flist = NULL;
 	        }
 
 		/* 
@@ -1118,9 +1118,9 @@ int mef_engine(mef_bb * bb)
 		if (bb->sat_check) {
 		   if (mef_saturation_check(prep, bb)!=0) {
 			e_error("in saturation check: aborting");
-			image_del(bias);
-			image_del(flat_combined);
-			cube_del(prep);
+			image_del(bias); bias = NULL;
+			image_del(flat_combined); flat_combined = NULL;
+			cube_del(prep); prep = NULL;
             free(xts); return -1; /* FSE 2024-05-20 */
 		   }
 		} else {
@@ -1138,13 +1138,13 @@ int mef_engine(mef_bb * bb)
 		 e_comment(0, "--> [%d/%d] Part %d of %d: bias subtraction", xts[j], nxts, part, ALGPARTS);
 		 if (bias == NULL) {
 		     e_error("no  bias frame [%s]", bb->name_bias);
-		     cube_del(prep);
+		     cube_del(prep); prep = NULL;
              free(xts); return -1 ;
 	         }
 		 if (cube_sub_im(prep, bias)!=0) {
 	             e_error("in bias subtraction: aborting");
-		     image_del(bias);
-		     cube_del(prep);
+		     image_del(bias); bias = NULL;
+		     cube_del(prep); prep = NULL;
              free(xts); return -1 ;
 		 }
 
@@ -1154,13 +1154,13 @@ int mef_engine(mef_bb * bb)
 		 e_comment(0, "--> [%d/%d] Part %d of %d: flatfield division", xts[j], nxts, part, ALGPARTS);
 		 if (flat_combined == NULL) {
 		     e_error("NULL pointer to  flat-field frame");
-		     cube_del(prep);
+		     cube_del(prep); prep = NULL;
              free(xts); return -1 ;
 		 }
 		 if (cube_div_im(prep, flat_combined)!=0) {
 	             e_error("in flat-field division: aborting");
-		     image_del(flat_combined);
-		     cube_del(prep);
+		     image_del(flat_combined); flat_combined = NULL;
+		     cube_del(prep); prep = NULL;
              free(xts); return -1 ;
 		 }
 
@@ -1288,8 +1288,8 @@ int mef_engine(mef_bb * bb)
                sprintf(cval, "%5.3f", bb->sat_max);
                qfits_header_add_after(fh,"SATLEVEL", "SATNMAX", cval, "Max fraction of pixel saturated", NULL);
 
-		       mef_hdrpix_dump(NULL,name_o,fh,BPP_DEFAULT);
-		       qfits_header_destroy(fh);
+		       if (mef_hdrpix_dump(NULL,name_o,fh,BPP_DEFAULT) != 0) goto publication_failed;
+		       qfits_header_destroy(fh); fh = NULL;
 		    }
 		    e_comment(1, "reading extension header of file %s",bb->science_frame_name[p]);
 		    fh_aux1 = mef_header_ext(bb->science_frame_name[p],bb);
@@ -1368,29 +1368,29 @@ int mef_engine(mef_bb * bb)
 
 		    e_comment(1, "dumping extension headers and pixel data of extension %d calibrated %s frame",
 				    xts[j],bb->science_frame_name[p]);
-		    mef_hdrpix_dump(prep->plane[p],name_o,fh,BPP_DEFAULT);
+		    if (mef_hdrpix_dump(prep->plane[p],name_o,fh,BPP_DEFAULT) != 0) goto publication_failed;
 		    e_comment(1, "done.");
 
-		    qfits_header_destroy(fh);
-		    qfits_header_destroy(fh_aux1);
-		    qfits_header_destroy(fh_aux2);
+		    qfits_header_destroy(fh); fh = NULL;
+		    qfits_header_destroy(fh_aux1); fh_aux1 = NULL;
+		    qfits_header_destroy(fh_aux2); fh_aux2 = NULL;
 		 }
-		 cube_del(prep);
+		 cube_del(prep); prep = NULL;
 	    }
 
 	    if (bias != NULL) {
 		    e_comment(1, "deallocating bias memory");
-		    image_del(bias);
+		    image_del(bias); bias = NULL;
             e_comment(1, "done.");
 	    }
 	    if (bp_map != NULL) {
 		    e_comment(1, "deallocating bp_map  memory");
-		    pixelmap_del(bp_map);
+		    pixelmap_del(bp_map); bp_map = NULL;
             e_comment(1, "done.");
 	    }
 	    if (flat_combined != NULL) {
 		    e_comment(1, "deallocating flat_combined memory");
-		    image_del(flat_combined);
+		    image_del(flat_combined); flat_combined = NULL;
 		    e_comment(1, "done");
 	    }
         /* Last use of per-extension metadata after every product is published (#124). */
@@ -1405,6 +1405,28 @@ int mef_engine(mef_bb * bb)
     free(xts);
 	e_comment(0, "--> STOP  MEF calibration engine");
 	return 0 ;
+
+publication_failed:
+    /* Only new publication errors enter here; the caller still owns bb. */
+    if (fh != NULL) qfits_header_destroy(fh);
+    if (fh_ext != NULL) qfits_header_destroy(fh_ext);
+    if (fh_aux1 != NULL) qfits_header_destroy(fh_aux1);
+    if (fh_aux2 != NULL) qfits_header_destroy(fh_aux2);
+    if (flist != NULL) framelist_del(flist);
+    if (prep != NULL) cube_del(prep);
+    if (bias != NULL) image_del(bias);
+    if (bp_map != NULL) pixelmap_del(bp_map);
+    if (flat_dome != NULL) image_del(flat_dome);
+    if (flat_sky != NULL) image_del(flat_sky);
+    if (flat_combined != NULL) image_del(flat_combined);
+    free(bias_xtname);
+    free(bpm_xtname);
+    free(dome_xtname);
+    free(sky_xtname);
+    free(mff_xtname);
+    free(sci_xtname);
+    free(xts);
+    return -1;
 }
 #undef ALGPARTS
 
