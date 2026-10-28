@@ -1,0 +1,20 @@
+{
+  "status": "passed-header-inspection-input-lock-pending",
+  "archive_sha256": "1d6a1fceff33ae558b3779805136fe3a58c9fb6979555f051c3d799983999624",
+  "inventory_sha256": "6b98aac7a649dcfde328965aeb159f9ffa7540859ece7eaef0f26beb5e1ad5fb",
+  "file_records": 272,
+  "header_errors": 0,
+  "reported_stat_preservation_passed": true,
+  "selected_unique_files": 11,
+  "selected_raw_gib": 1.4500772953033447,
+  "roles": {
+    "bias": 3,
+    "bpm": 3,
+    "dome": 3,
+    "sky": 3,
+    "science": 1
+  },
+  "consistent_eight_extension_order": true,
+  "content_hashes_locked": false,
+  "native_launches_consumed": 0
+}

@@ -1,0 +1,1283 @@
+{
+  "schema_version": 1,
+  "purpose": "One fixed F2 Orion B-band input selection; content identity/readiness lock pending actual Mac",
+  "source_inventory_sha256": "6b98aac7a649dcfde328965aeb159f9ffa7540859ece7eaef0f26beb5e1ad5fb",
+  "source_inventory_archive_sha256": "1d6a1fceff33ae558b3779805136fe3a58c9fb6979555f051c3d799983999624",
+  "source_inventory_attachment": "libfile_b0d46fc730d0819184a9d945632d260b",
+  "source_inventory_path": "/Users/fselman/Software/build/wenu-imaging/mac-integrated-wfi-inventory-14319kln/run-provenance.json",
+  "source_dataset": "Orion, 9-11 December 2001",
+  "filter": "BB#B/99_ESO842",
+  "binning": [
+    1,
+    1
+  ],
+  "readout": "normal",
+  "extension_order": [
+    "WIN1.CHIP1.OUT1",
+    "WIN1.CHIP2.OUT1",
+    "WIN1.CHIP3.OUT1",
+    "WIN1.CHIP4.OUT1",
+    "WIN1.CHIP8.OUT1",
+    "WIN1.CHIP7.OUT1",
+    "WIN1.CHIP6.OUT1",
+    "WIN1.CHIP5.OUT2"
+  ],
+  "paf_source": "mefpp2/ins/mef/config/wfi.paf",
+  "paf_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+  "roles": {
+    "bias": [
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:25:32.398.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:26:28.968.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:27:24.654.fits"
+    ],
+    "bpm": [
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-09T20:54:42.040.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:54:11.877.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:55:17.546.fits"
+    ],
+    "dome": [
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:54:11.877.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:55:17.546.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:56:22.481.fits"
+    ],
+    "sky": [
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:09:44.890.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:11:22.043.fits",
+      "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:13:07.835.fits"
+    ],
+    "science": [
+      "/Users/fselman/Pictures/WFI/raw_orion/sci/WFI.2001-12-11T02:01:24.777.fits"
+    ]
+  },
+  "files": {
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:25:32.398.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:25:32.398.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:25:32.398.fits",
+      "size": 141546240,
+      "mtime_ns": 1721187700241424597,
+      "inode": 15386539,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_Dark.fits",
+        "DATE-OBS": "2001-12-10T19:25:32.397",
+        "MJD-OBS": 52253.80940275,
+        "EXPTIME": 0.011,
+        "OBJECT": "BIAS",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "BIAS",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123316
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:26:28.968.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:26:28.968.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:26:28.968.fits",
+      "size": 141546240,
+      "mtime_ns": 1721186419008260991,
+      "inode": 15386540,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_Dark.1.fits",
+        "DATE-OBS": "2001-12-10T19:26:28.967",
+        "MJD-OBS": 52253.8100575,
+        "EXPTIME": 0.0104,
+        "OBJECT": "BIAS",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "BIAS",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123316
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:27:24.654.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:27:24.654.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:27:24.654.fits",
+      "size": 141546240,
+      "mtime_ns": 1721183542733670730,
+      "inode": 15386541,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_Dark.2.fits",
+        "DATE-OBS": "2001-12-10T19:27:24.653",
+        "MJD-OBS": 52253.81070201,
+        "EXPTIME": 0.0101,
+        "OBJECT": "BIAS",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "BIAS",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123316
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-09T20:54:42.040.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-09T20:54:42.040.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-09T20:54:42.040.fits",
+      "size": 141546240,
+      "mtime_ns": 1721183693796800768,
+      "inode": 15386534,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_FlatDomeIma.14.fits",
+        "DATE-OBS": "2001-12-09T20:54:42.040",
+        "MJD-OBS": 52252.87131991,
+        "EXPTIME": 9.8829,
+        "OBJECT": "FLAT,SCREEN",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "FLAT,SCREEN",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.D-0273(A)",
+        "ESO OBS ID": 100123276
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:54:11.877.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:54:11.877.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:54:11.877.fits",
+      "size": 141546240,
+      "mtime_ns": 1721184076415306095,
+      "inode": 15386552,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_FlatDomeIma.5.fits",
+        "DATE-OBS": "2001-12-10T19:54:11.876",
+        "MJD-OBS": 52253.82930413,
+        "EXPTIME": 7.3738,
+        "OBJECT": "FLAT,SCREEN",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "FLAT,SCREEN",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123319
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:55:17.546.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:55:17.546.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:55:17.546.fits",
+      "size": 141546240,
+      "mtime_ns": 1721183481281496592,
+      "inode": 15386553,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_FlatDomeIma.6.fits",
+        "DATE-OBS": "2001-12-10T19:55:17.545",
+        "MJD-OBS": 52253.83006419,
+        "EXPTIME": 7.3741,
+        "OBJECT": "FLAT,SCREEN",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "FLAT,SCREEN",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123319
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:56:22.481.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:56:22.481.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:56:22.481.fits",
+      "size": 141546240,
+      "mtime_ns": 1721183186732985771,
+      "inode": 15386554,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_FlatDomeIma.7.fits",
+        "DATE-OBS": "2001-12-10T19:56:22.480",
+        "MJD-OBS": 52253.83081575,
+        "EXPTIME": 7.374,
+        "OBJECT": "FLAT,SCREEN",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "FLAT,SCREEN",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123319
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:09:44.890.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:09:44.890.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:09:44.890.fits",
+      "size": 141546240,
+      "mtime_ns": 1721187817261524675,
+      "inode": 15386570,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_FlatSkyIma.16.fits",
+        "DATE-OBS": "2001-12-11T00:09:44.890",
+        "MJD-OBS": 52254.00676956,
+        "EXPTIME": 26.6883,
+        "OBJECT": "FLAT,SKY",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "FLAT,SKY",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123337
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:11:22.043.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:11:22.043.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:11:22.043.fits",
+      "size": 141546240,
+      "mtime_ns": 1721182759140755779,
+      "inode": 15386571,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_FlatSkyIma.17.fits",
+        "DATE-OBS": "2001-12-11T00:11:22.043",
+        "MJD-OBS": 52254.00789402,
+        "EXPTIME": 37.5112,
+        "OBJECT": "FLAT,SKY",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "FLAT,SKY",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123337
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:13:07.835.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:13:07.835.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:13:07.835.fits",
+      "size": 141546240,
+      "mtime_ns": 1721183770848122570,
+      "inode": 15386574,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_FlatSkyIma.18.fits",
+        "DATE-OBS": "2001-12-11T00:13:07.834",
+        "MJD-OBS": 52254.00911846,
+        "EXPTIME": 54.4796,
+        "OBJECT": "FLAT,SKY",
+        "ESO DPR CATG": "CALIB",
+        "ESO DPR TYPE": "FLAT,SKY",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123337
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    },
+    "/Users/fselman/Pictures/WFI/raw_orion/sci/WFI.2001-12-11T02:01:24.777.fits": {
+      "path": "/Users/fselman/Pictures/WFI/raw_orion/sci/WFI.2001-12-11T02:01:24.777.fits",
+      "resolved_path": "/Users/fselman/Pictures/WFI/raw_orion/sci/WFI.2001-12-11T02:01:24.777.fits",
+      "size": 141546240,
+      "mtime_ns": 1721176135400118818,
+      "inode": 15344053,
+      "primary": {
+        "INSTRUME": "WFI",
+        "TELESCOP": "MPI-2.2",
+        "ORIGFILE": "WFI_Ima.17.fits",
+        "DATE-OBS": "2001-12-11T02:01:24.777",
+        "MJD-OBS": 52254.08431455,
+        "EXPTIME": 89.9177,
+        "OBJECT": "Trapezium-core",
+        "ESO DPR CATG": "SCIENCE",
+        "ESO DPR TYPE": "OBJECT",
+        "ESO DPR TECH": "IMAGE",
+        "ESO INS FILT1 NAME": "BB#B/99_ESO842",
+        "ESO INS FILT1 ID": "842",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1,
+        "ESO DET READ CLOCK": "mosaic read (ordered)",
+        "ESO DET READ SPEED": "normal",
+        "ESO OBS PROG ID": "68.C-0342(A)",
+        "ESO OBS ID": 100123345
+      },
+      "extensions": [
+        {
+          "index": 1,
+          "EXTNAME": "WIN1.CHIP1.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 2,
+          "EXTNAME": "WIN1.CHIP2.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 3,
+          "EXTNAME": "WIN1.CHIP3.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 4,
+          "EXTNAME": "WIN1.CHIP4.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": -4097.0
+        },
+        {
+          "index": 5,
+          "EXTNAME": "WIN1.CHIP8.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -6089.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 6,
+          "EXTNAME": "WIN1.CHIP7.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -4043.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 7,
+          "EXTNAME": "WIN1.CHIP6.OUT1",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": -1997.0,
+          "CRPIX2": 1.0
+        },
+        {
+          "index": 8,
+          "EXTNAME": "WIN1.CHIP5.OUT2",
+          "BITPIX": 16,
+          "NAXIS": 2,
+          "NAXIS1": 2142,
+          "NAXIS2": 4128,
+          "CRPIX1": 49.0,
+          "CRPIX2": 1.0
+        }
+      ],
+      "header_warnings": [],
+      "stat_unchanged": true
+    }
+  },
+  "unique_files": 11,
+  "total_raw_bytes": 1557008640,
+  "notes": [
+    "BPM uses three same-filter dome exposures spanning two nominal exposure groups; the existing robust constructor supports lamp sequences and fits pixel intensity against frame median, not exposure time.",
+    "One earlier dome frame is used for the BPM; all selected data share the same 2001 instrument configuration, binning, readout and extension mapping.",
+    "Content hashes and measured intensity separation remain pending the read-only Mac input lock.",
+    "No May 2003 BPM material, prebuilt master products, other filters, Doradus duplicate aliases or 2x2 data are selected."
+  ]
+}

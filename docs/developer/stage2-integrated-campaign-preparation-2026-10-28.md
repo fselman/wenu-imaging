@@ -44,3 +44,5 @@ for bias/dome/sky, `mef_build_bpm`, `mef_ff_combine`, science correction and sav
 sequentially by extension. The campaign will observe those calls and cleanup,
 retaining intentionally live calibrations between stages. Native processing and
 failure injections have not run. No numerical source correction is made here.
+
+Update: all 272 actual WFI header/stat records are inspected with zero header errors and reported source-stat preservation. The fixed selection is 11 unique Orion B-band files, all 1x1/normal/eight matching extensions, using 3 bias, 3 BPM, 3 dome, 3 sky and 1 science input. Two BPM frames also appear in the dome list. Exact selected-file hashes and small physical-pixel readiness samples await the Mac input-lock helper; no native launch has occurred. See stage2-wfi-input-selection-2026-10-28.md.
