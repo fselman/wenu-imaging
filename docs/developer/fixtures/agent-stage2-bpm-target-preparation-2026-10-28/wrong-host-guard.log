@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/575604f10f8d/bpm-target-preparation/mefpp2/tests/qualify_bpm_bias_chapman3.py", line 374, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspace/scratch/575604f10f8d/bpm-target-preparation/mefpp2/tests/qualify_bpm_bias_chapman3.py", line 35, in main
+    raise RuntimeError("STOP: run on Chapman3")
+RuntimeError: STOP: run on Chapman3

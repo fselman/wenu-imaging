@@ -1,0 +1,45 @@
+{
+  "purpose": "Prepare bounded target orchestration without native execution",
+  "status": "passed",
+  "native_execution": false,
+  "commands": [
+    {
+      "label": "python-syntax",
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "-m",
+        "py_compile",
+        "mefpp2/tests/qualify_bpm_bias_chapman3.py"
+      ],
+      "exit_status": 0,
+      "expected_result": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "help",
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "mefpp2/tests/qualify_bpm_bias_chapman3.py",
+        "--help"
+      ],
+      "exit_status": 0,
+      "expected_result": true,
+      "log_sha256": "0dc19d2f8a0b310cdced7db56034f99726a7e2a4ac93d395170a0d452a484edd"
+    },
+    {
+      "label": "wrong-host-guard",
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "mefpp2/tests/qualify_bpm_bias_chapman3.py",
+        "--compiler",
+        "/usr/bin/gcc",
+        "--cmake",
+        "/usr/bin/true"
+      ],
+      "exit_status": 1,
+      "expected_result": true,
+      "log_sha256": "3ffd4fcca7641ccdbf8fd68289cc75dac871574365ca044417b8e3a6a324d296"
+    }
+  ],
+  "runner_sha256": "63eda7e9af9fa797474b4c6f4f63c476313bd22765ed220ec8b95a2faf6379cb"
+}
