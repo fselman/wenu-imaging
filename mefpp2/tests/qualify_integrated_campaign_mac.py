@@ -75,12 +75,50 @@ def diagnostic(output, detectors, lane):
     return result,findings
 
 
+
+def begin_attempt(parent, pointer, commit, protected, previous_path=None):
+    """Retain the first failure and enter only its specifically reviewed repair round."""
+    if previous_path is None:
+        with pointer.open('x') as stream:json.dump(dict(status='initializing',source=commit),stream)
+        return Path(tempfile.mkdtemp(prefix='mac-stage2-integrated-',dir=parent)),None
+    previous_path=previous_path.resolve(strict=True)
+    original=parent/'mac-stage2-integrated-du1sqj06/run-provenance.json'
+    if previous_path!=original.resolve(strict=True):raise RuntimeError('STOP: unexpected failed campaign')
+    active=json.loads(pointer.read_text())
+    if Path(active['report']).resolve()!=previous_path:raise RuntimeError('STOP: active campaign already advanced')
+    previous=json.loads(previous_path.read_text())
+    cases=previous['cases']
+    if (previous['source']['commit']!='fa2e5c2f508e18d18981b8e987b86cc4a411c1df'
+        or previous['status']!='stopped' or previous['execution_complete']
+        or previous['native_launches_consumed']!=1 or previous['correction_rounds_consumed']!=0
+        or len(cases)!=1 or cases[0]['fixed_row']!='F1' or cases[0]['lane']!='ordinary'
+        or cases[0]['status']!='failed' or cases[0]['exit_status']!=0
+        or cases[0]['findings']!=['Known-answer array differs: CALIB.MASTER_DOME_FLAT extension 2']):
+        raise RuntimeError('STOP: parent is not the reviewed F1 failure')
+    if previous['protected_sha256']!=protected:raise RuntimeError('STOP: protected installation identity changed')
+    for key in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved'):
+        if not previous[key]:raise RuntimeError('STOP: parent preservation finding')
+    # Retain/hash original evidence before creating a separate correction directory.
+    for command in previous['commands']:
+        if file_hash(Path(command['log']))!=command['log_sha256']:raise RuntimeError('STOP: original log changed')
+    root=Path(cases[0]['directory'])
+    for name,h in cases[0]['input_sha256'].items():
+        if file_hash(root/name)!=h:raise RuntimeError('STOP: original fixture input changed')
+    work=previous_path.parent/'correction-round-1'
+    work.mkdir(exist_ok=False)
+    return work,dict(report=str(previous_path),sha256=file_hash(previous_path),
+                     source=previous['source'],planned_launches=1,retest_launches=0,
+                     reviewed_defect=121,correction_round=1,
+                     input_sha256=cases[0]['input_sha256'])
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--compiler',type=Path,required=True)
     parser.add_argument('--sdk',type=Path,required=True)
     parser.add_argument('--cmake',type=Path,required=True)
     parser.add_argument('--input-lock',type=Path,required=True)
+    parser.add_argument('--resume-correction',type=Path,help='The reviewed F1 failure report; enters global repair round 1 only')
     args=parser.parse_args()
     # Guards and input/reference lock: no native launch occurs in this section.
     if platform.system()!='Darwin' or platform.node().split('.')[0]!='MC02VV0HPHTDG':
@@ -122,9 +160,8 @@ def main():
         controls[str(p.relative_to(repo))]=file_hash(p)
     parent=Path.home()/'Software/build/wenu-imaging';parent.mkdir(parents=True,exist_ok=True)
     pointer=parent/'stage2-integrated-active-campaign.json'
-    # Exclusive pointer prevents a second invocation silently restarting the fixed budget.
-    with pointer.open('x') as stream:json.dump(dict(status='initializing',source=commit),stream)
-    work=Path(tempfile.mkdtemp(prefix='mac-stage2-integrated-',dir=parent))
+    # A correction continues the original campaign; it cannot reset its counters.
+    work,previous=begin_attempt(parent,pointer,commit,protected,args.resume_correction)
     provenance=work/'run-provenance.json'
     record=dict(schema_version=1,project='wenu-imaging',source=dict(commit=commit,dirty=False),
                 created_utc=datetime.now(timezone.utc).isoformat(),status='running',execution_complete=False,
@@ -135,6 +172,9 @@ def main():
                 installation_performed=False,scientific_acceptance_claimed=False,
                 remaining_fixed_rows=['F3','F4','F5'],limits=['F1/F2 only; no full Stage 2 acceptance',
                 '#116 remains unresolved; exact descriptor gates active','No large-file mmap/swap stress'])
+    record.update(previous_attempt=previous,planned_launches_consumed=1 if previous else 0,
+                  retest_launches_consumed=0,native_launches_consumed=1 if previous else 0,
+                  correction_rounds_consumed=1 if previous else 0)
     save(provenance,record);save(pointer,dict(report=str(provenance),source=commit))
     print('WORK DIRECTORY:',work,flush=True)
     env=os.environ.copy()
@@ -147,7 +187,12 @@ def main():
         item=dict(label=label,argv=list(map(str,argv)),cwd=str(cwd),native=native)
         record['commands'].append(item)
         if native:
-            if record['native_launches_consumed']>=6:raise RuntimeError('STOP: F1/F2 launch budget exhausted')
+            if previous and label=='F1-ordinary':
+                if record['retest_launches_consumed']!=0:raise RuntimeError('STOP: correction retest already consumed')
+                record['retest_launches_consumed']+=1;item['purpose']='correction-round-1 affected F1 retry'
+            else:
+                if record['planned_launches_consumed']>=6:raise RuntimeError('STOP: F1/F2 planned launch budget exhausted')
+                record['planned_launches_consumed']+=1;item['purpose']='fixed planned row'
             record['native_launches_consumed']+=1
         save(provenance,record);print('Running:',label,flush=True)
         log=work/(label+'.log')
@@ -220,6 +265,7 @@ def main():
                 if tiny:
                     fixture=prepare(directory,source)
                     inputs=fixture['input_sha256'];names=['F1_CCD_A','F1_CCD_B'];detectors=2
+                    if previous and inputs!=previous['input_sha256']:raise RuntimeError('STOP: correction fixture/reference changed')
                 else:
                     directory.mkdir();inputs={};names=selection['extension_order'];detectors=8
                     paf=source/selection['paf_source']
@@ -261,10 +307,12 @@ def main():
         record['protected_files_unchanged']=all(file_hash(Path(p))==h for p,h in protected.items())
         record['checkout_unchanged']=git('rev-parse','HEAD')==commit and not git('status','--porcelain','--untracked-files=all')
         record['raw_files_preserved']=all([Path(p).stat().st_size,Path(p).stat().st_mtime_ns,Path(p).stat().st_ino]==st and file_hash(Path(p))==lock['input_files'][p]['sha256'] for p,st in rawstats.items())
+        record['previous_report_unchanged']=not previous or file_hash(Path(previous['report']))==previous['sha256']
         record['finished_utc']=datetime.now(timezone.utc).isoformat()
-        if not all(record[k] for k in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved')):record['status']='stopped-preservation-finding'
+        if not all(record[k] for k in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved','previous_report_unchanged')):record['status']='stopped-preservation-finding'
         save(provenance,record)
-        print('NATIVE LAUNCHES:',record['native_launches_consumed'],'/ 19; correction rounds: 0 / 2',flush=True)
+        print('PLANNED LAUNCHES:',record['planned_launches_consumed'],'/ 19; correction retests:',record['retest_launches_consumed'],flush=True)
+        print('TOTAL NATIVE LAUNCHES:',record['native_launches_consumed'],'; correction rounds:',record['correction_rounds_consumed'],'/ 2',flush=True)
         print('STATUS:',record['status'],flush=True);print('REPORT:',provenance,flush=True)
     return 0 if record['execution_complete'] and record['status']=='F1-F2-passed-awaiting-review' else 1
 

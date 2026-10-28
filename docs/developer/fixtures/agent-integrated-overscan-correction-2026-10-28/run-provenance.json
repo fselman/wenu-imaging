@@ -1,0 +1,23 @@
+{
+  "status": "correction-prepared-not-native-qualified",
+  "issue": 121,
+  "original_source": "fa2e5c2f508e18d18981b8e987b86cc4a411c1df",
+  "original_run": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+  "evidence_kind": "User-supplied terminal report and read-only product statistics; full original archive remains on Mac",
+  "planned_native_launches_consumed": 1,
+  "correction_retests_executed": 0,
+  "correction_round": "1/2 prepared; consumed on actual-host resume",
+  "source_sha256": {
+    "mefpp2/src/math/function_1d.c": "afd07c7abfe25f8c465ed6a15d7f077d774e203cd5751e50aeb3dccb580919e6",
+    "mefpp2/tests/qualify_integrated_campaign_mac.py": "8bfc447d5651d0f46e23ecadaf037f5fd7250f01a98e65c537dee39bf09dd842",
+    "mefpp2/tests/check_integrated_resume.py": "d4fd215452e738d1d8bccf17058bd2672acdb2f102c5c462fd871b813781bbc3"
+  },
+  "checks": {
+    "c90_syntax": "passed",
+    "c17_syntax": "passed",
+    "python_compilation": "passed",
+    "python_resume_guards": "passed"
+  },
+  "numerical_acceptance": "Pending unchanged exact F1 on actual Mac; no native engine executed by agent",
+  "preserve": "All original inputs, products, logs, report and installed engine; unchanged expected arrays/tolerances"
+}

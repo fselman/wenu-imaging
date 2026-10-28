@@ -830,7 +830,8 @@ pixelvalue function1d_average_reject(
 
 	/* Find out average of remaining values */
 	avg = 0.00 ;
-	for (i=pix_low+1 ; i<(npix-pix_high) ; i++) {
+	/* The retained interval starts at zero-based pix_low (#121). */
+	for (i=pix_low ; i<(npix-pix_high) ; i++) {
 		avg += (double)sorted[i] ;
 	}
 	free(sorted);
