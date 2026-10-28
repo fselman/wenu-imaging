@@ -959,6 +959,21 @@ The former component repositories remain historical references; do not push
 ongoing development to them or to their original upstream projects.
 Do not merge, delete branches, tag or release without instruction.
 
+### PR executive summaries and Work chat — approved 28 October 2026
+
+Every PR, including drafts and documentation-only PRs, must begin its description
+with a concise executive summary for Fernando. State the purpose/problem, main
+changes, checks actually passed, pending verification or material risks, and the
+current status/next step. Distinguish prepared fixes from verified behavior and
+functional success from memory or scientific acceptance. Keep implementation
+details and full evidence below the summary.
+
+Automatically display the same complete executive summary in the Work chat when
+creating a PR or materially updating its scope, findings, validation or readiness;
+include its link and current commit. Do not require Fernando to ask for it. Keep
+the PR summary and chat summary consistent with the latest evidence. This reporting
+rule adds no tests, host synchronization, execution gates or approval steps.
+
 ### Delivery handoff and local synchronization
 
 These six rules were approved by Fernando on 23 October 2026, adapting the
