@@ -1,0 +1,15 @@
+{
+  "purpose": "Report-level consistency review of ten independent-process attempts",
+  "source_library_file_id": "libfile_9bc4180ca8708191b6332ff016a1cf3d",
+  "report_sha256": "28a69c7a2b277b781a7d86bb9fe42a6418d7a0b760e96bb293714425dc9ddcb6",
+  "attempts": 10,
+  "reported_findings": 0,
+  "reported_descriptor_changes": 0,
+  "source_identities_verified": 36,
+  "reference_and_binary_pins_match": true,
+  "reported_products_match_inspected_reference": true,
+  "all_preservation_flags_true": true,
+  "raw_repeat_logs_and_fits_independently_inspected": false,
+  "native_execution_performed": false,
+  "issue116_closed": false
+}

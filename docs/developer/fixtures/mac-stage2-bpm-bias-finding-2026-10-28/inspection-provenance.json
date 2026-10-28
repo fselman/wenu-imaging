@@ -1,0 +1,11 @@
+{
+  "purpose": "Retain user supplied terminal case/log evidence, not a complete run archive",
+  "source_library_file_id": "libfile_2b2f0537b760819193ab1580650423f9",
+  "terminal_report_sha256": "9903d0097199b5a7a974ede3126bc31b37c8a2a157dfc07b49147f902efa47ee",
+  "tested_commit": "e7e8fbdcff5af70bdcb4ea8d5521efe4a030e62f",
+  "original_run": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe",
+  "finding": "c90-instrumented-retained-flag0 descriptor identity, 4 to 4, equality false at all three post-call boundaries",
+  "full_run_archive_inspected": false,
+  "status": "unresolved",
+  "issue": 116
+}

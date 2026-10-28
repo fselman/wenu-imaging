@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "test/stage2-bpm-supplied-bias",
+    "commit": "bf1c6afe0063ae62833efd04a9109ae5a3982cef",
+    "dirty": true
+  },
+  "purpose": "first Python fixture preparation",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "parent_manifest": "../run-provenance.json"
+}

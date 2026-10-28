@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "test/stage2-bpm-supplied-bias",
+    "commit": "bf1c6afe0063ae62833efd04a9109ae5a3982cef",
+    "dirty": true
+  },
+  "created_utc": "2026-10-28T12:08:51.095556+00:00",
+  "purpose": "Python-only supplied-bias fixture preparation; no native execution",
+  "status": "passed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "checks": [
+    "Python syntax: 2 sources passed",
+    "All 29 accepted metadata source/fixture identities unchanged",
+    "retained: six identical staged hashes; 3 exact frame recoveries; unchanged overscan/headers/padding/PAF/list; skipped subtraction changes independent proportional mask",
+    "known-response: six identical staged hashes; 3 exact frame recoveries; unchanged overscan/headers/padding/PAF/list; skipped subtraction changes independent proportional mask"
+  ],
+  "native_execution": false,
+  "source_sha256": {
+    "mefpp2/tests/bpm_bias_cases.py": "5e8ff545c251b12a62b3cc0dc091c261b260ecec1471a05e8a93275e7c134fb5",
+    "mefpp2/tests/qualify_bpm_bias.py": "415020d701d0698ab34096d62bbc57db317f13bb7577a46ae13bbe869777c9f3",
+    "mefpp2/tests/bpm_bias_probe.c": "6e77d9759b1fa910c2e9a1788657e77ef780c4df3f1aec749059bc8373fc738c",
+    "mefpp2/tests/bpm_bias_ownership_probe.c": "ec550b215749ffada64e144a0ff7099f7f0e85423a7115fc94e892ad8677366a"
+  },
+  "completed_utc": "2026-10-28T12:08:51.162869+00:00",
+  "post_check_comment_only_change": "Clarified export section comment; executable code unchanged."
+}

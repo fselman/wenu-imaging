@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "purpose": "S2-05 supplied-bias additive derivatives; unchanged overscan/metadata",
+  "source_commit": "bf1c6afe0063ae62833efd04a9109ae5a3982cef",
+  "parent_manifest": "mefpp2/tests/fixtures/bpm-metadata/manifest.json",
+  "parent_manifest_sha256": "3d29e8e974b48b50a04d12461f98345fd39e25ac405d9ad2ba08fae9c1ac24cb",
+  "bias_pattern": "16 + 8*y + 2*x; [4,5]=4096; zero-based y,x; float32",
+  "cases": {
+    "retained": {
+      "inputs_sha256": {
+        "bias.fits": "f0c57bb4b9e53399673c49abe14118dbc606fb0d48de2622898994d5fea20cce",
+        "frame0.fits": "14d213fcc49b5c262b1464d06a9c59032cf8c186433036efc579a19aa5915d1a",
+        "frame1.fits": "806f93c1b1f860bab575053f05051838a49e8e74e04ad266b6526d02ab27119a",
+        "frame2.fits": "1b88b610e2900ca071486a19ba522f3537234e21b337d0c5d8fb485e5680b055",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      },
+      "exact_float_recovery": true
+    },
+    "known-response": {
+      "inputs_sha256": {
+        "bias.fits": "f0c57bb4b9e53399673c49abe14118dbc606fb0d48de2622898994d5fea20cce",
+        "frame0.fits": "1c544871bf020931e3cd2601aa66a2c3b52125417420ef82e0cf0fc6b773d0a4",
+        "frame1.fits": "b66ff944116b1b1bb083000c3d8d0102efb8f47cc61cd15778bc20ac7b19bf29",
+        "frame2.fits": "7d587011146e3b660ccaedc14817bbf8aafc82ac93d2aab10eb0af1acbe79698",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      },
+      "exact_float_recovery": true
+    }
+  }
+}

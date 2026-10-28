@@ -1,0 +1,16 @@
+{
+  "purpose": "Independent bounded Chapman3 supplied-bias acceptance inspection",
+  "archive_library_file_id": "libfile_54db3390ba908191aa00d27a2b8b5c0f",
+  "archive_sha256": "805fb360cb8ea252e1a093f17607195e3ef3d34709aefc01fd7ec76eff9dd607",
+  "original_run": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-bias-zuc8ta6h",
+  "original_archive": "/home/fselman/Software/build/wenu-imaging/chapman3-bpm-bias-transfer-8ov1052h/chapman3-bpm-bias-evidence.tar.gz",
+  "mac_transfer": "/Users/fselman/Software/build/wenu-imaging/chapman3-bpm-bias-transfer-QoOUlUFc/chapman3-bpm-bias-evidence.tar.gz",
+  "archive_member_files_verified": 225,
+  "manifest_verified": true,
+  "inspection_script_sha256": "6d9ff57065376f815df97fe7c14778202401c5d0fb8f520a492e2f4928976578",
+  "status": "bounded target functional/accounting evidence accepted",
+  "native_execution_performed": false,
+  "external_target_diagnostics_accepted": false,
+  "issue116_closed": false,
+  "full_S2_05_closed": false
+}

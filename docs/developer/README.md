@@ -1,5 +1,8 @@
 # Developer documentation
 
+Current S2-05 continuation, 28 October 2026: [supplied-bias BPM ownership gate prepared](stage2-bpm-supplied-bias-2026-10-28.md) from synchronized main bf1c6afe0063ae62833efd04a9109ae5a3982cef after merged PR #114. Separate synthetic driver/observer and additive float32 fixtures preserve production source and accepted exact masks/metadata; Python-only preparation checks pass, actual Mac execution pending. Retain failed/corrected preparation and every earlier run/archive/installation. Chapman3 workloads remain paused pending host/hardware status from the latest handoff. Full S2-05/#75, WFI/multiple extensions and applicable error/repeat/cache/target external diagnostic gates stay open. No departure, S2-06 advance, merge or branch deletion approved; mandatory review before Stage 2A/extraction remains. Earlier PR #114 pending statements are historical.
+
+
 Latest S2-05: PR #114 populated-metadata qualification approved for integration and merged-branch cleanup; [Mac/Chapman3 evidence](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md) retained. Full S2-05/#75 and target external diagnostics stay open; runs/installations preserved.
 
 Latest S2-05: [populated metadata accepted on Mac and Chapman3](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md); PR #114 awaits integration, full S2-05/#75 and target external diagnostics stay open.

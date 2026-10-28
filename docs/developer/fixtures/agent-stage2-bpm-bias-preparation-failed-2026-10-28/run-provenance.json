@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "test/stage2-bpm-supplied-bias",
+    "commit": "bf1c6afe0063ae62833efd04a9109ae5a3982cef",
+    "dirty": true
+  },
+  "created_utc": "2026-10-28T12:08:25.533784+00:00",
+  "purpose": "Python-only supplied-bias fixture preparation; no native execution",
+  "status": "failed",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "checks": [
+    "Python syntax: 2 sources passed",
+    "All 29 accepted metadata source/fixture identities unchanged",
+    "retained: six identical staged hashes; 3 exact frame recoveries; unchanged overscan/headers/padding/PAF/list; skipped subtraction changes independent proportional mask"
+  ],
+  "native_execution": false,
+  "error": "",
+  "completed_utc": "2026-10-28T12:08:25.586816+00:00"
+}

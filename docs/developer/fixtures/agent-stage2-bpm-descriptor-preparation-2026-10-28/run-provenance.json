@@ -1,0 +1,78 @@
+{
+  "purpose": "Issue116 descriptor diagnostic preparation, no native execution",
+  "status": "passed",
+  "tested_source": "e7e8fbdcff5af70bdcb4ea8d5521efe4a030e62f plus diagnostic changes",
+  "native_execution": false,
+  "commands": [
+    {
+      "label": "parser-tests",
+      "argv": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "mefpp2/tests",
+        "-p",
+        "test_descriptor_snapshots.py",
+        "-v"
+      ],
+      "exit_status": 0,
+      "log_sha256": "94c9f3d20b1c616dbc05c7552293ad0bc149b40621e33d8c425512f141d13451"
+    },
+    {
+      "label": "c90-syntax",
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c90",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-fd-preparation",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_bias_ownership_probe.c"
+      ],
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c17-syntax",
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c17",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-fd-preparation",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_bias_ownership_probe.c"
+      ],
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "python-syntax",
+      "argv": [
+        "python",
+        "-m",
+        "py_compile",
+        "mefpp2/tests/descriptor_snapshots.py",
+        "mefpp2/tests/qualify_bpm_bias.py"
+      ],
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source_sha256": {
+    "mefpp2/tests/bpm_bias_ownership_probe.c": "b4a5ac6d380e60714d564d11451f7a74b39c79d6a07970ff0fa81696d2b44ded",
+    "mefpp2/tests/descriptor_snapshots.py": "0e6a1b0cc269f956aca3f55a002bf865509fa00c58c956146dd126d4f7a5cdae",
+    "mefpp2/tests/test_descriptor_snapshots.py": "7e4a06b6a17cbe12447dba806079d21af087e5134e74606eec12268b08cf929c",
+    "mefpp2/tests/qualify_bpm_bias.py": "7549a2776b84e0a5b50f7aaa96871359fabb27268a01a9fdb163e341033f78b8"
+  }
+}
