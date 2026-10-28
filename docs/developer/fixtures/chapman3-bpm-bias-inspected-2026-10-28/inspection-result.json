@@ -1,0 +1,200 @@
+{
+  "archive_sha256": "805fb360cb8ea252e1a093f17607195e3ef3d34709aefc01fd7ec76eff9dd607",
+  "manifest_files_verified": 225,
+  "manifest_itself_verified": true,
+  "runs": {
+    "chapman3-stage2-bpm-bias-zuc8ta6h": {
+      "commit": "10b3ca8285f886694fd0aa54197b8ba46f9cd1e4",
+      "report_sha256": "d2e97691b6f316fbba4d055686d28d435c080b726091f9c92c8932def15b0b54",
+      "status": "passed",
+      "roles_verified": 16,
+      "case_pairs": 8,
+      "input_frame_checks": 48,
+      "mask_pixels_verified": 2592,
+      "leak_summaries_verified": 0,
+      "commands_verified": 23,
+      "builds": [
+        {
+          "name": "build-c17-functional",
+          "translation_units": 101,
+          "c_standard": 17,
+          "info_sha256": "0a33a913bbbfacb2cb7d28de573d5e61723fafe978bd11145a441f8c8adb9f7e"
+        },
+        {
+          "name": "build-c90-functional",
+          "translation_units": 101,
+          "c_standard": 90,
+          "info_sha256": "d762884526037e04990a0402acc9c92222cfa5b5ebac99a73d2af1ccd135d7e1"
+        }
+      ],
+      "descriptor_boundaries": [
+        {
+          "case": "c90-functional-retained-flag0",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-functional-retained-flag1",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-functional-known-response-flag0",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c90-functional-known-response-flag1",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-functional-retained-flag0",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-functional-retained-flag1",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-functional-known-response-flag0",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        },
+        {
+          "case": "c17-functional-known-response-flag1",
+          "boundaries": [
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ],
+            [
+              "3",
+              "3",
+              "1"
+            ]
+          ]
+        }
+      ],
+      "findings": [],
+      "canonical_output_count": 16
+    }
+  },
+  "native_execution_performed": false,
+  "target_mac_canonical_products_identical": true,
+  "unchanged_mac_source_identities_verified": 35,
+  "status": "passed-bounded-target-functional-accounting-inspection"
+}

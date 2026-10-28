@@ -1,5 +1,9 @@
 # Agreed bounded Chapman3 supplied-bias verification — 28 October 2026
 
+Update: [actual Chapman3 evidence is inspected and the bounded functional/accounting
+slice passes](stage2-bpm-bias-chapman3-acceptance-2026-10-28.md). Older target-pending
+statements below describe preparation history. #116 and broader S2 gates stay open.
+
 ## Explicit disposition agreed before target implementation
 
 Fernando replied **"agree"** to collecting bounded Chapman3 supplied-bias
