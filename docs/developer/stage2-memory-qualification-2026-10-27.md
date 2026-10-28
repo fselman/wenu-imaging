@@ -1,5 +1,8 @@
 # Stage 2 memory and ownership qualification — 27 October 2026
 
+Current S2-05 continuation, 28 October 2026: [supplied-bias BPM ownership gate prepared](stage2-bpm-supplied-bias-2026-10-28.md) from synchronized main bf1c6afe0063ae62833efd04a9109ae5a3982cef after merged PR #114. Separate synthetic driver/observer and additive float32 fixtures preserve production source and accepted exact masks/metadata; Python-only preparation checks pass, actual Mac execution pending. Retain failed/corrected preparation and every earlier run/archive/installation. Chapman3 workloads remain paused pending host/hardware status from the latest handoff. Full S2-05/#75, WFI/multiple extensions and applicable error/repeat/cache/target external diagnostic gates stay open. No departure, S2-06 advance, merge or branch deletion approved; mandatory review before Stage 2A/extraction remains. Earlier PR #114 pending statements are historical.
+
+
 Integration update: PR #114 populated-metadata qualification is approved for integration and merged-branch cleanup, with inspected Mac/Chapman3 evidence retained. Older PR #114 integration-pending statements are historical. Full S2-05/#75 and compatible target external diagnostics stay open; next remaining successful-case coverage includes supplied bias, WFI and multiple extensions. No scope departure or S2-06 advance is approved.
 
 Latest S2-05: [populated metadata accepted on Mac and Chapman3](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md), 16 Mac / 8 target pairs; PR #114 awaits integration. Earlier target-pending statements are historical. Full S2-05/#75 and compatible target external diagnostics remain open.
