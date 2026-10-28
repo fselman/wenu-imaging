@@ -1,0 +1,29 @@
+{
+  "purpose": "Python-only two-extension preparation. Constructed products are not native acceptance.",
+  "status": "failed",
+  "native_execution": false,
+  "created_utc": "2026-10-28T16:20:46.525061+00:00",
+  "python": "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+  "tested_source": {
+    "commit": "664f501fe723a924b6a2395d00f70cba1fb03ab7",
+    "dirty": true
+  },
+  "source_sha256": {
+    "mefpp2/tests/bpm_multiext_cases.py": "49cd64c2a114b0ce756b8f435f70f5834ca068cd73b9d855b3cf590725ec2212",
+    "mefpp2/tests/bpm_multiext_ownership_probe.c": "aae949e64d129111a7c65366e8013cd1d3f532caaa94f80545e0a378cde9c5e5",
+    "mefpp2/tests/bpm_multiext_probe.c": "386f5468207efe74f01b6b8f10624235916d5f3de9d619db41eefb3660179ca6",
+    "mefpp2/tests/check_bpm_multiext_preparation.py": "def76aaaae3ba0b45af0e5528343720220bacfdd71cc21e2eb2a30b36e2fe02a",
+    "mefpp2/tests/qualify_bpm_multiext.py": "f47aa3bce20ddce9a0dc701a4705f7f2fc208eb42ca9ba947dce4cb9a237bfce"
+  },
+  "cases": [],
+  "rejected": [
+    "omegacam-retained-flag0:pixels",
+    "omegacam-retained-flag0:metadata"
+  ],
+  "retention_roles": [
+    "preparation_evidence"
+  ],
+  "error": "Header missing END card.",
+  "immutable_fixtures_unchanged": true,
+  "completed_utc": "2026-10-28T16:20:46.610665+00:00"
+}

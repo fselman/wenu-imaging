@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "parent_manifest_sha256": "3d29e8e974b48b50a04d12461f98345fd39e25ac405d9ad2ba08fae9c1ac24cb",
+  "description": "Two distinct 9x9 science / 9x18 raw image extensions; second science mirrored in X, overscan unmodified; original instrument PAF; NULL bias; thresholds fixed in test driver at 0.5 and 1.5.",
+  "cases": {
+    "omegacam-retained": {
+      "inputs_sha256": {
+        "frame0.fits": "49b91f2a9fe20543129f7db4d34141bca11d6464381a2e84b41273f18e60969f",
+        "frame1.fits": "3a8520b222d560e244e1a097a70ec74b4eaa0e6d25f1e8574c9c1c750dccde21",
+        "frame2.fits": "027dfe3b3b8137fc4791bef59f1c6c1fa816feb0dbd4b9dbec3bc3642a1ae83e",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      }
+    },
+    "omegacam-known-response": {
+      "inputs_sha256": {
+        "frame0.fits": "d2e91def9b4072eac674435e69c9fe95af95c0fc6011fe4a5957390306a3f9b0",
+        "frame1.fits": "195387fa90773c8ea5f2b309aeba3bdc630a641ebeacda95d01e4ac43b3514cd",
+        "frame2.fits": "7000655b13fc79fdee340bce93dac8b55cc7289defa9567f8272a92798028afb",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      }
+    },
+    "wfi-retained": {
+      "inputs_sha256": {
+        "frame0.fits": "4e6dfbaa508f2d3d241a52c6f06fa81f2c2f72ae1613dcfdba34a9bbc8b08633",
+        "frame1.fits": "bd038098642614647bcf125b1263aadd8f2edeca722b856dafd1b3bf728dcbdb",
+        "frame2.fits": "c88e75568363e48430bd603dbe6179cf12a4b01f2c9603d593dc15bb1d4f4453",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+      }
+    },
+    "wfi-known-response": {
+      "inputs_sha256": {
+        "frame0.fits": "aa9dc2f2f921fed9e7f7025ca7df94eaa0baab2a8e44d3ccee198ef0d6a080c7",
+        "frame1.fits": "57120661538096915819e18692b14187e2e5554977d0c189b778e2b1263f4949",
+        "frame2.fits": "bc3049a3ad2d6cc7637e044b69327661de5cbe6f4212edb92971c14165f02824",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+      }
+    }
+  }
+}

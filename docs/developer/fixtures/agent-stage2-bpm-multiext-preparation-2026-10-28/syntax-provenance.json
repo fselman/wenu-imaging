@@ -1,0 +1,54 @@
+{
+  "purpose": "C90/C17 syntax and Python syntax only, no native execution",
+  "status": "passed",
+  "native_execution": false,
+  "commands": [
+    {
+      "label": "c90-syntax",
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c90",
+        "-Werror=declaration-after-statement",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-multiext-syntax-final",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_multiext_probe.c",
+        "mefpp2/tests/bpm_multiext_ownership_probe.c"
+      ],
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "c17-syntax",
+      "argv": [
+        "gcc",
+        "-fsyntax-only",
+        "-std=c17",
+        "-Werror=declaration-after-statement",
+        "-D_GNU_SOURCE=1",
+        "-DXMEMORY_MODE=2",
+        "-DXMEMORY_MAXPTRS=2000000",
+        "-I/workspace/scratch/575604f10f8d/bpm-multiext-syntax-final",
+        "-Imefpp2/src/include",
+        "-Imefpp2/qfits5/include",
+        "-Imefpp2/ins/mef/common",
+        "mefpp2/tests/bpm_multiext_probe.c",
+        "mefpp2/tests/bpm_multiext_ownership_probe.c"
+      ],
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source_sha256": {
+    "mefpp2/tests/bpm_multiext_cases.py": "709ba48f7afc03b82306f47b2a8d0b67d5bcab1e184fdd0782502fdac42e8e23",
+    "mefpp2/tests/bpm_multiext_ownership_probe.c": "aae949e64d129111a7c65366e8013cd1d3f532caaa94f80545e0a378cde9c5e5",
+    "mefpp2/tests/bpm_multiext_probe.c": "d5b621d7b1f6d991e96753315032d05d7cce15a1e3b0fda24416479920066b87",
+    "mefpp2/tests/check_bpm_multiext_preparation.py": "198bdbc512a7df2022c9892c4409845f867c0d9dad50fd69575dac68d49d386e",
+    "mefpp2/tests/qualify_bpm_multiext.py": "93616c5cff5435188f51f1ffe34fb0dbd26549ef35b36aff03d14c2894660a19"
+  }
+}
