@@ -66,6 +66,28 @@ def main():
         try:begin_attempt(parent,pointer,'unapproved-third',{},third)
         except RuntimeError as error:assert 'no third correction' in str(error)
         else:raise AssertionError('Third repair round accepted')
+        # v2.2 is a separate explicit one-use exception, not a third general round.
+        r3=deepcopy(r2);r3['source']['commit']='3e60e8cbf198bd786dd1929e48e60f5c066be854'
+        r3.update(native_launches_consumed=5,retest_launches_consumed=3,correction_rounds_consumed=2,
+            previous_report_unchanged=True,previous_attempt=dict(report=str(second),sha256=file_hash(second)))
+        state=dict(pointers=4,bytes=32,mapped_files=0,mapped_references=0,swap_bytes=0)
+        r3['cases'][1]['diagnostics']=dict(accounting={'after-purge':state,'after-second-purge':state})
+        save(third,r3);save(pointer,dict(report=str(third)))
+        with patch('qualify_integrated_campaign_mac.verify',return_value={}):
+            exception,prior=begin_attempt(parent,pointer,'bias-qc-only',{},third,True)
+        assert exception==old/'v2.2-bias-qc' and prior['correction_round']==2
+        assert prior['approved_exception']=='v2.2-bias-qc'
+        assert prior['planned_launches']==2 and prior['retest_launches']==3 and prior['native_launches']==5
+        with patch('qualify_integrated_campaign_mac.verify',return_value={}):
+            try:begin_attempt(parent,pointer,'duplicate-exception',{},third,True)
+            except FileExistsError:pass
+            else:raise AssertionError('Duplicate exception accepted')
+        # A different residual does not qualify for this narrow authorization.
+        bad=deepcopy(r3);bad['cases'][1]['diagnostics']['accounting']['after-purge']['bytes']=40
+        save(third,bad)
+        try:begin_attempt(parent,pointer,'different-failure',{},third,True)
+        except RuntimeError as error:assert 'reviewed F1 failure' in str(error)
+        else:raise AssertionError('Unreviewed residual accepted')
     print('Resume guards passed; native launches: 0')
 
 

@@ -27,7 +27,8 @@ from descriptor_snapshots import snapshots
 
 LOCK_SHA = 'e4572a8f99b4648722a89c6b4b4ffcc539243ef69faeee0dc71999f4a8d6d397'
 FROZEN = {'native-roadmap-frozen-v2.0-2026-10-28.md':'1a3b679710fb45796fb136f6d9883efba632522d8a0ead249ce868ef107f1f89',
-          'native-roadmap-amendment-v2.1-2026-10-28.md':'06436cf14657ee5585957ead6328bee5218c66a20c36ed4cfc702840c5377626'}
+          'native-roadmap-amendment-v2.1-2026-10-28.md':'06436cf14657ee5585957ead6328bee5218c66a20c36ed4cfc702840c5377626',
+          'native-roadmap-amendment-v2.2-2026-10-28.md':'20f23e9fa75d28ea16cda55e549d5cdf6a4e1db9ca3045fd8d6398ed476f3b6b'}
 ARGV = ['--pafname','mefpp.paf','--bias','bias.list','--biassave','--biassub',
         '--bpm','bpm.list','--dome','dome.list','--domesave','--sky','sky.list','--skysave','--science','science.list']
 
@@ -76,8 +77,9 @@ def diagnostic(output, detectors, lane):
 
 
 
-def begin_attempt(parent, pointer, commit, protected, previous_path=None):
+def begin_attempt(parent, pointer, commit, protected, previous_path=None, allow_bias_qc=False):
     """Continue a reviewed failure, with the original campaign and two-round limit."""
+    if allow_bias_qc and previous_path is None:raise RuntimeError('STOP: bias-QC exception requires its reviewed parent')
     if previous_path is None:
         with pointer.open('x') as stream:json.dump(dict(status='initializing',source=commit),stream)
         return Path(tempfile.mkdtemp(prefix='mac-stage2-integrated-',dir=parent)),None
@@ -85,6 +87,8 @@ def begin_attempt(parent, pointer, commit, protected, previous_path=None):
     campaign=parent/'mac-stage2-integrated-du1sqj06'
     first=campaign/'run-provenance.json'
     second=campaign/'correction-round-1/run-provenance.json'
+    third=campaign/'correction-round-2/run-provenance.json'
+    exception=None
     active=json.loads(pointer.read_text())
     if Path(active['report']).resolve()!=previous_path:raise RuntimeError('STOP: active campaign already advanced')
     previous=json.loads(previous_path.read_text());cases=previous['cases']
@@ -106,10 +110,30 @@ def begin_attempt(parent, pointer, commit, protected, previous_path=None):
             and previous['planned_launches_consumed']==planned and previous['retest_launches_consumed']==retests)
         ancestor=previous['previous_attempt']
         if file_hash(Path(ancestor['report']))!=ancestor['sha256']:raise RuntimeError('STOP: original ancestor changed')
+    elif allow_bias_qc and previous_path==third.resolve(strict=True):
+        exception='v2.2-bias-qc';correction_round=2;planned=2;retests=3;total=5
+        labels=['F1-ordinary','F1-instrumented'];reference=cases[0]['products']
+        valid=(previous['source']['commit']=='3e60e8cbf198bd786dd1929e48e60f5c066be854'
+            and len(cases)==2 and cases[0]['fixed_row']=='F1' and cases[0]['lane']=='ordinary'
+            and cases[0]['status']=='passed' and not cases[0]['findings']
+            and cases[1]['fixed_row']=='F1' and cases[1]['lane']=='instrumented'
+            and cases[1]['status']=='failed' and cases[1]['exit_status']==0
+            and cases[1]['findings']==['Live tracked resources at after-purge','Live tracked resources at after-second-purge']
+            and previous['planned_launches_consumed']==planned and previous['retest_launches_consumed']==retests
+            and previous['previous_report_unchanged'])
+        expected=dict(pointers=4,bytes=32,mapped_files=0,mapped_references=0,swap_bytes=0)
+        if valid:
+            valid=all(cases[1]['diagnostics']['accounting'][phase]==expected
+                for phase in ('after-purge','after-second-purge'))
+        ancestor=previous['previous_attempt']
+        for depth in range(2):
+            if file_hash(Path(ancestor['report']))!=ancestor['sha256']:raise RuntimeError('STOP: ancestor evidence changed')
+            ancestor=json.loads(Path(ancestor['report']).read_text()).get('previous_attempt')
+            if ancestor is None:break
     else:raise RuntimeError('STOP: unexpected failed campaign; no third correction round')
     if (not valid or previous['status']!='stopped' or previous['execution_complete']
         or previous['native_launches_consumed']!=total
-        or previous['correction_rounds_consumed']!=correction_round-1):
+        or previous['correction_rounds_consumed']!=(2 if exception else correction_round-1)):
         raise RuntimeError('STOP: parent is not the reviewed F1 failure')
     if previous['protected_sha256']!=protected:raise RuntimeError('STOP: protected installation identity changed')
     for key in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved'):
@@ -124,11 +148,12 @@ def begin_attempt(parent, pointer, commit, protected, previous_path=None):
         if 'products' in case:
             actual=verify(root,case['input_sha256'],2,True,['F1_CCD_A','F1_CCD_B'])
             if actual!=case['products']:raise RuntimeError('STOP: original product evidence changed')
-    work=campaign/('correction-round-'+str(correction_round));work.mkdir(exist_ok=False)
+    if allow_bias_qc and exception is None:raise RuntimeError('STOP: wrong parent for bias-QC exception')
+    work=campaign/(exception or ('correction-round-'+str(correction_round)));work.mkdir(exist_ok=False)
     return work,dict(report=str(previous_path),sha256=file_hash(previous_path),source=previous['source'],
         planned_launches=planned,retest_launches=retests,native_launches=total,
         reviewed_defects=[121] if correction_round==1 else [122,123,124],correction_round=correction_round,
-        retest_labels=labels,product_reference=reference,input_sha256=cases[0]['input_sha256'])
+        retest_labels=labels,product_reference=reference,input_sha256=cases[0]['input_sha256'],approved_exception=exception)
 
 
 def main():
@@ -138,6 +163,7 @@ def main():
     parser.add_argument('--cmake',type=Path,required=True)
     parser.add_argument('--input-lock',type=Path,required=True)
     parser.add_argument('--resume-correction',type=Path,help='Reviewed F1 failure report; continue its fixed global repair round (1 or 2 only)')
+    parser.add_argument('--bias-qc-exception',action='store_true',help='Approved one-time v2.2 four-array cleanup exception only')
     args=parser.parse_args()
     # Guards and input/reference lock: no native launch occurs in this section.
     if platform.system()!='Darwin' or platform.node().split('.')[0]!='MC02VV0HPHTDG':
@@ -180,7 +206,7 @@ def main():
     parent=Path.home()/'Software/build/wenu-imaging';parent.mkdir(parents=True,exist_ok=True)
     pointer=parent/'stage2-integrated-active-campaign.json'
     # A correction continues the original campaign; it cannot reset its counters.
-    work,previous=begin_attempt(parent,pointer,commit,protected,args.resume_correction)
+    work,previous=begin_attempt(parent,pointer,commit,protected,args.resume_correction,args.bias_qc_exception)
     provenance=work/'run-provenance.json'
     record=dict(schema_version=1,project='wenu-imaging',source=dict(commit=commit,dirty=False),
                 created_utc=datetime.now(timezone.utc).isoformat(),status='running',execution_complete=False,
@@ -194,7 +220,8 @@ def main():
     record.update(previous_attempt=previous,planned_launches_consumed=previous['planned_launches'] if previous else 0,
                   retest_launches_consumed=previous['retest_launches'] if previous else 0,
                   native_launches_consumed=previous['native_launches'] if previous else 0,
-                  correction_rounds_consumed=previous['correction_round'] if previous else 0)
+                  correction_rounds_consumed=previous['correction_round'] if previous else 0,
+                  bias_qc_exception_consumed=bool(previous and previous.get('approved_exception')))
     save(provenance,record);save(pointer,dict(report=str(provenance),source=commit))
     print('WORK DIRECTORY:',work,flush=True)
     env=os.environ.copy()
@@ -211,7 +238,7 @@ def main():
                 limit=previous['retest_launches']+len(previous['retest_labels'])
                 if record['retest_launches_consumed']>=limit:raise RuntimeError('STOP: correction retest budget consumed')
                 record['retest_launches_consumed']+=1
-                item['purpose']='correction-round-'+str(previous['correction_round'])+' F1 retry/smoke'
+                item['purpose']=(previous.get('approved_exception') or ('correction-round-'+str(previous['correction_round'])))+' F1 validation'
             else:
                 if record['planned_launches_consumed']>=6:raise RuntimeError('STOP: F1/F2 planned launch budget exhausted')
                 record['planned_launches_consumed']+=1;item['purpose']='fixed planned row'
@@ -338,6 +365,7 @@ def main():
         save(provenance,record)
         print('PLANNED LAUNCHES:',record['planned_launches_consumed'],'/ 19; correction retests:',record['retest_launches_consumed'],flush=True)
         print('TOTAL NATIVE LAUNCHES:',record['native_launches_consumed'],'; correction rounds:',record['correction_rounds_consumed'],'/ 2',flush=True)
+        print('BIAS-QC EXCEPTION:',record['bias_qc_exception_consumed'],flush=True)
         print('STATUS:',record['status'],flush=True);print('REPORT:',provenance,flush=True)
     return 0 if record['execution_complete'] and record['status']=='F1-F2-passed-awaiting-review' else 1
 

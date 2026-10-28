@@ -1256,6 +1256,10 @@ void mef_bb_del(mef_bb * bb)
 	if (bb->name_bias_o)        free(bb->name_bias_o);
     if (bb->name_bpm)           free(bb->name_bpm);
     if (bb->name_bpm_o)         free(bb->name_bpm_o);
+    free(bb->bias_framethr_lo);
+    free(bb->bias_framethr_hi);
+    free(bb->bias_avg1);
+    free(bb->bias_sig1);
     free(bb->orig_bias);
     free(bb->orig_dome);
     free(bb->orig_sky);

@@ -1,0 +1,8 @@
+mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_bpm’:
+mefpp2/ins/mef/common/mefp_lib.c:2668:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2668 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+mefpp2/ins/mef/common/mefp_lib.c:3665:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3665 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
