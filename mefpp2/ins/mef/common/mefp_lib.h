@@ -338,6 +338,8 @@ typedef struct _mef_bb_ {
 mef_bb * mef_bb_new(void);
 mef_bb * mef_bb_new_from_paf(char *pafname);
 
+/* Release per-extension work after publication; NULL released fields (#124). */
+void mef_bb_clear_work(mef_bb *bb);
 void mef_bb_del(mef_bb * bb);
 
 void mef_bb_dump(mef_bb * bb, FILE * out);

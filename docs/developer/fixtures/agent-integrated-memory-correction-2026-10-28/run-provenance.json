@@ -1,0 +1,37 @@
+{
+  "status": "final-correction-prepared-not-native-qualified",
+  "issues": [
+    122,
+    123,
+    124
+  ],
+  "original_campaign": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+  "inspected_source": "f0242b24aa4ebe54171287f3439902df8cc6f576",
+  "source_sha256": {
+    "mefpp2/ins/mef/common/mefp_lib.c": "68e5748c5a4e89b7557bf83a4459c9303697046771d4083d8da61c32834e69c3",
+    "mefpp2/ins/mef/common/mefp_lib.h": "43bac58a2dfafcd84d9fff56b899cff5d1871bfd74a24e771a661a8cfb88c472",
+    "mefpp2/ins/mef/recipes/mefpp.c": "313a16829b81230b5608de6cdfd1cc14e798ca6e4666ce898447363e740ac4d9",
+    "mefpp2/tests/qualify_integrated_campaign_mac.py": "5fc812450aaa5c4cddd2b43b1bd34f5e569328e1d28966807a47af0f64f6c793",
+    "mefpp2/tests/check_integrated_resume.py": "7bade508867f05db4e3c0fec44519d5ce318253c7635d425cbedc33fe714d316"
+  },
+  "checks": {
+    "c90_syntax": "passed",
+    "c17_syntax": "passed",
+    "python_compilation": "passed",
+    "resume_controls": "passed"
+  },
+  "warnings": "Three pre-existing format-security warnings in both syntax logs; no implicit-declaration or incompatible-pointer errors",
+  "tests_executed": "Agent syntax/Python only, no engine launches",
+  "current_counters": {
+    "planned": 2,
+    "retests": 1,
+    "total_engine_launches": 3,
+    "repair_rounds": 1
+  },
+  "next_round": "Final global round 2; failed F1 instrumented plus ordinary smoke; then only unrun planned lanes",
+  "limits": [
+    "No corrected Mac memory acceptance yet",
+    "External leaks, WFI and F3-F5 remain unrun",
+    "No extra repair round or new matrix"
+  ]
+}

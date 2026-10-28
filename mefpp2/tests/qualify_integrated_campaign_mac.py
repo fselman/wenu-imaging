@@ -77,39 +77,58 @@ def diagnostic(output, detectors, lane):
 
 
 def begin_attempt(parent, pointer, commit, protected, previous_path=None):
-    """Retain the first failure and enter only its specifically reviewed repair round."""
+    """Continue a reviewed failure, with the original campaign and two-round limit."""
     if previous_path is None:
         with pointer.open('x') as stream:json.dump(dict(status='initializing',source=commit),stream)
         return Path(tempfile.mkdtemp(prefix='mac-stage2-integrated-',dir=parent)),None
     previous_path=previous_path.resolve(strict=True)
-    original=parent/'mac-stage2-integrated-du1sqj06/run-provenance.json'
-    if previous_path!=original.resolve(strict=True):raise RuntimeError('STOP: unexpected failed campaign')
+    campaign=parent/'mac-stage2-integrated-du1sqj06'
+    first=campaign/'run-provenance.json'
+    second=campaign/'correction-round-1/run-provenance.json'
     active=json.loads(pointer.read_text())
     if Path(active['report']).resolve()!=previous_path:raise RuntimeError('STOP: active campaign already advanced')
-    previous=json.loads(previous_path.read_text())
-    cases=previous['cases']
-    if (previous['source']['commit']!='fa2e5c2f508e18d18981b8e987b86cc4a411c1df'
-        or previous['status']!='stopped' or previous['execution_complete']
-        or previous['native_launches_consumed']!=1 or previous['correction_rounds_consumed']!=0
-        or len(cases)!=1 or cases[0]['fixed_row']!='F1' or cases[0]['lane']!='ordinary'
-        or cases[0]['status']!='failed' or cases[0]['exit_status']!=0
-        or cases[0]['findings']!=['Known-answer array differs: CALIB.MASTER_DOME_FLAT extension 2']):
+    previous=json.loads(previous_path.read_text());cases=previous['cases']
+    if previous_path==first.resolve(strict=True):
+        correction_round=1;planned=1;retests=0;total=1;labels=['F1-ordinary'];reference=None
+        valid=(previous['source']['commit']=='fa2e5c2f508e18d18981b8e987b86cc4a411c1df'
+            and len(cases)==1 and cases[0]['fixed_row']=='F1' and cases[0]['lane']=='ordinary'
+            and cases[0]['status']=='failed' and cases[0]['exit_status']==0
+            and cases[0]['findings']==['Known-answer array differs: CALIB.MASTER_DOME_FLAT extension 2'])
+    elif previous_path==second.resolve(strict=True):
+        correction_round=2;planned=2;retests=1;total=3
+        labels=['F1-ordinary','F1-instrumented'];reference=cases[0]['products']
+        valid=(previous['source']['commit']=='f0242b24aa4ebe54171287f3439902df8cc6f576'
+            and len(cases)==2 and cases[0]['fixed_row']=='F1' and cases[0]['lane']=='ordinary'
+            and cases[0]['status']=='passed' and not cases[0]['findings']
+            and cases[1]['fixed_row']=='F1' and cases[1]['lane']=='instrumented'
+            and cases[1]['status']=='failed' and cases[1]['exit_status']==0
+            and cases[1]['findings']==['Live tracked resources at after-purge','Live tracked resources at after-second-purge']
+            and previous['planned_launches_consumed']==planned and previous['retest_launches_consumed']==retests)
+        ancestor=previous['previous_attempt']
+        if file_hash(Path(ancestor['report']))!=ancestor['sha256']:raise RuntimeError('STOP: original ancestor changed')
+    else:raise RuntimeError('STOP: unexpected failed campaign; no third correction round')
+    if (not valid or previous['status']!='stopped' or previous['execution_complete']
+        or previous['native_launches_consumed']!=total
+        or previous['correction_rounds_consumed']!=correction_round-1):
         raise RuntimeError('STOP: parent is not the reviewed F1 failure')
     if previous['protected_sha256']!=protected:raise RuntimeError('STOP: protected installation identity changed')
     for key in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved'):
         if not previous[key]:raise RuntimeError('STOP: parent preservation finding')
-    # Retain/hash original evidence before creating a separate correction directory.
+    # Verify all prior command logs, fixture inputs and reported output identities.
     for command in previous['commands']:
         if file_hash(Path(command['log']))!=command['log_sha256']:raise RuntimeError('STOP: original log changed')
-    root=Path(cases[0]['directory'])
-    for name,h in cases[0]['input_sha256'].items():
-        if file_hash(root/name)!=h:raise RuntimeError('STOP: original fixture input changed')
-    work=previous_path.parent/'correction-round-1'
-    work.mkdir(exist_ok=False)
-    return work,dict(report=str(previous_path),sha256=file_hash(previous_path),
-                     source=previous['source'],planned_launches=1,retest_launches=0,
-                     reviewed_defect=121,correction_round=1,
-                     input_sha256=cases[0]['input_sha256'])
+    for case in cases:
+        root=Path(case['directory'])
+        for name,h in case['input_sha256'].items():
+            if file_hash(root/name)!=h:raise RuntimeError('STOP: original fixture input changed')
+        if 'products' in case:
+            actual=verify(root,case['input_sha256'],2,True,['F1_CCD_A','F1_CCD_B'])
+            if actual!=case['products']:raise RuntimeError('STOP: original product evidence changed')
+    work=campaign/('correction-round-'+str(correction_round));work.mkdir(exist_ok=False)
+    return work,dict(report=str(previous_path),sha256=file_hash(previous_path),source=previous['source'],
+        planned_launches=planned,retest_launches=retests,native_launches=total,
+        reviewed_defects=[121] if correction_round==1 else [122,123,124],correction_round=correction_round,
+        retest_labels=labels,product_reference=reference,input_sha256=cases[0]['input_sha256'])
 
 
 def main():
@@ -118,7 +137,7 @@ def main():
     parser.add_argument('--sdk',type=Path,required=True)
     parser.add_argument('--cmake',type=Path,required=True)
     parser.add_argument('--input-lock',type=Path,required=True)
-    parser.add_argument('--resume-correction',type=Path,help='The reviewed F1 failure report; enters global repair round 1 only')
+    parser.add_argument('--resume-correction',type=Path,help='Reviewed F1 failure report; continue its fixed global repair round (1 or 2 only)')
     args=parser.parse_args()
     # Guards and input/reference lock: no native launch occurs in this section.
     if platform.system()!='Darwin' or platform.node().split('.')[0]!='MC02VV0HPHTDG':
@@ -172,9 +191,10 @@ def main():
                 installation_performed=False,scientific_acceptance_claimed=False,
                 remaining_fixed_rows=['F3','F4','F5'],limits=['F1/F2 only; no full Stage 2 acceptance',
                 '#116 remains unresolved; exact descriptor gates active','No large-file mmap/swap stress'])
-    record.update(previous_attempt=previous,planned_launches_consumed=1 if previous else 0,
-                  retest_launches_consumed=0,native_launches_consumed=1 if previous else 0,
-                  correction_rounds_consumed=1 if previous else 0)
+    record.update(previous_attempt=previous,planned_launches_consumed=previous['planned_launches'] if previous else 0,
+                  retest_launches_consumed=previous['retest_launches'] if previous else 0,
+                  native_launches_consumed=previous['native_launches'] if previous else 0,
+                  correction_rounds_consumed=previous['correction_round'] if previous else 0)
     save(provenance,record);save(pointer,dict(report=str(provenance),source=commit))
     print('WORK DIRECTORY:',work,flush=True)
     env=os.environ.copy()
@@ -187,9 +207,11 @@ def main():
         item=dict(label=label,argv=list(map(str,argv)),cwd=str(cwd),native=native)
         record['commands'].append(item)
         if native:
-            if previous and label=='F1-ordinary':
-                if record['retest_launches_consumed']!=0:raise RuntimeError('STOP: correction retest already consumed')
-                record['retest_launches_consumed']+=1;item['purpose']='correction-round-1 affected F1 retry'
+            if previous and label in previous['retest_labels']:
+                limit=previous['retest_launches']+len(previous['retest_labels'])
+                if record['retest_launches_consumed']>=limit:raise RuntimeError('STOP: correction retest budget consumed')
+                record['retest_launches_consumed']+=1
+                item['purpose']='correction-round-'+str(previous['correction_round'])+' F1 retry/smoke'
             else:
                 if record['planned_launches_consumed']>=6:raise RuntimeError('STOP: F1/F2 planned launch budget exhausted')
                 record['planned_launches_consumed']+=1;item['purpose']='fixed planned row'
@@ -288,6 +310,9 @@ def main():
                 # All six products: independent tiny arrays or exact WFI control comparison.
                 try:
                     case['products']=verify(directory,inputs,detectors,tiny,names)
+                    if tiny and previous and previous['product_reference'] is not None:
+                        if comparable(case['products'])!=comparable(previous['product_reference']):
+                            case['findings'].append('Products/ordered metadata differ from retained corrected ordinary result')
                     if reference is None:reference=comparable(case['products'])
                     elif comparable(case['products'])!=reference:case['findings'].append('Products/ordered metadata differ from ordinary control')
                 except Exception as error:case['findings'].append(str(error))

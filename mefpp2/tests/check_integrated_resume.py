@@ -2,6 +2,8 @@
 import json
 from pathlib import Path
 import tempfile
+from copy import deepcopy
+from unittest.mock import patch
 from qualify_integrated_campaign_mac import begin_attempt,save
 from integrated_campaign_products import file_hash
 
@@ -43,6 +45,27 @@ def main():
         try:begin_attempt(parent,pointer,'corrected',{},report)
         except RuntimeError as error:assert 'already advanced' in str(error)
         else:raise AssertionError('Advanced campaign accepted old retry')
+        # Final round: one failed diagnostic plus one successful workflow smoke.
+        second=work/'run-provenance.json'
+        r2=deepcopy(record);r2['source']['commit']='f0242b24aa4ebe54171287f3439902df8cc6f576'
+        ordinary=deepcopy(record['cases'][0]);ordinary.update(status='passed',findings=[],products={})
+        instrumented=deepcopy(ordinary);instrumented.update(lane='instrumented',status='failed',
+            findings=['Live tracked resources at after-purge','Live tracked resources at after-second-purge'])
+        r2.update(cases=[ordinary,instrumented],native_launches_consumed=3,planned_launches_consumed=2,
+            retest_launches_consumed=1,correction_rounds_consumed=1,
+            previous_attempt=dict(report=str(report),sha256=file_hash(report)))
+        save(second,r2);save(pointer,dict(report=str(second)));second_bytes=second.read_bytes()
+        # Product-reader behavior is independently checked; mock only its guard result here.
+        with patch('qualify_integrated_campaign_mac.verify',return_value={}):
+            final,prior=begin_attempt(parent,pointer,'final-correction',{},second)
+        assert final==old/'correction-round-2' and prior['correction_round']==2
+        assert prior['planned_launches']==2 and prior['retest_launches']==1 and prior['native_launches']==3
+        assert prior['retest_labels']==['F1-ordinary','F1-instrumented']
+        assert second.read_bytes()==second_bytes and report.read_bytes()==before
+        third=final/'run-provenance.json';save(third,dict(cases=[]));save(pointer,dict(report=str(third)))
+        try:begin_attempt(parent,pointer,'unapproved-third',{},third)
+        except RuntimeError as error:assert 'no third correction' in str(error)
+        else:raise AssertionError('Third repair round accepted')
     print('Resume guards passed; native launches: 0')
 
 
