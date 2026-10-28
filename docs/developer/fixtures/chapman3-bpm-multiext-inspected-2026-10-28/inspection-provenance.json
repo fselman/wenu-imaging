@@ -1,0 +1,9 @@
+{
+  "purpose": "Read-only target archive identity verification",
+  "status": "passed",
+  "native_execution": false,
+  "archive_sha256": "2934852a1ac54873bff889758e25e03eba22464a12756079fc54282f7a68afdd",
+  "file_identities_verified": 911,
+  "manifest_verified": true,
+  "persistent_archive_attachment": "libfile_b2419325f908819198bae5ddefa4ccd0"
+}

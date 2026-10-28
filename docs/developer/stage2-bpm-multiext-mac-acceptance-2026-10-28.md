@@ -1,5 +1,7 @@
 # S2-05 two-extension Mac acceptance and target plan — 28 October 2026
 
+Update: [complete target evidence is inspected](stage2-bpm-multiext-chapman3-acceptance-2026-10-28.md); all 16 Chapman3 pairs pass their declared functional/accounting gates. Earlier target-pending statements below are historical. Full S2-05/#75, #116 and target external diagnostics remain open.
+
 The complete Mac evidence for tested clean source
 `cea3e927f0392d8ec6c97cd40afbac2878aca03f` is independently inspected. This accepts
 only the declared two-extension synthetic OmegaCAM/WFI BPM ownership slice.

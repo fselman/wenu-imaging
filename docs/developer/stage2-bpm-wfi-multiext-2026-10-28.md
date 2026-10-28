@@ -1,5 +1,7 @@
 # S2-05 two-extension OmegaCAM/WFI BPM ownership — 28 October 2026
 
+Update: [complete target evidence is inspected](stage2-bpm-multiext-chapman3-acceptance-2026-10-28.md); all 16 Chapman3 pairs pass their declared functional/accounting gates. Earlier target-pending statements below are historical. Full S2-05/#75, #116 and target external diagnostics remain open.
+
 Update: [complete Mac evidence is inspected](stage2-bpm-multiext-mac-acceptance-2026-10-28.md); all 32 pairs pass. The unchanged-native-driver Chapman3 runner is prepared; actual target execution is pending. Earlier preparation status below is historical. Full S2-05/#75 and #116 remain open.
 
 Status: test-only preparation from merged main

@@ -1,0 +1,370 @@
+{
+  "purpose": "Read-only Chapman3 multiext inspection; no native execution.",
+  "status": "passed",
+  "native_execution": false,
+  "archive_sha256": "2934852a1ac54873bff889758e25e03eba22464a12756079fc54282f7a68afdd",
+  "manifest_file_identities_verified": 911,
+  "external_memory_diagnostic_acceptance": false,
+  "tested_commit": "355034606cd6015b9e9abc99744973bf4c081b00",
+  "report_sha256": "38e860798034038a2a4e43700c96f53f119f1e569d531c825b61011b5d3b8e3e",
+  "case_pairs": 16,
+  "roles_verified": 32,
+  "mask_pixel_comparisons": 10368,
+  "input_frame_checks": 96,
+  "input_extension_checks": 192,
+  "commands_verified": 39,
+  "builds": [
+    {
+      "name": "build-c17-functional",
+      "c_standard": 17,
+      "translation_units": 101,
+      "build_info_sha256": "665fe81863fdc80b14249cdf95be87b6de233be4286698c6e10dd438a54c0472",
+      "warning_lines": 62,
+      "compiler_linker_errors": []
+    },
+    {
+      "name": "build-c90-functional",
+      "c_standard": 90,
+      "translation_units": 101,
+      "build_info_sha256": "76104f40ad8ffc7a8653821de6854f7c9981c544f6e6bbf20aa928a459eb2c67",
+      "warning_lines": 61,
+      "compiler_linker_errors": []
+    }
+  ],
+  "selected_sources_verified": 38,
+  "mac_qualified_source_identities_unchanged": 37,
+  "allocator_boundaries_verified": 192,
+  "descriptor_boundaries_verified": 48,
+  "descriptor_boundaries": [
+    {
+      "case": "c90-functional-omegacam-retained-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-functional-omegacam-retained-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-functional-omegacam-known-response-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-functional-omegacam-known-response-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-functional-wfi-retained-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-functional-wfi-retained-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-functional-wfi-known-response-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-functional-wfi-known-response-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-omegacam-retained-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-omegacam-retained-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-omegacam-known-response-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-omegacam-known-response-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-wfi-retained-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-wfi-retained-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-wfi-known-response-flag0",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-functional-wfi-known-response-flag1",
+      "boundaries": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "3",
+          "3",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "all_target_products_equal_mac": true,
+  "reported_preservation_flags": {
+    "sources_unchanged": true,
+    "exported_sources_unchanged": true,
+    "protected_files_unchanged": true,
+    "metadata_mac_reference_unchanged": true,
+    "reference_unchanged": true,
+    "parent_metadata_reference_unchanged": true,
+    "checkout_unchanged": true
+  }
+}
