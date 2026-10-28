@@ -22,6 +22,7 @@ import tempfile
 from qualify_mac_leaks import digest, save
 from bpm_bias_cases import prepare, verify
 from qualify_split_ownership import allocation_state
+from descriptor_snapshots import snapshots
 
 
 def main():
@@ -86,6 +87,7 @@ def main():
              "mefpp2/tests/bpm_metadata_cases.py", "mefpp2/tests/qualify_bpm_bias.py",
              "mefpp2/tests/bpm_bias_cases.py", "mefpp2/tests/bpm_bias_probe.c",
              "mefpp2/tests/bpm_bias_ownership_probe.c",
+             "mefpp2/tests/descriptor_snapshots.py",
              "mefpp2/tests/fixtures/bpm-bias/manifest.json"]
     names += ["mefpp2/tests/fixtures/bpm-cleanup/" + name for name in fixture_manifest["files"]]
     sources = {p: digest(repo / p) for p in names}
@@ -294,6 +296,8 @@ def main():
                                 if code != 0:
                                     observed["findings"].append("Observer/tool nonzero exit")
                                 try:
+                                    # #116: retain exact per-fd attribution before enforcing the old gate.
+                                    observed["descriptor_snapshots"] = snapshots(output)
                                     for boundary in ("process-start", "after-context", "before-build", "after-build",
                                                      "after-mask-release", "after-context-release", "after-driver",
                                                      "after-purge", "after-second-purge"):
@@ -305,6 +309,8 @@ def main():
                                     if len(rows) != 1 or rows[0][0] != rows[0][1] or rows[0][2] != "1":
                                         raise RuntimeError("Descriptor observation incomplete/changed at driver return")
                                     observed["descriptors"] = list(rows[0])
+                                    if any(observed["descriptor_snapshots"]["changes"].values()):
+                                        raise RuntimeError("Per-descriptor identity changed; inspect descriptor_snapshots")
                                     for boundary in ("after-purge", "after-second-purge"):
                                         rows = re.findall(r"^CACHE DESCRIPTORS " + boundary + r" before=(\d+) after=(\d+) identity_equal=(\d+)$", output, re.M)
                                         if len(rows) != 1 or rows[0][0] != rows[0][1] or rows[0][2] != "1":

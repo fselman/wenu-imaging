@@ -1,0 +1,9 @@
+{
+  "c17-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "c90-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mefpp_platform_config.h": "a30623e3b23f7d06d526c108446bc9c1d86ed69415fd4ded970bbc37df7b89e6",
+  "parser-tests.log": "94c9f3d20b1c616dbc05c7552293ad0bc149b40621e33d8c425512f141d13451",
+  "python-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "qfits_platform_config.h": "a30623e3b23f7d06d526c108446bc9c1d86ed69415fd4ded970bbc37df7b89e6",
+  "run-provenance.json": "ba445f51f5cf6616551babaafd1a00da89ac5ba761c130450970feab8c3fa5e2"
+}

@@ -1,0 +1,1180 @@
+=== PRESERVATION CHECKS ===
+sources_unchanged True
+exported_sources_unchanged True
+protected_files_unchanged True
+ownership_reference_unchanged True
+reference_unchanged True
+checkout_unchanged True
+
+=== CASE FINDINGS ===
+{
+  "case": "c90-instrumented-retained-flag0",
+  "mode": 90,
+  "lane": "instrumented",
+  "fixture": "retained",
+  "proportional_flag": 0,
+  "roles": {
+    "ordinary": {
+      "exit_status": 0,
+      "input_sha256": {
+        "bias.fits": "f0c57bb4b9e53399673c49abe14118dbc606fb0d48de2622898994d5fea20cce",
+        "frame0.fits": "14d213fcc49b5c262b1464d06a9c59032cf8c186433036efc579a19aa5915d1a",
+        "frame1.fits": "806f93c1b1f860bab575053f05051838a49e8e74e04ad266b6526d02ab27119a",
+        "frame2.fits": "1b88b610e2900ca071486a19ba522f3537234e21b337d0c5d8fb485e5680b055",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      },
+      "findings": [],
+      "executable_sha256": "b496b315daaf16ded2d311c343f1117dbaa08b56b8e5d94aa7bec80df25e4bbe",
+      "log_sha256": "61a9326469648b3670865b5fa88d0973ece4746ac9f2e83824349348cf2918c5",
+      "output_sha256": {
+        "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609",
+        "OCAM_BPM.fits": "c12901362c94a8a40ebbb88c8617336b05d6b7f63011cdd506ccebb2fbec0ef8"
+      },
+      "outputs": {
+        "good": 79,
+        "bad": 2,
+        "pixels_checked": 81,
+        "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+        "extension": "META_CCD_17",
+        "saved_name": "OCAM_BPM.fits",
+        "saved_headers": [
+          [
+            "SIMPLE  =                    T / Fits format                                    ",
+            "BITPIX  =                    8 / bits per pixel                                 ",
+            "NAXIS   =                    0 / # of axes in frame                             ",
+            "EXTEND  =                    T / Extension may be present.                      ",
+            "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+            "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+            "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+            "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+            "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+            "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+            "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+            "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+            "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+            "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+            "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+            "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+            "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+            "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+            "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+          ],
+          [
+            "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+            "BITPIX  =                    8 / bits per pixel                                 ",
+            "NAXIS   =                    2 / single image                                   ",
+            "NAXIS1  =                    9 / x axis                                         ",
+            "NAXIS2  =                    9 / y axis                                         ",
+            "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+            "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+            "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+            "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+            "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+            "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+            "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+            "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+            "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+            "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+            "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+            "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+            "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+            "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+            "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+            "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+          ]
+        ],
+        "metadata_source_frame": "frame0.fits",
+        "expected_primary_metadata": {
+          "ORIGIN": "ESO S2 METADATA 0",
+          "TELESCOP": "VST-META-0",
+          "INSTRUME": "OMEGACAM-META-0",
+          "MJD-OBS": 61314.125,
+          "DATE-OBS": "2026-10-01T01:02:03.125",
+          "ESO DET WIN1 BINX": 1,
+          "ESO DET WIN1 BINY": 1
+        }
+      },
+      "generated_origfiles": [
+        "CMDP.OMEGACAM.2026-10-28T10:27:09.912.fits",
+        "CMDP.OMEGACAM.2026-10-28T10:27:09.912.fits"
+      ],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    "observer": {
+      "exit_status": 0,
+      "input_sha256": {
+        "bias.fits": "f0c57bb4b9e53399673c49abe14118dbc606fb0d48de2622898994d5fea20cce",
+        "frame0.fits": "14d213fcc49b5c262b1464d06a9c59032cf8c186433036efc579a19aa5915d1a",
+        "frame1.fits": "806f93c1b1f860bab575053f05051838a49e8e74e04ad266b6526d02ab27119a",
+        "frame2.fits": "1b88b610e2900ca071486a19ba522f3537234e21b337d0c5d8fb485e5680b055",
+        "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+        "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+      },
+      "findings": [
+        "Descriptor observation incomplete/changed at driver return"
+      ],
+      "executable_sha256": "cd5991befc8e1c2e59e5924cb20465d794dbc136278f424b33a2c71e3cf97348",
+      "log_sha256": "902febcdec0ae8d96f7395d4dfe916b98dc326dae500f24f79ae33088ee80bda",
+      "output_sha256": {
+        "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609",
+        "OCAM_BPM.fits": "a85017f695bcfa7628a30e2900c3d3050c86d07eb941888b55736509ffe3bd70"
+      },
+      "outputs": {
+        "good": 79,
+        "bad": 2,
+        "pixels_checked": 81,
+        "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+        "extension": "META_CCD_17",
+        "saved_name": "OCAM_BPM.fits",
+        "saved_headers": [
+          [
+            "SIMPLE  =                    T / Fits format                                    ",
+            "BITPIX  =                    8 / bits per pixel                                 ",
+            "NAXIS   =                    0 / # of axes in frame                             ",
+            "EXTEND  =                    T / Extension may be present.                      ",
+            "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+            "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+            "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+            "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+            "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+            "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+            "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+            "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+            "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+            "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+            "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+            "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+            "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+            "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+            "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+          ],
+          [
+            "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+            "BITPIX  =                    8 / bits per pixel                                 ",
+            "NAXIS   =                    2 / single image                                   ",
+            "NAXIS1  =                    9 / x axis                                         ",
+            "NAXIS2  =                    9 / y axis                                         ",
+            "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+            "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+            "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+            "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+            "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+            "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+            "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+            "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+            "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+            "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+            "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+            "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+            "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+            "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+            "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+            "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+            "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+            "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+            "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+            "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+            "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+          ]
+        ],
+        "metadata_source_frame": "frame0.fits",
+        "expected_primary_metadata": {
+          "ORIGIN": "ESO S2 METADATA 0",
+          "TELESCOP": "VST-META-0",
+          "INSTRUME": "OMEGACAM-META-0",
+          "MJD-OBS": 61314.125,
+          "DATE-OBS": "2026-10-01T01:02:03.125",
+          "ESO DET WIN1 BINX": 1,
+          "ESO DET WIN1 BINY": 1
+        }
+      },
+      "generated_origfiles": [
+        "CMDP.OMEGACAM.2026-10-28T10:27:10.079.fits",
+        "CMDP.OMEGACAM.2026-10-28T10:27:10.079.fits"
+      ],
+      "ownership_contract": [
+        "0",
+        "1",
+        "1",
+        "1",
+        "1",
+        "0",
+        "0",
+        "0"
+      ],
+      "functional_status": "passed",
+      "process-start_accounting": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "after-context_accounting": {
+        "pointers": 112,
+        "bytes": 14029,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "before-build_accounting": {
+        "pointers": 119,
+        "bytes": 14398,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "after-build_accounting": {
+        "pointers": 137,
+        "bytes": 14678,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "after-mask-release_accounting": {
+        "pointers": 133,
+        "bytes": 14233,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "after-context-release_accounting": {
+        "pointers": 20,
+        "bytes": 158,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "after-driver_accounting": {
+        "pointers": 20,
+        "bytes": 158,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "after-purge_accounting": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "after-second-purge_accounting": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      },
+      "status": "failed"
+    }
+  },
+  "findings": [
+    "observer: Descriptor observation incomplete/changed at driver return"
+  ],
+  "functional_status": "passed",
+  "status": "failed"
+}
+
+=== LOG: /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/c90-instrumented-retained-flag0-ordinary.log ===
+ENTER production mef_build_bpm supplied-bias
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-01T01:02:03.125']/[Date of observation of first frame]
+[ZNAME]=['META_CCD_17']/[Original extension name]
+[ORIGIN]=['ESO S2 METADATA 0']/[European Southern Observatory]
+[TELESCOP]=['VST-META-0']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM-META-0']/[European Southern Observatory]
+[MJD-OBS]=[61314.125]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[frame0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[frame1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[frame2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-28T10:27:09.912.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[0]/[# of axes in frame]
+[EXTEND]=[T]/[Extension may be present.]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-01T01:02:03.125']/[Date of observation of first frame]
+[ORIGIN]=['ESO S2 METADATA 0']/[European Southern Observatory]
+[TELESCOP]=['VST-META-0']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM-META-0']/[European Southern Observatory]
+[MJD-OBS]=[61314.125]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[frame0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[frame1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[frame2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-28T10:27:09.912.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[XTENSION]=[IMAGE]/[Extension first keyword (see SIMPLE)]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[EXTNAME]=['META_CCD_17']/[Extension first keyword (see SIMPLE)]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-01T01:02:03.125']/[Date of observation of first frame]
+[ORIGIN]=['ESO S2 METADATA 0']/[European Southern Observatory]
+[TELESCOP]=['VST-META-0']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM-META-0']/[European Southern Observatory]
+[MJD-OBS]=[61314.125]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[frame0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[frame1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[frame2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-28T10:27:09.912.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+BIAS RESULT supplied=1 pixels_unchanged=81 caller_released=1
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[END]=[]
+PASS: returned 9x9 mask good=79
+
+
+=== LOG: /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/c90-instrumented-retained-flag0-observer.log ===
+ACCOUNTING BEGIN process-start
+ACCOUNTING END process-start
+ACCOUNTING BEGIN after-context
+#----- memory status called from /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/source/mefpp2/tests/bpm_bias_ownership_probe.c (40) --------
+#- ALL status
+ALL_npointers       112
+ALL_size            14029
+ALL_maxalloc_kb     13
+ALL_maxpointers     112
+#- RAM status
+RAM_alloc           14029
+#- pointer details
+R(0x61b000000780) for 1552 bytes
+R(0x6040000002d0) for 39 bytes
+R(0x604000000310) for 34 bytes
+R(0x604000000350) for 35 bytes
+R(0x604000000390) for 47 bytes
+R(0x6040000003d0) for 34 bytes
+R(0x604000000410) for 35 bytes
+R(0x604000000450) for 36 bytes
+R(0x604000000490) for 37 bytes
+R(0x6040000004d0) for 35 bytes
+R(0x604000000510) for 35 bytes
+R(0x604000000550) for 35 bytes
+R(0x604000000590) for 39 bytes
+R(0x6040000005d0) for 34 bytes
+R(0x604000000610) for 34 bytes
+R(0x604000000650) for 34 bytes
+R(0x604000000690) for 38 bytes
+R(0x626000000100) for 10112 bytes
+R(0x603000001ae0) for 17 bytes
+R(0x603000001b10) for 22 bytes
+R(0x603000001b40) for 23 bytes
+R(0x603000001b70) for 22 bytes
+R(0x603000001ba0) for 19 bytes
+R(0x603000001bd0) for 18 bytes
+R(0x603000001c00) for 23 bytes
+R(0x603000001c30) for 22 bytes
+R(0x603000001c60) for 18 bytes
+R(0x603000001c90) for 17 bytes
+R(0x603000001cc0) for 24 bytes
+R(0x603000001cf0) for 25 bytes
+R(0x603000001d20) for 32 bytes
+R(0x603000001d50) for 20 bytes
+R(0x603000001d80) for 22 bytes
+R(0x603000001db0) for 22 bytes
+R(0x603000001de0) for 29 bytes
+R(0x603000001e10) for 24 bytes
+R(0x603000001e40) for 29 bytes
+R(0x603000001e70) for 22 bytes
+R(0x603000001ea0) for 17 bytes
+R(0x603000001ed0) for 23 bytes
+R(0x603000001f00) for 17 bytes
+R(0x603000001f30) for 21 bytes
+R(0x603000001f60) for 30 bytes
+R(0x603000001f90) for 30 bytes
+R(0x603000001fc0) for 30 bytes
+R(0x603000001ff0) for 22 bytes
+R(0x603000002020) for 23 bytes
+R(0x603000002050) for 17 bytes
+R(0x603000002080) for 22 bytes
+R(0x6030000020b0) for 21 bytes
+R(0x6030000020e0) for 18 bytes
+R(0x603000002110) for 28 bytes
+R(0x603000002140) for 27 bytes
+R(0x603000002170) for 27 bytes
+R(0x6030000021a0) for 27 bytes
+R(0x6030000021d0) for 17 bytes
+R(0x603000002200) for 29 bytes
+R(0x603000002230) for 30 bytes
+R(0x603000002260) for 26 bytes
+R(0x603000002290) for 28 bytes
+R(0x6030000022c0) for 29 bytes
+R(0x6030000022f0) for 23 bytes
+R(0x603000002320) for 18 bytes
+R(0x603000002350) for 23 bytes
+R(0x603000002380) for 19 bytes
+R(0x6030000023b0) for 24 bytes
+R(0x6030000023e0) for 18 bytes
+R(0x603000002410) for 22 bytes
+R(0x603000002440) for 20 bytes
+R(0x603000002470) for 27 bytes
+R(0x6030000024a0) for 28 bytes
+R(0x6030000024d0) for 30 bytes
+R(0x603000002500) for 30 bytes
+R(0x603000002530) for 30 bytes
+R(0x603000002560) for 31 bytes
+R(0x603000002590) for 30 bytes
+R(0x6030000025c0) for 30 bytes
+R(0x6030000025f0) for 28 bytes
+R(0x603000002620) for 22 bytes
+R(0x6020000000b0) for 10 bytes
+R(0x6020000000d0) for 12 bytes
+R(0x6020000000f0) for 4 bytes
+R(0x602000000110) for 9 bytes
+R(0x602000000130) for 9 bytes
+R(0x602000000150) for 10 bytes
+R(0x602000000170) for 8 bytes
+R(0x602000000190) for 6 bytes
+R(0x6020000001b0) for 9 bytes
+R(0x6020000001d0) for 8 bytes
+R(0x6020000001f0) for 8 bytes
+R(0x602000000210) for 9 bytes
+R(0x602000000230) for 8 bytes
+R(0x602000000250) for 4 bytes
+R(0x602000000270) for 7 bytes
+R(0x602000000290) for 8 bytes
+R(0x6020000002b0) for 13 bytes
+R(0x6020000002d0) for 8 bytes
+R(0x6020000002f0) for 13 bytes
+R(0x602000000310) for 8 bytes
+R(0x602000000330) for 9 bytes
+R(0x602000000350) for 9 bytes
+R(0x602000000370) for 16 bytes
+R(0x602000000390) for 16 bytes
+R(0x6020000003b0) for 12 bytes
+R(0x6020000003d0) for 16 bytes
+R(0x6020000003f0) for 11 bytes
+R(0x602000000410) for 9 bytes
+R(0x602000000430) for 16 bytes
+R(0x602000000450) for 8 bytes
+R(0x602000000470) for 15 bytes
+R(0x602000000490) for 5 bytes
+R(0x6020000004b0) for 9 bytes
+ACCOUNTING END after-context
+ENTER production mef_build_bpm supplied-bias
+ACCOUNTING BEGIN before-build
+#----- memory status called from /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/source/mefpp2/tests/bpm_bias_ownership_probe.c (40) --------
+#- ALL status
+ALL_npointers       119
+ALL_size            14398
+ALL_maxalloc_kb     14
+ALL_maxpointers     142
+#- RAM status
+RAM_alloc           14398
+#- pointer details
+R(0x61b000000780) for 1552 bytes
+R(0x6040000002d0) for 39 bytes
+R(0x604000000310) for 34 bytes
+R(0x604000000350) for 35 bytes
+R(0x604000000390) for 47 bytes
+R(0x6040000003d0) for 34 bytes
+R(0x604000000410) for 35 bytes
+R(0x604000000450) for 36 bytes
+R(0x604000000490) for 37 bytes
+R(0x6040000004d0) for 35 bytes
+R(0x604000000510) for 35 bytes
+R(0x604000000550) for 35 bytes
+R(0x604000000590) for 39 bytes
+R(0x6040000005d0) for 34 bytes
+R(0x604000000610) for 34 bytes
+R(0x604000000650) for 34 bytes
+R(0x604000000690) for 38 bytes
+R(0x613000000040) for 324 bytes
+R(0x626000000100) for 10112 bytes
+R(0x603000001ae0) for 17 bytes
+R(0x603000001b10) for 22 bytes
+R(0x603000001b40) for 23 bytes
+R(0x603000001b70) for 22 bytes
+R(0x603000001ba0) for 19 bytes
+R(0x603000001bd0) for 18 bytes
+R(0x603000001c00) for 23 bytes
+R(0x603000001c30) for 22 bytes
+R(0x603000001c60) for 18 bytes
+R(0x603000001c90) for 17 bytes
+R(0x603000001cc0) for 24 bytes
+R(0x603000001cf0) for 25 bytes
+R(0x603000001d20) for 32 bytes
+R(0x603000001d50) for 20 bytes
+R(0x603000001d80) for 22 bytes
+R(0x603000001db0) for 22 bytes
+R(0x603000001de0) for 29 bytes
+R(0x603000001e10) for 24 bytes
+R(0x603000001e40) for 29 bytes
+R(0x603000001e70) for 22 bytes
+R(0x603000001ea0) for 17 bytes
+R(0x603000001ed0) for 23 bytes
+R(0x603000001f00) for 17 bytes
+R(0x603000001f30) for 21 bytes
+R(0x603000001f60) for 30 bytes
+R(0x603000001f90) for 30 bytes
+R(0x603000001fc0) for 30 bytes
+R(0x603000001ff0) for 22 bytes
+R(0x603000002020) for 23 bytes
+R(0x603000002050) for 17 bytes
+R(0x603000002080) for 22 bytes
+R(0x6030000020b0) for 21 bytes
+R(0x6030000020e0) for 18 bytes
+R(0x603000002110) for 28 bytes
+R(0x603000002140) for 27 bytes
+R(0x603000002170) for 27 bytes
+R(0x6030000021a0) for 27 bytes
+R(0x6030000021d0) for 17 bytes
+R(0x603000002200) for 29 bytes
+R(0x603000002230) for 30 bytes
+R(0x603000002260) for 26 bytes
+R(0x603000002290) for 28 bytes
+R(0x6030000022c0) for 29 bytes
+R(0x6030000022f0) for 23 bytes
+R(0x603000002320) for 18 bytes
+R(0x603000002350) for 23 bytes
+R(0x603000002380) for 19 bytes
+R(0x6030000023b0) for 24 bytes
+R(0x6030000023e0) for 18 bytes
+R(0x603000002410) for 22 bytes
+R(0x603000002440) for 20 bytes
+R(0x603000002470) for 27 bytes
+R(0x6030000024a0) for 28 bytes
+R(0x6030000024d0) for 30 bytes
+R(0x603000002500) for 30 bytes
+R(0x603000002530) for 30 bytes
+R(0x603000002560) for 31 bytes
+R(0x603000002590) for 30 bytes
+R(0x6030000025c0) for 30 bytes
+R(0x6030000025f0) for 28 bytes
+R(0x603000002620) for 22 bytes
+R(0x6020000000b0) for 10 bytes
+R(0x6020000000d0) for 12 bytes
+R(0x6020000000f0) for 4 bytes
+R(0x602000000110) for 9 bytes
+R(0x602000000130) for 9 bytes
+R(0x602000000150) for 10 bytes
+R(0x602000000170) for 8 bytes
+R(0x602000000190) for 6 bytes
+R(0x6020000001b0) for 9 bytes
+R(0x6020000001d0) for 8 bytes
+R(0x6020000001f0) for 8 bytes
+R(0x602000000210) for 9 bytes
+R(0x602000000230) for 8 bytes
+R(0x602000000250) for 4 bytes
+R(0x602000000270) for 7 bytes
+R(0x602000000290) for 8 bytes
+R(0x6020000002b0) for 13 bytes
+R(0x6020000002d0) for 8 bytes
+R(0x6020000002f0) for 13 bytes
+R(0x602000000310) for 8 bytes
+R(0x602000000330) for 9 bytes
+R(0x602000000370) for 16 bytes
+R(0x602000000390) for 16 bytes
+R(0x6020000003b0) for 12 bytes
+R(0x6020000003d0) for 16 bytes
+R(0x6020000003f0) for 11 bytes
+R(0x602000000410) for 9 bytes
+R(0x602000000430) for 16 bytes
+R(0x602000000450) for 8 bytes
+R(0x602000000470) for 15 bytes
+R(0x602000000490) for 5 bytes
+R(0x6020000004b0) for 9 bytes
+R(0x6020000004d0) for 12 bytes
+R(0x602000000530) for 10 bytes
+R(0x602000000550) for 4 bytes
+R(0x602000000570) for 4 bytes
+R(0x602000000590) for 4 bytes
+R(0x6020000005b0) for 4 bytes
+R(0x602000000730) for 16 bytes
+ACCOUNTING END before-build
+DESCRIPTOR LIMIT before soft=256 hard=9223372036854775807 soft_unlimited=0
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-01T01:02:03.125']/[Date of observation of first frame]
+[ZNAME]=['META_CCD_17']/[Original extension name]
+[ORIGIN]=['ESO S2 METADATA 0']/[European Southern Observatory]
+[TELESCOP]=['VST-META-0']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM-META-0']/[European Southern Observatory]
+[MJD-OBS]=[61314.125]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[frame0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[frame1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[frame2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-28T10:27:10.079.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[0]/[# of axes in frame]
+[EXTEND]=[T]/[Extension may be present.]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-01T01:02:03.125']/[Date of observation of first frame]
+[ORIGIN]=['ESO S2 METADATA 0']/[European Southern Observatory]
+[TELESCOP]=['VST-META-0']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM-META-0']/[European Southern Observatory]
+[MJD-OBS]=[61314.125]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[frame0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[frame1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[frame2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-28T10:27:10.079.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[XTENSION]=[IMAGE]/[Extension first keyword (see SIMPLE)]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[EXTNAME]=['META_CACCOUNTING BEGIN after-build
+#----- memory status called from /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/source/mefpp2/tests/bpm_bias_ownership_probe.c (40) --------
+#- ALL status
+ALL_npointers       137
+ALL_size            14678
+ALL_maxalloc_kb     21
+ALL_maxpointers     421
+#- RAM status
+RAM_alloc           14678
+#- pointer details
+R(0x608000001220) for 81 bytes
+R(0x61b000000780) for 1552 bytes
+R(0x6040000002d0) for 39 bytes
+R(0x604000000310) for 34 bytes
+R(0x604000000350) for 35 bytes
+R(0x604000000390) for 47 bytes
+R(0x6040000003d0) for 34 bytes
+R(0x604000000410) for 35 bytes
+R(0x604000000450) for 36 bytes
+R(0x604000000490) for 37 bytes
+R(0x6040000004d0) for 35 bytes
+R(0x604000000510) for 35 bytes
+R(0x604000000550) for 35 bytes
+R(0x604000000590) for 39 bytes
+R(0x6040000005d0) for 34 bytes
+R(0x604000000610) for 34 bytes
+R(0x604000000650) for 34 bytes
+R(0x604000000690) for 38 bytes
+R(0x6040000011d0) for 43 bytes
+R(0x613000000040) for 324 bytes
+R(0x626000000100) for 10112 bytes
+R(0x603000001ae0) for 17 bytes
+R(0x603000001b10) for 22 bytes
+R(0x603000001b40) for 23 bytes
+R(0x603000001b70) for 22 bytes
+R(0x603000001ba0) for 19 bytes
+R(0x603000001bd0) for 18 bytes
+R(0x603000001c00) for 23 bytes
+R(0x603000001c30) for 22 bytes
+R(0x603000001c60) for 18 bytes
+R(0x603000001c90) for 17 bytes
+R(0x603000001cc0) for 24 bytes
+R(0x603000001cf0) for 25 bytes
+R(0x603000001d20) for 32 bytes
+R(0x603000001d50) for 20 bytes
+R(0x603000001d80) for 22 bytes
+R(0x603000001db0) for 22 bytes
+R(0x603000001de0) for 29 bytes
+R(0x603000001e10) for 24 bytes
+R(0x603000001e40) for 29 bytes
+R(0x603000001e70) for 22 bytes
+R(0x603000001ea0) for 17 bytes
+R(0x603000001ed0) for 23 bytes
+R(0x603000001f00) for 17 bytes
+R(0x603000001f30) for 21 bytes
+R(0x603000001f60) for 30 bytes
+R(0x603000001f90) for 30 bytes
+R(0x603000001fc0) for 30 bytes
+R(0x603000001ff0) for 22 bytes
+R(0x603000002020) for 23 bytes
+R(0x603000002050) for 17 bytes
+R(0x603000002080) for 22 bytes
+R(0x6030000020b0) for 21 bytes
+R(0x6030000020e0) for 18 bytes
+R(0x603000002110) for 28 bytes
+R(0x603000002140) for 27 bytes
+R(0x603000002170) for 27 bytes
+R(0x6030000021a0) for 27 bytes
+R(0x6030000021d0) for 17 bytes
+R(0x603000002200) for 29 bytes
+R(0x603000002230) for 30 bytes
+R(0x603000002260) for 26 bytes
+R(0x603000002290) for 28 bytes
+R(0x6030000022c0) for 29 bytes
+R(0x6030000022f0) for 23 bytes
+R(0x603000002320) for 18 bytes
+R(0x603000002350) for 23 bytes
+R(0x603000002380) for 19 bytes
+R(0x6030000023b0) for 24 bytes
+R(0x6030000023e0) for 18 bytes
+R(0x603000002410) for 22 bytes
+R(0x603000002440) for 20 bytes
+R(0x603000002470) for 27 bytes
+R(0x6030000024a0) for 28 bytes
+R(0x6030000024d0) for 30 bytes
+R(0x603000002500) for 30 bytes
+R(0x603000002530) for 30 bytes
+R(0x603000002560) for 31 bytes
+R(0x603000002590) for 30 bytes
+R(0x6030000025c0) for 30 bytes
+R(0x6030000025f0) for 28 bytes
+R(0x603000002620) for 22 bytes
+R(0x603000004930) for 24 bytes
+R(0x6020000000b0) for 10 bytes
+R(0x6020000000d0) for 12 bytes
+R(0x6020000000f0) for 4 bytes
+R(0x602000000110) for 9 bytes
+R(0x602000000130) for 9 bytes
+R(0x602000000150) for 10 bytes
+R(0x602000000170) for 8 bytes
+R(0x602000000190) for 6 bytes
+R(0x6020000001b0) for 9 bytes
+R(0x6020000001d0) for 8 bytes
+R(0x6020000001f0) for 8 bytes
+R(0x602000000210) for 9 bytes
+R(0x602000000230) for 8 bytes
+R(0x602000000250) for 4 bytes
+R(0x602000000270) for 7 bytes
+R(0x602000000290) for 8 bytes
+R(0x6020000002b0) for 13 bytes
+R(0x6020000002d0) for 8 bytes
+R(0x6020000002f0) for 13 bytes
+R(0x602000000310) for 8 bytes
+R(0x602000000330) for 9 bytes
+R(0x602000000370) for 16 bytes
+R(0x602000000390) for 16 bytes
+R(0x6020000003b0) for 12 bytes
+R(0x6020000003d0) for 16 bytes
+R(0x6020000003f0) for 11 bytes
+R(0x602000000410) for 9 bytes
+R(0x602000000430) for 16 bytes
+R(0x602000000450) for 8 bytes
+R(0x602000000470) for 15 bytes
+R(0x602000000490) for 5 bytes
+R(0x6020000004b0) for 9 bytes
+R(0x6020000004d0) for 12 bytes
+R(0x602000000530) for 10 bytes
+R(0x602000000550) for 4 bytes
+R(0x602000000570) for 4 bytes
+R(0x602000000590) for 4 bytes
+R(0x6020000005b0) for 4 bytes
+R(0x602000000730) for 16 bytes
+R(0x602000000b90) for 12 bytes
+R(0x602000000bb0) for 8 bytes
+R(0x602000000bd0) for 8 bytes
+R(0x602000000bf0) for 8 bytes
+R(0x602000000c10) for 8 bytes
+R(0x602000000c30) for 12 bytes
+R(0x602000000c50) for 8 bytes
+R(0x602000000c70) for 8 bytes
+R(0x602000000c90) for 8 bytes
+R(0x602000000cb0) for 8 bytes
+R(0x602000000cd0) for 12 bytes
+R(0x602000000cf0) for 8 bytes
+R(0x602000000d10) for 8 bytes
+R(0x602000000d30) for 8 bytes
+R(0x602000000d50) for 8 bytes
+ACCOUNTING END after-build
+ACCOUNTING BEGIN after-mask-release
+#----- memory status called from /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/source/mefpp2/tests/bpm_bias_ownership_probe.c (40) --------
+#- ALL status
+ALL_npointers       133
+ALL_size            14233
+ALL_maxalloc_kb     21
+ALL_maxpointers     421
+#- RAM status
+RAM_alloc           14233
+#- pointer details
+R(0x61b000000780) for 1552 bytes
+R(0x6040000002d0) for 39 bytes
+R(0x604000000310) for 34 bytes
+R(0x604000000350) for 35 bytes
+R(0x604000000390) for 47 bytes
+R(0x6040000003d0) for 34 bytes
+R(0x604000000410) for 35 bytes
+R(0x604000000450) for 36 bytes
+R(0x604000000490) for 37 bytes
+R(0x6040000004d0) for 35 bytes
+R(0x604000000510) for 35 bytes
+R(0x604000000550) for 35 bytes
+R(0x604000000590) for 39 bytes
+R(0x6040000005d0) for 34 bytes
+R(0x604000000610) for 34 bytes
+R(0x604000000650) for 34 bytes
+R(0x604000000690) for 38 bytes
+R(0x6040000011d0) for 43 bytes
+R(0x626000000100) for 10112 bytes
+R(0x603000001ae0) for 17 bytes
+R(0x603000001b10) for 22 bytes
+R(0x603000001b40) for 23 bytes
+R(0x603000001b70) for 22 bytes
+R(0x603000001ba0) for 19 bytes
+R(0x603000001bd0) for 18 bytes
+R(0x603000001c00) for 23 bytes
+R(0x603000001c30) for 22 bytes
+R(0x603000001c60) for 18 bytes
+R(0x603000001c90) for 17 bytes
+R(0x603000001cc0) for 24 bytes
+R(0x603000001cf0) for 25 bytes
+R(0x603000001d20) for 32 bytes
+R(0x603000001d50) for 20 bytes
+R(0x603000001d80) for 22 bytes
+R(0x603000001db0) for 22 bytes
+R(0x603000001de0) for 29 bytes
+R(0x603000001e10) for 24 bytes
+R(0x603000001e40) for 29 bytes
+R(0x603000001e70) for 22 bytes
+R(0x603000001ea0) for 17 bytes
+R(0x603000001ed0) for 23 bytes
+R(0x603000001f00) for 17 bytes
+R(0x603000001f30) for 21 bytes
+R(0x603000001f60) for 30 bytes
+R(0x603000001f90) for 30 bytes
+R(0x603000001fc0) for 30 bytes
+R(0x603000001ff0) for 22 bytes
+R(0x603000002020) for 23 bytes
+R(0x603000002050) for 17 bytes
+R(0x603000002080) for 22 bytes
+R(0x6030000020b0) for 21 bytes
+R(0x6030000020e0) for 18 bytes
+R(0x603000002110) for 28 bytes
+R(0x603000002140) for 27 bytes
+R(0x603000002170) for 27 bytes
+R(0x6030000021a0) for 27 bytes
+R(0x6030000021d0) for 17 bytes
+R(0x603000002200) for 29 bytes
+R(0x603000002230) for 30 bytes
+R(0x603000002260) for 26 bytes
+R(0x603000002290) for 28 bytes
+R(0x6030000022c0) for 29 bytes
+R(0x6030000022f0) for 23 bytes
+R(0x603000002320) for 18 bytes
+R(0x603000002350) for 23 bytes
+R(0x603000002380) for 19 bytes
+R(0x6030000023b0) for 24 bytes
+R(0x6030000023e0) for 18 bytes
+R(0x603000002410) for 22 bytes
+R(0x603000002440) for 20 bytes
+R(0x603000002470) for 27 bytes
+R(0x6030000024a0) for 28 bytes
+R(0x6030000024d0) for 30 bytes
+R(0x603000002500) for 30 bytes
+R(0x603000002530) for 30 bytes
+R(0x603000002560) for 31 bytes
+R(0x603000002590) for 30 bytes
+R(0x6030000025c0) for 30 bytes
+R(0x6030000025f0) for 28 bytes
+R(0x603000002620) for 22 bytes
+R(0x6020000000b0) for 10 bytes
+R(0x6020000000d0) for 12 bytes
+R(0x6020000000f0) for 4 bytes
+R(0x602000000110) for 9 bytes
+R(0x602000000130) for 9 bytes
+R(0x602000000150) for 10 bytes
+R(0x602000000170) for 8 bytes
+R(0x602000000190) for 6 bytes
+R(0x6020000001b0) for 9 bytes
+R(0x6020000001d0) for 8 bytes
+R(0x6020000001f0) for 8 bytes
+R(0x602000000210) for 9 bytes
+R(0x602000000230) for 8 bytes
+R(0x602000000250) for 4 bytes
+R(0x602000000270) for 7 bytes
+R(0x602000000290) for 8 bytes
+R(0x6020000002b0) for 13 bytes
+R(0x6020000002d0) for 8 bytes
+R(0x6020000002f0) for 13 bytes
+R(0x602000000310) for 8 bytes
+R(0x602000000330) for 9 bytes
+R(0x602000000370) for 16 bytes
+R(0x602000000390) for 16 bytes
+R(0x6020000003b0) for 12 bytes
+R(0x6020000003d0) for 16 bytes
+R(0x6020000003f0) for 11 bytes
+R(0x602000000410) for 9 bytes
+R(0x602000000430) for 16 bytes
+R(0x602000000450) for 8 bytes
+R(0x602000000470) for 15 bytes
+R(0x602000000490) for 5 bytes
+R(0x6020000004b0) for 9 bytes
+R(0x6020000004d0) for 12 bytes
+R(0x602000000530) for 10 bytes
+R(0x602000000550) for 4 bytes
+R(0x602000000570) for 4 bytes
+R(0x602000000590) for 4 bytes
+R(0x6020000005b0) for 4 bytes
+R(0x602000000b90) for 12 bytes
+R(0x602000000bb0) for 8 bytes
+R(0x602000000bd0) for 8 bytes
+R(0x602000000bf0) for 8 bytes
+R(0x602000000c10) for 8 bytes
+R(0x602000000c30) for 12 bytes
+R(0x602000000c50) for 8 bytes
+R(0x602000000c70) for 8 bytes
+R(0x602000000c90) for 8 bytes
+R(0x602000000cb0) for 8 bytes
+R(0x602000000cd0) for 12 bytes
+R(0x602000000cf0) for 8 bytes
+R(0x602000000d10) for 8 bytes
+R(0x602000000d30) for 8 bytes
+R(0x602000000d50) for 8 bytes
+ACCOUNTING END after-mask-release
+ACCOUNTING BEGIN after-context-release
+#----- memory status called from /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/source/mefpp2/tests/bpm_bias_ownership_probe.c (40) --------
+#- ALL status
+ALL_npointers       20
+ALL_size            158
+ALL_maxalloc_kb     21
+ALL_maxpointers     421
+#- RAM status
+RAM_alloc           158
+#- pointer details
+R(0x602000000530) for 10 bytes
+R(0x602000000550) for 4 bytes
+R(0x602000000570) for 4 bytes
+R(0x602000000590) for 4 bytes
+R(0x6020000005b0) for 4 bytes
+R(0x602000000b90) for 12 bytes
+R(0x602000000bb0) for 8 bytes
+R(0x602000000bd0) for 8 bytes
+R(0x602000000bf0) for 8 bytes
+R(0x602000000c10) for 8 bytes
+R(0x602000000c30) for 12 bytes
+R(0x602000000c50) for 8 bytes
+R(0x602000000c70) for 8 bytes
+R(0x602000000c90) for 8 bytes
+R(0x602000000cb0) for 8 bytes
+R(0x602000000cd0) for 12 bytes
+R(0x602000000cf0) for 8 bytes
+R(0x602000000d10) for 8 bytes
+R(0x602000000d30) for 8 bytes
+R(0x602000000d50) for 8 bytes
+ACCOUNTING END after-context-release
+ACCOUNTING BEGIN after-driver
+#----- memory status called from /Users/fselman/Software/build/wenu-imaging/mac-stage2-bpm-bias-zutw0_xe/source/mefpp2/tests/bpm_bias_ownership_probe.c (40) --------
+#- ALL status
+ALL_npointers       20
+ALL_size            158
+ALL_maxalloc_kb     21
+ALL_maxpointers     421
+#- RAM status
+RAM_alloc           158
+#- pointer details
+R(0x602000000530) for 10 bytes
+R(0x602000000550) for 4 bytes
+R(0x602000000570) for 4 bytes
+R(0x602000000590) for 4 bytes
+R(0x6020000005b0) for 4 bytes
+R(0x602000000b90) for 12 bytes
+R(0x602000000bb0) for 8 bytes
+R(0x602000000bd0) for 8 bytes
+R(0x602000000bf0) for 8 bytes
+R(0x602000000c10) for 8 bytes
+R(0x602000000c30) for 12 bytes
+R(0x602000000c50) for 8 bytes
+R(0x602000000c70) for 8 bytes
+R(0x602000000c90) for 8 bytes
+R(0x602000000cb0) for 8 bytes
+R(0x602000000cd0) for 12 bytes
+R(0x602000000cf0) for 8 bytes
+R(0x602000000d10) for 8 bytes
+R(0x602000000d30) for 8 bytes
+R(0x602000000d50) for 8 bytes
+ACCOUNTING END after-driver
+ACCOUNTING BEGIN after-purge
+ACCOUNTING END after-purge
+ACCOUNTING BEGIN after-second-purge
+ACCOUNTING END after-second-purge
+CD_17']/[Extension first keyword (see SIMPLE)]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-01T01:02:03.125']/[Date of observation of first frame]
+[ORIGIN]=['ESO S2 METADATA 0']/[European Southern Observatory]
+[TELESCOP]=['VST-META-0']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM-META-0']/[European Southern Observatory]
+[MJD-OBS]=[61314.125]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[frame0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[frame1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[frame2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-28T10:27:10.079.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+BIAS RESULT supplied=1 pixels_unchanged=81 caller_released=1
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[END]=[]
+PASS: returned 9x9 mask good=79
+BPM RESULT native_exit=0 constructed=1 destroyed=1 builds=1 masks_released=1 mismatch=0 owner_live=0 mask_live=0
+DESCRIPTOR LIMIT after soft=9223372036854775807 hard=9223372036854775807 soft_unlimited=1
+DESCRIPTORS before=4 after=4 identity_equal=0
+CACHE DESCRIPTORS after-purge before=4 after=4 identity_equal=0
+CACHE DESCRIPTORS after-second-purge before=4 after=4 identity_equal=0
+
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 

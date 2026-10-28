@@ -1,0 +1,10 @@
+test_added_and_removed_descriptors (test_descriptor_snapshots.DescriptorSnapshots.test_added_and_removed_descriptors) ... ok
+test_balanced_and_unordered (test_descriptor_snapshots.DescriptorSnapshots.test_balanced_and_unordered) ... ok
+test_missing_and_duplicate_boundaries_rejected (test_descriptor_snapshots.DescriptorSnapshots.test_missing_and_duplicate_boundaries_rejected) ... ok
+test_missing_duplicate_and_corrupted_details_rejected (test_descriptor_snapshots.DescriptorSnapshots.test_missing_duplicate_and_corrupted_details_rejected) ... ok
+test_same_count_replacement_identifies_field (test_descriptor_snapshots.DescriptorSnapshots.test_same_count_replacement_identifies_field) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK

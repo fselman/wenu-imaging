@@ -1,5 +1,10 @@
 # S2-05 supplied-bias ownership qualification — 28 October 2026
 
+Actual Mac run has one unresolved descriptor-identity finding; see
+[issue #116 diagnostic preparation](stage2-bpm-bias-descriptor-diagnostic-2026-10-28.md).
+Earlier native-pending statements describe preparation history. No Mac acceptance
+is claimed; all failed evidence and installations remain preserved.
+
 Additional agent preparation, 28 October 2026: the existing PR #115 source
 `465848f493abff0a8af85f0319f96c6ec6c0d727` now passes independent Astropy
 fixture/product-oracle checks (16 constructed products, 48 deliberate corruption

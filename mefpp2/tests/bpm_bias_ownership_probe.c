@@ -9,6 +9,7 @@
 #include <limits.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #include "mefp_lib.h"
 #include "xmemory.h"
 #include "qfits.h"
@@ -83,10 +84,44 @@ static void observe_del(mef_bb *context)
     account("after-context-release");
 }
 
+/* #116: record each identity without opening files or changing the gate.
+ * Target lookup is explanatory: unsupported socket/pipe paths remain explicit. */
+static void descriptor_detail(const char *phase, int fd, int flags,
+                              const struct stat *info)
+{
+    char target[PATH_MAX];
+    int found, error;
+#if defined(__linux__)
+    char linkpath[64];
+    ssize_t length;
+#endif
+    fprintf(stderr,
+            "DESCRIPTOR DETAIL phase=%s fd=%d flags=%d dev=%lu ino=%lu mode=%lu\n",
+            phase, fd, flags, (unsigned long)info->st_dev,
+            (unsigned long)info->st_ino, (unsigned long)info->st_mode);
+    found = 0;
+    error = 0;
+#if defined(__APPLE__) && defined(F_GETPATH)
+    if (fcntl(fd, F_GETPATH, target) == 0) found = 1;
+    else error = errno;
+#elif defined(__linux__)
+    sprintf(linkpath, "/proc/self/fd/%d", fd);
+    length = readlink(linkpath, target, sizeof(target) - 1);
+    if (length >= 0) {
+        target[length] = '\0';
+        found = 1;
+    } else error = errno;
+#endif
+    if (found)
+        fprintf(stderr, "DESCRIPTOR TARGET phase=%s fd=%d path=%s\n", phase, fd, target);
+    else
+        fprintf(stderr, "DESCRIPTOR TARGET phase=%s fd=%d unavailable_errno=%d\n", phase, fd, error);
+}
+
 /* Enumerate open descriptors independently of the soft limit: the production
  * allocator raises that limit on first use (#106). Exclude only this scan's
  * temporary directory descriptor; close it before returning. */
-static int descriptors(unsigned long *identity)
+static int descriptors(const char *phase, unsigned long *identity)
 {
     DIR *directory;
     struct dirent *item;
@@ -134,6 +169,7 @@ static int descriptors(unsigned long *identity)
             failed = 1;
             break;
         }
+        descriptor_detail(phase, fd, flags, &info);
         count++;
         cell = (unsigned long)fd;
         cell = cell * 33UL + (unsigned long)flags;
@@ -147,6 +183,8 @@ static int descriptors(unsigned long *identity)
         fprintf(stderr, "DESCRIPTORS ERROR incomplete enumeration\n");
         return -1;
     }
+    fprintf(stderr, "DESCRIPTOR SET phase=%s count=%d identity=%lu\n", phase, count, value);
+    fflush(stderr);
     *identity = value;
     return count;
 }
@@ -167,7 +205,7 @@ int main(int argc, char **argv)
     int status, before, after;
     unsigned long first_identity, last_identity;
     descriptor_limit("before");
-    before = descriptors(&first_identity);
+    before = descriptors("before", &first_identity);
     if (before < 0) return 2;
     account("process-start");
     status = retained_bpm_main(argc, argv);
@@ -176,17 +214,17 @@ int main(int argc, char **argv)
            status, constructed, destroyed, builds, masks_released, mismatch,
            owner != NULL, returned_mask != NULL);
     descriptor_limit("after");
-    after = descriptors(&last_identity);
+    after = descriptors("after-driver", &last_identity);
     printf("DESCRIPTORS before=%d after=%d identity_equal=%d\n",
            before, after, after >= 0 && first_identity == last_identity);
     qfits_cache_purge();
     account("after-purge");
-    after = descriptors(&last_identity);
+    after = descriptors("after-purge", &last_identity);
     printf("CACHE DESCRIPTORS after-purge before=%d after=%d identity_equal=%d\n",
            before, after, after >= 0 && first_identity == last_identity);
     qfits_cache_purge();
     account("after-second-purge");
-    after = descriptors(&last_identity);
+    after = descriptors("after-second-purge", &last_identity);
     printf("CACHE DESCRIPTORS after-second-purge before=%d after=%d identity_equal=%d\n",
            before, after, after >= 0 && first_identity == last_identity);
     fflush(stdout);
