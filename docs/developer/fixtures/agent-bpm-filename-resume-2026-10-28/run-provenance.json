@@ -1,0 +1,18 @@
+{
+  "status": "prepared-not-native-executed",
+  "checks": {
+    "check_bpm_filename_resume.py": "passed",
+    "check_integrated_resume.py": "passed",
+    "python_syntax": "passed"
+  },
+  "native_launches": 0,
+  "source_sha256": {
+    "qualify_integrated_campaign_mac.py": "8a73f3d60216a7ed382af7fc8ef5861b7eaa7bd8d5af779c2b4f00a53f648646",
+    "check_bpm_filename_resume.py": "435be57f449e530dd308257da3e7d2b57e877754132aa71e4bf9717c0feb1b6d"
+  },
+  "limits": [
+    "Guard unit tests mock native product/diagnostic reader outcomes; existing real readers remain active at host continuation",
+    "One F2 ordinary retry; then originally unrun instrumented/leaks only if passed",
+    "Inherited F1 stays attributed to source 9242174; no corrected-source F1 run claimed"
+  ]
+}

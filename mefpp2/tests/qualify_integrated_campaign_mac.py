@@ -28,7 +28,8 @@ from descriptor_snapshots import snapshots
 LOCK_SHA = 'e4572a8f99b4648722a89c6b4b4ffcc539243ef69faeee0dc71999f4a8d6d397'
 FROZEN = {'native-roadmap-frozen-v2.0-2026-10-28.md':'1a3b679710fb45796fb136f6d9883efba632522d8a0ead249ce868ef107f1f89',
           'native-roadmap-amendment-v2.1-2026-10-28.md':'06436cf14657ee5585957ead6328bee5218c66a20c36ed4cfc702840c5377626',
-          'native-roadmap-amendment-v2.2-2026-10-28.md':'20f23e9fa75d28ea16cda55e549d5cdf6a4e1db9ca3045fd8d6398ed476f3b6b'}
+          'native-roadmap-amendment-v2.2-2026-10-28.md':'20f23e9fa75d28ea16cda55e549d5cdf6a4e1db9ca3045fd8d6398ed476f3b6b',
+          'native-roadmap-amendment-v2.3-2026-10-28.md':'4720621bf85978c2fc4f7582c633193cb6f3c30a65c8d42e0a333453847df84e'}
 ARGV = ['--pafname','mefpp.paf','--bias','bias.list','--biassave','--biassub',
         '--bpm','bpm.list','--dome','dome.list','--domesave','--sky','sky.list','--skysave','--science','science.list']
 
@@ -156,6 +157,92 @@ def begin_attempt(parent, pointer, commit, protected, previous_path=None, allow_
         retest_labels=labels,product_reference=reference,input_sha256=cases[0]['input_sha256'],approved_exception=exception)
 
 
+def verify_bpm_filenames(path, inputs):
+    """Require the approved filename provenance on primary and detector headers."""
+    from astropy.io import fits
+    with fits.open(path,memmap=False) as hdus:
+        for hdu in hdus:
+            for index,name in enumerate(inputs,1):
+                key='ESO MPP BPM FRAME%03d'%index
+                if hdu.header.get(key)!=Path(name).name:
+                    raise RuntimeError('BPM filename provenance differs: '+key)
+
+
+def begin_bpm_filename_attempt(parent, pointer, protected, previous_path, repo, commit):
+    """One F2 retry after the approved basename correction; retain passed F1."""
+    expected=parent/'mac-stage2-integrated-du1sqj06/v2.2-bias-qc/run-provenance.json'
+    previous_path=previous_path.resolve(strict=True)
+    if previous_path!=expected.resolve(strict=True):raise RuntimeError('STOP: wrong BPM parent')
+    if Path(json.loads(pointer.read_text())['report']).resolve()!=previous_path:
+        raise RuntimeError('STOP: active campaign already advanced')
+    old=json.loads(previous_path.read_text());cases=old['cases']
+    if (old['source']['commit']!='92421749d8350d9b6438d7b16014555a228f2c5f'
+        or old['status']!='stopped' or old['execution_complete']
+        or old['planned_launches_consumed']!=4 or old['retest_launches_consumed']!=5
+        or old['native_launches_consumed']!=9 or old['correction_rounds_consumed']!=2
+        or not old['bias_qc_exception_consumed'] or len(cases)!=4):
+        raise RuntimeError('STOP: not the reviewed WFI failure/counters')
+    if [(c['fixed_row'],c['lane']) for c in cases]!=[
+        ('F1','ordinary'),('F1','instrumented'),('F1','leaks'),('F2','ordinary')]:
+        raise RuntimeError('STOP: unexpected parent lanes')
+    failed=cases[-1]
+    if (failed['status']!='failed' or failed['exit_status']!=-4
+        or failed['findings']!=['Native/tool process returned nonzero',
+                               'Expected exactly six integrated FITS products; found 2']):
+        raise RuntimeError('STOP: not the reviewed WFI SIGILL')
+    if old['protected_sha256']!=protected:raise RuntimeError('STOP: installation identity changed')
+    for key in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved','previous_report_unchanged'):
+        if not old[key]:raise RuntimeError('STOP: parent preservation finding')
+    # Admit precisely the approved production change; test/handoff code is separate.
+    changed=subprocess.check_output(['git','diff','--name-only',old['source']['commit'],commit,'--','mefpp2'],cwd=repo,text=True).splitlines()
+    if [p for p in changed if not p.startswith('mefpp2/tests/')]!=['mefpp2/ins/mef/common/mefp_lib.c']:
+        raise RuntimeError('STOP: unexpected native changes')
+    name='mefpp2/ins/mef/common/mefp_lib.c'
+    before=subprocess.check_output(['git','show',old['source']['commit']+':'+name],cwd=repo,text=True)
+    original='                qfits_header_add_after(fhdr_extra,cval_prev, cval, flist->name[i], bb->bpm_frame_i_comment,NULL);'
+    replacement='                /* Record the filename, as for bias/dome/sky provenance. */\n                qfits_header_add_after(fhdr_extra,cval_prev, cval, get_basename(flist->name[i]), bb->bpm_frame_i_comment,NULL);'
+    if before.count(original)!=1 or before.replace(original,replacement)!=(repo/name).read_text():
+        raise RuntimeError('STOP: native change differs from approved basename correction')
+    # Read-only verification of prior logs, inputs, ancestor reports and passed F1.
+    identities={str(previous_path):file_hash(previous_path)}
+    ancestor=old.get('previous_attempt');ancestor_sources=[]
+    while ancestor:
+        path=Path(ancestor['report'])
+        if str(path) in identities:raise RuntimeError('STOP: ancestor cycle')
+        if file_hash(path)!=ancestor['sha256']:raise RuntimeError('STOP: ancestor changed')
+        identities[str(path)]=ancestor['sha256'];prior=json.loads(path.read_text())
+        ancestor_sources.append(prior['source']['commit']);ancestor=prior.get('previous_attempt')
+    if ancestor_sources!=['3e60e8cbf198bd786dd1929e48e60f5c066be854','f0242b24aa4ebe54171287f3439902df8cc6f576','fa2e5c2f508e18d18981b8e987b86cc4a411c1df']:
+        raise RuntimeError('STOP: incomplete reviewed ancestor chain')
+    logs={}
+    for command in old['commands']:
+        path=Path(command['log'])
+        if file_hash(path)!=command['log_sha256']:raise RuntimeError('STOP: parent log changed')
+        identities[str(path)]=command['log_sha256'];logs[command['label']]=path
+    for case in cases:
+        root=Path(case['directory'])
+        for name,h in case['input_sha256'].items():
+            path=root/name
+            if file_hash(path)!=h:raise RuntimeError('STOP: parent input changed')
+            identities[str(path)]=h
+        if case['fixed_row']=='F1':
+            if case['status']!='passed' or case['exit_status']!=0 or case['findings']:
+                raise RuntimeError('STOP: F1 was not fully passed')
+            actual=verify(root,case['input_sha256'],2,True,['F1_CCD_A','F1_CCD_B'])
+            if actual!=case['products']:raise RuntimeError('STOP: F1 products changed')
+            if case['lane']!='ordinary':
+                state,findings=diagnostic(logs['F1-'+case['lane']].read_text(errors='replace'),2,case['lane'])
+                if findings or json.loads(json.dumps(state))!=case['diagnostics']:raise RuntimeError('STOP: retained F1 diagnostic finding')
+        for path in root.glob('*.fits'):identities[str(path)]=file_hash(path)
+    if sorted(p.name for p in Path(failed['directory']).glob('*.fits'))!=['WFI_BPM_1x1.fits','WFI_MB_1x1.fits']:
+        raise RuntimeError('STOP: partial WFI products differ')
+    work=parent/'mac-stage2-integrated-du1sqj06/v2.3-bpm-filenames';work.mkdir(exist_ok=False)
+    return work,dict(report=str(previous_path),sha256=file_hash(previous_path),source=old['source'],
+        planned_launches=4,retest_launches=5,native_launches=9,correction_round=2,
+        reviewed_defects=[126],retest_labels=['F2-ordinary'],approved_exception='v2.3-bpm-filenames',
+        inherited_fixed_rows=['F1'],inherited_cases=cases[:3],preserved_sha256=identities)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--compiler',type=Path,required=True)
@@ -164,7 +251,10 @@ def main():
     parser.add_argument('--input-lock',type=Path,required=True)
     parser.add_argument('--resume-correction',type=Path,help='Reviewed F1 failure report; continue its fixed global repair round (1 or 2 only)')
     parser.add_argument('--bias-qc-exception',action='store_true',help='Approved one-time v2.2 four-array cleanup exception only')
+    parser.add_argument('--resume-bpm-filenames',type=Path,help='One reviewed F2 SIGILL retry after the approved v2.3 caller correction')
     args=parser.parse_args()
+    if args.resume_bpm_filenames and (args.resume_correction or args.bias_qc_exception):
+        raise RuntimeError('STOP: incompatible resume options')
     # Guards and input/reference lock: no native launch occurs in this section.
     if platform.system()!='Darwin' or platform.node().split('.')[0]!='MC02VV0HPHTDG':
         raise RuntimeError('STOP: qualified Intel Mac required')
@@ -206,7 +296,10 @@ def main():
     parent=Path.home()/'Software/build/wenu-imaging';parent.mkdir(parents=True,exist_ok=True)
     pointer=parent/'stage2-integrated-active-campaign.json'
     # A correction continues the original campaign; it cannot reset its counters.
-    work,previous=begin_attempt(parent,pointer,commit,protected,args.resume_correction,args.bias_qc_exception)
+    if args.resume_bpm_filenames:
+        work,previous=begin_bpm_filename_attempt(parent,pointer,protected,args.resume_bpm_filenames,repo,commit)
+    else:
+        work,previous=begin_attempt(parent,pointer,commit,protected,args.resume_correction,args.bias_qc_exception)
     provenance=work/'run-provenance.json'
     record=dict(schema_version=1,project='wenu-imaging',source=dict(commit=commit,dirty=False),
                 created_utc=datetime.now(timezone.utc).isoformat(),status='running',execution_complete=False,
@@ -222,6 +315,8 @@ def main():
                   native_launches_consumed=previous['native_launches'] if previous else 0,
                   correction_rounds_consumed=previous['correction_round'] if previous else 0,
                   bias_qc_exception_consumed=bool(previous and previous.get('approved_exception')))
+    record['inherited_cases']=previous.get('inherited_cases',[]) if previous else []
+    record['bpm_filename_retry_consumed']=bool(args.resume_bpm_filenames)
     save(provenance,record);save(pointer,dict(report=str(provenance),source=commit))
     print('WORK DIRECTORY:',work,flush=True)
     env=os.environ.copy()
@@ -238,7 +333,7 @@ def main():
                 limit=previous['retest_launches']+len(previous['retest_labels'])
                 if record['retest_launches_consumed']>=limit:raise RuntimeError('STOP: correction retest budget consumed')
                 record['retest_launches_consumed']+=1
-                item['purpose']=(previous.get('approved_exception') or ('correction-round-'+str(previous['correction_round'])))+' F1 validation'
+                item['purpose']=(previous.get('approved_exception') or ('correction-round-'+str(previous['correction_round'])))+' validation'
             else:
                 if record['planned_launches_consumed']>=6:raise RuntimeError('STOP: F1/F2 planned launch budget exhausted')
                 record['planned_launches_consumed']+=1;item['purpose']='fixed planned row'
@@ -291,7 +386,7 @@ def main():
                 if code:raise RuntimeError('dsymutil failed')
         record['binary_sha256']={lane:file_hash(p) for lane,p in builds.items()}
         # F1: three complete tiny workflows; F2 starts only after every F1 lane passes.
-        for fixed,tiny in [('F1',True),('F2',False)]:
+        for fixed,tiny in ([('F2',False)] if args.resume_bpm_filenames else [('F1',True),('F2',False)]):
             reference=None
             if not tiny:
                 # Copy each locked original once; never hardlink or chmod the originals.
@@ -337,6 +432,8 @@ def main():
                 # All six products: independent tiny arrays or exact WFI control comparison.
                 try:
                     case['products']=verify(directory,inputs,detectors,tiny,names)
+                    if args.resume_bpm_filenames:
+                        verify_bpm_filenames(directory/case['products']['CALIB.BPM']['name'],selection['roles']['bpm'])
                     if tiny and previous and previous['product_reference'] is not None:
                         if comparable(case['products'])!=comparable(previous['product_reference']):
                             case['findings'].append('Products/ordered metadata differ from retained corrected ordinary result')
@@ -360,8 +457,9 @@ def main():
         record['checkout_unchanged']=git('rev-parse','HEAD')==commit and not git('status','--porcelain','--untracked-files=all')
         record['raw_files_preserved']=all([Path(p).stat().st_size,Path(p).stat().st_mtime_ns,Path(p).stat().st_ino]==st and file_hash(Path(p))==lock['input_files'][p]['sha256'] for p,st in rawstats.items())
         record['previous_report_unchanged']=not previous or file_hash(Path(previous['report']))==previous['sha256']
+        record['inherited_evidence_unchanged']=all(file_hash(Path(p))==h for p,h in (previous.get('preserved_sha256',{}) if previous else {}).items())
         record['finished_utc']=datetime.now(timezone.utc).isoformat()
-        if not all(record[k] for k in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved','previous_report_unchanged')):record['status']='stopped-preservation-finding'
+        if not all(record[k] for k in ('protected_files_unchanged','checkout_unchanged','raw_files_preserved','previous_report_unchanged','inherited_evidence_unchanged')):record['status']='stopped-preservation-finding'
         save(provenance,record)
         print('PLANNED LAUNCHES:',record['planned_launches_consumed'],'/ 19; correction retests:',record['retest_launches_consumed'],flush=True)
         print('TOTAL NATIVE LAUNCHES:',record['native_launches_consumed'],'; correction rounds:',record['correction_rounds_consumed'],'/ 2',flush=True)

@@ -10,7 +10,7 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | Prior accepted build/context/parser/split/BPM work | Accepted and preserved | Main b0061b55b9ff8dc2d185c3c403c5119a25b606a5; PRs #115/#117 and earlier receipts |
 | One input inventory/reference lock | Locked; header inventory and selected-content report inspected | WFI at /Users/fselman/Pictures/WFI; 11 reported SHA256 identities and fixed lists; see integrated runner record |
 | F1 integrated tiny OmegaCAM | Ordinary, instrumented and external leaks passed (user-reported at 9242174) | Full v2.2 archive inspection pending; no repeated F1 matrix |
-| F2 integrated selected WFI | Ordinary stopped: SIGILL in qfits strcpy, #126; filename correction prepared | Two partial products are not acceptance; instrumented/leaks unrun; guarded retry handoff pending |
+| F2 integrated selected WFI | Ordinary stopped: SIGILL in qfits strcpy, #126; filename correction prepared | Two partial products are not acceptance; instrumented/leaks unrun; one-use guarded retry prepared, actual execution pending |
 | F3 five fixed failure cases | Pending / reuse applicable accepted evidence | Maximum 10 planned launches |
 | F4 fixed same-process repetition | Pending | Maximum 1 planned launch, warmup plus ten measured cycles |
 | F5 compact Chapman3 regression | Pending | Maximum 2 planned launches: one C17 and one C90 together at the end, per v2.1; no target external-memory qualification |
@@ -29,3 +29,5 @@ Final-round terminal result (user-reported, full evidence not yet inspected): so
 Fernando approved the concrete four-release / two-validation exception with "proceed" after identifying the modified native file. Residual is user-reported 4 allocations / 32 bytes with balanced owners and all preservation flags true. Native exception verification remains pending.
 
 Latest: [approved BPM provenance correction](native-roadmap-amendment-v2.3-2026-10-28.md), #126. Deferred qfits CONTINUE and writer safety is #125; no qfits implementation in this increment. Earlier terminal statements above are historical.
+
+[One-use F2 continuation prepared](stage2-bpm-filename-resume-2026-10-28.md): Python controls pass; no native launches. Preserve F1 as inherited at source 9242174. Maximum one F2 retest plus its two originally unrun diagnostic roles; successful cumulative count 12 (6 planned + 6 retests), 2/2 general rounds unchanged.
