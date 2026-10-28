@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "purpose": "Independent inspection of Chapman3 S2-05 populated-metadata evidence",
+  "status": "passed",
+  "created_utc": "2026-10-28T00:18:42.853641+00:00",
+  "archive_sha256": "6c73e30d674d63748f0b25bcba00e90291b90805c8bf10a12d77aaa696ee3a59",
+  "archive_library_id": "libfile_85350abc84f88191a17ad3c75d149882",
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "completed_utc": "2026-10-28T00:18:43.042251+00:00",
+  "member_count": 203,
+  "verified_manifest_entries": 202,
+  "report_sha256": "e493a3d4c9f163cb0bf5ca366b8460b668143b7495c05ede7460a9730d586268",
+  "native_roles_verified": 16,
+  "external_leak_summaries": 0,
+  "postpurge_zero_cases": 8,
+  "exact_mask_reference_and_metadata_comparisons": 16,
+  "payload_preserved_frame_checks": 48,
+  "after_driver_states": [
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    },
+    {
+      "pointers": 15,
+      "bytes": 132,
+      "mapped_files": 0,
+      "mapped_references": 0,
+      "swap_bytes": 0
+    }
+  ],
+  "limitations": [
+    "Header-only populated-metadata OmegaCAM derivatives; not WFI/observational acceptance",
+    "Both regression producers with bias=NULL and one extension; other branches remain pending",
+    "One native call per process; no same-process repeated-stage qualification",
+    "Original after-driver state retained; double purge diagnoses cache but cannot waive other live state",
+    "No allocation/I/O injection or general mmap/swap qualification",
+    "Compatible target external diagnostics remain pending; this is functional/accounting only"
+  ]
+}

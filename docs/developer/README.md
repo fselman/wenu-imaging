@@ -1,5 +1,13 @@
 # Developer documentation
 
+Latest S2-05: PR #114 populated-metadata qualification approved for integration and merged-branch cleanup; [Mac/Chapman3 evidence](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md) retained. Full S2-05/#75 and target external diagnostics stay open; runs/installations preserved.
+
+Latest S2-05: [populated metadata accepted on Mac and Chapman3](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md); PR #114 awaits integration, full S2-05/#75 and target external diagnostics stay open.
+
+Latest S2-05: [populated metadata verified on Mac; target checks prepared](stage2-bpm-metadata-mac-acceptance-2026-10-27.md). Full S2-05 and target external diagnostics remain open.
+
+Next S2-05: [populated-metadata ownership checks prepared](stage2-bpm-metadata-2026-10-27.md), unchanged native code/pixels; actual Mac execution pending.
+
 Latest S2-05: PR #108 baseline and PR #113 ownership correction approved for integration and merged-branch cleanup; [Mac/Chapman3 acceptance](stage2-bpm-chapman3-acceptance-2026-10-27.md) retained. Full S2-05/#75 and target external diagnostics remain open; preserve runs/installations.
 
 Latest S2-05: [bounded BPM correction verified on Mac and Chapman3](stage2-bpm-chapman3-acceptance-2026-10-27.md); exact FITS products and ownership/accounting pass. PR stack awaits integration; full S2-05 and target external diagnostics remain open.
