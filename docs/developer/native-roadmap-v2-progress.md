@@ -11,7 +11,7 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | One input inventory/reference lock | Locked; header inventory and selected-content report inspected | WFI at /Users/fselman/Pictures/WFI; 11 reported SHA256 identities and fixed lists; see integrated runner record |
 | F1 integrated tiny OmegaCAM | Accepted at 9242174: all three Mac lanes | Archived exact FITS and diagnostic logs independently checked; inherited at later source |
 | F2 integrated selected WFI | Accepted at f5afd08: all three Mac lanes after filename correction | Six products/eight detectors; host pixel/header reports agree, archived diagnostics pass; large FITS stay on Mac |
-| F3 five fixed failure cases | Pending / reuse applicable accepted evidence | Maximum 10 planned launches |
+| F3 five fixed failure cases | Prepared, actual Mac execution pending | Maximum 10 launches, two diagnostic lanes; Python controls/private C90+C17 syntax pass |
 | F4 fixed same-process repetition | Pending | Maximum 1 planned launch, warmup plus ten measured cycles |
 | F5 compact Chapman3 regression | Pending | Maximum 2 planned launches: one C17 and one C90 together at the end, per v2.1; no target external-memory qualification |
 | Final C90 compatibility checkpoint | Required at final stable source | Native corrections #121–#124; one final Mac C90 build, no duplicate runtime matrix |
@@ -33,3 +33,5 @@ Latest: [approved BPM provenance correction](native-roadmap-amendment-v2.3-2026-
 [One-use F2 continuation prepared](stage2-bpm-filename-resume-2026-10-28.md): Python controls pass; no native launches. Preserve F1 as inherited at source 9242174. Maximum one F2 retest plus its two originally unrun diagnostic roles; successful cumulative count 12 (6 planned + 6 retests), 2/2 general rounds unchanged.
 
 Latest accepted status: [integrated F1/F2 evidence receipt](stage2-integrated-f1-f2-acceptance-2026-10-28.md). Archive 0ee502ce: 416 files / 52 logs verified; F1 FITS reread, WFI host reports and all memory/descriptor/leaks logs accepted with explicit transfer limitations. Earlier blocked/pending F1/F2 statements above are historical. Next fixed row F3; no extra native launch during receipt.
+
+[F3 one-use runner prepared](stage2-integrated-f3-preparation-2026-10-28.md), no production changes or native launches. At most ten originally planned cases; current total remains 12, potential total after F3 is 22. Stop at first finding with the exhausted repair budget unchanged.
