@@ -42,7 +42,7 @@ def prepare(work, repo):
         for number,level in enumerate(values):
             name=f'{kind}{number}.fits';names.append(name)
             header=fits.Header()
-            for k,v in {'ORIGIN':'ESO FROZEN F1','TELESCOP':'VST','INSTRUME':'OMEGACAM',
+            for k,v in {'ORIGFILE':name,'ORIGIN':'ESO FROZEN F1','TELESCOP':'VST','INSTRUME':'OMEGACAM',
                 'DATE-OBS':f'2026-10-28T00:00:{number:02d}.000','MJD-OBS':61341.+number/86400.,
                 'EXPTIME':float(level if kind=='bpm' else 1),'OBJECT':kind.upper(),'OBSERVER':'F1',
                 'PI-COI':'F1','RA':0.,'DEC':0.,'UTC':0.,'RADECSYS':'ICRS',

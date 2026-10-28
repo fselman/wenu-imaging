@@ -1,0 +1,5 @@
+In file included from mefpp2/tests/integrated_calibration_observer.c:42:
+mefpp2/tests/../ins/mef/recipes/mefpp.c: In function ‘mef_engine’:
+mefpp2/tests/../ins/mef/recipes/mefpp.c:1228:30: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1228 |                sprintf(cval, recipe_version);
+      |                              ^~~~~~~~~~~~~~

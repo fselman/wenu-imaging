@@ -1,0 +1,30 @@
+{
+  "status": "prepared-not-native-qualified",
+  "native_launches_consumed": 0,
+  "correction_rounds_consumed": 0,
+  "source_sha256": {
+    "mefpp2/tests/integrated_calibration_observer.c": "65479301fc091febaa52e26a7ca526f04eaba28ab8ee55626ee32f361a35521d",
+    "mefpp2/tests/integrated_descriptor_observer.h": "cc06da79e0669e79a3cec308dedc7e7224d6a3579c616196fb391caddca73d35",
+    "mefpp2/tests/integrated_campaign_products.py": "6f9eb173c4ec5871261e9b128c291da05bc60a108ebd0401c16edbff27d50262",
+    "mefpp2/tests/qualify_integrated_campaign_mac.py": "e51a60ae9588cc0fc9087707ecf495552a1163598a57d25d52f63f568a0f3b16",
+    "mefpp2/tests/check_integrated_preparation.py": "011b6f51b570f26b1aaf282a8b7b5ce0905bfb4617f3322f3c0c1a398dbcfa40",
+    "mefpp2/tests/prepare_integrated_campaign_fixture.py": "904ec73d71c571574f9021fe8d3e9a2a43c9d2967de2221304df8d45dbbc211c"
+  },
+  "checks": {
+    "c17_syntax": "passed",
+    "c90_syntax": "passed",
+    "python_compilation": "passed",
+    "constructed_product_controls": "passed"
+  },
+  "retained_warning": "Existing recipe sprintf(cval, recipe_version) format-security warning; no production source changes.",
+  "control_limit": "Constructed reader controls and Linux syntax only, not actual Mac native qualification",
+  "fixed_next_rows": [
+    "F1",
+    "F2"
+  ],
+  "remaining_fixed_rows": [
+    "F3",
+    "F4",
+    "F5"
+  ]
+}
