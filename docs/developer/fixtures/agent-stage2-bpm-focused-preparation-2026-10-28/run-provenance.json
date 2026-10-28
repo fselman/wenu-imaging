@@ -1,0 +1,37 @@
+{
+  "purpose": "Focused #116 fresh-process runner preparation; no native execution",
+  "status": "passed",
+  "native_execution": false,
+  "source_sha256": {
+    "mefpp2/tests/repeat_bpm_bias_descriptor_case.py": "2ee90517c4c1309369832ae2f2fa99e6f6183b017b30dc4ceac683120fff3fa7",
+    "mefpp2/tests/test_repeat_bpm_bias_descriptor_case.py": "e17f8bf036c0855aade48847f1afc188fa30f97605502b4a7e7e4d33265e2aff"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "mefpp2/tests",
+        "-p",
+        "test_repeat_bpm_bias_descriptor_case.py",
+        "-v"
+      ],
+      "exit_status": 0,
+      "log_sha256": "dff5879dfe7e34b3389ac56f3fad04ba89c70920bebb9ac78ed4c42c5c52e36c"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "-m",
+        "py_compile",
+        "mefpp2/tests/repeat_bpm_bias_descriptor_case.py",
+        "mefpp2/tests/test_repeat_bpm_bias_descriptor_case.py"
+      ],
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

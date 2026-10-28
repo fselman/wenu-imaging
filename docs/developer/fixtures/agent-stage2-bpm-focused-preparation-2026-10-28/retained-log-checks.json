@@ -1,0 +1,8 @@
+{
+  "known_diagnostic_logs_accepted": 16,
+  "older_unattributed_log_rejected": true,
+  "reference_hash_verified": true,
+  "binary_hash_verified": true,
+  "qualified_source_hashes_verified": 35,
+  "native_execution": false
+}

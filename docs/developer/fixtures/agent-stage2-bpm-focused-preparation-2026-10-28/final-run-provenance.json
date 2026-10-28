@@ -1,0 +1,37 @@
+{
+  "purpose": "Final focused #116 diagnostic preparation",
+  "status": "passed",
+  "native_execution": false,
+  "source_sha256": {
+    "mefpp2/tests/repeat_bpm_bias_descriptor_case.py": "c8891140295420dbee16e5da4ff71b299d97fcfc1e473fb69b9d3a5165dd31db",
+    "mefpp2/tests/test_repeat_bpm_bias_descriptor_case.py": "ea554c7fe95784ef033eb1aa42fdf23b997c945d119e4f72af220088fdd820aa"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "mefpp2/tests",
+        "-p",
+        "test_repeat_bpm_bias_descriptor_case.py",
+        "-v"
+      ],
+      "exit_status": 0,
+      "log_sha256": "dff5879dfe7e34b3389ac56f3fad04ba89c70920bebb9ac78ed4c42c5c52e36c"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "-m",
+        "py_compile",
+        "mefpp2/tests/repeat_bpm_bias_descriptor_case.py",
+        "mefpp2/tests/test_repeat_bpm_bias_descriptor_case.py"
+      ],
+      "exit_status": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

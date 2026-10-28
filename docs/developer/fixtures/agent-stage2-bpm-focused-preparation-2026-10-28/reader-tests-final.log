@@ -1,0 +1,10 @@
+test_balanced (test_repeat_bpm_bias_descriptor_case.FocusedObserverReader.test_balanced) ... ok
+test_missing_or_live_resource_observation_rejected (test_repeat_bpm_bias_descriptor_case.FocusedObserverReader.test_missing_or_live_resource_observation_rejected) ... ok
+test_missing_snapshot_or_owner_not_accepted (test_repeat_bpm_bias_descriptor_case.FocusedObserverReader.test_missing_snapshot_or_owner_not_accepted) ... ok
+test_nonzero_exit_and_sanitizer_not_ignored (test_repeat_bpm_bias_descriptor_case.FocusedObserverReader.test_nonzero_exit_and_sanitizer_not_ignored) ... ok
+test_same_count_change_is_attributed (test_repeat_bpm_bias_descriptor_case.FocusedObserverReader.test_same_count_change_is_attributed) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.007s
+
+OK
