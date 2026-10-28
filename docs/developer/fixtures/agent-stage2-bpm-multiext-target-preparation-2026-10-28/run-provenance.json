@@ -1,0 +1,53 @@
+{
+  "purpose": "Target runner syntax/guards/source pins and read-only Mac product mappings; no native execution",
+  "status": "passed",
+  "native_execution": false,
+  "created_utc": "2026-10-28T16:45:02.499127+00:00",
+  "commands": [
+    {
+      "label": "help",
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "/workspace/scratch/575604f10f8d/bpm-multiext-receipt/mefpp2/tests/qualify_bpm_multiext_chapman3.py",
+        "--help"
+      ],
+      "exit_status": 0,
+      "log_sha256": "6b853edfd6b942bb2ca884ce8a6208544f20a952704071f497395cba4c97f55f"
+    },
+    {
+      "label": "wrong-host",
+      "argv": [
+        "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+        "/workspace/scratch/575604f10f8d/bpm-multiext-receipt/mefpp2/tests/qualify_bpm_multiext_chapman3.py",
+        "--compiler",
+        "/usr/bin/gcc",
+        "--cmake",
+        "/usr/bin/cmake"
+      ],
+      "exit_status": 1,
+      "log_sha256": "2b8dd8d6e3f525039a320e8935256c3932f805f523daaf8531e306dd5537cf34"
+    }
+  ],
+  "mapped_cases": [
+    "c90-functional-omegacam-retained-flag0",
+    "c90-functional-omegacam-retained-flag1",
+    "c90-functional-omegacam-known-response-flag0",
+    "c90-functional-omegacam-known-response-flag1",
+    "c90-functional-wfi-retained-flag0",
+    "c90-functional-wfi-retained-flag1",
+    "c90-functional-wfi-known-response-flag0",
+    "c90-functional-wfi-known-response-flag1",
+    "c17-functional-omegacam-retained-flag0",
+    "c17-functional-omegacam-retained-flag1",
+    "c17-functional-omegacam-known-response-flag0",
+    "c17-functional-omegacam-known-response-flag1",
+    "c17-functional-wfi-retained-flag0",
+    "c17-functional-wfi-retained-flag1",
+    "c17-functional-wfi-known-response-flag0",
+    "c17-functional-wfi-known-response-flag1"
+  ],
+  "mac_selected_sources_verified": 37,
+  "mapped_role_products": 32,
+  "target_runner_sha256": "6eaa335490c1d7546d6c4a5ba4ad83bad88d4a3c88044f94049bc8d47d4bd459",
+  "completed_utc": "2026-10-28T16:45:03.613862+00:00"
+}

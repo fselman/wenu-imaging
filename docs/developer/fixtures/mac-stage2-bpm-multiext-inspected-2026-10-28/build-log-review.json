@@ -1,0 +1,123 @@
+{
+  "status": "passed",
+  "archive_sha256": "9ecc8af68712842d817cb29f9a9bbe4111acffa087c24e9fae2efda6fb46f1ed",
+  "files": {
+    "build-c90-instrumented.log": {
+      "sha256": "5505b5cb7e26b76d85ca8e8445ab82f961e98656023a8f9b8aff20f40d277265",
+      "lines": 6074,
+      "compiler_linker_errors": [],
+      "diagnostic_category_counts": {
+        "-Wdeprecated-declarations": 630,
+        "-Wformat-security": 4,
+        "-Wunused-but-set-variable": 15,
+        "-Wtautological-pointer-compare": 2,
+        "-Wmemset-transposed-args": 2,
+        "-Wsizeof-pointer-memaccess": 1,
+        "other": 2,
+        "-Wunused-parameter": 6,
+        "-Wsometimes-uninitialized": 2,
+        "-Wshift-negative-value": 1,
+        "-Wliteral-conversion": 4,
+        "-Wunused-variable": 25,
+        "-Wuninitialized": 1,
+        "-Wparentheses-equality": 1,
+        "-Wreturn-type": 1
+      },
+      "new_test_deprecation_warnings": [
+        "source/mefpp2/tests/bpm_multiext_ownership_probe.c:63:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]",
+        "source/mefpp2/tests/bpm_multiext_ownership_probe.c:67:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]",
+        "source/mefpp2/tests/bpm_multiext_ownership_probe.c:79:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]",
+        "source/mefpp2/tests/bpm_multiext_probe.c:40:9: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]"
+      ],
+      "completed_targets": [
+        "bpm_original_probe",
+        "bpm_ownership_probe"
+      ]
+    },
+    "build-c90-leaks.log": {
+      "sha256": "1b69d9d3ebbb6868dc2a21b0aa9edf5c4ca20483496d4e3b946e7cc72a45d465",
+      "lines": 403,
+      "compiler_linker_errors": [],
+      "diagnostic_category_counts": {
+        "-Wformat-security": 4,
+        "-Wunused-but-set-variable": 15,
+        "-Wtautological-pointer-compare": 2,
+        "-Wmemset-transposed-args": 2,
+        "-Wsizeof-pointer-memaccess": 1,
+        "-Wunused-parameter": 6,
+        "-Wsometimes-uninitialized": 2,
+        "-Wshift-negative-value": 1,
+        "-Wliteral-conversion": 4,
+        "-Wsign-compare": 1,
+        "-Wunused-variable": 25,
+        "-Wuninitialized": 1,
+        "-Wparentheses-equality": 1,
+        "-Wreturn-type": 1
+      },
+      "new_test_deprecation_warnings": [],
+      "completed_targets": [
+        "bpm_original_probe",
+        "bpm_ownership_probe"
+      ]
+    },
+    "build-c17-instrumented.log": {
+      "sha256": "d9431c39b1113b44b29282b3ead41dfc1fbf660a47666eecf08daeaf576f5018",
+      "lines": 6074,
+      "compiler_linker_errors": [],
+      "diagnostic_category_counts": {
+        "-Wdeprecated-declarations": 630,
+        "-Wformat-security": 4,
+        "-Wunused-but-set-variable": 15,
+        "-Wtautological-pointer-compare": 2,
+        "-Wmemset-transposed-args": 2,
+        "-Wsizeof-pointer-memaccess": 1,
+        "other": 1,
+        "-Wunused-parameter": 6,
+        "-Wsometimes-uninitialized": 2,
+        "-Wshift-negative-value": 1,
+        "-Wliteral-conversion": 4,
+        "-Wsign-compare": 1,
+        "-Wunused-variable": 25,
+        "-Wuninitialized": 1,
+        "-Wparentheses-equality": 1,
+        "-Wreturn-type": 1
+      },
+      "new_test_deprecation_warnings": [
+        "source/mefpp2/tests/bpm_multiext_ownership_probe.c:63:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]",
+        "source/mefpp2/tests/bpm_multiext_ownership_probe.c:67:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]",
+        "source/mefpp2/tests/bpm_multiext_ownership_probe.c:79:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]",
+        "source/mefpp2/tests/bpm_multiext_probe.c:40:9: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]"
+      ],
+      "completed_targets": [
+        "bpm_original_probe",
+        "bpm_ownership_probe"
+      ]
+    },
+    "build-c17-leaks.log": {
+      "sha256": "701524a4b6f88cd6959f8a29a8deeb9b18f74c7409c4b258e3a6cd24713150f8",
+      "lines": 403,
+      "compiler_linker_errors": [],
+      "diagnostic_category_counts": {
+        "-Wformat-security": 4,
+        "-Wunused-but-set-variable": 15,
+        "-Wtautological-pointer-compare": 2,
+        "-Wmemset-transposed-args": 2,
+        "-Wsizeof-pointer-memaccess": 1,
+        "-Wunused-parameter": 6,
+        "-Wsometimes-uninitialized": 2,
+        "-Wshift-negative-value": 1,
+        "-Wliteral-conversion": 4,
+        "-Wsign-compare": 1,
+        "-Wunused-variable": 25,
+        "-Wuninitialized": 1,
+        "-Wparentheses-equality": 1,
+        "-Wreturn-type": 1
+      },
+      "new_test_deprecation_warnings": [],
+      "completed_targets": [
+        "bpm_original_probe",
+        "bpm_ownership_probe"
+      ]
+    }
+  }
+}

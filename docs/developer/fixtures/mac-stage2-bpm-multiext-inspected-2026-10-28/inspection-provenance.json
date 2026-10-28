@@ -1,0 +1,8 @@
+{
+  "purpose": "Read-only inspection of uploaded Mac multiext evidence",
+  "status": "passed",
+  "native_execution": false,
+  "archive_sha256": "d2756d00d3dab708efbd8f40e02337a90b51e98514f2ad0ee87793eaa88ec428",
+  "manifest_files_verified": 1259,
+  "run": "mac-stage2-bpm-multiext-yb3etszi"
+}

@@ -1,0 +1,59 @@
+{
+  "purpose": "Python-only two-extension preparation. Constructed products are not native acceptance.",
+  "status": "passed",
+  "native_execution": false,
+  "created_utc": "2026-10-28T16:22:42.802320+00:00",
+  "python": "/workspace/scratch/575604f10f8d/bpm-preparation-env/bin/python",
+  "tested_source": {
+    "commit": "664f501fe723a924b6a2395d00f70cba1fb03ab7",
+    "dirty": true
+  },
+  "source_sha256": {
+    "mefpp2/tests/bpm_multiext_cases.py": "709ba48f7afc03b82306f47b2a8d0b67d5bcab1e184fdd0782502fdac42e8e23",
+    "mefpp2/tests/bpm_multiext_ownership_probe.c": "aae949e64d129111a7c65366e8013cd1d3f532caaa94f80545e0a378cde9c5e5",
+    "mefpp2/tests/bpm_multiext_probe.c": "d5b621d7b1f6d991e96753315032d05d7cce15a1e3b0fda24416479920066b87",
+    "mefpp2/tests/check_bpm_multiext_preparation.py": "198bdbc512a7df2022c9892c4409845f867c0d9dad50fd69575dac68d49d386e",
+    "mefpp2/tests/qualify_bpm_multiext.py": "93616c5cff5435188f51f1ffe34fb0dbd26549ef35b36aff03d14c2894660a19"
+  },
+  "cases": [
+    "omegacam-retained-flag0",
+    "omegacam-retained-flag1",
+    "omegacam-known-response-flag0",
+    "omegacam-known-response-flag1",
+    "wfi-retained-flag0",
+    "wfi-retained-flag1",
+    "wfi-known-response-flag0",
+    "wfi-known-response-flag1"
+  ],
+  "rejected": [
+    "omegacam-retained-flag0:pixels",
+    "omegacam-retained-flag0:metadata",
+    "omegacam-retained-flag0:order",
+    "omegacam-retained-flag1:pixels",
+    "omegacam-retained-flag1:metadata",
+    "omegacam-retained-flag1:order",
+    "omegacam-known-response-flag0:pixels",
+    "omegacam-known-response-flag0:metadata",
+    "omegacam-known-response-flag0:order",
+    "omegacam-known-response-flag1:pixels",
+    "omegacam-known-response-flag1:metadata",
+    "omegacam-known-response-flag1:order",
+    "wfi-retained-flag0:pixels",
+    "wfi-retained-flag0:metadata",
+    "wfi-retained-flag0:order",
+    "wfi-retained-flag1:pixels",
+    "wfi-retained-flag1:metadata",
+    "wfi-retained-flag1:order",
+    "wfi-known-response-flag0:pixels",
+    "wfi-known-response-flag0:metadata",
+    "wfi-known-response-flag0:order",
+    "wfi-known-response-flag1:pixels",
+    "wfi-known-response-flag1:metadata",
+    "wfi-known-response-flag1:order"
+  ],
+  "retention_roles": [
+    "preparation_evidence"
+  ],
+  "immutable_fixtures_unchanged": true,
+  "completed_utc": "2026-10-28T16:22:44.707667+00:00"
+}

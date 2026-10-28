@@ -1,0 +1,694 @@
+{
+  "purpose": "Inspect retained Mac multiext evidence; no native execution or artifact edits.",
+  "status": "passed",
+  "native_execution": false,
+  "archive_sha256": "d2756d00d3dab708efbd8f40e02337a90b51e98514f2ad0ee87793eaa88ec428",
+  "manifest_files_verified": 1259,
+  "missing_command_logs": [],
+  "tested_commit": "cea3e927f0392d8ec6c97cd40afbac2878aca03f",
+  "report_sha256": "95c9c352f8a92ba97d4cfc20e1b3341a4548c1b954e404c3c952967ec0efa430",
+  "case_pairs": 32,
+  "roles_verified": 64,
+  "mask_pixel_comparisons": 20736,
+  "input_frame_checks": 192,
+  "input_extension_checks": 384,
+  "leak_summaries_verified": 16,
+  "allocator_boundaries_verified": 384,
+  "descriptor_boundaries_verified": 96,
+  "commands_verified": 79,
+  "selected_source_identities_verified": 37,
+  "builds": [
+    {
+      "name": "build-c17-instrumented",
+      "translation_units": 101,
+      "c_standard": 17,
+      "build_info_sha256": "2a5bc7024f1f7c9cbc4db7146d027596233d20bed9a3e553c15d7509ef83e8d7"
+    },
+    {
+      "name": "build-c17-leaks",
+      "translation_units": 101,
+      "c_standard": 17,
+      "build_info_sha256": "8ba4f5f94ecc15ce66d595c8311440f2d2f2060e7f7b594c1ef7bd0c58fedab7"
+    },
+    {
+      "name": "build-c90-instrumented",
+      "translation_units": 101,
+      "c_standard": 90,
+      "build_info_sha256": "b7365b0835d07ba050d48c9b5ad8e62b13bb034fa2fb891e1ea07cfbec01c74b"
+    },
+    {
+      "name": "build-c90-leaks",
+      "translation_units": 101,
+      "c_standard": 90,
+      "build_info_sha256": "1af82c4ac8a9f25d74e31dc53e48ded56f48ae745663532d2bdbe1ea5487be86"
+    }
+  ],
+  "descriptor_boundaries": [
+    {
+      "case": "c90-instrumented-omegacam-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-instrumented-omegacam-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-instrumented-omegacam-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-instrumented-omegacam-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-instrumented-wfi-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-instrumented-wfi-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-instrumented-wfi-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-instrumented-wfi-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-omegacam-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-omegacam-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-omegacam-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-omegacam-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-wfi-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-wfi-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-wfi-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c90-leaks-wfi-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-omegacam-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-omegacam-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-omegacam-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-omegacam-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-wfi-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-wfi-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-wfi-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-instrumented-wfi-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-omegacam-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-omegacam-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-omegacam-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-omegacam-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-wfi-retained-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-wfi-retained-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-wfi-known-response-flag0",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    },
+    {
+      "case": "c17-leaks-wfi-known-response-flag1",
+      "boundaries": [
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ],
+        [
+          "4",
+          "4",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "canonical_products_across_modes_lanes_roles_identical": true,
+  "preservation_flags_reported_true": true,
+  "supplement_archive_sha256": "9ecc8af68712842d817cb29f9a9bbe4111acffa087c24e9fae2efda6fb46f1ed",
+  "supplement_file_identities_verified": 4,
+  "persistent_original_attachment": "libfile_883fd91133b48191adba6243707eac53",
+  "persistent_supplement_attachment": "libfile_dae395394c5c81919e9138a90851f75e"
+}
