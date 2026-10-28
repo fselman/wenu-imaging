@@ -1,5 +1,7 @@
 # S2-05 populated-metadata Chapman3 acceptance — 27 October 2026
 
+Integration update: Fernando authorized merging PR #114 and cleaning only its merged branch after verifying main ancestry and evidence. Earlier integration-pending/no-merge-authorization statements below are historical; all broader S2 gates and run/installation preservation requirements remain in force.
+
 Actual clean source `b9530c8cfcf60db1aa583571f279b80757952da2`, branch
 `test/stage2-bpm-metadata`, Linux chapman3.sc.eso.org. GCC 10.2.1 and CMake
 3.29.6 build unchanged Mac-qualified native production sources, original driver,

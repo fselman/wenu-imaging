@@ -1,5 +1,7 @@
 # Stage 2 memory and ownership qualification — 27 October 2026
 
+Integration update: PR #114 populated-metadata qualification is approved for integration and merged-branch cleanup, with inspected Mac/Chapman3 evidence retained. Older PR #114 integration-pending statements are historical. Full S2-05/#75 and compatible target external diagnostics stay open; next remaining successful-case coverage includes supplied bias, WFI and multiple extensions. No scope departure or S2-06 advance is approved.
+
 Latest S2-05: [populated metadata accepted on Mac and Chapman3](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md), 16 Mac / 8 target pairs; PR #114 awaits integration. Earlier target-pending statements are historical. Full S2-05/#75 and compatible target external diagnostics remain open.
 
 Latest S2-05: [populated metadata Mac acceptance](stage2-bpm-metadata-mac-acceptance-2026-10-27.md) is inspected, 16 pairs pass; target runner is prepared, not executed. Earlier metadata-preparation statements are historical. Full S2-05/#75 and target external diagnostics remain open.
