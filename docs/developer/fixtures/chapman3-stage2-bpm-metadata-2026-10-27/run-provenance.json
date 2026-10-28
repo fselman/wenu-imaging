@@ -1,0 +1,3153 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "tested_source": {
+    "repository": "https://github.com/fselman/wenu-imaging",
+    "branch": "test/stage2-bpm-metadata",
+    "commit": "b9530c8cfcf60db1aa583571f279b80757952da2",
+    "dirty": false
+  },
+  "host": "chapman3.sc.eso.org",
+  "created_utc": "2026-10-28T00:15:20.812266+00:00",
+  "purpose": "S2-05 target populated BPM metadata functional/accounting verification",
+  "diagnostic_scope": "Uninstrumented target; no external sanitizer/leak-tool acceptance",
+  "metadata_mac_reference": "/home1/fselman/Software/wenu-imaging/docs/developer/fixtures/mac-stage2-bpm-metadata-2026-10-27/run-provenance.json",
+  "metadata_mac_reference_sha256": "26868de58bd3a5c05c82304620d00549b79b2de605bd7bffcbeccd4faa9c308d",
+  "mac_reference_report": "/home1/fselman/Software/wenu-imaging/docs/developer/fixtures/mac-bpm-cleanup-2026-10-27/run-provenance.json",
+  "mac_reference_sha256": "90eff4ddb869bac73601ca3818ed4f94452fe5146013c85a8d0e3755459eee4a",
+  "fixture_manifest_sha256": "8a7e3e20b42f48fdb80da49985a4504c57befb8e5c4297105c84a75be14e703d",
+  "metadata_fixture_manifest": {
+    "schema_version": 1,
+    "purpose": "S2-05 deterministic populated-header derivatives; unchanged pixels/native driver",
+    "parent_manifest": "mefpp2/tests/fixtures/bpm-cleanup/manifest.json",
+    "parent_manifest_sha256": "8a7e3e20b42f48fdb80da49985a4504c57befb8e5c4297105c84a75be14e703d",
+    "source_commit": "f377642ebfd8a8c0a43a99007f5543af34ff9c54",
+    "primary_metadata_by_frame": [
+      {
+        "ORIGIN": "ESO S2 METADATA 0",
+        "TELESCOP": "VST-META-0",
+        "INSTRUME": "OMEGACAM-META-0",
+        "MJD-OBS": 61314.125,
+        "DATE-OBS": "2026-10-01T01:02:03.125",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1
+      },
+      {
+        "ORIGIN": "ESO S2 METADATA 1",
+        "TELESCOP": "VST-META-1",
+        "INSTRUME": "OMEGACAM-META-1",
+        "MJD-OBS": 61314.375,
+        "DATE-OBS": "2026-10-01T01:02:04.125",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1
+      },
+      {
+        "ORIGIN": "ESO S2 METADATA 2",
+        "TELESCOP": "VST-META-2",
+        "INSTRUME": "OMEGACAM-META-2",
+        "MJD-OBS": 61314.625,
+        "DATE-OBS": "2026-10-01T01:02:05.125",
+        "ESO DET WIN1 BINX": 1,
+        "ESO DET WIN1 BINY": 1
+      }
+    ],
+    "extension_metadata": {
+      "EXTNAME": "META_CCD_17"
+    },
+    "cases": {
+      "retained": {
+        "inputs_sha256": {
+          "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+          "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+          "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+          "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+          "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+        },
+        "pixels_unchanged": true
+      },
+      "known-response": {
+        "inputs_sha256": {
+          "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+          "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+          "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+          "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+          "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+        },
+        "pixels_unchanged": true
+      }
+    }
+  },
+  "status": "passed",
+  "execution_complete": true,
+  "retention_roles": [
+    "acceptance_evidence"
+  ],
+  "source_sha256": {
+    "mefpp2/ins/mef/common/mefp_lib.c": "a4139ba5948acb140b0f1132ecd51e607d5d723aceb106dd12effd4752c2b5a6",
+    "mefpp2/ins/mef/common/mefp_lib.h": "ca848eebf90225f39abfa6eab5b6480d74a1e7f7d77020e8493773a91501ee25",
+    "mefpp2/src/iproc/detector.c": "64773140986d17e98afe0c29ccb88bb06a1a4f6a72f008f382b84794e50c944e",
+    "mefpp2/src/iproc/pixelmaps.c": "a4b92f344fde5fe8bfe424b401ba4c5beff2bfdd1e4b71b03862345dbca8ccfd",
+    "mefpp2/src/iproc/framelist.c": "4f539cca687b23ca1270476e96b2c153772abbb7e57decaf7d6e53187e29ada0",
+    "mefpp2/qfits5/src/xmemory.c": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87",
+    "mefpp2/qfits5/include/xmemory.h": "815e8e839323c6f20dae3a7117941c2e45ccdb7e1f387af6ebd461c728dc1340",
+    "mefpp2/qfits5/src/cache.c": "c53fdd40024cc343349b5f1e9bd1baa33b6904180cc76a52fb1c4ece6f555620",
+    "mefpp2/tests/bpm_ownership_probe.c": "b1ba4a737ee2b4376912aee68c09a3193243988404e5d469b2a4fc1c92d5d1f3",
+    "mefpp2/tests/bpm_ownership_cases.py": "0b77e1f87b681463ac7a1ec74a6be6cb5af175ec3eec89dc9fb9155f569c3891",
+    "mefpp2/tests/qualify_bpm_ownership.py": "73e30bf823e5517d98869b91fb7810a9d55520c740aba89db28f7db0d460ed45",
+    "mefpp2/tests/qualify_split_ownership.py": "8e39ab367c1b141c83785c0c07df7f0d93a49aa1571369e5f0a3f6d1b21663bd",
+    "mefpp2/tests/qualify_mac_leaks.py": "b91c19bffc5721377d74cb90f49ef243a2e412039aed76ec62d7fe53c6dbee85",
+    "mefpp2/tests/split_ownership_cases.py": "95f5278682f422188a0e6047f0d0dcc9724cfa9a50b1fa03bf0b7e118f08b25c",
+    "mefpp2/tests/fixtures/bpm-cleanup/manifest.json": "8a7e3e20b42f48fdb80da49985a4504c57befb8e5c4297105c84a75be14e703d",
+    "mefpp2/tests/bpm_metadata_cases.py": "fa498ba4d591477973ee6c2a9b11078f2d43c0a5b8f125e654f9a903993f56f6",
+    "mefpp2/tests/qualify_bpm_metadata.py": "52581ff631d84d3a56d58ea915e4ace2d63f84d851a1cd27e753e684bc5af7fb",
+    "mefpp2/tests/fixtures/bpm-metadata/manifest.json": "3d29e8e974b48b50a04d12461f98345fd39e25ac405d9ad2ba08fae9c1ac24cb",
+    "mefpp2/tests/fixtures/bpm-cleanup/retained/mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "mefpp2/tests/fixtures/bpm-cleanup/retained/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+    "mefpp2/tests/fixtures/bpm-cleanup/retained/frame0.fits": "0f9d03d7967e7792a0e7c067c997e038ae93f92ebb1e69c00bd14093998b3305",
+    "mefpp2/tests/fixtures/bpm-cleanup/retained/frame1.fits": "b790db943dc8c713637c1af1f1767b98e540506ff3c4193b416e51e06fced97c",
+    "mefpp2/tests/fixtures/bpm-cleanup/retained/frame2.fits": "bb94e4c77e98278a84d439fe3ec9f14771c58a05f6416f5644e1d78a0dafcbde",
+    "mefpp2/tests/fixtures/bpm-cleanup/known-response/mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "mefpp2/tests/fixtures/bpm-cleanup/known-response/frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+    "mefpp2/tests/fixtures/bpm-cleanup/known-response/frame0.fits": "9f0f6990faf95c97420feee64a2151ac20ebb2c0b03f4e7da1f16c48cad93ad0",
+    "mefpp2/tests/fixtures/bpm-cleanup/known-response/frame1.fits": "7b495ec716013512b9c7f5abb3039238ed81084245daf6500a12e55c420563a7",
+    "mefpp2/tests/fixtures/bpm-cleanup/known-response/frame2.fits": "c5e8c335eea545e3aa98d3f27fe62974a51234552f15c0f6f97d2b83e33cbf28",
+    "mefpp2/tests/fixtures/bpm-cleanup/bpm_cleanup_probe.c": "cd8b33603ce2d18a12e4db4f3dcd80b9c78e78c745ad86dd58fd8eb8c143162d",
+    "mefpp2/tests/qualify_bpm_metadata_chapman3.py": "c711f9a8c01b100ff2c19c46095421b158d99158a497559b02c3c0fcb2ede816"
+  },
+  "protected_sha256": {
+    "/home1/fselman/.pycavi/pycavi_astrosoft.cfg": "9127dc7b2225799af763ba7f8a558f1fa9c358dfcd2059fdf69fc935555f0e52",
+    "/home1/fselman/opt/local/mefpp/bin/mefpp": "06dde5281aa10a8bc874f55cd5838299deb3b59a815136df30d09c37d1d61265"
+  },
+  "commands": [
+    {
+      "label": "compiler-version",
+      "argv": [
+        "/opt/rh/devtoolset-10/root/usr/bin/gcc",
+        "--version"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/compiler-version.log",
+      "exit_status": 0,
+      "log_sha256": "6c9570e8bc49f3cc036575edace02b346aa5df76213c978aec8541020471c9b8"
+    },
+    {
+      "label": "cmake-version",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "--version"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/cmake-version.log",
+      "exit_status": 0,
+      "log_sha256": "6750f1708963ba7653df8327146a722a51a4f273b22487167d28c1b2497b3bac"
+    },
+    {
+      "label": "os-version",
+      "argv": [
+        "uname",
+        "-a"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/os-version.log",
+      "exit_status": 0,
+      "log_sha256": "9b57c51d43c179b18dfd975b93659ac3dc617ce2b04e90bbe7c0ecf8005aa819"
+    },
+    {
+      "label": "configure-c90-functional",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "-S",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/source/mefpp2",
+        "-B",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/opt/rh/devtoolset-10/root/usr/bin/gcc",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=b9530c8cfcf60db1aa583571f279b80757952da2",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/configure-c90-functional.log",
+      "exit_status": 0,
+      "log_sha256": "ca7d6bfb63bc663bbd5a1686f3d4ea483b4b6ef0416ec5935e484427fae0198f"
+    },
+    {
+      "label": "build-c90-functional",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "--build",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional",
+        "--target",
+        "bpm_original_probe",
+        "bpm_ownership_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional.log",
+      "exit_status": 0,
+      "log_sha256": "9850771f2d7fbac6d2e2a67efa941bb9a7fd2b8bc6083230082eea63b610416b"
+    },
+    {
+      "label": "c90-functional-retained-flag0-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_original_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag0/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag0-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "e20fcb3e7daa5dafd128c84e2d6ac8bc1c60318112a121740f93e31213374f7d"
+    },
+    {
+      "label": "c90-functional-retained-flag0-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_ownership_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag0/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag0-observer.log",
+      "exit_status": 0,
+      "log_sha256": "b1bc9058d76de5a5d05a8a5ea923b692f057a7d7a741c1aaca5c8749dcf25860"
+    },
+    {
+      "label": "c90-functional-retained-flag1-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_original_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag1/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag1-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "1173f798b62d22736e3f67f16dc0e00357e0803d347dc3d2d2e43a73d89c15d2"
+    },
+    {
+      "label": "c90-functional-retained-flag1-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_ownership_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag1/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-retained-flag1-observer.log",
+      "exit_status": 0,
+      "log_sha256": "cf5371e975c25ad548be4f45ee8e6df2df1b5caefb11a4c63290981ab4a42104"
+    },
+    {
+      "label": "c90-functional-known-response-flag0-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_original_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag0/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag0-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "492bbbe81e34a6999421fc07581a5c38bf9c5d459c27c957511ae828fdedcd7d"
+    },
+    {
+      "label": "c90-functional-known-response-flag0-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_ownership_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag0/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag0-observer.log",
+      "exit_status": 0,
+      "log_sha256": "6cd1ff13c28486a2b0aa078210ea0673cfdbbf06b4dbf9c2c64110229bae20dc"
+    },
+    {
+      "label": "c90-functional-known-response-flag1-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_original_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag1/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag1-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "2b21b85bf883f79e2cb31a33d12c9c296cb1359d6863aaea866b7951849601a1"
+    },
+    {
+      "label": "c90-functional-known-response-flag1-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c90-functional/bpm_ownership_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag1/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c90-functional-known-response-flag1-observer.log",
+      "exit_status": 0,
+      "log_sha256": "7eafa5b62ffde7d973ab7852453dd0c78d03c5a7a6bff1e78dd3b0ac15ce1cb3"
+    },
+    {
+      "label": "configure-c17-functional",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "-S",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/source/mefpp2",
+        "-B",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/opt/rh/devtoolset-10/root/usr/bin/gcc",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=b9530c8cfcf60db1aa583571f279b80757952da2",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/configure-c17-functional.log",
+      "exit_status": 0,
+      "log_sha256": "ca37d0b887634563befb76373314ed015260bd1f26f627a4ac3a904a7cac749d"
+    },
+    {
+      "label": "build-c17-functional",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "--build",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional",
+        "--target",
+        "bpm_original_probe",
+        "bpm_ownership_probe",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional.log",
+      "exit_status": 0,
+      "log_sha256": "3e79d8efc35299cf6807c3b19dfa56e96583127d21bc2dc930ad5b0d62b6823a"
+    },
+    {
+      "label": "c17-functional-retained-flag0-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_original_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag0/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag0-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "dd8e9bdeb99ee5b77df2b7ef25a88716d168532277e49d5ed9a5d7c3046474f6"
+    },
+    {
+      "label": "c17-functional-retained-flag0-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_ownership_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag0/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag0-observer.log",
+      "exit_status": 0,
+      "log_sha256": "62d39cb93a201a96f69682ffeca5f6d8632b9a116e01ba6a22d094eba927e80e"
+    },
+    {
+      "label": "c17-functional-retained-flag1-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_original_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag1/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag1-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "234d37ebef169e0c3b7b450db8f8036bda58bd557b7238872f7b9bcdb277bea5"
+    },
+    {
+      "label": "c17-functional-retained-flag1-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_ownership_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag1/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-retained-flag1-observer.log",
+      "exit_status": 0,
+      "log_sha256": "2f56c7e5343865ff497ef317ad035f43c002cc2c8d3e171aee779b38abf039ae"
+    },
+    {
+      "label": "c17-functional-known-response-flag0-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_original_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag0/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag0-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "0dc01842069a32ece05c2827c325c9ac3409d549d418023360e2da26767f0605"
+    },
+    {
+      "label": "c17-functional-known-response-flag0-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_ownership_probe",
+        "0"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag0/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag0-observer.log",
+      "exit_status": 0,
+      "log_sha256": "b18fb49865700c5ca95e4d73d26ebbc579c4ef919a32d6d04a6c749191985b1b"
+    },
+    {
+      "label": "c17-functional-known-response-flag1-ordinary",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_original_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag1/ordinary",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag1-ordinary.log",
+      "exit_status": 0,
+      "log_sha256": "f24c9864630589bdaefafb19626a55f0c61b3551c54303f86167835e0aa85f43"
+    },
+    {
+      "label": "c17-functional-known-response-flag1-observer",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/build-c17-functional/bpm_ownership_probe",
+        "1"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag1/observer",
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-bpm-metadata-p8__ggrf/c17-functional-known-response-flag1-observer.log",
+      "exit_status": 0,
+      "log_sha256": "4c5c0c99ee2d9af99f9dd1d256a14c2a03279fbbe9b244516de50423e296194d"
+    }
+  ],
+  "cases": [
+    {
+      "case": "c90-functional-retained-flag0",
+      "mode": 90,
+      "lane": "functional",
+      "fixture": "retained",
+      "proportional_flag": 0,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "445fdcca12ab58c511dfe6bf5baa2ca3c49b72eea0cd2c2b957df8a320ca8493",
+          "log_sha256": "e20fcb3e7daa5dafd128c84e2d6ac8bc1c60318112a121740f93e31213374f7d",
+          "output_sha256": {
+            "OCAM_BPM.fits": "49b6674900316e7ace0cff4c5ad3b2f520a57848ca6194b0d7485e680bfbf309",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:28.851.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:28.851.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c21bd8a0ac4dd03d551db38b9ac86343bcb900bf41c0b8c441d666bc78fb1a5f",
+          "log_sha256": "b1bc9058d76de5a5d05a8a5ea923b692f057a7d7a741c1aaca5c8749dcf25860",
+          "output_sha256": {
+            "OCAM_BPM.fits": "f89441a40e6d583e3f055a21bddd0862d7653562301d583f8cbf74955fc17150",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:28.875.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:28.875.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    {
+      "case": "c90-functional-retained-flag1",
+      "mode": 90,
+      "lane": "functional",
+      "fixture": "retained",
+      "proportional_flag": 1,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "445fdcca12ab58c511dfe6bf5baa2ca3c49b72eea0cd2c2b957df8a320ca8493",
+          "log_sha256": "1173f798b62d22736e3f67f16dc0e00357e0803d347dc3d2d2e43a73d89c15d2",
+          "output_sha256": {
+            "OCAM_BPM.fits": "d708259e57e619e6bd147b5a6d7d49f670dcd03d7920f461b70316d0b1b04b3b",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:28.895.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:28.895.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c21bd8a0ac4dd03d551db38b9ac86343bcb900bf41c0b8c441d666bc78fb1a5f",
+          "log_sha256": "cf5371e975c25ad548be4f45ee8e6df2df1b5caefb11a4c63290981ab4a42104",
+          "output_sha256": {
+            "OCAM_BPM.fits": "896c46bb703fbe191740a8073173d29f1469882afa01b90cce16ac1bd0ef5d51",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.915.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.915.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    {
+      "case": "c90-functional-known-response-flag0",
+      "mode": 90,
+      "lane": "functional",
+      "fixture": "known-response",
+      "proportional_flag": 0,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "445fdcca12ab58c511dfe6bf5baa2ca3c49b72eea0cd2c2b957df8a320ca8493",
+          "log_sha256": "492bbbe81e34a6999421fc07581a5c38bf9c5d459c27c957511ae828fdedcd7d",
+          "output_sha256": {
+            "OCAM_BPM.fits": "1c2df7a02425c6b5e0a10ed9c0861e7d9352689249ec1417931277c562b46737",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.936.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.936.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c21bd8a0ac4dd03d551db38b9ac86343bcb900bf41c0b8c441d666bc78fb1a5f",
+          "log_sha256": "6cd1ff13c28486a2b0aa078210ea0673cfdbbf06b4dbf9c2c64110229bae20dc",
+          "output_sha256": {
+            "OCAM_BPM.fits": "a8a626bdf5f846628658f39b8689174ec2087ad5030bd175a118dc9d327bef54",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.955.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.955.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    {
+      "case": "c90-functional-known-response-flag1",
+      "mode": 90,
+      "lane": "functional",
+      "fixture": "known-response",
+      "proportional_flag": 1,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "445fdcca12ab58c511dfe6bf5baa2ca3c49b72eea0cd2c2b957df8a320ca8493",
+          "log_sha256": "2b21b85bf883f79e2cb31a33d12c9c296cb1359d6863aaea866b7951849601a1",
+          "output_sha256": {
+            "OCAM_BPM.fits": "39c3a232145c6721c7cc8feaa8a3000f432854ee12ef0e09d14ec96a9d83febb",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.976.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.976.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c21bd8a0ac4dd03d551db38b9ac86343bcb900bf41c0b8c441d666bc78fb1a5f",
+          "log_sha256": "7eafa5b62ffde7d973ab7852453dd0c78d03c5a7a6bff1e78dd3b0ac15ce1cb3",
+          "output_sha256": {
+            "OCAM_BPM.fits": "9b296dba873a3f64d350a759f80bfeeef3eb3ce986cc42e2d93366a86dd76ba5",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.997.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:29.997.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    {
+      "case": "c17-functional-retained-flag0",
+      "mode": 17,
+      "lane": "functional",
+      "fixture": "retained",
+      "proportional_flag": 0,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c186f3b6fbf098b8caa9c5a3be58856697bef756fd3f0c243c7a676a2744b14a",
+          "log_sha256": "dd8e9bdeb99ee5b77df2b7ef25a88716d168532277e49d5ed9a5d7c3046474f6",
+          "output_sha256": {
+            "OCAM_BPM.fits": "18b3d00c07ecaec30b3043a07e0edfb151cbacc5fadc4f7f10d783686709e7b8",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:36.689.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:36.689.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "3a9397f55195a3e9bea3beb4ed86f238ce9bd5c0811a7b551bdb1a0432bf30a2",
+          "log_sha256": "62d39cb93a201a96f69682ffeca5f6d8632b9a116e01ba6a22d094eba927e80e",
+          "output_sha256": {
+            "OCAM_BPM.fits": "754a350614231cd85f608b77ec64113689f8a15f812e9269b1bed04b0f02d0c3",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.709.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.709.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    {
+      "case": "c17-functional-retained-flag1",
+      "mode": 17,
+      "lane": "functional",
+      "fixture": "retained",
+      "proportional_flag": 1,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c186f3b6fbf098b8caa9c5a3be58856697bef756fd3f0c243c7a676a2744b14a",
+          "log_sha256": "234d37ebef169e0c3b7b450db8f8036bda58bd557b7238872f7b9bcdb277bea5",
+          "output_sha256": {
+            "OCAM_BPM.fits": "f3c65054cb04db0ad330bf88b74775865cc794396be7161bfa36c21eef6425b8",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.729.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.729.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "18f3d7b2f39cf65789cfb0e0bf44a4763ad2c73c4cb0695eff65a09fed9816f1",
+            "frame1.fits": "434ee5e4cba881b25bd39a7754f78ef9fe9803797290f965258ba8111655daa3",
+            "frame2.fits": "55983c26ae8242dee0ea32fb6db756b6cc6f4f700588e7fe898714a953306774",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "3a9397f55195a3e9bea3beb4ed86f238ce9bd5c0811a7b551bdb1a0432bf30a2",
+          "log_sha256": "2f56c7e5343865ff497ef317ad035f43c002cc2c8d3e171aee779b38abf039ae",
+          "output_sha256": {
+            "OCAM_BPM.fits": "010f021ef4b4af76decef649d39ef69e30b0e61b3e4e82b9308f937b29b6db4a",
+            "returned.fits": "c8fb2565ef843a6a25b07fe145e6050ab32f057b439f4038223593c4be784609"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "aef15f499de6f1235c55f3144d88c1d8626cb116039f65055a987041c5ef6f76",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.746.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.746.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    {
+      "case": "c17-functional-known-response-flag0",
+      "mode": 17,
+      "lane": "functional",
+      "fixture": "known-response",
+      "proportional_flag": 0,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c186f3b6fbf098b8caa9c5a3be58856697bef756fd3f0c243c7a676a2744b14a",
+          "log_sha256": "0dc01842069a32ece05c2827c325c9ac3409d549d418023360e2da26767f0605",
+          "output_sha256": {
+            "OCAM_BPM.fits": "9e77a81fb6627c3ef8cbdc9ab7bc15d4895230995e03b1b1b894a34c80de31f2",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.770.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.770.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "3a9397f55195a3e9bea3beb4ed86f238ce9bd5c0811a7b551bdb1a0432bf30a2",
+          "log_sha256": "b18fb49865700c5ca95e4d73d26ebbc579c4ef919a32d6d04a6c749191985b1b",
+          "output_sha256": {
+            "OCAM_BPM.fits": "78de1a557c4b4982271c7c90e6df05d1f4f8433ae3fa7580792c8d422774eb85",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 0 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.785.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:37.785.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    },
+    {
+      "case": "c17-functional-known-response-flag1",
+      "mode": 17,
+      "lane": "functional",
+      "fixture": "known-response",
+      "proportional_flag": 1,
+      "roles": {
+        "ordinary": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "c186f3b6fbf098b8caa9c5a3be58856697bef756fd3f0c243c7a676a2744b14a",
+          "log_sha256": "f24c9864630589bdaefafb19626a55f0c61b3551c54303f86167835e0aa85f43",
+          "output_sha256": {
+            "OCAM_BPM.fits": "274eed859d00a1c609c53eeba5785a6f579ae25051f3f33b0b607a3b5405c753",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:38.805.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:38.805.fits"
+          ],
+          "functional_status": "passed",
+          "status": "passed"
+        },
+        "observer": {
+          "exit_status": 0,
+          "input_sha256": {
+            "frame0.fits": "787e6fb0c13ddf4afe59d58a05b78ab40b9567d17414eaeb3546a578c632b6aa",
+            "frame1.fits": "7789b7f0880297085ef524e4c3d0548ec0e24a290998e53a6abedd16701446ee",
+            "frame2.fits": "720e6255dfcf97a4a3e55dffccf8bfe74660d4413529637aad86a18be20fc52f",
+            "frames.list": "5909d15ed48c4f6c8a7993e3f38dfa19b78b9f60dd10e9456f88dcf70097fbc6",
+            "mefpp.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
+          },
+          "findings": [],
+          "executable_sha256": "3a9397f55195a3e9bea3beb4ed86f238ce9bd5c0811a7b551bdb1a0432bf30a2",
+          "log_sha256": "4c5c0c99ee2d9af99f9dd1d256a14c2a03279fbbe9b244516de50423e296194d",
+          "output_sha256": {
+            "OCAM_BPM.fits": "d75909e560813f5d6b6b505ce30b2f1fb5348900c58cae77b4ce85da04dc6225",
+            "returned.fits": "27c8481c148ee3126b38fae53a0ab3b9c74ee7b1daa6cbd9e7fb1722e310864d"
+          },
+          "outputs": {
+            "good": 79,
+            "bad": 2,
+            "pixels_checked": 81,
+            "mask_pixels_sha256": "23aa3a08672bf667e5e71e6e6cc020a3a41e2b46d221ad03371e8861599e1371",
+            "extension": "META_CCD_17",
+            "saved_name": "OCAM_BPM.fits",
+            "saved_headers": [
+              [
+                "SIMPLE  =                    T / Fits format                                    ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    0 / # of axes in frame                             ",
+                "EXTEND  =                    T / Extension may be present.                      ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ],
+              [
+                "XTENSION= 'IMAGE   ' / Extension first keyword (see SIMPLE)                     ",
+                "BITPIX  =                    8 / bits per pixel                                 ",
+                "NAXIS   =                    2 / single image                                   ",
+                "NAXIS1  =                    9 / x axis                                         ",
+                "NAXIS2  =                    9 / y axis                                         ",
+                "EXTNAME = 'META_CCD_17' / Extension first keyword (see SIMPLE)                  ",
+                "PRODCATG= 'CALIB.BPM' / Phase3 product category                                 ",
+                "DATE-OBS= '2026-10-01T01:02:03.125' / Date of observation of first frame        ",
+                "ORIGIN  = 'ESO S2 METADATA 0' / European Southern Observatory                   ",
+                "TELESCOP= 'VST-META-0' / European Southern Observatory                          ",
+                "INSTRUME= 'OMEGACAM-META-0' / European Southern Observatory                     ",
+                "MJD-OBS =            61314.125 / European Southern Observatory                  ",
+                "HIERARCH ESO DET WIN1 BINX   = 1 / Binning factor along X                       ",
+                "HIERARCH ESO DET WIN1 BINY   = 1 / Binning factor along Y                       ",
+                "HIERARCH ESO MPP BPM FRAME001= 'frame0.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME002= 'frame1.fits' / Input bpm frame                  ",
+                "HIERARCH ESO MPP BPM FRAME003= 'frame2.fits' / Input bpm frame                  ",
+                "ECLIPSE = '5.5.0   ' / Based on Eclipse version 5.0.0 by N. Devillard           ",
+                "HIERARCH ESO MPP PRSCX X1    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP PRSCX X2    = 1 / Prescan xmin xmax                            ",
+                "HIERARCH ESO MPP OVSCX X1    = 10 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP OVSCX X2    = 18 / Overscan xmin xmax                          ",
+                "HIERARCH ESO MPP RJOVSC NLOW = 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP RJOVSC NHIGH= 0 / Rejection min max                            ",
+                "HIERARCH ESO MPP TRIM X1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM X2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y1     = 1 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP TRIM Y2     = 9 / xmin xmax ymin ymax                          ",
+                "HIERARCH ESO MPP BPM PROPFLAG= 1 / proportional flag for BPM creation           ",
+                "HIERARCH ESO MPP BPM LGAINTHR= 0.500000 / low gain threshold for BPM creation   ",
+                "HIERARCH ESO MPP BPM HGAINTHR= 1.500000 / high gain threshold for BPM creation  ",
+                "HIERARCH ESO MPP QC NGOODPIX = 79 / Number of good pixels                       ",
+                "HIERARCH ESO MPP QC NBADPIX  = 2 / Number of bad pixels                         "
+              ]
+            ],
+            "metadata_source_frame": "frame0.fits",
+            "expected_primary_metadata": {
+              "ORIGIN": "ESO S2 METADATA 0",
+              "TELESCOP": "VST-META-0",
+              "INSTRUME": "OMEGACAM-META-0",
+              "MJD-OBS": 61314.125,
+              "DATE-OBS": "2026-10-01T01:02:03.125",
+              "ESO DET WIN1 BINX": 1,
+              "ESO DET WIN1 BINY": 1
+            }
+          },
+          "generated_origfiles": [
+            "CMDP.OMEGACAM.2026-10-27T21:15:38.824.fits",
+            "CMDP.OMEGACAM.2026-10-27T21:15:38.824.fits"
+          ],
+          "ownership_contract": [
+            "0",
+            "1",
+            "1",
+            "1",
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "functional_status": "passed",
+          "process-start_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context_accounting": {
+            "pointers": 112,
+            "bytes": 14029,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-build_accounting": {
+            "pointers": 112,
+            "bytes": 14032,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-build_accounting": {
+            "pointers": 130,
+            "bytes": 14312,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-mask-release_accounting": {
+            "pointers": 128,
+            "bytes": 14207,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver_accounting": {
+            "pointers": 15,
+            "bytes": 132,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge_accounting": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "after-second-purge_descriptors": [
+            "3",
+            "3",
+            "1"
+          ],
+          "descriptor_limits": [
+            [
+              "before",
+              "1024",
+              "4096",
+              "0"
+            ],
+            [
+              "after",
+              "4096",
+              "4096",
+              "0"
+            ]
+          ],
+          "status": "passed"
+        }
+      },
+      "findings": [],
+      "functional_status": "passed",
+      "status": "passed"
+    }
+  ],
+  "qualified_tool_reports_sha256": {
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/leak-run-provenance.json": "a58380d92c769b333c7fd2c66ed8e843c0f2b797634d8e773058443bd47c4673",
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/diagnostic-run-provenance.json": "ac7f0a6e00d29fa90e5426ff383066f1cd6310a9320e1d4a3832d3720c88e8dc"
+  },
+  "allocator": {
+    "XMEMORY_MODE": 2,
+    "XMEMORY_MAXPTRS": 2000000
+  },
+  "tool_sha256": {
+    "/opt/rh/devtoolset-10/root/usr/bin/gcc": "d04bb4b8b6cc4fbcef2140b3282636b77a3a63b7e87fd3322b12188fd4f0edf6",
+    "/home1/fselman/opt/cmake-3.29.6/bin/cmake": "4a6c99a21c507cd35f51acd017e995a562eb6e5e23218b0cc96e91543c4fa953"
+  },
+  "installation_performed": false,
+  "observational_processing_performed": false,
+  "python": "/home/fselman/.conda/envs/wenu-imaging/bin/python",
+  "numpy": "1.26.4",
+  "astropy": "6.1.7",
+  "limits": [
+    "Header-only populated-metadata OmegaCAM derivatives; not WFI/observational acceptance",
+    "Both regression producers with bias=NULL and one extension; other branches remain pending",
+    "One native call per process; no same-process repeated-stage qualification",
+    "Original after-driver state retained; double purge diagnoses cache but cannot waive other live state",
+    "No allocation/I/O injection or general mmap/swap qualification",
+    "Compatible target external diagnostics remain pending; this is functional/accounting only"
+  ],
+  "source_archive_sha256": "195f5ce71d798649dc9fbbd515aae4b74c7b83d1784f7c00507ac2f72865fd3a",
+  "diagnostic_cmake_sha256": "166a3a6372b34c432e5be362d69425b8eea8378e81f80c65439d39bc2e8fa56f",
+  "removed_child_environment": [
+    "ASAN_OPTIONS",
+    "UBSAN_OPTIONS",
+    "LSAN_OPTIONS",
+    "DYLD_INSERT_LIBRARIES",
+    "DYLD_LIBRARY_PATH",
+    "MallocStackLogging",
+    "MallocScribble",
+    "MallocStackLoggingNoCompact",
+    "S2_SPLIT_WRITE_LIMIT",
+    "S2_SPLIT_CACHE_CONTROL"
+  ],
+  "lane_environment": {
+    "functional": {}
+  },
+  "functional_finding_cases": 0,
+  "finding_cases": 0,
+  "sources_unchanged": true,
+  "exported_sources_unchanged": true,
+  "protected_files_unchanged": true,
+  "metadata_mac_reference_unchanged": true,
+  "reference_unchanged": true,
+  "checkout_unchanged": true,
+  "completed_utc": "2026-10-28T00:15:38.381073+00:00"
+}

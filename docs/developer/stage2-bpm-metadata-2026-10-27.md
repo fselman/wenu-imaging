@@ -1,5 +1,7 @@
 # S2-05 populated-metadata ownership qualification — 27 October 2026
 
+Update: [actual Chapman3 metadata evidence is inspected and passes](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md). Earlier target-pending statements below describe preparation history. Full S2-05/#75 and target external diagnostics remain open.
+
 Update: [actual Mac metadata evidence is inspected and passes](stage2-bpm-metadata-mac-acceptance-2026-10-27.md). Earlier native-Mac-pending statements describe preparation history. Unchanged-driver target verification is prepared but unexecuted; full S2-05 remains open.
 
 Status: prepared, actual native Mac execution pending. Baseline main

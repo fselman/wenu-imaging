@@ -1,5 +1,7 @@
 # S2-05 populated-metadata Mac acceptance — 27 October 2026
 
+Update: [actual Chapman3 metadata evidence is inspected and passes](stage2-bpm-metadata-chapman3-acceptance-2026-10-27.md). Earlier target-pending statements below describe preparation history. Full S2-05/#75 and target external diagnostics remain open.
+
 Actual clean source `c6a7a2bf05f8962cd9db4d72989b420f10159406`, branch
 `test/stage2-bpm-metadata`, Intel Mac MC02VV0HPHTDG. All **16 pairs / 32 native
 calls** pass across C90/C17 ASan/UBSan and separate external-leaks builds. This
