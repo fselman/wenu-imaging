@@ -1,0 +1,15 @@
+{
+  "purpose": "Read-only amendment checksum, link and launch-count validation",
+  "status": "passed",
+  "native_execution": false,
+  "original_v2_0_sha256_unchanged": "1a3b679710fb45796fb136f6d9883efba632522d8a0ead249ce868ef107f1f89",
+  "amendment_v2_1_sha256": "06436cf14657ee5585957ead6328bee5218c66a20c36ed4cfc702840c5377626",
+  "previous_planned_launch_cap": 18,
+  "amended_planned_launch_cap": 19,
+  "final_chapman_modes": [
+    "C17",
+    "C90"
+  ],
+  "maximum_global_correction_rounds": 2,
+  "production_changes": false
+}

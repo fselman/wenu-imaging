@@ -1,0 +1,18 @@
+{
+  "purpose": "Frozen roadmap document/link/count verification; no native execution",
+  "status": "passed",
+  "native_execution": false,
+  "baseline": "b0061b55b9ff8dc2d185c3c403c5119a25b606a5",
+  "frozen_contract_sha256": "1a3b679710fb45796fb136f6d9883efba632522d8a0ead249ce868ef107f1f89",
+  "fixed_campaign_rows": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5"
+  ],
+  "maximum_planned_native_launches": 18,
+  "maximum_global_correction_rounds": 2,
+  "links_verified": true,
+  "production_changes": false
+}
