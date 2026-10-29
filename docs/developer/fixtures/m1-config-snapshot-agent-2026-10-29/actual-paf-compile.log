@@ -1,0 +1,176 @@
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_framelist_load’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1710:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1710 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_load’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1856:33: warning: unused variable ‘single_frames’ [-Wunused-variable]
+ 1856 |         int                     single_frames ;
+      |                                 ^~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1855:33: warning: unused variable ‘err’ [-Wunused-variable]
+ 1855 |         int                     err ;
+      |                                 ^~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1854:33: warning: unused variable ‘exts’ [-Wunused-variable]
+ 1854 |         int               *     exts ;
+      |                                 ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1853:33: warning: unused variable ‘i’ [-Wunused-variable]
+ 1853 |         int                     i ;
+      |                                 ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1851:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1851 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1850:20: warning: unused variable ‘mef_frame’ [-Wunused-variable]
+ 1850 |         image_t  * mef_frame ;
+      |                    ^~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_overscan_correction’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1957:21: warning: variable ‘zIndex’ set but not used [-Wunused-but-set-variable]
+ 1957 |     int             zIndex;
+      |                     ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘simplifyFilterName’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:2218:14: warning: unused variable ‘zChar’ [-Wunused-variable]
+ 2218 |         char zChar ;
+      |              ^~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_valid_subset’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:2253:33: warning: unused variable ‘getval’ [-Wunused-variable]
+ 2253 |         char            *       getval ;
+      |                                 ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_bpm’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:2675:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2675 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:2835:25: warning: unused variable ‘bias’ [-Wunused-variable]
+ 2835 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:2834:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+ 2834 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3672:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3672 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3548:17: warning: unused variable ‘i’ [-Wunused-variable]
+ 3548 |     int         i, nframes ;
+      |                 ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3546:18: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3546 |     char        *getval ;
+      |                  ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3542:18: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 3542 |     framelist   *fnames ;
+      |                  ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_eclipse’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3717:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 3717 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3716:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3716 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3712:17: warning: variable ‘exptime’ set but not used [-Wunused-but-set-variable]
+ 3712 |     float       exptime;
+      |                 ^~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:3709:26: warning: unused variable ‘fh_ref’ [-Wunused-variable]
+ 3709 |         qfits_header    *fh_ref ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_input_filename’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4055:14: warning: unused variable ‘cval’ [-Wunused-variable]
+ 4055 |         char cval[80];
+      |              ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_headers_for’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4227:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 4227 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4226:26: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 4226 |         framelist       *fnames ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4225:26: warning: unused variable ‘first_name’ [-Wunused-variable]
+ 4225 |         char            *first_name ;
+      |                          ^~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4223:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 4223 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4220:26: warning: unused variable ‘out’ [-Wunused-variable]
+ 4220 |         FILE            *out ;
+      |                          ^~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4219:25: warning: unused variable ‘qd’ [-Wunused-variable]
+ 4219 |         qfitsdumper     qd ;
+      |                         ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4212:26: warning: unused variable ‘fh_main’ [-Wunused-variable]
+ 4212 |         qfits_header    *fh_main = NULL ;
+      |                          ^~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_create_orig_filename’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:4143:1: warning: control reaches end of non-void function [-Wreturn-type]
+ 4143 | }
+      | ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_split’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1645:31: warning: ‘.tmp.XXXXXX’ directive writing 11 bytes into a region of size between 1 and 512 [-Wformat-overflow=]
+ 1645 |         sprintf(temporary, "%s.tmp.XXXXXX", output);
+      |                               ^~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c:1645:9: note: ‘sprintf’ output between 12 and 523 bytes into a destination of size 512
+ 1645 |         sprintf(temporary, "%s.tmp.XXXXXX", output);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:350:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  350 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:351:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  351 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:536:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  536 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:837:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  837 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:188:21: note: ‘xmemory_p_mm_filename’ declared here
+  188 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:505:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:505:31: note: directive argument in the range [-2147483648, 2147483647]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:505:31: note: using the range [0, 4294967295] for directive argument
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c:505:5: note: ‘sprintf’ output between 20 and 1052 bytes into a destination of size 1024
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  506 |             (long)getpid(), reg) ;
+      |             ~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/qerror.c: In function ‘qfits_warning’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/qerror.c:175:27: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1020 [-Wformat-overflow=]
+  175 |         sprintf(all, "*** %s", msg);
+      |                           ^~   ~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/qerror.c:175:9: note: ‘sprintf’ output between 5 and 1028 bytes into a destination of size 1024
+  175 |         sprintf(all, "*** %s", msg);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/qerror.c: In function ‘qfits_error’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/qerror.c:193:30: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1017 [-Wformat-overflow=]
+  193 |         sprintf(all, "error: %s", msg);
+      |                              ^~   ~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/qerror.c:193:9: note: ‘sprintf’ output between 8 and 1031 bytes into a destination of size 1024
+  193 |         sprintf(all, "error: %s", msg);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/t_iso8601.c: In function ‘qfits_get_datetime_iso8601’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/t_iso8601.c:236:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/t_iso8601.c:236:27: note: directive argument in the range [-99, 99]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/t_iso8601.c:236:5: note: ‘sprintf’ output between 20 and 40 bytes into a destination of size 20
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  237 |             GET_CCYEAR(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  238 |             GET_MONTH(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~
+  239 |             GET_DAY(curdate),
+      |             ~~~~~~~~~~~~~~~~~
+  240 |             GET_HOUR(curtime),
+      |             ~~~~~~~~~~~~~~~~~~
+  241 |             GET_MINUTE(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  242 |             GET_SECOND(curtime));
+      |             ~~~~~~~~~~~~~~~~~~~~

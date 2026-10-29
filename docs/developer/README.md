@@ -1,5 +1,7 @@
 # Developer documentation
 
+Mandatory host selection: [Selected project tools — Mac and shared Chapman installations](selected-tools.md). Use the recorded absolute paths; consult the shared private-tool record before considering replacements or workarounds. Chapman3/4 are copycat hosts: no repeated per-host tool checks are needed.
+
 M0/M0a prepared for review: [WAD/project contract package](../architecture/proposed/m0-m0a/README.md), synthetic linked examples, native ownership sketch and expanded source migration ledger. Thirteen negative controls pass in the agent environment; no native/ASDF/FITS execution. Source-only CLI finding --ksize is tracked separately as #133. Mac development, chapman4 later qualification; accepted main 0fa9eaf remains the host baseline.
 
 WAD and ASDF project design: [Wenu Attribute Dictionary / ProcessingProject](../architecture/proposed/wad-processing-project.md), [revised target diagram](../architecture/proposed/pycavi-mefpp.md) and [M0a / updated milestones](../architecture/proposed/implementation-plan.md). Owner-directed documentation update, 29 October 2026; implementation remains pending.
