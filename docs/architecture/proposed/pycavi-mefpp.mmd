@@ -24,7 +24,7 @@ flowchart TD
     EXEC --> BIND["Optional mefppy binding"]
     CLI --> CORE["Shared C services and isolated contexts"]
     BIND --> CORE
-    CORE --> RESULT["Detector results and temporary FITS"]
+    CORE --> RESULT["Signal, variance from M6a, optional BPM provenance"]
     RESULT --> PUB["Validate, assemble and publish"]
     PUB --> FITS["Versioned FITS / MEF products"]
     PUB --> MODEL

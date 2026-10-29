@@ -2,10 +2,11 @@
 
 Detailed delivery sequence: [implementation milestones M0–M11 and later passes P/G](implementation-plan.md). This is a proposal; publishing it does not start implementation.
 
-Discussion proposal, revision 4, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
+Discussion proposal, revision 5, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 Status: proposed contracts and names; no implementation or dependency selection. Owner-directed revision 2 includes versioned dependency/association tracking and future incremental reprocessing as part of the architecture, with automatic cascades deferred beyond the first pass.
 Revision 3 adds the owner's project-overview CLI, variance creation/propagation, linearity, native dark construction/optional subtraction and fringe construction with later Python subtraction. See milestones M3 and M6a–M6d.
 Revision 4 records Wenu Attribute Dictionary (WAD), an ASDF ProcessingProject, a shared project service and M0a following owner instruction. Detailed schemas/APIs/layout remain proposals. See [WAD and processing projects](wad-processing-project.md).
+Revision 5 records the owner's chain-wide optional input-BPM policy and required variance capability from M6a; see [the policy and stage matrix](bpm-variance-policy.md). Existing runtime behavior is not changed by this design update.
 Compare the [original architecture](../original/pycavi-mefpp.md).
 
 ## Executive summary
@@ -51,7 +52,7 @@ flowchart TD
     EXEC --> BIND["Optional mefppy binding"]
     CLI --> CORE["Shared C services and isolated contexts"]
     BIND --> CORE
-    CORE --> RESULT["Detector results and temporary FITS"]
+    CORE --> RESULT["Signal, variance from M6a, optional BPM provenance"]
     RESULT --> PUB["Validate, assemble and publish"]
     PUB --> FITS["Versioned FITS / MEF products"]
     PUB --> MODEL
@@ -165,7 +166,9 @@ Separate configuration validation, input/layout inspection, calibration construc
 
 The calibration service boundary includes bias/BPM/dome/sky/master-flat, linearity-model construction, dark construction and fringe-frame construction. A C subroutine applies a selected linearity model; mefpp subtracts dark only on explicit request with a compatible selected dark and declared scaling. Fringe construction produces a template for a separate later Python subtraction operation. Recipe order and calibration preparation state must be explicit; fitting/building a model is separate from applying it.
 
-Signal, variance and mask are linked detector products throughout the services. Variance initialization identifies supplied versus modeled noise and the gain/read-noise assumptions. Propagation includes calibration uncertainty, flat division, linearity response, optional dark subtraction and gain/exposure normalization. Store pixel planes in FITS and describe their selectors, units, provenance, correction state and approximation/covariance limits in ASDF. Missing uncertainty is not zero uncertainty. The later Python fringe subtraction must also account for template/scale uncertainty; resampling requires its own covariance treatment. These numerical additions have separate acceptance gates from extraction that preserves legacy results.
+Input BPMs are optional throughout the target chain, with explicit omission recorded in requests and results. A supplied invalid BPM fails rather than falling back. Generated validity/rejection flags remain separate, and requested BPM creation must produce its BPM. From M6a, variance initialization and propagation are required for supported signal products in the new chain; this is not another optional mask setting. Raw variance may be initialized by an explicit qualified model. Historical signal-only comparisons remain distinct from variance-capable completion. See [the cross-stage contract](bpm-variance-policy.md).
+
+Signal, variance and generated validity are linked detector products throughout the variance-capable services; an external calibration BPM is independently optional. Variance initialization identifies supplied versus modeled noise and the gain/read-noise assumptions. Propagation includes calibration uncertainty, flat division, linearity response, optional dark subtraction and gain/exposure normalization. Store pixel planes in FITS and describe their selectors, units, provenance, correction state and approximation/covariance limits in ASDF. Missing uncertainty is not zero uncertainty. The later Python fringe subtraction must also account for template/scale uncertainty; resampling requires its own covariance treatment. These numerical additions have separate acceptance gates from extraction that preserves legacy results.
 
 Use immutable configuration, an execution request, isolated mutable work context and owned result handles. One allocation has one documented destruction owner, including partial failure. Do not promise reentrancy/thread safety until Eclipse/qfits globals, caches and initialization are addressed.
 
@@ -313,3 +316,5 @@ Current assessment: explicit resolution and typed requests are the necessary fir
 - Revision 3: owner adds recursive project visualization, variance creation/propagation, linearity, dark construction/optional native subtraction and fringe-frame construction with later Python subtraction; detailed milestones added, 29 October 2026.
 
 - Revision 4: owner proceeds with WAD and ASDF processing projects; add shared project service, metadata authority, immutable plans, M0a and offline/version/publication contracts, 29 October 2026.
+
+- Revision 5: owner permits omitted input BPM throughout the chain and requires variance capability from M6a; distinguish omission from invalid selections, generated validity from calibration masks and legacy comparisons from complete new-chain products, 29 October 2026.

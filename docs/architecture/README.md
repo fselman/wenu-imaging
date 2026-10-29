@@ -1,5 +1,7 @@
 # Architecture documents
 
+- [Optional BPMs and required variances](proposed/bpm-variance-policy.md): owner-directed chain-wide contract, baseline source observations and staged acceptance; numerical implementation remains pending.
+
 - [Original Pycavi/mefpp architecture](original/pycavi-mefpp.md): source-based pre-refactor snapshot at accepted main 22a32d39463a73ab32d2ba9d811f949198852902, including the current diagram and working-directory behavior. [Mermaid source](original/pycavi-mefpp.mmd).
 - [Proposed target architecture](proposed/pycavi-mefpp.md): revision-4 executive summary and diagram: WAD, ASDF processing projects, explicit paths, versioned dependency/association graph and future incremental reprocessing. First-pass records are separated from deferred trigger/cascade execution. [Mermaid source](proposed/pycavi-mefpp.mmd).
 - [WAD and ASDF processing projects](proposed/wad-processing-project.md): common schemas, project/plan/run lifecycle, metadata authority, offline resources and publication/recovery contracts.

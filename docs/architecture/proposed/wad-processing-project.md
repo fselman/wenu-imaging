@@ -1,5 +1,7 @@
 # Wenu Attribute Dictionary and ASDF processing projects
 
+29 October owner addition: [optional input BPMs / required variance support](bpm-variance-policy.md). WAD records explicit BPM omission or selected identity/coverage, independently of generated validity masks. A broken selected reference is an error, not omission. From M6a, supported new-chain signal products require variance initialization/propagation and provenance; pre-M6a unavailable variance is a historical/compatibility state, not a normal complete new-chain result. Numeric model/parameter uncertainty and integer BPM outputs retain type-appropriate contracts.
+
 Design direction recorded 29 October 2026; version 1. Owner instructed "Proceed" after reviewing WAD and the ASDF processing-project proposal. This authorizes this architecture/roadmap update. Concrete schemas, APIs, packaging and numerical implementation remain pending milestones, not installed capabilities.
 
 See the [target architecture](pycavi-mefpp.md) and [implementation plan](implementation-plan.md). Existing accepted Stage 2/2.1 evidence and original files remain unchanged.
