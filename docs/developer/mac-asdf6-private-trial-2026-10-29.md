@@ -2,6 +2,16 @@
 
 29 October 2026. Continuation of the [Chapman qualification](toml-asdf-chapman-qualification-2026-10-29.md). Private dependency testing only; production activation and refactoring remain outside this increment.
 
+## Independent Mac evidence receipt and reverse check preparation
+
+The owner-created bundle is `/Users/fselman/Software/build/wenu-imaging/mac-asdf6-transfer-ntb2et4J/Mac-private-k4i17lwh/evidence-transfer-qfjhi949/mac-asdf6-evidence.tar.gz`, 39,825 bytes, SHA256 `2819854e6a05e943234d7acc409eab7fcdae9b4755c995623717a576458c011d`. The uploaded copy passes safe regular-file membership/no-duplicate/path checks and all 17 manifest size/hash entries. Parent-to-functional/interchange report hashes, all six successful command-log hashes, all six fixture artifact hashes, production before/after metadata equality and preservation flags agree. Both functional/interchange network-attempt lists are empty. Interchange records original-fixture and cwd preservation. Installed candidate versions/locations match the private Mac environment; retained base packages include NumPy 1.26.4, Astropy 6.1.7 and zipp 4.1.1.
+
+The six Mac-generated fixture files are byte-identical to the independently inspected Chapman files, including positive/negative ASDF, schema, expected-WAD JSON, MEF and primary-image FITS. Semantic digest matches the recorded value. This is independent inspection of retained evidence, without a new Mac runtime execution or remote filesystem inspection.
+
+Prepared `probes/asdf6_reverse_interchange_probe.py` reads the exact transferred Mac fixture on Chapman4 using the existing D2 private environment. Guards include actual host, private/base Python prefix and exact installed package versions/locations (Chapman zipp remains 4.1.2). Test purpose: prove Mac-to-Chapman reading of a Mac-created artifact. Actions: offline ASDF custom-schema validation, expected semantic equality, all four referenced FITS arrays/metadata, relocation with spaces, negative-record rejection and original fixture/cwd preservation. It exercises ASDF/Astropy APIs only; no Pycavi methods, native engines, installation or reduction. Expected output is `interchange-report.json` with `Mac-to-Chapman4-interchange-passed`, the agreed semantic digest, empty network attempts and preservation true. Syntax passed on the agent; actual target execution remains pending.
+
+Next transfer the exact Mac archive into a fresh Chapman4 directory, verify its SHA256, inspect current target state, then execute the prepared reader on a fresh extracted copy. No production adoption or merge/cleanup follows automatically.
+
 ## Returned Mac result — 29 October 2026
 
 Owner terminal reports successful execution at `/Users/fselman/Software/build/wenu-imaging/mac-asdf6-transfer-ntb2et4J/Mac-private-k4i17lwh`. All six commands completed; parent status `Mac-passed-awaiting-reverse-interchange`. Semantic digest matches Chapman (`4df8a3c69e541d2d4950e9ffdc86b2b57670a1364682611f6f7fc4e5207daf30`). Production package metadata and checkout are reported unchanged; production activation is false. This is a user-returned runtime result, pending independent inspection of the retained Mac artifacts.
