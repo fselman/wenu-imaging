@@ -12,10 +12,10 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | F1 integrated tiny OmegaCAM | Accepted at 9242174: all three Mac lanes | Archived exact FITS and diagnostic logs independently checked; inherited at later source |
 | F2 integrated selected WFI | Accepted at f5afd08: all three Mac lanes after filename correction | Six products/eight detectors; host pixel/header reports agree, archived diagnostics pass; large FITS stay on Mac |
 | F3 five fixed failure cases | Accepted bounded F3; full archive inspected | Ten final failure roles and two exact smokes; 539 files / 35 logs / six builds verified; historical #127/#129 failures preserved |
-| F4 fixed same-process repetition | Prepared; actual Mac run pending | Reuse qualified instrumented binary; one process / one planned launch, warmup plus ten measured cycles |
+| F4 fixed same-process repetition | Accepted; archive independently inspected | One process, warmup + ten cycles; 66 exact products / 132 detector arrays, zero cleaned resources and stable descriptors |
 | F5 compact Chapman3 regression | Pending | Maximum 2 planned launches: one C17 and one C90 together at the end, per v2.1; no target external-memory qualification |
 | Final C90 compatibility checkpoint | Required at final stable source | Native corrections #121–#124; one final Mac C90 build, no duplicate runtime matrix |
-| Correction/retest budget | 2/2 consumed; approved v2.2–v2.5 exceptions consumed | Current 16 planned + 10 retests = 26 actual; F4 one and F5 two original planned launches remain; no automatic repair/retry |
+| Correction/retest budget | 2/2 consumed; approved v2.2–v2.5 exceptions consumed | Current 17 planned + 10 retests = 27 actual; only F5 two original planned launches remain; no automatic repair/retry |
 | #116 disposition | Open | Original descriptor identity mismatch remains unattributed/non-reproduced |
 | Target external diagnostics | Limitation remains open | Accepted v2.0 removes it as an automatic block to the Mac-led campaign |
 | Final Stage 2 owner review / Phase 3 gap matrix | Pending | Completion, accepted named limitations, or explicit blocked decision |
@@ -45,3 +45,5 @@ Latest: [cube-allocation #129 blocked decision](stage2-integrated-f3-cube-blocke
 [Approved v2.5 cube repair/resume prepared](stage2-integrated-cube-repair-2026-10-28.md). User authorized exact two-C-file/two-retest proposal; agent syntax/owner/guard checks pass, recipe launches 0. Current cumulative count remains 23; no further repair/retry beyond this one-use exception.
 
 Latest controlling status: [F3 archive accepted](stage2-integrated-f3-acceptance-2026-10-28.md), [F4 prepared](stage2-integrated-f4-preparation-2026-10-28.md). Current 26 actual; after F4 27, after paired F5 at most 29. Preparation/receipt consumed zero native launches. Earlier pending/blocked statements are historical; no frozen contract bytes changed.
+
+Latest controlling status: [F4 accepted](stage2-integrated-f4-acceptance-2026-10-28.md), all 421 archive identities checked. Current 27 actual; only final Mac C90 build, two compact F5 launches and owner/Phase 3 review remain. Receipt consumes zero launches and requires no host sync.

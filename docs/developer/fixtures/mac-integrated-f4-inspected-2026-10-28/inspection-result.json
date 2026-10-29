@@ -1,0 +1,21 @@
+{
+  "status": "accepted-bounded-F4",
+  "files_verified": 421,
+  "native_processes": 1,
+  "warmup_cycles": 1,
+  "measured_cycles": 10,
+  "exact_products_verified": 66,
+  "ordered_detector_arrays_verified": 132,
+  "post_purge_resources": "zero in all eleven cycles; stable descriptors within/across cycles",
+  "planned_launches": 17,
+  "retest_launches": 10,
+  "total_launches": 27,
+  "general_rounds": 2,
+  "engine_source": "68f0a04632a63fa53c7549b02cde019112fa80f5",
+  "report_sha256": "e4cc2db636e46b45f698c98e5a7e4ba65b494e321dbe65d99b9002a09c200a10",
+  "log_sha256": "a4ab66178cf95d41ebab9d03331363975ff610bd45749f2a141e4a6536b36348",
+  "limitations": [
+    "Instrumented tiny repeat, not repeated external leaks or scientific acceptance",
+    "Final Mac C90 build, compact Chapman C17/C90 and owner review remain pending; #116 unresolved"
+  ]
+}
