@@ -1,0 +1,587 @@
+{
+  "notation": "wad-contract-review-1",
+  "schema_version": "0.1.0-proposal",
+  "synthetic": true,
+  "entry_project": "project:example@2",
+  "records": [
+    {
+      "kind": "asset",
+      "logical_id": "asset:science",
+      "version": 1,
+      "record_id": "asset:science@1",
+      "locations": {
+        "root": "raw",
+        "path": "science/example.fits"
+      },
+      "availability": "unavailable",
+      "identity": {
+        "state": "unknown",
+        "content_sha256": null
+      }
+    },
+    {
+      "kind": "asset",
+      "logical_id": "asset:bias",
+      "version": 1,
+      "record_id": "asset:bias@1",
+      "locations": {
+        "root": "calibration",
+        "path": "bias/v1.fits"
+      },
+      "availability": "unavailable",
+      "identity": {
+        "state": "unknown",
+        "content_sha256": null
+      }
+    },
+    {
+      "kind": "asset",
+      "logical_id": "asset:flat",
+      "version": 1,
+      "record_id": "asset:flat@1",
+      "locations": {
+        "root": "calibration",
+        "path": "flat/v1.fits"
+      },
+      "availability": "unavailable",
+      "identity": {
+        "state": "unknown",
+        "content_sha256": null
+      }
+    },
+    {
+      "kind": "image",
+      "logical_id": "image:science",
+      "version": 1,
+      "record_id": "image:science@1",
+      "asset": "asset:science@1",
+      "detector_id": "CCD-A",
+      "hdu": {
+        "index": 2,
+        "extname": "CCD-A",
+        "extver": 1
+      },
+      "shape": [
+        4,
+        4
+      ],
+      "dtype": "float32",
+      "unit": "adu",
+      "variance": {
+        "state": "unavailable",
+        "image": null,
+        "unit": "adu^2",
+        "model": null
+      },
+      "mask": {
+        "state": "unavailable",
+        "image": null
+      },
+      "corrections": {
+        "bias": "not_applied",
+        "flat": "not_applied",
+        "dark": "not_applied",
+        "linearity": "not_applied",
+        "normalization": "not_applied"
+      }
+    },
+    {
+      "kind": "image",
+      "logical_id": "image:bias",
+      "version": 1,
+      "record_id": "image:bias@1",
+      "asset": "asset:bias@1",
+      "detector_id": "CCD-A",
+      "hdu": {
+        "index": 1,
+        "extname": "CCD-A",
+        "extver": 1
+      },
+      "shape": [
+        4,
+        4
+      ],
+      "dtype": "float32",
+      "unit": "adu",
+      "variance": {
+        "state": "unavailable",
+        "image": null,
+        "unit": "adu^2",
+        "model": null
+      },
+      "mask": {
+        "state": "unavailable",
+        "image": null
+      },
+      "corrections": {
+        "bias": "not_applied",
+        "flat": "not_applied",
+        "dark": "not_applied",
+        "linearity": "not_applied",
+        "normalization": "not_applied"
+      }
+    },
+    {
+      "kind": "image",
+      "logical_id": "image:flat",
+      "version": 1,
+      "record_id": "image:flat@1",
+      "asset": "asset:flat@1",
+      "detector_id": "CCD-A",
+      "hdu": {
+        "index": 3,
+        "extname": "CCD-A",
+        "extver": 1
+      },
+      "shape": [
+        4,
+        4
+      ],
+      "dtype": "float32",
+      "unit": "1",
+      "variance": {
+        "state": "unavailable",
+        "image": null,
+        "unit": "1^2",
+        "model": null
+      },
+      "mask": {
+        "state": "unavailable",
+        "image": null
+      },
+      "corrections": {
+        "bias": "not_applied",
+        "flat": "not_applied",
+        "dark": "not_applied",
+        "linearity": "not_applied",
+        "normalization": "not_applied"
+      }
+    },
+    {
+      "kind": "observation",
+      "logical_id": "observation:science",
+      "version": 1,
+      "record_id": "observation:science@1",
+      "image": "image:science@1",
+      "instrument": "SYNTHETIC",
+      "target": "contract-example",
+      "filter": "example-r",
+      "exposure_s": 20.0,
+      "original": {
+        "EXPTIME": 20.0,
+        "GAIN": 0.0
+      },
+      "attributes": {
+        "gain": {
+          "value": 2.0,
+          "unit": "electron/adu",
+          "source": "configured",
+          "source_ref": "fixture-settings",
+          "raw_value": 0.0,
+          "conflict": true,
+          "selection_reason": "explicit synthetic override; not characterized"
+        }
+      }
+    },
+    {
+      "kind": "calibration",
+      "logical_id": "calibration:bias",
+      "version": 1,
+      "record_id": "calibration:bias@1",
+      "image": "image:bias@1",
+      "calibration_type": "bias",
+      "applicability": {
+        "detector_id": "CCD-A",
+        "readout": "fixture-mode"
+      },
+      "preparation": {
+        "bias": "master",
+        "linearity": "not_applied"
+      },
+      "origin": "supplied-synthetic-example"
+    },
+    {
+      "kind": "calibration",
+      "logical_id": "calibration:flat",
+      "version": 1,
+      "record_id": "calibration:flat@1",
+      "image": "image:flat@1",
+      "calibration_type": "master_flat",
+      "applicability": {
+        "detector_id": "CCD-A",
+        "filter": "example-r",
+        "readout": "fixture-mode"
+      },
+      "preparation": {
+        "bias": "applied",
+        "linearity": "not_applied",
+        "reference_detector": "CCD-A"
+      },
+      "origin": "supplied-synthetic-example"
+    },
+    {
+      "kind": "group",
+      "logical_id": "group:science",
+      "version": 1,
+      "record_id": "group:science@1",
+      "members": [
+        "observation:science@1"
+      ],
+      "policy": "explicit-membership-v1"
+    },
+    {
+      "kind": "association",
+      "logical_id": "association:science",
+      "version": 1,
+      "record_id": "association:science@1",
+      "group": "group:science@1",
+      "policy": "explicit-choice-v1",
+      "candidates": [
+        "calibration:bias@1",
+        "calibration:flat@1"
+      ],
+      "selected": {
+        "bias": "calibration:bias@1",
+        "master_flat": "calibration:flat@1"
+      },
+      "rejected": {},
+      "overrides": []
+    },
+    {
+      "kind": "configuration",
+      "logical_id": "configuration:effective",
+      "version": 1,
+      "record_id": "configuration:effective@1",
+      "settings": {
+        "recipe": [
+          "scan_trim",
+          "subtract_bias",
+          "divide_flat"
+        ],
+        "variance": "unavailable",
+        "linearity": "off",
+        "dark": "off",
+        "fringe": "python-later",
+        "normalization_owner": "python",
+        "normalization_requested": false
+      },
+      "sources": [
+        {
+          "name": "fixture-settings",
+          "format": "inline-review",
+          "values": {
+            "gain_electron_per_adu": 2.0
+          }
+        }
+      ],
+      "compatibility": "synthetic-only; no native processing authorized"
+    },
+    {
+      "kind": "task",
+      "logical_id": "task:native",
+      "version": 1,
+      "record_id": "task:native@1",
+      "operation": "native_preprocess",
+      "depends_on": [],
+      "inputs": [
+        "observation:science@1"
+      ],
+      "calibrations": {
+        "bias": "calibration:bias@1",
+        "master_flat": "calibration:flat@1"
+      },
+      "detectors": [
+        "CCD-A"
+      ],
+      "configuration": "configuration:effective@1",
+      "outputs": [
+        "product:native@1"
+      ],
+      "paths": {
+        "output_root": "output",
+        "work_root": "work",
+        "log_root": "logs"
+      }
+    },
+    {
+      "kind": "project",
+      "logical_id": "project:example",
+      "version": 1,
+      "record_id": "project:example@1",
+      "parent": null,
+      "roots": {
+        "raw": "file:///EXAMPLE/raw/",
+        "calibration": "file:///EXAMPLE/calibration/",
+        "output": "file:///EXAMPLE/output/",
+        "work": "file:///EXAMPLE/work/",
+        "logs": "file:///EXAMPLE/logs/"
+      },
+      "inventory": [
+        "observation:science@1",
+        "calibration:bias@1",
+        "calibration:flat@1"
+      ],
+      "groups": [
+        "group:science@1"
+      ],
+      "associations": [
+        "association:science@1"
+      ],
+      "configuration": "configuration:effective@1",
+      "plans": [],
+      "runs": [],
+      "products": [],
+      "selection_mode": "pinned",
+      "profiles": {
+        "reduction": "scientific",
+        "recipe": "legacy-native",
+        "product": "internal-test"
+      }
+    },
+    {
+      "kind": "plan",
+      "logical_id": "plan:original",
+      "version": 1,
+      "record_id": "plan:original@1",
+      "project": "project:example@1",
+      "groups": [
+        "group:science@1"
+      ],
+      "associations": [
+        "association:science@1"
+      ],
+      "configuration": "configuration:effective@1",
+      "tasks": [
+        "task:native@1"
+      ],
+      "software_requirement": {
+        "source_revision": "0fa9eaf157359a93f2a9196f6fff05dc3e96e220",
+        "equivalence": "exact-source; illustrative request only"
+      },
+      "state": "frozen"
+    },
+    {
+      "kind": "run",
+      "logical_id": "run:original",
+      "version": 1,
+      "record_id": "run:original@1",
+      "plan": "plan:original@1",
+      "attempts": [
+        "attempt:original@1"
+      ],
+      "state": "not_started",
+      "actual_software": {}
+    },
+    {
+      "kind": "attempt",
+      "logical_id": "attempt:original",
+      "version": 1,
+      "record_id": "attempt:original@1",
+      "run": "run:original@1",
+      "task": "task:native@1",
+      "state": "not_started",
+      "outcome": "not_run",
+      "products": []
+    },
+    {
+      "kind": "asset",
+      "logical_id": "asset:output",
+      "version": 1,
+      "record_id": "asset:output@1",
+      "locations": {
+        "root": "output",
+        "path": "attempt-001/native_pre.fits"
+      },
+      "availability": "unavailable",
+      "identity": {
+        "state": "unknown",
+        "content_sha256": null
+      }
+    },
+    {
+      "kind": "image",
+      "logical_id": "image:output",
+      "version": 1,
+      "record_id": "image:output@1",
+      "asset": "asset:output@1",
+      "detector_id": "CCD-A",
+      "hdu": {
+        "index": 1,
+        "extname": "CCD-A",
+        "extver": 1
+      },
+      "shape": [
+        4,
+        4
+      ],
+      "dtype": "float32",
+      "unit": "adu",
+      "variance": {
+        "state": "unavailable",
+        "image": null,
+        "unit": "adu^2",
+        "model": null
+      },
+      "mask": {
+        "state": "unavailable",
+        "image": null
+      },
+      "corrections": {
+        "bias": "not_applied",
+        "flat": "not_applied",
+        "dark": "not_applied",
+        "linearity": "not_applied",
+        "normalization": "not_applied"
+      }
+    },
+    {
+      "kind": "product",
+      "logical_id": "product:native",
+      "version": 1,
+      "record_id": "product:native@1",
+      "plan": "plan:original@1",
+      "producer": "task:native@1",
+      "parents": [
+        "observation:science@1",
+        "calibration:bias@1",
+        "calibration:flat@1"
+      ],
+      "image": "image:output@1",
+      "state": "planned",
+      "verification": "not_verified"
+    },
+    {
+      "kind": "asset",
+      "logical_id": "asset:bias-new",
+      "version": 1,
+      "record_id": "asset:bias-new@1",
+      "locations": {
+        "root": "calibration",
+        "path": "bias/v2.fits"
+      },
+      "availability": "unavailable",
+      "identity": {
+        "state": "unknown",
+        "content_sha256": null
+      }
+    },
+    {
+      "kind": "image",
+      "logical_id": "image:bias-new",
+      "version": 1,
+      "record_id": "image:bias-new@1",
+      "asset": "asset:bias-new@1",
+      "detector_id": "CCD-A",
+      "hdu": {
+        "index": 1,
+        "extname": "CCD-A",
+        "extver": 1
+      },
+      "shape": [
+        4,
+        4
+      ],
+      "dtype": "float32",
+      "unit": "adu",
+      "variance": {
+        "state": "unavailable",
+        "image": null,
+        "unit": "adu^2",
+        "model": null
+      },
+      "mask": {
+        "state": "unavailable",
+        "image": null
+      },
+      "corrections": {
+        "bias": "not_applied",
+        "flat": "not_applied",
+        "dark": "not_applied",
+        "linearity": "not_applied",
+        "normalization": "not_applied"
+      }
+    },
+    {
+      "kind": "calibration",
+      "logical_id": "calibration:bias",
+      "version": 2,
+      "record_id": "calibration:bias@2",
+      "image": "image:bias-new@1",
+      "calibration_type": "bias",
+      "applicability": {
+        "detector_id": "CCD-A",
+        "readout": "fixture-mode"
+      },
+      "preparation": {
+        "bias": "master",
+        "linearity": "not_applied"
+      },
+      "origin": "new-synthetic-candidate"
+    },
+    {
+      "kind": "association",
+      "logical_id": "association:science",
+      "version": 2,
+      "record_id": "association:science@2",
+      "group": "group:science@1",
+      "policy": "explicit-choice-v1",
+      "candidates": [
+        "calibration:bias@1",
+        "calibration:bias@2",
+        "calibration:flat@1"
+      ],
+      "selected": {
+        "bias": "calibration:bias@2",
+        "master_flat": "calibration:flat@1"
+      },
+      "rejected": {
+        "calibration:bias@1": "superseded by explicit synthetic selection"
+      },
+      "overrides": [
+        "synthetic manual selection; no quality claim"
+      ]
+    },
+    {
+      "kind": "project",
+      "logical_id": "project:example",
+      "version": 2,
+      "record_id": "project:example@2",
+      "parent": "project:example@1",
+      "roots": {
+        "raw": "file:///EXAMPLE/raw/",
+        "calibration": "file:///EXAMPLE/calibration/",
+        "output": "file:///EXAMPLE/output/",
+        "work": "file:///EXAMPLE/work/",
+        "logs": "file:///EXAMPLE/logs/"
+      },
+      "inventory": [
+        "observation:science@1",
+        "calibration:bias@1",
+        "calibration:bias@2",
+        "calibration:flat@1"
+      ],
+      "groups": [
+        "group:science@1"
+      ],
+      "associations": [
+        "association:science@2"
+      ],
+      "configuration": "configuration:effective@1",
+      "plans": [
+        "plan:original@1"
+      ],
+      "runs": [
+        "run:original@1"
+      ],
+      "products": [
+        "product:native@1"
+      ],
+      "selection_mode": "pinned",
+      "profiles": {
+        "reduction": "scientific",
+        "recipe": "legacy-native",
+        "product": "internal-test"
+      }
+    }
+  ]
+}

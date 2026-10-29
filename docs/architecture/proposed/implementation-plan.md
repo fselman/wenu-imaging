@@ -8,6 +8,8 @@ Evidence: [accepted OCAM/WFI baseline](../../developer/stage2-1-functional-resul
 
 ## Executive summary
 
+Preparation receipt, 29 October 2026: [M0/M0a contract review package](m0-m0a/README.md) provides the minimal WAD review catalog, linked synthetic project example, native ownership sketch, expanded source ledger and focused verification plan. Status: prepared for review; parser/schema packaging, private effective settings and later numerical choices remain explicit open decisions. No M1 runtime implementation or new processing starts from this receipt.
+
 Deliver one serial, numerically equivalent processing path with typed C configuration, TOML subsets, explicit file/detector references, modular native services and an ASDF-backed Pycavi plan. Replace the prepared-directory requirement without moving raw data or rewriting the scientific algorithms. Include single-detector layouts in the data contract and qualification. Add a readable recursive project inspection command in M3, replacing routine dfits/fitsort inspection. Include explicit numerical milestones M6a–M6d for variance creation/propagation, linearity, dark construction with optional native subtraction, and fringe-frame construction with later Python subtraction. Keep legacy-equivalence checks separate from acceptance of these additions.
 
 WAD supplies common data contracts from M0a. A ProcessingProject is the evolving ASDF-backed scientific workspace; execution plans freeze a project revision, exact memberships/associations and resolved settings, while runs record actual attempts/outcomes. M7 implements persistence for these early contracts rather than first defining them.

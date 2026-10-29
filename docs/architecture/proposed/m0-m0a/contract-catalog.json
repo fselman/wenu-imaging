@@ -1,0 +1,115 @@
+{
+  "notation": "wad-contract-review-1",
+  "version": "0.1.0-proposal",
+  "status": "design-only",
+  "record_types": {
+    "asset": {
+      "locations": "object",
+      "availability": "string",
+      "identity": "object"
+    },
+    "image": {
+      "asset": "ref",
+      "detector_id": "string",
+      "hdu": "object",
+      "shape": "integers",
+      "dtype": "string",
+      "unit": "string",
+      "variance": "object",
+      "mask": "object",
+      "corrections": "object"
+    },
+    "observation": {
+      "image": "ref",
+      "instrument": "string",
+      "target": "string",
+      "filter": "string",
+      "exposure_s": "number",
+      "original": "object",
+      "attributes": "object"
+    },
+    "calibration": {
+      "image": "ref",
+      "calibration_type": "string",
+      "applicability": "object",
+      "preparation": "object",
+      "origin": "string"
+    },
+    "group": {
+      "members": "refs",
+      "policy": "string"
+    },
+    "association": {
+      "group": "ref",
+      "policy": "string",
+      "candidates": "refs",
+      "selected": "object",
+      "rejected": "object",
+      "overrides": "array"
+    },
+    "configuration": {
+      "settings": "object",
+      "sources": "array",
+      "compatibility": "string"
+    },
+    "project": {
+      "parent": "nullable_ref",
+      "roots": "object",
+      "inventory": "refs",
+      "groups": "refs",
+      "associations": "refs",
+      "configuration": "ref",
+      "plans": "refs",
+      "runs": "refs",
+      "products": "refs",
+      "selection_mode": "string",
+      "profiles": "object"
+    },
+    "task": {
+      "operation": "string",
+      "depends_on": "refs",
+      "inputs": "refs",
+      "calibrations": "object",
+      "detectors": "strings",
+      "configuration": "ref",
+      "outputs": "refs",
+      "paths": "object"
+    },
+    "plan": {
+      "project": "ref",
+      "groups": "refs",
+      "associations": "refs",
+      "configuration": "ref",
+      "tasks": "refs",
+      "software_requirement": "object",
+      "state": "string"
+    },
+    "run": {
+      "plan": "ref",
+      "attempts": "refs",
+      "state": "string",
+      "actual_software": "object"
+    },
+    "attempt": {
+      "run": "ref",
+      "task": "ref",
+      "state": "string",
+      "outcome": "string",
+      "products": "refs"
+    },
+    "product": {
+      "plan": "ref",
+      "producer": "ref",
+      "parents": "refs",
+      "image": "ref",
+      "state": "string",
+      "verification": "string"
+    }
+  },
+  "common": {
+    "logical_id": "string",
+    "version": "integer",
+    "record_id": "string",
+    "kind": "string"
+  }
+}

@@ -1,0 +1,72 @@
+/* M0 review sketch only. No public ABI, installed header or implementation.
+ * All declarations use C90-compatible vocabulary. Names remain provisional.
+ */
+#ifndef WENU_M0_NATIVE_INTERFACE_SKETCH_H
+#define WENU_M0_NATIVE_INTERFACE_SKETCH_H
+
+#include <stddef.h>
+
+typedef struct mef_config mef_config;
+typedef struct mef_request mef_request;
+typedef struct mef_context mef_context;
+typedef struct mef_result mef_result;
+typedef struct mef_error mef_error;
+
+typedef enum {
+    MEF_STATUS_OK = 0,
+    MEF_STATUS_CONFIG,
+    MEF_STATUS_INPUT,
+    MEF_STATUS_UNSUPPORTED,
+    MEF_STATUS_MEMORY,
+    MEF_STATUS_COMPUTATION,
+    MEF_STATUS_IO,
+    MEF_STATUS_CANCELLED
+} mef_status;
+
+/* Proposed inspectable descriptor. Strings are caller-owned until the
+ * create call returns; the created context copies all required data.
+ * HDU index/name/version are checked against the same physical FITS HDU.
+ * index 0 is a primary image; detector_id is never derived from this index.
+ */
+typedef struct {
+    const char *asset_record_id;
+    const char *detector_id;
+    const char *resolved_path;
+    int hdu_index;
+    const char *extname;             /* NULL if not specified */
+    int extver;                     /* positive when name selector used */
+} mef_image_ref;
+
+/* WAD-facing request construction/validation adapters will populate opaque
+ * config/request objects. Their builders/accessors must be specified with
+ * the actual fields during M1/M2; this sketch is not a usable header alone.
+ * Every request identifies operation/version, ordered input/calibration
+ * mappings, correction state, shared reference and explicit work/output/log
+ * paths. No file discovery, graph mutation or implicit chdir is permitted.
+ */
+mef_status mef_context_create(const mef_config *config,
+                              const mef_request *request,
+                              mef_context **context,
+                              mef_error **error);
+
+/* context owns mutable work. On success result is independently owned;
+ * on failure *result is NULL and *error is NULL or independently owned.
+ * No process exit, parent cwd/environment mutation or final project publish.
+ * Unsupported future operations fail explicitly rather than using a fallback.
+ */
+mef_status mef_execute(mef_context *context,
+                       mef_result **result,
+                       mef_error **error);
+
+/* Inspection/accessor details are specified alongside implementation.
+ * Do not expose mef_bb, Eclipse/qfits pointers, borrowed array lifetimes or
+ * language-specific ASDF/Python values as the permanent public interface.
+ */
+void mef_context_destroy(mef_context *context);
+void mef_result_destroy(mef_result *result);
+void mef_error_destroy(mef_error *error);
+
+/* Destroy accepts NULL. Reusing a non-NULL freed pointer is not supported.
+ * Cancellation semantics and concurrent calls need their own qualification.
+ */
+#endif

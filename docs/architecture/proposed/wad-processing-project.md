@@ -126,4 +126,6 @@ Our external FITS references, ProcessingProject records and future cascade plans
 
 ## Status
 
+Concrete preparation: [M0/M0a review package](m0-m0a/README.md), including the small catalog/example and explicit limits. These are schema/contract sketches in a dependency-free review notation, not a qualified ASDF runtime or public WAD API.
+
 Architecture direction recorded; exact schema vocabulary, tag namespace, packaging, project revision protocol, migration compatibility and numerical acceptance remain concrete milestone decisions. Original architecture and frozen roadmap amendments are unchanged.
