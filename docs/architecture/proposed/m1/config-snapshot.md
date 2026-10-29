@@ -78,8 +78,11 @@ Per-object allocation accounting returned to zero at every checked boundary.
 The separate actual-PAF probe was not sanitizer-instrumented. Retained source
 identity checks matched all 127 fetched upstream input blobs.
 
-Full CMake build/CTest and actual Intel Mac/Chapman qualification are pending.
-Agent compilation does not qualify either production host. No installation,
+The returned Intel Mac and Chapman C90 CMake configure/probe builds and focused
+CTest now pass; see the [paired receipt](../../../developer/m1-config-paired-results-2026-10-29.md).
+These are owner-returned terminal results, not independently inspected target
+archives. They qualify this opt-in configuration increment, not the full engine.
+Target C17/sanitizer runs and remaining M1 lifecycle work are not claimed. No installation,
 notebook change, native recipe execution, calibration recalculation, pixel
 comparison, scientific acceptance or QC estimator is part of this increment.
 Request/context/result/error lifecycles, effective CLI override capture and

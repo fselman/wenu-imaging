@@ -170,4 +170,7 @@ upgrading external astronomy programs.
 - The earlier PATH-only Chapman4 preflight found system CMake 2.8.12.2.
   Interpreting that as a need for a new tool or direct-compiler workaround was
   incorrect. The workaround was not published; use the shared CMake/CTest.
-  No Chapman M1 build result is claimed yet.
+  The subsequent Chapman4 private C90 configure/probe build and focused CTest
+  passed at e5c3aba6e6b35530f528eb4942e54bd8e3b47884; see the
+  [paired M1 receipt](m1-config-paired-results-2026-10-29.md). No recheck of
+  the shared tools or duplicate Chapman3 execution is needed.

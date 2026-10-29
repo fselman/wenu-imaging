@@ -69,4 +69,4 @@ cc -std=c90 -pedantic-errors -Wall -Wextra -Werror -fsyntax-only -x c docs/archi
 
 ## First implementation increment
 
-Owner authorized implementation after the verified effective-input map. See [owned configuration snapshot](config-snapshot.md): isolated C90 lifecycle/copy/dump implementation and focused tests; real PAF constructor comparisons pass in the agent environment, actual Mac/Chapman and full CMake qualification pending. The numerical operation template above remains a design scaffold; M1 is not complete.
+Owner authorized implementation after the verified effective-input map. See [owned configuration snapshot](config-snapshot.md): isolated C90 lifecycle/copy/dump implementation and focused tests; agent checks and returned Mac/Chapman C90 CMake probe builds/focused CTest pass; see the [paired receipt](../../../developer/m1-config-paired-results-2026-10-29.md). This is ready for bounded review, with target C17/sanitizer runs unclaimed. The numerical operation template above remains a design scaffold; M1 is not complete.
