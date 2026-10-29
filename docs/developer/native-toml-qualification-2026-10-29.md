@@ -1,5 +1,7 @@
 # Native TOML qualification — Mac and Chapman4
 
+29 October 2026 owner decision: vendor the two tested tomlc17 source files, with the MIT license, exact revision/hash provenance and update policy, in [third_party/tomlc17](../../third_party/tomlc17/README.wenu.md). The approved source import is byte-identical to pinned upstream 4987cf895df61f702d19e3481f34b032ab29ed3a and both qualified host copies. Vendoring is the selected distribution method; build-target/configuration-adapter integration remains the planned implementation stage. Preserve C90 public/numerical contracts, compile the dependency in C99 when integrated, and retain explicit UTF-8 validation/one-time option initialization/shared TOML 1.0 bounds. No production installation, PAF replacement or processing begins from this source import.
+
 29 October 2026. Owner instruction: “Let us include it in the current work.” This adds bounded tomlc17 qualification to PR #135 alongside the completed Python TOML/core-ASDF private trial. It authorizes private source builds/tests and a scoped C99 dependency trial, not production integration, installation, PAF replacement, reductions or a general mefpp language-standard change.
 
 ## N4 independent paired receipt and recommendation

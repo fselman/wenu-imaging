@@ -1,4 +1,6 @@
 # mefpp refactor implementation plan — proposal
+
+29 October owner decision: use the [vendored, pinned tomlc17 source](../../../third_party/tomlc17/README.wenu.md) for the planned native TOML reader. Source import and byte-identity verification are approved now; the static build target and production adapter remain M2 implementation work after their prerequisites. Qualification N1–N4 on Mac/Chapman4 is complete within the recorded limits. This source import does not advance native numerical refactoring or install packages.
 29 October owner addition: [bounded native TOML qualification](../../developer/native-toml-qualification-2026-10-29.md) now belongs to the current dependency work. Authorize private Mac/Chapman4 tests of pinned tomlc17 with a scoped C99 dependency exception, strict-C90 caller boundary, shared TOML 1.0 semantics/error controls and ownership checks before production parser adoption. Existing native source/public contracts retain C90; this does not authorize M1/M2 implementation, installation or processing. The completed Python/core-ASDF trial is preserved.
 
 Version 3, 29 October 2026. For discussion; no implementation begins from this plan.
