@@ -18,6 +18,8 @@ The first pass records stable IDs, exact versions, ordered membership, associati
 
 Use small reviewed increments, maintaining a legacy adapter until the replacement passes the accepted baseline. Each increment has targeted checks and a rollback boundary. Finish with one cumulative OCAM/WFI five-exposure comparison through notebook 04, reusing existing references. Do not repeat the Stage 2 compiler/memory matrix or reduce the large Chapman dataset.
 
+Production dependency gate: [Chapman TOML/ASDF qualification](../../developer/toml-asdf-chapman-qualification-2026-10-29.md). Chapman machines are the main production targets. No new parser/ASDF runtime is adopted on Mac-only evidence; inspect actual target state, qualify the constrained dependency closure privately, and verify interchange/offline operation on both platforms before adoption.
+
 Milestone IDs below organize this refactor; they do not renumber the global roadmap.
 
 ## Milestone map
@@ -267,7 +269,7 @@ Synthetic structured backgrounds and masked sources check template recovery, nor
 
 ### Work and deliverables
 
-- Qualify the selected ASDF adapter privately; do not upgrade the working scientific stack implicitly.
+- Qualify the selected ASDF adapter and its transitive dependencies privately on the actual Mac and production Chapman target before adoption; require offline operation/interchange and preserve the working scientific stack.
 - Implement the M0a WAD contracts for ProcessingProject revisions, asset/group/calibration/association/task/attempt/product/assessment, stable IDs, exact versions and typed edges. Schemas and native descriptors evolve together with explicit compatibility handling.
 - Keep image arrays in FITS/MEF. Implement explicit FITS reference resolution and metadata/layout validation; ASDF external-array references do not themselves resolve files.
 - Preserve ordered membership, original card/provenance references, logical versus physical locations and recorded configuration snapshots.

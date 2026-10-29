@@ -56,6 +56,8 @@ CLI and optional mefppy adapt to the same services. C sees native structures/pat
 
 The legacy PAF adapter remains available. Python owns the project/ASDF layer initially. A standalone native TOML CLI remains the target, but its C parser/dependency selection is not qualified by these fixtures. Keep C90/C17 and actual target constraints explicit rather than silently choosing a C99-only parser.
 
+Production dependency requirement: [TOML/ASDF Chapman qualification](../../../developer/toml-asdf-chapman-qualification-2026-10-29.md). New dependencies must qualify on actual Chapman before adoption as well as on Mac. PR #134's contract-review package is accepted/merged; runtime/dependency decisions remain open.
+
 ## Verification and remaining decisions
 
 Run the local, dependency-free review check with Python 3.11:

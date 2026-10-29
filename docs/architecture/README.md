@@ -4,6 +4,7 @@
 - [Proposed target architecture](proposed/pycavi-mefpp.md): revision-4 executive summary and diagram: WAD, ASDF processing projects, explicit paths, versioned dependency/association graph and future incremental reprocessing. First-pass records are separated from deferred trigger/cascade execution. [Mermaid source](proposed/pycavi-mefpp.mmd).
 - [WAD and ASDF processing projects](proposed/wad-processing-project.md): common schemas, project/plan/run lifecycle, metadata authority, offline resources and publication/recovery contracts.
 - [M0/M0a contract review package](proposed/m0-m0a/README.md): linked synthetic records, native interface sketch, configuration ledger and bounded checks; production implementation pending.
+- [Production Chapman dependency gate](../developer/toml-asdf-chapman-qualification-2026-10-29.md): exact candidate/dependency review, isolated Mac/Chapman trials and adoption criteria; target execution pending.
 - [Implementation plan](proposed/implementation-plan.md): detailed first-pass milestones, gates/rollback and later parallel/incremental passes.
 - [Detailed refactor analysis](../developer/mefpp-refactor-analysis-2026-10-29.md), [PAF inventory](../developer/mefpp-refactor-paf-inventory-2026-10-29.md) and [Chapman4 evidence](../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 
