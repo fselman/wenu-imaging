@@ -1,5 +1,7 @@
 # mefpp refactor — initial source analysis and design proposal
 
+29 October 2026: see the [original architecture diagram](../architecture/original/pycavi-mefpp.md) and [target architecture proposal](../architecture/proposed/pycavi-mefpp.md). The proposed execution contract resolves inputs, calibrations, configuration and output/work destinations explicitly, without changing the caller's working directory or implicitly searching for files. Existing cwd-dependent behavior remains unchanged; this is design for discussion.
+
 Date: 29 October 2026. Source baseline: main 22a32d39463a73ab32d2ba9d811f949198852902.
 Scope: [owner amendment v2.9](native-roadmap-amendment-v2.9-2026-10-29.md).
 Status: source analysis complete for the boundaries below; design proposed for review. Chapman4's compact science-partition census and workspace/project configuration relationship are now recorded; effective override mapping and target dependency/binding qualification remain pending. No production software or datasets changed.

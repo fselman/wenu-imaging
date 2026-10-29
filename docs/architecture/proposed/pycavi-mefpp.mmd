@@ -1,0 +1,25 @@
+flowchart TD
+    RAW["Original FITS / MEF assets"] --> N01["Notebook 01: inventory and associations"]
+    TOML["Versioned TOML subsets"] --> N01
+    N01 --> ASDF["ASDF project, assets and associations"]
+    ASDF --> PLAN["Shared plan builder and validation"]
+    TOML --> PLAN
+    N03["Notebook 03: select and inspect"] --> PLAN
+    SCRIPT["Configured Python command"] --> PLAN
+    PLAN --> RESOLVE["Resolve file, detector and calibration references"]
+    RAW --> RESOLVE
+    RESOLVE --> REQUEST["Explicit requests and path bindings"]
+    REQUEST --> PYAPI["Optional mefppy binding"]
+    REQUEST --> CLI["Native mefpp CLI adapter"]
+    subgraph CORE["Shared modular C library"]
+        API["Typed API and owned contexts"] --> CAL["Calibration and shared-reference services"]
+        CAL --> DET["Detector science subroutines"]
+        SUPPORT["FITS I/O, geometry and diagnostics"] --> CAL
+        SUPPORT --> DET
+    end
+    PYAPI --> API
+    CLI --> API
+    DET --> RESULT["Per-task results and isolated temporary FITS"]
+    RESULT --> COMMIT["Coordinator: validate and assemble"]
+    COMMIT --> FITS["Published FITS / MEF products"]
+    COMMIT --> RECORD["ASDF provenance and product references"]
