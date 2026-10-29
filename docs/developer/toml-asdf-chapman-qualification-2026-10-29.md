@@ -8,6 +8,10 @@ Native TOML scope added by owner, 29 October 2026: include pinned tomlc17 qualif
 
 Baseline: main b5bfd910614a786b95a598cb6295989c9f6602d6. M0/M0a review package is accepted/merged; actual ASDF schemas/runtime, parser selection and effective legacy-setting decisions remain open. Prior chapman3 evidence does not automatically qualify chapman4 or another dependency.
 
+## Native dependency qualification completed; adoption recommendation pending
+
+The paired native tomlc17 trial (pinned 4987cf895df61f702d19e3481f34b032ab29ed3a) now passes independent N4 evidence review on Intel Mac/Apple Clang 15 and Chapman4/GCC 10.2.1. See [the final native receipt and recommendation](native-toml-qualification-2026-10-29.md). Strict C99 dependency/C90 caller boundary, bounded typed TOML agreement/error checks and allocator-hook ownership/failure-recovery controls pass on both hosts. All 140 transferred file identities and 71 command-log identities/statuses agree. Recommend this static native reader for planned M2 integration with UTF-8 validation, one-time option initialization and the shared TOML 1.0/range contract. Production adoption/adapter implementation, other hosts, concurrency and sanitizer/full-conformance claims remain separate; activation is false. The completed Python/core-ASDF private qualification and two interchange directions remain preserved. No further runtime tests are planned for these bounded trials.
+
 ## Returned private qualification status
 
 Both actual-host private trials and both Mac/Chapman4 interchange directions passed. See the [final returned result and independently inspected evidence receipts](mac-asdf6-private-trial-2026-10-29.md). Python 3.11 stdlib TOML parsing and pinned core ASDF 6.0.0/asdf-standard 1.5.0 are qualified within the documented synthetic/offline scope on these exact environments. Production activation remains false and adoption awaits owner review. No inference to other Chapman hosts, native TOML/C90, production WAD schemas, ASDF extensions or reduction correctness is made. Earlier pending language below is historical for these completed private trials; open implementation/adoption gates remain.

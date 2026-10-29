@@ -2,6 +2,35 @@
 
 29 October 2026. Owner instruction: “Let us include it in the current work.” This adds bounded tomlc17 qualification to PR #135 alongside the completed Python TOML/core-ASDF private trial. It authorizes private source builds/tests and a scoped C99 dependency trial, not production integration, installation, PAF replacement, reductions or a general mefpp language-standard change.
 
+## N4 independent paired receipt and recommendation
+
+29 October 2026: uploaded native evidence from both actual hosts independently inspected; bounded N1–N4 qualification is complete.
+
+| Bundle | Bytes | Manifest files | SHA256 |
+|---|---:|---:|---|
+| mac-native-toml-evidence.tar.gz | 135023 | 72 | e15b387342bf12f16086814394e58b8c0588977903c3446a3466144218dd932f |
+| chapman4-native-toml-evidence.tar.gz | 103957 | 68 | f846da8cb7ecee2b70a3ea52a2ee26f863e134f96f00f882b327b5e886b982c9 |
+
+Both archive identities, safe regular-file membership, no duplicate/traversal paths, exact manifest membership and all 140 member size/hash identities pass. The Mac-only members are N1/sdk.log and three N23 dSYM files (Info.plist, DWARF symbols and x86_64 relocation YAML). They explain the four-file difference. Executables and static libraries are excluded as intended; the Mac archive additionally retains debug-symbol data. No archive regeneration or test rerun is needed.
+
+Independently verified four reports and their N1→N23 links, all 71 command-log hashes/statuses, source/header/license pins, exact test-only bridge/C90 caller/C driver contents, every transferred artifact identity, generated corpus bytes against the prepared fixture definitions and expected typed trees. Native binary/library identities were verified by host runners/collectors and are recorded in reports; those payloads were not independently re-read on the agent because they remain on their hosts.
+
+The logs confirm explicit Xcode Apple Clang 15 on Intel Mac and devtoolset GCC 10.2.1 on Chapman4, parser/bridge C99, strict-C90 caller, -pedantic-errors, and /usr/bin/ar. Compile/link logs are empty on both hosts. Mac linked runtime is libSystem; Chapman links the system libm/libc/loader, with no missing dependency reported. No Mesa/MPI compiler wrapper is selected. Clean baseline HEADs and unchanged before/after Git and production package metadata agree with the declared target states.
+
+N2 independently reconstructed six expected typed trees (including signed zero, Unicode, numeric limits and date/time/timezone normalization), checked twelve negative diagnostics and zero tracked allocation counts, and verified every case input identity. Both semantic digests equal `40b47916247e105606bcaaac47a893871edc4e37f8f05f87b490267dc696edb9`. The signed-64 overflow controls use an explicit interoperability range check on the Python side; they are not tomllib syntax failures.
+
+N3 cycle logs/report agree on twenty cycles / 60 parses per host, zero outstanding parser allocations. Each host records all 119 valid-input and 120 partial-invalid injection positions consumed/rejected, no fallback successes and zero outstanding allocations. The reviewed harness checks recovery status, equivalent semantics for any successful fallback, and a valid parse after each injected case. Recorded preservation flags are true; installation/production activation are false. This is retained-evidence review, not another target execution.
+
+### Recommendation for owner review
+
+Adopt pinned tomlc17 `4987cf895df61f702d19e3481f34b032ab29ed3a` as the native TOML dependency for the planned M2 integration on these exact tested Intel Mac/Chapman4 environments, subject to the existing production-adoption decision. Use a static dependency in explicit C99 mode, keep upstream types behind the adapter boundary, enable UTF-8 validation and initialize parser options once before any worker activity. Retain the C90 baseline for numerical/public native contracts. Initial editable configuration should use the shared TOML 1.0 subset and explicit C-compatible integer/domain bounds; production dialect and domain enforcement must be implemented in the adapter rather than inferred from parser acceptance.
+
+The C90 proof is a narrow test interface using double/long/error buffers, not qualification of the entire future typed request/configuration API. C99 test-only glue does not automatically authorize an exception for production adapter compilation. Production integration, PAF migration, installation, scientific equivalence and any broader language-standard exception remain future implementation/review work.
+
+Other Chapman hosts, sanitizer/all-process leak coverage, concurrent parsing/global-option races, full TOML conformance and unsupported production schemas are not qualified by this corpus. The dependency is a reader; no TOML editing/writing capability was qualified. Preserve all evidence and completed Python TOML/ASDF trials. No further runtime test is planned for this bounded trial. Owner acceptance, dependency adoption and merge/cleanup remain pending.
+
+Earlier preparation/pending paragraphs below are chronological history and are superseded by this receipt only for N1–N4 on the two named hosts.
+
 ## Pinned source and boundary
 
 Upstream: https://github.com/cktan/tomlc17
