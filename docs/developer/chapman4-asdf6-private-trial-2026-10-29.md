@@ -2,6 +2,14 @@
 
 29 October 2026. Continuation of [production qualification](toml-asdf-chapman-qualification-2026-10-29.md) and [D0/D1 preparation](chapman4-toml-asdf-preflight-2026-10-29.md).
 
+## Returned D2 result — 29 October 2026
+
+Owner terminal reports the one-use D2 trial passed at /home1/fselman/Software/build/wenu-imaging/chapman4-asdf6-download-crhlZBOC/D2-private-s6qsxbqf. Status: Chapman4-D2-passed-awaiting-Mac-and-interchange. Checks reported successful: private imports and exact installed dependency closure; TOML structured input/error controls; offline ASDF format1.5.0 custom-schema/round-trip controls; synthetic MEF/primary signal/variance/mask references, rejected selectors, relocation and fixture/cwd preservation.
+
+Semantic SHA256: 4df8a3c69e541d2d4950e9ffdc86b2b57670a1364682611f6f7fc4e5207daf30. Production package metadata unchanged: true; checkout unchanged: true; production activation: false. No real data reduction or native engine run is reported.
+
+This is returned target evidence, not yet independent agent inspection of the retained reports/logs/artifacts. Next prepare a bounded evidence/interchange bundle containing reports, logs, exact wheels and tiny fixtures, excluding the environment and real datasets. Preserve the private environment and all original evidence; do not rerun passed checks. Mac qualification and both-direction interchange remain pending before adoption. The preparation-pending statements below describe the earlier state and are superseded by this receipt for reported Chapman4 D2 execution only.
+
 ## Accepted returned D1 metadata evidence
 
 User ran the exact D1 helper on chapman4 and inspected its retained report.
