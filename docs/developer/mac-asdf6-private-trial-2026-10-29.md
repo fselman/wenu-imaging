@@ -2,6 +2,18 @@
 
 29 October 2026. Continuation of the [Chapman qualification](toml-asdf-chapman-qualification-2026-10-29.md). Private dependency testing only; production activation and refactoring remain outside this increment.
 
+## Final returned reverse-interchange result — 29 October 2026
+
+The owner ran the prepared reader once in the retained Chapman4 private environment. Work directory: `/home1/fselman/Software/build/wenu-imaging/chapman4-mac-interchange-rMLZ5KVo/reverse-bh84ftf1`. Terminal output reports `Mac-to-Chapman4-interchange-passed`, empty network attempts, original fixture/cwd unchanged, and successful parent preservation checks. Parent report: `run-provenance.json`; child report: `interchange-report.json`; log: `reverse-interchange.log`.
+
+Checks passed on target: transferred Mac-created ASDF semantics/custom schema; all four FITS references and exact synthetic arrays; relocation with spaces; transferred invalid record rejection. Exact package versions remain ASDF 6.0.0, asdf-standard 1.5.0, jmespath 1.1.0, semantic-version 2.10.0, NumPy 1.26.4, Astropy 6.1.7, zipp 4.1.2, importlib-metadata 9.0.1, attrs 26.1.0, typing-extensions 4.16.0, packaging 26.3 and PyYAML 6.0.3. Semantic SHA256 is `4df8a3c69e541d2d4950e9ffdc86b2b57670a1364682611f6f7fc4e5207daf30`, identical across both hosts and both directions.
+
+Evidence distinction: Mac/Chapman initial bundles were independently inspected; this final reverse run is verified from the owner's returned terminal output and the prepared runner's pass conditions, without a separately uploaded final parent report. The locale startup warning did not prevent successful execution. No reinstall, reduction, new scientific operation or rerun of passed trials occurred.
+
+The bounded Python 3.11 stdlib-TOML/core-ASDF private dependency trial is complete on these exact Intel Mac and Chapman4 environments, including both interchange directions. No further runtime test is planned for this bounded trial. Production activation remains false. Owner review/adoption is pending; other Chapman machines, native TOML/C90, production WAD schemas, ASDF extensions and numerical/refactor behavior are not qualified by these tests. Preserve all retained trials and artifacts.
+
+Earlier pending statements below describe preparation before this returned result and are superseded for the named private trials and two interchange directions only.
+
 ## Independent Mac evidence receipt and reverse check preparation
 
 The owner-created bundle is `/Users/fselman/Software/build/wenu-imaging/mac-asdf6-transfer-ntb2et4J/Mac-private-k4i17lwh/evidence-transfer-qfjhi949/mac-asdf6-evidence.tar.gz`, 39,825 bytes, SHA256 `2819854e6a05e943234d7acc409eab7fcdae9b4755c995623717a576458c011d`. The uploaded copy passes safe regular-file membership/no-duplicate/path checks and all 17 manifest size/hash entries. Parent-to-functional/interchange report hashes, all six successful command-log hashes, all six fixture artifact hashes, production before/after metadata equality and preservation flags agree. Both functional/interchange network-attempt lists are empty. Interchange records original-fixture and cwd preservation. Installed candidate versions/locations match the private Mac environment; retained base packages include NumPy 1.26.4, Astropy 6.1.7 and zipp 4.1.1.

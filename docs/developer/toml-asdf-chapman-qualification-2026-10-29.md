@@ -4,7 +4,11 @@
 
 Baseline: main b5bfd910614a786b95a598cb6295989c9f6602d6. M0/M0a review package is accepted/merged; actual ASDF schemas/runtime, parser selection and effective legacy-setting decisions remain open. Prior chapman3 evidence does not automatically qualify chapman4 or another dependency.
 
-## Candidate review; no adoption or installation yet
+## Returned private qualification status
+
+Both actual-host private trials and both Mac/Chapman4 interchange directions passed. See the [final returned result and independently inspected evidence receipts](mac-asdf6-private-trial-2026-10-29.md). Python 3.11 stdlib TOML parsing and pinned core ASDF 6.0.0/asdf-standard 1.5.0 are qualified within the documented synthetic/offline scope on these exact environments. Production activation remains false and adoption awaits owner review. No inference to other Chapman hosts, native TOML/C90, production WAD schemas, ASDF extensions or reduction correctness is made. Earlier pending language below is historical for these completed private trials; open implementation/adoption gates remain.
+
+## Candidate review and adoption scope
 
 | Candidate | Source requirement/evidence | Proposed disposition |
 |---|---|---|
