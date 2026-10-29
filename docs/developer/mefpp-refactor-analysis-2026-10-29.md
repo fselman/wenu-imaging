@@ -2,7 +2,7 @@
 
 Date: 29 October 2026. Source baseline: main 22a32d39463a73ab32d2ba9d811f949198852902.
 Scope: [owner amendment v2.9](native-roadmap-amendment-v2.9-2026-10-29.md).
-Status: source analysis complete for the boundaries below; design proposed for review. Actual Chapman directory evidence and target dependency/binding qualification are pending. No production software or datasets changed.
+Status: source analysis complete for the boundaries below; design proposed for review. Partial Chapman4 directory evidence is now recorded; complete partition/configuration coverage and target dependency/binding qualification remain pending. No production software or datasets changed.
 
 ## Decisions versus proposals
 
@@ -166,17 +166,17 @@ Binding selection waits for the C contract. Test repeated calls in one interpret
 
 These are ordered proposals, not a new unbounded implementation authorization. Reuse Stage 2.1 baselines; agree the smallest relevant checks at each change, rather than replaying the full Stage 2 campaign. New variance/calibration algorithms remain Stage 4 scope.
 
-## Chapman evidence still needed
+## Chapman evidence and remaining inventory
 
-Known historical root from the recorded pilot: /home/fselman/omegacam/testing/reduced. A larger project may be elsewhere; first collect actual host/Git/environment evidence, root/config discovery and immediate directory listings. Then run a bounded metadata inventory of selected roots.
+A [partial actual Chapman4 inventory](mefpp-refactor-chapman4-inventory-2026-10-29.md) now records the requested ~/omegacam/testing and ~/fits roots, 53 visited science partitions, shared absent calibration targets and different resolved storage roots. The testing traversal hit its time limit; this is not a complete dataset census. Known historical root from the recorded pilot: /home/fselman/omegacam/testing/reduced. A larger project may be elsewhere; first collect actual host/Git/environment evidence, root/config discovery and immediate directory listings. Then run a bounded metadata inventory of selected roots.
 
 For each partition record list membership, link targets/broken links, local effective configuration/overrides, expected versus present products, sizes and stage reports/logs. Distinguish raw, native-preprocessed, normalized, detector-solved, assembled-WCS and later-tool states. Product presence establishes only a candidate state; a WCS label or all expected filenames does not establish validated completion. Sample FITS headers first; do not hash/read every large pixel array, follow directory symlinks recursively, repair links, delete partial files or resume jobs. Record unknown or contradictory state.
 
-The inventory informs schema size/granularity, shared-calibration reuse, naming collisions, incomplete attempts, restart semantics and relocation needs. No Chapman workload, directory scan or completeness result has yet been observed by this agent.
+The inventory informs schema size/granularity, shared-calibration reuse, naming collisions, incomplete attempts, restart semantics and relocation needs. The actual directory scan is now observed on chapman4; no pipeline workload, header/pixel validation or complete reduction result is established. Its 181 absent link targets can include planned unbuilt calibrations, so do not repair them automatically.
 
 ## Checks performed and limits
 
-Inspected current C/header sources, notebook 00/01/03 cells, Python association/instrument code and OCAM/WFI templates. Built a reproducible key-family inventory and checked the illustrative TOML syntax. These are source/document checks, not native execution, dependency qualification, ASDF round-trip validation or scientific acceptance. No compiler/memory matrix, reduction, parser installation or target mutation was run. Chapman inspection remains pending returned host evidence.
+Inspected current C/header sources, notebook 00/01/03 cells, Python association/instrument code and OCAM/WFI templates. Built a reproducible key-family inventory and checked the illustrative TOML syntax. These are source/document checks, not native execution, dependency qualification, ASDF round-trip validation or scientific acceptance. No compiler/memory matrix, reduction, parser installation or target mutation was run. Partial Chapman4 returned-host inventory has been parsed and reconciled; complete coverage and effective local settings remain pending.
 
 ## Primary references checked 29 October 2026
 
