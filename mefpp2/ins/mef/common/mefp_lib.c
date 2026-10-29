@@ -1443,6 +1443,18 @@ void mef_bb_del(mef_bb * bb)
 
 void mef_bb_dump(mef_bb * bb, FILE * out)
 {
+	int detector_index;
+    /* -d runs before extension traversal: zero/negative means all, not CCD[-1].
+     * Keep the existing first-detector display and valid positive RON choice. */
+    if (bb == NULL || out == NULL || bb->ccd == NULL || bb->nchips <= 0) {
+        e_error("Cannot display unavailable detector settings");
+        return;
+    }
+    detector_index = bb->xtnum > 0 ? bb->xtnum - 1 : 0;
+    if (detector_index >= bb->nchips) {
+        e_error("Cannot display detector selector %d: outside configured detectors", bb->xtnum);
+        return;
+    }
 	fprintf(out,
 			"\n"
 			"Parameters for this command:\n"
@@ -1533,7 +1545,7 @@ void mef_bb_dump(mef_bb * bb, FILE * out)
 		(((bb->ccd)+0)->trimreg)[1],
 		(((bb->ccd)+0)->trimreg)[2],
 		(((bb->ccd)+0)->trimreg)[3],
-		((bb->ccd)+(bb->xtnum-1))->ron,
+		((bb->ccd)+detector_index)->ron,
 		((bb->ccd)+0)->gain,
 		bb->pixrej_lo,
 		bb->pixrej_hi,

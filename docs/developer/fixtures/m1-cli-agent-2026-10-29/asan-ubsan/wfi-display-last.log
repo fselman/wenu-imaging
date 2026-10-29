@@ -1,0 +1,87 @@
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1225)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1226)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1227)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1230)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1231)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1232)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1233)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1234)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1235)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1236)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1260)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1261)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1262)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1263)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1264)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1265)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1266)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1267)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c (1268)
+
+Parameters for this command:
+
+[Extension]
+xtnum       = 8
+
+[Output]
+Name        = WFI_MFF
+
+[Bias]
+Name        = none
+
+[Dome]
+Name        = unknown
+
+Filter	     = unknown
+Binning in X= unknown
+Binning in Y= unknown
+LoThresh    = 10000
+HiThresh    = 45000
+MinFrames   = 3
+SaveFlat    = no
+
+[Sky]
+Name        = unknown
+LoThresh    = 7000
+HiThresh    = 45000
+MinFrames   = 3
+SaveFlat    = no
+
+[Prescan]
+xmin        = 5
+xmax        = 48
+
+[Overscan]
+xmin        = 2100
+xmax        = 2142
+
+[Scan rejection]
+min         = 10
+max         = 10
+
+[Trimming]
+xmin        = 51
+xmax        = 2094
+ymin        = 31
+ymax        = 4127
+
+[Pixel]
+ReadoutNoise  = 4.9
+Gain          = 2
+LoSigmaRej    = 3
+HiSigmaRej    = 3
+
+[Median region]
+xmin        = 500
+xmax        = 1500
+ymin        = 1500
+ymax        = 2500
+
+[Smoothing kernel]
+HalfSize    = 7
+
+
+PASS: 121 CLI capture allocation positions, transient+persistent OOM; 20 ownership cycles
+PASS: actual legacy CLI captured; source/argv destroyed; no reduction executed

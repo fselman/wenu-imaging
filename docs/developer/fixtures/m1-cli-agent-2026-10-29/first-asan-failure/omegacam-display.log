@@ -1,0 +1,55 @@
+=================================================================
+==23==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5260000000f8 at pc 0x55994a1fa56d bp 0x7ffd06e20750 sp 0x7ffd06e20740
+READ of size 4 at 0x5260000000f8 thread T0
+    #0 0x55994a1fa56c in mef_bb_dump /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c:1536
+    #1 0x55994a197be0 in mef_bb_load /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/tests/../ins/mef/recipes/mefpp.c:359
+    #2 0x55994a19b022 in main /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/tests/cli_capture_probe.c:127
+    #3 0x7f124c3c51c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #4 0x7f124c3c528a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #5 0x55994a194b84 in _start (/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/agent-build/probe-asan-ubsan+0x148b84) (BuildId: 2f3a1b27a3ba9b6f987f93969327440033bb0a23)
+
+0x5260000000f8 is located 8 bytes before 10112-byte region [0x526000000100,0x526000002880)
+allocated by thread T0 here:
+    #0 0x7f124cda99c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x55994a1ff584 in xmemory_malloc /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/src/xmemory.c:577
+    #2 0x55994a1ffc0a in xmemory_calloc /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/src/xmemory.c:718
+    #3 0x55994a1d7cf2 in mef_bb_new_from_paf /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c:129
+    #4 0x55994a1951e5 in mef_bb_load /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/tests/../ins/mef/recipes/mefpp.c:180
+    #5 0x55994a19b022 in main /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/tests/cli_capture_probe.c:127
+    #6 0x7f124c3c51c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #7 0x7f124c3c528a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #8 0x55994a194b84 in _start (/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/agent-build/probe-asan-ubsan+0x148b84) (BuildId: 2f3a1b27a3ba9b6f987f93969327440033bb0a23)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c:1536 in mef_bb_dump
+Shadow bytes around the buggy address:
+  0x525ffffffe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x525ffffffe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x525fffffff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x525fffffff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x526000000000: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+=>0x526000000080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa[fa]
+  0x526000000100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x526000000180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x526000000200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x526000000280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x526000000300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==23==ABORTING

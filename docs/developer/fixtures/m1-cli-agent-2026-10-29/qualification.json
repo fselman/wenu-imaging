@@ -1,0 +1,67 @@
+{
+  "strict_core": [
+    {
+      "argv": [
+        "/usr/bin/cc",
+        "-std=c90",
+        "-pedantic-errors",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-D_DEFAULT_SOURCE=1",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/agent-build",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/include",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/include",
+        "-fsyntax-only",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mef_cli_request.c"
+      ],
+      "exit_status": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/cc",
+        "-std=c17",
+        "-pedantic-errors",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-D_DEFAULT_SOURCE=1",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/agent-build",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/include",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/include",
+        "-fsyntax-only",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mef_cli_request.c"
+      ],
+      "exit_status": 0
+    }
+  ],
+  "sanitizer_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0",
+    "UBSAN_OPTIONS": "halt_on_error=1"
+  },
+  "status": "agent-fixed-C90-C17-and-ASan-UBSan-51-cases-passed",
+  "failed_first_sanitizer_run": "m1-cli-i_73b1lg",
+  "defect": 139,
+  "source_sha256": {
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/tests/cli_capture_probe.c": "3817508f25ab58df2ce9c641b5a590edb4cc3717eef1c1b3673a6fad4a1b957e",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mef_config.c": "475bd35fb17248e852c2e00333a9967d6ebe93c3724f09d8d260e21e77df5d7c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mef_runtime.c": "940e7ce6379dc6591736f83ffc695c324657d1486e4618d2b817dcc11bfa88f4",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mef_cli_request.c": "79031d586026effaad5e916ce06cb2d34f3abb09032b47ee1d69cd09f7e167d7",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/ins/mef/common/mefp_lib.c": "45e09b7970b0940ed69b4d7a30a1a0e4bf45e4f1cf3603078b791a9a8392a172",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/src/pafs.c": "548ce8b2a12265f7b597851b0c7075f3fb9a5784ee2998084c28d0b31074c499",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/unix/comm.c": "fedb577839d39151310b67dfac6f8dffe8a8ff07f0e628f842c4b4ecfc6e40f9",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/unix/strlib.c": "c42737c78eed9109a54d4361ad79a052a0154ea90efa524d543ce86780847622",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/unix/t_stamp.c": "b489e940fc21afc609a8d32731904e531374619ac08614309fcc46b86e8e26e2",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/unix/userid.c": "b41d7f0dd1f27b32fd556806ddd635a18a4ce8bc4296358f7720d8e931e0f406",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/unix/e_version.c": "3ab78634d0390285b59834ef485b51def2dc8f9d527780bcc4855a8fdc2c8758",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/src/xmemory.c": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/src/qerror.c": "294696388b54b4986eef66a1ee448baaf29778780814a9c904b591f6a8f0232c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/src/t_iso8601.c": "dae4507766dde8f49a610a2c5407f8d9cb30e8315d90d2650143fcf4226fa85e",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/qfits5/src/version.c": "9139e89b39f28a436d3ad8601ea7b102dbd639d12ce3c19ce80e5608a5ac17d0",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/unix/getopt.c": "c9ded22ca98f924f8c040523b34b7051b4f5b735913c74aad8a1c4c969858ea5",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-cli/mefpp2/src/unix/t_iso8601.c": "c3b11c194b0383b7954555f0779312ca7d567b50fa4e7ab570b47b28b49179ee"
+  },
+  "original_mefp_lib_sha256": "09b7b7cbcef77db59f3d8b4ef0ffb350f42a7bee093ccfac99944566d87a5c17"
+}
