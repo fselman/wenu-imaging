@@ -79,8 +79,11 @@ execution, copied error text, independent result/error lifetimes, empty result
 metadata, and preserving unsupported status even when error allocation fails.
 The previous configuration snapshot OCAM/WFI/edge regression checks also pass.
 
-Actual Intel Mac/representative Chapman builds and focused CTest remain pending.
-Agent tests do not establish those target results. No FITS/reduction processing,
+Returned Intel Mac and representative Chapman4 C90 CMake probe builds and both
+focused tests now pass (2/2); see the [paired receipt](../../../developer/m1-runtime-paired-results-2026-10-29.md).
+These are returned terminal results, not independently inspected target archives.
+Target C17/sanitizer results are not claimed. The increment is ready for bounded
+review, with no further run needed for this documentation receipt. No FITS/reduction processing,
 scientific acceptance, installation or notebook change has occurred. Retain all
 accepted baselines and private evidence; do not replay the historical matrix.
 
