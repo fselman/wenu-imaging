@@ -79,8 +79,8 @@ The normal `-d` option still prints and then continues into the engine. Do not
 use the production executable as a supposedly dump-only checker. The private
 test program calls only the old loader and owned capture; it never calls the
 production main or engine. This correction is not a new QC estimator or a change
-to configured gains/RON used in reduction. #139 remains open pending target
-verification; do not discard the failed first sanitizer evidence.
+to configured gains/RON used in reduction. #139 now has the paired target verification recorded below; bounded issue
+closure is distinct from PR merge. Do not discard the failed first sanitizer evidence.
 
 ## Tests and build isolation
 
@@ -118,9 +118,13 @@ pass or whole-engine memory acceptance is claimed. Original failure and fixed
 reports/selected logs/link commands are retained under
 `docs/developer/fixtures/m1-cli-agent-2026-10-29/`.
 
-Actual Mac/representative Chapman CMake builds and the three focused CTests
-remain pending. Use the established absolute tool paths; no tool installation
-or repeat qualification between copycat Chapman hosts. No user installation,
-normal execution configuration, notebook, raw input or accepted product has
-changed. Next: target verification, then bridge-to-operation integration and one
-real operation through the accepted common pattern; M1 is not complete.
+Actual Intel Mac and representative Chapman4 private C90 CMake builds and all
+three focused CTests passed 3/3, including all 51 CLI cases on each target. See
+the [paired receipt](../../../developer/m1-cli-paired-results-2026-10-29.md) for
+exact source, retained paths, returned-output provenance and limits. Target
+C17/sanitizer results are not claimed. Use the established absolute tools; no
+tool installation or repeat qualification between copycat Chapman hosts.
+No user installation, normal execution configuration, notebook, raw input or
+accepted product changed. Ready for owner review; no rebuild for this receipt.
+Resolved-operation integration and one real operation through the common pattern
+remain subsequent M1 work; M1 is not complete.
