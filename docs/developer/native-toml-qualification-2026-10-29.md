@@ -66,6 +66,16 @@ SHA256: runner `2cf03b79d19341d7d916a538bd6a840f6d25fa403f6b2c6cfd373874aa1267e7
 
 Earlier preparation status below is historical where superseded by this returned N1 result and prepared N2/N3 step.
 
+## Returned N2/N3 pair and evidence collection
+
+Owner output reports `N2-N3-passed-awaiting-paired-evidence-review` on both actual hosts: Mac `/Users/fselman/Software/build/wenu-imaging/native-toml-n23-MC02VV0HPHTDG-79x2yt3h`; Chapman4 `/home1/fselman/Software/build/wenu-imaging/native-toml-n23-chapman4-zaup3mhq`.
+
+Both semantic digests are `40b47916247e105606bcaaac47a893871edc4e37f8f05f87b490267dc696edb9`. All six valid/twelve invalid cases passed. Each host completed twenty cycles/60 parses with zero outstanding parser allocations; 119 valid-input and 120 partial-invalid allocation positions were injected and rejected, with zero outstanding allocations and valid recovery. Production package metadata, checkout and retained N1 evidence are reported unchanged. This is returned terminal evidence; independent paired artifact review remains pending. Do not rebuild/replay N1/N2/N3 to collect evidence.
+
+Prepared `probes/package_native_toml_evidence.py` verifies the retained reports and their linkage, recorded metadata/preservation, N1 inputs/library/executable identities, all command logs/statuses, every N2/N3 artifact hash, expected typed trees/case inputs, semantic digest, cycles and allocation counts. It writes a fresh archive/manifest per host with reports/logs, synthetic configurations, source/license/test glue and expected trees. Native binaries/static libraries are checked on the host but excluded from transfer; observational data and environments are excluded. Collector uses standard-library byte/JSON inspection only: no compilation, native parser launch, scientific imports or test rerun. Collector syntax and wrong-host rejection passed on the agent; target collection and independent N4 review remain pending.
+
+Collector SHA256: `47658ad4cc7d67d496b908f59b28522519f9819ca278bfd96efb9c06fc51c691`. After collection, return both archive sizes/hashes and upload both exact bundles for paired inspection and the bounded adoption recommendation. Production activation/integration, other Chapman hosts, concurrency and sanitizer/full-process memory qualification remain outside this result.
+
 ## Current evidence and next action
 
 Agent source review and SHA256/Git-blob identity checks passed. Read-only preflight helper `probes/native_toml_tool_preflight.py` passed syntax and wrong-host rejection. It only invokes version/read-only Git queries and records known compiler candidates, recording PATH-discovered Mesa SDK tools without selecting them for the native build. Target compiler inventory is now returned above. Native target compilation, boundary behavior, broader parser agreement and ownership checks remain pending. Do not reuse the completed ASDF tests as evidence for this native dependency and do not rerun them for this addition.
