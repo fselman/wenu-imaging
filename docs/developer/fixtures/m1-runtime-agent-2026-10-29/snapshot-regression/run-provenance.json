@@ -1,0 +1,85 @@
+{
+  "status": "synthetic-config-snapshot-passed",
+  "host": "06020969a870",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "compiler": "/usr/bin/x86_64-linux-gnu-gcc-13",
+  "sanitize": false,
+  "c_standard": "90",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "--version"
+      ],
+      "exit_status": 0,
+      "log": "compiler.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "-std=c90",
+        "-pedantic-errors",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-UNDEBUG",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/src/include",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/qfits5/include",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config.c",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/tests/config_snapshot.c",
+        "-o",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726/config_snapshot"
+      ],
+      "exit_status": 0,
+      "log": "compile.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726/config_snapshot",
+        "omegacam",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726/omegacam.json"
+      ],
+      "exit_status": 0,
+      "log": "omegacam.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726/config_snapshot",
+        "wfi",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726/wfi.json"
+      ],
+      "exit_status": 0,
+      "log": "wfi.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726/config_snapshot",
+        "edge",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-config-oup_5726/edge.json"
+      ],
+      "exit_status": 0,
+      "log": "edge.log"
+    }
+  ],
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": null,
+    "UBSAN_OPTIONS": null,
+    "LSAN_OPTIONS": null
+  },
+  "input_sha256": {
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/docs/architecture/proposed/m1/effective-settings-baseline.json": "67fdbabb855f4f0cc2e6f856a57fd5aa3d5d4addbdaaa3cd66bd3c86c969c1f4",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config.c": "475bd35fb17248e852c2e00333a9967d6ebe93c3724f09d8d260e21e77df5d7c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config.h": "fd057b7d97a54faccec7b377570e10272912a42d92a7816cfae137324becd4df",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config_fields.def": "ac78cd9f2d3988d84c30a6bae64028ad1bf8e65f65209f6e2cca04efc788ec95",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config_members.h": "4308b97730c3833d07399a7455b42ddedc2526c7e58d124c61375cbd12fe8122",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mefp_lib.h": "dc264df6194c9d3bd2b5aee24fbe894cb596320a53d0e4de38908877fac92661",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/tests/config_snapshot.c": "a484af28b24bc4c60d3ad002ec42f37b7fd47aa71fedf1330db27d244b26fe6f",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/tests/config_snapshot_contract.py": "42ee42c95238efd41e4115a15eabba6b05291c366f41c5f273e26c54e9755d3f"
+  },
+  "paf_constructor_checked": false,
+  "scope": "configuration only; no FITS, recipe execution, installation or scientific acceptance"
+}

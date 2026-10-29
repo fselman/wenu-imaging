@@ -70,3 +70,7 @@ cc -std=c90 -pedantic-errors -Wall -Wextra -Werror -fsyntax-only -x c docs/archi
 ## First implementation increment
 
 Owner authorized implementation after the verified effective-input map. See [owned configuration snapshot](config-snapshot.md): isolated C90 lifecycle/copy/dump implementation and focused tests; agent checks and returned Mac/Chapman C90 CMake probe builds/focused CTest pass; see the [paired receipt](../../../developer/m1-config-paired-results-2026-10-29.md). This is ready for bounded review, with target C17/sanitizer runs unclaimed. The numerical operation template above remains a design scaffold; M1 is not complete.
+
+## Owned runtime increment
+
+PR #137's configuration increment is accepted and merged at 1d991a22a39d6133ab19721b7bb3a6dd11394264. The next [runtime lifecycle implementation](runtime-lifecycles.md) adds independently owned request/context/result/error objects and configuration cloning. Agent strict C90/C17 and failure/lifetime checks pass. Returned Mac and representative Chapman4 C90 CMake probe builds and both focused tests also pass (2/2); see the [paired runtime receipt](../../../developer/m1-runtime-paired-results-2026-10-29.md). This increment is ready for bounded review; target C17/sanitizer results are not claimed. Execution returns unsupported until a numerical service is connected. The legacy CLI adapter, concrete operation/QC implementation and full M1 completion remain pending.
