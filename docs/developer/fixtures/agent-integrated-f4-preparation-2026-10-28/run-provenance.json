@@ -1,0 +1,29 @@
+{
+  "status": "prepared-not-Mac-executed",
+  "created_utc": "2026-10-29T00:28:01.360848+00:00",
+  "native_launches_consumed": 0,
+  "engine_source": "68f0a04632a63fa53c7549b02cde019112fa80f5",
+  "reuses_existing_binary": true,
+  "native_source_changes": false,
+  "checks": [
+    {
+      "log": "python-controls.log",
+      "exit_status": 0,
+      "sha256": "e84c59f3248608ca479367d32a46ac60273824d06ca73e283f3465de4b7c4d67"
+    },
+    {
+      "log": "help.log",
+      "exit_status": 0,
+      "sha256": "9831f6d9a77a3c3ab201637cdb4d012962b6c1ab0e593cb654e09c69b7704dd0"
+    },
+    {
+      "log": "wrong-host.log",
+      "exit_status": 1,
+      "sha256": "f8d81cf008b01f9cd15306539c3c4e73d8803e095cfc1913d763ca3b8ee306ea"
+    }
+  ],
+  "python_source_sha256": {
+    "mefpp2/tests/check_integrated_repeat.py": "560aa260d5f81434938532a706dffac022ea6832f7cc5cbd4b9d6b6c33c69467",
+    "mefpp2/tests/qualify_integrated_repeat_mac.py": "acfa4f6bd41ceb225f586ff64a787fc9dfe21818e75ee0e081e1a0fbad80c99e"
+  }
+}

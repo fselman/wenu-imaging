@@ -338,6 +338,8 @@ typedef struct _mef_bb_ {
 mef_bb * mef_bb_new(void);
 mef_bb * mef_bb_new_from_paf(char *pafname);
 
+/* Release per-extension work after publication; NULL released fields (#124). */
+void mef_bb_clear_work(mef_bb *bb);
 void mef_bb_del(mef_bb * bb);
 
 void mef_bb_dump(mef_bb * bb, FILE * out);
@@ -381,8 +383,9 @@ char 		*mef_get_input_filename(mef_bb *bb, char *what);
 char 		*mef_get_output_filename(mef_bb *bb, char *what);
 void        *mef_create_orig_filename(mef_bb *bb, char *what);
 qfits_header	*mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage);
-void	 	mef_save(mef_bb *bb, image_t *zImage, char *what);
-void	 	mef_hdrpix_dump(image_t *,char *,qfits_header *,int);
+/* Publication status: 0 complete, -1 failure; caller retains input ownership. */
+int	 	mef_save(mef_bb *bb, image_t *zImage, char *what);
+int	 	mef_hdrpix_dump(image_t *,char *,qfits_header *,int);
 image_t 	*mef_build_cal(mef_bb *, char *);
 image_t 	*mef_ff_combine(mef_bb *, image_t *, image_t *, image_t *,pixelmap *);
 image_t		*mef_image_filter_flat(image_t *,int kern_size,pixelmap *);

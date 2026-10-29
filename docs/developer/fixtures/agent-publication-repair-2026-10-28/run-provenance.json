@@ -1,0 +1,33 @@
+{
+  "status": "prepared-not-Mac-verified",
+  "owner_authorization": "Proceed after three-file/two-retest proposal and header-signature clarification",
+  "issue": 127,
+  "checks": {
+    "c90_syntax": "passed",
+    "c17_syntax": "passed",
+    "c90_actual_helper_controls": "passed",
+    "c17_actual_helper_controls": "passed",
+    "python_resume_controls": "passed",
+    "python_syntax": "passed"
+  },
+  "native_source_sha256": {
+    "mefpp2/ins/mef/common/mefp_lib.c": "0a7d16ad27a8e98536e61afe6e4f0f076a9df4fed3d837e36d4a49218e74737e",
+    "mefpp2/ins/mef/common/mefp_lib.h": "dc264df6194c9d3bd2b5aee24fbe894cb596320a53d0e4de38908877fac92661",
+    "mefpp2/ins/mef/recipes/mefpp.c": "89e10094534112c0763827c142d503c105a36ae4bbd2386ade75c220c6bfa93b"
+  },
+  "test_source_sha256": {
+    "mefpp2/tests/publication_status_probe.c": "ee813bb3aeb74d6c883103c194103556087774fce47bd580b3ffa2145717c705",
+    "mefpp2/tests/qualify_integrated_failures_mac.py": "40a47914cebd59fe2587e139b31a5620ac30fd4fbab941e729aaa6d42b153c3d",
+    "mefpp2/tests/check_integrated_failures.py": "e4c0733667d96f9dbd7ea5799a2c9e8d2cd38d3da73faa7d22b331b6ce617ef5"
+  },
+  "recipe_launches": 0,
+  "general_repair_rounds": 2,
+  "approved_added_retests": 2,
+  "remaining_original_F3_roles": 5,
+  "limitations": [
+    "Actual helper units use controlled qfits stubs; no recipe execution or Mac qualification in agent workspace",
+    "Native publication-error cleanup and exact integrated successful smoke await actual Mac execution",
+    "qfits pixel writer still hides some delayed close errors; caller byte count is not universal I/O-failure qualification (#128)",
+    "#125 CONTINUE and #128 library write-status work stay deferred; no qfits source changes"
+  ]
+}

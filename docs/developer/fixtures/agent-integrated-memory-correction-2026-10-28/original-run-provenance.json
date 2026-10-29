@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "source": {
+    "commit": "fa2e5c2f508e18d18981b8e987b86cc4a411c1df",
+    "dirty": false
+  },
+  "created_utc": "2026-10-28T19:16:54.087411+00:00",
+  "status": "stopped",
+  "execution_complete": false,
+  "planned_native_launch_limit": 19,
+  "native_launches_consumed": 1,
+  "correction_rounds_consumed": 0,
+  "correction_round_limit": 2,
+  "commands": [
+    {
+      "label": "configure-ordinary",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-ordinary",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=fa2e5c2f508e18d18981b8e987b86cc4a411c1df",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/configure-ordinary.log",
+      "log_sha256": "103b2afa43192920606b4cceb10ea5b6dad4ea2ae1a6945bf43ec4a15567752d"
+    },
+    {
+      "label": "build-ordinary",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-ordinary",
+        "--target",
+        "mefpp",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-ordinary.log",
+      "log_sha256": "8f3bb96ff98817961d6e228a4b91932a7c1e3a9d0aa1cb2324d54de1c2ff6e47"
+    },
+    {
+      "label": "configure-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-instrumented",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=fa2e5c2f508e18d18981b8e987b86cc4a411c1df",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/configure-instrumented.log",
+      "log_sha256": "1438896335723013030c700c375575a5086b904ac27048b9ebdd1e955bfcfe49"
+    },
+    {
+      "label": "build-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-instrumented",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-instrumented.log",
+      "log_sha256": "5194c04103f691951b2a156ce1551f08cab7dd69a07086bf5a2880aac6900fff"
+    },
+    {
+      "label": "symbols-instrumented",
+      "argv": [
+        "/usr/bin/nm",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-instrumented/integrated_observer"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/symbols-instrumented.log",
+      "log_sha256": "e2cfcc88525341fec0f55fcee3868c92195a07759a68e149c1ed14cb0ba16b07"
+    },
+    {
+      "label": "configure-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-leaks",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=fa2e5c2f508e18d18981b8e987b86cc4a411c1df",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/configure-leaks.log",
+      "log_sha256": "e6dba3cad56d2f2d9b5f37d36c59337ce4847e5da04e6258100f1487db6ea007"
+    },
+    {
+      "label": "build-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-leaks",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-leaks.log",
+      "log_sha256": "f520baf4804724d697090ed637166192e048d9530bab10c4aa4985a026ec9b42"
+    },
+    {
+      "label": "dsym-leaks",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-leaks/integrated_observer"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/dsym-leaks.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "F1-ordinary",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/build-c17-ordinary/mefpp",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F1-ordinary",
+      "native": true,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F1-ordinary.log",
+      "log_sha256": "6cc4f017f9f6d50df023dab335f24ca10ba905af92e81e324298f4fc0dd7d3b2"
+    }
+  ],
+  "cases": [
+    {
+      "fixed_row": "F1",
+      "lane": "ordinary",
+      "status": "failed",
+      "findings": [
+        "Known-answer array differs: CALIB.MASTER_DOME_FLAT extension 2"
+      ],
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F1-ordinary",
+      "input_sha256": {
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48"
+      },
+      "exit_status": 0
+    }
+  ],
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "input_lock_sha256": "e4572a8f99b4648722a89c6b4b4ffcc539243ef69faeee0dc71999f4a8d6d397",
+  "qualified_tool_reports_sha256": {
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/leak-run-provenance.json": "a58380d92c769b333c7fd2c66ed8e843c0f2b797634d8e773058443bd47c4673",
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/diagnostic-run-provenance.json": "ac7f0a6e00d29fa90e5426ff383066f1cd6310a9320e1d4a3832d3720c88e8dc"
+  },
+  "tool_sha256": {
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang": "86051fc5c41d7fb5f8998d0188a9730d0e5f6e1170aed3006fd719fc88f747f3",
+    "/opt/local/bin/cmake": "0ed0b5ec05f6c923cbefbe0b5b3a6fa58a1124a8918ea44201eadd90154aea73",
+    "/usr/bin/leaks": "79a1655c859ee61f5d995a9ebae174b3631125f0357c21bdd700ba6567a5f16a"
+  },
+  "installation_performed": false,
+  "scientific_acceptance_claimed": false,
+  "remaining_fixed_rows": [
+    "F3",
+    "F4",
+    "F5"
+  ],
+  "limits": [
+    "F1/F2 only; no full Stage 2 acceptance",
+    "#116 remains unresolved; exact descriptor gates active",
+    "No large-file mmap/swap stress"
+  ],
+  "removed_child_environment": [],
+  "source_archive_sha256": "1a72c5c65b4c2a06419f7a6a28416ca2fb7763f6f4cd6463fc4f5cbfd82fc0d3",
+  "private_cmake_sha256": "506a5f731d0874efd185012ec959192616cc63a1f33913177b68deba589d41e5",
+  "binary_sha256": {
+    "ordinary": "5488b50bb715dfef6fb258a709ee0a0e8a3fb785382fae1292a2daad40d03049",
+    "instrumented": "919ee531b14a52e59d16a63bbe0d6fecb36b92fbaa6137db29c9f213e17aac26",
+    "leaks": "f88a15cc21437bccc520d4aa6de7167eb074b594113be49cadc9ed2e99ff57d5"
+  },
+  "error": "STOP: F1 ordinary: Known-answer array differs: CALIB.MASTER_DOME_FLAT extension 2",
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "raw_files_preserved": true,
+  "finished_utc": "2026-10-28T19:18:31.939674+00:00"
+}

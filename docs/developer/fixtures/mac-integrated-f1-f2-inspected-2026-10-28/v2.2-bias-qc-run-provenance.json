@@ -1,0 +1,2190 @@
+{
+  "schema_version": 1,
+  "project": "wenu-imaging",
+  "source": {
+    "commit": "92421749d8350d9b6438d7b16014555a228f2c5f",
+    "dirty": false
+  },
+  "created_utc": "2026-10-28T20:26:28.760029+00:00",
+  "status": "stopped",
+  "execution_complete": false,
+  "planned_native_launch_limit": 19,
+  "native_launches_consumed": 9,
+  "correction_rounds_consumed": 2,
+  "correction_round_limit": 2,
+  "commands": [
+    {
+      "label": "configure-ordinary",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-ordinary",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=92421749d8350d9b6438d7b16014555a228f2c5f",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/configure-ordinary.log",
+      "log_sha256": "32a20ed45282f740fa38185b9dd970c90e5a8d4f99e9b8aa39ffee918bb1e666"
+    },
+    {
+      "label": "build-ordinary",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-ordinary",
+        "--target",
+        "mefpp",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-ordinary.log",
+      "log_sha256": "a2a0f27eddc5ee0c5219edd007c30ea8e02c7efa3479b9ea1c2097e01252c3bf"
+    },
+    {
+      "label": "configure-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-instrumented",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=92421749d8350d9b6438d7b16014555a228f2c5f",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/configure-instrumented.log",
+      "log_sha256": "2613bc2ddc8a3719a4f8362e417777d2e4867cd313a9b67fa1e86fbcaf3d7f04"
+    },
+    {
+      "label": "build-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-instrumented",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-instrumented.log",
+      "log_sha256": "47c74b6eac425fac624ff4ed9c96e7529f40afd4ec6c804f60d7c0c7bfeddab1"
+    },
+    {
+      "label": "symbols-instrumented",
+      "argv": [
+        "/usr/bin/nm",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-instrumented/integrated_observer"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/symbols-instrumented.log",
+      "log_sha256": "d5671a205b516b92afc865f6ded3b049073888cf03b16ee1f962db539db091ad"
+    },
+    {
+      "label": "configure-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-leaks",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=92421749d8350d9b6438d7b16014555a228f2c5f",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/configure-leaks.log",
+      "log_sha256": "58da835bbaf10998ce1b1a10cf75e7b00f51a3faa02233c8a52a706a57c2286c"
+    },
+    {
+      "label": "build-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-leaks",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-leaks.log",
+      "log_sha256": "2d7ad1f7d5aed2a5c6feb774ebcf836c19da2b035332443e51afc78a8262a3c5"
+    },
+    {
+      "label": "dsym-leaks",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-leaks/integrated_observer"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/dsym-leaks.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "F1-ordinary",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-ordinary/mefpp",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-ordinary",
+      "native": true,
+      "purpose": "v2.2-bias-qc F1 validation",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-ordinary.log",
+      "log_sha256": "c430b4239938bc7fea40ff3aa33b155695f79178e9184322e9880995cb431247"
+    },
+    {
+      "label": "F1-instrumented",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-instrumented/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-instrumented",
+      "native": true,
+      "purpose": "v2.2-bias-qc F1 validation",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-instrumented.log",
+      "log_sha256": "c9b7648058401bab894c62a2701fc14fa7df43917ba54850a24f8253020a3d60"
+    },
+    {
+      "label": "F1-leaks",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-leaks/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-leaks",
+      "native": true,
+      "purpose": "fixed planned row",
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-leaks.log",
+      "log_sha256": "54c713072d653f865498241aaa1151992ffc29c81c1ced1d43ea930de22eef77"
+    },
+    {
+      "label": "F2-ordinary",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/build-c17-ordinary/mefpp",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F2-ordinary",
+      "native": true,
+      "purpose": "fixed planned row",
+      "exit_status": -4,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F2-ordinary.log",
+      "log_sha256": "5b16b6bd88ab45aebe30aec7acf631f6c61e3ba12fc027402d74e0dea1460b85"
+    }
+  ],
+  "cases": [
+    {
+      "fixed_row": "F1",
+      "lane": "ordinary",
+      "status": "passed",
+      "findings": [],
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-ordinary",
+      "input_sha256": {
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48"
+      },
+      "exit_status": 0,
+      "products": {
+        "CALIB.BPM": {
+          "name": "OCAM_BPM_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "be106c4ea91b8c50bfd325651b398863100995c46d07d784d4da08dad7e8c88c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "3ee49d77af2224093e63913902306f58b21f3eeac13ae292de986b54699b9f1c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "179485e10562b18f6ea29a5ffd4b6be3cf9dd405f5dd728e750215fcbbe5752b"
+        },
+        "CALIB.MASTER_DOME_FLAT": {
+          "name": "OCAM_DOMEFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "db9d1476f522a6081b2efbad68a6a8a5ff8714afac681c84629ca1bfd460a9db"
+        },
+        "CALIB.MASTER_BIAS": {
+          "name": "OCAM_MB_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "a17c1f3fc807a2b38085728f83ead96745126288cf9bbed3d176201f4ce249ef"
+        },
+        "CALIB.MASTER_FLAT": {
+          "name": "OCAM_MFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "8605bc05cc27d4a1328cdfc1c415a10a1b031090ea0d505c546fd6f34d4e8d74"
+        },
+        "CALIB.MASTER_SKY_FLAT": {
+          "name": "OCAM_SKYFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "fd761d6332c59d2579463f0a97ed500b45063196a0ba8716689a0ee09e263563"
+        },
+        "SCIENCE.MEFIMAGE": {
+          "name": "science0_pre.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "da89cf1fdf4dcd6c5bc9c3336e7cc996af1cb14ffba4207602ef611279c7d1ac"
+        }
+      }
+    },
+    {
+      "fixed_row": "F1",
+      "lane": "instrumented",
+      "status": "passed",
+      "findings": [],
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-instrumented",
+      "input_sha256": {
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48"
+      },
+      "exit_status": 0,
+      "products": {
+        "CALIB.BPM": {
+          "name": "OCAM_BPM_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "be106c4ea91b8c50bfd325651b398863100995c46d07d784d4da08dad7e8c88c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "3ee49d77af2224093e63913902306f58b21f3eeac13ae292de986b54699b9f1c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "179485e10562b18f6ea29a5ffd4b6be3cf9dd405f5dd728e750215fcbbe5752b"
+        },
+        "CALIB.MASTER_DOME_FLAT": {
+          "name": "OCAM_DOMEFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "db9d1476f522a6081b2efbad68a6a8a5ff8714afac681c84629ca1bfd460a9db"
+        },
+        "CALIB.MASTER_BIAS": {
+          "name": "OCAM_MB_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "a17c1f3fc807a2b38085728f83ead96745126288cf9bbed3d176201f4ce249ef"
+        },
+        "CALIB.MASTER_FLAT": {
+          "name": "OCAM_MFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "8605bc05cc27d4a1328cdfc1c415a10a1b031090ea0d505c546fd6f34d4e8d74"
+        },
+        "CALIB.MASTER_SKY_FLAT": {
+          "name": "OCAM_SKYFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "fd761d6332c59d2579463f0a97ed500b45063196a0ba8716689a0ee09e263563"
+        },
+        "SCIENCE.MEFIMAGE": {
+          "name": "science0_pre.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "da89cf1fdf4dcd6c5bc9c3336e7cc996af1cb14ffba4207602ef611279c7d1ac"
+        }
+      },
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 0,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 6,
+          "bpm_calls": 2,
+          "combine_calls": 2,
+          "science_loads": 2,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-before-000": {
+            "pointers": 233,
+            "bytes": 5862,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-after-001": {
+            "pointers": 235,
+            "bytes": 6202,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-1-before-002": {
+            "pointers": 244,
+            "bytes": 6371,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-before-004": {
+            "pointers": 261,
+            "bytes": 6835,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-after-005": {
+            "pointers": 263,
+            "bytes": 7175,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-before-006": {
+            "pointers": 256,
+            "bytes": 7059,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-after-007": {
+            "pointers": 258,
+            "bytes": 7399,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-before-008": {
+            "pointers": 259,
+            "bytes": 7442,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-after-009": {
+            "pointers": 261,
+            "bytes": 7782,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-010": {
+            "pointers": 260,
+            "bytes": 7485,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-011": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-before-012": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-after-013": {
+            "pointers": 262,
+            "bytes": 7841,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-1-after-014": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-015": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-1-after-016": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-017": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-before-018": {
+            "pointers": 239,
+            "bytes": 6120,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-after-019": {
+            "pointers": 241,
+            "bytes": 6460,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-2-before-020": {
+            "pointers": 249,
+            "bytes": 6586,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-before-022": {
+            "pointers": 265,
+            "bytes": 7007,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-after-023": {
+            "pointers": 267,
+            "bytes": 7347,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-before-024": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-after-025": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-before-026": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-after-027": {
+            "pointers": 263,
+            "bytes": 7868,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-028": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-029": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-before-030": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-after-031": {
+            "pointers": 263,
+            "bytes": 7884,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-2-after-032": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-033": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-2-after-034": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-035": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-context-release": {
+            "pointers": 231,
+            "bytes": 6020,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 77,
+                "mode": 49590
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 77,
+                "mode": 49590
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 77,
+                "mode": 49590
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300618,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 77,
+                "mode": 49590
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "256",
+            "9223372036854775807",
+            "0"
+          ],
+          [
+            "after",
+            "9223372036854775807",
+            "9223372036854775807",
+            "1"
+          ]
+        ]
+      }
+    },
+    {
+      "fixed_row": "F1",
+      "lane": "leaks",
+      "status": "passed",
+      "findings": [],
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F1-leaks",
+      "input_sha256": {
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48"
+      },
+      "exit_status": 0,
+      "products": {
+        "CALIB.BPM": {
+          "name": "OCAM_BPM_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "be106c4ea91b8c50bfd325651b398863100995c46d07d784d4da08dad7e8c88c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "3ee49d77af2224093e63913902306f58b21f3eeac13ae292de986b54699b9f1c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "179485e10562b18f6ea29a5ffd4b6be3cf9dd405f5dd728e750215fcbbe5752b"
+        },
+        "CALIB.MASTER_DOME_FLAT": {
+          "name": "OCAM_DOMEFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "db9d1476f522a6081b2efbad68a6a8a5ff8714afac681c84629ca1bfd460a9db"
+        },
+        "CALIB.MASTER_BIAS": {
+          "name": "OCAM_MB_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "a17c1f3fc807a2b38085728f83ead96745126288cf9bbed3d176201f4ce249ef"
+        },
+        "CALIB.MASTER_FLAT": {
+          "name": "OCAM_MFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "8605bc05cc27d4a1328cdfc1c415a10a1b031090ea0d505c546fd6f34d4e8d74"
+        },
+        "CALIB.MASTER_SKY_FLAT": {
+          "name": "OCAM_SKYFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "fd761d6332c59d2579463f0a97ed500b45063196a0ba8716689a0ee09e263563"
+        },
+        "SCIENCE.MEFIMAGE": {
+          "name": "science0_pre.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "da89cf1fdf4dcd6c5bc9c3336e7cc996af1cb14ffba4207602ef611279c7d1ac"
+        }
+      },
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 0,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 6,
+          "bpm_calls": 2,
+          "combine_calls": 2,
+          "science_loads": 2,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-before-000": {
+            "pointers": 233,
+            "bytes": 5862,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-after-001": {
+            "pointers": 235,
+            "bytes": 6202,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-1-before-002": {
+            "pointers": 244,
+            "bytes": 6371,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-before-004": {
+            "pointers": 261,
+            "bytes": 6835,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-after-005": {
+            "pointers": 263,
+            "bytes": 7175,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-before-006": {
+            "pointers": 256,
+            "bytes": 7059,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-after-007": {
+            "pointers": 258,
+            "bytes": 7399,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-before-008": {
+            "pointers": 259,
+            "bytes": 7442,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-after-009": {
+            "pointers": 261,
+            "bytes": 7782,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-010": {
+            "pointers": 260,
+            "bytes": 7485,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-011": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-before-012": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-after-013": {
+            "pointers": 262,
+            "bytes": 7841,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-1-after-014": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-015": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-1-after-016": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-017": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-before-018": {
+            "pointers": 239,
+            "bytes": 6120,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-after-019": {
+            "pointers": 241,
+            "bytes": 6460,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-2-before-020": {
+            "pointers": 249,
+            "bytes": 6586,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-before-022": {
+            "pointers": 265,
+            "bytes": 7007,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-after-023": {
+            "pointers": 267,
+            "bytes": 7347,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-before-024": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-after-025": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-before-026": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-after-027": {
+            "pointers": 263,
+            "bytes": 7868,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-028": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-029": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-before-030": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-after-031": {
+            "pointers": 263,
+            "bytes": 7884,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-2-after-032": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-033": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-2-after-034": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-035": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-context-release": {
+            "pointers": 231,
+            "bytes": 6020,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 78,
+                "mode": 49590
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 78,
+                "mode": 49590
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 78,
+                "mode": 49590
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84300696,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 78,
+                "mode": 49590
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "256",
+            "9223372036854775807",
+            "0"
+          ],
+          [
+            "after",
+            "9223372036854775807",
+            "9223372036854775807",
+            "1"
+          ]
+        ],
+        "leaks": [
+          [
+            "0",
+            "0"
+          ]
+        ]
+      }
+    },
+    {
+      "fixed_row": "F2",
+      "lane": "ordinary",
+      "status": "failed",
+      "findings": [
+        "Native/tool process returned nonzero",
+        "Expected exactly six integrated FITS products; found 2"
+      ],
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/F2-ordinary",
+      "input_sha256": {
+        "dome.list": "a8fcab82408248a08dfd2d94c3e28242b92dc64ed8e0380ddaede4fc778164c7",
+        "bpm.list": "31717d426a6974f41b096d6a7dbeef7d17dce611c12e6de1efeca3ebe1a71db3",
+        "mefpp.paf": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+        "science.list": "b892f3750c4f3d5513eb4d3e721f8a53326a5c371885bbb57ace6c53826c8a1b",
+        "sky.list": "b7added12a8030ab7d438c6c6b65eb242a10cd743a671c3c82f3fdca207747c1",
+        "bias.list": "fe4b022f6d7ee343bdd56b66b59be096dbe74f4e562e15b7ee51cbb46257f272",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-09T20:54:42.040.fits": "18741ff097f8ee0235b741cb3e1432b3de9ee8398de2097aee8166dfb9e43822",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:25:32.398.fits": "3544ea752a1b0c1313018d24624d0c41c90930453035e751c0c8e472acfdc04e",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:26:28.968.fits": "195c0ba5d85930b39819069398572a66de3b317b75d8c4f0d8d9a9c905e383ff",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:27:24.654.fits": "c21e7281ee830721b8d88042777a67f035433d097fdb45e04b51372f71fdd9f4",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:54:11.877.fits": "fc9cf83455f29b13bc1cabbf9d1d05364c75e9edfed13c47b760adb0170f0427",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:55:17.546.fits": "999daf126fce331166e7b0c1750281d7c021674a987a7e0d4336ca66548a23e4",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:56:22.481.fits": "41506b5681c7459796f89e1413918ff07087b23d38ce53891865ca8c583243a3",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T00:09:44.890.fits": "678e222c83697f2ac4db9f2b65c5a7bf778817bf625b6543274258d4da75e128",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T00:11:22.043.fits": "bdde1dbc18a165fe5649775ed986b3d67f573cbc4bd97ad39218fbf4e93bae93",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T00:13:07.835.fits": "9b8607d13d9e0a37a297b4ae5878093365f563a382a5c5cfa7d0c1886ee22dfc",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T02:01:24.777.fits": "22304f17da54cad093950e529209d091d40eddf26915596d2667b0eb6adc18e4"
+      },
+      "exit_status": -4
+    }
+  ],
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "input_lock_sha256": "e4572a8f99b4648722a89c6b4b4ffcc539243ef69faeee0dc71999f4a8d6d397",
+  "qualified_tool_reports_sha256": {
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/leak-run-provenance.json": "a58380d92c769b333c7fd2c66ed8e843c0f2b797634d8e773058443bd47c4673",
+    "docs/developer/fixtures/mac-stage2-tool-controls-2026-10-27/diagnostic-run-provenance.json": "ac7f0a6e00d29fa90e5426ff383066f1cd6310a9320e1d4a3832d3720c88e8dc"
+  },
+  "tool_sha256": {
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang": "86051fc5c41d7fb5f8998d0188a9730d0e5f6e1170aed3006fd719fc88f747f3",
+    "/opt/local/bin/cmake": "0ed0b5ec05f6c923cbefbe0b5b3a6fa58a1124a8918ea44201eadd90154aea73",
+    "/usr/bin/leaks": "79a1655c859ee61f5d995a9ebae174b3631125f0357c21bdd700ba6567a5f16a"
+  },
+  "installation_performed": false,
+  "scientific_acceptance_claimed": false,
+  "remaining_fixed_rows": [
+    "F3",
+    "F4",
+    "F5"
+  ],
+  "limits": [
+    "F1/F2 only; no full Stage 2 acceptance",
+    "#116 remains unresolved; exact descriptor gates active",
+    "No large-file mmap/swap stress"
+  ],
+  "previous_attempt": {
+    "report": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/correction-round-2/run-provenance.json",
+    "sha256": "c65090955582a004b094a317a27d9710274128fc13f0d94d3e498317e33cbd5a",
+    "source": {
+      "commit": "3e60e8cbf198bd786dd1929e48e60f5c066be854",
+      "dirty": false
+    },
+    "planned_launches": 2,
+    "retest_launches": 3,
+    "native_launches": 5,
+    "reviewed_defects": [
+      122,
+      123,
+      124
+    ],
+    "correction_round": 2,
+    "retest_labels": [
+      "F1-ordinary",
+      "F1-instrumented"
+    ],
+    "product_reference": {
+      "CALIB.BPM": {
+        "name": "OCAM_BPM_1x1.fits",
+        "extension_names": [
+          "F1_CCD_A",
+          "F1_CCD_B"
+        ],
+        "pixels": [
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": 8,
+            "sha256": "be106c4ea91b8c50bfd325651b398863100995c46d07d784d4da08dad7e8c88c",
+            "nonfinite": 0
+          },
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": 8,
+            "sha256": "3ee49d77af2224093e63913902306f58b21f3eeac13ae292de986b54699b9f1c",
+            "nonfinite": 0
+          }
+        ],
+        "canonical_headers_sha256": "179485e10562b18f6ea29a5ffd4b6be3cf9dd405f5dd728e750215fcbbe5752b"
+      },
+      "CALIB.MASTER_DOME_FLAT": {
+        "name": "OCAM_DOMEFF_S2_1x1.fits",
+        "extension_names": [
+          "F1_CCD_A",
+          "F1_CCD_B"
+        ],
+        "pixels": [
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+            "nonfinite": 0
+          },
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+            "nonfinite": 0
+          }
+        ],
+        "canonical_headers_sha256": "db9d1476f522a6081b2efbad68a6a8a5ff8714afac681c84629ca1bfd460a9db"
+      },
+      "CALIB.MASTER_BIAS": {
+        "name": "OCAM_MB_1x1.fits",
+        "extension_names": [
+          "F1_CCD_A",
+          "F1_CCD_B"
+        ],
+        "pixels": [
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+            "nonfinite": 0
+          },
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+            "nonfinite": 0
+          }
+        ],
+        "canonical_headers_sha256": "a17c1f3fc807a2b38085728f83ead96745126288cf9bbed3d176201f4ce249ef"
+      },
+      "CALIB.MASTER_FLAT": {
+        "name": "OCAM_MFF_S2_1x1.fits",
+        "extension_names": [
+          "F1_CCD_A",
+          "F1_CCD_B"
+        ],
+        "pixels": [
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+            "nonfinite": 0
+          },
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+            "nonfinite": 0
+          }
+        ],
+        "canonical_headers_sha256": "8605bc05cc27d4a1328cdfc1c415a10a1b031090ea0d505c546fd6f34d4e8d74"
+      },
+      "CALIB.MASTER_SKY_FLAT": {
+        "name": "OCAM_SKYFF_S2_1x1.fits",
+        "extension_names": [
+          "F1_CCD_A",
+          "F1_CCD_B"
+        ],
+        "pixels": [
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+            "nonfinite": 0
+          },
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+            "nonfinite": 0
+          }
+        ],
+        "canonical_headers_sha256": "fd761d6332c59d2579463f0a97ed500b45063196a0ba8716689a0ee09e263563"
+      },
+      "SCIENCE.MEFIMAGE": {
+        "name": "science0_pre.fits",
+        "extension_names": [
+          "F1_CCD_A",
+          "F1_CCD_B"
+        ],
+        "pixels": [
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+            "nonfinite": 0
+          },
+          {
+            "shape": [
+              9,
+              9
+            ],
+            "bitpix": -32,
+            "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+            "nonfinite": 0
+          }
+        ],
+        "canonical_headers_sha256": "da89cf1fdf4dcd6c5bc9c3336e7cc996af1cb14ffba4207602ef611279c7d1ac"
+      }
+    },
+    "input_sha256": {
+      "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+      "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+      "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+      "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+      "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+      "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+      "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+      "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+      "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+      "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+      "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+      "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+      "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+      "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+      "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+      "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+      "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+      "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+      "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+      "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+      "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+      "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+      "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+      "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+      "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+      "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+      "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+      "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+      "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+      "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+      "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48"
+    },
+    "approved_exception": "v2.2-bias-qc"
+  },
+  "planned_launches_consumed": 4,
+  "retest_launches_consumed": 5,
+  "bias_qc_exception_consumed": true,
+  "removed_child_environment": [],
+  "source_archive_sha256": "278d84db6a7ab7e1ae9963a7fdbfc1813cc402144428acc8688b510e6d1f10da",
+  "private_cmake_sha256": "506a5f731d0874efd185012ec959192616cc63a1f33913177b68deba589d41e5",
+  "binary_sha256": {
+    "ordinary": "c92d4cfb586bdb8330de969908396f00ed86ac37f199c9a3314a79ac3a6b8399",
+    "instrumented": "093da6303141239344f9db98995522dd1449718aedcad519bacb1750b20e753b",
+    "leaks": "f81828977c93ea483a125e6f5d1fd919f9ca03fe6e4825efd309b47dcf84485c"
+  },
+  "raw_stat_before": {
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-09T20:54:42.040.fits": [
+      141546240,
+      1721183693796800768,
+      15386534
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:25:32.398.fits": [
+      141546240,
+      1721187700241424597,
+      15386539
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:26:28.968.fits": [
+      141546240,
+      1721186419008260991,
+      15386540
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:27:24.654.fits": [
+      141546240,
+      1721183542733670730,
+      15386541
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:54:11.877.fits": [
+      141546240,
+      1721184076415306095,
+      15386552
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:55:17.546.fits": [
+      141546240,
+      1721183481281496592,
+      15386553
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:56:22.481.fits": [
+      141546240,
+      1721183186732985771,
+      15386554
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:09:44.890.fits": [
+      141546240,
+      1721187817261524675,
+      15386570
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:11:22.043.fits": [
+      141546240,
+      1721182759140755779,
+      15386571
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:13:07.835.fits": [
+      141546240,
+      1721183770848122570,
+      15386574
+    ],
+    "/Users/fselman/Pictures/WFI/raw_orion/sci/WFI.2001-12-11T02:01:24.777.fits": [
+      141546240,
+      1721176135400118818,
+      15344053
+    ]
+  },
+  "raw_staging": {
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-09T20:54:42.040.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-09T20:54:42.040.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:25:32.398.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:25:32.398.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:26:28.968.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:26:28.968.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:27:24.654.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:27:24.654.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:54:11.877.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:54:11.877.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:55:17.546.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:55:17.546.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-10T19:56:22.481.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-10T19:56:22.481.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:09:44.890.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T00:09:44.890.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:11:22.043.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T00:11:22.043.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/cal/WFI.2001-12-11T00:13:07.835.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T00:13:07.835.fits",
+    "/Users/fselman/Pictures/WFI/raw_orion/sci/WFI.2001-12-11T02:01:24.777.fits": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.2-bias-qc/wfi-inputs/WFI.2001-12-11T02:01:24.777.fits"
+  },
+  "error": "STOP: F2 ordinary: Native/tool process returned nonzero; Expected exactly six integrated FITS products; found 2",
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "raw_files_preserved": true,
+  "previous_report_unchanged": true,
+  "finished_utc": "2026-10-28T20:28:40.702747+00:00"
+}

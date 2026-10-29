@@ -1,0 +1,38 @@
+{
+  "status": "prepared-not-Mac-executed",
+  "checks": {
+    "python_controls": "passed",
+    "python_syntax": "passed",
+    "c90_private_injection_syntax": "passed",
+    "c17_private_injection_syntax": "passed",
+    "real_log_parser_controls": "passed"
+  },
+  "private_points": [
+    {
+      "path": "ins/mef/common/mefp_lib.c",
+      "before_sha256": "0e81b2d7bfe106970bf2f813767946ae88d75f00046960e0c8bd92f99cf2d0cf",
+      "after_sha256": "4bfb8ed6d7a8b507c5c267ecc054f44e2df60d9150411edd9e023eaece309364",
+      "old": "bb = calloc(1, sizeof(mef_bb));",
+      "new": "bb = (getenv(\"S2_F3_ALLOC\") != NULL && !strcmp(getenv(\"S2_F3_ALLOC\"), \"context\")) ? (fprintf(stderr, \"F3 INJECT context allocation\\n\"), (void *)0) : calloc(1, sizeof(mef_bb));"
+    },
+    {
+      "path": "src/iproc/cube_handling.c",
+      "before_sha256": "b5f63b989499bb6a963b2de53d82dfd729e2c0e4fbfc4d7b4d9b175a4802cad5",
+      "after_sha256": "3552c5799cb0e2232ca67a1d49022ba59519bf61375231ccfb31663d79e9fb33",
+      "old": "n = malloc(sizeof(cube_t)) ;",
+      "new": "n = (getenv(\"S2_F3_ALLOC\") != NULL && !strcmp(getenv(\"S2_F3_ALLOC\"), \"cube\")) ? (fprintf(stderr, \"F3 INJECT cube allocation\\n\"), (void *)0) : malloc(sizeof(cube_t)) ;"
+    }
+  ],
+  "native_engine_launches": 0,
+  "case_limit": 10,
+  "production_sources_changed": false,
+  "source_sha256": {
+    "mefpp2/tests/qualify_integrated_failures_mac.py": "8a062759f0f7f4cb15e8b243fa592731a1546d25cb2a85e85d98e9169dd6ec51",
+    "mefpp2/tests/check_integrated_failures.py": "0be54a83fd9f4223632ddbb61d122edbd3c25c84215f860a9dd005364dde01b4"
+  },
+  "limits": [
+    "Parser unit controls mock accounting/descriptor parsers; actual run uses the real parsers",
+    "NULL injection is scoped and test-only; it does not model exhaustion of every allocator fallback",
+    "Stop on first observed finding; no automatic repair or retry"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "status": "approved-exception-prepared-not-native-qualified",
+  "issue": 124,
+  "owner_authorization": "proceed after explicit four-release/two-validation proposal and file clarification",
+  "source_sha256": {
+    "mefpp2/ins/mef/common/mefp_lib.c": "5aaa0315ff0859df07dcd53e1bce3fbc030520babdda9fdc2cdfedd142d42b0d",
+    "mefpp2/tests/qualify_integrated_campaign_mac.py": "4e155a07af13b24fa1ff5cc40d6723f86804e71409885882bcd10cb1978229a8",
+    "mefpp2/tests/check_integrated_resume.py": "7351a686eb64a262449ce87bce13ed6bac84fc8b2596a8be24b1a46bbd0752a1",
+    "docs/developer/native-roadmap-amendment-v2.2-2026-10-28.md": "20f23e9fa75d28ea16cda55e549d5cdf6a4e1db9ca3045fd8d6398ed476f3b6b"
+  },
+  "native_change": "Exactly four free calls in mef_bb_del; no calculation/expected array change",
+  "checks": {
+    "c90_syntax": "passed",
+    "c17_syntax": "passed",
+    "python_compilation": "passed",
+    "resume_controls": "passed"
+  },
+  "warnings": "Two pre-existing format-security warnings in common source syntax logs",
+  "current_counters": {
+    "planned": 2,
+    "correction_retests": 3,
+    "total": 5,
+    "repair_rounds": 2
+  },
+  "exception": {
+    "id": "v2.2-bias-qc",
+    "allowed_validations": 2,
+    "used": false,
+    "general_repair_round_increase": false
+  },
+  "limits": [
+    "No agent engine launch",
+    "Actual Mac zero-resource acceptance remains pending",
+    "Residual inventory is user-reported; no allocation call stacks were supplied"
+  ]
+}

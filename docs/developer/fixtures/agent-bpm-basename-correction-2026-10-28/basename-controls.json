@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "cases": 12,
+  "input_buffers_unchanged": true,
+  "rows": [
+    {
+      "key": "HIERARCH ESO MPP BPM FRAME001",
+      "filename": "WFI.2001-12-09T20:54:42.040.fits",
+      "value_card_length": 65
+    },
+    {
+      "key": "HIERARCH ESO MPP BPM FRAME002",
+      "filename": "WFI.2001-12-10T19:54:11.877.fits",
+      "value_card_length": 65
+    },
+    {
+      "key": "HIERARCH ESO MPP BPM FRAME003",
+      "filename": "WFI.2001-12-10T19:55:17.546.fits",
+      "value_card_length": 65
+    }
+  ]
+}

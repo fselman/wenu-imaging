@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "purpose": "Selected-header/schema/PAF/physical-section checks; no native execution",
+  "selected_files": 11,
+  "role_counts": {
+    "bias": 3,
+    "bpm": 3,
+    "dome": 3,
+    "sky": 3,
+    "science": 1
+  },
+  "all_selected_headers_match_instrument_geometry_binning_readout": true,
+  "configuration_preserved": true,
+  "physical_section_scaling_control_passed": true,
+  "script_sha256": "8ffc2254f909958bda4377ba174e505012d36b57e824a001e23983659c529fe4",
+  "selection_file_sha256": "edfa2e80077a654b7621dbd69fca682de3e7b6188d97ea8da6e8877a74bba42f",
+  "content_lock_pending_actual_mac": true,
+  "native_launches_consumed": 0
+}

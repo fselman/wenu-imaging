@@ -1,0 +1,31 @@
+{
+  "status": "accepted-bounded-F5",
+  "archive_sha256": "1eac1e5d6cef30f22c3ab8f5650556e66d516bec3a393ffb7c0db8242f0b4ef1",
+  "files_verified": 94,
+  "command_logs_verified": 6,
+  "builds_verified": 2,
+  "source_inventory_entries_verified": [
+    391,
+    391
+  ],
+  "private_wiring_and_unchanged_observer_verified": true,
+  "exact_products_verified": 12,
+  "ordered_detector_arrays_verified": 24,
+  "native_roles_verified": 2,
+  "cleaned_resources": "zero both modes",
+  "descriptors": "stable within both modes",
+  "compiler_warnings": {
+    "17": 61,
+    "90": 60
+  },
+  "planned_launches": 19,
+  "retest_launches": 10,
+  "total_launches": 29,
+  "general_rounds": 2,
+  "report_sha256": "3926b21cb2e1876a10f9ac69efc433c2e1ada32228f3a1e24e53f978b5e1071d",
+  "limitations": [
+    "Internal target accounting/ownership/descriptors; no target external sanitizer/leaks suite",
+    "Binaries retained on Chapman with host-verified hashes, not independently reread",
+    "No scientific/full Stage 2/Phase 3 acceptance; #116 unresolved; owner review pending"
+  ]
+}

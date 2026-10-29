@@ -1,0 +1,20 @@
+{
+  "status": "accepted-for-bounded-functional-memory-campaign",
+  "archive_sha256": "4fb753bbaa7f4e46555d6818c61508abb79ed28e42145ae51b9ab089ee70d0d5",
+  "persistent_attachment": "libfile_33e659c57ca08191b209d609a748fe26",
+  "report_sha256": "e4572a8f99b4648722a89c6b4b4ffcc539243ef69faeee0dc71999f4a8d6d397",
+  "unique_files": 11,
+  "role_counts": {
+    "bias": 3,
+    "bpm": 3,
+    "dome": 3,
+    "sky": 3,
+    "science": 1
+  },
+  "configuration_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+  "all_reported_input_hashes_well_formed": true,
+  "source_stat_preservation_reported": true,
+  "all_eight_detectors_have_three_distinct_positive_bpm_samples": true,
+  "readiness_limit": "Small samples, not full native frame medians or independent scientific calibration validation; raw content hashes are host-reported and must be rechecked before staging/native use.",
+  "native_launches_consumed": 0
+}

@@ -1,0 +1,6 @@
+{
+  "archive_sha256": "dcf6cc90c215727381f4f57332f9d5b569748bce3128f76e40245d797152eb59",
+  "archive_library_id": "libfile_a881b967b6d481919bd45d5f1a823126",
+  "native_launches_during_inspection": 0,
+  "verification": "All archive identities, actual cycle logs, exact FITS/expected arrays and canonical metadata independently checked"
+}

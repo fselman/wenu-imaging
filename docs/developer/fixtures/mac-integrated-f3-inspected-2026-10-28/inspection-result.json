@@ -1,0 +1,282 @@
+{
+  "status": "accepted-bounded-F3",
+  "archive_sha256": "facaf3e6f8aa41fda92c0e205bc696e530afb7f3fbef38ca2b9503d8362c6ebf",
+  "files_verified": 539,
+  "command_logs_verified": 35,
+  "build_records_verified": 6,
+  "final_fixed_roles": 10,
+  "successful_smokes": 2,
+  "retained_failed_attempts": 2,
+  "F3_role_launches": 14,
+  "total_campaign_launches": 26,
+  "planned_campaign_launches": 16,
+  "retests": 10,
+  "general_repair_rounds": 2,
+  "latest_report_sha256": "404805478bb6608ca366e9599b16fdb0f622bdf5688c42769782a25174ad8aea",
+  "roles": [
+    {
+      "variant": "blocked-output",
+      "lane": "instrumented",
+      "source": "2e3969c4a1e3bc112325e7a2c7d6f8bdc7f260bb",
+      "attempt": "v2.4-publication",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "blocked-output",
+      "lane": "leaks",
+      "source": "2e3969c4a1e3bc112325e7a2c7d6f8bdc7f260bb",
+      "attempt": "v2.4-publication",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "context-allocation",
+      "lane": "instrumented",
+      "source": "2e3969c4a1e3bc112325e7a2c7d6f8bdc7f260bb",
+      "attempt": "v2.4-publication",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "context-allocation",
+      "lane": "leaks",
+      "source": "2e3969c4a1e3bc112325e7a2c7d6f8bdc7f260bb",
+      "attempt": "v2.4-publication",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "corrupt-frame",
+      "lane": "instrumented",
+      "source": "c7223105e402f197d9c0a2b7be9021ee76da7e9c",
+      "attempt": "F3-failures",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "corrupt-frame",
+      "lane": "leaks",
+      "source": "c7223105e402f197d9c0a2b7be9021ee76da7e9c",
+      "attempt": "F3-failures",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "cube-allocation",
+      "lane": "instrumented",
+      "source": "68f0a04632a63fa53c7549b02cde019112fa80f5",
+      "attempt": "v2.5-cube-allocation",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "cube-allocation",
+      "lane": "leaks",
+      "source": "68f0a04632a63fa53c7549b02cde019112fa80f5",
+      "attempt": "v2.5-cube-allocation",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "missing-list",
+      "lane": "instrumented",
+      "source": "c7223105e402f197d9c0a2b7be9021ee76da7e9c",
+      "attempt": "F3-failures",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    },
+    {
+      "variant": "missing-list",
+      "lane": "leaks",
+      "source": "c7223105e402f197d9c0a2b7be9021ee76da7e9c",
+      "attempt": "F3-failures",
+      "native_exit": 1,
+      "post_purge": {
+        "pointers": 0,
+        "bytes": 0,
+        "mapped_files": 0,
+        "mapped_references": 0,
+        "swap_bytes": 0
+      }
+    }
+  ],
+  "history": [
+    {
+      "attempt": "F3-failures",
+      "variant": "missing-list",
+      "lane": "instrumented",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "F3-failures",
+      "variant": "missing-list",
+      "lane": "leaks",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "F3-failures",
+      "variant": "corrupt-frame",
+      "lane": "instrumented",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "F3-failures",
+      "variant": "corrupt-frame",
+      "lane": "leaks",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "F3-failures",
+      "variant": "blocked-output",
+      "lane": "instrumented",
+      "status": "failed",
+      "exit": 0,
+      "findings": [
+        "Native failure status not propagated"
+      ]
+    },
+    {
+      "attempt": "v2.4-publication",
+      "variant": "blocked-output",
+      "lane": "instrumented",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "v2.4-publication",
+      "variant": "publication-smoke",
+      "lane": "instrumented",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "v2.4-publication",
+      "variant": "blocked-output",
+      "lane": "leaks",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "v2.4-publication",
+      "variant": "context-allocation",
+      "lane": "instrumented",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "v2.4-publication",
+      "variant": "context-allocation",
+      "lane": "leaks",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "v2.4-publication",
+      "variant": "cube-allocation",
+      "lane": "instrumented",
+      "status": "failed",
+      "exit": 86,
+      "findings": [
+        "Observer/tool exited nonzero (not a clean observed native failure)",
+        "Missing native return/cleanup observation (possible crash/exit)"
+      ]
+    },
+    {
+      "attempt": "v2.5-cube-allocation",
+      "variant": "cube-allocation",
+      "lane": "instrumented",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "v2.5-cube-allocation",
+      "variant": "cube-smoke",
+      "lane": "instrumented",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "attempt": "v2.5-cube-allocation",
+      "variant": "cube-allocation",
+      "lane": "leaks",
+      "status": "passed",
+      "exit": 0,
+      "findings": []
+    }
+  ],
+  "limits": [
+    "Controlled tiny fixture and two fixed NULL points, not exhaustive allocator/I/O failure coverage",
+    "F4/final C90/compact Chapman3 C17+C90 and #116 disposition remain pending",
+    "No scientific/Phase3/full Stage 2 acceptance; qfits #125/#128 deferred"
+  ]
+}

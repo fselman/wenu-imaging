@@ -1,0 +1,13 @@
+# Fixed F4 same-process repeat prepared
+
+Purpose: detect state/resource accumulation across repeated integrated processing. Inputs are eleven fresh, byte-identical copies of the accepted tiny two-extension fixture and unchanged exact expectations. The actual engine builds bias, BPM, dome, sky, combined flat and science in each cycle.
+
+`mefpp2/tests/qualify_integrated_repeat_mac.py` reuses the exact qualified ASan/UBSan `integrated_observer` binary from source 68f0a04632a63fa53c7549b02cde019112fa80f5. No native source edit or rebuild is needed. Its already compiled repeat control executes cycle 0 (warmup) and cycles 1–10 in **one process / one native launch**. Private failure injection variables are removed. Numerical threads remain one and niceness must be at least 10.
+
+Every cycle must return native success, create/destroy one context, balance owners, produce six exact FITS products with preserved detector order and canonical metadata, start with zero tracked resources, and reach zero after each of two cache purges. Descriptor identities must remain stable within each cycle and match the warmup cleaned baseline across cycles. Any sanitizer finding, incomplete cycle, altered input, prior evidence, installation or checkout stops the run. Full detailed observations are retained in the log for all cycles and summarized for 0/1/2/10; cleaned accounting and product verification are recorded for every cycle.
+
+The runner pins the inspected F3 parent report SHA256 404805478bb6608ca366e9599b16fdb0f622bdf5688c42769782a25174ad8aea, qualified binary/build identity, source and frozen contract hashes. The active campaign must still reference that report; `F4-repeat` must not exist. It is one-use, without automatic retries or repairs.
+
+Preparation controls pass: real archived successful log parsed as eleven synthetic parser samples; malformed cycle/status/descriptor/sanitizer samples and altered parent reports rejected; two newly prepared fixtures exactly match accepted input hashes; help and wrong-host guards pass. These are Python controls, **not actual same-process qualification**. No native engine ran during preparation. See [preparation evidence](fixtures/agent-integrated-f4-preparation-2026-10-28/run-provenance.json).
+
+Current count remains 16 planned + 10 retests = 26 actual, 2/2 general rounds. This original F4 launch will make 17 planned + 10 retests = 27 actual. Then only the final Mac C90 build, paired compact Chapman3 C17/C90 launches and final owner/Phase 3 gap review remain. External leaks are not repeated in F4; they were separately checked in F1–F3. No scientific acceptance, new processing matrix, installation, merge or deletion is implied.

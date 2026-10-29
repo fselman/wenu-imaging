@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/575604f10f8d/integrated-roadmap-acceptance/mefpp2/tests/qualify_integrated_chapman3.py", line 127, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ^^^^^^
+  File "/workspace/scratch/575604f10f8d/integrated-roadmap-acceptance/mefpp2/tests/qualify_integrated_chapman3.py", line 28, in main
+    if platform.system()!='Linux' or platform.node().split('.')[0]!='chapman3':raise RuntimeError('STOP: run on Chapman3')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: STOP: run on Chapman3

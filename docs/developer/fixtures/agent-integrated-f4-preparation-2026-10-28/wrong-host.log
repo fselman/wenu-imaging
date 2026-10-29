@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/575604f10f8d/integrated-roadmap-acceptance/mefpp2/tests/qualify_integrated_repeat_mac.py", line 124, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ^^^^^^
+  File "/workspace/scratch/575604f10f8d/integrated-roadmap-acceptance/mefpp2/tests/qualify_integrated_repeat_mac.py", line 49, in main
+    if platform.system()!='Darwin' or platform.node().split('.')[0]!='MC02VV0HPHTDG':raise RuntimeError('STOP: qualified Mac required')
+                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: STOP: qualified Mac required

@@ -54,7 +54,16 @@ cube_t * cube_new(int lx, int ly, int n_im)
 
     /* Try to get allocation for a new structure    */
     n = malloc(sizeof(cube_t)) ;
+    if (n == NULL) {
+        e_error("cannot allocate cube structure");
+        return NULL;
+    }
 	n->plane = malloc(n_im * sizeof(image_t*)) ;
+    if (n->plane == NULL) {
+        e_error("cannot allocate cube plane list");
+        free(n);
+        return NULL;
+    }
     for (i=0 ; i<n_im ; i++) {
         n->plane[i] = NULL ; 
 	}

@@ -1,0 +1,6 @@
+usage: qualify_integrated_chapman3.py [-h]
+
+Fixed F5: one tiny integrated Chapman3 workflow in C17 and one in C90.
+
+options:
+  -h, --help  show this help message and exit

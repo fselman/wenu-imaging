@@ -1,0 +1,128 @@
+{
+  "status": "accepted-F1-F2-bounded-functional-memory-slice",
+  "files_verified": 416,
+  "command_logs_verified": 52,
+  "actual_native_launches": 12,
+  "general_repair_rounds": 2,
+  "results": [
+    {
+      "row": "F1",
+      "lane": "ordinary",
+      "status": "passed",
+      "product_categories": 6,
+      "detectors": 2,
+      "post_purge": {},
+      "product_evidence": "independently-read-archived-FITS"
+    },
+    {
+      "row": "F1",
+      "lane": "instrumented",
+      "status": "passed",
+      "product_categories": 6,
+      "detectors": 2,
+      "post_purge": {
+        "after-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        },
+        "after-second-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        }
+      },
+      "product_evidence": "independently-read-archived-FITS"
+    },
+    {
+      "row": "F1",
+      "lane": "leaks",
+      "status": "passed",
+      "product_categories": 6,
+      "detectors": 2,
+      "post_purge": {
+        "after-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        },
+        "after-second-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        }
+      },
+      "product_evidence": "independently-read-archived-FITS"
+    },
+    {
+      "row": "F2",
+      "lane": "ordinary",
+      "status": "passed",
+      "product_categories": 6,
+      "detectors": 8,
+      "post_purge": {},
+      "product_evidence": "host-verified-pixel/header-reports-and-archived-logs"
+    },
+    {
+      "row": "F2",
+      "lane": "instrumented",
+      "status": "passed",
+      "product_categories": 6,
+      "detectors": 8,
+      "post_purge": {
+        "after-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        },
+        "after-second-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        }
+      },
+      "product_evidence": "host-verified-pixel/header-reports-and-archived-logs"
+    },
+    {
+      "row": "F2",
+      "lane": "leaks",
+      "status": "passed",
+      "product_categories": 6,
+      "detectors": 8,
+      "post_purge": {
+        "after-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        },
+        "after-second-purge": {
+          "pointers": 0,
+          "bytes": 0,
+          "mapped_files": 0,
+          "mapped_references": 0,
+          "swap_bytes": 0
+        }
+      },
+      "product_evidence": "host-verified-pixel/header-reports-and-archived-logs"
+    }
+  ],
+  "limitations": [
+    "Large WFI inputs/products remain on the Mac; their pixels/headers were verified there by the source-pinned runner, not reread from this transfer",
+    "F1 is qualified at 9242174 and explicitly inherited; F2 at f5afd08",
+    "No scientific/Phase3 acceptance; F3-F5/final C90 and unresolved #116 remain pending; #125 deferred"
+  ]
+}

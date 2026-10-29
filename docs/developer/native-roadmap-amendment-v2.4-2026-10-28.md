@@ -1,0 +1,15 @@
+# Approved amendment v2.4: publication-status propagation
+
+28 October 2026. Fernando instructed "Proceed" after the concrete three-file repair/two-added-retest proposal and clarification that mefp_lib.h declarations must change from void to int to match the new helper status interface.
+
+Authorize the publication repair for #127 only: mefpp2/ins/mef/common/mefp_lib.c, its mefp_lib.h declarations and mefpp2/ins/mef/recipes/mefpp.c callers. Check available open/header/pixel/padding/close outcomes, return failure and release all acquired local resources before propagating the error. Preserve computations, numerical order, valid output card content/order, raw inputs, prior products and reports, the blocked target, and all accepted F1/F2 evidence. qfits including fits_h.c is unchanged. This is not a general third repair round or permission to repair other allocation paths.
+
+The legacy qfits pixel API ignores some write/close results, so the caller verifies expected pixel-byte growth. Replace the unchecked void padding call at this caller with the same zero bytes and checked write/flush/close, preserving FITS block padding. General library I/O hardening is outside this repair; do not claim exhaustive filesystem-failure coverage.
+
+The actual Mac F3 attempt at c722310 stopped after four passed roles and blocked-output instrumented native_exit=0. Read-only evidence confirms the reserved master-bias directory/marker and five other outputs, with no master-bias FITS. Keep that attempt byte-identical. Current counters: 11 planned + 6 retests = 17 actual, general repair rounds 2/2.
+
+This one-use exception permits exactly two added native retests: (1) blocked-output instrumented, requiring truthful nonzero native return with clean owners/resources/descriptors and preserved blocker; (2) one successful tiny instrumented integrated smoke, retaining unchanged exact arrays/ordered canonical metadata and all diagnostic gates. If both pass, continue only the five originally unrun F3 roles: blocked-output leaks, then context-allocation and cube-allocation under both diagnostic lanes. At most seven new actual launches: two retests plus five original planned roles; successful F3 totals become 16 planned + 8 retests = 24 actual. Builds are excluded as before. No F1/F2 matrix or raw-WFI rerun is added.
+
+A finding stops dependent execution without automatic repair or second exception attempt. Record general repair rounds still 2/2 and this exception separately. One-use directory/pointer and reviewed-parent guards must preserve the five original case findings, inputs, logs and partial outputs. F4, final Mac C90, compact Chapman3 C17/C90 and final owner review retain their original order and scope. Full original F3 archive inspection remains pending; do not turn the terminal excerpt into full acceptance.
+
+Earlier immutable v2.0/v2.1/v2.2/v2.3 bytes remain unchanged. No new backend, scientific policy/tolerance, broad I/O rewrite, merge, branch deletion or installation is authorized. Mac actual correction acceptance is pending; agent syntax/helper/guard checks alone are not target verification.
