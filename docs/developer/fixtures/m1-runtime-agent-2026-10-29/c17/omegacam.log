@@ -1,0 +1,1 @@
+PASS: 268 allocation positions, transient+persistent OOM; 20 cycles per owner; independent result/error lifetimes

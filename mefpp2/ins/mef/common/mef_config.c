@@ -140,6 +140,69 @@ fail:
     return status;
 }
 
+
+mef_status mef_config_clone(const mef_config *source, const mef_allocator *allocator,
+    mef_config **out, const char **diagnostic)
+{
+    mef_allocator a;
+    mef_config *copy;
+    size_t bytes;
+    const char *detail;
+    if (diagnostic != NULL) *diagnostic = NULL;
+    if (source == NULL || out == NULL || *out != NULL ||
+        (allocator != NULL && (allocator->allocate == NULL || allocator->release == NULL))) {
+        if (diagnostic != NULL) *diagnostic = "Invalid clone arguments";
+        return MEF_ERR_CONFIG;
+    }
+    a.user = NULL;
+    a.allocate = default_allocate;
+    a.release = default_release;
+    if (allocator != NULL) a = *allocator;
+    copy = a.allocate(a.user, sizeof(*copy));
+    if (copy == NULL) {
+        if (diagnostic != NULL) *diagnostic = "Cannot allocate config clone";
+        return MEF_ERR_MEMORY;
+    }
+    copy->allocator = a;
+    copy->detectors = NULL;
+#define MEF_STRING(member, key) copy->member = NULL;
+#define MEF_INT(member, key) copy->member = source->member;
+#define MEF_FLOAT(member, key) copy->member = source->member;
+#define MEF_DOUBLE(member, key) copy->member = source->member;
+#include "mef_config_fields.def"
+#undef MEF_STRING
+#undef MEF_INT
+#undef MEF_FLOAT
+#undef MEF_DOUBLE
+    /* The opaque source was constructed with the checked detector count. */
+    bytes = (size_t)source->nchips * sizeof(*copy->detectors);
+    detail = "Cannot allocate cloned detector settings";
+    copy->detectors = a.allocate(a.user, bytes);
+    if (copy->detectors == NULL) goto memory_failure;
+    memcpy(copy->detectors, source->detectors, bytes);
+#define MEF_STRING(member, key) \
+    bytes = strlen(source->member); \
+    detail = key; \
+    if (bytes == (size_t)-1) goto memory_failure; \
+    copy->member = a.allocate(a.user, bytes + 1); \
+    if (copy->member == NULL) goto memory_failure; \
+    memcpy(copy->member, source->member, bytes + 1);
+#define MEF_INT(member, key)
+#define MEF_FLOAT(member, key)
+#define MEF_DOUBLE(member, key)
+#include "mef_config_fields.def"
+#undef MEF_STRING
+#undef MEF_INT
+#undef MEF_FLOAT
+#undef MEF_DOUBLE
+    *out = copy;
+    return MEF_OK;
+memory_failure:
+    mef_config_destroy(copy);
+    if (diagnostic != NULL) *diagnostic = detail;
+    return MEF_ERR_MEMORY;
+}
+
 static void json_string(FILE *stream, const char *text)
 {
     const unsigned char *p;

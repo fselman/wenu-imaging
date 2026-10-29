@@ -1,5 +1,7 @@
 # Developer documentation
 
+M1 next increment: [owned request/context/result/error lifecycles](../architecture/proposed/m1/runtime-lifecycles.md), following accepted PR #137. Agent checks pass; new actual Mac/shared Chapman checks are pending.
+
 Mandatory host selection: [Selected project tools — Mac and shared Chapman installations](selected-tools.md). Use the recorded absolute paths; consult the shared private-tool record before considering replacements or workarounds. Chapman3/4 are copycat hosts: no repeated per-host tool checks are needed.
 
 M0/M0a prepared for review: [WAD/project contract package](../architecture/proposed/m0-m0a/README.md), synthetic linked examples, native ownership sketch and expanded source migration ledger. Thirteen negative controls pass in the agent environment; no native/ASDF/FITS execution. Source-only CLI finding --ksize is tracked separately as #133. Mac development, chapman4 later qualification; accepted main 0fa9eaf remains the host baseline.

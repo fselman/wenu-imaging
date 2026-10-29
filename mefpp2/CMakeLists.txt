@@ -124,7 +124,8 @@ endif()
 # depend on the snapshot library, which is not yet a supported public ABI.
 option(MEFPP_BUILD_CONFIG_PROBES "Build isolated M1 configuration probes" OFF)
 if(MEFPP_BUILD_CONFIG_PROBES)
-  add_library(mefpp_config_snapshot STATIC ins/mef/common/mef_config.c)
+  add_library(mefpp_config_snapshot STATIC ins/mef/common/mef_config.c
+    ins/mef/common/mef_runtime.c)
   target_include_directories(mefpp_config_snapshot PUBLIC ins/mef/common
     PRIVATE src/include qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_config_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -180,6 +181,12 @@ if(BUILD_TESTING)
         --c-standard "${MEFPP_C_STANDARD}"
         --paf-probe "$<TARGET_FILE:config_paf_snapshot>" ${config_probe_sdk_args})
     set_tests_properties(native_config_snapshot PROPERTIES TIMEOUT 180 LABELS "native;configuration")
+    add_test(NAME native_runtime_lifecycle
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/runtime_lifecycle_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --cc "${CMAKE_C_COMPILER}" --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work"
+        --c-standard "${MEFPP_C_STANDARD}" ${config_probe_sdk_args})
+    set_tests_properties(native_runtime_lifecycle PROPERTIES TIMEOUT 180 LABELS "native;configuration;ownership")
   endif()
   add_test(NAME native_primitives COMMAND native_smoke)
   set_tests_properties(native_primitives PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test-work")

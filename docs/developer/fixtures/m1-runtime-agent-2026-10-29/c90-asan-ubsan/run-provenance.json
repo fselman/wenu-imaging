@@ -1,0 +1,91 @@
+{
+  "status": "runtime-lifecycle-passed",
+  "host": "06020969a870",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "python": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+  "c_standard": "90",
+  "sanitize": true,
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "--version"
+      ],
+      "exit_status": 0,
+      "log": "compiler.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "-std=c90",
+        "-pedantic-errors",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-UNDEBUG",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/src/include",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/qfits5/include",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-g",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config.c",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_runtime.c",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/tests/runtime_lifecycle.c",
+        "-o",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6/runtime_lifecycle"
+      ],
+      "exit_status": 0,
+      "log": "compile.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6/runtime_lifecycle",
+        "omegacam",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6/omegacam.json"
+      ],
+      "exit_status": 0,
+      "log": "omegacam.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6/runtime_lifecycle",
+        "wfi",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6/wfi.json"
+      ],
+      "exit_status": 0,
+      "log": "wfi.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6/runtime_lifecycle",
+        "override",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/m1-runtime-z759qfp6/override.json"
+      ],
+      "exit_status": 0,
+      "log": "override.log"
+    }
+  ],
+  "input_sha256": {
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config.c": "475bd35fb17248e852c2e00333a9967d6ebe93c3724f09d8d260e21e77df5d7c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_runtime.c": "940e7ce6379dc6591736f83ffc695c324657d1486e4618d2b817dcc11bfa88f4",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/tests/runtime_lifecycle.c": "04da839152bcf690df0fa1abde47ceec055b228bde7111dba49a8b2e9a1e02c8",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config.h": "fd057b7d97a54faccec7b377570e10272912a42d92a7816cfae137324becd4df",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_runtime.h": "688f77ff25e919fb984ca8fb258e5ed9c6cadfbe24576ecd00b5adbecb1dec5d",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config_fields.def": "ac78cd9f2d3988d84c30a6bae64028ad1bf8e65f65209f6e2cca04efc788ec95",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mef_config_members.h": "4308b97730c3833d07399a7455b42ddedc2526c7e58d124c61375cbd12fe8122",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/ins/mef/common/mefp_lib.h": "dc264df6194c9d3bd2b5aee24fbe894cb596320a53d0e4de38908877fac92661",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/tests/config_snapshot_contract.py": "42ee42c95238efd41e4115a15eabba6b05291c366f41c5f273e26c54e9755d3f",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/docs/architecture/proposed/m1/effective-settings-baseline.json": "67fdbabb855f4f0cc2e6f856a57fd5aa3d5d4addbdaaa3cd66bd3c86c969c1f4",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-lifecycle/mefpp2/tests/runtime_lifecycle_contract.py": "5ea2d151fff9b1cdee6e23d0e54a378061042ca583ad7c795ff3a523cf3b3834"
+  },
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0",
+    "UBSAN_OPTIONS": null,
+    "LSAN_OPTIONS": null
+  },
+  "source_unchanged": true
+}

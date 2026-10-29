@@ -30,6 +30,9 @@ struct _mef_bb_;
  */
 mef_status mef_config_from_legacy(const struct _mef_bb_ *source,
     const mef_allocator *allocator, mef_config **out, const char **diagnostic);
+/* Independently owned copy, preserving the same stored types and bits. */
+mef_status mef_config_clone(const mef_config *source, const mef_allocator *allocator,
+    mef_config **out, const char **diagnostic);
 void mef_config_destroy(mef_config *config);
 
 /* Deterministic JSON: integers and strings, floating object bits in big-endian
