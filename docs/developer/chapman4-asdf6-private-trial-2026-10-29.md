@@ -2,6 +2,10 @@
 
 29 October 2026. Continuation of [production qualification](toml-asdf-chapman-qualification-2026-10-29.md) and [D0/D1 preparation](chapman4-toml-asdf-preflight-2026-10-29.md).
 
+## Independent inspection and next host
+
+The uploaded evidence bundle has now been independently inspected. See [the evidence receipt and prepared Mac trial](mac-asdf6-private-trial-2026-10-29.md). Archive/manifest/log/wheel/helper/artifact identities and retained metadata equality pass; synthetic FITS arrays were independently inspected. Mac runtime and reverse interchange remain pending; no production adoption.
+
 ## Returned D2 result — 29 October 2026
 
 Owner terminal reports the one-use D2 trial passed at /home1/fselman/Software/build/wenu-imaging/chapman4-asdf6-download-crhlZBOC/D2-private-s6qsxbqf. Status: Chapman4-D2-passed-awaiting-Mac-and-interchange. Checks reported successful: private imports and exact installed dependency closure; TOML structured input/error controls; offline ASDF format1.5.0 custom-schema/round-trip controls; synthetic MEF/primary signal/variance/mask references, rejected selectors, relocation and fixture/cwd preservation.
