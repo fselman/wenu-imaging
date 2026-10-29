@@ -1,0 +1,7 @@
+{
+  "inspected_utc": "2026-10-29T00:27:57.836621+00:00",
+  "archive_sha256": "facaf3e6f8aa41fda92c0e205bc696e530afb7f3fbef38ca2b9503d8362c6ebf",
+  "archive_library_id": "libfile_a2809905afbc8191b6b41ff809e1dd5c",
+  "native_launches_consumed_by_inspection": 0,
+  "verification": "All manifest identities/logs/build/source injections checked; final diagnostic logs reparsed; smoke FITS independently reread"
+}

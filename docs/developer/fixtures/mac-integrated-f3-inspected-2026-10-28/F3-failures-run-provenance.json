@@ -1,0 +1,1816 @@
+{
+  "schema_version": 1,
+  "source": {
+    "commit": "c7223105e402f197d9c0a2b7be9021ee76da7e9c",
+    "dirty": false
+  },
+  "fixed_row": "F3",
+  "status": "stopped",
+  "execution_complete": false,
+  "previous_attempt": {
+    "report": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/v2.3-bpm-filenames/run-provenance.json",
+    "sha256": "63ce8c1c6fd60610573cc80daf044e05b1da557d483a2c8cada44305fac2ceab"
+  },
+  "planned_launches_consumed": 11,
+  "retest_launches_consumed": 6,
+  "native_launches_consumed": 17,
+  "correction_rounds_consumed": 2,
+  "planned_native_launch_limit": 19,
+  "commands": [
+    {
+      "label": "configure-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-instrumented",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=c7223105e402f197d9c0a2b7be9021ee76da7e9c",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all",
+        "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/configure-instrumented.log",
+      "log_sha256": "1959e2273bdae2a05e0724285d0e5f9123fbd49710d71943280afe57942feb12"
+    },
+    {
+      "label": "build-instrumented",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-instrumented",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-instrumented.log",
+      "log_sha256": "713c01555a732518f38b87ca068f6e7b8471e964ef7990e405ab792944613cac"
+    },
+    {
+      "label": "symbols-instrumented",
+      "argv": [
+        "/usr/bin/nm",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-instrumented/integrated_observer"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/symbols-instrumented.log",
+      "log_sha256": "525ce807800c18fa1f18eba9767ec40f598b8c6bb76fd7355015a1ccba8f0514"
+    },
+    {
+      "label": "configure-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-leaks",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=c7223105e402f197d9c0a2b7be9021ee76da7e9c",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/configure-leaks.log",
+      "log_sha256": "af043fae8affc2f45c0897e2302a76b091b6ef920fc651974e23cf8d59ad4512"
+    },
+    {
+      "label": "build-leaks",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-leaks",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-leaks.log",
+      "log_sha256": "aac743c92aa1547bf6e7249fe11d9076b37d838ba81c795e919a3982aed0016d"
+    },
+    {
+      "label": "symbols-leaks",
+      "argv": [
+        "/usr/bin/nm",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-leaks/integrated_observer"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/symbols-leaks.log",
+      "log_sha256": "9698102f4ba7b06f637504ad830f09144a0089f346b60bd1f7e5424361ea7fa8"
+    },
+    {
+      "label": "dsym-leaks",
+      "argv": [
+        "/usr/bin/dsymutil",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-leaks/integrated_observer"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures",
+      "native": false,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/dsym-leaks.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "missing-list-instrumented",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-instrumented/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "missing-bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/missing-list-instrumented",
+      "native": true,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/missing-list-instrumented.log",
+      "log_sha256": "474f817b9a936f9c26aace8bdebf83d5fa5710ae9595bf8126d89de169e85e35"
+    },
+    {
+      "label": "missing-list-leaks",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-leaks/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "missing-bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/missing-list-leaks",
+      "native": true,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/missing-list-leaks.log",
+      "log_sha256": "9b9f2f975b0ca8f38434cf33787670e917f85ba61b1005ee6a9c6a925e79ca45"
+    },
+    {
+      "label": "corrupt-frame-instrumented",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-instrumented/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/corrupt-frame-instrumented",
+      "native": true,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/corrupt-frame-instrumented.log",
+      "log_sha256": "4bdc536c42845faa2a209244e363560da31988f05e1c86ee25cba7c0eeb48ddd"
+    },
+    {
+      "label": "corrupt-frame-leaks",
+      "argv": [
+        "/usr/bin/leaks",
+        "-quiet",
+        "-atExit",
+        "--",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-leaks/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/corrupt-frame-leaks",
+      "native": true,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/corrupt-frame-leaks.log",
+      "log_sha256": "609779318d7429590cb0fc561e709cf3bed4c2aceb227d41006491b75b98639e"
+    },
+    {
+      "label": "blocked-output-instrumented",
+      "argv": [
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/build-c17-instrumented/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/blocked-output-instrumented",
+      "native": true,
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/blocked-output-instrumented.log",
+      "log_sha256": "b4eb4c62b6b933c7f8b5d56f51672a5dcec6b973ed004ad93df7221788120757"
+    }
+  ],
+  "cases": [
+    {
+      "variant": "missing-list",
+      "lane": "instrumented",
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/missing-list-instrumented",
+      "input_sha256": {
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "run-provenance.json": "e12a447a1153078f7a12a91ab4965b65597977495d97443f9abefcbbebaca09b",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db"
+      },
+      "status": "passed",
+      "findings": [],
+      "exit_status": 0,
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 1,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 0,
+          "bpm_calls": 0,
+          "combine_calls": 0,
+          "science_loads": 0,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 81,
+                "mode": 49590
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 81,
+                "mode": 49590
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 81,
+                "mode": 49590
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332588,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 81,
+                "mode": 49590
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "256",
+            "9223372036854775807",
+            "0"
+          ],
+          [
+            "after",
+            "9223372036854775807",
+            "9223372036854775807",
+            "1"
+          ]
+        ]
+      },
+      "partial_products": {}
+    },
+    {
+      "variant": "missing-list",
+      "lane": "leaks",
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/missing-list-leaks",
+      "input_sha256": {
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "run-provenance.json": "d15362e9f728c1251c53fa1bdabe05967943801e767276f5ecff4680380ff5a2",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db"
+      },
+      "status": "passed",
+      "findings": [],
+      "exit_status": 0,
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 1,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 0,
+          "bpm_calls": 0,
+          "combine_calls": 0,
+          "science_loads": 0,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 82,
+                "mode": 49590
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 82,
+                "mode": 49590
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 82,
+                "mode": 49590
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332638,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 82,
+                "mode": 49590
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "256",
+            "9223372036854775807",
+            "0"
+          ],
+          [
+            "after",
+            "9223372036854775807",
+            "9223372036854775807",
+            "1"
+          ]
+        ],
+        "leaks": [
+          [
+            "0",
+            "0"
+          ]
+        ]
+      },
+      "partial_products": {}
+    },
+    {
+      "variant": "corrupt-frame",
+      "lane": "instrumented",
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/corrupt-frame-instrumented",
+      "input_sha256": {
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "bias0.fits": "dd532b379b528b7a84ef008f079101371f83bc8ae75a1d8026cb9c5e868ab62a",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "run-provenance.json": "59bb9d3c1a76907f4bc7516476d6bd6c43b7d4ac6d1d07184023bbaf3abe1a16",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db"
+      },
+      "status": "passed",
+      "findings": [],
+      "exit_status": 0,
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 1,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 0,
+          "bpm_calls": 0,
+          "combine_calls": 0,
+          "science_loads": 0,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 83,
+                "mode": 49590
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 83,
+                "mode": 49590
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 83,
+                "mode": 49590
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332704,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 83,
+                "mode": 49590
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "256",
+            "9223372036854775807",
+            "0"
+          ],
+          [
+            "after",
+            "9223372036854775807",
+            "9223372036854775807",
+            "1"
+          ]
+        ]
+      },
+      "partial_products": {}
+    },
+    {
+      "variant": "corrupt-frame",
+      "lane": "leaks",
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/corrupt-frame-leaks",
+      "input_sha256": {
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "bias0.fits": "dd532b379b528b7a84ef008f079101371f83bc8ae75a1d8026cb9c5e868ab62a",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "run-provenance.json": "cc93f93e6e48a1f303eef771e957ccf845d52fe5c5896758fd00407efdcace89",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db"
+      },
+      "status": "passed",
+      "findings": [],
+      "exit_status": 0,
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 1,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 0,
+          "bpm_calls": 0,
+          "combine_calls": 0,
+          "science_loads": 0,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 84,
+                "mode": 49590
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 84,
+                "mode": 49590
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 84,
+                "mode": 49590
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332746,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 84,
+                "mode": 49590
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "256",
+            "9223372036854775807",
+            "0"
+          ],
+          [
+            "after",
+            "9223372036854775807",
+            "9223372036854775807",
+            "1"
+          ]
+        ],
+        "leaks": [
+          [
+            "0",
+            "0"
+          ]
+        ]
+      },
+      "partial_products": {}
+    },
+    {
+      "variant": "blocked-output",
+      "lane": "instrumented",
+      "directory": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/F3-failures/blocked-output-instrumented",
+      "input_sha256": {
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "run-provenance.json": "a02e801ca83c2484aec8342029cc2cd0e0f962f034d4bdcfa033ffc4a130c470",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        "OCAM_MB_1x1.fits/preserve-marker.txt": "7284b232dbfa514798e4e87e48a7f8b56cc280cd55b3e822ea6827c630bac70e"
+      },
+      "status": "failed",
+      "findings": [
+        "Native failure status not propagated"
+      ],
+      "exit_status": 0,
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 0,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 6,
+          "bpm_calls": 2,
+          "combine_calls": 2,
+          "science_loads": 2,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-before-000": {
+            "pointers": 233,
+            "bytes": 5862,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-after-001": {
+            "pointers": 235,
+            "bytes": 6202,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-before-004": {
+            "pointers": 261,
+            "bytes": 6835,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-after-005": {
+            "pointers": 263,
+            "bytes": 7175,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-before-006": {
+            "pointers": 256,
+            "bytes": 7059,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-after-007": {
+            "pointers": 258,
+            "bytes": 7399,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-before-008": {
+            "pointers": 259,
+            "bytes": 7442,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-after-009": {
+            "pointers": 261,
+            "bytes": 7782,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-010": {
+            "pointers": 260,
+            "bytes": 7485,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-011": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-before-012": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-after-013": {
+            "pointers": 262,
+            "bytes": 7841,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-1-after-014": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-015": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-1-after-016": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-017": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-before-018": {
+            "pointers": 239,
+            "bytes": 6120,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-after-019": {
+            "pointers": 241,
+            "bytes": 6460,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-before-022": {
+            "pointers": 265,
+            "bytes": 7007,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-after-023": {
+            "pointers": 267,
+            "bytes": 7347,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-before-024": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-after-025": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-before-026": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-after-027": {
+            "pointers": 263,
+            "bytes": 7868,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-028": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-029": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-before-030": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-after-031": {
+            "pointers": 263,
+            "bytes": 7884,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-2-after-032": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-033": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-2-after-034": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-035": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-context-release": {
+            "pointers": 231,
+            "bytes": 6020,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 85,
+                "mode": 49590
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 85,
+                "mode": 49590
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 85,
+                "mode": 49590
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 719315519,
+                "ino": 687,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 16777222,
+                "ino": 84332801,
+                "mode": 33188
+              },
+              {
+                "fd": 3,
+                "flags": 1,
+                "dev": 18446744073709551615,
+                "ino": 85,
+                "mode": 49590
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "256",
+            "9223372036854775807",
+            "0"
+          ],
+          [
+            "after",
+            "9223372036854775807",
+            "9223372036854775807",
+            "1"
+          ]
+        ]
+      },
+      "partial_products": {
+        "science0_pre.fits": "593cb2ef75089ebf1e6f6a87db2f133f5c77c9aa9b56242d11abb723545ea0d8",
+        "OCAM_SKYFF_S2_1x1.fits": "0d5283cec0b263d80cff498f335e9aa2e3107a973b8b6a4e0906f54629d81d24",
+        "OCAM_BPM_1x1.fits": "791d9e10f685f9ac1602e17bb8e8f98efdb75e75ae54a24ae43fccefb7b49da5",
+        "OCAM_MFF_S2_1x1.fits": "390d6026dfcac84a3fea3f871a403f9942716f2dd5a266d1930f291a29e0db3a",
+        "OCAM_DOMEFF_S2_1x1.fits": "ff93bb628d77c876800deca7e03358fcc246182fabdea881859e0423e1cbac48"
+      }
+    }
+  ],
+  "selected_cases": [
+    "missing-list",
+    "corrupt-frame",
+    "blocked-output",
+    "context-allocation",
+    "cube-allocation"
+  ],
+  "lane_order": [
+    "instrumented",
+    "leaks"
+  ],
+  "protected_sha256": {
+    "/Users/fselman/.pycavi/pycavi_astrosoft.cfg": "3a0bca420a06827abd3073ac6cc0794ee7b89fe7a2d9f4cb4553db428996c70b",
+    "/Users/fselman/opt/local/mefpp/bin/mefpp": "8bc2996bfc35719c60bdeb10219c3052ad87c89d444cd27512aeddf2cd266e9a"
+  },
+  "inherited_source": {
+    "commit": "f5afd08fbfb35a8a50409c92352f9061c92c1f69",
+    "dirty": false
+  },
+  "installation_performed": false,
+  "scientific_acceptance_claimed": false,
+  "raw_WFI_opened": false,
+  "tool_sha256": {
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang": "86051fc5c41d7fb5f8998d0188a9730d0e5f6e1170aed3006fd719fc88f747f3",
+    "/opt/local/bin/cmake": "0ed0b5ec05f6c923cbefbe0b5b3a6fa58a1124a8918ea44201eadd90154aea73",
+    "/usr/bin/leaks": "79a1655c859ee61f5d995a9ebae174b3631125f0357c21bdd700ba6567a5f16a"
+  },
+  "source_archive_sha256": "245618257c0c8b491903d72a70dad71ecfb8e3e6bfee3f2700e1da07a64a0d5a",
+  "private_injection_points": [
+    {
+      "path": "ins/mef/common/mefp_lib.c",
+      "before_sha256": "0e81b2d7bfe106970bf2f813767946ae88d75f00046960e0c8bd92f99cf2d0cf",
+      "after_sha256": "4bfb8ed6d7a8b507c5c267ecc054f44e2df60d9150411edd9e023eaece309364",
+      "old": "bb = calloc(1, sizeof(mef_bb));",
+      "new": "bb = (getenv(\"S2_F3_ALLOC\") != NULL && !strcmp(getenv(\"S2_F3_ALLOC\"), \"context\")) ? (fprintf(stderr, \"F3 INJECT context allocation\\n\"), (void *)0) : calloc(1, sizeof(mef_bb));"
+    },
+    {
+      "path": "src/iproc/cube_handling.c",
+      "before_sha256": "b5f63b989499bb6a963b2de53d82dfd729e2c0e4fbfc4d7b4d9b175a4802cad5",
+      "after_sha256": "3552c5799cb0e2232ca67a1d49022ba59519bf61375231ccfb31663d79e9fb33",
+      "old": "n = malloc(sizeof(cube_t)) ;",
+      "new": "n = (getenv(\"S2_F3_ALLOC\") != NULL && !strcmp(getenv(\"S2_F3_ALLOC\"), \"cube\")) ? (fprintf(stderr, \"F3 INJECT cube allocation\\n\"), (void *)0) : malloc(sizeof(cube_t)) ;"
+    }
+  ],
+  "private_cmake_sha256": "186e88fec84976344ff244d909990a17a83d78b64241337f59a72fe57d6ee7c9",
+  "binary_sha256": {
+    "instrumented": "2f8f10c93333e39a3a64f00d9c8a705d1186eaad0fa87edeb46dce69d6064aa3",
+    "leaks": "7cff35a99272863a0c0ddece987d1f4a81bad92413b8e835ec433c7ca6ce30b4"
+  },
+  "error": "STOP: blocked-output-instrumented: Native failure status not propagated",
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true,
+  "previous_evidence_unchanged": true,
+  "fixture_inputs_unchanged": true
+}

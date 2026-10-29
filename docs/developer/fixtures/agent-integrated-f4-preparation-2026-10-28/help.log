@@ -1,0 +1,6 @@
+usage: qualify_integrated_repeat_mac.py [-h]
+
+F4: one qualified instrumented process, tiny warmup plus ten measured cycles.
+
+options:
+  -h, --help  show this help message and exit
