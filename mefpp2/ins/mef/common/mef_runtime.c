@@ -10,6 +10,8 @@ struct mef_error {
 struct mef_request {
     mef_allocator allocator;
     mef_request_spec spec;
+    mef_resolved_request_spec resolved;
+    int has_resolved_bindings;
 };
 struct mef_context {
     mef_allocator allocator;
@@ -173,6 +175,7 @@ failure:
 void mef_request_destroy(mef_request *request)
 {
     mef_allocator a;
+    size_t i;
     if (request == NULL) return;
     a = request->allocator;
     free_refs(&a, request->spec.inputs, request->spec.input_count);
@@ -180,6 +183,12 @@ void mef_request_destroy(mef_request *request)
     release(&a, request->spec.work_dir);
     release(&a, request->spec.output_dir);
     release(&a, request->spec.log_path);
+    release(&a, request->resolved.calibration_roles);
+    if (request->resolved.bpm_selections != NULL) {
+        for (i = 0; i < request->resolved.bpm_selection_count; ++i)
+            release(&a, request->resolved.bpm_selections[i].detector_id);
+    }
+    release(&a, request->resolved.bpm_selections);
     release(&a, request);
 }
 mef_status mef_request_create(const mef_request_spec *spec,
@@ -200,6 +209,11 @@ mef_status mef_request_create(const mef_request_spec *spec,
     request = a.allocate(a.user, sizeof(*request));
     if (request == NULL) return fail(&a, MEF_ERR_MEMORY, "Cannot allocate request", error);
     request->allocator = a;
+    request->has_resolved_bindings = 0;
+    request->resolved.calibration_roles = NULL;
+    request->resolved.calibration_role_count = 0;
+    request->resolved.bpm_selections = NULL;
+    request->resolved.bpm_selection_count = 0;
     request->spec = *spec;
     request->spec.inputs = NULL;
     request->spec.calibrations = NULL;
@@ -225,6 +239,108 @@ memory_failure:
 const mef_request_spec *mef_request_view(const mef_request *request)
 {
     return request == NULL ? NULL : &request->spec;
+}
+
+/* Descriptor validation deliberately does not infer roles or application from
+ * filenames, operation names or configured defaults. Resolvers supply these.
+ */
+static int valid_resolved(const mef_resolved_request_spec *spec)
+{
+    const mef_request_spec *base;
+    size_t i, j, matches, masks;
+    if (spec == NULL) return 0;
+    base = &spec->request;
+    if (base->input_count == 0 || !valid_refs(base->inputs, base->input_count) ||
+        !valid_refs(base->calibrations, base->calibration_count) ||
+        spec->calibration_role_count != base->calibration_count ||
+        spec->calibration_role_count > (size_t)-1 / sizeof(mef_calibration_role) ||
+        (spec->calibration_role_count != 0 && spec->calibration_roles == NULL) ||
+        spec->bpm_selection_count == 0 || spec->bpm_selections == NULL ||
+        spec->bpm_selection_count > base->input_count ||
+        spec->bpm_selection_count > (size_t)-1 / sizeof(mef_bpm_selection)) return 0;
+    for (i = 0; i < spec->calibration_role_count; ++i) {
+        if (spec->calibration_roles[i] < MEF_CAL_BIAS ||
+            spec->calibration_roles[i] > MEF_CAL_MFF) return 0;
+        /* A supplied calibration must belong to a selected input detector. */
+        matches = 0;
+        for (j = 0; j < base->input_count; ++j)
+            if (strcmp(base->calibrations[i].detector_id, base->inputs[j].detector_id) == 0)
+                ++matches;
+        if (matches == 0) return 0;
+    }
+    for (i = 0; i < spec->bpm_selection_count; ++i) {
+        if (!text_present(spec->bpm_selections[i].detector_id) ||
+            (spec->bpm_selections[i].state != MEF_BPM_OMITTED &&
+             spec->bpm_selections[i].state != MEF_BPM_SELECTED)) return 0;
+        for (j = 0; j < i; ++j)
+            if (strcmp(spec->bpm_selections[i].detector_id,
+                       spec->bpm_selections[j].detector_id) == 0) return 0;
+        matches = masks = 0;
+        for (j = 0; j < base->input_count; ++j)
+            if (strcmp(spec->bpm_selections[i].detector_id, base->inputs[j].detector_id) == 0)
+                ++matches;
+        if (matches == 0) return 0;
+        for (j = 0; j < base->calibration_count; ++j)
+            if (spec->calibration_roles[j] == MEF_CAL_BPM &&
+                strcmp(spec->bpm_selections[i].detector_id,
+                       base->calibrations[j].detector_id) == 0) ++masks;
+        if (masks != (spec->bpm_selections[i].state == MEF_BPM_SELECTED ? 1U : 0U)) return 0;
+    }
+    for (i = 0; i < base->input_count; ++i) {
+        matches = 0;
+        for (j = 0; j < spec->bpm_selection_count; ++j)
+            if (strcmp(base->inputs[i].detector_id, spec->bpm_selections[j].detector_id) == 0)
+                ++matches;
+        if (matches != 1) return 0;
+    }
+    return 1;
+}
+mef_status mef_request_create_resolved(const mef_resolved_request_spec *spec,
+    const mef_allocator *allocator, mef_request **out, mef_error **error)
+{
+    mef_allocator a;
+    mef_request *request;
+    mef_calibration_role *roles;
+    mef_bpm_selection *selections;
+    mef_status status;
+    size_t i;
+    if (out == NULL || *out != NULL || (error != NULL && *error != NULL)) return MEF_ERR_INPUT;
+    if (!select_allocator(allocator, &a)) return MEF_ERR_CONFIG;
+    if (!valid_resolved(spec))
+        return fail(&a, MEF_ERR_INPUT, "Invalid resolved calibration/BPM bindings", error);
+    request = NULL;
+    status = mef_request_create(&spec->request, &a, &request, error);
+    if (status != MEF_OK) return status;
+    if (spec->calibration_role_count != 0) {
+        roles = a.allocate(a.user, spec->calibration_role_count * sizeof(*roles));
+        if (roles == NULL) goto memory_failure;
+        request->resolved.calibration_roles = roles;
+        request->resolved.calibration_role_count = spec->calibration_role_count;
+        memcpy(roles, spec->calibration_roles, spec->calibration_role_count * sizeof(*roles));
+    }
+    selections = a.allocate(a.user, spec->bpm_selection_count * sizeof(*selections));
+    if (selections == NULL) goto memory_failure;
+    request->resolved.bpm_selections = selections;
+    request->resolved.bpm_selection_count = spec->bpm_selection_count;
+    for (i = 0; i < spec->bpm_selection_count; ++i) {
+        selections[i].detector_id = NULL;
+        selections[i].state = spec->bpm_selections[i].state;
+    }
+    for (i = 0; i < spec->bpm_selection_count; ++i) {
+        selections[i].detector_id = copy_string(&a, spec->bpm_selections[i].detector_id);
+        if (selections[i].detector_id == NULL) goto memory_failure;
+    }
+    request->resolved.request = request->spec;
+    request->has_resolved_bindings = 1;
+    *out = request;
+    return MEF_OK;
+memory_failure:
+    mef_request_destroy(request);
+    return fail(&a, MEF_ERR_MEMORY, "Cannot copy calibration/BPM bindings", error);
+}
+const mef_resolved_request_spec *mef_request_resolved_view(const mef_request *request)
+{
+    return request == NULL || !request->has_resolved_bindings ? NULL : &request->resolved;
 }
 void mef_context_destroy(mef_context *context)
 {
@@ -252,8 +368,11 @@ mef_status mef_context_create(const mef_config *config, const mef_request *reque
     context->config = NULL;
     context->request = NULL;
     status = mef_config_clone(config, &a, &context->config, &detail);
-    if (status == MEF_OK)
-        status = mef_request_create(&request->spec, &a, &context->request, error);
+    if (status == MEF_OK) {
+        if (request->has_resolved_bindings)
+            status = mef_request_create_resolved(&request->resolved, &a, &context->request, error);
+        else status = mef_request_create(&request->spec, &a, &context->request, error);
+    }
     if (status != MEF_OK) {
         mef_context_destroy(context);
         return fail(&a, status, "Cannot copy context inputs", error);

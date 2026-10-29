@@ -41,6 +41,8 @@ static void fixture_release(mef_bb *source)
 }
 #include "config_snapshot_fixture.h"
 
+void test_resolved_request(const mef_config *config);
+
 static size_t exercise(int mode, const mef_config *config,
     const mef_request *original, const mef_request_spec *spec,
     const mef_allocator *allocator, size_t fail_at, int persistent)
@@ -107,6 +109,7 @@ int main(int argc, char **argv)
     result = NULL; error = NULL;
     assert(mef_config_from_legacy(&legacy, NULL, &config, &diagnostic) == MEF_OK);
     fixture_release(&legacy);
+    test_resolved_request(config);
     strcpy(asset, "asset:primary"); strcpy(path, "/input with spaces/primary.fits");
     refs[0].asset_record_id = asset; refs[0].detector_id = "detector-primary";
     refs[0].resolved_path = path; refs[0].hdu_index = 0;
