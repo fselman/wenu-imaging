@@ -1,5 +1,7 @@
 # Developer documentation
 
+Current owner addition: [optional input BPMs throughout the chain; required variances from M6a](../architecture/proposed/bpm-variance-policy.md). The policy updates the target/WAD/template/roadmap and records existing wrapper blockers; no production behavior changed. PR #140 is accepted/merged at 6a4d4d8ec078a3360a5a743845dcbe752cbc84bd with Mac/shared Chapman synchronized and clean; the M1 resolved-operation bridge and concrete service remain next.
+
 M1 next increment: [legacy CLI compatibility capture](../architecture/proposed/m1/cli-compatibility.md), including diagnostic bounds defect #139 and retained failure/correction evidence. Agent checks pass; actual Mac/shared Chapman checks pending.
 
 M1 next increment: [owned request/context/result/error lifecycles](../architecture/proposed/m1/runtime-lifecycles.md), following accepted PR #137. Agent checks pass; new actual Mac/shared Chapman checks are pending.

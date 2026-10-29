@@ -1,5 +1,7 @@
 # M1 common subroutine template — C90 design contract
 
+29 October owner addition: follow [the chain-wide BPM/variance policy](../bpm-variance-policy.md) when implementing this pattern. An input BPM can be explicitly omitted, including for first bias/BPM construction. Selected invalid masks fail; omit neither generated validity flags nor later required variance propagation. Declare selection, actual application, detector coverage and uncertainty capability separately in request/result contracts. No optional variance-off mode is introduced for the future M6a chain; this remains a design allowance, not implemented runtime behavior.
+
 Owner requirement, 29 October 2026: provide a template subroutine that all extracted subroutines can use. Make this the first M1 design deliverable, before duplicating interfaces across numerical modules.
 
 Use plain C structs, functions and opaque handles. This is a copyable calling/ownership pattern, not C++ inheritance, macros generating algorithms or a new dispatch framework. Each operation has its own implementation and may have operation-specific configuration/request/result payloads. Share status, error, lifecycle and metadata conventions; do not force bias, flat, linearity and image writing into an identical numerical signature or one giant state struct.

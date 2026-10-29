@@ -3,7 +3,7 @@
 29 October owner decision: use the [vendored, pinned tomlc17 source](../../../third_party/tomlc17/README.wenu.md) for the planned native TOML reader. Source import and byte-identity verification are approved now; the static build target and production adapter remain M2 implementation work after their prerequisites. Qualification N1–N4 on Mac/Chapman4 is complete within the recorded limits. This source import does not advance native numerical refactoring or install packages.
 29 October owner addition: [bounded native TOML qualification](../../developer/native-toml-qualification-2026-10-29.md) now belongs to the current dependency work. Authorize private Mac/Chapman4 tests of pinned tomlc17 with a scoped C99 dependency exception, strict-C90 caller boundary, shared TOML 1.0 semantics/error controls and ownership checks before production parser adoption. Existing native source/public contracts retain C90; this does not authorize M1/M2 implementation, installation or processing. The completed Python/core-ASDF trial is preserved.
 
-Version 3, 29 October 2026. For discussion; no implementation begins from this plan.
+Version 4, 29 October 2026. For discussion; no implementation begins from this plan.
 Baseline: accepted main 22a32d39463a73ab32d2ba9d811f949198852902.
 Design: [target architecture revision 4](pycavi-mefpp.md).
 Data contracts: [WAD and ASDF processing projects](wad-processing-project.md).
@@ -87,6 +87,10 @@ Review the small schema/contract sketches and linked examples against OCAM/WFI m
 
 M0a acceptance covers the agreed contract/examples only. It does not qualify an ASDF runtime, create a production WAD package, migrate data or implement numerical processing. Unresolved format/packaging choices remain explicit; preserve legacy data and interfaces.
 
+## Chain-wide BPM and variance rule
+
+Owner addition, 29 October 2026: [input BPMs are optional throughout; variance support is required when introduced at M6a](bpm-variance-policy.md). Explicit omission differs from a selected broken/incompatible mask. Preserve generated validity flags; requested BPM construction still produces a BPM. All request/configuration/association/native/Python/inspection/product layers carry that distinction. This supersedes the former normal variance-disabled compatibility option for the new chain; pre-M6a signal-only legacy comparisons remain explicitly unavailable, not variance-capable acceptance. See the policy's stage matrix and bounded gates.
+
 ## M1 — Typed configuration and explicit ownership
 
 ### Work and deliverables
@@ -101,6 +105,7 @@ M0a acceptance covers the agreed contract/examples only. It does not qualify an 
 - Introduce explicit lifecycle/status contracts in .h and .c together. Existing recipe can use a compatibility adapter while extraction progresses.
 - Provide a developer-visible normalized settings dump so equivalence is observable.
 - Keep CLI parsing, initialization and informational commands out of reusable numerical routines.
+- Carry explicit selected/omitted input-BPM state into the resolved-operation bridge and first service. Validate supplied masks without mandatory loading when omitted; return truthful application status. Reserve required variance source/validity contracts for M6a, without implementing new noise mathematics during extraction.
 
 ### Gate
 
@@ -246,7 +251,7 @@ Preserve all prior products and failed attempts. CLI default/installed selection
 
 ### Gate and rollback
 
-Use small analytic controls for addition/subtraction, division, scaling, masked/zero-flat cases and representative calibration combinations, plus bounded simulation where estimator uncertainty requires it. Check dimensions, nonnegative finite valid values and exactly-once scaling. Label unavailable or approximate uncertainty honestly. Preserve legacy signal equivalence; retain variance-disabled compatibility mode with explicit unavailable state.
+Use small analytic controls for addition/subtraction, division, scaling, masked/zero-flat cases and representative calibration combinations, plus bounded simulation where estimator uncertainty requires it. Check dimensions, nonnegative finite valid values and exactly-once scaling. Label unavailable or approximate uncertainty honestly. Preserve legacy signal equivalence. The new variance-capable chain requires initialization and propagation; it has no normal variance-off mode. Raw inputs may initialize variance from an explicit qualified noise model; missing required model/parameters or incompatible supplied variance must fail rather than fabricate uncertainty. Pre-M6a/reference signal-only comparisons remain separate, explicitly variance-unavailable, and cannot meet this completion gate. Optional input BPMs do not weaken variance requirements; see [the chain-wide policy](bpm-variance-policy.md).
 
 ## M6b — Linearity subroutine and calibration products
 
