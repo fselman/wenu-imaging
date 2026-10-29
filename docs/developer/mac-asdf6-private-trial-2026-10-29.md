@@ -2,6 +2,12 @@
 
 29 October 2026. Continuation of the [Chapman qualification](toml-asdf-chapman-qualification-2026-10-29.md). Private dependency testing only; production activation and refactoring remain outside this increment.
 
+## Returned Mac result — 29 October 2026
+
+Owner terminal reports successful execution at `/Users/fselman/Software/build/wenu-imaging/mac-asdf6-transfer-ntb2et4J/Mac-private-k4i17lwh`. All six commands completed; parent status `Mac-passed-awaiting-reverse-interchange`. Semantic digest matches Chapman (`4df8a3c69e541d2d4950e9ffdc86b2b57670a1364682611f6f7fc4e5207daf30`). Production package metadata and checkout are reported unchanged; production activation is false. This is a user-returned runtime result, pending independent inspection of the retained Mac artifacts.
+
+Prepared `probes/package_mac_evidence.py` checks parent/functional/interchange report linkage and recorded preservation, all six successful command logs, unchanged functional helper, six generated fixture artifacts and their FITS bindings. It packages only 17 explicitly selected files plus a manifest in a fresh transfer directory. The private environment, wheels and real observations are excluded. Collector syntax and wrong-host rejection pass on the agent; collection has not yet run on Mac. No imports of ASDF/Astropy, reinstall, reduction or repeated functional tests are required for collection. Mac-to-Chapman runtime interchange remains pending; reading the same Chapman-origin fixture on both hosts does not establish the reverse direction.
+
 ## Independently inspected Chapman evidence
 
 Uploaded archive: `chapman4-asdf6-evidence.tar.gz`, 1,063,536 bytes, SHA256 `146182a5f21acaeb5436d2ffed4f89d81ecd662f6eb8cf75cf475bed9b6b9358`.
