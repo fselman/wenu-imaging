@@ -75,6 +75,8 @@ Keep the candidate private until the integration/activation decision. Record rol
 
 ## Status and next step
 
+[Actual Chapman4 preflight and exact D1 preparation](chapman4-toml-asdf-preflight-2026-10-29.md): Python 3.11.14 / NumPy 1.26.4 / Astropy 6.1.7 / glibc 2.17, compatible declared top-level minimums and missing candidate packages identified. A four-wheel hash-pinned download/metadata runner is prepared; target execution and installation remain pending. The historical initial review below predates this receipt.
+
 Primary documentation and tagged metadata reviewed; no dependency resolution/download/install/build/runtime trial has run. Next: inspect returned D0 Chapman4 preflight and its actual scientific package versions before preparing D1. No production adoption is claimed.
 
 Sources checked 29 October 2026:
