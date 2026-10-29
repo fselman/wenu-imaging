@@ -1,4 +1,5 @@
 # mefpp refactor implementation plan — proposal
+29 October owner addition: [bounded native TOML qualification](../../developer/native-toml-qualification-2026-10-29.md) now belongs to the current dependency work. Authorize private Mac/Chapman4 tests of pinned tomlc17 with a scoped C99 dependency exception, strict-C90 caller boundary, shared TOML 1.0 semantics/error controls and ownership checks before production parser adoption. Existing native source/public contracts retain C90; this does not authorize M1/M2 implementation, installation or processing. The completed Python/core-ASDF trial is preserved.
 
 Version 3, 29 October 2026. For discussion; no implementation begins from this plan.
 Baseline: accepted main 22a32d39463a73ab32d2ba9d811f949198852902.

@@ -1,5 +1,9 @@
 # TOML/ASDF dependency qualification — production Chapman gate
 
+
+Native TOML scope added by owner, 29 October 2026: include pinned tomlc17 qualification in the current dependency work (PR #135). See [native TOML qualification](native-toml-qualification-2026-10-29.md). Private actual-host Mac/Chapman4 builds, TOML 1.0 agreement/error controls, ownership checks and a strict-C90 caller boundary are authorized. The C99 exception is scoped to the external parser dependency and test-only glue; existing native source/public contracts retain C90. Production adapter exceptions/adoption/integration remain explicit later decisions. First collect actual compiler/tool/SDK/libc evidence; no compiler/system/production upgrades, PAF replacement or reductions. Preserve the completed ASDF trial; do not rerun it for this addition.
+
+
 29 October 2026. Owner states that the older Chapman machines are the main production systems and explicitly requires qualification there for new TOML/ASDF packages. Development remains on the Intel Mac. This is a mandatory adoption gate, not optional post-Mac portability work.
 
 Baseline: main b5bfd910614a786b95a598cb6295989c9f6602d6. M0/M0a review package is accepted/merged; actual ASDF schemas/runtime, parser selection and effective legacy-setting decisions remain open. Prior chapman3 evidence does not automatically qualify chapman4 or another dependency.
