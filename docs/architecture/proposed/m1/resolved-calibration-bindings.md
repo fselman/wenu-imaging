@@ -101,7 +101,11 @@ Existing legacy compilation warnings remain retained, not described as a
 warning-free production build.
 
 Reports and profile logs are retained under
-docs/developer/fixtures/m1-resolved-agent-2026-10-29/. Actual Mac/representative
-Chapman CMake builds and the three focused tests remain pending. Use existing
+docs/developer/fixtures/m1-resolved-agent-2026-10-29/. Actual Intel Mac and representative
+Chapman4 private C90 CMake builds and all three focused tests passed 3/3,
+including all 51 CLI cases on each target. See the
+[paired receipt](../../../developer/m1-bindings-paired-results-2026-10-29.md)
+for returned-output provenance, exact source/evidence paths and limits. Ready for
+owner review; target C17/sanitizer results are not claimed. Use existing
 selected tools and fresh private exports; no new tool qualification or duplicate
 Chapman host test. No installation, real FITS read, reduction or notebook ran.

@@ -1,6 +1,6 @@
 # M1 common subroutine template — C90 design contract
 
-M1 current increment: [resolved calibration roles and explicit per-detector BPM choices](resolved-calibration-bindings.md). Added owned descriptor validation/context copying; agent C90/C17, sanitizer and CLI regression checks pass. Actual Mac/shared Chapman checks and connection to I/O/numerical services remain pending; no processing, installation or complete-M1 claim.
+M1 current increment: [resolved calibration roles and explicit per-detector BPM choices](resolved-calibration-bindings.md). Added owned descriptor validation/context copying; agent C90/C17, sanitizer and CLI regression checks pass. Actual Mac/shared Chapman private C90 builds and three focused tests now pass 3/3, including 51 CLI cases each; see the [paired receipt](../../../developer/m1-bindings-paired-results-2026-10-29.md). Ready for owner review. Connection to I/O/numerical services remains pending; no processing, installation or complete-M1 claim.
 
 29 October owner addition: follow [the chain-wide BPM/variance policy](../bpm-variance-policy.md) when implementing this pattern. An input BPM can be explicitly omitted, including for first bias/BPM construction. Selected invalid masks fail; omit neither generated validity flags nor later required variance propagation. Declare selection, actual application, detector coverage and uncertainty capability separately in request/result contracts. No optional variance-off mode is introduced for the future M6a chain; this remains a design allowance, not implemented runtime behavior.
 
