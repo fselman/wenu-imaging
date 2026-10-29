@@ -4,14 +4,17 @@
  */
 #include "mef_operation_template.h.txt"
 
-mef_status mef_operation_validate(mef_context *context, mef_error **error);
-mef_status mef_operation_result_create(mef_result **result, mef_error **error);
-mef_status mef_operation_kernel(mef_context *context, mef_result *result,
+mef_status mef_cal_bias_validate(mef_context *context, mef_error **error);
+mef_status mef_cal_bias_result_create(mef_result **result, mef_error **error);
+mef_status mef_cal_bias_kernel(mef_context *context, mef_result *result,
                                  mef_error **error);
-mef_status mef_operation_validate_result(const mef_result *result,
+mef_status mef_cal_bias_validate_result(const mef_result *result,
                                           mef_error **error);
+/* qc helpers compute declared measurements, not unstated quality cuts. */
+mef_status mef_cal_bias_qc(mef_context *context, mef_result *result,
+                            mef_error **error);
 
-mef_status mef_operation_run(mef_context *context,
+mef_status mef_cal_bias(mef_context *context,
                               mef_result **result,
                               mef_error **error)
 {
@@ -30,23 +33,29 @@ mef_status mef_operation_run(mef_context *context,
     }
 
     /* Validate the resolved request and settings before doing work. */
-    status = mef_operation_validate(context, error);
+    status = mef_cal_bias_validate(context, error);
     if (status != MEF_STATUS_OK) {
         goto cleanup;
     }
 
     /* A partially constructed result must remain safely destructible. */
-    status = mef_operation_result_create(&pending, error);
+    status = mef_cal_bias_result_create(&pending, error);
     if (status != MEF_STATUS_OK) {
         goto cleanup;
     }
 
     /* Existing calculation goes here, through explicit context/state. */
-    status = mef_operation_kernel(context, pending, error);
+    status = mef_cal_bias_kernel(context, pending, error);
     if (status != MEF_STATUS_OK) {
         goto cleanup;
     }
-    status = mef_operation_validate_result(pending, error);
+    status = mef_cal_bias_validate_result(pending, error);
+    if (status != MEF_STATUS_OK) {
+        goto cleanup;
+    }
+
+    /* Explicit qc stage: use retained inputs/intermediates as required. */
+    status = mef_cal_bias_qc(context, pending, error);
     if (status != MEF_STATUS_OK) {
         goto cleanup;
     }

@@ -12,7 +12,7 @@
  * Failure: *result remains NULL; optional *error is independently owned.
  * No exit(), hidden global mutable state, cwd change or project publication.
  */
-mef_status mef_operation_run(mef_context *context,
+mef_status mef_cal_bias(mef_context *context,
                               mef_result **result,
                               mef_error **error);
 
