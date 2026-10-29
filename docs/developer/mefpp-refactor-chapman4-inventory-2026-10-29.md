@@ -1,5 +1,7 @@
 # Chapman4 reduction-directory inventory — 29 October 2026
 
+The later compact census below supersedes the partial scan's science-partition totals only. The earlier partial calibration/link inventory remains bounded as recorded; no large recursive retry or processing resume is required.
+
 ## Evidence and scope
 
 Actual host: chapman4.sc.eso.org, Linux 3.10.0-1160.71.1.el7.x86_64.
@@ -70,3 +72,42 @@ An absent target may be an intentionally planned, unbuilt calibration, a stale a
 7. Retain local configuration source/hash even when equal across partitions. Content deduplication must preserve the association to each task/attempt and distinguish later overrides.
 
 Next evidence: a compact science-partition census at the known target/filter/OB depth, plus configuration/project discovery for testing/wenu-imaging-test, workflows/wenu-imaging-test and m42/reduced. Header-only samples can follow for existing products if needed to distinguish preprocessing from normalization; no bulk pixel audit or processing restart is required.
+
+## Compact partition census — later returned evidence
+
+Evidence: Pasted text(10).txt, SHA256 106321b22c20077f7973c41f40e2cc97b65872de4fb3dbc1598c17fffe8886f9. Parsed 205 historical and two test-project partition rows; all numeric row sums agree with their root summaries. No reported traversal limits/errors for these expected-depth passes. The scope was science.list at target/filter/OB depth or shallower, excluding directory symlinks; it is not a universal filesystem or FITS validation.
+
+| Science root | Target directory names | Partitions | Science-list memberships | Matching local _pre.fits | Expected _pre names absent locally | Expected WCS paths present |
+|---|---:|---:|---:|---:|---:|---:|
+| testing/reduced/science | 42 | 205 | 963 | 10 | 953 | 10 |
+| testing/wenu-imaging-test/science | 1 | 2 | 10 | 10 | 0 | 0 |
+| m42/reduced/science | Not established by this list-based census | 0 matching lists | 0 reported | Not established | Not established | Not established |
+
+Historical filter grouping: 95 NB_659 partitions and 110 r_SDSS partitions. Counts refer to list memberships, not independently deduplicated raw exposures. The historic ten matched products remain the two NB_659 CN Ori groups identified above. The newer project has one CN Ori group per filter, five members each.
+
+WCS counts are checks of the canonical source-stem subdirectory path only. The newer test project contains separate notebook04/05/etc. run directories, so zero canonical WCS paths is not evidence that astrometry never ran. Do not contradict the earlier qualified pilot records or move/reduce those files. Likewise, absent expected _pre names do not prove that alternate locations/names contain no products.
+
+### Workspace/project relationship now observed
+
+The configuration at ~/omegacam/workflows/wenu-imaging-test/config/pycavi.cfg specifies:
+
+| Role | Configured location |
+|---|---|
+| Raw inputs | /home/fselman/fits/ |
+| Reduction project | /home/fselman/omegacam/testing/wenu-imaging-test/ |
+| Static calibration | Project static_calib/ |
+| Reduced calibration | Project calib/ |
+| Reduced standards | Project std/ |
+| Reduced science | Project science/ |
+| Logs | Project logs/ |
+| Downstream stage names | Sextractor_dir, Scamp_dir, Swarp_dir, Calibration_dir |
+
+The workflow workspace also contains config/ and data/, but workflows/wenu-imaging-test/data/science is absent at the checked location. This is consistent with its explicit external project_dir setting, not a broken workflow established by this census.
+
+Its config directory contains mefpp.cfg/mefpp.paf, omegacam.cfg/omegacam.paf, pycavi.cfg, wfi.cfg/wfi.paf and example files. Presence does not establish which are effectively consumed; current source readers and actual run settings decide that. The test reduction project contains stage-specific successful/failed pilot directories and pre-normalization backups. Their names are context evidence, not completion certificates.
+
+### Design disposition
+
+This evidence is sufficient to inform the architecture analysis without more broad scans. Explicitly separate workspace, raw-storage root, reduction project, task attempt and published-product location. Keep project/asset identifiers stable when paths differ. Inventory and migrate the grouping/association descriptions without starting the 953 locally absent historical expected outputs.
+
+Use the existing Mac baseline and already qualified Chapman pilot records for behavior comparisons. Further exact configuration consumption, local overrides and header/array checks should be tied to a concrete parser/interface implementation question, not added as a new full-dataset audit. No production changes, reductions, link repairs or dataset cleanup occurred.

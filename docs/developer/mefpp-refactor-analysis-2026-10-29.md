@@ -2,7 +2,7 @@
 
 Date: 29 October 2026. Source baseline: main 22a32d39463a73ab32d2ba9d811f949198852902.
 Scope: [owner amendment v2.9](native-roadmap-amendment-v2.9-2026-10-29.md).
-Status: source analysis complete for the boundaries below; design proposed for review. Partial Chapman4 directory evidence is now recorded; complete partition/configuration coverage and target dependency/binding qualification remain pending. No production software or datasets changed.
+Status: source analysis complete for the boundaries below; design proposed for review. Chapman4's compact science-partition census and workspace/project configuration relationship are now recorded; effective override mapping and target dependency/binding qualification remain pending. No production software or datasets changed.
 
 ## Decisions versus proposals
 
@@ -168,15 +168,21 @@ These are ordered proposals, not a new unbounded implementation authorization. R
 
 ## Chapman evidence and remaining inventory
 
-A [partial actual Chapman4 inventory](mefpp-refactor-chapman4-inventory-2026-10-29.md) now records the requested ~/omegacam/testing and ~/fits roots, 53 visited science partitions, shared absent calibration targets and different resolved storage roots. The testing traversal hit its time limit; this is not a complete dataset census. Known historical root from the recorded pilot: /home/fselman/omegacam/testing/reduced. A larger project may be elsewhere; first collect actual host/Git/environment evidence, root/config discovery and immediate directory listings. Then run a bounded metadata inventory of selected roots.
+The [actual Chapman4 inventory and compact census](mefpp-refactor-chapman4-inventory-2026-10-29.md) record the requested ~/omegacam/testing and ~/fits roots. The later census found 205 historical science partitions / 963 list memberships across 42 target directories and two newer test partitions / ten memberships. The original recursive calibration/link scan remains partial; the compact science-list pass had no reported limits/errors at its specified depth. Known historical root from the recorded pilot: /home/fselman/omegacam/testing/reduced. A larger project may be elsewhere; first collect actual host/Git/environment evidence, root/config discovery and immediate directory listings. Then run a bounded metadata inventory of selected roots.
 
 For each partition record list membership, link targets/broken links, local effective configuration/overrides, expected versus present products, sizes and stage reports/logs. Distinguish raw, native-preprocessed, normalized, detector-solved, assembled-WCS and later-tool states. Product presence establishes only a candidate state; a WCS label or all expected filenames does not establish validated completion. Sample FITS headers first; do not hash/read every large pixel array, follow directory symlinks recursively, repair links, delete partial files or resume jobs. Record unknown or contradictory state.
 
 The inventory informs schema size/granularity, shared-calibration reuse, naming collisions, incomplete attempts, restart semantics and relocation needs. The actual directory scan is now observed on chapman4; no pipeline workload, header/pixel validation or complete reduction result is established. Its 181 absent link targets can include planned unbuilt calibrations, so do not repair them automatically.
 
+### Workspace, project and attempt separation confirmed
+
+The workflow config lives under ~/omegacam/workflows/wenu-imaging-test/config while its explicit project_dir points to ~/omegacam/testing/wenu-imaging-test. Raw assets live through ~/fits on /gluster. Therefore the TOML composition root must not assume that cwd, config location, reduction outputs and raw storage share a root. Relative configuration references should have a defined containing-file base; asset locations need an explicit project/storage resolver.
+
+The newer project has stage-specific notebook run directories and pre-normalization backups. A canonical WCS path being absent cannot erase their history or establish an unrun stage. Model task attempts and product locations independently. The larger legacy tree is useful as an unexecuted association/import fixture, not an instruction to reduce all remaining members.
+
 ## Checks performed and limits
 
-Inspected current C/header sources, notebook 00/01/03 cells, Python association/instrument code and OCAM/WFI templates. Built a reproducible key-family inventory and checked the illustrative TOML syntax. These are source/document checks, not native execution, dependency qualification, ASDF round-trip validation or scientific acceptance. No compiler/memory matrix, reduction, parser installation or target mutation was run. Partial Chapman4 returned-host inventory has been parsed and reconciled; complete coverage and effective local settings remain pending.
+Inspected current C/header sources, notebook 00/01/03 cells, Python association/instrument code and OCAM/WFI templates. Built a reproducible key-family inventory and checked the illustrative TOML syntax. These are source/document checks, not native execution, dependency qualification, ASDF round-trip validation or scientific acceptance. No compiler/memory matrix, reduction, parser installation or target mutation was run. Chapman4's partial recursive inventory and later compact census were parsed and reconciled. Historical science rows total 205 partitions / 963 memberships, with ten matching local preprocessed files and 953 expected names absent at those locations. The newer project has two groups / ten matching preprocessed files. Exact effective local settings remain pending; a further broad dataset scan is unnecessary for the present design.
 
 ## Primary references checked 29 October 2026
 
