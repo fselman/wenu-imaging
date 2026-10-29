@@ -1,0 +1,8 @@
+IMAGE:asset:z|DET-B|/workspace/scratch/dd7a33151b6c/dependency-review/m1-inputs/m1-inputs-6o0wf0ti/fixture with spaces/members/z.fits|2|1
+IMAGE:asset:z|DET-A|/workspace/scratch/dd7a33151b6c/dependency-review/m1-inputs/m1-inputs-6o0wf0ti/fixture with spaces/members/z.fits|1|1
+IMAGE:asset:a|DET-A|/workspace/scratch/dd7a33151b6c/dependency-review/m1-inputs/m1-inputs-6o0wf0ti/fixture with spaces/members/a.fits|0|0
+IMAGE:asset:z|DET-B|/workspace/scratch/dd7a33151b6c/dependency-review/m1-inputs/m1-inputs-6o0wf0ti/fixture with spaces/members/z.fits|2|1
+IMAGE:asset:z|DET-A|/workspace/scratch/dd7a33151b6c/dependency-review/m1-inputs/m1-inputs-6o0wf0ti/fixture with spaces/members/z.fits|1|1
+BPM:DET-B:1
+BPM:DET-A:2
+OWNERSHIP:40:transient+persistent:20cycles

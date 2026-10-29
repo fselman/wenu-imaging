@@ -125,7 +125,8 @@ endif()
 option(MEFPP_BUILD_CONFIG_PROBES "Build isolated M1 configuration probes" OFF)
 if(MEFPP_BUILD_CONFIG_PROBES)
   add_library(mefpp_config_snapshot STATIC ins/mef/common/mef_config.c
-    ins/mef/common/mef_runtime.c ins/mef/common/mef_cli_request.c)
+    ins/mef/common/mef_runtime.c ins/mef/common/mef_cli_request.c
+    ins/mef/common/mef_input_request.c)
   target_include_directories(mefpp_config_snapshot PUBLIC ins/mef/common
     PRIVATE src/include qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_config_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -138,8 +139,12 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(cli_capture_probe tests/cli_capture_probe.c)
   target_link_libraries(cli_capture_probe PRIVATE mefpp_config_snapshot mefpp_common)
   target_compile_definitions(cli_capture_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  add_executable(input_request_probe tests/input_request_probe.c)
+  target_link_libraries(input_request_probe PRIVATE mefpp_config_snapshot eclipse)
+  target_compile_definitions(input_request_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(cli_capture_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_compile_options(input_request_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   endif()
 endif()
 
@@ -199,6 +204,12 @@ if(BUILD_TESTING)
         --probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_cli_capture PROPERTIES TIMEOUT 300 LABELS "native;configuration;cli;ownership")
+    add_test(NAME native_input_request
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/input_request_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --probe "$<TARGET_FILE:input_request_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_input_request PROPERTIES TIMEOUT 300 LABELS "native;inputs;ownership")
   endif()
   add_test(NAME native_primitives COMMAND native_smoke)
   set_tests_properties(native_primitives PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test-work")
