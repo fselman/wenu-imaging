@@ -1,5 +1,7 @@
 # Proposed Pycavi/mefpp target architecture
 
+Detailed delivery sequence: [implementation milestones M0–M11 and later passes P/G](implementation-plan.md). This is a proposal; publishing it does not start implementation.
+
 Discussion proposal, revision 2, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 Status: proposed contracts and names; no implementation or dependency selection. Owner-directed revision 2 includes versioned dependency/association tracking and future incremental reprocessing as part of the architecture, with automatic cascades deferred beyond the first pass.
 Compare the [original architecture](../original/pycavi-mefpp.md).
