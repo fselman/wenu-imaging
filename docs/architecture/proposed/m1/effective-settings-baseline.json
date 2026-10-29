@@ -1,0 +1,5908 @@
+{
+  "schema_version": 1,
+  "status": "source-and-retained-log-baseline-mapped",
+  "archive_sha256": "3a6519ff91e31e69ace2f34126085d9c936d487222135acc4a86281809615a81",
+  "source_revision": "7341c895e9e1eb7008915e1e2cf961532b7eb8a6",
+  "source_git_blobs": {
+    "mefpp2/ins/mef/common/mefp_lib.c": "edde7862e5ed59ccfd78489d7c12d14d9c37710d",
+    "mefpp2/ins/mef/common/mefp_lib.h": "b1e7f399ac631d48fc009eaa3403e19c4c697d0c",
+    "mefpp2/ins/mef/recipes/mefpp.c": "9487b09943069de3cc57ad11668f8e09d04230ef",
+    "mefpp2/qfits5/src/pafs.c": "1b06e73e3843efa2d19b75f1f21620ad2988c808"
+  },
+  "scope": "finite source/log-derived model; not production PAF decoding or full-precision runtime equivalence",
+  "registry": [
+    {
+      "key_template": "MEF.NCHIPS",
+      "kind_code": 1,
+      "legacy_target": "bb->nchips",
+      "legacy_storage_type": "int",
+      "conversion": "(int)nchips",
+      "source_line": 111,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.PRESCAN.X.MIN.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->prescan_x[0]",
+      "legacy_storage_type": "int[2]",
+      "conversion": "atoi(value)",
+      "source_line": 145,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.PRESCAN.X.MAX.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->prescan_x[1]",
+      "legacy_storage_type": "int[2]",
+      "conversion": "atoi(value)",
+      "source_line": 151,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.OVERSCAN.X.MIN.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->overscan_x[0]",
+      "legacy_storage_type": "int[2]",
+      "conversion": "atoi(value)",
+      "source_line": 157,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.OVERSCAN.X.MAX.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->overscan_x[1]",
+      "legacy_storage_type": "int[2]",
+      "conversion": "atoi(value)",
+      "source_line": 163,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CROP.X.MIN.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->trimreg[0]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atoi(value)",
+      "source_line": 169,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CROP.X.MAX.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->trimreg[1]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atoi(value)",
+      "source_line": 175,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CROP.Y.MIN.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->trimreg[2]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atoi(value)",
+      "source_line": 181,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CROP.Y.MAX.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->trimreg[3]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atoi(value)",
+      "source_line": 187,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CCD.RON.CHIP%d",
+      "kind_code": 2,
+      "legacy_target": "(ccd+i)->ron",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 193,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CCD.GAIN.CHIP%d",
+      "kind_code": 2,
+      "legacy_target": "(ccd+i)->gain",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 199,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CRVAL1.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->crval1",
+      "legacy_storage_type": "float",
+      "conversion": "atoi(value)",
+      "source_line": 205,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CRVAL2.CHIP%d",
+      "kind_code": 1,
+      "legacy_target": "(ccd+i)->crval2",
+      "legacy_storage_type": "float",
+      "conversion": "atoi(value)",
+      "source_line": 211,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CRPIX1.CHIP%d",
+      "kind_code": 2,
+      "legacy_target": "(ccd+i)->crpix1",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 217,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.CRPIX2.CHIP%d",
+      "kind_code": 2,
+      "legacy_target": "(ccd+i)->crpix2",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 223,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.ORIGIN",
+      "kind_code": 0,
+      "legacy_target": "bb->origin",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 233,
+      "proposed_owner_domain": "instrument_metadata"
+    },
+    {
+      "key_template": "MEF.TELESCOPE",
+      "kind_code": 0,
+      "legacy_target": "bb->telescope",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 240,
+      "proposed_owner_domain": "instrument_metadata"
+    },
+    {
+      "key_template": "MEF.INSTRUMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->instrument",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 247,
+      "proposed_owner_domain": "instrument_metadata"
+    },
+    {
+      "key_template": "MEF.CORRECT.REFPIXELS",
+      "kind_code": 1,
+      "legacy_target": "bb->correct_ref_pix",
+      "legacy_storage_type": "int",
+      "conversion": "atoi(value)",
+      "source_line": 254,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.RECIPE.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->recipe_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 260,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DPR.CATG.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->dpr_catg_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 267,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DPR.CATG.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->dpr_catg_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 274,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DPR.TYPE.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->dpr_type_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 281,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DPR.TYPE.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->dpr_type_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 288,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 297,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.VAL.BIAS",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_val_bias",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 304,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.VAL.BPM",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_val_bpm",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 311,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.VAL.DOMEFF",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_val_domeff",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 318,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.VAL.SKYFF",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_val_skyff",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 325,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.VAL.MFF",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_val_mff",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 332,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.VAL.SCIENCE",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_val_science",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 339,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PRODCATG.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_prodcatg_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 346,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PROGID.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_progid_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 353,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PROGID.HDRKEY",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_progid_hdrkey",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 360,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PROGID.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_progid_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 367,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.OBID.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_obid_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 374,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.OBID.HDRKEY",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_obid_hdrkey",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 381,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.OBID.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_obid_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 388,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.NCOMBINE.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_ncombine_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 395,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.NCOMBINE.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_ncombine_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 402,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.OBSTECH.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_obstech_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 409,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.OBSTECH.HDRKEY",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_obstech_hdrkey",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 416,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.OBSTECH.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_obstech_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 423,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.MJDEND.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_mjdend_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 430,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.MJDEND.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_mjdend_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 437,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PROCSOFT.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_procsoft_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 444,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.PROCSOFT.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_procsoft_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 451,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.TIMESYS.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_timesys_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 458,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.TIMESYS.VAL",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_timesys_val",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 465,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.TIMESYS.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_timesys_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 472,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.FILTER.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_filter_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 479,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.FILTER.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_filter_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 486,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.FLUXCAL.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_fluxcal_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 493,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.FLUXCAL.VAL",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_fluxcal_val",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 500,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.FLUXCAL.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_fluxcal_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 507,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.RADESYS.KEY.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_radesys_keyname",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 514,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.RADESYS.HDRKEY",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_radesys_hdrkey",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 521,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "PHASE3.RADESYS.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->phase3_radesys_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 528,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.USE.PRESCAN",
+      "kind_code": 1,
+      "legacy_target": "bb->use_prescan",
+      "legacy_storage_type": "int",
+      "conversion": "atoi(value)",
+      "source_line": 535,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.USE.OVERSCAN",
+      "kind_code": 1,
+      "legacy_target": "bb->use_overscan",
+      "legacy_storage_type": "int",
+      "conversion": "atoi(value)",
+      "source_line": 541,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.BIAS.FRAME.I.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->bias_frame_i_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 547,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BIAS.FRAME.I.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->bias_frame_i_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 554,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.BIAS.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->master_bias_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 562,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.BIAS.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->master_bias_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 569,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BIAS.NAME.O",
+      "kind_code": 0,
+      "legacy_target": "bb->name_bias_o",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 576,
+      "proposed_owner_domain": "product_naming_default"
+    },
+    {
+      "key_template": "MEF.BPM.NAME.O",
+      "kind_code": 0,
+      "legacy_target": "bb->name_bpm_o",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 583,
+      "proposed_owner_domain": "product_naming_default"
+    },
+    {
+      "key_template": "MEF.BPM.NAME",
+      "kind_code": 0,
+      "legacy_target": "bb->name_bpm",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 607,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.BPM.FRAME.I.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_frame_i_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 614,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BPM.FRAME.I.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_frame_i_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 621,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BPM.PROPFLAG.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_propflag_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 628,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BPM.PROPFLAG.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_propflag_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 635,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BPM.LGAINTHR.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_lgainthr_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 642,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BPM.LGAINTHR.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_lgainthr_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 649,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BPM.HGAINTHR.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_hgainthr_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 656,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BPM.HGAINTHR.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->bpm_hgainthr_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 663,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.BPM.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->master_bpm_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 670,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.BPM.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->master_bpm_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 677,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.DOME.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->master_dome_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 686,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.DOME.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->master_dome_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 693,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.NAME.O",
+      "kind_code": 0,
+      "legacy_target": "bb->name_dome_o",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 700,
+      "proposed_owner_domain": "product_naming_default"
+    },
+    {
+      "key_template": "MEF.MASTER.SKY.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->master_sky_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 708,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.SKY.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->master_sky_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 715,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.NAME.O",
+      "kind_code": 0,
+      "legacy_target": "bb->name_sky_o",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 722,
+      "proposed_owner_domain": "product_naming_default"
+    },
+    {
+      "key_template": "MEF.MFF.NAME.O",
+      "kind_code": 0,
+      "legacy_target": "bb->name_mf_o",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 729,
+      "proposed_owner_domain": "product_naming_default"
+    },
+    {
+      "key_template": "MEF.MASTER.FLAT.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->master_flat_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 738,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MASTER.FLAT.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->master_flat_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 745,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.REFPIX.X",
+      "kind_code": 2,
+      "legacy_target": "bb->refpix_x",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 753,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.REFPIX.Y",
+      "kind_code": 2,
+      "legacy_target": "bb->refpix_y",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 759,
+      "proposed_owner_domain": "instrument_detector_config"
+    },
+    {
+      "key_template": "MEF.FILTER.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->filter_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 765,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BINX.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->binx_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 774,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BINY.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->biny_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 783,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.BIAS.KAPPA1",
+      "kind_code": 2,
+      "legacy_target": "bb->bias_kappa1",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 792,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.BIAS.FRAMENUM.MIN",
+      "kind_code": 1,
+      "legacy_target": "bb->bias_minframe",
+      "legacy_storage_type": "int",
+      "conversion": "atoi(value)",
+      "source_line": 798,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.BPM.PROPFLAG",
+      "kind_code": 1,
+      "legacy_target": "bb->bpm_proportional_flag",
+      "legacy_storage_type": "int",
+      "conversion": "atoi(value)",
+      "source_line": 804,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.BPM.LGAINTHR",
+      "kind_code": 2,
+      "legacy_target": "bb->bpm_gainthr_lo",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 810,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.BPM.HGAINTHR",
+      "kind_code": 2,
+      "legacy_target": "bb->bpm_gainthr_hi",
+      "legacy_storage_type": "float",
+      "conversion": "atof(value)",
+      "source_line": 816,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAME.I.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->domeff_frame_i_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 822,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAME.I.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->domeff_frame_i_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 829,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMETHR.LO.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->dome_framethr_lo_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 836,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMETHR.LO.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->dome_framethr_lo_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 843,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMETHR.LO",
+      "kind_code": 2,
+      "legacy_target": "bb->dome_framethr_lo",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 850,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMETHR.HI.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->dome_framethr_hi_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 857,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMETHR.HI.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->dome_framethr_hi_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 864,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMETHR.HI",
+      "kind_code": 2,
+      "legacy_target": "bb->dome_framethr_hi",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 871,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMENUM.MIN.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->dome_minframe_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 877,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMENUM.MIN.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->dome_minframe_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 884,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.DOMEFF.FRAMENUM.MIN",
+      "kind_code": 1,
+      "legacy_target": "bb->dome_minframe",
+      "legacy_storage_type": "int",
+      "conversion": "atof(value)",
+      "source_line": 891,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAME.I.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->skyff_frame_i_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 897,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAME.I.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->skyff_frame_i_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 904,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMETHR.LO.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->sky_framethr_lo_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 911,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMETHR.LO.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->sky_framethr_lo_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 918,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMETHR.LO",
+      "kind_code": 2,
+      "legacy_target": "bb->sky_framethr_lo",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 925,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMETHR.HI.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->sky_framethr_hi_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 931,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMETHR.HI.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->sky_framethr_hi_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 938,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMETHR.HI",
+      "kind_code": 2,
+      "legacy_target": "bb->sky_framethr_hi",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 945,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMENUM.MIN.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->sky_minframe_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 951,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMENUM.MIN.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->sky_minframe_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 958,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SKYFF.FRAMENUM.MIN",
+      "kind_code": 1,
+      "legacy_target": "bb->sky_minframe",
+      "legacy_storage_type": "int",
+      "conversion": "atof(value)",
+      "source_line": 965,
+      "proposed_owner_domain": "calibration_algorithm_config"
+    },
+    {
+      "key_template": "MEF.PRESCAN.X.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->prescan_x_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 971,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.PRESCAN.X.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->prescan_x_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 978,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.OVERSCAN.X.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->overscan_x_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 985,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.OVERSCAN.X.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->overscan_x_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 992,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SCANREJ.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->scanrej_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 999,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SCANREJ.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->scanrej_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1006,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.SCANREJ.MIN",
+      "kind_code": 1,
+      "legacy_target": "bb->scanrej[0]",
+      "legacy_storage_type": "int[2]",
+      "conversion": "atof(value)",
+      "source_line": 1013,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.SCANREJ.MAX",
+      "kind_code": 1,
+      "legacy_target": "bb->scanrej[1]",
+      "legacy_storage_type": "int[2]",
+      "conversion": "atof(value)",
+      "source_line": 1019,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.TRIMREG.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->trimreg_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1025,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.TRIMREG.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->trimreg_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1032,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.CCD.RON.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->ccd_ron_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1039,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.CCD.RON.I.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->ccd_ron_i_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1046,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.CCD.RON.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->ccd_ron_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1053,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.CCD.GAIN.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->ccd_gain_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1060,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.CCD.GAIN.I.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->ccd_gain_i_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1067,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.CCD.GAIN.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->ccd_gain_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1074,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.PIXREJ.SIGMA.LO.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->pixrej_lo_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1081,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.PIXREJ.SIGMA.LO.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->pixrej_lo_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1088,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.PIXREJ.SIGMA.LO",
+      "kind_code": 3,
+      "legacy_target": "bb->pixrej_lo",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 1095,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.PIXREJ.SIGMA.HI.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->pixrej_hi_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1101,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.PIXREJ.SIGMA.HI.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->pixrej_hi_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1108,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.PIXREJ.SIGMA.HI",
+      "kind_code": 3,
+      "legacy_target": "bb->pixrej_hi",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 1115,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.MEDIAN.REG.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->median_reg_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1121,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MEDIAN.REG.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->median_reg_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1128,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.MEDIAN.REG.X1",
+      "kind_code": 1,
+      "legacy_target": "bb->median_reg[0]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atof(value)",
+      "source_line": 1135,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.MEDIAN.REG.X2",
+      "kind_code": 1,
+      "legacy_target": "bb->median_reg[1]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atof(value)",
+      "source_line": 1141,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.MEDIAN.REG.Y1",
+      "kind_code": 1,
+      "legacy_target": "bb->median_reg[2]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atof(value)",
+      "source_line": 1147,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.MEDIAN.REG.Y2",
+      "kind_code": 1,
+      "legacy_target": "bb->median_reg[3]",
+      "legacy_storage_type": "int[4]",
+      "conversion": "atof(value)",
+      "source_line": 1153,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.KERN.HSIZE.KEY",
+      "kind_code": 0,
+      "legacy_target": "bb->kern_hsize_key",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1163,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.KERN.HSIZE.COMMENT",
+      "kind_code": 0,
+      "legacy_target": "bb->kern_hsize_comment",
+      "legacy_storage_type": "char *",
+      "conversion": "string copy after qfits query",
+      "source_line": 1170,
+      "proposed_owner_domain": "product_metadata_mapping"
+    },
+    {
+      "key_template": "MEF.KERN.HSIZE",
+      "kind_code": 1,
+      "legacy_target": "bb->kern_hsize",
+      "legacy_storage_type": "int",
+      "conversion": "atof(value)",
+      "source_line": 1177,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.SATLEVEL",
+      "kind_code": 3,
+      "legacy_target": "bb->sat_level",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 1186,
+      "proposed_owner_domain": "processing_config"
+    },
+    {
+      "key_template": "MEF.SATMAX",
+      "kind_code": 3,
+      "legacy_target": "bb->sat_max",
+      "legacy_storage_type": "double",
+      "conversion": "atof(value)",
+      "source_line": 1192,
+      "proposed_owner_domain": "processing_config"
+    }
+  ],
+  "profiles": {
+    "omegacam": {
+      "project_paf_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+      "nchips": 32,
+      "constructor_keys": 585,
+      "duplicates": {},
+      "not_read_by_constructor": [
+        "MEF.BIAS.FRAMETHR.HI",
+        "MEF.BIAS.FRAMETHR.LO",
+        "PHASE3.FLUXCAL.HDRKEY",
+        "PHASE3.MJDEND.HDRKEY",
+        "PHASE3.PROCSOFT.HDRKEY",
+        "PHASE3.TIMESYS.HDRKEY"
+      ],
+      "values": {
+        "MEF.NCHIPS": {
+          "source_line": 74,
+          "literal": "32",
+          "modeled_stored_value": 32
+        },
+        "MEF.PRESCAN.X.MIN.CHIP1": {
+          "source_line": 86,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP2": {
+          "source_line": 88,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP3": {
+          "source_line": 90,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP4": {
+          "source_line": 92,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP5": {
+          "source_line": 94,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP6": {
+          "source_line": 96,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP7": {
+          "source_line": 98,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP8": {
+          "source_line": 100,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP9": {
+          "source_line": 102,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP10": {
+          "source_line": 104,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP11": {
+          "source_line": 106,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP12": {
+          "source_line": 108,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP13": {
+          "source_line": 110,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP14": {
+          "source_line": 112,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP15": {
+          "source_line": 114,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP16": {
+          "source_line": 116,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP17": {
+          "source_line": 118,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP18": {
+          "source_line": 120,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP19": {
+          "source_line": 122,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP20": {
+          "source_line": 124,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP21": {
+          "source_line": 126,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP22": {
+          "source_line": 128,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP23": {
+          "source_line": 130,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP24": {
+          "source_line": 132,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP25": {
+          "source_line": 134,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP26": {
+          "source_line": 136,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP27": {
+          "source_line": 138,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP28": {
+          "source_line": 140,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP29": {
+          "source_line": 142,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP30": {
+          "source_line": 144,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP31": {
+          "source_line": 146,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP32": {
+          "source_line": 148,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MAX.CHIP1": {
+          "source_line": 87,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP2": {
+          "source_line": 89,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP3": {
+          "source_line": 91,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP4": {
+          "source_line": 93,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP5": {
+          "source_line": 95,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP6": {
+          "source_line": 97,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP7": {
+          "source_line": 99,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP8": {
+          "source_line": 101,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP9": {
+          "source_line": 103,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP10": {
+          "source_line": 105,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP11": {
+          "source_line": 107,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP12": {
+          "source_line": 109,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP13": {
+          "source_line": 111,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP14": {
+          "source_line": 113,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP15": {
+          "source_line": 115,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP16": {
+          "source_line": 117,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP17": {
+          "source_line": 119,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP18": {
+          "source_line": 121,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP19": {
+          "source_line": 123,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP20": {
+          "source_line": 125,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP21": {
+          "source_line": 127,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP22": {
+          "source_line": 129,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP23": {
+          "source_line": 131,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP24": {
+          "source_line": 133,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP25": {
+          "source_line": 135,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP26": {
+          "source_line": 137,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP27": {
+          "source_line": 139,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP28": {
+          "source_line": 141,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP29": {
+          "source_line": 143,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP30": {
+          "source_line": 145,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP31": {
+          "source_line": 147,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP32": {
+          "source_line": 149,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP1": {
+          "source_line": 154,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP2": {
+          "source_line": 156,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP3": {
+          "source_line": 158,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP4": {
+          "source_line": 160,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP5": {
+          "source_line": 162,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP6": {
+          "source_line": 164,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP7": {
+          "source_line": 166,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP8": {
+          "source_line": 168,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP9": {
+          "source_line": 170,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP10": {
+          "source_line": 172,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP11": {
+          "source_line": 174,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP12": {
+          "source_line": 176,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP13": {
+          "source_line": 178,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP14": {
+          "source_line": 180,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP15": {
+          "source_line": 182,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP16": {
+          "source_line": 184,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP17": {
+          "source_line": 186,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP18": {
+          "source_line": 188,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP19": {
+          "source_line": 190,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP20": {
+          "source_line": 192,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP21": {
+          "source_line": 194,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP22": {
+          "source_line": 196,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP23": {
+          "source_line": 198,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP24": {
+          "source_line": 200,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP25": {
+          "source_line": 202,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP26": {
+          "source_line": 204,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP27": {
+          "source_line": 206,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP28": {
+          "source_line": 208,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP29": {
+          "source_line": 210,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP30": {
+          "source_line": 212,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP31": {
+          "source_line": 214,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP32": {
+          "source_line": 216,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP1": {
+          "source_line": 155,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP2": {
+          "source_line": 157,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP3": {
+          "source_line": 159,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP4": {
+          "source_line": 161,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP5": {
+          "source_line": 163,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP6": {
+          "source_line": 165,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP7": {
+          "source_line": 167,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP8": {
+          "source_line": 169,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP9": {
+          "source_line": 171,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP10": {
+          "source_line": 173,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP11": {
+          "source_line": 175,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP12": {
+          "source_line": 177,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP13": {
+          "source_line": 179,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP14": {
+          "source_line": 181,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP15": {
+          "source_line": 183,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP16": {
+          "source_line": 185,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP17": {
+          "source_line": 187,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP18": {
+          "source_line": 189,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP19": {
+          "source_line": 191,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP20": {
+          "source_line": 193,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP21": {
+          "source_line": 195,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP22": {
+          "source_line": 197,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP23": {
+          "source_line": 199,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP24": {
+          "source_line": 201,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP25": {
+          "source_line": 203,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP26": {
+          "source_line": 205,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP27": {
+          "source_line": 207,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP28": {
+          "source_line": 209,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP29": {
+          "source_line": 211,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP30": {
+          "source_line": 213,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP31": {
+          "source_line": 215,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP32": {
+          "source_line": 217,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.CROP.X.MIN.CHIP1": {
+          "source_line": 366,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP2": {
+          "source_line": 370,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP3": {
+          "source_line": 374,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP4": {
+          "source_line": 378,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP5": {
+          "source_line": 382,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP6": {
+          "source_line": 386,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP7": {
+          "source_line": 390,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP8": {
+          "source_line": 394,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP9": {
+          "source_line": 398,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP10": {
+          "source_line": 402,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP11": {
+          "source_line": 406,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP12": {
+          "source_line": 410,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP13": {
+          "source_line": 414,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP14": {
+          "source_line": 418,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP15": {
+          "source_line": 422,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP16": {
+          "source_line": 426,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP17": {
+          "source_line": 430,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP18": {
+          "source_line": 434,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP19": {
+          "source_line": 438,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP20": {
+          "source_line": 442,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP21": {
+          "source_line": 446,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP22": {
+          "source_line": 450,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP23": {
+          "source_line": 454,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP24": {
+          "source_line": 458,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP25": {
+          "source_line": 462,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP26": {
+          "source_line": 466,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP27": {
+          "source_line": 470,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP28": {
+          "source_line": 474,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP29": {
+          "source_line": 478,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP30": {
+          "source_line": 482,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP31": {
+          "source_line": 486,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP32": {
+          "source_line": 490,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MAX.CHIP1": {
+          "source_line": 367,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP2": {
+          "source_line": 371,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP3": {
+          "source_line": 375,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP4": {
+          "source_line": 379,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP5": {
+          "source_line": 383,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP6": {
+          "source_line": 387,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP7": {
+          "source_line": 391,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP8": {
+          "source_line": 395,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP9": {
+          "source_line": 399,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP10": {
+          "source_line": 403,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP11": {
+          "source_line": 407,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP12": {
+          "source_line": 411,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP13": {
+          "source_line": 415,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP14": {
+          "source_line": 419,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP15": {
+          "source_line": 423,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP16": {
+          "source_line": 427,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP17": {
+          "source_line": 431,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP18": {
+          "source_line": 435,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP19": {
+          "source_line": 439,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP20": {
+          "source_line": 443,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP21": {
+          "source_line": 447,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP22": {
+          "source_line": 451,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP23": {
+          "source_line": 455,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP24": {
+          "source_line": 459,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP25": {
+          "source_line": 463,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP26": {
+          "source_line": 467,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP27": {
+          "source_line": 471,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP28": {
+          "source_line": 475,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP29": {
+          "source_line": 479,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP30": {
+          "source_line": 483,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP31": {
+          "source_line": 487,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP32": {
+          "source_line": 491,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.Y.MIN.CHIP1": {
+          "source_line": 368,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP2": {
+          "source_line": 372,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP3": {
+          "source_line": 376,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP4": {
+          "source_line": 380,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP5": {
+          "source_line": 384,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP6": {
+          "source_line": 388,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP7": {
+          "source_line": 392,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP8": {
+          "source_line": 396,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP9": {
+          "source_line": 400,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP10": {
+          "source_line": 404,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP11": {
+          "source_line": 408,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP12": {
+          "source_line": 412,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP13": {
+          "source_line": 416,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP14": {
+          "source_line": 420,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP15": {
+          "source_line": 424,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP16": {
+          "source_line": 428,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP17": {
+          "source_line": 432,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP18": {
+          "source_line": 436,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP19": {
+          "source_line": 440,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP20": {
+          "source_line": 444,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP21": {
+          "source_line": 448,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP22": {
+          "source_line": 452,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP23": {
+          "source_line": 456,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP24": {
+          "source_line": 460,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.CROP.Y.MIN.CHIP25": {
+          "source_line": 464,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP26": {
+          "source_line": 468,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP27": {
+          "source_line": 472,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP28": {
+          "source_line": 476,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP29": {
+          "source_line": 480,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP30": {
+          "source_line": 484,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP31": {
+          "source_line": 488,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MIN.CHIP32": {
+          "source_line": 492,
+          "literal": "105",
+          "modeled_stored_value": 105
+        },
+        "MEF.CROP.Y.MAX.CHIP1": {
+          "source_line": 369,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP2": {
+          "source_line": 373,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP3": {
+          "source_line": 377,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP4": {
+          "source_line": 381,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP5": {
+          "source_line": 385,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP6": {
+          "source_line": 389,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP7": {
+          "source_line": 393,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP8": {
+          "source_line": 397,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP9": {
+          "source_line": 401,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP10": {
+          "source_line": 405,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP11": {
+          "source_line": 409,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP12": {
+          "source_line": 413,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP13": {
+          "source_line": 417,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP14": {
+          "source_line": 421,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP15": {
+          "source_line": 425,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP16": {
+          "source_line": 429,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP17": {
+          "source_line": 433,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP18": {
+          "source_line": 437,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP19": {
+          "source_line": 441,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP20": {
+          "source_line": 445,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP21": {
+          "source_line": 449,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP22": {
+          "source_line": 453,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP23": {
+          "source_line": 457,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP24": {
+          "source_line": 461,
+          "literal": "4095",
+          "modeled_stored_value": 4095
+        },
+        "MEF.CROP.Y.MAX.CHIP25": {
+          "source_line": 465,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP26": {
+          "source_line": 469,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP27": {
+          "source_line": 473,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP28": {
+          "source_line": 477,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP29": {
+          "source_line": 481,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP30": {
+          "source_line": 485,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP31": {
+          "source_line": 489,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CROP.Y.MAX.CHIP32": {
+          "source_line": 493,
+          "literal": "4195",
+          "modeled_stored_value": 4195
+        },
+        "MEF.CCD.RON.CHIP1": {
+          "source_line": 499,
+          "literal": "4.1",
+          "modeled_stored_value": 4.099999904632568
+        },
+        "MEF.CCD.RON.CHIP2": {
+          "source_line": 500,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP3": {
+          "source_line": 501,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP4": {
+          "source_line": 502,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP5": {
+          "source_line": 503,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP6": {
+          "source_line": 504,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP7": {
+          "source_line": 505,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP8": {
+          "source_line": 506,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP9": {
+          "source_line": 507,
+          "literal": "4.1",
+          "modeled_stored_value": 4.099999904632568
+        },
+        "MEF.CCD.RON.CHIP10": {
+          "source_line": 508,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP11": {
+          "source_line": 509,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP12": {
+          "source_line": 510,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP13": {
+          "source_line": 511,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP14": {
+          "source_line": 512,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP15": {
+          "source_line": 513,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP16": {
+          "source_line": 514,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP17": {
+          "source_line": 515,
+          "literal": "4.1",
+          "modeled_stored_value": 4.099999904632568
+        },
+        "MEF.CCD.RON.CHIP18": {
+          "source_line": 516,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP19": {
+          "source_line": 517,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP20": {
+          "source_line": 518,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP21": {
+          "source_line": 519,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP22": {
+          "source_line": 520,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP23": {
+          "source_line": 521,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP24": {
+          "source_line": 522,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP25": {
+          "source_line": 523,
+          "literal": "4.1",
+          "modeled_stored_value": 4.099999904632568
+        },
+        "MEF.CCD.RON.CHIP26": {
+          "source_line": 524,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP27": {
+          "source_line": 525,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP28": {
+          "source_line": 526,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP29": {
+          "source_line": 527,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP30": {
+          "source_line": 528,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP31": {
+          "source_line": 529,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.RON.CHIP32": {
+          "source_line": 530,
+          "literal": "4.0",
+          "modeled_stored_value": 4.0
+        },
+        "MEF.CCD.GAIN.CHIP1": {
+          "source_line": 535,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP2": {
+          "source_line": 536,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP3": {
+          "source_line": 537,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP4": {
+          "source_line": 538,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP5": {
+          "source_line": 539,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP6": {
+          "source_line": 540,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP7": {
+          "source_line": 541,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP8": {
+          "source_line": 542,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP9": {
+          "source_line": 543,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP10": {
+          "source_line": 544,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP11": {
+          "source_line": 545,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP12": {
+          "source_line": 546,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP13": {
+          "source_line": 547,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP14": {
+          "source_line": 548,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP15": {
+          "source_line": 549,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP16": {
+          "source_line": 550,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP17": {
+          "source_line": 551,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP18": {
+          "source_line": 552,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP19": {
+          "source_line": 553,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP20": {
+          "source_line": 554,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP21": {
+          "source_line": 555,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP22": {
+          "source_line": 556,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP23": {
+          "source_line": 557,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP24": {
+          "source_line": 558,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP25": {
+          "source_line": 559,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP26": {
+          "source_line": 560,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP27": {
+          "source_line": 561,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP28": {
+          "source_line": 562,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP29": {
+          "source_line": 563,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP30": {
+          "source_line": 564,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP31": {
+          "source_line": 565,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP32": {
+          "source_line": 566,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CRVAL1.CHIP1": {
+          "source_line": 226,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP2": {
+          "source_line": 230,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP3": {
+          "source_line": 234,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP4": {
+          "source_line": 238,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP5": {
+          "source_line": 242,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP6": {
+          "source_line": 246,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP7": {
+          "source_line": 250,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP8": {
+          "source_line": 254,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP9": {
+          "source_line": 258,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP10": {
+          "source_line": 262,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP11": {
+          "source_line": 266,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP12": {
+          "source_line": 270,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP13": {
+          "source_line": 274,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP14": {
+          "source_line": 278,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP15": {
+          "source_line": 282,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP16": {
+          "source_line": 286,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP17": {
+          "source_line": 290,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP18": {
+          "source_line": 294,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP19": {
+          "source_line": 298,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP20": {
+          "source_line": 302,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP21": {
+          "source_line": 306,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP22": {
+          "source_line": 310,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP23": {
+          "source_line": 314,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP24": {
+          "source_line": 318,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP25": {
+          "source_line": 322,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP26": {
+          "source_line": 326,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP27": {
+          "source_line": 330,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP28": {
+          "source_line": 334,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP29": {
+          "source_line": 338,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP30": {
+          "source_line": 342,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP31": {
+          "source_line": 346,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL1.CHIP32": {
+          "source_line": 350,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP1": {
+          "source_line": 227,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP2": {
+          "source_line": 231,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP3": {
+          "source_line": 235,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP4": {
+          "source_line": 239,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP5": {
+          "source_line": 243,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP6": {
+          "source_line": 247,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP7": {
+          "source_line": 251,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP8": {
+          "source_line": 255,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP9": {
+          "source_line": 259,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP10": {
+          "source_line": 263,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP11": {
+          "source_line": 267,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP12": {
+          "source_line": 271,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP13": {
+          "source_line": 275,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP14": {
+          "source_line": 279,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP15": {
+          "source_line": 283,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP16": {
+          "source_line": 287,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP17": {
+          "source_line": 291,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP18": {
+          "source_line": 295,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP19": {
+          "source_line": 299,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP20": {
+          "source_line": 303,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP21": {
+          "source_line": 307,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP22": {
+          "source_line": 311,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP23": {
+          "source_line": 315,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP24": {
+          "source_line": 319,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP25": {
+          "source_line": 323,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP26": {
+          "source_line": 327,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP27": {
+          "source_line": 331,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP28": {
+          "source_line": 335,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP29": {
+          "source_line": 339,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP30": {
+          "source_line": 343,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP31": {
+          "source_line": 347,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRVAL2.CHIP32": {
+          "source_line": 351,
+          "literal": "0",
+          "modeled_stored_value": 0.0
+        },
+        "MEF.CRPIX1.CHIP1": {
+          "source_line": 228,
+          "literal": "8590",
+          "modeled_stored_value": 8590.0
+        },
+        "MEF.CRPIX1.CHIP2": {
+          "source_line": 232,
+          "literal": "6442",
+          "modeled_stored_value": 6442.0
+        },
+        "MEF.CRPIX1.CHIP3": {
+          "source_line": 236,
+          "literal": "4294",
+          "modeled_stored_value": 4294.0
+        },
+        "MEF.CRPIX1.CHIP4": {
+          "source_line": 240,
+          "literal": "2146",
+          "modeled_stored_value": 2146.0
+        },
+        "MEF.CRPIX1.CHIP5": {
+          "source_line": 244,
+          "literal": "8590",
+          "modeled_stored_value": 8590.0
+        },
+        "MEF.CRPIX1.CHIP6": {
+          "source_line": 248,
+          "literal": "6442",
+          "modeled_stored_value": 6442.0
+        },
+        "MEF.CRPIX1.CHIP7": {
+          "source_line": 252,
+          "literal": "4294",
+          "modeled_stored_value": 4294.0
+        },
+        "MEF.CRPIX1.CHIP8": {
+          "source_line": 256,
+          "literal": "2146",
+          "modeled_stored_value": 2146.0
+        },
+        "MEF.CRPIX1.CHIP9": {
+          "source_line": 260,
+          "literal": "8590",
+          "modeled_stored_value": 8590.0
+        },
+        "MEF.CRPIX1.CHIP10": {
+          "source_line": 264,
+          "literal": "6442",
+          "modeled_stored_value": 6442.0
+        },
+        "MEF.CRPIX1.CHIP11": {
+          "source_line": 268,
+          "literal": "4294",
+          "modeled_stored_value": 4294.0
+        },
+        "MEF.CRPIX1.CHIP12": {
+          "source_line": 272,
+          "literal": "2146",
+          "modeled_stored_value": 2146.0
+        },
+        "MEF.CRPIX1.CHIP13": {
+          "source_line": 276,
+          "literal": "8590",
+          "modeled_stored_value": 8590.0
+        },
+        "MEF.CRPIX1.CHIP14": {
+          "source_line": 280,
+          "literal": "6442",
+          "modeled_stored_value": 6442.0
+        },
+        "MEF.CRPIX1.CHIP15": {
+          "source_line": 284,
+          "literal": "4294",
+          "modeled_stored_value": 4294.0
+        },
+        "MEF.CRPIX1.CHIP16": {
+          "source_line": 288,
+          "literal": "2146",
+          "modeled_stored_value": 2146.0
+        },
+        "MEF.CRPIX1.CHIP17": {
+          "source_line": 292,
+          "literal": "-2",
+          "modeled_stored_value": -2.0
+        },
+        "MEF.CRPIX1.CHIP18": {
+          "source_line": 296,
+          "literal": "-2150",
+          "modeled_stored_value": -2150.0
+        },
+        "MEF.CRPIX1.CHIP19": {
+          "source_line": 300,
+          "literal": "-4298",
+          "modeled_stored_value": -4298.0
+        },
+        "MEF.CRPIX1.CHIP20": {
+          "source_line": 304,
+          "literal": "-6446",
+          "modeled_stored_value": -6446.0
+        },
+        "MEF.CRPIX1.CHIP21": {
+          "source_line": 308,
+          "literal": "-22",
+          "modeled_stored_value": -22.0
+        },
+        "MEF.CRPIX1.CHIP22": {
+          "source_line": 312,
+          "literal": "-2159",
+          "modeled_stored_value": -2159.0
+        },
+        "MEF.CRPIX1.CHIP23": {
+          "source_line": 316,
+          "literal": "-4298",
+          "modeled_stored_value": -4298.0
+        },
+        "MEF.CRPIX1.CHIP24": {
+          "source_line": 320,
+          "literal": "-6446",
+          "modeled_stored_value": -6446.0
+        },
+        "MEF.CRPIX1.CHIP25": {
+          "source_line": 324,
+          "literal": "-2",
+          "modeled_stored_value": -2.0
+        },
+        "MEF.CRPIX1.CHIP26": {
+          "source_line": 328,
+          "literal": "-2150",
+          "modeled_stored_value": -2150.0
+        },
+        "MEF.CRPIX1.CHIP27": {
+          "source_line": 332,
+          "literal": "-4298",
+          "modeled_stored_value": -4298.0
+        },
+        "MEF.CRPIX1.CHIP28": {
+          "source_line": 336,
+          "literal": "-6446",
+          "modeled_stored_value": -6446.0
+        },
+        "MEF.CRPIX1.CHIP29": {
+          "source_line": 340,
+          "literal": "-2",
+          "modeled_stored_value": -2.0
+        },
+        "MEF.CRPIX1.CHIP30": {
+          "source_line": 344,
+          "literal": "-2150",
+          "modeled_stored_value": -2150.0
+        },
+        "MEF.CRPIX1.CHIP31": {
+          "source_line": 348,
+          "literal": "-4298",
+          "modeled_stored_value": -4298.0
+        },
+        "MEF.CRPIX1.CHIP32": {
+          "source_line": 352,
+          "literal": "-6446",
+          "modeled_stored_value": -6446.0
+        },
+        "MEF.CRPIX2.CHIP1": {
+          "source_line": 229,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP2": {
+          "source_line": 233,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP3": {
+          "source_line": 237,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP4": {
+          "source_line": 241,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP5": {
+          "source_line": 245,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP6": {
+          "source_line": 249,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP7": {
+          "source_line": 253,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP8": {
+          "source_line": 257,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP9": {
+          "source_line": 261,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP10": {
+          "source_line": 265,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP11": {
+          "source_line": 269,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP12": {
+          "source_line": 273,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP13": {
+          "source_line": 277,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.CRPIX2.CHIP14": {
+          "source_line": 281,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.CRPIX2.CHIP15": {
+          "source_line": 285,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.CRPIX2.CHIP16": {
+          "source_line": 289,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.CRPIX2.CHIP17": {
+          "source_line": 293,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP18": {
+          "source_line": 297,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP19": {
+          "source_line": 301,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP20": {
+          "source_line": 305,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.CRPIX2.CHIP21": {
+          "source_line": 309,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP22": {
+          "source_line": 313,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP23": {
+          "source_line": 317,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP24": {
+          "source_line": 321,
+          "literal": "4129",
+          "modeled_stored_value": 4129.0
+        },
+        "MEF.CRPIX2.CHIP25": {
+          "source_line": 325,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP26": {
+          "source_line": 329,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP27": {
+          "source_line": 333,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP28": {
+          "source_line": 337,
+          "literal": "71",
+          "modeled_stored_value": 71.0
+        },
+        "MEF.CRPIX2.CHIP29": {
+          "source_line": 341,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.CRPIX2.CHIP30": {
+          "source_line": 345,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.CRPIX2.CHIP31": {
+          "source_line": 349,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.CRPIX2.CHIP32": {
+          "source_line": 353,
+          "literal": "-4405",
+          "modeled_stored_value": -4405.0
+        },
+        "MEF.ORIGIN": {
+          "source_line": 13,
+          "literal": "ESO-PARANAL",
+          "modeled_stored_value": "ESO-PARANAL"
+        },
+        "MEF.TELESCOPE": {
+          "source_line": 14,
+          "literal": "VST",
+          "modeled_stored_value": "VST"
+        },
+        "MEF.INSTRUMENT": {
+          "source_line": 15,
+          "literal": "OMEGACAM",
+          "modeled_stored_value": "OMEGACAM"
+        },
+        "MEF.CORRECT.REFPIXELS": {
+          "source_line": 222,
+          "literal": "0",
+          "modeled_stored_value": 0
+        },
+        "MEF.RECIPE.KEY": {
+          "source_line": 16,
+          "literal": "HIERARCH ESO MPP",
+          "modeled_stored_value": "HIERARCH ESO MPP"
+        },
+        "MEF.DPR.CATG.KEY": {
+          "source_line": 18,
+          "literal": "HIERARCH ESO DPR CATG",
+          "modeled_stored_value": "HIERARCH ESO DPR CATG"
+        },
+        "MEF.DPR.CATG.COMMENT": {
+          "source_line": 19,
+          "literal": "product frame category",
+          "modeled_stored_value": "product frame category"
+        },
+        "MEF.DPR.TYPE.KEY": {
+          "source_line": 20,
+          "literal": "HIERARCH ESO DPR TYPE",
+          "modeled_stored_value": "HIERARCH ESO DPR TYPE"
+        },
+        "MEF.DPR.TYPE.COMMENT": {
+          "source_line": 21,
+          "literal": "product frame type",
+          "modeled_stored_value": "product frame type"
+        },
+        "PHASE3.PRODCATG.KEY.NAME": {
+          "source_line": 24,
+          "literal": "PRODCATG",
+          "modeled_stored_value": "PRODCATG"
+        },
+        "PHASE3.PRODCATG.VAL.BIAS": {
+          "source_line": 27,
+          "literal": "CALIB.MASTER_BIAS",
+          "modeled_stored_value": "CALIB.MASTER_BIAS"
+        },
+        "PHASE3.PRODCATG.VAL.BPM": {
+          "source_line": 26,
+          "literal": "CALIB.BPM",
+          "modeled_stored_value": "CALIB.BPM"
+        },
+        "PHASE3.PRODCATG.VAL.DOMEFF": {
+          "source_line": 28,
+          "literal": "CALIB.MASTER_DOME_FLAT",
+          "modeled_stored_value": "CALIB.MASTER_DOME_FLAT"
+        },
+        "PHASE3.PRODCATG.VAL.SKYFF": {
+          "source_line": 29,
+          "literal": "CALIB.MASTER_SKY_FLAT",
+          "modeled_stored_value": "CALIB.MASTER_SKY_FLAT"
+        },
+        "PHASE3.PRODCATG.VAL.MFF": {
+          "source_line": 30,
+          "literal": "CALIB.MASTER_FLAT",
+          "modeled_stored_value": "CALIB.MASTER_FLAT"
+        },
+        "PHASE3.PRODCATG.VAL.SCIENCE": {
+          "source_line": 25,
+          "literal": "SCIENCE.MEFIMAGE",
+          "modeled_stored_value": "SCIENCE.MEFIMAGE"
+        },
+        "PHASE3.PRODCATG.COMMENT": {
+          "source_line": 31,
+          "literal": "Phase3 product category",
+          "modeled_stored_value": "Phase3 product category"
+        },
+        "PHASE3.PROGID.KEY.NAME": {
+          "source_line": 33,
+          "literal": "PROG_ID",
+          "modeled_stored_value": "PROG_ID"
+        },
+        "PHASE3.PROGID.HDRKEY": {
+          "source_line": 34,
+          "literal": "HIERARCH ESO OBS PROG ID",
+          "modeled_stored_value": "HIERARCH ESO OBS PROG ID"
+        },
+        "PHASE3.PROGID.COMMENT": {
+          "source_line": 35,
+          "literal": "Phase3 observation programme id",
+          "modeled_stored_value": "Phase3 observation programme id"
+        },
+        "PHASE3.OBID.KEY.NAME": {
+          "source_line": 37,
+          "literal": "OBID1",
+          "modeled_stored_value": "OBID1"
+        },
+        "PHASE3.OBID.HDRKEY": {
+          "source_line": 38,
+          "literal": "HIERARCH ESO OBS ID",
+          "modeled_stored_value": "HIERARCH ESO OBS ID"
+        },
+        "PHASE3.OBID.COMMENT": {
+          "source_line": 39,
+          "literal": "Phase3 observation id",
+          "modeled_stored_value": "Phase3 observation id"
+        },
+        "PHASE3.NCOMBINE.KEY.NAME": {
+          "source_line": 41,
+          "literal": "NCOMBINE",
+          "modeled_stored_value": "NCOMBINE"
+        },
+        "PHASE3.NCOMBINE.COMMENT": {
+          "source_line": 42,
+          "literal": "Phase3 number of observations combined",
+          "modeled_stored_value": "Phase3 number of observations combined"
+        },
+        "PHASE3.OBSTECH.KEY.NAME": {
+          "source_line": 44,
+          "literal": "OBSTECH",
+          "modeled_stored_value": "OBSTECH"
+        },
+        "PHASE3.OBSTECH.HDRKEY": {
+          "source_line": 45,
+          "literal": "HIERARCH ESO DPR TECH",
+          "modeled_stored_value": "HIERARCH ESO DPR TECH"
+        },
+        "PHASE3.OBSTECH.COMMENT": {
+          "source_line": 46,
+          "literal": "Phase3 observation technique",
+          "modeled_stored_value": "Phase3 observation technique"
+        },
+        "PHASE3.MJDEND.KEY.NAME": {
+          "source_line": 48,
+          "literal": "MJD-END",
+          "modeled_stored_value": "MJD-END"
+        },
+        "PHASE3.MJDEND.COMMENT": {
+          "source_line": 50,
+          "literal": "Phase3 MJD at the end of exposure",
+          "modeled_stored_value": "Phase3 MJD at the end of exposure"
+        },
+        "PHASE3.PROCSOFT.KEY.NAME": {
+          "source_line": 52,
+          "literal": "PROCSOFT",
+          "modeled_stored_value": "PROCSOFT"
+        },
+        "PHASE3.PROCSOFT.COMMENT": {
+          "source_line": 54,
+          "literal": "Branch from ECLIPSE by N. Devillar",
+          "modeled_stored_value": "Branch from ECLIPSE by N. Devillar"
+        },
+        "PHASE3.TIMESYS.KEY.NAME": {
+          "source_line": 56,
+          "literal": "TIMESYS",
+          "modeled_stored_value": "TIMESYS"
+        },
+        "PHASE3.TIMESYS.VAL": {
+          "source_line": 58,
+          "literal": "UTC",
+          "modeled_stored_value": "UTC"
+        },
+        "PHASE3.TIMESYS.COMMENT": {
+          "source_line": 59,
+          "literal": "Phase3 standard of time",
+          "modeled_stored_value": "Phase3 standard of time"
+        },
+        "PHASE3.FILTER.KEY.NAME": {
+          "source_line": 61,
+          "literal": "FILTER",
+          "modeled_stored_value": "FILTER"
+        },
+        "PHASE3.FILTER.COMMENT": {
+          "source_line": 62,
+          "literal": "Phase3 simple filter keyword",
+          "modeled_stored_value": "Phase3 simple filter keyword"
+        },
+        "PHASE3.FLUXCAL.KEY.NAME": {
+          "source_line": 64,
+          "literal": "FLUXCAL",
+          "modeled_stored_value": "FLUXCAL"
+        },
+        "PHASE3.FLUXCAL.VAL": {
+          "source_line": 66,
+          "literal": "UNCALIBRATED",
+          "modeled_stored_value": "UNCALIBRATED"
+        },
+        "PHASE3.FLUXCAL.COMMENT": {
+          "source_line": 67,
+          "literal": "Phase3 flux calibration:ABSOLUTE, UNCALIBRATED",
+          "modeled_stored_value": "Phase3 flux calibration:ABSOLUTE, UNCALIBRATED"
+        },
+        "PHASE3.RADESYS.KEY.NAME": {
+          "source_line": 69,
+          "literal": "RADESYS",
+          "modeled_stored_value": "RADESYS"
+        },
+        "PHASE3.RADESYS.HDRKEY": {
+          "source_line": 70,
+          "literal": "\"RADECSYS\u201d",
+          "modeled_stored_value": "\"RADECSYS\u201d"
+        },
+        "PHASE3.RADESYS.COMMENT": {
+          "source_line": 71,
+          "literal": "Phase3 coordinate reference frame",
+          "modeled_stored_value": "Phase3 coordinate reference frame"
+        },
+        "MEF.USE.PRESCAN": {
+          "source_line": 83,
+          "literal": "0",
+          "modeled_stored_value": 0
+        },
+        "MEF.USE.OVERSCAN": {
+          "source_line": 151,
+          "literal": "1",
+          "modeled_stored_value": 1
+        },
+        "MEF.BIAS.FRAME.I.KEY": {
+          "source_line": 569,
+          "literal": "HIERARCH ESO MPP BIAS",
+          "modeled_stored_value": "HIERARCH ESO MPP BIAS"
+        },
+        "MEF.BIAS.FRAME.I.COMMENT": {
+          "source_line": 570,
+          "literal": "Input bias frame",
+          "modeled_stored_value": "Input bias frame"
+        },
+        "MEF.MASTER.BIAS.KEY": {
+          "source_line": 578,
+          "literal": "HIERARCH ESO MPP MBIAS",
+          "modeled_stored_value": "HIERARCH ESO MPP MBIAS"
+        },
+        "MEF.MASTER.BIAS.COMMENT": {
+          "source_line": 579,
+          "literal": "Master bias used",
+          "modeled_stored_value": "Master bias used"
+        },
+        "MEF.BIAS.NAME.O": {
+          "source_line": 571,
+          "literal": "OCAM_MB",
+          "modeled_stored_value": "OCAM_MB"
+        },
+        "MEF.BPM.NAME.O": {
+          "source_line": 583,
+          "literal": "OCAM_BPM",
+          "modeled_stored_value": "OCAM_BPM"
+        },
+        "MEF.BPM.NAME": {
+          "source_line": 582,
+          "literal": "OCAM_BPM",
+          "modeled_stored_value": "OCAM_BPM"
+        },
+        "MEF.BPM.FRAME.I.KEY": {
+          "source_line": 584,
+          "literal": "HIERARCH ESO MPP BPM",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM"
+        },
+        "MEF.BPM.FRAME.I.COMMENT": {
+          "source_line": 585,
+          "literal": "Input bpm frame",
+          "modeled_stored_value": "Input bpm frame"
+        },
+        "MEF.BPM.PROPFLAG.KEY": {
+          "source_line": 586,
+          "literal": "HIERARCH ESO MPP BPM PROPFLAG",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM PROPFLAG"
+        },
+        "MEF.BPM.PROPFLAG.COMMENT": {
+          "source_line": 587,
+          "literal": "proportional flag for BPM creation",
+          "modeled_stored_value": "proportional flag for BPM creation"
+        },
+        "MEF.BPM.LGAINTHR.KEY": {
+          "source_line": 589,
+          "literal": "HIERARCH ESO MPP BPM LGAINTHR",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM LGAINTHR"
+        },
+        "MEF.BPM.LGAINTHR.COMMENT": {
+          "source_line": 590,
+          "literal": "low gain threshold for BPM creation",
+          "modeled_stored_value": "low gain threshold for BPM creation"
+        },
+        "MEF.BPM.HGAINTHR.KEY": {
+          "source_line": 592,
+          "literal": "HIERARCH ESO MPP BPM HGAINTHR",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM HGAINTHR"
+        },
+        "MEF.BPM.HGAINTHR.COMMENT": {
+          "source_line": 593,
+          "literal": "high gain threshold for BPM creation",
+          "modeled_stored_value": "high gain threshold for BPM creation"
+        },
+        "MEF.MASTER.BPM.KEY": {
+          "source_line": 597,
+          "literal": "HIERARCH ESO MPP MBPM",
+          "modeled_stored_value": "HIERARCH ESO MPP MBPM"
+        },
+        "MEF.MASTER.BPM.COMMENT": {
+          "source_line": 598,
+          "literal": "Master bpm used",
+          "modeled_stored_value": "Master bpm used"
+        },
+        "MEF.MASTER.DOME.KEY": {
+          "source_line": 615,
+          "literal": "HIERARCH ESO MPP MDOME",
+          "modeled_stored_value": "HIERARCH ESO MPP MDOME"
+        },
+        "MEF.MASTER.DOME.COMMENT": {
+          "source_line": 616,
+          "literal": "Master dome used",
+          "modeled_stored_value": "Master dome used"
+        },
+        "MEF.DOMEFF.NAME.O": {
+          "source_line": 603,
+          "literal": "OCAM_DOMEFF",
+          "modeled_stored_value": "OCAM_DOMEFF"
+        },
+        "MEF.MASTER.SKY.KEY": {
+          "source_line": 633,
+          "literal": "HIERARCH ESO MPP MSKY",
+          "modeled_stored_value": "HIERARCH ESO MPP MSKY"
+        },
+        "MEF.MASTER.SKY.COMMENT": {
+          "source_line": 634,
+          "literal": "Master sky used",
+          "modeled_stored_value": "Master sky used"
+        },
+        "MEF.SKYFF.NAME.O": {
+          "source_line": 621,
+          "literal": "OCAM_SKYFF",
+          "modeled_stored_value": "OCAM_SKYFF"
+        },
+        "MEF.MFF.NAME.O": {
+          "source_line": 652,
+          "literal": "OCAM_MFF",
+          "modeled_stored_value": "OCAM_MFF"
+        },
+        "MEF.MASTER.FLAT.KEY": {
+          "source_line": 657,
+          "literal": "HIERARCH ESO MPP MFF",
+          "modeled_stored_value": "HIERARCH ESO MPP MFF"
+        },
+        "MEF.MASTER.FLAT.COMMENT": {
+          "source_line": 658,
+          "literal": "Master flat field",
+          "modeled_stored_value": "Master flat field"
+        },
+        "MEF.REFPIX.X": {
+          "source_line": 223,
+          "literal": "8590",
+          "modeled_stored_value": 8590.0
+        },
+        "MEF.REFPIX.Y": {
+          "source_line": 224,
+          "literal": "8605",
+          "modeled_stored_value": 8605.0
+        },
+        "MEF.FILTER.KEY": {
+          "source_line": 78,
+          "literal": "HIERARCH ESO INS FILT1 NAME",
+          "modeled_stored_value": "HIERARCH ESO INS FILT1 NAME"
+        },
+        "MEF.BINX.KEY": {
+          "source_line": 79,
+          "literal": "HIERARCH ESO DET WIN1 BINX",
+          "modeled_stored_value": "HIERARCH ESO DET WIN1 BINX"
+        },
+        "MEF.BINY.KEY": {
+          "source_line": 80,
+          "literal": "HIERARCH ESO DET WIN1 BINY",
+          "modeled_stored_value": "HIERARCH ESO DET WIN1 BINY"
+        },
+        "MEF.BIAS.KAPPA1": {
+          "source_line": 574,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.BIAS.FRAMENUM.MIN": {
+          "source_line": 575,
+          "literal": "3",
+          "modeled_stored_value": 3
+        },
+        "MEF.BPM.PROPFLAG": {
+          "source_line": 588,
+          "literal": "0",
+          "modeled_stored_value": 0
+        },
+        "MEF.BPM.LGAINTHR": {
+          "source_line": 591,
+          "literal": "0.5",
+          "modeled_stored_value": 0.5
+        },
+        "MEF.BPM.HGAINTHR": {
+          "source_line": 594,
+          "literal": "1.5",
+          "modeled_stored_value": 1.5
+        },
+        "MEF.DOMEFF.FRAME.I.KEY": {
+          "source_line": 601,
+          "literal": "HIERARCH ESO MPP FLAT DOME",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT DOME"
+        },
+        "MEF.DOMEFF.FRAME.I.COMMENT": {
+          "source_line": 602,
+          "literal": "Input dome frame",
+          "modeled_stored_value": "Input dome frame"
+        },
+        "MEF.DOMEFF.FRAMETHR.LO.KEY": {
+          "source_line": 604,
+          "literal": "HIERARCH ESO MPP FLAT DOME LFRATHD",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT DOME LFRATHD"
+        },
+        "MEF.DOMEFF.FRAMETHR.LO.COMMENT": {
+          "source_line": 605,
+          "literal": "low frame threshold for dome",
+          "modeled_stored_value": "low frame threshold for dome"
+        },
+        "MEF.DOMEFF.FRAMETHR.LO": {
+          "source_line": 606,
+          "literal": "10000",
+          "modeled_stored_value": 10000.0
+        },
+        "MEF.DOMEFF.FRAMETHR.HI.KEY": {
+          "source_line": 607,
+          "literal": "HIERARCH ESO MPP FLAT DOME HFRATHD",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT DOME HFRATHD"
+        },
+        "MEF.DOMEFF.FRAMETHR.HI.COMMENT": {
+          "source_line": 608,
+          "literal": "high frame threshold for dome",
+          "modeled_stored_value": "high frame threshold for dome"
+        },
+        "MEF.DOMEFF.FRAMETHR.HI": {
+          "source_line": 609,
+          "literal": "55000",
+          "modeled_stored_value": 55000.0
+        },
+        "MEF.DOMEFF.FRAMENUM.MIN.KEY": {
+          "source_line": 610,
+          "literal": "HIERARCH ESO MPP FLAT DOME MINFRAD",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT DOME MINFRAD"
+        },
+        "MEF.DOMEFF.FRAMENUM.MIN.COMMENT": {
+          "source_line": 611,
+          "literal": "minimum number of frames for dome flat",
+          "modeled_stored_value": "minimum number of frames for dome flat"
+        },
+        "MEF.DOMEFF.FRAMENUM.MIN": {
+          "source_line": 612,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.SKYFF.FRAME.I.KEY": {
+          "source_line": 619,
+          "literal": "HIERARCH ESO MPP FLAT SKY",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY"
+        },
+        "MEF.SKYFF.FRAME.I.COMMENT": {
+          "source_line": 620,
+          "literal": "Input sky frame",
+          "modeled_stored_value": "Input sky frame"
+        },
+        "MEF.SKYFF.FRAMETHR.LO.KEY": {
+          "source_line": 622,
+          "literal": "HIERARCH ESO MPP FLAT SKY LFRATHS",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY LFRATHS"
+        },
+        "MEF.SKYFF.FRAMETHR.LO.COMMENT": {
+          "source_line": 623,
+          "literal": "low frame threshold for sky",
+          "modeled_stored_value": "low frame threshold for sky"
+        },
+        "MEF.SKYFF.FRAMETHR.LO": {
+          "source_line": 624,
+          "literal": "7000",
+          "modeled_stored_value": 7000.0
+        },
+        "MEF.SKYFF.FRAMETHR.HI.KEY": {
+          "source_line": 625,
+          "literal": "HIERARCH ESO MPP FLAT SKY HFRATHS",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY HFRATHS"
+        },
+        "MEF.SKYFF.FRAMETHR.HI.COMMENT": {
+          "source_line": 626,
+          "literal": "high frame threshold for sky",
+          "modeled_stored_value": "high frame threshold for sky"
+        },
+        "MEF.SKYFF.FRAMETHR.HI": {
+          "source_line": 627,
+          "literal": "55000",
+          "modeled_stored_value": 55000.0
+        },
+        "MEF.SKYFF.FRAMENUM.MIN.KEY": {
+          "source_line": 628,
+          "literal": "HIERARCH ESO MPP FLAT SKY MINFRAS",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY MINFRAS"
+        },
+        "MEF.SKYFF.FRAMENUM.MIN.COMMENT": {
+          "source_line": 629,
+          "literal": "minimum number of frames for sky flat",
+          "modeled_stored_value": "minimum number of frames for sky flat"
+        },
+        "MEF.SKYFF.FRAMENUM.MIN": {
+          "source_line": 630,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.KEY": {
+          "source_line": 84,
+          "literal": "HIERARCH ESO MPP PRSCX",
+          "modeled_stored_value": "HIERARCH ESO MPP PRSCX"
+        },
+        "MEF.PRESCAN.X.COMMENT": {
+          "source_line": 85,
+          "literal": "Prescan xmin xmax",
+          "modeled_stored_value": "Prescan xmin xmax"
+        },
+        "MEF.OVERSCAN.X.KEY": {
+          "source_line": 152,
+          "literal": "HIERARCH ESO MPP OVSCX",
+          "modeled_stored_value": "HIERARCH ESO MPP OVSCX"
+        },
+        "MEF.OVERSCAN.X.COMMENT": {
+          "source_line": 153,
+          "literal": "Overscan xmin xmax",
+          "modeled_stored_value": "Overscan xmin xmax"
+        },
+        "MEF.SCANREJ.KEY": {
+          "source_line": 357,
+          "literal": "HIERARCH ESO MPP RJOVSC",
+          "modeled_stored_value": "HIERARCH ESO MPP RJOVSC"
+        },
+        "MEF.SCANREJ.COMMENT": {
+          "source_line": 358,
+          "literal": "Rejection min max",
+          "modeled_stored_value": "Rejection min max"
+        },
+        "MEF.SCANREJ.MIN": {
+          "source_line": 359,
+          "literal": "10",
+          "modeled_stored_value": 10
+        },
+        "MEF.SCANREJ.MAX": {
+          "source_line": 360,
+          "literal": "10",
+          "modeled_stored_value": 10
+        },
+        "MEF.TRIMREG.KEY": {
+          "source_line": 363,
+          "literal": "HIERARCH ESO MPP TRIM",
+          "modeled_stored_value": "HIERARCH ESO MPP TRIM"
+        },
+        "MEF.TRIMREG.COMMENT": {
+          "source_line": 364,
+          "literal": "xmin xmax ymin ymax",
+          "modeled_stored_value": "xmin xmax ymin ymax"
+        },
+        "MEF.CCD.RON.KEY": {
+          "source_line": 496,
+          "literal": "RDNOISE",
+          "modeled_stored_value": "RDNOISE"
+        },
+        "MEF.CCD.RON.I.KEY": {
+          "source_line": 497,
+          "literal": "HIERARCH ESO DET OUT%d RON",
+          "modeled_stored_value": "HIERARCH ESO DET OUT%d RON"
+        },
+        "MEF.CCD.RON.COMMENT": {
+          "source_line": 498,
+          "literal": "Read out noise",
+          "modeled_stored_value": "Read out noise"
+        },
+        "MEF.CCD.GAIN.KEY": {
+          "source_line": 532,
+          "literal": "GAIN",
+          "modeled_stored_value": "GAIN"
+        },
+        "MEF.CCD.GAIN.I.KEY": {
+          "source_line": 533,
+          "literal": "HIERARCH ESO DET OUT%d GAIN",
+          "modeled_stored_value": "HIERARCH ESO DET OUT%d GAIN"
+        },
+        "MEF.CCD.GAIN.COMMENT": {
+          "source_line": 534,
+          "literal": "CCD gain",
+          "modeled_stored_value": "CCD gain"
+        },
+        "MEF.PIXREJ.SIGMA.LO.KEY": {
+          "source_line": 637,
+          "literal": "HIERARCH ESO MPP FLAT LPIXSIG",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT LPIXSIG"
+        },
+        "MEF.PIXREJ.SIGMA.LO.COMMENT": {
+          "source_line": 638,
+          "literal": "low sigma for pixel rejection",
+          "modeled_stored_value": "low sigma for pixel rejection"
+        },
+        "MEF.PIXREJ.SIGMA.LO": {
+          "source_line": 639,
+          "literal": "3.0",
+          "modeled_stored_value": 3.0
+        },
+        "MEF.PIXREJ.SIGMA.HI.KEY": {
+          "source_line": 640,
+          "literal": "HIERARCH ESO MPP FLAT HPIXSIG",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT HPIXSIG"
+        },
+        "MEF.PIXREJ.SIGMA.HI.COMMENT": {
+          "source_line": 641,
+          "literal": "high sigma for pixel rejection",
+          "modeled_stored_value": "high sigma for pixel rejection"
+        },
+        "MEF.PIXREJ.SIGMA.HI": {
+          "source_line": 642,
+          "literal": "3.0",
+          "modeled_stored_value": 3.0
+        },
+        "MEF.MEDIAN.REG.KEY": {
+          "source_line": 644,
+          "literal": "HIERARCH ESO MPP FLAT MREGDEF",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT MREGDEF"
+        },
+        "MEF.MEDIAN.REG.COMMENT": {
+          "source_line": 645,
+          "literal": "Region for median computation",
+          "modeled_stored_value": "Region for median computation"
+        },
+        "MEF.MEDIAN.REG.X1": {
+          "source_line": 646,
+          "literal": "500",
+          "modeled_stored_value": 500
+        },
+        "MEF.MEDIAN.REG.X2": {
+          "source_line": 647,
+          "literal": "1500",
+          "modeled_stored_value": 1500
+        },
+        "MEF.MEDIAN.REG.Y1": {
+          "source_line": 648,
+          "literal": "1500",
+          "modeled_stored_value": 1500
+        },
+        "MEF.MEDIAN.REG.Y2": {
+          "source_line": 649,
+          "literal": "2500",
+          "modeled_stored_value": 2500
+        },
+        "MEF.KERN.HSIZE.KEY": {
+          "source_line": 653,
+          "literal": "HIERARCH ESO MPP FLAT KERNS",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT KERNS"
+        },
+        "MEF.KERN.HSIZE.COMMENT": {
+          "source_line": 654,
+          "literal": "Smoothing kernel size",
+          "modeled_stored_value": "Smoothing kernel size"
+        },
+        "MEF.KERN.HSIZE": {
+          "source_line": 655,
+          "literal": "7",
+          "modeled_stored_value": 7
+        },
+        "MEF.SATLEVEL": {
+          "source_line": 75,
+          "literal": "65534",
+          "modeled_stored_value": 65534.0
+        },
+        "MEF.SATMAX": {
+          "source_line": 76,
+          "literal": "0.05",
+          "modeled_stored_value": 0.05
+        }
+      }
+    },
+    "wfi": {
+      "project_paf_sha256": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c",
+      "nchips": 8,
+      "constructor_keys": 249,
+      "duplicates": {
+        "MEF.MASTER.BIAS.KEY": [
+          {
+            "line": 235,
+            "value": "HIERARCH ESO MPP MBIAS"
+          },
+          {
+            "line": 244,
+            "value": "HIERARCH ESO MPP MBIAS"
+          }
+        ],
+        "MEF.MASTER.BIAS.COMMENT": [
+          {
+            "line": 236,
+            "value": "Master bias used"
+          },
+          {
+            "line": 245,
+            "value": "Master bias used"
+          }
+        ]
+      },
+      "not_read_by_constructor": [
+        "MEF.BIAS.FRAMETHR.HI",
+        "MEF.BIAS.FRAMETHR.LO",
+        "PHASE3.FLUXCAL.HDRKEY",
+        "PHASE3.MJDEND.HDRKEY",
+        "PHASE3.PROCSOFT.HDRKEY",
+        "PHASE3.TIMESYS.HDRKEY"
+      ],
+      "values": {
+        "MEF.NCHIPS": {
+          "source_line": 74,
+          "literal": "8",
+          "modeled_stored_value": 8
+        },
+        "MEF.PRESCAN.X.MIN.CHIP1": {
+          "source_line": 86,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP2": {
+          "source_line": 88,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP3": {
+          "source_line": 90,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP4": {
+          "source_line": 92,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MIN.CHIP5": {
+          "source_line": 94,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP6": {
+          "source_line": 96,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP7": {
+          "source_line": 98,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.PRESCAN.X.MIN.CHIP8": {
+          "source_line": 100,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.PRESCAN.X.MAX.CHIP1": {
+          "source_line": 87,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP2": {
+          "source_line": 89,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP3": {
+          "source_line": 91,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP4": {
+          "source_line": 93,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.PRESCAN.X.MAX.CHIP5": {
+          "source_line": 95,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP6": {
+          "source_line": 97,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP7": {
+          "source_line": 99,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.PRESCAN.X.MAX.CHIP8": {
+          "source_line": 101,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP1": {
+          "source_line": 107,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP2": {
+          "source_line": 109,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP3": {
+          "source_line": 111,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP4": {
+          "source_line": 113,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP5": {
+          "source_line": 115,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP6": {
+          "source_line": 117,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP7": {
+          "source_line": 119,
+          "literal": "5",
+          "modeled_stored_value": 5
+        },
+        "MEF.OVERSCAN.X.MIN.CHIP8": {
+          "source_line": 121,
+          "literal": "2100",
+          "modeled_stored_value": 2100
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP1": {
+          "source_line": 108,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP2": {
+          "source_line": 110,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP3": {
+          "source_line": 112,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP4": {
+          "source_line": 114,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP5": {
+          "source_line": 116,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP6": {
+          "source_line": 118,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP7": {
+          "source_line": 120,
+          "literal": "48",
+          "modeled_stored_value": 48
+        },
+        "MEF.OVERSCAN.X.MAX.CHIP8": {
+          "source_line": 122,
+          "literal": "2142",
+          "modeled_stored_value": 2142
+        },
+        "MEF.CROP.X.MIN.CHIP1": {
+          "source_line": 174,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP2": {
+          "source_line": 178,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP3": {
+          "source_line": 182,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP4": {
+          "source_line": 186,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MIN.CHIP5": {
+          "source_line": 190,
+          "literal": "49",
+          "modeled_stored_value": 49
+        },
+        "MEF.CROP.X.MIN.CHIP6": {
+          "source_line": 194,
+          "literal": "49",
+          "modeled_stored_value": 49
+        },
+        "MEF.CROP.X.MIN.CHIP7": {
+          "source_line": 198,
+          "literal": "49",
+          "modeled_stored_value": 49
+        },
+        "MEF.CROP.X.MIN.CHIP8": {
+          "source_line": 202,
+          "literal": "51",
+          "modeled_stored_value": 51
+        },
+        "MEF.CROP.X.MAX.CHIP1": {
+          "source_line": 175,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP2": {
+          "source_line": 179,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP3": {
+          "source_line": 183,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP4": {
+          "source_line": 187,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.X.MAX.CHIP5": {
+          "source_line": 191,
+          "literal": "2092",
+          "modeled_stored_value": 2092
+        },
+        "MEF.CROP.X.MAX.CHIP6": {
+          "source_line": 195,
+          "literal": "2092",
+          "modeled_stored_value": 2092
+        },
+        "MEF.CROP.X.MAX.CHIP7": {
+          "source_line": 199,
+          "literal": "2092",
+          "modeled_stored_value": 2092
+        },
+        "MEF.CROP.X.MAX.CHIP8": {
+          "source_line": 203,
+          "literal": "2094",
+          "modeled_stored_value": 2094
+        },
+        "MEF.CROP.Y.MIN.CHIP1": {
+          "source_line": 176,
+          "literal": "31",
+          "modeled_stored_value": 31
+        },
+        "MEF.CROP.Y.MIN.CHIP2": {
+          "source_line": 180,
+          "literal": "31",
+          "modeled_stored_value": 31
+        },
+        "MEF.CROP.Y.MIN.CHIP3": {
+          "source_line": 184,
+          "literal": "31",
+          "modeled_stored_value": 31
+        },
+        "MEF.CROP.Y.MIN.CHIP4": {
+          "source_line": 188,
+          "literal": "31",
+          "modeled_stored_value": 31
+        },
+        "MEF.CROP.Y.MIN.CHIP5": {
+          "source_line": 192,
+          "literal": "2",
+          "modeled_stored_value": 2
+        },
+        "MEF.CROP.Y.MIN.CHIP6": {
+          "source_line": 196,
+          "literal": "2",
+          "modeled_stored_value": 2
+        },
+        "MEF.CROP.Y.MIN.CHIP7": {
+          "source_line": 200,
+          "literal": "2",
+          "modeled_stored_value": 2
+        },
+        "MEF.CROP.Y.MIN.CHIP8": {
+          "source_line": 204,
+          "literal": "2",
+          "modeled_stored_value": 2
+        },
+        "MEF.CROP.Y.MAX.CHIP1": {
+          "source_line": 177,
+          "literal": "4127",
+          "modeled_stored_value": 4127
+        },
+        "MEF.CROP.Y.MAX.CHIP2": {
+          "source_line": 181,
+          "literal": "4127",
+          "modeled_stored_value": 4127
+        },
+        "MEF.CROP.Y.MAX.CHIP3": {
+          "source_line": 185,
+          "literal": "4127",
+          "modeled_stored_value": 4127
+        },
+        "MEF.CROP.Y.MAX.CHIP4": {
+          "source_line": 189,
+          "literal": "4127",
+          "modeled_stored_value": 4127
+        },
+        "MEF.CROP.Y.MAX.CHIP5": {
+          "source_line": 193,
+          "literal": "4098",
+          "modeled_stored_value": 4098
+        },
+        "MEF.CROP.Y.MAX.CHIP6": {
+          "source_line": 197,
+          "literal": "4098",
+          "modeled_stored_value": 4098
+        },
+        "MEF.CROP.Y.MAX.CHIP7": {
+          "source_line": 201,
+          "literal": "4098",
+          "modeled_stored_value": 4098
+        },
+        "MEF.CROP.Y.MAX.CHIP8": {
+          "source_line": 205,
+          "literal": "4098",
+          "modeled_stored_value": 4098
+        },
+        "MEF.CCD.RON.CHIP1": {
+          "source_line": 211,
+          "literal": "5.1",
+          "modeled_stored_value": 5.099999904632568
+        },
+        "MEF.CCD.RON.CHIP2": {
+          "source_line": 212,
+          "literal": "5.4",
+          "modeled_stored_value": 5.400000095367432
+        },
+        "MEF.CCD.RON.CHIP3": {
+          "source_line": 213,
+          "literal": "5.3",
+          "modeled_stored_value": 5.300000190734863
+        },
+        "MEF.CCD.RON.CHIP4": {
+          "source_line": 214,
+          "literal": "4.8",
+          "modeled_stored_value": 4.800000190734863
+        },
+        "MEF.CCD.RON.CHIP5": {
+          "source_line": 215,
+          "literal": "5.2",
+          "modeled_stored_value": 5.199999809265137
+        },
+        "MEF.CCD.RON.CHIP6": {
+          "source_line": 216,
+          "literal": "5.4",
+          "modeled_stored_value": 5.400000095367432
+        },
+        "MEF.CCD.RON.CHIP7": {
+          "source_line": 217,
+          "literal": "5.0",
+          "modeled_stored_value": 5.0
+        },
+        "MEF.CCD.RON.CHIP8": {
+          "source_line": 218,
+          "literal": "4.9",
+          "modeled_stored_value": 4.900000095367432
+        },
+        "MEF.CCD.GAIN.CHIP1": {
+          "source_line": 223,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP2": {
+          "source_line": 224,
+          "literal": "2.1",
+          "modeled_stored_value": 2.0999999046325684
+        },
+        "MEF.CCD.GAIN.CHIP3": {
+          "source_line": 225,
+          "literal": "2.3",
+          "modeled_stored_value": 2.299999952316284
+        },
+        "MEF.CCD.GAIN.CHIP4": {
+          "source_line": 226,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.CCD.GAIN.CHIP5": {
+          "source_line": 227,
+          "literal": "2.1",
+          "modeled_stored_value": 2.0999999046325684
+        },
+        "MEF.CCD.GAIN.CHIP6": {
+          "source_line": 228,
+          "literal": "2.1",
+          "modeled_stored_value": 2.0999999046325684
+        },
+        "MEF.CCD.GAIN.CHIP7": {
+          "source_line": 229,
+          "literal": "2.2",
+          "modeled_stored_value": 2.200000047683716
+        },
+        "MEF.CCD.GAIN.CHIP8": {
+          "source_line": 230,
+          "literal": "2.2",
+          "modeled_stored_value": 2.200000047683716
+        },
+        "MEF.CRVAL1.CHIP1": {
+          "source_line": 130,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL1.CHIP2": {
+          "source_line": 134,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL1.CHIP3": {
+          "source_line": 138,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL1.CHIP4": {
+          "source_line": 142,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL1.CHIP5": {
+          "source_line": 146,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL1.CHIP6": {
+          "source_line": 150,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL1.CHIP7": {
+          "source_line": 154,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL1.CHIP8": {
+          "source_line": 158,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.CRVAL2.CHIP1": {
+          "source_line": 131,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRVAL2.CHIP2": {
+          "source_line": 135,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRVAL2.CHIP3": {
+          "source_line": 139,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRVAL2.CHIP4": {
+          "source_line": 143,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRVAL2.CHIP5": {
+          "source_line": 147,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRVAL2.CHIP6": {
+          "source_line": 151,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRVAL2.CHIP7": {
+          "source_line": 155,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRVAL2.CHIP8": {
+          "source_line": 159,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.CRPIX1.CHIP1": {
+          "source_line": 132,
+          "literal": "4184",
+          "modeled_stored_value": 4184.0
+        },
+        "MEF.CRPIX1.CHIP2": {
+          "source_line": 136,
+          "literal": "2049",
+          "modeled_stored_value": 2049.0
+        },
+        "MEF.CRPIX1.CHIP3": {
+          "source_line": 140,
+          "literal": "-90",
+          "modeled_stored_value": -90.0
+        },
+        "MEF.CRPIX1.CHIP4": {
+          "source_line": 144,
+          "literal": "-2233",
+          "modeled_stored_value": -2233.0
+        },
+        "MEF.CRPIX1.CHIP5": {
+          "source_line": 148,
+          "literal": "-2225",
+          "modeled_stored_value": -2225.0
+        },
+        "MEF.CRPIX1.CHIP6": {
+          "source_line": 152,
+          "literal": "-86",
+          "modeled_stored_value": -86.0
+        },
+        "MEF.CRPIX1.CHIP7": {
+          "source_line": 156,
+          "literal": "2049",
+          "modeled_stored_value": 2049.0
+        },
+        "MEF.CRPIX1.CHIP8": {
+          "source_line": 160,
+          "literal": "4188",
+          "modeled_stored_value": 4188.0
+        },
+        "MEF.CRPIX2.CHIP1": {
+          "source_line": 133,
+          "literal": "-150",
+          "modeled_stored_value": -150.0
+        },
+        "MEF.CRPIX2.CHIP2": {
+          "source_line": 137,
+          "literal": "-150",
+          "modeled_stored_value": -150.0
+        },
+        "MEF.CRPIX2.CHIP3": {
+          "source_line": 141,
+          "literal": "-144",
+          "modeled_stored_value": -144.0
+        },
+        "MEF.CRPIX2.CHIP4": {
+          "source_line": 145,
+          "literal": "-146",
+          "modeled_stored_value": -146.0
+        },
+        "MEF.CRPIX2.CHIP5": {
+          "source_line": 149,
+          "literal": "3973",
+          "modeled_stored_value": 3973.0
+        },
+        "MEF.CRPIX2.CHIP6": {
+          "source_line": 153,
+          "literal": "3969",
+          "modeled_stored_value": 3969.0
+        },
+        "MEF.CRPIX2.CHIP7": {
+          "source_line": 157,
+          "literal": "3965",
+          "modeled_stored_value": 3965.0
+        },
+        "MEF.CRPIX2.CHIP8": {
+          "source_line": 161,
+          "literal": "3967",
+          "modeled_stored_value": 3967.0
+        },
+        "MEF.ORIGIN": {
+          "source_line": 13,
+          "literal": "ESO-LASILLA",
+          "modeled_stored_value": "ESO-LASILLA"
+        },
+        "MEF.TELESCOPE": {
+          "source_line": 14,
+          "literal": "MPI 2.2-m",
+          "modeled_stored_value": "MPI 2.2-m"
+        },
+        "MEF.INSTRUMENT": {
+          "source_line": 15,
+          "literal": "WFI",
+          "modeled_stored_value": "WFI"
+        },
+        "MEF.CORRECT.REFPIXELS": {
+          "source_line": 126,
+          "literal": "1",
+          "modeled_stored_value": 1
+        },
+        "MEF.RECIPE.KEY": {
+          "source_line": 16,
+          "literal": "HIERARCH ESO MPP",
+          "modeled_stored_value": "HIERARCH ESO MPP"
+        },
+        "MEF.DPR.CATG.KEY": {
+          "source_line": 18,
+          "literal": "HIERARCH ESO DPR CATG",
+          "modeled_stored_value": "HIERARCH ESO DPR CATG"
+        },
+        "MEF.DPR.CATG.COMMENT": {
+          "source_line": 19,
+          "literal": "product frame category",
+          "modeled_stored_value": "product frame category"
+        },
+        "MEF.DPR.TYPE.KEY": {
+          "source_line": 20,
+          "literal": "HIERARCH ESO DPR TYPE",
+          "modeled_stored_value": "HIERARCH ESO DPR TYPE"
+        },
+        "MEF.DPR.TYPE.COMMENT": {
+          "source_line": 21,
+          "literal": "product frame type",
+          "modeled_stored_value": "product frame type"
+        },
+        "PHASE3.PRODCATG.KEY.NAME": {
+          "source_line": 24,
+          "literal": "PRODCATG",
+          "modeled_stored_value": "PRODCATG"
+        },
+        "PHASE3.PRODCATG.VAL.BIAS": {
+          "source_line": 26,
+          "literal": "CALIB.MASTER_BIAS",
+          "modeled_stored_value": "CALIB.MASTER_BIAS"
+        },
+        "PHASE3.PRODCATG.VAL.BPM": {
+          "source_line": 27,
+          "literal": "CALIB.BPM",
+          "modeled_stored_value": "CALIB.BPM"
+        },
+        "PHASE3.PRODCATG.VAL.DOMEFF": {
+          "source_line": 28,
+          "literal": "CALIB.MASTER_DOME_FLAT",
+          "modeled_stored_value": "CALIB.MASTER_DOME_FLAT"
+        },
+        "PHASE3.PRODCATG.VAL.SKYFF": {
+          "source_line": 29,
+          "literal": "CALIB.MASTER_SKY_FLAT",
+          "modeled_stored_value": "CALIB.MASTER_SKY_FLAT"
+        },
+        "PHASE3.PRODCATG.VAL.MFF": {
+          "source_line": 30,
+          "literal": "CALIB.MASTER_FLAT",
+          "modeled_stored_value": "CALIB.MASTER_FLAT"
+        },
+        "PHASE3.PRODCATG.VAL.SCIENCE": {
+          "source_line": 25,
+          "literal": "SCIENCE.MEFIMAGE",
+          "modeled_stored_value": "SCIENCE.MEFIMAGE"
+        },
+        "PHASE3.PRODCATG.COMMENT": {
+          "source_line": 31,
+          "literal": "Phase3 product category",
+          "modeled_stored_value": "Phase3 product category"
+        },
+        "PHASE3.PROGID.KEY.NAME": {
+          "source_line": 33,
+          "literal": "PROG_ID",
+          "modeled_stored_value": "PROG_ID"
+        },
+        "PHASE3.PROGID.HDRKEY": {
+          "source_line": 34,
+          "literal": "HIERARCH ESO OBS PROG ID",
+          "modeled_stored_value": "HIERARCH ESO OBS PROG ID"
+        },
+        "PHASE3.PROGID.COMMENT": {
+          "source_line": 35,
+          "literal": "Phase3 observation programme id",
+          "modeled_stored_value": "Phase3 observation programme id"
+        },
+        "PHASE3.OBID.KEY.NAME": {
+          "source_line": 37,
+          "literal": "OBID1",
+          "modeled_stored_value": "OBID1"
+        },
+        "PHASE3.OBID.HDRKEY": {
+          "source_line": 38,
+          "literal": "HIERARCH ESO OBS ID",
+          "modeled_stored_value": "HIERARCH ESO OBS ID"
+        },
+        "PHASE3.OBID.COMMENT": {
+          "source_line": 39,
+          "literal": "Phase3 observation id",
+          "modeled_stored_value": "Phase3 observation id"
+        },
+        "PHASE3.NCOMBINE.KEY.NAME": {
+          "source_line": 41,
+          "literal": "NCOMBINE",
+          "modeled_stored_value": "NCOMBINE"
+        },
+        "PHASE3.NCOMBINE.COMMENT": {
+          "source_line": 42,
+          "literal": "Phase3 number of observations combined",
+          "modeled_stored_value": "Phase3 number of observations combined"
+        },
+        "PHASE3.OBSTECH.KEY.NAME": {
+          "source_line": 44,
+          "literal": "OBSTECH",
+          "modeled_stored_value": "OBSTECH"
+        },
+        "PHASE3.OBSTECH.HDRKEY": {
+          "source_line": 45,
+          "literal": "HIERARCH ESO DPR TECH",
+          "modeled_stored_value": "HIERARCH ESO DPR TECH"
+        },
+        "PHASE3.OBSTECH.COMMENT": {
+          "source_line": 46,
+          "literal": "Phase3 observation technique",
+          "modeled_stored_value": "Phase3 observation technique"
+        },
+        "PHASE3.MJDEND.KEY.NAME": {
+          "source_line": 48,
+          "literal": "MJD-END",
+          "modeled_stored_value": "MJD-END"
+        },
+        "PHASE3.MJDEND.COMMENT": {
+          "source_line": 50,
+          "literal": "Phase3 MJD at the end of exposure",
+          "modeled_stored_value": "Phase3 MJD at the end of exposure"
+        },
+        "PHASE3.PROCSOFT.KEY.NAME": {
+          "source_line": 52,
+          "literal": "PROCSOFT",
+          "modeled_stored_value": "PROCSOFT"
+        },
+        "PHASE3.PROCSOFT.COMMENT": {
+          "source_line": 54,
+          "literal": "Branch from ECLIPSE by N. Devillar",
+          "modeled_stored_value": "Branch from ECLIPSE by N. Devillar"
+        },
+        "PHASE3.TIMESYS.KEY.NAME": {
+          "source_line": 56,
+          "literal": "TIMESYS",
+          "modeled_stored_value": "TIMESYS"
+        },
+        "PHASE3.TIMESYS.VAL": {
+          "source_line": 58,
+          "literal": "UTC",
+          "modeled_stored_value": "UTC"
+        },
+        "PHASE3.TIMESYS.COMMENT": {
+          "source_line": 59,
+          "literal": "Phase3 standard of time",
+          "modeled_stored_value": "Phase3 standard of time"
+        },
+        "PHASE3.FILTER.KEY.NAME": {
+          "source_line": 61,
+          "literal": "FILTER",
+          "modeled_stored_value": "FILTER"
+        },
+        "PHASE3.FILTER.COMMENT": {
+          "source_line": 62,
+          "literal": "Phase3 simple filter keyword",
+          "modeled_stored_value": "Phase3 simple filter keyword"
+        },
+        "PHASE3.FLUXCAL.KEY.NAME": {
+          "source_line": 64,
+          "literal": "FLUXCAL",
+          "modeled_stored_value": "FLUXCAL"
+        },
+        "PHASE3.FLUXCAL.VAL": {
+          "source_line": 66,
+          "literal": "UNCALIBRATED",
+          "modeled_stored_value": "UNCALIBRATED"
+        },
+        "PHASE3.FLUXCAL.COMMENT": {
+          "source_line": 67,
+          "literal": "Phase3 flux calibration:ABSOLUTE, UNCALIBRATED",
+          "modeled_stored_value": "Phase3 flux calibration:ABSOLUTE, UNCALIBRATED"
+        },
+        "PHASE3.RADESYS.KEY.NAME": {
+          "source_line": 69,
+          "literal": "RADESYS",
+          "modeled_stored_value": "RADESYS"
+        },
+        "PHASE3.RADESYS.HDRKEY": {
+          "source_line": 70,
+          "literal": "\"RADECSYS\u201d",
+          "modeled_stored_value": "\"RADECSYS\u201d"
+        },
+        "PHASE3.RADESYS.COMMENT": {
+          "source_line": 71,
+          "literal": "Phase3 coordinate reference frame",
+          "modeled_stored_value": "Phase3 coordinate reference frame"
+        },
+        "MEF.USE.PRESCAN": {
+          "source_line": 83,
+          "literal": "0",
+          "modeled_stored_value": 0
+        },
+        "MEF.USE.OVERSCAN": {
+          "source_line": 104,
+          "literal": "1",
+          "modeled_stored_value": 1
+        },
+        "MEF.BIAS.FRAME.I.KEY": {
+          "source_line": 233,
+          "literal": "HIERARCH ESO MPP BIAS",
+          "modeled_stored_value": "HIERARCH ESO MPP BIAS"
+        },
+        "MEF.BIAS.FRAME.I.COMMENT": {
+          "source_line": 234,
+          "literal": "Input bias frame",
+          "modeled_stored_value": "Input bias frame"
+        },
+        "MEF.MASTER.BIAS.KEY": {
+          "source_line": 235,
+          "literal": "HIERARCH ESO MPP MBIAS",
+          "modeled_stored_value": "HIERARCH ESO MPP MBIAS"
+        },
+        "MEF.MASTER.BIAS.COMMENT": {
+          "source_line": 236,
+          "literal": "Master bias used",
+          "modeled_stored_value": "Master bias used"
+        },
+        "MEF.BIAS.NAME.O": {
+          "source_line": 237,
+          "literal": "WFI_MB",
+          "modeled_stored_value": "WFI_MB"
+        },
+        "MEF.BPM.NAME.O": {
+          "source_line": 249,
+          "literal": "WFI_BPM",
+          "modeled_stored_value": "WFI_BPM"
+        },
+        "MEF.BPM.NAME": {
+          "source_line": 248,
+          "literal": "WFI_BPM",
+          "modeled_stored_value": "WFI_BPM"
+        },
+        "MEF.BPM.FRAME.I.KEY": {
+          "source_line": 250,
+          "literal": "HIERARCH ESO MPP BPM",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM"
+        },
+        "MEF.BPM.FRAME.I.COMMENT": {
+          "source_line": 251,
+          "literal": "Input bpm frame",
+          "modeled_stored_value": "Input bpm frame"
+        },
+        "MEF.BPM.PROPFLAG.KEY": {
+          "source_line": 252,
+          "literal": "HIERARCH ESO MPP BPM PROPFLAG",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM PROPFLAG"
+        },
+        "MEF.BPM.PROPFLAG.COMMENT": {
+          "source_line": 253,
+          "literal": "proportional flag for BPM creation",
+          "modeled_stored_value": "proportional flag for BPM creation"
+        },
+        "MEF.BPM.LGAINTHR.KEY": {
+          "source_line": 255,
+          "literal": "HIERARCH ESO MPP BPM LGAINTHR",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM LGAINTHR"
+        },
+        "MEF.BPM.LGAINTHR.COMMENT": {
+          "source_line": 256,
+          "literal": "low gain threshold for BPM creation",
+          "modeled_stored_value": "low gain threshold for BPM creation"
+        },
+        "MEF.BPM.HGAINTHR.KEY": {
+          "source_line": 258,
+          "literal": "HIERARCH ESO MPP BPM HGAINTHR",
+          "modeled_stored_value": "HIERARCH ESO MPP BPM HGAINTHR"
+        },
+        "MEF.BPM.HGAINTHR.COMMENT": {
+          "source_line": 259,
+          "literal": "high gain threshold for BPM creation",
+          "modeled_stored_value": "high gain threshold for BPM creation"
+        },
+        "MEF.MASTER.BPM.KEY": {
+          "source_line": 263,
+          "literal": "HIERARCH ESO MPP MBPM",
+          "modeled_stored_value": "HIERARCH ESO MPP MBPM"
+        },
+        "MEF.MASTER.BPM.COMMENT": {
+          "source_line": 264,
+          "literal": "Master bpm used",
+          "modeled_stored_value": "Master bpm used"
+        },
+        "MEF.MASTER.DOME.KEY": {
+          "source_line": 281,
+          "literal": "HIERARCH ESO MPP MDOME",
+          "modeled_stored_value": "HIERARCH ESO MPP MDOME"
+        },
+        "MEF.MASTER.DOME.COMMENT": {
+          "source_line": 282,
+          "literal": "Master dome used",
+          "modeled_stored_value": "Master dome used"
+        },
+        "MEF.DOMEFF.NAME.O": {
+          "source_line": 269,
+          "literal": "WFI_DOMEFF",
+          "modeled_stored_value": "WFI_DOMEFF"
+        },
+        "MEF.MASTER.SKY.KEY": {
+          "source_line": 299,
+          "literal": "HIERARCH ESO MPP MSKY",
+          "modeled_stored_value": "HIERARCH ESO MPP MSKY"
+        },
+        "MEF.MASTER.SKY.COMMENT": {
+          "source_line": 300,
+          "literal": "Master sky used",
+          "modeled_stored_value": "Master sky used"
+        },
+        "MEF.SKYFF.NAME.O": {
+          "source_line": 287,
+          "literal": "WFI_SKYFF",
+          "modeled_stored_value": "WFI_SKYFF"
+        },
+        "MEF.MFF.NAME.O": {
+          "source_line": 318,
+          "literal": "WFI_MFF",
+          "modeled_stored_value": "WFI_MFF"
+        },
+        "MEF.MASTER.FLAT.KEY": {
+          "source_line": 323,
+          "literal": "HIERARCH ESO MPP MFF",
+          "modeled_stored_value": "HIERARCH ESO MPP MFF"
+        },
+        "MEF.MASTER.FLAT.COMMENT": {
+          "source_line": 324,
+          "literal": "Master flat field",
+          "modeled_stored_value": "Master flat field"
+        },
+        "MEF.REFPIX.X": {
+          "source_line": 127,
+          "literal": "4101",
+          "modeled_stored_value": 4101.0
+        },
+        "MEF.REFPIX.Y": {
+          "source_line": 128,
+          "literal": "3950",
+          "modeled_stored_value": 3950.0
+        },
+        "MEF.FILTER.KEY": {
+          "source_line": 78,
+          "literal": "HIERARCH ESO INS FILT1 NAME",
+          "modeled_stored_value": "HIERARCH ESO INS FILT1 NAME"
+        },
+        "MEF.BINX.KEY": {
+          "source_line": 79,
+          "literal": "HIERARCH ESO DET WIN1 BINX",
+          "modeled_stored_value": "HIERARCH ESO DET WIN1 BINX"
+        },
+        "MEF.BINY.KEY": {
+          "source_line": 80,
+          "literal": "HIERARCH ESO DET WIN1 BINY",
+          "modeled_stored_value": "HIERARCH ESO DET WIN1 BINY"
+        },
+        "MEF.BIAS.KAPPA1": {
+          "source_line": 240,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.BIAS.FRAMENUM.MIN": {
+          "source_line": 241,
+          "literal": "3",
+          "modeled_stored_value": 3
+        },
+        "MEF.BPM.PROPFLAG": {
+          "source_line": 254,
+          "literal": "0",
+          "modeled_stored_value": 0
+        },
+        "MEF.BPM.LGAINTHR": {
+          "source_line": 257,
+          "literal": "0.5",
+          "modeled_stored_value": 0.5
+        },
+        "MEF.BPM.HGAINTHR": {
+          "source_line": 260,
+          "literal": "2.0",
+          "modeled_stored_value": 2.0
+        },
+        "MEF.DOMEFF.FRAME.I.KEY": {
+          "source_line": 267,
+          "literal": "HIERARCH ESO MPP FLAT DOME",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT DOME"
+        },
+        "MEF.DOMEFF.FRAME.I.COMMENT": {
+          "source_line": 268,
+          "literal": "Input dome frame",
+          "modeled_stored_value": "Input dome frame"
+        },
+        "MEF.DOMEFF.FRAMETHR.LO.KEY": {
+          "source_line": 270,
+          "literal": "HIERARCH ESO MPP FLAT LFRATHD",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT LFRATHD"
+        },
+        "MEF.DOMEFF.FRAMETHR.LO.COMMENT": {
+          "source_line": 271,
+          "literal": "low frame threshold for dome",
+          "modeled_stored_value": "low frame threshold for dome"
+        },
+        "MEF.DOMEFF.FRAMETHR.LO": {
+          "source_line": 272,
+          "literal": "10000",
+          "modeled_stored_value": 10000.0
+        },
+        "MEF.DOMEFF.FRAMETHR.HI.KEY": {
+          "source_line": 273,
+          "literal": "HIERARCH ESO MPP FLAT HFRATHD",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT HFRATHD"
+        },
+        "MEF.DOMEFF.FRAMETHR.HI.COMMENT": {
+          "source_line": 274,
+          "literal": "high frame threshold for dome",
+          "modeled_stored_value": "high frame threshold for dome"
+        },
+        "MEF.DOMEFF.FRAMETHR.HI": {
+          "source_line": 275,
+          "literal": "45000",
+          "modeled_stored_value": 45000.0
+        },
+        "MEF.DOMEFF.FRAMENUM.MIN.KEY": {
+          "source_line": 276,
+          "literal": "HIERARCH ESO MPP FLAT MINFRAD",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT MINFRAD"
+        },
+        "MEF.DOMEFF.FRAMENUM.MIN.COMMENT": {
+          "source_line": 277,
+          "literal": "minimum number of frames for dome flat",
+          "modeled_stored_value": "minimum number of frames for dome flat"
+        },
+        "MEF.DOMEFF.FRAMENUM.MIN": {
+          "source_line": 278,
+          "literal": "3",
+          "modeled_stored_value": 3
+        },
+        "MEF.SKYFF.FRAME.I.KEY": {
+          "source_line": 285,
+          "literal": "HIERARCH ESO MPP FLAT SKY",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY"
+        },
+        "MEF.SKYFF.FRAME.I.COMMENT": {
+          "source_line": 286,
+          "literal": "Input sky frame",
+          "modeled_stored_value": "Input sky frame"
+        },
+        "MEF.SKYFF.FRAMETHR.LO.KEY": {
+          "source_line": 288,
+          "literal": "HIERARCH ESO MPP FLAT SKY LFRATHS",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY LFRATHS"
+        },
+        "MEF.SKYFF.FRAMETHR.LO.COMMENT": {
+          "source_line": 289,
+          "literal": "low frame threshold for sky",
+          "modeled_stored_value": "low frame threshold for sky"
+        },
+        "MEF.SKYFF.FRAMETHR.LO": {
+          "source_line": 290,
+          "literal": "7000",
+          "modeled_stored_value": 7000.0
+        },
+        "MEF.SKYFF.FRAMETHR.HI.KEY": {
+          "source_line": 291,
+          "literal": "HIERARCH ESO MPP FLAT SKY HFRATHS",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY HFRATHS"
+        },
+        "MEF.SKYFF.FRAMETHR.HI.COMMENT": {
+          "source_line": 292,
+          "literal": "high frame threshold for sky",
+          "modeled_stored_value": "high frame threshold for sky"
+        },
+        "MEF.SKYFF.FRAMETHR.HI": {
+          "source_line": 293,
+          "literal": "45000",
+          "modeled_stored_value": 45000.0
+        },
+        "MEF.SKYFF.FRAMENUM.MIN.KEY": {
+          "source_line": 294,
+          "literal": "HIERARCH ESO MPP FLAT SKY MINFRAS",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT SKY MINFRAS"
+        },
+        "MEF.SKYFF.FRAMENUM.MIN.COMMENT": {
+          "source_line": 295,
+          "literal": "minimum number of frames for sky flat",
+          "modeled_stored_value": "minimum number of frames for sky flat"
+        },
+        "MEF.SKYFF.FRAMENUM.MIN": {
+          "source_line": 296,
+          "literal": "3",
+          "modeled_stored_value": 3
+        },
+        "MEF.PRESCAN.X.KEY": {
+          "source_line": 84,
+          "literal": "HIERARCH ESO MPP PRSCX",
+          "modeled_stored_value": "HIERARCH ESO MPP PRSCX"
+        },
+        "MEF.PRESCAN.X.COMMENT": {
+          "source_line": 85,
+          "literal": "Prescan xmin xmax",
+          "modeled_stored_value": "Prescan xmin xmax"
+        },
+        "MEF.OVERSCAN.X.KEY": {
+          "source_line": 105,
+          "literal": "HIERARCH ESO MPP OVSCX",
+          "modeled_stored_value": "HIERARCH ESO MPP OVSCX"
+        },
+        "MEF.OVERSCAN.X.COMMENT": {
+          "source_line": 106,
+          "literal": "Overscan xmin xmax",
+          "modeled_stored_value": "Overscan xmin xmax"
+        },
+        "MEF.SCANREJ.KEY": {
+          "source_line": 164,
+          "literal": "HIERARCH ESO MPP RJOVSC",
+          "modeled_stored_value": "HIERARCH ESO MPP RJOVSC"
+        },
+        "MEF.SCANREJ.COMMENT": {
+          "source_line": 165,
+          "literal": "Rejection min max",
+          "modeled_stored_value": "Rejection min max"
+        },
+        "MEF.SCANREJ.MIN": {
+          "source_line": 166,
+          "literal": "10",
+          "modeled_stored_value": 10
+        },
+        "MEF.SCANREJ.MAX": {
+          "source_line": 167,
+          "literal": "10",
+          "modeled_stored_value": 10
+        },
+        "MEF.TRIMREG.KEY": {
+          "source_line": 171,
+          "literal": "HIERARCH ESO MPP TRIM",
+          "modeled_stored_value": "HIERARCH ESO MPP TRIM"
+        },
+        "MEF.TRIMREG.COMMENT": {
+          "source_line": 172,
+          "literal": "xmin xmax ymin ymax",
+          "modeled_stored_value": "xmin xmax ymin ymax"
+        },
+        "MEF.CCD.RON.KEY": {
+          "source_line": 208,
+          "literal": "RDNOISE",
+          "modeled_stored_value": "RDNOISE"
+        },
+        "MEF.CCD.RON.I.KEY": {
+          "source_line": 209,
+          "literal": "HIERARCH ESO DET OUT%d RON",
+          "modeled_stored_value": "HIERARCH ESO DET OUT%d RON"
+        },
+        "MEF.CCD.RON.COMMENT": {
+          "source_line": 210,
+          "literal": "Read out noise",
+          "modeled_stored_value": "Read out noise"
+        },
+        "MEF.CCD.GAIN.KEY": {
+          "source_line": 220,
+          "literal": "GAIN",
+          "modeled_stored_value": "GAIN"
+        },
+        "MEF.CCD.GAIN.I.KEY": {
+          "source_line": 221,
+          "literal": "HIERARCH ESO DET OUT%d GAIN",
+          "modeled_stored_value": "HIERARCH ESO DET OUT%d GAIN"
+        },
+        "MEF.CCD.GAIN.COMMENT": {
+          "source_line": 222,
+          "literal": "CCD gain",
+          "modeled_stored_value": "CCD gain"
+        },
+        "MEF.PIXREJ.SIGMA.LO.KEY": {
+          "source_line": 303,
+          "literal": "HIERARCH ESO MPP FLAT LPIXSIG",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT LPIXSIG"
+        },
+        "MEF.PIXREJ.SIGMA.LO.COMMENT": {
+          "source_line": 304,
+          "literal": "low sigma for pixel rejection",
+          "modeled_stored_value": "low sigma for pixel rejection"
+        },
+        "MEF.PIXREJ.SIGMA.LO": {
+          "source_line": 305,
+          "literal": "3.0",
+          "modeled_stored_value": 3.0
+        },
+        "MEF.PIXREJ.SIGMA.HI.KEY": {
+          "source_line": 306,
+          "literal": "HIERARCH ESO MPP FLAT HPIXSIG",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT HPIXSIG"
+        },
+        "MEF.PIXREJ.SIGMA.HI.COMMENT": {
+          "source_line": 307,
+          "literal": "high sigma for pixel rejection",
+          "modeled_stored_value": "high sigma for pixel rejection"
+        },
+        "MEF.PIXREJ.SIGMA.HI": {
+          "source_line": 308,
+          "literal": "3.0",
+          "modeled_stored_value": 3.0
+        },
+        "MEF.MEDIAN.REG.KEY": {
+          "source_line": 310,
+          "literal": "HIERARCH ESO MPP FLAT MREGDEF",
+          "modeled_stored_value": "HIERARCH ESO MPP FLAT MREGDEF"
+        },
+        "MEF.MEDIAN.REG.COMMENT": {
+          "source_line": 311,
+          "literal": "Region for median computation",
+          "modeled_stored_value": "Region for median computation"
+        },
+        "MEF.MEDIAN.REG.X1": {
+          "source_line": 312,
+          "literal": "500",
+          "modeled_stored_value": 500
+        },
+        "MEF.MEDIAN.REG.X2": {
+          "source_line": 313,
+          "literal": "1500",
+          "modeled_stored_value": 1500
+        },
+        "MEF.MEDIAN.REG.Y1": {
+          "source_line": 314,
+          "literal": "1500",
+          "modeled_stored_value": 1500
+        },
+        "MEF.MEDIAN.REG.Y2": {
+          "source_line": 315,
+          "literal": "2500",
+          "modeled_stored_value": 2500
+        },
+        "MEF.KERN.HSIZE.KEY": {
+          "source_line": 319,
+          "literal": "HIERARCH MEFPP REC FLAT KERNS",
+          "modeled_stored_value": "HIERARCH MEFPP REC FLAT KERNS"
+        },
+        "MEF.KERN.HSIZE.COMMENT": {
+          "source_line": 320,
+          "literal": "Smoothing kernel size for sky flat",
+          "modeled_stored_value": "Smoothing kernel size for sky flat"
+        },
+        "MEF.KERN.HSIZE": {
+          "source_line": 321,
+          "literal": "7",
+          "modeled_stored_value": 7
+        },
+        "MEF.SATLEVEL": {
+          "source_line": 75,
+          "literal": "65534",
+          "modeled_stored_value": 65534.0
+        },
+        "MEF.SATMAX": {
+          "source_line": 76,
+          "literal": "0.05",
+          "modeled_stored_value": 0.05
+        }
+      }
+    }
+  },
+  "partitions": [
+    {
+      "instrument": "omegacam",
+      "partition": "calib/bias/574184/2017-03-13T09:44:19",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp --bias bias.list  --biassave",
+      "cli_field_overrides": {
+        "name_bias": "bias.list",
+        "bias_save": 1
+      },
+      "list_members": {
+        "name_bias": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:54:23.384.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:56:31.804.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:50:05.624.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:50:48.373.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:55:49.384.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:55:06.394.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:51:31.403.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:52:57.394.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T09:52:14.404.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_bias"
+      ],
+      "constructor_log_fields_verified": 585
+    },
+    {
+      "instrument": "omegacam",
+      "partition": "calib/bias/574184/2017-03-14T09:41:34",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp --bias bias.list  --biassave",
+      "cli_field_overrides": {
+        "name_bias": "bias.list",
+        "bias_save": 1
+      },
+      "list_members": {
+        "name_bias": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:50:32.247.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:54:04.247.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:49:07.247.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:53:21.248.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:47:42.877.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:48:25.247.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:52:39.247.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:51:14.687.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:51:57.258.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T09:49:49.487.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_bias"
+      ],
+      "constructor_log_fields_verified": 585
+    },
+    {
+      "instrument": "omegacam",
+      "partition": "calib/dome/574184/r_SDSS/2017-03-14T09:41:34",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias OCAM_MB_1x1.fits  --dome dome.list  --domesave",
+      "cli_field_overrides": {
+        "name_bias": "OCAM_MB_1x1.fits",
+        "name_dome": "dome.list",
+        "dome_save": 1
+      },
+      "list_members": {
+        "name_dome": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T10:33:54.324.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T10:31:37.123.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T10:33:08.244.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T10:34:39.254.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-14T10:32:22.404.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_domeff"
+      ],
+      "constructor_log_fields_verified": 585
+    },
+    {
+      "instrument": "omegacam",
+      "partition": "calib/sky/200253584/r_SDSS/2017-03-13T23:12:13",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias OCAM_MB_1x1.fits  --dome OCAM_DOMEFF_r_SDSS_1x1.fits  --sky sky.list  --skysave  --mffsave OCAM_MFF",
+      "cli_field_overrides": {
+        "name_bias": "OCAM_MB_1x1.fits",
+        "name_dome": "OCAM_DOMEFF_r_SDSS_1x1.fits",
+        "name_sky": "sky.list",
+        "sky_save": 1,
+        "name_mf_o": "OCAM_MFF"
+      },
+      "list_members": {
+        "name_sky": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T23:17:13.519.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T23:15:41.520.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T23:14:56.159.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T23:16:27.509.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T23:18:00.549.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_skyff",
+        "mef_cal_mff"
+      ],
+      "constructor_log_fields_verified": 585
+    },
+    {
+      "instrument": "omegacam",
+      "partition": "science/CP_Pup/r_SDSS/2017-03-13T01:57:49",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias OCAM_MB_1x1.fits  --mff OCAM_MFF_r_SDSS_1x1.fits  --science science.list",
+      "cli_field_overrides": {
+        "name_bias": "OCAM_MB_1x1.fits",
+        "name_mf": "OCAM_MFF_r_SDSS_1x1.fits",
+        "science_name_i": "science.list"
+      },
+      "list_members": {
+        "science_name_i": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T02:40:12.356.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T02:36:57.286.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T02:35:52.825.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T02:38:02.286.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/omegacam/raw-inputs/OMEGA.2017-03-13T02:39:07.286.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_sci_pp"
+      ],
+      "constructor_log_fields_verified": 585
+    },
+    {
+      "instrument": "wfi",
+      "partition": "calib/bias/100123316/2001-12-10T19:25:19",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp --bias bias.list  --biassave",
+      "cli_field_overrides": {
+        "name_bias": "bias.list",
+        "bias_save": 1
+      },
+      "list_members": {
+        "name_bias": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:28:20.495.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:26:28.968.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:27:24.654.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:25:32.398.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:29:16.547.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_bias"
+      ],
+      "constructor_log_fields_verified": 249
+    },
+    {
+      "instrument": "wfi",
+      "partition": "calib/dome/100123319/BB_B_99_ESO842/2001-12-10T19:51:55",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias WFI_MB_1x1.fits  --dome dome.list  --domesave",
+      "cli_field_overrides": {
+        "name_bias": "WFI_MB_1x1.fits",
+        "name_dome": "dome.list",
+        "dome_save": 1
+      },
+      "list_members": {
+        "name_dome": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:56:22.481.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:58:31.052.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:57:26.425.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:54:11.877.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-10T19:55:17.546.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_domeff"
+      ],
+      "constructor_log_fields_verified": 249
+    },
+    {
+      "instrument": "wfi",
+      "partition": "calib/sky/100123337/BB_B_99_ESO842/2001-12-11T00:07:12",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias WFI_MB_1x1.fits  --dome WFI_DOMEFF_BB_B_99_ESO842_1x1.fits  --sky sky.list  --skysave  --mffsave WFI_MFF",
+      "cli_field_overrides": {
+        "name_bias": "WFI_MB_1x1.fits",
+        "name_dome": "WFI_DOMEFF_BB_B_99_ESO842_1x1.fits",
+        "name_sky": "sky.list",
+        "sky_save": 1,
+        "name_mf_o": "WFI_MFF"
+      },
+      "list_members": {
+        "name_sky": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T00:13:07.835.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T00:09:44.890.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T00:11:22.043.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_skyff",
+        "mef_cal_mff"
+      ],
+      "constructor_log_fields_verified": 249
+    },
+    {
+      "instrument": "wfi",
+      "partition": "calib/sky/100123366/BB_B_99_ESO842/2001-12-11T09:05:21",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias WFI_MB_1x1.fits  --dome WFI_DOMEFF_BB_B_99_ESO842_1x1.fits  --sky sky.list  --skysave  --mffsave WFI_MFF",
+      "cli_field_overrides": {
+        "name_bias": "WFI_MB_1x1.fits",
+        "name_dome": "WFI_DOMEFF_BB_B_99_ESO842_1x1.fits",
+        "name_sky": "sky.list",
+        "sky_save": 1,
+        "name_mf_o": "WFI_MFF"
+      },
+      "list_members": {
+        "name_sky": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T09:09:18.986.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T09:06:41.946.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T09:08:02.099.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_cal_skyff",
+        "mef_cal_mff"
+      ],
+      "constructor_log_fields_verified": 249
+    },
+    {
+      "instrument": "wfi",
+      "partition": "science/Trapezium-core/BB_B_99_ESO842/2001-12-11T01:59:14",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias WFI_MB_1x1.fits  --mff WFI_MFF_BB_B_99_ESO842_1x1.fits  --science science.list",
+      "cli_field_overrides": {
+        "name_bias": "WFI_MB_1x1.fits",
+        "name_mf": "WFI_MFF_BB_B_99_ESO842_1x1.fits",
+        "science_name_i": "science.list"
+      },
+      "list_members": {
+        "science_name_i": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T02:14:31.809.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T02:01:24.777.fits",
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T02:08:04.470.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_sci_pp"
+      ],
+      "constructor_log_fields_verified": 249
+    },
+    {
+      "instrument": "wfi",
+      "partition": "science/Trapezium-core/BB_B_99_ESO842/2001-12-11T07:08:55",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias WFI_MB_1x1.fits  --mff WFI_MFF_BB_B_99_ESO842_1x1.fits  --science science.list",
+      "cli_field_overrides": {
+        "name_bias": "WFI_MB_1x1.fits",
+        "name_mf": "WFI_MFF_BB_B_99_ESO842_1x1.fits",
+        "science_name_i": "science.list"
+      },
+      "list_members": {
+        "science_name_i": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T07:20:51.824.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_sci_pp"
+      ],
+      "constructor_log_fields_verified": 249
+    },
+    {
+      "instrument": "wfi",
+      "partition": "science/Trapezium-core/BB_B_99_ESO842/2001-12-11T08:32:20",
+      "paf": "mefpp.paf",
+      "paf_selection": "legacy cwd default; no --pafname override",
+      "retained_command": "nohup /Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/native/bin/mefpp  --bias WFI_MB_1x1.fits  --mff WFI_MFF_BB_B_99_ESO842_1x1.fits  --science science.list",
+      "cli_field_overrides": {
+        "name_bias": "WFI_MB_1x1.fits",
+        "name_mf": "WFI_MFF_BB_B_99_ESO842_1x1.fits",
+        "science_name_i": "science.list"
+      },
+      "list_members": {
+        "science_name_i": [
+          "/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB/pilot-5-per-instrument/wfi/raw-inputs/WFI.2001-12-11T08:45:41.017.fits"
+        ]
+      },
+      "planned_service_mapping": [
+        "mef_sci_pp"
+      ],
+      "constructor_log_fields_verified": 249
+    }
+  ],
+  "constructor_log_fields_verified": 4668,
+  "limits": [
+    "constructor logs round floating values; binary32 values are source-derived model values",
+    "snapshot does not prove unrecorded historical invocations or all runtime mutations",
+    "domains and typed public layouts remain implementation design; no scientific defaults changed"
+  ]
+}
