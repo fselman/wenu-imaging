@@ -1,0 +1,31 @@
+flowchart TD
+    subgraph PY["Pycavi: Python orchestration"]
+        N00["Notebook 00: project setup"] --> CFG["Project CFG and instrument CFG"]
+        CFG --> N01["Notebook 01: PartitionsTree"]
+        RAW["Raw FITS exposures"] --> N01
+        N01 --> TREE["Directories, frame lists and calibration links"]
+        TREE --> N03["Notebook 03: selection and dependencies"]
+        CFG --> N03
+        N03 --> WRAP["Stage PAF and launch native commands"]
+    end
+    PAF["Instrument or partition PAF"] --> WRAP
+    subgraph C["mefpp: serial C processing"]
+        CLI["CLI and PAF loading"] --> BB["mef_bb: settings and mutable state"]
+        BB --> ENGINE["mef_engine: serial extension loop"]
+        ENGINE --> CAL["Read or construct calibrations"]
+        CAL --> SCI["Science preprocessing"]
+        SCI --> WRITE["Headers and ordered FITS writing"]
+        LIB["Embedded Eclipse and bundled qfits"] --> CAL
+        LIB --> SCI
+        LIB --> WRITE
+    end
+    WRAP --> CLI
+    PAF --> CLI
+    TREE --> CAL
+    RAW --> SCI
+    WRITE --> PRE["Calibration products and science MEFs"]
+    subgraph POST["Pycavi: subsequent processing"]
+        PRE --> NORM["Notebook 03: mean gain / exposure normalization"]
+        NORM --> N04["Notebook 04: solve-field and WCS MEF assembly"]
+        N04 --> LATER["Later extraction, coaddition and photometry"]
+    end

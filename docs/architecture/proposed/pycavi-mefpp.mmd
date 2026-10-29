@@ -1,0 +1,30 @@
+flowchart TD
+    WAD["WAD schemas and contracts"] --> MODEL["Data models and project service"]
+    WAD --> TOML
+    MODEL --> INSPECT["Read-only project overview"]
+    RAW["FITS / MEF assets"] --> INGEST["Inventory and explicit registration"]
+    NB01["Notebook 01: inspect and associate"] --> INGEST
+    ARRIVAL["Future arrival / quality monitor"] -.-> INGEST
+    INGEST --> MODEL
+    MODEL <--> GRAPH["ASDF project revisions and versioned records"]
+    TOML["TOML policies, recipes and settings"] --> ASSOC["Association planner"]
+    MODEL --> ASSOC
+    ASSOC --> PLAN["Freeze a finite execution plan"]
+    MANUAL["Notebook 03 or configured command"] --> PLAN
+
+    subgraph FUTURE["Later implementation: incremental reprocessing"]
+        EVENT["Changed assets, membership or policy"] --> IMPACT["Re-evaluate associations and affected descendants"]
+        IMPACT --> REVIEW["Impact plan and execution policy"]
+    end
+    GRAPH -.-> EVENT
+    REVIEW -.-> PLAN
+
+    PLAN --> EXEC["Executor and resource coordination"]
+    EXEC --> CLI["Native mefpp CLI"]
+    EXEC --> BIND["Optional mefppy binding"]
+    CLI --> CORE["Shared C services and isolated contexts"]
+    BIND --> CORE
+    CORE --> RESULT["Detector results and temporary FITS"]
+    RESULT --> PUB["Validate, assemble and publish"]
+    PUB --> FITS["Versioned FITS / MEF products"]
+    PUB --> MODEL

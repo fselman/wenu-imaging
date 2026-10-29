@@ -1,0 +1,422 @@
+# mefpp refactor implementation plan — proposal
+
+Version 3, 29 October 2026. For discussion; no implementation begins from this plan.
+Baseline: accepted main 22a32d39463a73ab32d2ba9d811f949198852902.
+Design: [target architecture revision 4](pycavi-mefpp.md).
+Data contracts: [WAD and ASDF processing projects](wad-processing-project.md).
+Evidence: [accepted OCAM/WFI baseline](../../developer/stage2-1-functional-results-2026-10-29.md), [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md), [PAF inventory](../../developer/mefpp-refactor-paf-inventory-2026-10-29.md) and [Chapman4 census](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
+
+## Executive summary
+
+Deliver one serial, numerically equivalent processing path with typed C configuration, TOML subsets, explicit file/detector references, modular native services and an ASDF-backed Pycavi plan. Replace the prepared-directory requirement without moving raw data or rewriting the scientific algorithms. Include single-detector layouts in the data contract and qualification. Add a readable recursive project inspection command in M3, replacing routine dfits/fitsort inspection. Include explicit numerical milestones M6a–M6d for variance creation/propagation, linearity, dark construction with optional native subtraction, and fringe-frame construction with later Python subtraction. Keep legacy-equivalence checks separate from acceptance of these additions.
+
+WAD supplies common data contracts from M0a. A ProcessingProject is the evolving ASDF-backed scientific workspace; execution plans freeze a project revision, exact memberships/associations and resolved settings, while runs record actual attempts/outcomes. M7 implements persistence for these early contracts rather than first defining them.
+
+The first pass records stable IDs, exact versions, ordered membership, association decisions, typed dependencies, task attempts and product provenance. It executes explicit manually selected plans; automatic change detection, invalidation/cascades and parallel execution are later milestones. mefppy is an optional first-pass deliverable after the native API is stable; its evaluation and API allowance are mandatory.
+
+Use small reviewed increments, maintaining a legacy adapter until the replacement passes the accepted baseline. Each increment has targeted checks and a rollback boundary. Finish with one cumulative OCAM/WFI five-exposure comparison through notebook 04, reusing existing references. Do not repeat the Stage 2 compiler/memory matrix or reduce the large Chapman dataset.
+
+Milestone IDs below organize this refactor; they do not renumber the global roadmap.
+
+## Milestone map
+
+| ID | Deliverable | Depends on | Completion evidence |
+|---|---|---|---|
+| M0 | Reviewable contracts and bounded verification plan | Existing analysis | Decisions, baseline checklist and unresolved choices recorded |
+| M0a | WAD foundation and ProcessingProject contracts | M0 | Small linked record examples, authority/versioning rules and bounded validation checklist |
+| M1 | Typed configuration and separated work/result state | M0, M0a | PAF-loaded effective settings/lifecycle equivalence |
+| M2 | TOML subsets and deterministic configuration resolution | M1 | PAF/TOML effective-value and rejection checks |
+| M3 | Explicit paths and recursive project overview CLI | M1; integrate TOML after M2 | Cwd-independent requests; readable, deterministic project/header/status overview |
+| M4 | Detector/layout mapping | M1, M3 | Permuted/subset/primary-image/one-extension controls |
+| M5 | Calibration subroutines and shared reference contract | M2–M4 | Legacy-equivalent calibration results and ownership |
+| M6 | Science subroutines and product writer | M5 | Equivalent native science/results, safe ordered publication |
+| M6a | Variance creation and propagation | M4–M6; contracts in M0 | Analytic controls, units, masks and stated covariance limits |
+| M6b | Linearity calibration/correction subroutine | M5–M6a | Known-response controls, validity limits and propagated uncertainty |
+| M6c | Dark construction and optional mefpp subtraction | M5–M6b | Matched/scaled dark controls; request/off behavior and variance |
+| M6d | Fringe-frame construction and Python subtraction interface | M5–M6c | Template/rejection controls and explicit later Python handoff |
+| M7 | WAD/ASDF persistence, project service and FITS resolver | M0a, M3–M4; finalized against M5–M6d | Offline round-trip, revision/reference/recovery and graph-version checks |
+| M8 | Shared inventory/association planner; notebook 01 | M2, M7 | Legacy associations imported/reproduced and selection explicit |
+| M9 | Serial executor; notebook 03 | M6–M8 | Selected dependency plan, truthful results and exactly-once corrections |
+| M10 | mefppy decision and optional qualified binding | M6–M7 | Decision record; binding equivalence if adopted |
+| M11 | Cumulative first-pass acceptance and migration handoff | M0–M9 including M6a–M6d; M10 disposition | Both instrument baselines, target checks, documentation and rollback |
+
+Some schema/source work can be developed independently after its prerequisites, but integrate one reviewed boundary at a time. M0a establishes the WAD/project schema contracts early; M7 persistence can be prepared against them before all kernel extraction is complete. Final executable descriptors must agree with the actual native contracts. This dependency flexibility does not authorize concurrent uncontrolled changes or agent delegation.
+
+## M0 — Freeze the contracts and verification boundary
+
+### Work and deliverables
+
+- Approve the split among immutable configuration, explicit request, detector work context and owned result.
+- Define IDs/versions for assets, groups, calibration/association records, tasks, attempts and products; classify processing dependencies separately from descriptive graph relationships.
+- Specify file-location bases, detector/HDU identity, units/correction state, output ownership, status/error reporting and API/schema compatibility.
+- Define signal/variance/mask planes and their FITS references, variance units and initialization source, calibration uncertainty, covariance limitations, linearity validity domains, dark units/scaling/applicability and fringe-template conventions. Freeze recipe order before numerical implementation; later changes must identify which calibrations and products need rebuilding.
+- Complete the migration ledger beyond the initial PAF inventory: consumed PAF fields, instrument/project CFG mappings, CLI options, defaults and known partition-local overrides. Record unresolved source-use cases instead of guessing.
+- Decide the first implementation's TOML language subset/parser and ASDF ownership boundary. Recommendation: Python owns ASDF planning/resolution initially; native CLI remains independently usable with TOML/FITS. Assess language/license/platform/dependency implications before installing anything.
+- Select the smallest synthetic fixtures and existing actual-host reference products for each boundary. No new pixel-quality certification.
+- Record actual source/tool/package identity and comparison rules before changed code runs.
+
+### Gate and rollback
+
+A concrete schema/header sketch, migration ledger and test/product checklist are reviewable. Numerical defaults, common normalization, ordering, masks and Python gain/exposure normalization remain unchanged. WAD and ProcessingProject are the owner-selected design names; their public import/package/tag namespace and library dependencies are not selected merely by this plan. M0 modifies documentation/fixtures only; accepted installations and data remain untouched.
+
+## M0a — WAD foundation and ProcessingProject contract
+
+### Work and deliverables
+
+- Establish Wenu Attribute Dictionary (WAD) definitions within the monorepo: vocabulary, meaning, types, units, required/optional/unknown states and schema compatibility. Keep schema versions independent of record/content/software versions.
+- Define the smallest linked examples: ProcessingProject revision, observation, detector/image reference, calibration, ordered group, association decision, immutable ExecutionPlan, run/attempt and product/result.
+- Record original instrument metadata, versioned normalization mappings and authority/source rules. Configured, raw-reported, characterized and derived values remain distinguishable; conflicts cannot be silently overwritten.
+- Separate the evolving project manifest from frozen plan inputs/settings and append-only/versioned attempt/result evidence. Stable logical IDs are independent from physical FITS/HDU locations.
+- Specify common configuration/native contract mappings so TOML, Python and C interfaces share semantics without embedding ASDF internals in C or adding an unqualified code-generation tool.
+- Define offline distribution of schema resources, explicit old-version/unknown-tag handling and recoverable configuration snapshots.
+- Draft the project service API for loading/resolving records, read-only inspection, explicit updates and single-coordinator publication with expected-parent revision checks.
+- Record separate schema, reference/I/O, plan, numerical and product-profile validation levels. Specify ownership, storage-unit and covariance limitations for signal/variance/masks.
+- Preserve the distinction among reduction profile, ordered recipe and product profile.
+
+### Gate and rollback
+
+Review the small schema/contract sketches and linked examples against OCAM/WFI metadata, a single-detector layout, shared calibrations and a missing/unbuilt product. Declare checks for exact-plan stability after a project/config update, configured-versus-measured values, location aliases and unsupported versions. Do not require modeling every future operation before extraction.
+
+M0a acceptance covers the agreed contract/examples only. It does not qualify an ASDF runtime, create a production WAD package, migrate data or implement numerical processing. Unresolved format/packaging choices remain explicit; preserve legacy data and interfaces.
+
+## M1 — Typed configuration and explicit ownership
+
+### Work and deliverables
+
+- Map native configuration/request/result fields to WAD concepts, with explicit units and status semantics; numerical code need not load ASDF schemas.
+- Introduce small C configuration structures and validation independent from PAF/TOML syntax.
+- Keep the current PAF reader as an adapter into those structures.
+- Separate static instrument/algorithm settings from filenames, detector traversal state, calibration handles, statistics and task results currently mixed in mef_bb.
+- Introduce explicit lifecycle/status contracts in .h and .c together. Existing recipe can use a compatibility adapter while extraction progresses.
+- Provide a developer-visible normalized settings dump so equivalence is observable.
+- Keep CLI parsing, initialization and informational commands out of reusable numerical routines.
+
+### Gate
+
+OCAM/WFI settings loaded through the old and adapted paths agree field-by-field, including defaults and output metadata mappings. Valid/invalid/partially constructed configurations release owned resources correctly; help/version remain independent of processing data. Targeted lifecycle diagnostics cover changed ownership, not a replay of the full historical matrix.
+
+### Rollback
+
+Retain the legacy reader/engine path and original PAFs. A new type layout is not exposed as the permanent Python ABI.
+
+## M2 — TOML subsets and configuration migration
+
+### Work and deliverables
+
+- Implement versioned domains: project/composition, instrument/detector, association, processing, recipe, execution, quality and product/profile. Keep separate reduction profile, recipe and product profile.
+- Permit a small project entry point to reference reusable subsets; do not require eight files where fewer suffice.
+- Define containing-file path bases, explicit override precedence/allowlist, unknown-key handling, schema versions and conflict diagnostics.
+- Convert OCAM/WFI examples using the migration ledger; retain original text, conversion provenance and source hashes.
+- Record identical duplicate PAF entries without silently accepting conflicting definitions.
+- Produce one immutable effective configuration for both CLI and library requests, validated against WAD attribute definitions. Preserve resolved values and their sources in the plan; edits to mutable TOML cannot redefine an old run.
+
+### Gate
+
+PAF and TOML produce identical effective scientific settings for both instruments and the selected local override cases. Tests cover missing/unknown keys, types/units/ranges, conflicting definitions, subset cycles and paths with spaces. Parse success alone is insufficient. No thresholds or coercions change accidentally.
+
+### Rollback
+
+PAF remains supported during migration; no temporary splitting of PAF or independent second set of defaults. Removal of PAF occurs only after the integrated replacement is accepted.
+
+## M3 — Explicit paths and project visualization commands
+
+### Work and deliverables
+
+- Route explicit resolved input/list/calibration/configuration paths and output/work/log destinations through CLI adapters, loaders, processing context and writers.
+- Resolve user-relative arguments once at invocation; resolve TOML/ASDF references relative to their containing document or declared root binding.
+- Import legacy relative lists using the recorded original execution base; flag unknown bases.
+- Replace mandatory parent-process/library chdir and implicit local PAF discovery in the new path.
+- Keep optional subprocess-private arenas only for unmodified external adapters that need them.
+- Prevent output collisions from duplicate input basenames. Preserve established FITS metadata behavior; do not introduce full long paths into unsafe legacy cards as a side effect. Full locations belong in provenance records; deferred qfits #125 remains separately scoped.
+- Support different read-only raw/calibration roots and writable output/scratch locations. Relative name handling must not leak into numerical kernels.
+
+### Project overview command
+
+- Add a read-only command, provisional spelling `pycavi project inspect PROJECT_ROOT --recursive`, that recursively reads existing projects and presents an understandable processing sequence rather than an unstructured file listing. Invocation must work from any directory.
+- Present WAD attributes through a legacy adapter initially, then through the ASDF ProcessingProject service in M7. Preserve raw values and authority/conflict indicators; inspection never updates project revisions.
+- Initially read legacy configuration, science/calibration lists, links and FITS headers; use the same resolved-path rules as execution. Adapt to ASDF records in M7 and the shared inventory/planner in M8 rather than maintaining a second association engine.
+- Show project/instrument, target, filter, exposure time, detector coverage, partitions and ordered input membership; show associated bias/BPM/dome/sky/master-flat and later linearity/dark/fringe products, followed by native preprocessing, normalization and WCS products.
+- Provide a concise overview plus drill-down by partition, exposure, detector and stage. Include selected header columns and sorting/filtering so this replaces routine dfits/fitsort commands. A table view and machine-readable export support notebooks and later graphical views; exact flags are settled in M0.
+- Show counts, resolved locations, shared calibrations, missing/unavailable references, recorded attempts and available completion/failure evidence. Distinguish planned, existing-unverified and validated/published results; do not infer success or historical associations from filenames alone.
+- Handle incomplete projects, unreadable headers and dangling links with visible diagnostics. Follow declared references safely, deduplicate shared assets, prevent symlink/graph traversal loops and report any scan limits or incomplete coverage. Default to metadata inspection without reading image arrays, bulk hashing, running reductions or modifying the project.
+
+### Gate
+
+Bounded legacy fixtures cover nested partitions, shared calibrations, missing products, malformed headers and cyclic links; verify stable grouping/order, header values, diagnostic counts, truthful coverage and no project writes. Compare requested header columns with known FITS cards. Later ASDF-backed views must retain these semantics.
+
+The same explicit request launched from two unrelated directories produces equivalent pixels/relevant metadata and leaves cwd unchanged. Cover spaces, duplicate basenames, missing/incompatible inputs, no writes to raw storage and explicit output destinations. A single input-directory option or a hidden chdir wrapper does not meet this milestone.
+
+### Rollback
+
+The legacy arena adapter remains available for comparison. New outputs go to isolated attempts; existing arenas/links are not repaired or moved.
+
+## M4 — Detector identity and image-layout layer
+
+### Work and deliverables
+
+- Represent detector identity, per-file HDU index/name/version, amplifier/geometry, shape/type/scaling, units and original order explicitly.
+- Resolve each calibration's detector map independently rather than pairing by ordinal extension.
+- Support primary image HDU 0, one image extension and MEF within the I/O descriptor.
+- Keep health, user selection and processing result separate; preserve detector IDs when excluding a detector.
+- Carry normalization-reference identity separately from selected output detectors. Initially preserve the legacy reference; absence/exclusion must not trigger an unreviewed replacement policy.
+
+### Gate
+
+Tiny controls cover shuffled calibration HDUs, duplicate/missing/unknown IDs, selected subsets and deterministic output order. Primary-HDU and one-extension fixtures reach the same detector processing entry point without requiring a fictitious mosaic. Compare an extracted detector with its mosaic counterpart using the same required shared calibration/normalization context.
+
+### Rollback
+
+Retain the explicit legacy mapping for already qualified fixtures; fail unsupported ambiguous layouts before arithmetic. No claim of generic CMOS qualification follows.
+
+## M5 — Extract calibration services
+
+### Work and deliverables
+
+- Extract bias, BPM, dome, sky and master-flat operations from recipe/control code into callable C services.
+- Preserve actual algorithms, rejection order, thresholds, precision, masks and metadata.
+- Separate loading, computation and publication; expose owned calibration results.
+- Make shared dome/sky reference statistics an explicit input/result contract.
+- Eliminate hidden input mutation or document controlled ownership transfer, particularly around mef_ff_combine.
+- Distinguish native BPM construction from Pycavi's supplied-mask copying. This refactor does not silently change the observational recipe to generate new masks.
+- Retain the existing sky/master-flat coupling through a compatibility recipe until separately represented operations are equivalent.
+
+### Gate
+
+Known-answer fixtures reproduce calibration arrays, detector mapping and agreed metadata; shared normalization matches the legacy reference. Relevant constructor/partial-failure/cleanup checks pass. Use existing accepted calibration evidence where unchanged; only exercise new boundaries needed by extraction.
+
+### Rollback
+
+One service per reviewable increment, with legacy/component comparisons. New variance, linearity, dark and fringe numerical capabilities are delivered in M6a–M6d, with separate acceptance from this legacy extraction. Gain/RON characterization retains its own scoped calibration work; configured values remain explicitly identified until replaced by characterized values.
+
+## M6 — Extract science processing and product publication
+
+### Work and deliverables
+
+- Extract native science load/scan/trim/bias/flat operations into detector services with explicit calibration and correction-state inputs.
+- Return structured result/diagnostic objects; numerical routines cannot terminate the Python host.
+- Separate FITS header construction, detector output and deterministic MEF assembly.
+- Give each attempt unique temporary outputs; one coordinator owns the final product.
+- Define publication/recovery states and prevent accidental overwrite. If scratch and output are on different filesystems, stage into the output filesystem before any same-filesystem atomic rename; do not assume a cross-filesystem rename or ASDF/FITS transaction.
+- Keep Python mean-gain/exposure normalization in its current numerical owner during equivalence. State records must prevent a second application.
+
+### Gate
+
+Native science agrees with the legacy path on tiny fixtures and a bounded selected real case for each instrument. Test explicit paths, meaningful metadata/units, ordered complete publication and interrupted output behavior. Failed attempts never appear as published complete products. Exercise only modified failure/ownership paths.
+
+### Rollback
+
+Preserve all prior products and failed attempts. CLI default/installed selection remains unchanged until final acceptance and an explicit activation decision.
+
+## M6a — Variance creation and propagation
+
+### Work and deliverables
+
+- Implement detector-level variance initialization from supplied variance or an explicitly selected noise model using gain/read noise and units. Record assumed versus measured calibration inputs; do not silently manufacture missing uncertainties or interpret missing variance as zero.
+- Propagate signal, variance and masks together through trimming, bias/dark subtraction, flat division and gain/exposure scaling. Calibration builders return uncertainty/coverage information using the actual combination and rejection method.
+- Account for calibration uncertainty and shared normalization estimates under a declared approximation; preserve references to shared calibration errors. An independent per-pixel variance plane cannot encode all correlations.
+- Carry squared signal units, detector/HDU mapping, mask validity, model version and correction state. Pixels remain in FITS, including variance/mask planes or explicitly linked companion FITS; ASDF records their locations and meaning.
+- Establish the handoff for later Python fringe subtraction and WCS/resampling stages. WCS header correction preserves pixel variances; actual resampling needs a separately specified covariance treatment.
+
+### Gate and rollback
+
+Use small analytic controls for addition/subtraction, division, scaling, masked/zero-flat cases and representative calibration combinations, plus bounded simulation where estimator uncertainty requires it. Check dimensions, nonnegative finite valid values and exactly-once scaling. Label unavailable or approximate uncertainty honestly. Preserve legacy signal equivalence; retain variance-disabled compatibility mode with explicit unavailable state.
+
+## M6b — Linearity subroutine and calibration products
+
+### Work and deliverables
+
+- Define a versioned per-detector/amplifier linearity model with input units, valid signal range, reference convention, coefficients/table, calibration provenance and uncertainty.
+- Add a callable C linearity-correction subroutine; plan a separate calibration-building operation from linearity sequences so fitting and applying the model have distinct contracts.
+- Specify the order relative to overscan, bias, dark and flat with the model convention; prepare all calibration inputs consistently and record which correction was applied.
+- Propagate variance through the model response and supported model uncertainty. Flag saturated/out-of-domain values; no silent extrapolation.
+- Expose explicit recipe/configuration selection and the same operation to optional mefppy.
+
+### Gate and rollback
+
+Known synthetic response curves recover declared reference signals within stated tolerances; cover identity response, detector-specific models, invalid domains and uncertainty behavior. Characterization of real detectors is a separate bounded dataset acceptance, not implied by code acceptance. Disabled correction retains the legacy signal path.
+
+## M6c — Dark creation and optional native subtraction
+
+### Work and deliverables
+
+- Add a callable C dark-construction service with explicit input selection, bias/linearity correction state, detector geometry, exposure, temperature/readout applicability, combination/rejection and output variance/masks.
+- Distinguish an exposure-matched master dark from a dark-current rate product; record units and supported scaling. Exposure/temperature scaling is permitted only by the selected validated model, never inferred from a filename.
+- Let mefpp subtract the selected dark on explicit request through the recipe/CLI and optional library request. Record applied dark version and any scale; omission/off leaves the compatibility path unchanged.
+- Propagate dark uncertainty and relevant scaling uncertainty; reject incompatible or already-applied corrections. Link dark dependencies into associations, plans and future impact analysis.
+
+### Gate and rollback
+
+Controls cover known dark signals, matched exposure, explicitly supported rate scaling, disabled subtraction, missing/incompatible darks and no double subtraction. Check resulting pixels, variance, masks and provenance. Real temperature/exposure modeling requires separate measured qualification; preserve existing products and dark-disabled references.
+
+## M6d — Fringe-frame creation and later Python subtraction
+
+### Work and deliverables
+
+- Add a callable C fringe-frame construction service using explicitly prepared, compatible input frames. Define source masking, background treatment, normalization, combination/rejection, detector/filter applicability, variance and coverage.
+- Preserve ordered membership and preparation state; science-derived templates record their contributing science versions and any shared uncertainty/self-contribution limits.
+- Publish the fringe template as FITS with ASDF calibration/provenance references. It is not automatically subtracted by mefpp.
+- Specify a separate later Python subtraction operation: select the exact template, estimate or supply the scale, apply subtraction, propagate template/scale uncertainty and masks, and record correction state. Keep construction and subtraction independently selectable and resumable.
+
+### Gate and rollback
+
+Synthetic structured backgrounds and masked sources check template recovery, normalization, coverage and uncertainty. Verify publication and the Python handoff contract without claiming the later subtraction is implemented. Its later acceptance covers scale recovery, residuals, propagated uncertainty and double-application protection. Preserve unsubtracted products; no automatic fringe or iterative scientific policy is introduced.
+
+## M7 — WAD persistence, ASDF project service and FITS resolver
+
+### Work and deliverables
+
+- Qualify the selected ASDF adapter privately; do not upgrade the working scientific stack implicitly.
+- Implement the M0a WAD contracts for ProcessingProject revisions, asset/group/calibration/association/task/attempt/product/assessment, stable IDs, exact versions and typed edges. Schemas and native descriptors evolve together with explicit compatibility handling.
+- Keep image arrays in FITS/MEF. Implement explicit FITS reference resolution and metadata/layout validation; ASDF external-array references do not themselves resolve files.
+- Preserve ordered membership, original card/provenance references, logical versus physical locations and recorded configuration snapshots.
+- Implement a small project entry manifest referring to distributed records; keep arrays in FITS and avoid recursively expanding cyclic graph objects into one giant project tree.
+- Package required schema resources for offline reading. Define compatibility/migration or explicit refusal for unsupported versions; no implicit live schema download.
+- Implement load/resolve/validate and explicit revision publication in a shared project service. Preserve project history; reject stale expected-parent updates and record interrupted publication without claiming a multi-file transaction.
+- Persist frozen plans independently of run/attempt outcomes. Store recoverable resolved configuration and software requirements; actual execution identity must satisfy the request's compatibility contract.
+- Define serializable native request/result descriptions against WAD. Optional native ASDF adapter remains a separate decision.
+- Validate exact-version execution dependencies as a finite DAG, while permitting descriptive graph back-references.
+- Reference signal, variance, mask, linearity, dark and fringe products explicitly, including model/scale versions, correction order/state and uncertainty limitations. Extend the M3 inspector to these durable records.
+- Represent unavailable/planned, existing-unverified, validated and published products distinctly. Do not require a graph database or change monitor.
+
+### Gate
+
+Synthetic and bounded real metadata records round-trip without losing identity/order/units. Test relocation aliases, missing/mismatched files, duplicate detector selectors, unresolved IDs and true task-dependency cycles. A current plan continues to reference its exact inputs/settings after newer project revisions, TOML edits or calibrations are registered. Controls cover offline schemas, metadata authority conflicts, stale-writer rejection, interrupted project-entry publication and retained history; schema success alone is not scientific validation. No bulk pixel conversion or full-dataset content hashing is required.
+
+### Rollback
+
+ASDF records are additive; original FITS, CFG/PAF, lists/links and existing products remain intact. Retain a documented schema reader/migration boundary for later versions.
+
+## M8 — Shared inventory/association planner and notebook 01
+
+### Work and deliverables
+
+- Use the shared ProcessingProject service and WAD records as the notebook/headless entry point. Separate read-only preview from explicit registration/association updates; preserve prior project revisions.
+- Separate explicit-root inventory, classification/grouping, calibration association, selection preview and optional legacy-tree materialization.
+- Import existing lists/links and local settings as evidence, preserving line order and original identifiers.
+- Include explicit linearity/dark/fringe applicability and selection, with off/unavailable states rather than silently substituting calibrations.
+- Reproduce selected historical association decisions before reviewing policy improvements.
+- Save group membership snapshots, selected/rejected calibration candidates and selection rationale in ASDF.
+- Make notebook 01 call this library; preserve inspectable human selection and overrides.
+- Preserve independent workspace, raw-storage and reduction-project roots observed on Chapman4.
+
+### Gate
+
+Import a bounded example with shared calibrations, an unbuilt product and separate workspace/project roots. Its association graph matches the recorded input lists/links. Reading or previewing a plan writes no reduction products; repeated inventory does not silently alter selection. Do not reduce the 963 historical science-list memberships.
+
+### Rollback
+
+Legacy partition import/export remains usable; no directory relocation or new shallow layout is required.
+
+## M9 — Serial executor and notebook 03
+
+### Work and deliverables
+
+- Open an ASDF ProcessingProject and select/freeze a plan from a specific revision; later project edits cannot change the running request.
+- Execute an explicitly selected finite dependency plan through the modular native CLI, initially one task at a time.
+- Build/reuse decisions are visible; a shared calibration runs once per requested version.
+- Keep an explicit choice to build/inspect calibrations before continuing to science.
+- Record exact input/config/software identities, task/attempt status, output references and normalization state.
+- Make notebook 03 and a configured Python command call the same executor.
+- Record product manifests in ASDF after validation; maintain a recoverable single-writer project index.
+- Implement only bounded manual resume of an exact plan with validated reusable outputs. No watcher, automatic association change or impact scheduler.
+
+### Gate
+
+Selecting one group runs its dependencies only. A failed calibration stops dependent science; independent completed results remain recorded. Repeating a completed request does not blindly normalize again or overwrite products. Cancellation/interruption produces truthful attempt states. Notebook 04 consumes the resulting FITS outputs through explicit references; its scientific solver is not replaced.
+
+### Rollback
+
+Legacy notebook/library calls remain available for the preserved comparison baseline until the new client is accepted.
+
+## M10 — mefppy feasibility decision and optional first binding
+
+### Required evaluation
+
+- Compare compiled CFFI, a CPython extension and a narrow ctypes boundary against the actual new C API, packaging/platform needs and ownership rules.
+- Decide file-based requests first versus borrowed array buffers; do not promise zero-copy prematurely.
+- Verify the native code has no unhandled process-exit, global cwd or unsafe cross-call assumptions before hosting it inside Python.
+- Document initialization, context lifetime, diagnostics/cancellation, resource release and process isolation.
+
+### If adopted in the first pass
+
+Implement the narrowest binding over the same services as the CLI. Qualify repeated success/failure calls in one interpreter, cleanup, import outside the checkout and CLI/library equivalence. Test actual Mac and the identified Linux target. Releasing the GIL is not thread-safety acceptance.
+
+### Gate and fallback
+
+Record adopt/defer with evidence. A deferred binding does not block the serial CLI-backed first pass, but the native API must remain binding-ready. No permanent public Python exposure of mef_bb/Eclipse/qfits structures.
+
+## M11 — Integrated acceptance and migration handoff
+
+### Work and deliverables
+
+- Run one cumulative candidate pipeline for the accepted five OCAM exposures and five WFI exposures across its three partitions, in fresh isolated outputs, through notebook 04.
+- Reuse the accepted input/software records and old outputs as reference; compare new calibration/native/normalization/WCS results at their appropriate boundaries.
+- Run separate bounded controls for M6a–M6d and integrate only qualified requested corrections; unchanged legacy comparisons run with new corrections disabled. The accepted Stage 2.1 dataset alone does not validate new calibration models or fringe subtraction in Python.
+- Require declared detector coverage, pixel/unit/correction-state equivalence and expected provenance. WCS assembly must preserve its normalized inputs; compare astrometric behavior with an agreed deterministic/functional rule rather than requiring incidental solver metadata/timestamps to be byte-identical.
+- Demonstrate actual primary-HDU/one-extension CCD preprocessing through the new services with suitable supplied calibration context; genuine detector-characterization/scientific qualification remains separate.
+- Develop/check on Intel Mac and qualify changed interfaces on the actual selected Linux host, currently chapman4. Prior chapman3 evidence is not transferred automatically; collect fresh host/tool/allocation evidence before target changes/workloads.
+- Run targeted ownership/error diagnostics for the new context/API/binding paths, not the full exhausted Stage 2 campaign.
+- Verify WAD/ASDF round trips and native/client contract consistency, supported-version handling, project relocation/export completeness and preserved exact plans/history. Inspect offline schema resources and configuration snapshot recoverability.
+- Publish current/target diagrams, configuration migration guide, installed resources/schema documentation, supported layout/backend matrix, known gaps and rollback procedure.
+
+### Gate
+
+Owner reviews the bounded functional results and actual target limitations. Earlier accepted Stage 2/2.1 evidence remains preserved; new refactor acceptance is a separate result. No scientific/Phase 3 certification or automatic downstream full-survey processing.
+
+### Activation and rollback
+
+Keep candidate prefixes/configuration private during qualification. Switching normal engine/package selection, removing legacy PAF support or retiring compatibility clients requires the concrete accepted migration/activation decision. Do not delete reference products, raw frames or failed history. Git merge/branch cleanup follows the owner's separate instruction.
+
+## Later pass P — Actual process parallelization
+
+After serial acceptance:
+
+1. Profile representative detector operations, memory and I/O using bounded inputs.
+2. Qualify immutable shared-reference barriers and isolated worker contexts/temporary paths.
+3. Add allocation-aware process workers, ordered single-writer assembly and truthful worker failure/cancellation propagation.
+4. Test one versus multiple workers, shared-calibration deduplication, failure isolation, cleanup/restart and serial equivalence.
+
+No MPI, GPU or native-thread safety is assumed. Keep one numerical thread per worker initially and account for external tool threads. Optional threading/accelerators retain their separately reviewed roadmap assessment.
+
+## Later pass G — Incremental association and reprocessing
+
+### G1 — Change registration and advisory impact plans
+
+- Register idempotent observation/calibration/quality/policy/membership changes.
+- Find eligible associations even where the new calibration has no existing selected dependency edges.
+- Re-evaluate selection and preserve the old decision; compute affected descendants only when effective inputs change.
+- Produce an advisory plan with reuse/unavailable-dependency and resource implications; do not launch automatically.
+
+Gate: unchanged selection creates no pixel work; newly selected calibrations affect the correct consumers; location-only changes do not force numerical reruns.
+
+### G2 — Manually approved incremental execution
+
+- Define versioned task signatures and qualified reuse rules.
+- Deduplicate shared calibration rebuilds.
+- Update combinations after new science arrivals without needlessly reprocessing compatible existing exposures.
+- Preserve frozen releases while active projects may follow explicit selection policies.
+
+Gate: demonstrate minimal affected work, exact-version consistency, recovery and preservation of older products on controlled graphs.
+
+### G3 — Optional bounded automatic cascades
+
+- Add explicitly enabled arrival monitoring and execution rules.
+- Bound eligible change classes, task counts and CPU/memory/storage consumption.
+- Coalesce/deduplicate events and suppress loops caused by the system's own publications.
+- Define pause/cancel, owner overrides and audit trails.
+
+Gate: predictable bounded cascades, no infinite event loop or unreviewed scientific association-policy change.
+
+### G4 — Explicit iterative recipes, if separately needed
+
+Represent successive calibration/product versions with stopping criteria, maximum iterations and failure/resource policy. Reject executable cycles. Scientific feedback methods need their own validation; a graph engine alone does not approve a fringe/self-calibration algorithm.
+
+## Working rules across milestones
+
+- Proposals identify concrete scope before code changes. Record distinct defects under existing/new issues and link corrections/verification before closure.
+- Every test explanation names actual routines, inputs, outputs/pass criteria and limits.
+- Preserve common mosaic normalization, detector identity/order, masks, units and numerical precision; review changes instead of silently accepting differences.
+- Use source comments for technical reasons; maintain C headers, build/install documentation and attribution requirements with code changes.
+- Keep required C90/C17 compatibility checks appropriate to changed code. Do not add language/library upgrades by implication.
+- Batch work respects actual CPU/memory allocation and niceness policy. Interactive notebooks remain normal priority.
+- No dates or speedup claims are assigned before implementation scope and representative measurements exist.

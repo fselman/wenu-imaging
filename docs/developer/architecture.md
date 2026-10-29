@@ -1,5 +1,7 @@
 # wenu-imaging architecture
 
+29 October 2026: see the [original architecture diagram](../architecture/original/pycavi-mefpp.md) and [target architecture proposal](../architecture/proposed/pycavi-mefpp.md). The proposed execution contract resolves inputs, calibrations, configuration and output/work destinations explicitly, without changing the caller's working directory or implicitly searching for files. Existing cwd-dependent behavior remains unchanged; this is design for discussion.
+
 Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
 source baseline and explicitly qualify compilation and behavior in C17 mode.
 C17 is a compatibility target, not a new source-feature baseline. Inventory
