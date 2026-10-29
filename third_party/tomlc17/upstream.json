@@ -1,0 +1,24 @@
+{
+  "name": "tomlc17",
+  "upstream_url": "https://github.com/cktan/tomlc17",
+  "upstream_revision": "4987cf895df61f702d19e3481f34b032ab29ed3a",
+  "license": "MIT",
+  "local_patches": false,
+  "files": {
+    "tomlc17.c": {
+      "upstream_path": "src/tomlc17.c",
+      "sha256": "7476923b6c9b8f0858b82b63ed6107f57448882983390e70c31327f7d3e2a362",
+      "upstream_git_blob": "24a59ff947bec19ea28a2ee48e27f54126108081"
+    },
+    "tomlc17.h": {
+      "upstream_path": "src/tomlc17.h",
+      "sha256": "29c0909092f4b23c7edce705167064f4a90548db5334b4aa2cd95d7ad801adb9",
+      "upstream_git_blob": "c53be3e96d16e06c63f99b1b622df680d0f41833"
+    },
+    "LICENSE": {
+      "upstream_path": "LICENSE",
+      "sha256": "f949d0976f85076c96fc5122f0632b5a1b806d8b2badbe968c42c97230e6e79e",
+      "upstream_git_blob": "173779e2145a1cc338cabfdeb024d13490c96c02"
+    }
+  }
+}

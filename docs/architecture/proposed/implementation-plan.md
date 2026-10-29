@@ -1,5 +1,8 @@
 # mefpp refactor implementation plan — proposal
 
+29 October owner decision: use the [vendored, pinned tomlc17 source](../../../third_party/tomlc17/README.wenu.md) for the planned native TOML reader. Source import and byte-identity verification are approved now; the static build target and production adapter remain M2 implementation work after their prerequisites. Qualification N1–N4 on Mac/Chapman4 is complete within the recorded limits. This source import does not advance native numerical refactoring or install packages.
+29 October owner addition: [bounded native TOML qualification](../../developer/native-toml-qualification-2026-10-29.md) now belongs to the current dependency work. Authorize private Mac/Chapman4 tests of pinned tomlc17 with a scoped C99 dependency exception, strict-C90 caller boundary, shared TOML 1.0 semantics/error controls and ownership checks before production parser adoption. Existing native source/public contracts retain C90; this does not authorize M1/M2 implementation, installation or processing. The completed Python/core-ASDF trial is preserved.
+
 Version 3, 29 October 2026. For discussion; no implementation begins from this plan.
 Baseline: accepted main 22a32d39463a73ab32d2ba9d811f949198852902.
 Design: [target architecture revision 4](pycavi-mefpp.md).
@@ -17,6 +20,8 @@ WAD supplies common data contracts from M0a. A ProcessingProject is the evolving
 The first pass records stable IDs, exact versions, ordered membership, association decisions, typed dependencies, task attempts and product provenance. It executes explicit manually selected plans; automatic change detection, invalidation/cascades and parallel execution are later milestones. mefppy is an optional first-pass deliverable after the native API is stable; its evaluation and API allowance are mandatory.
 
 Use small reviewed increments, maintaining a legacy adapter until the replacement passes the accepted baseline. Each increment has targeted checks and a rollback boundary. Finish with one cumulative OCAM/WFI five-exposure comparison through notebook 04, reusing existing references. Do not repeat the Stage 2 compiler/memory matrix or reduce the large Chapman dataset.
+
+Production dependency gate: [Chapman TOML/ASDF qualification](../../developer/toml-asdf-chapman-qualification-2026-10-29.md). Chapman machines are the main production targets. No new parser/ASDF runtime is adopted on Mac-only evidence; inspect actual target state, qualify the constrained dependency closure privately, and verify interchange/offline operation on both platforms before adoption.
 
 Milestone IDs below organize this refactor; they do not renumber the global roadmap.
 
@@ -267,7 +272,7 @@ Synthetic structured backgrounds and masked sources check template recovery, nor
 
 ### Work and deliverables
 
-- Qualify the selected ASDF adapter privately; do not upgrade the working scientific stack implicitly.
+- Qualify the selected ASDF adapter and its transitive dependencies privately on the actual Mac and production Chapman target before adoption; require offline operation/interchange and preserve the working scientific stack.
 - Implement the M0a WAD contracts for ProcessingProject revisions, asset/group/calibration/association/task/attempt/product/assessment, stable IDs, exact versions and typed edges. Schemas and native descriptors evolve together with explicit compatibility handling.
 - Keep image arrays in FITS/MEF. Implement explicit FITS reference resolution and metadata/layout validation; ASDF external-array references do not themselves resolve files.
 - Preserve ordered membership, original card/provenance references, logical versus physical locations and recorded configuration snapshots.
