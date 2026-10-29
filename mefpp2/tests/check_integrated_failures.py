@@ -3,7 +3,7 @@ from copy import deepcopy
 from pathlib import Path
 import json,re,tempfile
 from unittest.mock import patch
-from qualify_integrated_failures_mac import inject,PATCHES,failure_diagnostics,publication_parent,PUBLICATION_SEQUENCE
+from qualify_integrated_failures_mac import inject,PATCHES,failure_diagnostics,publication_parent,PUBLICATION_SEQUENCE,cube_parent,CUBE_SEQUENCE
 
 
 def output(lane):
@@ -67,6 +67,25 @@ def main():
         else:raise AssertionError('Unreviewed publication parent accepted')
     assert len(PUBLICATION_SEQUENCE)==7 and PUBLICATION_SEQUENCE[:2]==(('blocked-output','instrumented'),('publication-smoke','instrumented'))
     assert PUBLICATION_SEQUENCE[2:]==(('blocked-output','leaks'),('context-allocation','instrumented'),('context-allocation','leaks'),('cube-allocation','instrumented'),('cube-allocation','leaks'))
+    # v2.5 accepts only the six-role publication attempt ending in injected UBSan.
+    cube_cases=[]
+    for variant,lane in PUBLICATION_SEQUENCE[:5]:
+        case=deepcopy(passed);case.update(variant=variant,lane=lane);cube_cases.append(case)
+    cube_cases.append(dict(variant='cube-allocation',lane='instrumented',status='failed',exit_status=86,
+        findings=['Observer/tool exited nonzero (not a clean observed native failure)',
+                  'Missing native return/cleanup observation (possible crash/exit)'],partial_products={}))
+    cube_record=deepcopy(parent);cube_record.update(source=dict(commit='2e3969c4a1e3bc112325e7a2c7d6f8bdc7f260bb'),cases=cube_cases,
+        planned_launches_consumed=15,retest_launches_consumed=8,native_launches_consumed=23,publication_exception_consumed=True)
+    cube_parent(cube_record)
+    for mutate in (lambda r:r.update(native_launches_consumed=0),lambda r:r.update(correction_rounds_consumed=3),
+                   lambda r:r.update(publication_exception_consumed=False),lambda r:r['cases'][-1].update(exit_status=1),
+                   lambda r:r['cases'][0].update(status='failed'),lambda r:r.update(fixture_inputs_unchanged=False),
+                   lambda r:r['cases'][-1].update(partial_products={'unexpected.fits':'hash'})):
+        bad=deepcopy(cube_record);mutate(bad)
+        try:cube_parent(bad)
+        except RuntimeError:pass
+        else:raise AssertionError('Unreviewed cube parent accepted')
+    assert CUBE_SEQUENCE==(('cube-allocation','instrumented'),('cube-smoke','instrumented'),('cube-allocation','leaks'))
     print('F3 parser/injection controls passed; native launches: 0')
 
 

@@ -1809,6 +1809,11 @@ cube_t * mef_cube_framelist_load(framelist *flist, int xtnum)
 			err++ ;
 		}
 		loaded = cube_new(mef_frame->lx, mef_frame->ly, flist->n);
+        if (loaded == NULL) {
+            e_error("mef_cube_framelist_load: cannot allocate input cube");
+            image_del(mef_frame);
+            return NULL;
+        }
 		loaded->plane[0] = mef_frame ;
 		for (i=1 ; i<flist->n ; i++) {
 			mef_frame = mef_load_ext(flist->name[i], xtnum);

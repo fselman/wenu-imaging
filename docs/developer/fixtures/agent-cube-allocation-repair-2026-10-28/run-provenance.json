@@ -1,0 +1,32 @@
+{
+  "status": "prepared-not-Mac-verified",
+  "issue": 129,
+  "owner_authorization": "authorized after two-C-file/two-added-retest proposal",
+  "checks": {
+    "c90_syntax": "passed",
+    "c17_syntax": "passed",
+    "c90_actual_constructor_loader_controls": "passed",
+    "c17_actual_constructor_loader_controls": "passed",
+    "python_guards": "passed",
+    "python_syntax": "passed"
+  },
+  "native_source_sha256": {
+    "mefpp2/src/iproc/cube_handling.c": "77384f40f88c2370eaf72e187b74ae4cfb045300e023370e7ede9b8eb8546cff",
+    "mefpp2/ins/mef/common/mefp_lib.c": "09b7b7cbcef77db59f3d8b4ef0ffb350f42a7bee093ccfac99944566d87a5c17"
+  },
+  "test_source_sha256": {
+    "mefpp2/tests/cube_allocation_probe.c": "7f3171711de2240fd63b489788e625ab4522b1896c44a92c6a9307cfb08ba724",
+    "mefpp2/tests/qualify_integrated_failures_mac.py": "32d8782fa049a9de2db83a42dd27b9cb33b3f255d14ab1a7a36f7b9c43396e6a",
+    "mefpp2/tests/check_integrated_failures.py": "ad034e81ba2d93fd13389721205f7b794e614460329c0d48df58c46e1a694c3b"
+  },
+  "loader_excerpt_sha256": "ccc20f2c0f4ac356cb962836b8eea80bf2d6ff2b8e85cbeb1b8b48e5cd4fc0a4",
+  "recipe_launches": 0,
+  "approved_added_retests": 2,
+  "remaining_original_F3_roles": 1,
+  "general_repair_rounds": 2,
+  "limits": [
+    "Actual cube constructor and exact source loader excerpt tested with controlled allocator/image/FITS-service stubs; not real qfits or recipe execution",
+    "No Mac acceptance claimed until failed-case retry/exact successful smoke/external leaks complete",
+    "No .h, recipe or qfits changes beyond the inherited already approved publication repair"
+  ]
+}

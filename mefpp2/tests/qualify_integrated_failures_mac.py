@@ -10,6 +10,7 @@ from descriptor_snapshots import snapshots
 
 CASES=('missing-list','corrupt-frame','blocked-output','context-allocation','cube-allocation')
 PUBLICATION_SEQUENCE=(('blocked-output','instrumented'),('publication-smoke','instrumented'),('blocked-output','leaks'),('context-allocation','instrumented'),('context-allocation','leaks'),('cube-allocation','instrumented'),('cube-allocation','leaks'))
+CUBE_SEQUENCE=(('cube-allocation','instrumented'),('cube-smoke','instrumented'),('cube-allocation','leaks'))
 PATCHES=(('ins/mef/common/mefp_lib.c','bb = calloc(1, sizeof(mef_bb));','bb = (getenv("S2_F3_ALLOC") != NULL && !strcmp(getenv("S2_F3_ALLOC"), "context")) ? (fprintf(stderr, "F3 INJECT context allocation\\n"), (void *)0) : calloc(1, sizeof(mef_bb));'),
          ('src/iproc/cube_handling.c','n = malloc(sizeof(cube_t)) ;','n = (getenv("S2_F3_ALLOC") != NULL && !strcmp(getenv("S2_F3_ALLOC"), "cube")) ? (fprintf(stderr, "F3 INJECT cube allocation\\n"), (void *)0) : malloc(sizeof(cube_t)) ;'))
 
@@ -78,11 +79,33 @@ def publication_parent(old):
         raise RuntimeError('STOP: reviewed partial product set differs')
 
 
+
+def cube_parent(old):
+    """Admit precisely the reviewed v2.4 injected cube UBSan failure."""
+    if (old['source']['commit']!='2e3969c4a1e3bc112325e7a2c7d6f8bdc7f260bb'
+        or old['status']!='stopped' or old['execution_complete'] or not old['publication_exception_consumed']
+        or [old[k] for k in ('planned_launches_consumed','retest_launches_consumed','native_launches_consumed','correction_rounds_consumed')]!=[15,8,23,2]):
+        raise RuntimeError('STOP: unreviewed cube parent/counters')
+    if [(c['variant'],c['lane']) for c in old['cases']]!=list(PUBLICATION_SEQUENCE[:6]):raise RuntimeError('STOP: cube parent case order differs')
+    for case in old['cases'][:5]:
+        if case['status']!='passed' or case['exit_status']!=0 or case['findings']:raise RuntimeError('STOP: prior publication/context case not passed')
+    failed=old['cases'][-1]
+    if (failed['status']!='failed' or failed['exit_status']!=86 or failed['partial_products']
+        or failed['findings']!=['Observer/tool exited nonzero (not a clean observed native failure)',
+                               'Missing native return/cleanup observation (possible crash/exit)']):
+        raise RuntimeError('STOP: not reviewed cube UBSan failure')
+    for key in ('protected_files_unchanged','checkout_unchanged','previous_evidence_unchanged','fixture_inputs_unchanged'):
+        if not old[key]:raise RuntimeError('STOP: cube parent preservation finding')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('compiler','sdk','cmake'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--resume-publication',action='store_true',help='Approved one-use v2.4 publication repair only')
+    p.add_argument('--resume-cube',action='store_true',help='Approved one-use v2.5 cube allocation repair only')
     args=p.parse_args()
+    if args.resume_cube and args.resume_publication:raise RuntimeError('STOP: incompatible exception flags')
+    resuming=args.resume_publication or args.resume_cube
     # Actual-host/source guards and inherited successful campaign; no processing here.
     if platform.system()!='Darwin' or platform.node().split('.')[0]!='MC02VV0HPHTDG':raise RuntimeError('STOP: qualified Mac required')
     if Path(sys.prefix).resolve()!=Path('/Users/fselman/anaconda3') or os.getpriority(os.PRIO_PROCESS,0)<10:raise RuntimeError('STOP: qualified Python / nice >=10 required')
@@ -92,22 +115,32 @@ def main():
     if repo!=Path('/Users/fselman/Developer/wenu-imaging') or git('status','--porcelain','--untracked-files=all'):raise RuntimeError('STOP: clean qualified checkout required')
     if git('symbolic-ref','--short','HEAD')!='test/stage2-integrated-campaign':raise RuntimeError('STOP: wrong branch')
     commit=git('rev-parse','HEAD')
-    changed=git('diff','--name-only','f5afd08fbfb35a8a50409c92352f9061c92c1f69',commit,'--','mefpp2').splitlines()
+    base='2e3969c4a1e3bc112325e7a2c7d6f8bdc7f260bb' if args.resume_cube else 'f5afd08fbfb35a8a50409c92352f9061c92c1f69'
+    changed=git('diff','--name-only',base,commit,'--','mefpp2').splitlines()
     native=[name for name in changed if not name.startswith('mefpp2/tests/')]
     allowed=['mefpp2/ins/mef/common/mefp_lib.c','mefpp2/ins/mef/common/mefp_lib.h','mefpp2/ins/mef/recipes/mefpp.c']
-    if args.resume_publication:
+    if args.resume_cube:
+        allowed=['mefpp2/ins/mef/common/mefp_lib.c','mefpp2/src/iproc/cube_handling.c']
+        if native!=allowed:raise RuntimeError('STOP: cube repair source scope differs')
+        receipt=json.loads((repo/'docs/developer/fixtures/agent-cube-allocation-repair-2026-10-28/run-provenance.json').read_text())
+        if any(file_hash(repo/name)!=receipt['native_source_sha256'][name] for name in allowed):raise RuntimeError('STOP: cube repair source identity differs')
+        if file_hash(repo/'docs/developer/native-roadmap-amendment-v2.5-2026-10-28.md')!='af394c20a2f3846d3ff7886cc2ef4d90e412098f13d247384cfa691967451244':raise RuntimeError('STOP: v2.5 changed')
+    elif args.resume_publication:
         if native!=allowed:raise RuntimeError('STOP: repair source scope differs')
         receipt=json.loads((repo/'docs/developer/fixtures/agent-publication-repair-2026-10-28/run-provenance.json').read_text())
         if any(file_hash(repo/name)!=receipt['native_source_sha256'][name] for name in allowed):raise RuntimeError('STOP: repair source identity differs')
         if file_hash(repo/'docs/developer/native-roadmap-amendment-v2.4-2026-10-28.md')!='937609ff2945d3abbdd12b382a053556f7c6e06748c37055e37d8f1f36ac3c1c':raise RuntimeError('STOP: v2.4 changed')
     elif native:raise RuntimeError('STOP: qualified production source changed')
+    if args.resume_cube and file_hash(repo/'docs/developer/native-roadmap-amendment-v2.4-2026-10-28.md')!='937609ff2945d3abbdd12b382a053556f7c6e06748c37055e37d8f1f36ac3c1c':raise RuntimeError('STOP: v2.4 changed')
     for name,h in FROZEN.items():
         if file_hash(repo/'docs/developer'/name)!=h:raise RuntimeError('STOP: frozen contract changed')
     parent=Path.home()/'Software/build/wenu-imaging';campaign=parent/'mac-stage2-integrated-du1sqj06'
-    prior=campaign/('F3-failures/run-provenance.json' if args.resume_publication else 'v2.3-bpm-filenames/run-provenance.json');old=json.loads(prior.read_text())
+    prior=campaign/('v2.4-publication/run-provenance.json' if args.resume_cube else ('F3-failures/run-provenance.json' if args.resume_publication else 'v2.3-bpm-filenames/run-provenance.json'));old=json.loads(prior.read_text())
     pointer=parent/'stage2-integrated-active-campaign.json'
     if Path(json.loads(pointer.read_text())['report']).resolve()!=prior.resolve():raise RuntimeError('STOP: campaign already advanced')
-    if args.resume_publication:
+    if args.resume_cube:
+        cube_parent(old)
+    elif args.resume_publication:
         publication_parent(old)
     else:
         if old['source']['commit']!='f5afd08fbfb35a8a50409c92352f9061c92c1f69' or old['status']!='F1-F2-passed-awaiting-review' or not old['execution_complete']:raise RuntimeError('STOP: F1/F2 acceptance parent differs')
@@ -126,7 +159,7 @@ def main():
         if file_hash(Path(command['log']))!=command['log_sha256']:raise RuntimeError('STOP: prior command log changed')
         preserved[command['log']]=command['log_sha256']
     smoke_reference=None;smoke_inputs=None
-    if args.resume_publication:
+    if resuming:
         logs={c['label']:Path(c['log']) for c in old['commands']}
         for case in old['cases']:
             for name,h in case['input_sha256'].items():
@@ -137,20 +170,35 @@ def main():
                 path=Path(case['directory'])/name
                 if file_hash(path)!=h:raise RuntimeError('STOP: prior partial output changed')
                 preserved[str(path)]=h
-            state,findings=failure_diagnostics(logs[case['variant']+'-'+case['lane']].read_text(errors='replace'),case['lane'],case['variant'])
-            if findings!=case['findings'] or json.loads(json.dumps(state))!=case['diagnostics']:raise RuntimeError('STOP: retained F3 diagnostics differ')
+            output=logs[case['variant']+'-'+case['lane']].read_text(errors='replace')
+            if args.resume_cube and case['variant']=='cube-allocation':
+                if output.count('F3 INJECT cube allocation')!=1 or 'runtime error: member access within null pointer' not in output or 'cube_handling.c' not in output or 'cube_t' not in output:
+                    raise RuntimeError('STOP: original cube injection/UBSan evidence differs')
+            else:
+                if case['variant']=='publication-smoke':
+                    state,findings=diagnostic(output,2,case['lane'])
+                    actual=verify(Path(case['directory']),case['input_sha256'],2,True,['F1_CCD_A','F1_CCD_B'])
+                    if actual!=case['products']:raise RuntimeError('STOP: retained successful smoke products changed')
+                else:state,findings=failure_diagnostics(output,case['lane'],case['variant'])
+                if findings!=case['findings'] or json.loads(json.dumps(state))!=case['diagnostics']:raise RuntimeError('STOP: retained F3 diagnostics differ')
         ancestor=old['previous_attempt'];path=Path(ancestor['report'])
-        if file_hash(path)!=ancestor['sha256']:raise RuntimeError('STOP: F2 ancestor changed')
-        preserved[str(path)]=ancestor['sha256'];accepted=json.loads(path.read_text())['inherited_cases'][0]
-        smoke_reference=accepted['products'];smoke_inputs=accepted['input_sha256']
-    work=campaign/('v2.4-publication' if args.resume_publication else 'F3-failures');work.mkdir(exist_ok=False)
+        if file_hash(path)!=ancestor['sha256']:raise RuntimeError('STOP: ancestor report changed')
+        preserved[str(path)]=ancestor['sha256']
+        if args.resume_cube:
+            accepted=old['cases'][1]
+            smoke_inputs={k:v for k,v in accepted['input_sha256'].items() if k!='run-provenance.json'}
+        else:
+            accepted=json.loads(path.read_text())['inherited_cases'][0];smoke_inputs=accepted['input_sha256']
+        smoke_reference=accepted['products']
+    work=campaign/('v2.5-cube-allocation' if args.resume_cube else ('v2.4-publication' if args.resume_publication else 'F3-failures'));work.mkdir(exist_ok=False)
     record=dict(schema_version=1,source=dict(commit=commit,dirty=False),fixed_row='F3',status='running',execution_complete=False,
         previous_attempt=dict(report=str(prior),sha256=file_hash(prior)),planned_launches_consumed=old['planned_launches_consumed'],retest_launches_consumed=old['retest_launches_consumed'],
         native_launches_consumed=old['native_launches_consumed'],correction_rounds_consumed=2,planned_native_launch_limit=19,commands=[],cases=[],
         selected_cases=list(CASES),lane_order=['instrumented','leaks'],protected_sha256=protected,
         inherited_source=old['source'],installation_performed=False,scientific_acceptance_claimed=False,
         raw_WFI_opened=False,tool_sha256={str(t):file_hash(t) for t in (compiler,cmake,leaks)})
-    record['publication_exception_consumed']=args.resume_publication
+    record['publication_exception_consumed']=resuming
+    record['cube_exception_consumed']=args.resume_cube
     report=work/'run-provenance.json';save(report,record);save(pointer,dict(report=str(report),source=commit))
     print('WORK DIRECTORY:',work,flush=True)
     env={k:v for k,v in os.environ.items() if not k.startswith(('S2_','Malloc','DYLD_')) and k not in ('ASAN_OPTIONS','UBSAN_OPTIONS','LSAN_OPTIONS')}
@@ -160,7 +208,10 @@ def main():
         item=dict(label=label,argv=list(map(str,argv)),cwd=str(cwd),native=native);record['commands'].append(item)
         if native:
             if len(record['cases'])>10 or record['planned_launches_consumed']>=16:raise RuntimeError('STOP: F3 launch cap')
-            if args.resume_publication and label in ('blocked-output-instrumented','publication-smoke-instrumented'):
+            if args.resume_cube and label in ('cube-allocation-instrumented','cube-smoke-instrumented'):
+                if record['retest_launches_consumed']>=10:raise RuntimeError('STOP: cube retests consumed')
+                record['retest_launches_consumed']+=1;item['purpose']='v2.5 approved retest'
+            elif args.resume_publication and label in ('blocked-output-instrumented','publication-smoke-instrumented'):
                 if record['retest_launches_consumed']>=8:raise RuntimeError('STOP: publication retests consumed')
                 record['retest_launches_consumed']+=1;item['purpose']='v2.4 approved retest'
             else:
@@ -194,7 +245,7 @@ def main():
                 code,_=run('dsym-leaks',['/usr/bin/dsymutil',binary],work,env)
                 if code:raise RuntimeError('dsymutil failed')
         record['binary_sha256']={k:file_hash(v) for k,v in builds.items()}
-        sequence=(PUBLICATION_SEQUENCE if args.resume_publication else [(v,l) for v in CASES for l in ('instrumented','leaks')])
+        sequence=(CUBE_SEQUENCE if args.resume_cube else (PUBLICATION_SEQUENCE if args.resume_publication else [(v,l) for v in CASES for l in ('instrumented','leaks')]))
         record['execution_sequence']=sequence;save(report,record)
         for variant,lane in sequence:
             label=variant+'-'+lane;directory=work/label;fixture=prepare(directory,source);argv=list(ARGV);child=env.copy()
@@ -214,7 +265,7 @@ def main():
             code,output=run(label,command,directory,child,True);case['exit_status']=code
             if code:case['findings'].append('Observer/tool exited nonzero (not a clean observed native failure)')
             try:
-                if variant=='publication-smoke':
+                if variant in ('publication-smoke','cube-smoke'):
                     if fixture['input_sha256']!=smoke_inputs:raise RuntimeError('Smoke fixture/expectations changed')
                     case['products']=verify(directory,fixture['input_sha256'],2,True,['F1_CCD_A','F1_CCD_B'])
                     if comparable(case['products'])!=comparable(smoke_reference):raise RuntimeError('Smoke canonical products differ from accepted F1')
@@ -225,7 +276,7 @@ def main():
             except Exception as error:case['findings'].append(str(error))
             if not all(file_hash(directory/n)==h for n,h in inputs.items()):case['findings'].append('Protected fixture/blocker changed')
             case['partial_products']={p.name:file_hash(p) for p in directory.glob('*.fits') if p.is_file() and p.name not in inputs}
-            if variant!='publication-smoke' and (variant!='blocked-output' or args.resume_publication) and case['partial_products']:case['findings'].append('Unexpected products before declared early failure')
+            if variant not in ('publication-smoke','cube-smoke') and (variant!='blocked-output' or resuming) and case['partial_products']:case['findings'].append('Unexpected products before declared early failure')
             case['status']='failed' if case['findings'] else 'passed';save(report,record);print(variant,lane,case['status'],flush=True)
             if case['findings']:raise RuntimeError('STOP: '+label+': '+'; '.join(case['findings']))
         record.update(status='F3-passed-awaiting-review',execution_complete=True)
