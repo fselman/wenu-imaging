@@ -2,8 +2,9 @@
 
 Detailed delivery sequence: [implementation milestones M0–M11 and later passes P/G](implementation-plan.md). This is a proposal; publishing it does not start implementation.
 
-Discussion proposal, revision 2, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
+Discussion proposal, revision 3, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 Status: proposed contracts and names; no implementation or dependency selection. Owner-directed revision 2 includes versioned dependency/association tracking and future incremental reprocessing as part of the architecture, with automatic cascades deferred beyond the first pass.
+Revision 3 adds the owner's project-overview CLI, variance creation/propagation, linearity, native dark construction/optional subtraction and fringe construction with later Python subtraction. See milestones M3 and M6a–M6d.
 Compare the [original architecture](../original/pycavi-mefpp.md).
 
 ## Executive summary
@@ -141,6 +142,10 @@ These commands may be invoked from any directory. The derived list contains expl
 
 Separate configuration validation, input/layout inspection, calibration construction, master-flat combination, detector science preprocessing and product writing. Supporting services handle geometry, arrays, FITS, diagnostics and status. Public .h contracts evolve with .c extraction; do not expose the historical mef_bb structure as the permanent API.
 
+The calibration service boundary includes bias/BPM/dome/sky/master-flat, linearity-model construction, dark construction and fringe-frame construction. A C subroutine applies a selected linearity model; mefpp subtracts dark only on explicit request with a compatible selected dark and declared scaling. Fringe construction produces a template for a separate later Python subtraction operation. Recipe order and calibration preparation state must be explicit; fitting/building a model is separate from applying it.
+
+Signal, variance and mask are linked detector products throughout the services. Variance initialization identifies supplied versus modeled noise and the gain/read-noise assumptions. Propagation includes calibration uncertainty, flat division, linearity response, optional dark subtraction and gain/exposure normalization. Store pixel planes in FITS and describe their selectors, units, provenance, correction state and approximation/covariance limits in ASDF. Missing uncertainty is not zero uncertainty. The later Python fringe subtraction must also account for template/scale uncertainty; resampling requires its own covariance treatment. These numerical additions have separate acceptance gates from extraction that preserves legacy results.
+
 Use immutable configuration, an execution request, isolated mutable work context and owned result handles. One allocation has one documented destruction owner, including partial failure. Do not promise reentrancy/thread safety until Eclipse/qfits globals, caches and initialization are addressed.
 
 Detector ID is independent from HDU index and output position. Resolve each science/calibration file's detector map separately. Support primary image HDU 0, one image extension and MEF through the same image-reference contract; preserve required MEF order and original identity when excluding detectors. Operational health, selection and processing outcome stay distinct.
@@ -164,6 +169,8 @@ FITS and ASDF publication need a recovery protocol, not an assumed multi-file tr
 | Notebook 03 | Choose group(s), inspect dependencies and build/reuse choices; execute the reviewed plan through a shared library |
 | Configured Python command | Submit the same plan/execution routines headlessly |
 | Notebook 04 and later clients | Consume published FITS/products through explicit references; do not infer success or ownership solely from paths |
+
+The M3 project inspector is an additional read-only client: recursively discover legacy partitions/lists/links and FITS headers, then show grouped inputs, selected calibrations, processing sequence, products and evidence-backed status. Summary/drill-down tables, configurable header columns, sorting/filtering and export replace routine dfits/fitsort inspection. Later it reads the same ASDF records and inventory library, with no separate association policy. Missing files, unbuilt products and traversal limits remain visible; shared references and cycles must not cause repeated or infinite traversal.
 
 Notebook inspection must not materialize or alter the reduction tree merely by reading a plan. Retain the useful choice to build/inspect calibrations before science. Existing directory structure remains supported by a legacy adapter; a shallow redesign, database, remote retrieval service or recursive workflow framework is not selected by this proposal.
 
@@ -281,3 +288,5 @@ Current assessment: explicit resolution and typed requests are the necessary fir
 
 - Revision 1: explicit-request/TOML/ASDF/FITS and CLI/library design; cwd-independent resolution, 29 October 2026.
 - Revision 2: owner requests versioned dependency/association graph and future cascades as architectural requirements; first-pass allowances and deferred automation distinguished, 29 October 2026.
+
+- Revision 3: owner adds recursive project visualization, variance creation/propagation, linearity, dark construction/optional native subtraction and fringe-frame construction with later Python subtraction; detailed milestones added, 29 October 2026.

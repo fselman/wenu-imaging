@@ -1,13 +1,13 @@
 # mefpp refactor implementation plan — proposal
 
-Version 1, 29 October 2026. For discussion; no implementation begins from this plan.
+Version 2, 29 October 2026. For discussion; no implementation begins from this plan.
 Baseline: accepted main 22a32d39463a73ab32d2ba9d811f949198852902.
-Design: [target architecture revision 2](pycavi-mefpp.md).
+Design: [target architecture revision 3](pycavi-mefpp.md).
 Evidence: [accepted OCAM/WFI baseline](../../developer/stage2-1-functional-results-2026-10-29.md), [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md), [PAF inventory](../../developer/mefpp-refactor-paf-inventory-2026-10-29.md) and [Chapman4 census](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 
 ## Executive summary
 
-Deliver one serial, numerically equivalent processing path with typed C configuration, TOML subsets, explicit file/detector references, modular native services and an ASDF-backed Pycavi plan. Replace the prepared-directory requirement without moving raw data or rewriting the scientific algorithms. Include single-detector layouts in the data contract and qualification.
+Deliver one serial, numerically equivalent processing path with typed C configuration, TOML subsets, explicit file/detector references, modular native services and an ASDF-backed Pycavi plan. Replace the prepared-directory requirement without moving raw data or rewriting the scientific algorithms. Include single-detector layouts in the data contract and qualification. Add a readable recursive project inspection command in M3, replacing routine dfits/fitsort inspection. Include explicit numerical milestones M6a–M6d for variance creation/propagation, linearity, dark construction with optional native subtraction, and fringe-frame construction with later Python subtraction. Keep legacy-equivalence checks separate from acceptance of these additions.
 
 The first pass records stable IDs, exact versions, ordered membership, association decisions, typed dependencies, task attempts and product provenance. It executes explicit manually selected plans; automatic change detection, invalidation/cascades and parallel execution are later milestones. mefppy is an optional first-pass deliverable after the native API is stable; its evaluation and API allowance are mandatory.
 
@@ -22,15 +22,19 @@ Milestone IDs below organize this refactor; they do not renumber the global road
 | M0 | Reviewable contracts and bounded verification plan | Existing analysis | Decisions, baseline checklist and unresolved choices recorded |
 | M1 | Typed configuration and separated work/result state | M0 | PAF-loaded effective settings/lifecycle equivalence |
 | M2 | TOML subsets and deterministic configuration resolution | M1 | PAF/TOML effective-value and rejection checks |
-| M3 | Explicit input/output/work paths | M1; integrate TOML after M2 | Same request works from unrelated directories with unchanged cwd |
+| M3 | Explicit paths and recursive project overview CLI | M1; integrate TOML after M2 | Cwd-independent requests; readable, deterministic project/header/status overview |
 | M4 | Detector/layout mapping | M1, M3 | Permuted/subset/primary-image/one-extension controls |
 | M5 | Calibration subroutines and shared reference contract | M2–M4 | Legacy-equivalent calibration results and ownership |
 | M6 | Science subroutines and product writer | M5 | Equivalent native science/results, safe ordered publication |
+| M6a | Variance creation and propagation | M4–M6; contracts in M0 | Analytic controls, units, masks and stated covariance limits |
+| M6b | Linearity calibration/correction subroutine | M5–M6a | Known-response controls, validity limits and propagated uncertainty |
+| M6c | Dark construction and optional mefpp subtraction | M5–M6b | Matched/scaled dark controls; request/off behavior and variance |
+| M6d | Fringe-frame construction and Python subtraction interface | M5–M6c | Template/rejection controls and explicit later Python handoff |
 | M7 | ASDF records, FITS resolver and plan schema | M0, M3–M4; finalized against M5–M6 | Round-trip/reference/graph-version checks |
 | M8 | Shared inventory/association planner; notebook 01 | M2, M7 | Legacy associations imported/reproduced and selection explicit |
 | M9 | Serial executor; notebook 03 | M6–M8 | Selected dependency plan, truthful results and exactly-once corrections |
 | M10 | mefppy decision and optional qualified binding | M6–M7 | Decision record; binding equivalence if adopted |
-| M11 | Cumulative first-pass acceptance and migration handoff | M0–M9; M10 disposition | Both instrument baselines, target checks, documentation and rollback |
+| M11 | Cumulative first-pass acceptance and migration handoff | M0–M9 including M6a–M6d; M10 disposition | Both instrument baselines, target checks, documentation and rollback |
 
 Some schema/source work can be developed independently after its prerequisites, but integrate one reviewed boundary at a time. M7's Python schema sketch need not wait for all kernel extraction; final executable descriptors must agree with the actual native contracts. This dependency flexibility does not authorize concurrent uncontrolled changes or agent delegation.
 
@@ -41,6 +45,7 @@ Some schema/source work can be developed independently after its prerequisites, 
 - Approve the split among immutable configuration, explicit request, detector work context and owned result.
 - Define IDs/versions for assets, groups, calibration/association records, tasks, attempts and products; classify processing dependencies separately from descriptive graph relationships.
 - Specify file-location bases, detector/HDU identity, units/correction state, output ownership, status/error reporting and API/schema compatibility.
+- Define signal/variance/mask planes and their FITS references, variance units and initialization source, calibration uncertainty, covariance limitations, linearity validity domains, dark units/scaling/applicability and fringe-template conventions. Freeze recipe order before numerical implementation; later changes must identify which calibrations and products need rebuilding.
 - Complete the migration ledger beyond the initial PAF inventory: consumed PAF fields, instrument/project CFG mappings, CLI options, defaults and known partition-local overrides. Record unresolved source-use cases instead of guessing.
 - Decide the first implementation's TOML language subset/parser and ASDF ownership boundary. Recommendation: Python owns ASDF planning/resolution initially; native CLI remains independently usable with TOML/FITS. Assess language/license/platform/dependency implications before installing anything.
 - Select the smallest synthetic fixtures and existing actual-host reference products for each boundary. No new pixel-quality certification.
@@ -88,7 +93,7 @@ PAF and TOML produce identical effective scientific settings for both instrument
 
 PAF remains supported during migration; no temporary splitting of PAF or independent second set of defaults. Removal of PAF occurs only after the integrated replacement is accepted.
 
-## M3 — Remove the execution-directory contract
+## M3 — Explicit paths and project visualization commands
 
 ### Work and deliverables
 
@@ -100,7 +105,18 @@ PAF remains supported during migration; no temporary splitting of PAF or indepen
 - Prevent output collisions from duplicate input basenames. Preserve established FITS metadata behavior; do not introduce full long paths into unsafe legacy cards as a side effect. Full locations belong in provenance records; deferred qfits #125 remains separately scoped.
 - Support different read-only raw/calibration roots and writable output/scratch locations. Relative name handling must not leak into numerical kernels.
 
+### Project overview command
+
+- Add a read-only command, provisional spelling `pycavi project inspect PROJECT_ROOT --recursive`, that recursively reads existing projects and presents an understandable processing sequence rather than an unstructured file listing. Invocation must work from any directory.
+- Initially read legacy configuration, science/calibration lists, links and FITS headers; use the same resolved-path rules as execution. Adapt to ASDF records in M7 and the shared inventory/planner in M8 rather than maintaining a second association engine.
+- Show project/instrument, target, filter, exposure time, detector coverage, partitions and ordered input membership; show associated bias/BPM/dome/sky/master-flat and later linearity/dark/fringe products, followed by native preprocessing, normalization and WCS products.
+- Provide a concise overview plus drill-down by partition, exposure, detector and stage. Include selected header columns and sorting/filtering so this replaces routine dfits/fitsort commands. A table view and machine-readable export support notebooks and later graphical views; exact flags are settled in M0.
+- Show counts, resolved locations, shared calibrations, missing/unavailable references, recorded attempts and available completion/failure evidence. Distinguish planned, existing-unverified and validated/published results; do not infer success or historical associations from filenames alone.
+- Handle incomplete projects, unreadable headers and dangling links with visible diagnostics. Follow declared references safely, deduplicate shared assets, prevent symlink/graph traversal loops and report any scan limits or incomplete coverage. Default to metadata inspection without reading image arrays, bulk hashing, running reductions or modifying the project.
+
 ### Gate
+
+Bounded legacy fixtures cover nested partitions, shared calibrations, missing products, malformed headers and cyclic links; verify stable grouping/order, header values, diagnostic counts, truthful coverage and no project writes. Compare requested header columns with known FITS cards. Later ASDF-backed views must retain these semantics.
 
 The same explicit request launched from two unrelated directories produces equivalent pixels/relevant metadata and leaves cwd unchanged. Cover spaces, duplicate basenames, missing/incompatible inputs, no writes to raw storage and explicit output destinations. A single input-directory option or a hidden chdir wrapper does not meet this milestone.
 
@@ -144,7 +160,7 @@ Known-answer fixtures reproduce calibration arrays, detector mapping and agreed 
 
 ### Rollback
 
-One service per reviewable increment, with legacy/component comparisons. No linearity, gain/RON estimation, dark/fringe method or variance algorithm is added here; those retain their later scientific gates.
+One service per reviewable increment, with legacy/component comparisons. New variance, linearity, dark and fringe numerical capabilities are delivered in M6a–M6d, with separate acceptance from this legacy extraction. Gain/RON characterization retains its own scoped calibration work; configured values remain explicitly identified until replaced by characterized values.
 
 ## M6 — Extract science processing and product publication
 
@@ -165,6 +181,60 @@ Native science agrees with the legacy path on tiny fixtures and a bounded select
 
 Preserve all prior products and failed attempts. CLI default/installed selection remains unchanged until final acceptance and an explicit activation decision.
 
+## M6a — Variance creation and propagation
+
+### Work and deliverables
+
+- Implement detector-level variance initialization from supplied variance or an explicitly selected noise model using gain/read noise and units. Record assumed versus measured calibration inputs; do not silently manufacture missing uncertainties or interpret missing variance as zero.
+- Propagate signal, variance and masks together through trimming, bias/dark subtraction, flat division and gain/exposure scaling. Calibration builders return uncertainty/coverage information using the actual combination and rejection method.
+- Account for calibration uncertainty and shared normalization estimates under a declared approximation; preserve references to shared calibration errors. An independent per-pixel variance plane cannot encode all correlations.
+- Carry squared signal units, detector/HDU mapping, mask validity, model version and correction state. Pixels remain in FITS, including variance/mask planes or explicitly linked companion FITS; ASDF records their locations and meaning.
+- Establish the handoff for later Python fringe subtraction and WCS/resampling stages. WCS header correction preserves pixel variances; actual resampling needs a separately specified covariance treatment.
+
+### Gate and rollback
+
+Use small analytic controls for addition/subtraction, division, scaling, masked/zero-flat cases and representative calibration combinations, plus bounded simulation where estimator uncertainty requires it. Check dimensions, nonnegative finite valid values and exactly-once scaling. Label unavailable or approximate uncertainty honestly. Preserve legacy signal equivalence; retain variance-disabled compatibility mode with explicit unavailable state.
+
+## M6b — Linearity subroutine and calibration products
+
+### Work and deliverables
+
+- Define a versioned per-detector/amplifier linearity model with input units, valid signal range, reference convention, coefficients/table, calibration provenance and uncertainty.
+- Add a callable C linearity-correction subroutine; plan a separate calibration-building operation from linearity sequences so fitting and applying the model have distinct contracts.
+- Specify the order relative to overscan, bias, dark and flat with the model convention; prepare all calibration inputs consistently and record which correction was applied.
+- Propagate variance through the model response and supported model uncertainty. Flag saturated/out-of-domain values; no silent extrapolation.
+- Expose explicit recipe/configuration selection and the same operation to optional mefppy.
+
+### Gate and rollback
+
+Known synthetic response curves recover declared reference signals within stated tolerances; cover identity response, detector-specific models, invalid domains and uncertainty behavior. Characterization of real detectors is a separate bounded dataset acceptance, not implied by code acceptance. Disabled correction retains the legacy signal path.
+
+## M6c — Dark creation and optional native subtraction
+
+### Work and deliverables
+
+- Add a callable C dark-construction service with explicit input selection, bias/linearity correction state, detector geometry, exposure, temperature/readout applicability, combination/rejection and output variance/masks.
+- Distinguish an exposure-matched master dark from a dark-current rate product; record units and supported scaling. Exposure/temperature scaling is permitted only by the selected validated model, never inferred from a filename.
+- Let mefpp subtract the selected dark on explicit request through the recipe/CLI and optional library request. Record applied dark version and any scale; omission/off leaves the compatibility path unchanged.
+- Propagate dark uncertainty and relevant scaling uncertainty; reject incompatible or already-applied corrections. Link dark dependencies into associations, plans and future impact analysis.
+
+### Gate and rollback
+
+Controls cover known dark signals, matched exposure, explicitly supported rate scaling, disabled subtraction, missing/incompatible darks and no double subtraction. Check resulting pixels, variance, masks and provenance. Real temperature/exposure modeling requires separate measured qualification; preserve existing products and dark-disabled references.
+
+## M6d — Fringe-frame creation and later Python subtraction
+
+### Work and deliverables
+
+- Add a callable C fringe-frame construction service using explicitly prepared, compatible input frames. Define source masking, background treatment, normalization, combination/rejection, detector/filter applicability, variance and coverage.
+- Preserve ordered membership and preparation state; science-derived templates record their contributing science versions and any shared uncertainty/self-contribution limits.
+- Publish the fringe template as FITS with ASDF calibration/provenance references. It is not automatically subtracted by mefpp.
+- Specify a separate later Python subtraction operation: select the exact template, estimate or supply the scale, apply subtraction, propagate template/scale uncertainty and masks, and record correction state. Keep construction and subtraction independently selectable and resumable.
+
+### Gate and rollback
+
+Synthetic structured backgrounds and masked sources check template recovery, normalization, coverage and uncertainty. Verify publication and the Python handoff contract without claiming the later subtraction is implemented. Its later acceptance covers scale recovery, residuals, propagated uncertainty and double-application protection. Preserve unsubtracted products; no automatic fringe or iterative scientific policy is introduced.
+
 ## M7 — ASDF/FITS records and executable-plan schema
 
 ### Work and deliverables
@@ -175,6 +245,7 @@ Preserve all prior products and failed attempts. CLI default/installed selection
 - Preserve ordered membership, original card/provenance references, logical versus physical locations and recorded configuration snapshots.
 - Define schema versions and serializable native request/result descriptions. Optional native ASDF adapter remains a separate decision.
 - Validate exact-version execution dependencies as a finite DAG, while permitting descriptive graph back-references.
+- Reference signal, variance, mask, linearity, dark and fringe products explicitly, including model/scale versions, correction order/state and uncertainty limitations. Extend the M3 inspector to these durable records.
 - Represent unavailable/planned, existing-unverified, validated and published products distinctly. Do not require a graph database or change monitor.
 
 ### Gate
@@ -191,6 +262,7 @@ ASDF records are additive; original FITS, CFG/PAF, lists/links and existing prod
 
 - Separate explicit-root inventory, classification/grouping, calibration association, selection preview and optional legacy-tree materialization.
 - Import existing lists/links and local settings as evidence, preserving line order and original identifiers.
+- Include explicit linearity/dark/fringe applicability and selection, with off/unavailable states rather than silently substituting calibrations.
 - Reproduce selected historical association decisions before reviewing policy improvements.
 - Save group membership snapshots, selected/rejected calibration candidates and selection rationale in ASDF.
 - Make notebook 01 call this library; preserve inspectable human selection and overrides.
@@ -247,6 +319,7 @@ Record adopt/defer with evidence. A deferred binding does not block the serial C
 
 - Run one cumulative candidate pipeline for the accepted five OCAM exposures and five WFI exposures across its three partitions, in fresh isolated outputs, through notebook 04.
 - Reuse the accepted input/software records and old outputs as reference; compare new calibration/native/normalization/WCS results at their appropriate boundaries.
+- Run separate bounded controls for M6a–M6d and integrate only qualified requested corrections; unchanged legacy comparisons run with new corrections disabled. The accepted Stage 2.1 dataset alone does not validate new calibration models or fringe subtraction in Python.
 - Require declared detector coverage, pixel/unit/correction-state equivalence and expected provenance. WCS assembly must preserve its normalized inputs; compare astrometric behavior with an agreed deterministic/functional rule rather than requiring incidental solver metadata/timestamps to be byte-identical.
 - Demonstrate actual primary-HDU/one-extension CCD preprocessing through the new services with suitable supplied calibration context; genuine detector-characterization/scientific qualification remains separate.
 - Develop/check on Intel Mac and qualify changed interfaces on the actual selected Linux host, currently chapman4. Prior chapman3 evidence is not transferred automatically; collect fresh host/tool/allocation evidence before target changes/workloads.
