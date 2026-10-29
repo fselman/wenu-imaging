@@ -90,6 +90,8 @@ M0a acceptance covers the agreed contract/examples only. It does not qualify an 
 
 ### Work and deliverables
 
+- First deliver a common ANSI-C90 subroutine template and module checklist: consistent context/result/error/status interface, immutable settings/request contract, explicit ownership/partial construction, validation/calculation/postcondition separation, one cleanup path and success-only result transfer. See [the M1 template](m1/README.md). Reuse the pattern across services with operation-specific payloads; do not introduce an inheritance/dispatch framework or duplicate scientific implementations.
+
 - Map native configuration/request/result fields to WAD concepts, with explicit units and status semantics; numerical code need not load ASDF schemas.
 - Introduce small C configuration structures and validation independent from PAF/TOML syntax.
 - Keep the current PAF reader as an adapter into those structures.
@@ -99,6 +101,8 @@ M0a acceptance covers the agreed contract/examples only. It does not qualify an 
 - Keep CLI parsing, initialization and informational commands out of reusable numerical routines.
 
 ### Gate
+
+The common template syntax compiles as strict C90; implemented lifecycle helpers must pass success, occupied/invalid output, partial-construction, allocation/processing-failure and independent result/error lifetime controls before numerical modules reuse them. A declaration-only template is not runtime qualification.
 
 OCAM/WFI settings loaded through the old and adapted paths agree field-by-field, including defaults and output metadata mappings. Valid/invalid/partially constructed configurations release owned resources correctly; help/version remain independent of processing data. Targeted lifecycle diagnostics cover changed ownership, not a replay of the full historical matrix.
 

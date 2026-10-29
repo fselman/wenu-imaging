@@ -1,5 +1,7 @@
 # wenu-imaging roadmap
 
+29 October owner requirement: M1 must first provide a [common ANSI C90 subroutine template](../architecture/proposed/m1/README.md) that subsequent modules reuse. Standardize context/result/error/status conventions, validation/calculation separation, explicit ownership and one cleanup path; keep numerical payloads operation-specific and use optional callbacks only where needed. The prepared scaffold reuses accepted M0 types and passes strict-C90 syntax checking on the agent; helper implementations, lifecycle tests and actual Mac/Chapman runtime remain the M1 gate. No numerical extraction, new global state or universal dispatch framework is introduced by this review template.
+
 29 October 2026 owner decision: vendor the two tested tomlc17 source files, with the MIT license, exact revision/hash provenance and update policy, in [third_party/tomlc17](../../third_party/tomlc17/README.wenu.md). The approved source import is byte-identical to pinned upstream 4987cf895df61f702d19e3481f34b032ab29ed3a and both qualified host copies. Vendoring is the selected distribution method; build-target/configuration-adapter integration remains the planned implementation stage. Preserve C90 public/numerical contracts, compile the dependency in C99 when integrated, and retain explicit UTF-8 validation/one-time option initialization/shared TOML 1.0 bounds. No production installation, PAF replacement or processing begins from this source import.
 
 
