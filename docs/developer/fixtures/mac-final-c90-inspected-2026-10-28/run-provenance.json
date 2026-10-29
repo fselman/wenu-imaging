@@ -1,0 +1,54 @@
+{
+  "source": "b93ffda7955ccf1b71063f37537125431e62be4d",
+  "status": "C90-build-passed-awaiting-review",
+  "commands": [
+    {
+      "label": "configure-c90",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "-S",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/Final-C90-build/source/mefpp2",
+        "-B",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/Final-C90-build/build",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+        "-DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=b93ffda7955ccf1b71063f37537125431e62be4d",
+        "-DCMAKE_C_FLAGS=",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/Final-C90-build/configure-c90.log",
+      "log_sha256": "15168daa7a0addd7f9cc8377c0ce6b4fc6c019fdfb3f250c4521d7cf808518e1"
+    },
+    {
+      "label": "build-c90",
+      "argv": [
+        "/opt/local/bin/cmake",
+        "--build",
+        "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/Final-C90-build/build",
+        "--target",
+        "mefpp",
+        "--parallel",
+        "2"
+      ],
+      "exit_status": 0,
+      "log": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/Final-C90-build/build-c90.log",
+      "log_sha256": "116c9805588b921232834c8c177d0ae0ccfaa3d1f8949faa36a270d16b0d6d3c"
+    }
+  ],
+  "native_launches_consumed": 27,
+  "planned_launches_consumed": 17,
+  "installation_performed": false,
+  "engine_executed": false,
+  "binary_sha256": "e19d59871aeb16f19bf541011d39d7ab3b4564c0c9c238c35b42d393497abf17",
+  "build_info_sha256": "fd96d80871ca262060000d1e80a9f02e068e3627773aee74f189b603dc75fa0f",
+  "protected_files_unchanged": true,
+  "checkout_unchanged": true
+}

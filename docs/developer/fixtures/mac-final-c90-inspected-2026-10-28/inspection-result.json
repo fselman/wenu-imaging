@@ -1,0 +1,25 @@
+{
+  "status": "accepted-bounded-final-Mac-C90-build",
+  "archive_sha256": "7076198738fe98428e39cda98e2816d5458613e0ac8bb478e9f2c83f48ee7cb4",
+  "archive_library_id": "libfile_d45d237c43bc8191aad2a95c574b7396",
+  "archive_files_verified": 6,
+  "reconstructed_inventory_inputs": 389,
+  "source_inventory_sha256": "250b7fcbfd45dfd49ae0bd544cdb1ed223b12185c37dbc571ac453391014e63b",
+  "tested_source": "b93ffda7955ccf1b71063f37537125431e62be4d",
+  "actual_flag": "-std=c90",
+  "compiler": "AppleClang 15.0.0.15000100",
+  "cmake": "3.29.3",
+  "platform": "Darwin x86_64",
+  "warnings": 66,
+  "new_warning_messages_against_retained_C90": 0,
+  "previous_warnings": 69,
+  "native_launches_during_build": 0,
+  "cumulative_native_launches": 27,
+  "planned_launches": 17,
+  "preservation": "host hash/checkout checks passed",
+  "limitations": [
+    "Binary retained on Mac; hash is host-verified, binary not independently reread",
+    "Compile/link acceptance only; no warning-free or scientific acceptance",
+    "Compact Chapman C17/C90 pair and owner review pending; #116 unresolved"
+  ]
+}

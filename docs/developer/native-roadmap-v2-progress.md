@@ -14,7 +14,7 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | F3 five fixed failure cases | Accepted bounded F3; full archive inspected | Ten final failure roles and two exact smokes; 539 files / 35 logs / six builds verified; historical #127/#129 failures preserved |
 | F4 fixed same-process repetition | Accepted; archive independently inspected | One process, warmup + ten cycles; 66 exact products / 132 detector arrays, zero cleaned resources and stable descriptors |
 | F5 compact Chapman3 regression | Pending | Maximum 2 planned launches: one C17 and one C90 together at the end, per v2.1; no target external-memory qualification |
-| Final C90 compatibility checkpoint | Required at final stable source | Native corrections #121–#124; one final Mac C90 build, no duplicate runtime matrix |
+| Final C90 compatibility checkpoint | Accepted Mac C90 compile/link at b93ffda | Actual -std=c90, AppleClang 15; six archive files / 389 source inputs verified; existing warnings retained, no processing rerun |
 | Correction/retest budget | 2/2 consumed; approved v2.2–v2.5 exceptions consumed | Current 17 planned + 10 retests = 27 actual; only F5 two original planned launches remain; no automatic repair/retry |
 | #116 disposition | Open | Original descriptor identity mismatch remains unattributed/non-reproduced |
 | Target external diagnostics | Limitation remains open | Accepted v2.0 removes it as an automatic block to the Mac-led campaign |
@@ -47,3 +47,5 @@ Latest: [cube-allocation #129 blocked decision](stage2-integrated-f3-cube-blocke
 Latest controlling status: [F3 archive accepted](stage2-integrated-f3-acceptance-2026-10-28.md), [F4 prepared](stage2-integrated-f4-preparation-2026-10-28.md). Current 26 actual; after F4 27, after paired F5 at most 29. Preparation/receipt consumed zero native launches. Earlier pending/blocked statements are historical; no frozen contract bytes changed.
 
 Latest controlling status: [F4 accepted](stage2-integrated-f4-acceptance-2026-10-28.md), all 421 archive identities checked. Current 27 actual; only final Mac C90 build, two compact F5 launches and owner/Phase 3 review remain. Receipt consumes zero launches and requires no host sync.
+
+Latest: [final Mac C90 accepted](stage2-final-c90-mac-acceptance-2026-10-28.md); counts unchanged at 27 actual. Next compact Chapman pair, then final owner/Phase 3 review. Older pending-C90 statements are historical.

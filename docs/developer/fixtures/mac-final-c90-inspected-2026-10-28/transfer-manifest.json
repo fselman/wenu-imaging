@@ -1,0 +1,11 @@
+{
+  "source_run": "/Users/fselman/Software/build/wenu-imaging/mac-stage2-integrated-du1sqj06/Final-C90-build",
+  "files": {
+    "run-provenance.json": "05dd472a935e573661d6e406a394bec28ac1d0a851dd0827bd5342319ec9d674",
+    "configure-c90.log": "15168daa7a0addd7f9cc8377c0ce6b4fc6c019fdfb3f250c4521d7cf808518e1",
+    "build-c90.log": "116c9805588b921232834c8c177d0ae0ccfaa3d1f8949faa36a270d16b0d6d3c",
+    "build/build-info.json": "fd96d80871ca262060000d1e80a9f02e068e3627773aee74f189b603dc75fa0f",
+    "build/CMakeCache.txt": "ace39781986a762b2943c0c06a4db86ddc5942990f754bea0e0fc3751f83c2d8",
+    "build/CMakeFiles/mefpp.dir/flags.make": "7b5dd5e6d7e13dcc1fbf202f9f26ed68f0374e467733c9eab6e013ad5f407b8d"
+  }
+}
