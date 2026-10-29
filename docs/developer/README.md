@@ -1,5 +1,7 @@
 # Developer documentation
 
+WAD and ASDF project design: [Wenu Attribute Dictionary / ProcessingProject](../architecture/proposed/wad-processing-project.md), [revised target diagram](../architecture/proposed/pycavi-mefpp.md) and [M0a / updated milestones](../architecture/proposed/implementation-plan.md). Owner-directed documentation update, 29 October 2026; implementation remains pending.
+
 Refactor delivery proposal: [detailed implementation milestones](../architecture/proposed/implementation-plan.md), covering the serial first pass, graph-ready records, optional mefppy and later parallel/incremental execution. No implementation starts from this proposal.
 
 29 October 2026: see the [original architecture diagram](../architecture/original/pycavi-mefpp.md) and [target architecture proposal](../architecture/proposed/pycavi-mefpp.md). The proposed execution contract resolves inputs, calibrations, configuration and output/work destinations explicitly, without changing the caller's working directory or implicitly searching for files. Existing cwd-dependent behavior remains unchanged; this is design for discussion.

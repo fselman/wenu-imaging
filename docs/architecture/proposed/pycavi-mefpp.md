@@ -2,12 +2,15 @@
 
 Detailed delivery sequence: [implementation milestones M0–M11 and later passes P/G](implementation-plan.md). This is a proposal; publishing it does not start implementation.
 
-Discussion proposal, revision 3, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
+Discussion proposal, revision 4, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 Status: proposed contracts and names; no implementation or dependency selection. Owner-directed revision 2 includes versioned dependency/association tracking and future incremental reprocessing as part of the architecture, with automatic cascades deferred beyond the first pass.
 Revision 3 adds the owner's project-overview CLI, variance creation/propagation, linearity, native dark construction/optional subtraction and fringe construction with later Python subtraction. See milestones M3 and M6a–M6d.
+Revision 4 records Wenu Attribute Dictionary (WAD), an ASDF ProcessingProject, a shared project service and M0a following owner instruction. Detailed schemas/APIs/layout remain proposals. See [WAD and processing projects](wad-processing-project.md).
 Compare the [original architecture](../original/pycavi-mefpp.md).
 
 ## Executive summary
+
+WAD defines common scientific/data contracts across configuration, notebooks, inspection, native requests/results and product records. ASDF represents the reduction project itself as well as individual records; FITS retains the image arrays. The project service separates evolving project revisions from immutable exact-version plans and run/attempt outcomes.
 
 Use a versioned relationship graph to connect observations, scientific groups, calibration candidates, association decisions, processing tasks and products. ASDF stores the durable logical records and FITS locations; TOML defines classification/association policies, processing recipes and execution settings. Explicit planning resolves these into typed requests for the shared modular C library through the CLI or optional mefppy.
 
@@ -23,12 +26,16 @@ Retain cwd-independent explicit input/config/output/work paths, detector-ID mapp
 
 ```mermaid
 flowchart TD
+    WAD["WAD schemas and contracts"] --> MODEL["Data models and project service"]
+    WAD --> TOML
+    MODEL --> INSPECT["Read-only project overview"]
     RAW["FITS / MEF assets"] --> INGEST["Inventory and explicit registration"]
     NB01["Notebook 01: inspect and associate"] --> INGEST
     ARRIVAL["Future arrival / quality monitor"] -.-> INGEST
-    INGEST --> GRAPH["Versioned relationship graph in ASDF"]
+    INGEST --> MODEL
+    MODEL <--> GRAPH["ASDF project revisions and versioned records"]
     TOML["TOML policies, recipes and settings"] --> ASSOC["Association planner"]
-    GRAPH --> ASSOC
+    MODEL --> ASSOC
     ASSOC --> PLAN["Freeze a finite execution plan"]
     MANUAL["Notebook 03 or configured command"] --> PLAN
 
@@ -47,12 +54,26 @@ flowchart TD
     CORE --> RESULT["Detector results and temporary FITS"]
     RESULT --> PUB["Validate, assemble and publish"]
     PUB --> FITS["Versioned FITS / MEF products"]
-    PUB --> GRAPH
+    PUB --> MODEL
 ```
 
 Solid paths describe the manually initiated target workflow, not already implemented software. Dashed paths describe later arrival/change monitoring and impact planning. Publication adds immutable graph records; that feedback edge is provenance, not a circular dependency within an executing task plan. The C core is shared by both transports and does not contain the graph scheduler.
 
 The first serial executor and later parallel/incremental executors consume the same explicit plan/result boundary. Calibration services provide required shared-reference statistics before dependent tasks; no worker independently chooses a normalization reference or appends to a common MEF.
+
+## WAD and the ASDF processing project
+
+Wenu Attribute Dictionary (WAD) is a shared definition of meaning and structure: observation identity, detector/layout, calibration applicability, configuration attributes, associations, processing state and products. Maintain definitions inside the monorepo initially, versioned independently of software and record versions. A shared data-model layer presents them to clients and adapters. WAD does not select calibrations, execute tasks or implement numerical algorithms.
+
+A ProcessingProject is the persistent scientific workspace. Its compact entry manifest references project revisions, inventories, overlapping groups, associations, configuration sources, plans, runs and products. Keep records distributed and arrays in FITS; do not put every historical run and array into one recursive ASDF document. Directory grouping shown in examples is illustrative, not a frozen migration layout.
+
+A plan freezes its source project revision, ordered inputs, selected calibrations, effective settings and software requirements. Run/attempt records describe actual execution separately. New observations, TOML edits and calibration choices create new project state/plans without altering old requests or accepted products. Keep reduction profile, recipe and product profile distinct.
+
+The project service owns loading, resolving, validation and coordinated publication. Initially one coordinator advances the project manifest using expected-parent revision checks; stale updates cannot silently overwrite newer state. Publish complete durable records/products before advertising them, with recovery for interrupted attempts and no assumed ASDF/FITS transaction. Future workers return isolated results.
+
+Preserve original headers and versioned instrument mappings. Distinguish configured assumptions, raw-reported values, characterized calibrations and derived values; record authority and conflicts. Schema validity, file/reference integrity, plan applicability and scientific/product-profile acceptance are separate checks.
+
+Ship supported schema resources with readers for offline use. Ordinary metadata stays simple enough for cross-language adapters; native C uses typed request/result contracts rather than serialized ASDF objects. The [detailed WAD/project proposal](wad-processing-project.md) defines domains, lifecycle, validation and acceptance; M0a develops the smallest concrete examples before M7 persistence.
 
 ## 1. Finding inputs without depending on cwd
 
@@ -107,7 +128,7 @@ Measured calibration results stay versioned calibration products in ASDF, with s
 
 ## 3. ASDF and the native boundary
 
-Recommendation for the first reviewed design: Python owns project discovery, ASDF validation/resolution, association planning and publication records. The C numerical core remains independent of the serialized ASDF tree. ASDF retains the complete logical provenance, including effective TOML snapshots or immutable recoverable references.
+Recommendation for the first reviewed design: Python owns the shared project service, project discovery, WAD/ASDF validation/resolution, association planning and publication records. The C numerical core remains independent of the serialized ASDF tree. ASDF retains the complete logical provenance, including effective TOML snapshots or immutable recoverable references.
 
 Native CLI can remain independently usable with explicit FITS inputs/lists and TOML settings, without requiring Python for every numerical operation. When launched by the Python coordinator, any resolved native configuration/input-list files are derived transport artifacts, pinned to the parent ASDF request and never edited as an alternative source of truth.
 
@@ -164,9 +185,9 @@ FITS and ASDF publication need a recovery protocol, not an assumed multi-file tr
 
 | Client | Proposed responsibility |
 |---|---|
-| Notebook 00 | Select project/configuration roots and show the resolved configuration |
-| Notebook 01 | Inventory explicit raw roots; inspect groups/calibration proposals; save an ASDF plan |
-| Notebook 03 | Choose group(s), inspect dependencies and build/reuse choices; execute the reviewed plan through a shared library |
+| Notebook 00 | Open the ProcessingProject, select location/configuration roots and show resolved configuration |
+| Notebook 01 | Inventory explicit raw roots; inspect groups/calibration proposals; save explicit project/association revisions and plan proposals |
+| Notebook 03 | Open the project, choose group(s), inspect dependencies/build-reuse choices and execute an immutable plan through shared services |
 | Configured Python command | Submit the same plan/execution routines headlessly |
 | Notebook 04 and later clients | Consume published FITS/products through explicit references; do not infer success or ownership solely from paths |
 
@@ -250,7 +271,7 @@ Do not add a heavy graph framework to the first serial extraction. A small schem
 
 ## 8. Bounded migration and acceptance proposal
 
-1. Freeze path/configuration/identity contracts, graph node/edge/version semantics, a minimal explicit plan/result boundary and C header types.
+1. Freeze path/configuration/identity contracts, graph node/edge/version semantics and a minimal plan/result boundary. M0a defines WAD and ProcessingProject examples before finalizing typed C headers.
 2. Retain PAF/CLI serial behavior while splitting configuration from mutable work.
 3. Add typed TOML adapter/subsets and field-by-field effective-configuration comparison.
 4. Make file resolution and output destinations explicit through loaders, kernels and writers; add a temporary legacy arena adapter only where unavoidable.
@@ -290,3 +311,5 @@ Current assessment: explicit resolution and typed requests are the necessary fir
 - Revision 2: owner requests versioned dependency/association graph and future cascades as architectural requirements; first-pass allowances and deferred automation distinguished, 29 October 2026.
 
 - Revision 3: owner adds recursive project visualization, variance creation/propagation, linearity, dark construction/optional native subtraction and fringe-frame construction with later Python subtraction; detailed milestones added, 29 October 2026.
+
+- Revision 4: owner proceeds with WAD and ASDF processing projects; add shared project service, metadata authority, immutable plans, M0a and offline/version/publication contracts, 29 October 2026.
