@@ -13,7 +13,7 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | F2 integrated selected WFI | Accepted at f5afd08: all three Mac lanes after filename correction | Six products/eight detectors; host pixel/header reports agree, archived diagnostics pass; large FITS stay on Mac |
 | F3 five fixed failure cases | Accepted bounded F3; full archive inspected | Ten final failure roles and two exact smokes; 539 files / 35 logs / six builds verified; historical #127/#129 failures preserved |
 | F4 fixed same-process repetition | Accepted; archive independently inspected | One process, warmup + ten cycles; 66 exact products / 132 detector arrays, zero cleaned resources and stable descriptors |
-| F5 compact Chapman3 regression | Pending | Maximum 2 planned launches: one C17 and one C90 together at the end, per v2.1; no target external-memory qualification |
+| F5 compact Chapman3 regression | Prepared, actual target execution pending | Qualified clean actual host preflight; one exact tiny integrated C17 and one C90 launch, internal owner/accounting/descriptors; no target external-memory qualification |
 | Final C90 compatibility checkpoint | Accepted Mac C90 compile/link at b93ffda | Actual -std=c90, AppleClang 15; six archive files / 389 source inputs verified; existing warnings retained, no processing rerun |
 | Correction/retest budget | 2/2 consumed; approved v2.2–v2.5 exceptions consumed | Current 17 planned + 10 retests = 27 actual; only F5 two original planned launches remain; no automatic repair/retry |
 | #116 disposition | Open | Original descriptor identity mismatch remains unattributed/non-reproduced |
@@ -49,3 +49,5 @@ Latest controlling status: [F3 archive accepted](stage2-integrated-f3-acceptance
 Latest controlling status: [F4 accepted](stage2-integrated-f4-acceptance-2026-10-28.md), all 421 archive identities checked. Current 27 actual; only final Mac C90 build, two compact F5 launches and owner/Phase 3 review remain. Receipt consumes zero launches and requires no host sync.
 
 Latest: [final Mac C90 accepted](stage2-final-c90-mac-acceptance-2026-10-28.md); counts unchanged at 27 actual. Next compact Chapman pair, then final owner/Phase 3 review. Older pending-C90 statements are historical.
+
+Latest: [F5 prepared](stage2-integrated-f5-preparation-2026-10-28.md) following actual clean Chapman preflight. Python preparation checks pass, target execution remains pending at 27 actual. Only two fixed native launches and final owner/Phase 3 review remain.
