@@ -74,3 +74,7 @@ Owner authorized implementation after the verified effective-input map. See [own
 ## Owned runtime increment
 
 PR #137's configuration increment is accepted and merged at 1d991a22a39d6133ab19721b7bb3a6dd11394264. The next [runtime lifecycle implementation](runtime-lifecycles.md) adds independently owned request/context/result/error objects and configuration cloning. Agent strict C90/C17 and failure/lifetime checks pass. Returned Mac and representative Chapman4 C90 CMake probe builds and both focused tests also pass (2/2); see the [paired runtime receipt](../../../developer/m1-runtime-paired-results-2026-10-29.md). This increment is ready for bounded review; target C17/sanitizer results are not claimed. Execution returns unsupported until a numerical service is connected. The legacy CLI adapter, concrete operation/QC implementation and full M1 completion remain pending.
+
+## Legacy CLI compatibility increment
+
+After accepted PR #138, the [owned CLI capture](cli-compatibility.md) copies actual loader bindings/flags/original argv and effective config, retaining multi-step invocation semantics. Agent C90/C17 and corrected ASan/UBSan pass 51 cases. Diagnostic-only #139 bounds correction retains its failed first evidence; actual Mac/representative Chapman checks are pending. #133 remains unchanged. This is not yet a resolved-operation adapter or complete M1; normal parser and numerical engine source are unchanged, and no image processing ran.

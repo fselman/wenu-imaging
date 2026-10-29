@@ -1,5 +1,7 @@
 # Developer documentation
 
+M1 next increment: [legacy CLI compatibility capture](../architecture/proposed/m1/cli-compatibility.md), including diagnostic bounds defect #139 and retained failure/correction evidence. Agent checks pass; actual Mac/shared Chapman checks pending.
+
 M1 next increment: [owned request/context/result/error lifecycles](../architecture/proposed/m1/runtime-lifecycles.md), following accepted PR #137. Agent checks pass; new actual Mac/shared Chapman checks are pending.
 
 Mandatory host selection: [Selected project tools — Mac and shared Chapman installations](selected-tools.md). Use the recorded absolute paths; consult the shared private-tool record before considering replacements or workarounds. Chapman3/4 are copycat hosts: no repeated per-host tool checks are needed.
