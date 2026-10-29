@@ -1,5 +1,9 @@
 # Frozen roadmap v2 progress ledger
 
+Stage 2.1 endpoint revised by owner, 29 October 2026: [immutable amendment v2.8](native-roadmap-amendment-v2.8-2026-10-29.md) makes the gate **current mefpp/Pycavi reduction through notebook 04: native calibration/science preprocessing, Python normalization, solve-field and WCS-corrected MEF assembly**. Keep one filter and at most five equal-integration-time science exposures per instrument; all three WFI partitions are authorized for the same five exposures in total. Notebook 05 extraction/SCAMP, SWarp, photometric/illumination work, downstream QC and final catalogues are outside Stage 2.1 and deferred to later workflow work. Older v2.7/full-chain completion wording is historical and superseded; do not reopen it as a closure requirement.
+
+WFI has passed native preprocessing, configured-gain normalization and notebook-04 astrometry for five exposures / 40 detectors, with pixel/input preservation checks. OCAM is prepared but its execution/result has not been returned; verify its existing status and complete only missing work through notebook 04. The failed first WFI SCAMP attempt and successful first catalogue remain retained outside this completion gate. #30/#131 remain recorded; VizieR availability, downstream processing and their production corrections do not block this stage. No stage-wide completion or automatic Stage 2A/refactoring is claimed.
+
 Controlling contract: [frozen roadmap v2.0](native-roadmap-frozen-v2.0-2026-10-28.md), with [owner-requested amendment v2.1](native-roadmap-amendment-v2.1-2026-10-28.md). The amended campaign cap is 19 planned native launches. [Approved v2.2](native-roadmap-amendment-v2.2-2026-10-28.md) separately permits one four-array cleanup and two tiny validations; the two-round limit remains exhausted.
 This ledger may update status and evidence links. It must not add requirements,
 rows, launches, repair rounds or completion gates. Amendments are separate files.
@@ -56,4 +60,4 @@ Latest controlling status: [F5 accepted](stage2-integrated-f5-acceptance-2026-10
 
 Controlling owner disposition: [v2.6](native-roadmap-amendment-v2.6-2026-10-28.md) accepts bounded Stage 2 closure with #116 open/unresolved/deferred; Phase 3 is deferred outside this gate. Finish integration and guarded clean-main handoff; no engine reruns.
 
-Owner addition after accepted closure: [v2.7 Stage 2.1](native-roadmap-amendment-v2.7-2026-10-28.md) adds full current mefpp/Pycavi reductions for one OCAM and one WFI dataset before Stage 2A. This separate planned functional baseline does not add rows/launches to the completed 19/19 Stage 2 campaign. No processing starts with publication; both hosts remain clean main.
+Historical owner addition after accepted closure (endpoint now superseded by v2.8): [v2.7 Stage 2.1](native-roadmap-amendment-v2.7-2026-10-28.md) adds full current mefpp/Pycavi reductions for one OCAM and one WFI dataset before Stage 2A. This separate planned functional baseline does not add rows/launches to the completed 19/19 Stage 2 campaign. No processing starts with publication; both hosts remain clean main.

@@ -1,5 +1,9 @@
 # Final integrated campaign owner review
 
+Stage 2.1 endpoint revised by owner, 29 October 2026: [immutable amendment v2.8](native-roadmap-amendment-v2.8-2026-10-29.md) makes the gate **current mefpp/Pycavi reduction through notebook 04: native calibration/science preprocessing, Python normalization, solve-field and WCS-corrected MEF assembly**. Keep one filter and at most five equal-integration-time science exposures per instrument; all three WFI partitions are authorized for the same five exposures in total. Notebook 05 extraction/SCAMP, SWarp, photometric/illumination work, downstream QC and final catalogues are outside Stage 2.1 and deferred to later workflow work. Older v2.7/full-chain completion wording is historical and superseded; do not reopen it as a closure requirement.
+
+WFI has passed native preprocessing, configured-gain normalization and notebook-04 astrometry for five exposures / 40 detectors, with pixel/input preservation checks. OCAM is prepared but its execution/result has not been returned; verify its existing status and complete only missing work through notebook 04. The failed first WFI SCAMP attempt and successful first catalogue remain retained outside this completion gate. #30/#131 remain recorded; VizieR availability, downstream processing and their production corrections do not block this stage. No stage-wide completion or automatic Stage 2A/refactoring is claimed.
+
 **Owner disposition accepted:** after reviewing #116, the owner instructed to leave it for now and finish the current work in a clean state for tomorrow. The bounded Stage 2 campaign is accepted with #116 open/unresolved and the named testing limitations retained. No additional engine runs or repairs are planned. Phase 3 planning is deferred and is not a closure gate. Integration and clean-checkout handoff follow the current wrap-up instruction.
 
 ## Fixed results
@@ -34,4 +38,4 @@ Integrate PR #119 then #120, verify final main tree equals the accepted closure 
 
 Tomorrow begins from clean synchronized main after returned host verification. Next roadmap topic is the planned Stage 2A data-representation/configuration review; begin no implementation/extraction automatically. Carry forward the agreed format-independent configuration, detector identity, reduction/recipe/product profile distinctions and shallow metadata-driven disk layout. Phase 3 stays deferred. #116 remains open/unresolved, qfits #125/#128 and existing warnings remain explicit future debt.
 
-Subsequent owner addition: amendment v2.7 inserts Stage 2.1 full current mefpp/Pycavi OCAM and WFI processing before Stage 2A. Thus the immediate next task is the bounded full-workflow baseline preparation, not representation/refactoring. Completed Stage 2 remains accepted without rerun; Phase 3 remains deferred.
+Historical subsequent owner addition (endpoint superseded by v2.8): amendment v2.7 inserts Stage 2.1 full current mefpp/Pycavi OCAM and WFI processing before Stage 2A. Thus the immediate next task is the bounded full-workflow baseline preparation, not representation/refactoring. Completed Stage 2 remains accepted without rerun; Phase 3 remains deferred.
