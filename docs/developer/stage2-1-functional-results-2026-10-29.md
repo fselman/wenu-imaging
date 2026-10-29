@@ -2,7 +2,7 @@
 
 ## Result and evidence level
 
-Both bounded sets passed current mefpp/Pycavi processing through notebook 04 on Intel Mac MC02VV0HPHTDG, macOS 13.7.8. This records user-returned actual-host terminal results and the checks performed by the supplied launchers. Large FITS products and full JSON reports remain on the Mac; they have not been independently downloaded and re-read by the agent. Processing is complete for the amended functional gate; owner review/integration remains pending.
+Both bounded sets passed current mefpp/Pycavi processing through notebook 04 on Intel Mac MC02VV0HPHTDG, macOS 13.7.8. This records user-returned actual-host terminal results and the checks performed by the supplied launchers. Large FITS products and full JSON reports remain on the Mac; they have not been independently downloaded and re-read by the agent. The owner accepted Stage 2.1 on 29 October 2026 and explicitly authorized merging PR #130 and cleaning its merged branch. This closes the amended functional gate; scientific/Phase 3 certification remains separate.
 
 The endpoint is controlled by immutable amendment v2.8. No new scope or acceptance requirement is added, and no frozen roadmap/amendment is edited.
 
@@ -48,4 +48,4 @@ Stage 2 remains separately accepted at 19 planned + 10 retests = 29 actual launc
 
 The failed first WFI SCAMP attempt is retained outside Stage 2.1. No SCAMP retry, SWarp, photometry, illumination, downstream QC or final catalogue is required by this gate. #30 remains open for SCAMP failure propagation; #131 remains open for the production gain-header contract. #116 remains deferred. Scientific validation, Phase 3 certification and future bias/linearity characterization are separate work.
 
-Next: owner review of this bounded baseline and PR #130. No automatic merge, branch deletion, installation switch, Stage 2A implementation or refactoring follows from these results. Documentation review requires no host sync or repeated reduction.
+Owner disposition: Stage 2.1 accepted; merge PR #130 and clean its exact merged branch, then synchronize clean user checkouts with guarded fast-forwards. Preserve all data, reports, builds and installations. Next substantive topic is Stage 2A review. No installation switch, Stage 2A implementation, refactoring or repeated reduction is authorized by this closure.
