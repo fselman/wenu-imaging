@@ -1,5 +1,7 @@
 # Developer documentation
 
+M1 current increment: [resolved calibration roles and explicit per-detector BPM choices](../architecture/proposed/m1/resolved-calibration-bindings.md). Added owned descriptor validation/context copying; agent C90/C17, sanitizer and CLI regression checks pass. Actual Mac/shared Chapman checks and connection to I/O/numerical services remain pending; no processing, installation or complete-M1 claim.
+
 Current owner addition: [optional input BPMs throughout the chain; required variances from M6a](../architecture/proposed/bpm-variance-policy.md). The policy updates the target/WAD/template/roadmap and records existing wrapper blockers; no production behavior changed. PR #140 is accepted/merged at 6a4d4d8ec078a3360a5a743845dcbe752cbc84bd with Mac/shared Chapman synchronized and clean; the M1 resolved-operation bridge and concrete service remain next.
 
 M1 next increment: [legacy CLI compatibility capture](../architecture/proposed/m1/cli-compatibility.md), including diagnostic bounds defect #139 and retained failure/correction evidence. Agent checks pass; actual Mac/shared Chapman checks pending.

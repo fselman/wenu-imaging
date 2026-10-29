@@ -35,6 +35,40 @@ typedef struct {
     const char *log_path;
 } mef_request_spec;
 
+/* Role names describe resolved calibration products, never raw file lists. */
+typedef enum {
+    MEF_CAL_BIAS = 1, MEF_CAL_BPM, MEF_CAL_DARK, MEF_CAL_FRINGES,
+    MEF_CAL_LINEARITY, MEF_CAL_DOMEFF, MEF_CAL_SKYFF, MEF_CAL_MFF
+} mef_calibration_role;
+typedef enum { MEF_BPM_OMITTED = 1, MEF_BPM_SELECTED } mef_bpm_selection_state;
+typedef struct {
+    const char *detector_id;
+    mef_bpm_selection_state state;
+} mef_bpm_selection;
+typedef struct {
+    mef_request_spec request;
+    /* One role per request.calibrations entry, in that same order. */
+    const mef_calibration_role *calibration_roles;
+    size_t calibration_role_count;
+    /* Exactly one explicit choice for each distinct input detector. */
+    const mef_bpm_selection *bpm_selections;
+    size_t bpm_selection_count;
+} mef_resolved_request_spec;
+
+/* Structural metadata only: a selected BPM has exactly one matching detector
+ * reference of role MEF_CAL_BPM; omission permits none. No file is read, no
+ * geometry/applicability is verified and no calibration is reported applied.
+ * Zero state is invalid. Selection cannot fall back to a PAF default here.
+ * Old mef_request_create remains a legacy/untyped metadata constructor.
+ * The resolved builder owns all copied role/selection data; contexts retain it.
+ * Variance initialization/propagation remains required later at M6a, not
+ * implemented or made optional by this descriptor boundary.
+ */
+mef_status mef_request_create_resolved(const mef_resolved_request_spec *spec,
+    const mef_allocator *allocator, mef_request **out, mef_error **error);
+/* NULL for NULL or a legacy/untyped request. Borrowed until destruction. */
+const mef_resolved_request_spec *mef_request_resolved_view(const mef_request *request);
+
 /* Builders deep-copy all descriptor arrays and strings. Descriptors are borrowed
  * only for the call. Allocator semantics/lifetime follow mef_config.h.
  * Every output starts NULL; occupied result/error outputs are rejected intact.

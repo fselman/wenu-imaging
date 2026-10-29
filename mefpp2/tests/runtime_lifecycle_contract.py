@@ -61,7 +61,8 @@ def main():
     for name in ('mefpp_platform_config.h', 'qfits_platform_config.h'):
         (work / name).write_text(config)
     common = root / 'mefpp2/ins/mef/common'
-    sources = [common / 'mef_config.c', common / 'mef_runtime.c', root / 'mefpp2/tests/runtime_lifecycle.c']
+    sources = [common / 'mef_config.c', common / 'mef_runtime.c',
+               root / 'mefpp2/tests/runtime_lifecycle.c', root / 'mefpp2/tests/resolved_request.c']
     inputs = sources + [common / n for n in ('mef_config.h', 'mef_runtime.h', 'mef_config_fields.def', 'mef_config_members.h', 'mefp_lib.h')]
     inputs += [old, baseline_path, Path(__file__).resolve()]
     before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}

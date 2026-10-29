@@ -1,0 +1,2 @@
+PASS: resolved roles/BPM metadata; 9 operations, 8 roles, 17 rejected bindings; 164 transient+persistent allocation positions; 20 cycles
+PASS: 268 allocation positions, transient+persistent OOM; 20 cycles per owner; independent result/error lifetimes
