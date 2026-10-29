@@ -1,58 +1,55 @@
 # Proposed Pycavi/mefpp target architecture
 
-Discussion proposal, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
-Status: proposed contracts and names; no implementation or dependency selection.
+Discussion proposal, revision 2, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
+Status: proposed contracts and names; no implementation or dependency selection. Owner-directed revision 2 includes versioned dependency/association tracking and future incremental reprocessing as part of the architecture, with automatic cascades deferred beyond the first pass.
 Compare the [original architecture](../original/pycavi-mefpp.md).
 
 ## Executive summary
 
-Replace the reduction directory as an implicit processing input with an explicit, validated request. TOML defines settings and recipes; ASDF identifies observations, calibrations, selected groups, FITS locations and processing history. A resolver turns those descriptions into precise file/detector references before calling a modular C library.
+Use a versioned relationship graph to connect observations, scientific groups, calibration candidates, association decisions, processing tasks and products. ASDF stores the durable logical records and FITS locations; TOML defines classification/association policies, processing recipes and execution settings. Explicit planning resolves these into typed requests for the shared modular C library through the CLI or optional mefppy.
 
-Both the native CLI and optional mefppy Python binding use the same C subroutines. Numerical code receives explicit paths or owned array handles, calibration references, immutable settings and a destination policy. It neither changes cwd nor searches directories to guess its inputs.
+The first pass is manually initiated and serial. It must nevertheless record stable IDs, exact versions, ordered group membership, association rationale, task inputs/configuration and output provenance so a later impact planner can identify affected work without redesigning those interfaces. No automatic watcher, full invalidation engine, database, recursive scheduler or re-reduction cascade is implemented in the first pass.
 
-Keep the first implementation serial and numerically equivalent to the accepted OCAM/WFI baseline. Design isolated work contexts, shared-reference dependencies and one ordered product publisher now, so later parallel execution and primary-HDU/single-extension images use the same contracts.
+The broad relationship graph can contain cycles and back-references. Each executable plan uses exact versions and only processing-dependency edges and must be acyclic. Genuine iterative processing is represented by bounded successive versions with explicit stopping/failure rules, not an unfinished task depending on itself.
 
-Recommendations for discussion:
+New or better calibrations, additional science frames, revised quality information and policy changes can later trigger association re-evaluation and a proposed plan for affected descendants. An event does not automatically require reprocessing, and a newly arrived calibration is not intrinsically better. Preserve old associations/products and let project policy distinguish frozen releases from projects following new eligible inputs.
 
-- Keep discovery/association in shared Python planning code, exposed through notebook 01 and configured scripts.
-- Make notebook 03 a client that selects, inspects and executes a saved plan.
-- Retain FITS/MEF images; store structured associations/state/provenance in ASDF.
-- Use typed configuration populated by PAF and TOML adapters during transition, then retire production PAF after equivalence.
-- Provide explicit input/config/output/work paths; no mandatory staging beside raw data and no parent-process chdir.
-- Design a shared native API for both CLI and optional mefppy; decide the binding and ASDF implementation after bounded feasibility checks.
-- Preserve detector identity/order, common flat normalization and correction-state/uncertainty semantics. New calibration algorithms remain separate.
+Retain cwd-independent explicit input/config/output/work paths, detector-ID mapping for primary-HDU/single-extension/MEF images, common mosaic-flat normalization and isolated contexts for future parallel workers. Discovery remains in the planning layer. Scientific kernels do not search for files, select the latest calibration or mutate graph state.
 
 ## Target architecture
 
 ```mermaid
 flowchart TD
-    RAW["Original FITS / MEF assets"] --> N01["Notebook 01: inventory and associations"]
-    TOML["Versioned TOML subsets"] --> N01
-    N01 --> ASDF["ASDF project, assets and associations"]
-    ASDF --> PLAN["Shared plan builder and validation"]
-    TOML --> PLAN
-    N03["Notebook 03: select and inspect"] --> PLAN
-    SCRIPT["Configured Python command"] --> PLAN
-    PLAN --> RESOLVE["Resolve file, detector and calibration references"]
-    RAW --> RESOLVE
-    RESOLVE --> REQUEST["Explicit requests and path bindings"]
-    REQUEST --> PYAPI["Optional mefppy binding"]
-    REQUEST --> CLI["Native mefpp CLI adapter"]
-    subgraph CORE["Shared modular C library"]
-        API["Typed API and owned contexts"] --> CAL["Calibration and shared-reference services"]
-        CAL --> DET["Detector science subroutines"]
-        SUPPORT["FITS I/O, geometry and diagnostics"] --> CAL
-        SUPPORT --> DET
+    RAW["FITS / MEF assets"] --> INGEST["Inventory and explicit registration"]
+    NB01["Notebook 01: inspect and associate"] --> INGEST
+    ARRIVAL["Future arrival / quality monitor"] -.-> INGEST
+    INGEST --> GRAPH["Versioned relationship graph in ASDF"]
+    TOML["TOML policies, recipes and settings"] --> ASSOC["Association planner"]
+    GRAPH --> ASSOC
+    ASSOC --> PLAN["Freeze a finite execution plan"]
+    MANUAL["Notebook 03 or configured command"] --> PLAN
+
+    subgraph FUTURE["Later implementation: incremental reprocessing"]
+        EVENT["Changed assets, membership or policy"] --> IMPACT["Re-evaluate associations and affected descendants"]
+        IMPACT --> REVIEW["Impact plan and execution policy"]
     end
-    PYAPI --> API
-    CLI --> API
-    DET --> RESULT["Per-task results and isolated temporary FITS"]
-    RESULT --> COMMIT["Coordinator: validate and assemble"]
-    COMMIT --> FITS["Published FITS / MEF products"]
-    COMMIT --> RECORD["ASDF provenance and product references"]
+    GRAPH -.-> EVENT
+    REVIEW -.-> PLAN
+
+    PLAN --> EXEC["Executor and resource coordination"]
+    EXEC --> CLI["Native mefpp CLI"]
+    EXEC --> BIND["Optional mefppy binding"]
+    CLI --> CORE["Shared C services and isolated contexts"]
+    BIND --> CORE
+    CORE --> RESULT["Detector results and temporary FITS"]
+    RESULT --> PUB["Validate, assemble and publish"]
+    PUB --> FITS["Versioned FITS / MEF products"]
+    PUB --> GRAPH
 ```
 
-The diagram shows component responsibilities. The calibration/shared-reference box includes detector-specific computations plus required reference-statistic barriers; it is not a rule that every request must build every calibration. The coordinator may run one serial task initially. CLI and binding are alternative transports into the same core, not duplicate scientific implementations.
+Solid paths describe the manually initiated target workflow, not already implemented software. Dashed paths describe later arrival/change monitoring and impact planning. Publication adds immutable graph records; that feedback edge is provenance, not a circular dependency within an executing task plan. The C core is shared by both transports and does not contain the graph scheduler.
+
+The first serial executor and later parallel/incremental executors consume the same explicit plan/result boundary. Calibration services provide required shared-reference statistics before dependent tasks; no worker independently chooses a normalization reference or appends to a common MEF.
 
 ## 1. Finding inputs without depending on cwd
 
@@ -168,9 +165,83 @@ FITS and ASDF publication need a recovery protocol, not an assumed multi-file tr
 
 Notebook inspection must not materialize or alter the reduction tree merely by reading a plan. Retain the useful choice to build/inspect calibrations before science. Existing directory structure remains supported by a legacy adapter; a shallow redesign, database, remote retrieval service or recursive workflow framework is not selected by this proposal.
 
-## 7. Bounded migration and acceptance proposal
+## 7. Versioned relationship graph and future cascades
 
-1. Freeze path/configuration/identity contracts and minimal C header types.
+### Node and edge contracts
+
+| Entity | Versioned record |
+|---|---|
+| Observation/asset | Stable identity, acquisition metadata, content/metadata revisions, locations and availability |
+| Scientific group | Group identity, definition/policy and exact ordered membership snapshot |
+| Calibration candidate | Product version, detector/readout/filter applicability, validity and quality-assessment references |
+| Association decision | Policy version, candidates considered, selected exact calibration versions, rejected reasons and manual overrides |
+| Task/attempt | Logical task, recipe/operation version, immutable request identity, attempt ID, software/settings/resource policy and structured outcome |
+| Product | Immutable product version, exact parents, detector coverage/correction state, FITS location and validation/publication state |
+| Assessment | Quality/validation information with source, version, scope and applicability; not an unversioned "better" flag |
+
+Edges have explicit types. Examples: uses_input, uses_calibration, selected_by, member_of, produced_by, assessed_by, supersedes and located_at. Distinguish dependency edges from descriptive/lineage/location relationships. Reverse indexes can accelerate impact queries but do not add physical data dependencies.
+
+Use stable logical IDs, version IDs and content identities for different purposes. Relocating the same FITS asset does not by itself create different science pixels; replacing content at a reused path does. A quality assessment or association-policy revision can alter selection without altering calibration bytes. Record exact versions when freezing a request so a running plan cannot silently follow a moving "latest" pointer.
+
+ASDF serialization must use IDs/references for graph edges, not recursively expand cyclic objects into a tree. Per-project indexes can reference observation/calibration/run/product documents; one coordinator owns each mutable index revision. Eventual database/index acceleration is optional and rebuildable from the durable records; no database is selected.
+
+### Change handling, implemented later
+
+1. Register an idempotent change record: new observation/calibration, additional group member, content or relevant metadata revision, quality assessment, applicability/policy update, or asset loss.
+2. Find candidate affected associations using compatibility/validity metadata and the recorded association policies. A newly available candidate may affect consumers that never depended on it before; a walk over existing selected-input edges alone is insufficient.
+3. Re-evaluate association decisions and group membership. Preserve the old decision; record changed selection and its rationale as a new version.
+4. Compare effective task inputs/settings against existing product signatures and validation state. Determine actual affected consumers, shared intermediates and downstream combinations.
+5. Produce an impact report: changed associations, proposed tasks, reusable results, unavailable dependencies, expected product changes and bounded CPU/memory/storage estimates when measured information exists.
+6. Apply the project's execution policy. Default proposal: review before a cascade; later opt-in automatic execution can be bounded by eligible change classes and task/resource limits.
+7. Freeze exact versions into a finite execution plan, deduplicate shared calibration tasks and run only required work. Preserve independent branches and completed compatible results.
+8. Validate and publish new products/association snapshots; keep previous versions and failures. An interrupted or rejected plan does not silently replace the accepted project state.
+
+An association policy must define compatibility, eligibility, ranking/ties and the role of an owner's decision. Do not change scientific calibration selection merely by enabling an event monitor. Initial import reproduces existing recorded selection; policy improvements remain explicit reviewed changes.
+
+### Project modes and precise invalidation
+
+Frozen projects use pinned memberships/associations; new arrivals can generate an advisory without changing the release. Following projects may re-evaluate an explicitly defined selection query. The result of every query is still frozen as a membership snapshot for each run.
+
+| Change | Possible effect; decided from declared consumed inputs/policy |
+|---|---|
+| New calibration candidate | Re-evaluate eligible associations; no science rerun if effective selection remains unchanged |
+| Selected calibration version changes | Rebuild affected native/normalization/downstream consumers; reuse unrelated branches |
+| Additional science exposure | Process the added exposure and update consuming combinations; existing individual reductions can remain reusable |
+| Raw science enters a calibration recipe | It can also affect calibration construction and its consumers; follow actual declared dependencies |
+| Display-only annotation | Update descriptive metadata without pixel work if no operation/selection consumes it |
+| Gain, exposure, geometry or WCS metadata changes | Can affect pixel scaling, associations or downstream operations; classification is consumer-specific |
+| Same asset is relocated | Update location bindings and revalidate availability/identity; no automatic numerical recomputation |
+| Config/software/quality policy changes | Invalidate only the operations/selections that consume the changed settings, with an explicit compatibility policy |
+
+A reusable-result signature includes the operation/recipe and relevant software identity, effective scientific settings, ordered input/calibration versions, detector/geometry, shared normalization and correction state. Resource/layout-only changes need a declared equivalence policy rather than automatic exclusion from the signature. Record the signature specification/version. If consumed dependencies are not known, mark reuse unqualified rather than claiming a safe cache hit.
+
+Separate freshness relative to current selection from validity of a historical product. An old product can remain a valid result for its pinned inputs while no longer being the selected product of an active project. File existence, success text or a timestamp alone is never the reuse criterion.
+
+### Cycles, iteration and termination
+
+The full graph may be cyclic through membership, cross-links or historical supersession relationships. Extract executable dependencies from exact-version producer/consumer edges and reject cycles before launching any task. Unknown/unbuilt dependencies remain planned states and cannot be mistaken for finished inputs.
+
+For a recipe with scientific feedback, explicitly create iteration 0 inputs, iteration 1 calibration/results and subsequent versions. Define convergence/quality checks, maximum iterations, resource limits and failure disposition before implementation. Do not request a calibration derived from a product that itself requires that identical calibration version. No iterative scientific recipe is selected merely by supporting graph relationships.
+
+Future event processing must prevent endless cascades caused by its own publications: distinguish external input changes from task-result events, deduplicate change/request identities, coalesce bursts, and compare effective signatures before scheduling. A shared calibration is built once per selected version; consumers use that exact result. Snapshot consistency and atomic index updates prevent concurrent planners from silently publishing conflicting selections.
+
+### First-pass allowance versus deferred capability
+
+| Included in the first implementation's contracts | Deferred beyond the first pass |
+|---|---|
+| Stable IDs and schema-versioned asset/group/association/task/product records | Automatic filesystem/archive watchers or arrival services |
+| Exact versions, ordered memberships and typed producer/input/calibration edges | Full incremental invalidation and automatic descendant scheduling |
+| Selection policy/source and association rationale | Automatic adoption of "better" calibrations or new science |
+| Explicit manual plan with dependency validation and task/result IDs | General iterative workflow engine/convergence execution |
+| Isolated attempts, provenance, product availability/validation states | Persistent query/index/database service |
+| Shared-reference and single-writer contracts | Full parallel processing and automatic distributed coordination |
+| Frozen snapshots usable as later impact-analysis inputs | Automatic cascades and background re-reduction |
+
+Do not add a heavy graph framework to the first serial extraction. A small schema and explicit plan/result interface can establish the required information without implementing future trigger behavior. Optional mefppy handles native execution; it does not independently choose associations or maintain a second graph.
+
+## 8. Bounded migration and acceptance proposal
+
+1. Freeze path/configuration/identity contracts, graph node/edge/version semantics, a minimal explicit plan/result boundary and C header types.
 2. Retain PAF/CLI serial behavior while splitting configuration from mutable work.
 3. Add typed TOML adapter/subsets and field-by-field effective-configuration comparison.
 4. Make file resolution and output destinations explicit through loaders, kernels and writers; add a temporary legacy arena adapter only where unavoidable.
@@ -178,6 +249,7 @@ Notebook inspection must not materialize or alter the reduction tree merely by r
 6. Extract one service at a time and adapt notebooks to the shared planner/executor.
 7. Qualify single-detector cases and the optional mefppy binding.
 8. Introduce bounded process parallelism after serial equivalence and shared-reference/output-ownership gates.
+9. Add change registration/impact planning and optionally automatic cascades in separately scoped later passes, using the first-pass version/provenance records.
 
 Proposed targeted checks:
 
@@ -188,6 +260,8 @@ Proposed targeted checks:
 - Exactly-once gain/exposure normalization; preserved common mosaic-flat reference; no duplicate shared calibration writers.
 - CLI versus optional library equivalence, repeated calls and partial cleanup without terminating Python.
 
+Graph-specific future controls must also cover unchanged association after arrival, a newly eligible calibration not previously selected, deduplicated shared rebuilds, pinned versus following projects, added science without unnecessary reruns, changed metadata/configuration, real dependency-cycle rejection, bounded iterations and publication-event loop suppression.
+
 These checks are proposed, not executed. Agree the smallest relevant acceptance per implementation increment; do not replay Stage 2's memory/compiler matrix or reduce the full Chapman dataset as a prerequisite.
 
 ## Review questions
@@ -197,5 +271,11 @@ These checks are proposed, not executed. Agree the smallest relevant acceptance 
 - Should file-based C requests be the initial stable interface before exposing borrowed array buffers?
 - What product/attempt retention and publication policy should be the default?
 - Which concrete first extraction provides the clearest equivalence check?
+- Which future change classes should produce advisory impact plans, and which might eventually permit bounded automatic execution?
 
 Current assessment: explicit resolution and typed requests are the necessary first boundary. Merely adding an input-directory option or setting subprocess cwd preserves too much hidden state. Those can support legacy compatibility but do not define the target API.
+
+## Revision history
+
+- Revision 1: explicit-request/TOML/ASDF/FITS and CLI/library design; cwd-independent resolution, 29 October 2026.
+- Revision 2: owner requests versioned dependency/association graph and future cascades as architectural requirements; first-pass allowances and deferred automation distinguished, 29 October 2026.

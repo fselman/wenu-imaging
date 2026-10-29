@@ -1,5 +1,7 @@
 # mefpp refactor — initial source analysis and design proposal
 
+Owner-directed architecture addition, 29 October 2026: the [revised target](../architecture/proposed/pycavi-mefpp.md) includes a versioned relationship/dependency graph, association re-evaluation and future incremental reprocessing. First-pass contracts record identities, exact versions, memberships and dependencies; watchers, automatic cascades and a general iterative executor remain deferred. Broad relationship cycles are distinct from the acyclic exact-version execution plans. This explicitly adopts that capability as architecture while leaving unrelated exploratory retrieval/layout frameworks unselected.
+
 29 October 2026: see the [original architecture diagram](../architecture/original/pycavi-mefpp.md) and [target architecture proposal](../architecture/proposed/pycavi-mefpp.md). The proposed execution contract resolves inputs, calibrations, configuration and output/work destinations explicitly, without changing the caller's working directory or implicitly searching for files. Existing cwd-dependent behavior remains unchanged; this is design for discussion.
 
 Date: 29 October 2026. Source baseline: main 22a32d39463a73ab32d2ba9d811f949198852902.
