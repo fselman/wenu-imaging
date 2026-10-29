@@ -36,7 +36,8 @@ Milestone IDs below organize this refactor; they do not renumber the global road
 | M3 | Explicit paths and recursive project overview CLI | M1; integrate TOML after M2 | Cwd-independent requests; readable, deterministic project/header/status overview |
 | M4 | Detector/layout mapping | M1, M3 | Permuted/subset/primary-image/one-extension controls |
 | M5 | Calibration subroutines and shared reference contract | M2–M4 | Legacy-equivalent calibration results and ownership |
-| M6 | Science subroutines and product writer | M5 | Equivalent native science/results, safe ordered publication |
+| M5a | Explicit qc stage and measurement/result contracts | M5; common conventions in M1 | Declared measurements/availability/provenance; estimators and quality cuts reviewed before numerical implementation |
+| M6 | Science subroutines and product writer | M5, M5a | Equivalent native science/results, safe ordered publication |
 | M6a | Variance creation and propagation | M4–M6; contracts in M0 | Analytic controls, units, masks and stated covariance limits |
 | M6b | Linearity calibration/correction subroutine | M5–M6a | Known-response controls, validity limits and propagated uncertainty |
 | M6c | Dark construction and optional mefpp subtraction | M5–M6b | Matched/scaled dark controls; request/off behavior and variance |
@@ -45,7 +46,7 @@ Milestone IDs below organize this refactor; they do not renumber the global road
 | M8 | Shared inventory/association planner; notebook 01 | M2, M7 | Legacy associations imported/reproduced and selection explicit |
 | M9 | Serial executor; notebook 03 | M6–M8 | Selected dependency plan, truthful results and exactly-once corrections |
 | M10 | mefppy decision and optional qualified binding | M6–M7 | Decision record; binding equivalence if adopted |
-| M11 | Cumulative first-pass acceptance and migration handoff | M0–M9 including M6a–M6d; M10 disposition | Both instrument baselines, target checks, documentation and rollback |
+| M11 | Cumulative first-pass acceptance and migration handoff | M0–M9 including M5a and M6a–M6d; M10 disposition | Both instrument baselines, target checks, documentation and rollback |
 
 Some schema/source work can be developed independently after its prerequisites, but integrate one reviewed boundary at a time. M0a establishes the WAD/project schema contracts early; M7 persistence can be prepared against them before all kernel extraction is complete. Final executable descriptors must agree with the actual native contracts. This dependency flexibility does not authorize concurrent uncontrolled changes or agent delegation.
 
@@ -90,6 +91,9 @@ M0a acceptance covers the agreed contract/examples only. It does not qualify an 
 
 ### Work and deliverables
 
+- Use the owner-selected entry names in [the service declaration sketch](m1/mef_services.h.txt): mef_cal_bias, mef_cal_bpm, mef_cal_dark, mef_cal_fringes, mef_cal_linearity, mef_cal_domeff, mef_cal_skyff, mef_cal_mff and mef_sci_pp. Establish an explicit qc phase/result convention; concrete QC estimators and thresholds are TBD.
+- First deliver a common ANSI-C90 subroutine template and module checklist: consistent context/result/error/status interface, immutable settings/request contract, explicit ownership/partial construction, validation/calculation/postcondition separation, one cleanup path and success-only result transfer. See [the M1 template](m1/README.md). Reuse the pattern across services with operation-specific payloads; do not introduce an inheritance/dispatch framework or duplicate scientific implementations.
+
 - Map native configuration/request/result fields to WAD concepts, with explicit units and status semantics; numerical code need not load ASDF schemas.
 - Introduce small C configuration structures and validation independent from PAF/TOML syntax.
 - Keep the current PAF reader as an adapter into those structures.
@@ -99,6 +103,8 @@ M0a acceptance covers the agreed contract/examples only. It does not qualify an 
 - Keep CLI parsing, initialization and informational commands out of reusable numerical routines.
 
 ### Gate
+
+The common template syntax compiles as strict C90; implemented lifecycle helpers must pass success, occupied/invalid output, partial-construction, allocation/processing-failure and independent result/error lifetime controls before numerical modules reuse them. A declaration-only template is not runtime qualification.
 
 OCAM/WFI settings loaded through the old and adapted paths agree field-by-field, including defaults and output metadata mappings. Valid/invalid/partially constructed configurations release owned resources correctly; help/version remain independent of processing data. Targeted lifecycle diagnostics cover changed ownership, not a replay of the full historical matrix.
 
@@ -179,7 +185,7 @@ Retain the explicit legacy mapping for already qualified fixtures; fail unsuppor
 
 ### Work and deliverables
 
-- Extract bias, BPM, dome, sky and master-flat operations from recipe/control code into callable C services.
+- Extract mef_cal_bias, mef_cal_bpm, mef_cal_domeff, mef_cal_skyff and mef_cal_mff operations from recipe/control code into callable C services.
 - Preserve actual algorithms, rejection order, thresholds, precision, masks and metadata.
 - Separate loading, computation and publication; expose owned calibration results.
 - Make shared dome/sky reference statistics an explicit input/result contract.
@@ -195,12 +201,26 @@ Known-answer fixtures reproduce calibration arrays, detector mapping and agreed 
 
 One service per reviewable increment, with legacy/component comparisons. New variance, linearity, dark and fringe numerical capabilities are delivered in M6a–M6d, with separate acceptance from this legacy extraction. Gain/RON characterization retains its own scoped calibration work; configured values remain explicitly identified until replaced by characterized values.
 
+## M5a — Explicit qc stage and measurement contracts
+
+### Work and deliverables
+
+- Define an explicit qc phase for calibration builders and, where applicable, mef_sci_pp. Separate measurement/reporting from structural result validation and any scientific acceptance/rejection policy.
+- Carry QC measurements or explicit unavailable/not-requested state in owned results, with units, method/version, source/input selection and configured-versus-measured authority. Final WAD/C field definitions remain review work.
+- Retain the required raw/intermediate information before trimming, rejection or release. Bias examples requested by the owner are mean level, RON and overscan mean level; regions, masks, input requirements, estimators, aggregation and thresholds are TBD.
+- Implement individual QC estimators only after their numerical definitions and bounded verification are agreed. Do not introduce quality cuts, modify gains/RON/header values, reselection or re-reduction automatically through this reporting stage.
+- Extend the common subroutine template with a qc phase; required/optional behavior and failure/partial-output policy must be reviewed before runtime implementation. Add appropriate QC to future linearity/dark/fringe builders at their own milestones.
+
+### Gate and rollback
+
+Review the QC stage and record contracts first. Later chosen estimators require synthetic/reference controls, explicit units/availability, detector/amplifier mapping and provenance before use. An absent measurement must never become a zero noise estimate or an implied quality pass. Preserve legacy numerical results and keep scientific acceptance thresholds unselected until separately agreed.
+
 ## M6 — Extract science processing and product publication
 
 ### Work and deliverables
 
-- Extract native science load/scan/trim/bias/flat operations into detector services with explicit calibration and correction-state inputs.
-- Return structured result/diagnostic objects; numerical routines cannot terminate the Python host.
+- Expose requested calibration application/science preprocessing as mef_sci_pp; extract native science load/scan/trim/bias/flat operations into detector services with explicit calibration and correction-state inputs.
+- Return structured result/diagnostic and qc records using M5a conventions; numerical routines cannot terminate the Python host.
 - Separate FITS header construction, detector output and deterministic MEF assembly.
 - Give each attempt unique temporary outputs; one coordinator owns the final product.
 - Define publication/recovery states and prevent accidental overwrite. If scratch and output are on different filesystems, stage into the output filesystem before any same-filesystem atomic rename; do not assume a cross-filesystem rename or ASDF/FITS transaction.
@@ -233,7 +253,7 @@ Use small analytic controls for addition/subtraction, division, scaling, masked/
 ### Work and deliverables
 
 - Define a versioned per-detector/amplifier linearity model with input units, valid signal range, reference convention, coefficients/table, calibration provenance and uncertainty.
-- Add a callable C linearity-correction subroutine; plan a separate calibration-building operation from linearity sequences so fitting and applying the model have distinct contracts.
+- Expose linearity calibration/model creation as mef_cal_linearity. Add a private callable C linearity-correction kernel for application through mef_sci_pp; plan a separate calibration-building operation from linearity sequences so fitting and applying the model have distinct contracts.
 - Specify the order relative to overscan, bias, dark and flat with the model convention; prepare all calibration inputs consistently and record which correction was applied.
 - Propagate variance through the model response and supported model uncertainty. Flag saturated/out-of-domain values; no silent extrapolation.
 - Expose explicit recipe/configuration selection and the same operation to optional mefppy.
@@ -246,7 +266,7 @@ Known synthetic response curves recover declared reference signals within stated
 
 ### Work and deliverables
 
-- Add a callable C dark-construction service with explicit input selection, bias/linearity correction state, detector geometry, exposure, temperature/readout applicability, combination/rejection and output variance/masks.
+- Add mef_cal_dark as the callable C dark-construction service with explicit input selection, bias/linearity correction state, detector geometry, exposure, temperature/readout applicability, combination/rejection and output variance/masks.
 - Distinguish an exposure-matched master dark from a dark-current rate product; record units and supported scaling. Exposure/temperature scaling is permitted only by the selected validated model, never inferred from a filename.
 - Let mefpp subtract the selected dark on explicit request through the recipe/CLI and optional library request. Record applied dark version and any scale; omission/off leaves the compatibility path unchanged.
 - Propagate dark uncertainty and relevant scaling uncertainty; reject incompatible or already-applied corrections. Link dark dependencies into associations, plans and future impact analysis.
@@ -259,7 +279,7 @@ Controls cover known dark signals, matched exposure, explicitly supported rate s
 
 ### Work and deliverables
 
-- Add a callable C fringe-frame construction service using explicitly prepared, compatible input frames. Define source masking, background treatment, normalization, combination/rejection, detector/filter applicability, variance and coverage.
+- Add mef_cal_fringes as the callable C fringe-frame construction service using explicitly prepared, compatible input frames. Define source masking, background treatment, normalization, combination/rejection, detector/filter applicability, variance and coverage.
 - Preserve ordered membership and preparation state; science-derived templates record their contributing science versions and any shared uncertainty/self-contribution limits.
 - Publish the fringe template as FITS with ASDF calibration/provenance references. It is not automatically subtracted by mefpp.
 - Specify a separate later Python subtraction operation: select the exact template, estimate or supply the scale, apply subtraction, propagate template/scale uncertainty and masks, and record correction state. Keep construction and subtraction independently selectable and resumable.

@@ -1,0 +1,70 @@
+/* Copy/rename for a real operation. C90 syntax-checkable review scaffold.
+ * Helpers below are contracts, not implementations; this file is not linked
+ * or added to the production build. Implement helpers in the owning module.
+ */
+#include "mef_operation_template.h.txt"
+
+mef_status mef_cal_bias_validate(mef_context *context, mef_error **error);
+mef_status mef_cal_bias_result_create(mef_result **result, mef_error **error);
+mef_status mef_cal_bias_kernel(mef_context *context, mef_result *result,
+                                 mef_error **error);
+mef_status mef_cal_bias_validate_result(const mef_result *result,
+                                          mef_error **error);
+/* qc helpers compute declared measurements, not unstated quality cuts. */
+mef_status mef_cal_bias_qc(mef_context *context, mef_result *result,
+                            mef_error **error);
+
+mef_status mef_cal_bias(mef_context *context,
+                              mef_result **result,
+                              mef_error **error)
+{
+    mef_status status;
+    mef_result *pending;
+
+    /* Reject occupied output handles without overwriting/leaking them. */
+    if (result == NULL || *result != NULL ||
+        (error != NULL && *error != NULL)) {
+        return MEF_STATUS_INPUT;
+    }
+    pending = NULL;
+    status = MEF_STATUS_INPUT;
+    if (context == NULL) {
+        goto cleanup;
+    }
+
+    /* Validate the resolved request and settings before doing work. */
+    status = mef_cal_bias_validate(context, error);
+    if (status != MEF_STATUS_OK) {
+        goto cleanup;
+    }
+
+    /* A partially constructed result must remain safely destructible. */
+    status = mef_cal_bias_result_create(&pending, error);
+    if (status != MEF_STATUS_OK) {
+        goto cleanup;
+    }
+
+    /* Existing calculation goes here, through explicit context/state. */
+    status = mef_cal_bias_kernel(context, pending, error);
+    if (status != MEF_STATUS_OK) {
+        goto cleanup;
+    }
+    status = mef_cal_bias_validate_result(pending, error);
+    if (status != MEF_STATUS_OK) {
+        goto cleanup;
+    }
+
+    /* Explicit qc stage: use retained inputs/intermediates as required. */
+    status = mef_cal_bias_qc(context, pending, error);
+    if (status != MEF_STATUS_OK) {
+        goto cleanup;
+    }
+
+    /* Transfer ownership only after the complete operation succeeds. */
+    *result = pending;
+    pending = NULL;
+
+cleanup:
+    mef_result_destroy(pending);  /* accepts NULL or partial valid objects */
+    return status;
+}

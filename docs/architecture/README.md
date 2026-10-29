@@ -9,3 +9,5 @@
 - [Detailed refactor analysis](../developer/mefpp-refactor-analysis-2026-10-29.md), [PAF inventory](../developer/mefpp-refactor-paf-inventory-2026-10-29.md) and [Chapman4 evidence](../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 
 "Original" is a dated observed baseline. "Proposed" is an unimplemented design; publication does not approve its detailed interfaces or start refactoring.
+
+- [M1 common ANSI C90 subroutine template](proposed/m1/README.md): calling/ownership pattern and module checklist; compile-only review scaffold, not production implementation.

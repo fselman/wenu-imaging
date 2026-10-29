@@ -1,0 +1,19 @@
+/* M1 review template, not an installed header or frozen public ABI. */
+#ifndef MEF_OPERATION_TEMPLATE_H
+#define MEF_OPERATION_TEMPLATE_H
+
+/* Reuse the accepted C90 type/ownership sketch. */
+#include "../m0-m0a/native-interface.h.txt"
+
+/* Caller owns context. Its constructor has copied required request/config
+ * data. The operation may mutate context work, never its frozen settings.
+ * Entry: result != NULL, *result == NULL; error == NULL or *error == NULL.
+ * Success: *result independently owned and valid after context destruction.
+ * Failure: *result remains NULL; optional *error is independently owned.
+ * No exit(), hidden global mutable state, cwd change or project publication.
+ */
+mef_status mef_cal_bias(mef_context *context,
+                              mef_result **result,
+                              mef_error **error);
+
+#endif
