@@ -1,0 +1,21 @@
+{
+  "scope": "private C90 actual constructor link; unchanged legacy dependencies; no sanitizer on this binary",
+  "source_sha256": {
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mef_config.c": "cdf2aafb26df1e2d31904b353cfa22424e6139d1bfb61257ebcb1319f0814c05",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/tests/config_paf_snapshot.c": "851e8cfdd29c1b5109936a6d3c8323b50213468e1ea849bfac200761f6118ecd",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/ins/mef/common/mefp_lib.c": "09b7b7cbcef77db59f3d8b4ef0ffb350f42a7bee093ccfac99944566d87a5c17",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/pafs.c": "548ce8b2a12265f7b597851b0c7075f3fb9a5784ee2998084c28d0b31074c499",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/src/unix/comm.c": "fedb577839d39151310b67dfac6f8dffe8a8ff07f0e628f842c4b4ecfc6e40f9",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/src/unix/strlib.c": "c42737c78eed9109a54d4361ad79a052a0154ea90efa524d543ce86780847622",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/xmemory.c": "97176efb7a4797a7c5e14769b7838c4792f15b621ddc649a77a9ed826d55ff87",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/qerror.c": "294696388b54b4986eef66a1ee448baaf29778780814a9c904b591f6a8f0232c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/src/unix/t_stamp.c": "b489e940fc21afc609a8d32731904e531374619ac08614309fcc46b86e8e26e2",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/qfits5/src/t_iso8601.c": "dae4507766dde8f49a610a2c5407f8d9cb30e8315d90d2650143fcf4226fa85e",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1/implementation/mefpp2/src/unix/userid.c": "b41d7f0dd1f27b32fd556806ddd635a18a4ce8bc4296358f7720d8e931e0f406"
+  },
+  "probe_sha256": "6985f63cab5b0fe1412a83ef7dbf2a0e726d41abdef08334fee3df4880252d45",
+  "upstream_blob_identity_checks": {
+    "matched": 127,
+    "mismatches": []
+  }
+}

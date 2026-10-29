@@ -119,6 +119,23 @@ if(NOT HAVE_SQRT_WITHOUT_LIBM)
   target_link_libraries(eclipse PUBLIC m)
 endif()
 
+
+# M1 inspection is opt-in. The legacy executable and installed payload do not
+# depend on the snapshot library, which is not yet a supported public ABI.
+option(MEFPP_BUILD_CONFIG_PROBES "Build isolated M1 configuration probes" OFF)
+if(MEFPP_BUILD_CONFIG_PROBES)
+  add_library(mefpp_config_snapshot STATIC ins/mef/common/mef_config.c)
+  target_include_directories(mefpp_config_snapshot PUBLIC ins/mef/common
+    PRIVATE src/include qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_config_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(mefpp_config_snapshot PRIVATE -Wall -Wextra -pedantic-errors)
+  endif()
+  add_executable(config_paf_snapshot tests/config_paf_snapshot.c)
+  target_link_libraries(config_paf_snapshot PRIVATE mefpp_config_snapshot mefpp_common)
+  target_compile_definitions(config_paf_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+endif()
+
 if(MEFPP_BUILD_RESOURCES)
   find_program(MEFPP_FUNPACK NAMES funpack REQUIRED)
   if(NOT EXISTS "${MEFPP_FUNPACK}" OR IS_DIRECTORY "${MEFPP_FUNPACK}")
@@ -151,6 +168,19 @@ if(BUILD_TESTING)
   endif()
   target_compile_options(native_smoke PRIVATE -Wall -Wextra -pedantic-errors)
   file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+  if(MEFPP_BUILD_CONFIG_PROBES)
+    set(config_probe_sdk_args "")
+    if(APPLE AND CMAKE_OSX_SYSROOT)
+      list(APPEND config_probe_sdk_args --sysroot "${CMAKE_OSX_SYSROOT}")
+    endif()
+    add_test(NAME native_config_snapshot
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_snapshot_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --cc "${CMAKE_C_COMPILER}" --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work"
+        --c-standard "${MEFPP_C_STANDARD}"
+        --paf-probe "$<TARGET_FILE:config_paf_snapshot>" ${config_probe_sdk_args})
+    set_tests_properties(native_config_snapshot PROPERTIES TIMEOUT 180 LABELS "native;configuration")
+  endif()
   add_test(NAME native_primitives COMMAND native_smoke)
   set_tests_properties(native_primitives PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test-work")
   add_test(NAME native_failure_contract
@@ -184,7 +214,7 @@ set(MEFPP_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 set(MEFPP_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 # Hash all native inputs, including headers and compressed resources, for provenance.
 file(GLOB_RECURSE manifest_inputs CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-  "src/*.c" "src/*.h" "ins/mef/*.c" "ins/mef/*.h"
+  "src/*.c" "src/*.h" "ins/mef/*.c" "ins/mef/*.h" "ins/mef/*.def"
   "ins/mef/config/*.paf" "ins/mef/static_cal/*.fits.fz"
   "qfits5/src/*.c" "qfits5/src/*.h" "qfits5/include/*.h"
   "CMakeLists.txt" "Makefile" "configure" "cmake/*" "tests/*" "LICENSE" "qfits5/LICENSE")

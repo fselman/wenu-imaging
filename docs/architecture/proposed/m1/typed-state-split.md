@@ -32,3 +32,7 @@ The eight captured repository configuration files match the current source Git i
 5. Integrate one boundary at a time; numerical extraction, new variance/linearity/dark/fringe models, QC estimators and TOML configuration integration retain their separate milestones.
 
 This receipt changes no native source, mathematics, installed configuration, calibration association or accepted product.
+
+## Implementation status
+
+The first [owned config snapshot](config-snapshot.md) now copies constructor-mapped settings with independent lifetimes, an internal typed detector array, per-object allocation and deterministic bit-preserving inspection. It remains opt-in and outside the numerical engine. Request/context/result ownership and CLI-override capture remain pending M1 work; no numerical service or TOML migration is implemented.
