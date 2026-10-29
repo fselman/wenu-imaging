@@ -55,3 +55,5 @@ Latest: [F5 prepared](stage2-integrated-f5-preparation-2026-10-28.md) following 
 Latest controlling status: [F5 accepted](stage2-integrated-f5-acceptance-2026-10-28.md); [final owner-review decision](stage2-integrated-owner-review-2026-10-28.md) ready; Phase 3 is deferred by the later owner disposition. Final count 19/19 planned, 29 actual. No further runs or automatic scope expansion. The owner subsequently accepted bounded closure with #116 deferred (v2.6); older pending statements are historical.
 
 Controlling owner disposition: [v2.6](native-roadmap-amendment-v2.6-2026-10-28.md) accepts bounded Stage 2 closure with #116 open/unresolved/deferred; Phase 3 is deferred outside this gate. Finish integration and guarded clean-main handoff; no engine reruns.
+
+Owner addition after accepted closure: [v2.7 Stage 2.1](native-roadmap-amendment-v2.7-2026-10-28.md) adds full current mefpp/Pycavi reductions for one OCAM and one WFI dataset before Stage 2A. This separate planned functional baseline does not add rows/launches to the completed 19/19 Stage 2 campaign. No processing starts with publication; both hosts remain clean main.

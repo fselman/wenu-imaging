@@ -1,5 +1,7 @@
 # mefpp modernization roadmap — version 1
 
+Stage 2.1 added by owner, 28 October 2026: [immutable amendment v2.7](native-roadmap-amendment-v2.7-2026-10-28.md) inserts full processing of one complete OCAM dataset and one complete WFI dataset with current mefpp/Pycavi before Stage 2A. New order: accepted Stage 2 → **Stage 2.1 full current-workflow baseline** → Stage 2A review → extraction. One inventory/input/software lock, both existing complete supported reduction chains, retained outputs/QC and one baseline report; no new algorithm, format migration, automatic tuning, repeated memory matrix or duplicated platform run. Stage 2 stays accepted at 19/19 planned, 29 actual; #116 open/deferred, Phase 3 deferred. Planning only tonight; both user checkouts stay clean on main, no processing/installation/sync needed to review. Exploratory ASDF/WISDG/layout ideas are not adopted requirements.
+
 Frozen roadmap accepted, 28 October 2026: Fernando instructed "proceed" after reviewing v2.0 and requesting amendment v2.1 (paired final Chapman3 C17/C90 regression). The [accepted execution record](native-roadmap-v2-acceptance-2026-10-28.md) activates the frozen contract plus amendment; earlier proposal/pending-acceptance statements are historical. Begin one read-only WFI inventory and one integrated-fixture/harness preparation pass, then the fixed F1–F5 campaign: Mac C17 diagnostics, one final C90 build, paired compact Chapman3 closure, at most 19 planned native launches and two global correction/retest rounds. No new BPM-only matrix, automatic scope expansion, processing before input/reference lock, merge or branch deletion is authorized. Keep the frozen files byte-identical, all prior evidence and installations preserved, and #116 explicitly open pending its final-review disposition.
 
 Owner-requested frozen-roadmap amendment v2.1, 28 October 2026: Fernando explicitly requested a compact final Chapman3 C90 regression together with C17. See [immutable amendment v2.1](native-roadmap-amendment-v2.1-2026-10-28.md). F5 now contains two compact target launches, one per mode; the campaign cap is 19 planned native launches. The original frozen v2.0 file/checksum, one-day preparation checkpoint, two global correction-round limit and all other scope/stopping rules remain unchanged. No build or processing starts from this documentation update.
@@ -85,6 +87,7 @@ release preparation and any submission remain separate from functional acceptanc
 | 0 | Toolchain/build decision and qualification fixtures | Review the selected tools, platform matrix, invariants and bounded first implementation |
 | 1 | Clean serial build and installation | Fresh source and private-prefix installed tests on Mac, then chapman3; no historical native dependency |
 | 2 | Memory and failure correctness | No unexplained memory diagnostics or leaks on the declared normal/error/repeat suite; cleanup and status tests pass |
+| 2.1 | Full current mefpp/Pycavi processing of one complete OCAM and one complete WFI dataset | Both existing supported workflows complete; products/QC and software/input identities reviewed and frozen as pre-refactor baselines |
 | 2A | Data standards, storage and representation audit | Reviewed format-neutral data contract and retain/adopt decision before component interfaces are fixed |
 | 3 | Component contracts and extraction of existing behavior | Serial legacy/component comparisons pass with agreed tolerances; ownership, metadata and normalization preserved |
 | 4 | Calibration services and frame variances | Linearity/shutter/gain/RON, dark, fringes and variance creation/propagation have defined products and separately qualified methods |
@@ -249,18 +252,23 @@ correct exit status/cleanup and equivalent scientific outputs. This is bounded
 memory evidence, not proof of absence of leaks in every possible execution.
 Broader refactoring waits for this gate. Re-run relevant checks after extraction.
 
-### Mandatory review after Stage 2
+### Accepted Stage 2 exit and next baseline
 
-After the declared memory/ownership suite has been qualified, review the situation
-with Fernando before starting Stage 2A implementation/prototypes or Stage 3
-extraction. Present current acceptance, remaining defects, the early Phase 3 gap
-matrix, product/profile requirements, resource costs and a proposed next bounded
-scope. Completion of Stage 2 does not automatically authorize later work.
+Stage 2 bounded acceptance is recorded in amendment v2.6; #116 remains open/deferred and Phase 3 work is deferred. It is not a new gate before the next functional baseline. The owner's subsequent amendment v2.7 inserts Stage 2.1 before representation work. Completion of either stage does not automatically authorize backend migration or component extraction.
+
+## Stage 2.1 — Full current-workflow OCAM and WFI processing
+
+Run the existing complete supported mefpp/Pycavi chain on one complete selected OCAM dataset and one complete selected WFI dataset before changing the representation or extracting components. Establish baseline products and end-to-end behavior of the current combined system, beyond Stage 2's native focused workflows.
+
+One preparation pass pins actual notebook/script paths, all intended exposures/filter groups and required calibrations, exact current mefpp/Pycavi/tool versions, configuration, host and expected products. Use fresh isolated outputs and preserve selected installations and earlier reductions. Execute calibration association/construction/application as supported, native preprocessing/Python normalization, astrometry/extraction/SCAMP, SWarp coaddition and supported photometric/QC/catalogue stages. Record supplied versus generated BPM/calibrations; do not add new methods or tune the science automatically to complete a missing capability.
+
+Deliver both complete reduction sets and one concise reviewed baseline report with input/software/configuration provenance, product coverage, QC and explicit limitations. Missing inputs or failures stop dependent processing for a bounded disposition. No repeated memory/compiler/platform matrix, format change or reinstallation is implied. Functional completion does not establish scientific or Phase 3 certification. See [immutable scope and completion gate](native-roadmap-amendment-v2.7-2026-10-28.md).
+
+Then proceed to Stage 2A review; implementation/extraction still needs its concrete separately approved scope.
 
 ## Stage 2A — Data standards, storage and representation audit
 
-Fernando adds this review immediately after memory qualification and before
-component contracts/extraction. New storage may improve intermediate processing,
+This review follows the accepted memory qualification and the newly inserted Stage 2.1 full current-workflow baseline, before component contracts/extraction. New storage may improve intermediate processing,
 but no replacement is selected and FITS is not presumed obsolete. Distinguish:
 (1) on-disk containers, (2) astronomical metadata/data models, and (3) in-memory
 array/state structures. A different container does not supply the scientific
