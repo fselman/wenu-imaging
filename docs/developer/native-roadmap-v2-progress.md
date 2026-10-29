@@ -13,12 +13,12 @@ rows, launches, repair rounds or completion gates. Amendments are separate files
 | F2 integrated selected WFI | Accepted at f5afd08: all three Mac lanes after filename correction | Six products/eight detectors; host pixel/header reports agree, archived diagnostics pass; large FITS stay on Mac |
 | F3 five fixed failure cases | Accepted bounded F3; full archive inspected | Ten final failure roles and two exact smokes; 539 files / 35 logs / six builds verified; historical #127/#129 failures preserved |
 | F4 fixed same-process repetition | Accepted; archive independently inspected | One process, warmup + ten cycles; 66 exact products / 132 detector arrays, zero cleaned resources and stable descriptors |
-| F5 compact Chapman3 regression | Prepared, actual target execution pending | Qualified clean actual host preflight; one exact tiny integrated C17 and one C90 launch, internal owner/accounting/descriptors; no target external-memory qualification |
+| F5 compact Chapman3 regression | Accepted; full archive independently inspected | 94 files / six logs, exact C17/C90 products and metadata, owners/accounting/descriptors; no target external-memory qualification |
 | Final C90 compatibility checkpoint | Accepted Mac C90 compile/link at b93ffda | Actual -std=c90, AppleClang 15; six archive files / 389 source inputs verified; existing warnings retained, no processing rerun |
-| Correction/retest budget | 2/2 consumed; approved v2.2–v2.5 exceptions consumed | Current 17 planned + 10 retests = 27 actual; only F5 two original planned launches remain; no automatic repair/retry |
+| Correction/retest budget | 2/2 consumed; approved v2.2–v2.5 exceptions consumed | Final 19 planned + 10 retests = 29 actual; no engine launches remain; no automatic repair/retry |
 | #116 disposition | Open | Original descriptor identity mismatch remains unattributed/non-reproduced |
 | Target external diagnostics | Limitation remains open | Accepted v2.0 removes it as an automatic block to the Mac-led campaign |
-| Final Stage 2 owner review / Phase 3 gap matrix | Pending | Completion, accepted named limitations, or explicit blocked decision |
+| Final Stage 2 owner disposition | Accepted bounded closure; Phase 3 deferred | #116 open/unresolved/deferred by owner; no additional runs, scientific/archive acceptance or automatic implementation |
 
 Current evidence: [F1 overscan finding and bounded correction](stage2-integrated-overscan-correction-2026-10-28.md). Remaining rows are unrun, not failed.
 
@@ -51,3 +51,7 @@ Latest controlling status: [F4 accepted](stage2-integrated-f4-acceptance-2026-10
 Latest: [final Mac C90 accepted](stage2-final-c90-mac-acceptance-2026-10-28.md); counts unchanged at 27 actual. Next compact Chapman pair, then final owner/Phase 3 review. Older pending-C90 statements are historical.
 
 Latest: [F5 prepared](stage2-integrated-f5-preparation-2026-10-28.md) following actual clean Chapman preflight. Python preparation checks pass, target execution remains pending at 27 actual. Only two fixed native launches and final owner/Phase 3 review remain.
+
+Latest controlling status: [F5 accepted](stage2-integrated-f5-acceptance-2026-10-28.md); [final owner-review decision](stage2-integrated-owner-review-2026-10-28.md) ready; Phase 3 is deferred by the later owner disposition. Final count 19/19 planned, 29 actual. No further runs or automatic scope expansion. The owner subsequently accepted bounded closure with #116 deferred (v2.6); older pending statements are historical.
+
+Controlling owner disposition: [v2.6](native-roadmap-amendment-v2.6-2026-10-28.md) accepts bounded Stage 2 closure with #116 open/unresolved/deferred; Phase 3 is deferred outside this gate. Finish integration and guarded clean-main handoff; no engine reruns.

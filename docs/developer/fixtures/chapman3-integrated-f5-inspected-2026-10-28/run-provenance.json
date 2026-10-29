@@ -1,0 +1,1446 @@
+{
+  "schema_version": 1,
+  "fixed_row": "F5",
+  "source": {
+    "commit": "57dd1739bd0bd30d7a74fe26f411fc07a3dc5373",
+    "dirty": false
+  },
+  "host": "chapman3.sc.eso.org",
+  "created_utc": "2026-10-29T00:57:40.588877+00:00",
+  "status": "F5-passed-awaiting-review",
+  "execution_complete": true,
+  "planned_launches_consumed": 19,
+  "retest_launches_consumed": 10,
+  "native_launches_consumed": 29,
+  "correction_rounds_consumed": 2,
+  "planned_native_launch_limit": 19,
+  "commands": [
+    {
+      "label": "configure-c17",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "-S",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/source/mefpp2",
+        "-B",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c17",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/opt/rh/devtoolset-10/root/usr/bin/gcc",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=17",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=57dd1739bd0bd30d7a74fe26f411fc07a3dc5373",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5",
+      "native": false,
+      "exit_status": 0,
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/configure-c17.log",
+      "log_sha256": "bc64e3dd8cbadf8f53bac350c89bc6bc55db4d7abb5401be49d6e5a39ec093ef"
+    },
+    {
+      "label": "build-c17",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "--build",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c17",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5",
+      "native": false,
+      "exit_status": 0,
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c17.log",
+      "log_sha256": "21272f370bf43e528b807b63bd22ec20eb0ad66447b90304bd8b03066d8b28bd"
+    },
+    {
+      "label": "configure-c90",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "-S",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/source/mefpp2",
+        "-B",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c90",
+        "-G",
+        "Unix Makefiles",
+        "-DCMAKE_C_COMPILER=/opt/rh/devtoolset-10/root/usr/bin/gcc",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DMEFPP_C_STANDARD=90",
+        "-DBUILD_TESTING=OFF",
+        "-DMEFPP_BUILD_RESOURCES=OFF",
+        "-DMEFPP_SOURCE_REVISION=57dd1739bd0bd30d7a74fe26f411fc07a3dc5373",
+        "-DCMAKE_C_FLAGS=-O0 -g -fno-omit-frame-pointer",
+        "-DCMAKE_EXE_LINKER_FLAGS="
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5",
+      "native": false,
+      "exit_status": 0,
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/configure-c90.log",
+      "log_sha256": "2200819e3e93198252340a7035589c08bc997c88070de24010e131ed18eb629d"
+    },
+    {
+      "label": "build-c90",
+      "argv": [
+        "/home1/fselman/opt/cmake-3.29.6/bin/cmake",
+        "--build",
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c90",
+        "--target",
+        "integrated_observer",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5",
+      "native": false,
+      "exit_status": 0,
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c90.log",
+      "log_sha256": "584309c98dfdb888e88135486e3ecc860319adf0aaf5fe1e9918f7be60c12dd2"
+    },
+    {
+      "label": "F5-c17",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c17/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/c17-functional",
+      "native": true,
+      "exit_status": 0,
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/F5-c17.log",
+      "log_sha256": "8f7d15b989906e99501dd9fc4e4ce56814db79bcdc9f7c73f7a0fb31a93391cc"
+    },
+    {
+      "label": "F5-c90",
+      "argv": [
+        "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/build-c90/integrated_observer",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/c90-functional",
+      "native": true,
+      "exit_status": 0,
+      "log": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/F5-c90.log",
+      "log_sha256": "dd361caade41ab3adaa40ef87a24636de9984a788f49aa69d12d32ca34520061"
+    }
+  ],
+  "cases": [
+    {
+      "mode": "17",
+      "directory": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/c17-functional",
+      "input_sha256": {
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48"
+      },
+      "fixture_report_sha256": "379087e7550d4a8f617e3ae9e92d057d62799ad3690ec485ec66a07876b84fdc",
+      "status": "passed",
+      "findings": [],
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 0,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 6,
+          "bpm_calls": 2,
+          "combine_calls": 2,
+          "science_loads": 2,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-before-000": {
+            "pointers": 233,
+            "bytes": 5862,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-after-001": {
+            "pointers": 235,
+            "bytes": 6202,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-1-before-002": {
+            "pointers": 244,
+            "bytes": 6371,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-before-004": {
+            "pointers": 261,
+            "bytes": 6835,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-after-005": {
+            "pointers": 263,
+            "bytes": 7175,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-before-006": {
+            "pointers": 256,
+            "bytes": 7059,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-after-007": {
+            "pointers": 258,
+            "bytes": 7399,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-before-008": {
+            "pointers": 259,
+            "bytes": 7442,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-after-009": {
+            "pointers": 261,
+            "bytes": 7782,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-010": {
+            "pointers": 260,
+            "bytes": 7485,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-011": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-before-012": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-after-013": {
+            "pointers": 262,
+            "bytes": 7841,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-1-after-014": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-015": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-1-after-016": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-017": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-before-018": {
+            "pointers": 239,
+            "bytes": 6120,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-after-019": {
+            "pointers": 241,
+            "bytes": 6460,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-2-before-020": {
+            "pointers": 249,
+            "bytes": 6586,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-before-022": {
+            "pointers": 265,
+            "bytes": 7007,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-after-023": {
+            "pointers": 267,
+            "bytes": 7347,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-before-024": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-after-025": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-before-026": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-after-027": {
+            "pointers": 263,
+            "bytes": 7868,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-028": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-029": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-before-030": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-after-031": {
+            "pointers": 263,
+            "bytes": 7884,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-2-after-032": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-033": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-2-after-034": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-035": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-context-release": {
+            "pointers": 231,
+            "bytes": 6020,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633025,
+                "mode": 33188
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "1024",
+            "4096",
+            "0"
+          ],
+          [
+            "after",
+            "4096",
+            "4096",
+            "0"
+          ]
+        ]
+      },
+      "products": {
+        "CALIB.BPM": {
+          "name": "OCAM_BPM_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "be106c4ea91b8c50bfd325651b398863100995c46d07d784d4da08dad7e8c88c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "3ee49d77af2224093e63913902306f58b21f3eeac13ae292de986b54699b9f1c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "179485e10562b18f6ea29a5ffd4b6be3cf9dd405f5dd728e750215fcbbe5752b"
+        },
+        "CALIB.MASTER_DOME_FLAT": {
+          "name": "OCAM_DOMEFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "db9d1476f522a6081b2efbad68a6a8a5ff8714afac681c84629ca1bfd460a9db"
+        },
+        "CALIB.MASTER_BIAS": {
+          "name": "OCAM_MB_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "a17c1f3fc807a2b38085728f83ead96745126288cf9bbed3d176201f4ce249ef"
+        },
+        "CALIB.MASTER_FLAT": {
+          "name": "OCAM_MFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "8605bc05cc27d4a1328cdfc1c415a10a1b031090ea0d505c546fd6f34d4e8d74"
+        },
+        "CALIB.MASTER_SKY_FLAT": {
+          "name": "OCAM_SKYFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "fd761d6332c59d2579463f0a97ed500b45063196a0ba8716689a0ee09e263563"
+        },
+        "SCIENCE.MEFIMAGE": {
+          "name": "science0_pre.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "da89cf1fdf4dcd6c5bc9c3336e7cc996af1cb14ffba4207602ef611279c7d1ac"
+        }
+      }
+    },
+    {
+      "mode": "90",
+      "directory": "/home/fselman/Software/build/wenu-imaging/chapman3-stage2-integrated-F5/c90-functional",
+      "input_sha256": {
+        "bias.list": "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        "bias0.fits": "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        "bias1.fits": "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        "bias2.fits": "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        "bpm.list": "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        "bpm0.fits": "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        "bpm1.fits": "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        "bpm2.fits": "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        "dome.list": "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        "dome0.fits": "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        "dome1.fits": "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        "dome2.fits": "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        "dome3.fits": "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        "dome4.fits": "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        "expected-bias-1.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bias-2.npy": "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        "expected-bpm-1.npy": "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        "expected-bpm-2.npy": "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        "expected-flat-1.npy": "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        "expected-flat-2.npy": "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        "expected-science-1.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "expected-science-2.npy": "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        "mefpp.paf": "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        "science.list": "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        "science0.fits": "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        "sky.list": "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        "sky0.fits": "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        "sky1.fits": "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        "sky2.fits": "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        "sky3.fits": "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        "sky4.fits": "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48"
+      },
+      "fixture_report_sha256": "b3cd03f66c494894ace135267362131f796854ba0f614c37d2d6f00acf47b37b",
+      "status": "passed",
+      "findings": [],
+      "diagnostics": {
+        "ownership": {
+          "native_exit": 0,
+          "contexts": 1,
+          "destroyed": 1,
+          "calibration_calls": 6,
+          "bpm_calls": 2,
+          "combine_calls": 2,
+          "science_loads": 2,
+          "live_products": 0,
+          "owner_live": 0,
+          "mismatch": 0
+        },
+        "accounting": {
+          "process-start": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context": {
+            "pointers": 112,
+            "bytes": 4549,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-before-000": {
+            "pointers": 233,
+            "bytes": 5862,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-1-after-001": {
+            "pointers": 235,
+            "bytes": 6202,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-1-before-002": {
+            "pointers": 244,
+            "bytes": 6371,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-before-004": {
+            "pointers": 261,
+            "bytes": 6835,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-1-after-005": {
+            "pointers": 263,
+            "bytes": 7175,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-before-006": {
+            "pointers": 256,
+            "bytes": 7059,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-1-after-007": {
+            "pointers": 258,
+            "bytes": 7399,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-before-008": {
+            "pointers": 259,
+            "bytes": 7442,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-1-after-009": {
+            "pointers": 261,
+            "bytes": 7782,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-010": {
+            "pointers": 260,
+            "bytes": 7485,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-011": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-before-012": {
+            "pointers": 258,
+            "bytes": 7145,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-1-after-013": {
+            "pointers": 262,
+            "bytes": 7841,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-1-after-014": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-015": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-1-after-016": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-1-after-017": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-before-018": {
+            "pointers": 239,
+            "bytes": 6120,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bias-2-after-019": {
+            "pointers": 241,
+            "bytes": 6460,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "bpm-2-before-020": {
+            "pointers": 249,
+            "bytes": 6586,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-before-022": {
+            "pointers": 265,
+            "bytes": 7007,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "dome-2-after-023": {
+            "pointers": 267,
+            "bytes": 7347,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-before-024": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "sky-2-after-025": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-before-026": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "combined-2-after-027": {
+            "pointers": 263,
+            "bytes": 7868,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-028": {
+            "pointers": 261,
+            "bytes": 7528,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-029": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-before-030": {
+            "pointers": 259,
+            "bytes": 7188,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-load-2-after-031": {
+            "pointers": 263,
+            "bytes": 7884,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "science-release-2-after-032": {
+            "pointers": 263,
+            "bytes": 7218,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-033": {
+            "pointers": 261,
+            "bytes": 6878,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "mask-release-2-after-034": {
+            "pointers": 259,
+            "bytes": 6773,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "image-release-2-after-035": {
+            "pointers": 257,
+            "bytes": 6433,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "before-context-release": {
+            "pointers": 231,
+            "bytes": 6020,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-context-release": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-driver": {
+            "pointers": 85,
+            "bytes": 998,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          },
+          "after-second-purge": {
+            "pointers": 0,
+            "bytes": 0,
+            "mapped_files": 0,
+            "mapped_references": 0,
+            "swap_bytes": 0
+          }
+        },
+        "descriptor_snapshots": {
+          "boundaries": {
+            "before": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              }
+            ],
+            "after-driver": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              }
+            ],
+            "after-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              }
+            ],
+            "after-second-purge": [
+              {
+                "fd": 0,
+                "flags": 0,
+                "dev": 12,
+                "ino": 3,
+                "mode": 8592
+              },
+              {
+                "fd": 1,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              },
+              {
+                "fd": 2,
+                "flags": 0,
+                "dev": 64780,
+                "ino": 947633307,
+                "mode": 33188
+              }
+            ]
+          },
+          "changes": {
+            "after-driver": [],
+            "after-purge": [],
+            "after-second-purge": []
+          }
+        },
+        "descriptor_limits": [
+          [
+            "before",
+            "1024",
+            "4096",
+            "0"
+          ],
+          [
+            "after",
+            "4096",
+            "4096",
+            "0"
+          ]
+        ]
+      },
+      "products": {
+        "CALIB.BPM": {
+          "name": "OCAM_BPM_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "be106c4ea91b8c50bfd325651b398863100995c46d07d784d4da08dad7e8c88c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": 8,
+              "sha256": "3ee49d77af2224093e63913902306f58b21f3eeac13ae292de986b54699b9f1c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "179485e10562b18f6ea29a5ffd4b6be3cf9dd405f5dd728e750215fcbbe5752b"
+        },
+        "CALIB.MASTER_DOME_FLAT": {
+          "name": "OCAM_DOMEFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "db9d1476f522a6081b2efbad68a6a8a5ff8714afac681c84629ca1bfd460a9db"
+        },
+        "CALIB.MASTER_BIAS": {
+          "name": "OCAM_MB_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "f4bd841308415de6ed2727462cd66a7333ac8155b4e8e95de0220355189c785c",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "a17c1f3fc807a2b38085728f83ead96745126288cf9bbed3d176201f4ce249ef"
+        },
+        "CALIB.MASTER_FLAT": {
+          "name": "OCAM_MFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "8605bc05cc27d4a1328cdfc1c415a10a1b031090ea0d505c546fd6f34d4e8d74"
+        },
+        "CALIB.MASTER_SKY_FLAT": {
+          "name": "OCAM_SKYFF_S2_1x1.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "d9342079fee02f546d00de04f2b8ba69a96eec2671a0c9ff80da0ad19e06774b",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "59b41e797cdbe6c016f67d7171bf6b49975440dba178f8e176bd60f185fedb70",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "fd761d6332c59d2579463f0a97ed500b45063196a0ba8716689a0ee09e263563"
+        },
+        "SCIENCE.MEFIMAGE": {
+          "name": "science0_pre.fits",
+          "extension_names": [
+            "F1_CCD_A",
+            "F1_CCD_B"
+          ],
+          "pixels": [
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            },
+            {
+              "shape": [
+                9,
+                9
+              ],
+              "bitpix": -32,
+              "sha256": "7fbe563864ecc7443ef659c43e4b90de0f07a9d5f73453e83d32fe7cf91645f5",
+              "nonfinite": 0
+            }
+          ],
+          "canonical_headers_sha256": "da89cf1fdf4dcd6c5bc9c3336e7cc996af1cb14ffba4207602ef611279c7d1ac"
+        }
+      }
+    }
+  ],
+  "protected_sha256": {
+    "/home1/fselman/.pycavi/pycavi_astrosoft.cfg": "9127dc7b2225799af763ba7f8a558f1fa9c358dfcd2059fdf69fc935555f0e52",
+    "/home1/fselman/opt/local/mefpp/bin/mefpp": "06dde5281aa10a8bc874f55cd5838299deb3b59a815136df30d09c37d1d61265",
+    "/home1/fselman/Software/wenu-imaging/docs/developer/fixtures/mac-integrated-f4-inspected-2026-10-28/run-provenance.json": "e4cc2db636e46b45f698c98e5a7e4ba65b494e321dbe65d99b9002a09c200a10",
+    "/home1/fselman/Software/wenu-imaging/docs/developer/fixtures/mac-integrated-f3-inspected-2026-10-28/v2.5-cube-allocation-run-provenance.json": "404805478bb6608ca366e9599b16fdb0f622bdf5688c42769782a25174ad8aea",
+    "/home1/fselman/Software/wenu-imaging/docs/developer/fixtures/mac-final-c90-inspected-2026-10-28/inspection-result.json": "e50da96cc399869d46a82a98d54cbe4b77ca279373d1b7c7dcf8bbf5c5a5c304"
+  },
+  "tool_sha256": {
+    "/opt/rh/devtoolset-10/root/usr/bin/gcc": "d04bb4b8b6cc4fbcef2140b3282636b77a3a63b7e87fd3322b12188fd4f0edf6",
+    "/home1/fselman/opt/cmake-3.29.6/bin/cmake": "4a6c99a21c507cd35f51acd017e995a562eb6e5e23218b0cc96e91543c4fa953"
+  },
+  "installation_performed": false,
+  "scientific_acceptance_claimed": false,
+  "diagnostic_scope": "Target internal ownership/accounting/descriptors only; no external sanitizer/leak qualification",
+  "inherited_mac_reference_sha256": "e4cc2db636e46b45f698c98e5a7e4ba65b494e321dbe65d99b9002a09c200a10",
+  "prior_mac_reference_sha256": "404805478bb6608ca366e9599b16fdb0f622bdf5688c42769782a25174ad8aea",
+  "limits": [
+    "#116 unresolved",
+    "No scientific/Phase3/full Stage 2 acceptance"
+  ],
+  "source_archive_sha256": "422615f1efa85734cc831d5e70805808a06e593f992773e08e3388324a21f310",
+  "private_cmake_sha256": "506a5f731d0874efd185012ec959192616cc63a1f33913177b68deba589d41e5",
+  "binary_sha256": {
+    "17": "4ddf4d5b52fdea6345589b3d0846da3fa48a68fc5f33ef6ab268497dad8e9b3f",
+    "90": "cfdb842cd0fc295a90d308ae8393eb7f337ee34d1ee752140cb718fed538348c"
+  },
+  "protected_files_unchanged": true,
+  "fixture_inputs_unchanged": true,
+  "fixture_reports_unchanged": true,
+  "checkout_unchanged": true,
+  "finished_utc": "2026-10-29T00:57:58.402949+00:00"
+}
