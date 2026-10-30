@@ -1,5 +1,18 @@
 # wenu-imaging agent instructions
 
+30 October final M2 cumulative review after owner-accepted/merged PR #157 and
+clean Mac/shared Chapman main 09a7aee4d69f04f5aeef954ff87c39d6f870d2d3:
+[recommend original-scope M2 closure](m2-final-closure-review-2026-10-30.md). The #155 project/native
+composition gap is resolved; the complete checklist and six paired receipts support
+configuration completion. This is a recommendation pending owner milestone
+acceptance, not M3 execution. Retain existing JSON outputs for now as explicitly
+instructed; human configuration remains TOML, and M7 retains planned ASDF
+persistence without a newly invented JSON-removal requirement. Follow the current
+plan and good programming practices; discuss proposed departures before
+implementation. Source/evidence/documentation review only; preserve selected
+tools, installations and all evidence, with no historical test replay. Separate
+owner instruction precedes merge/cleanup. Earlier status notes are historical.
+
 30 October paired project/native composition receipt: selected-tool Intel Mac
 and representative shared Chapman4 private C90 builds and both affected CTests
 passed 2/2 at d0ab19e91b46e6fe6e21c541af99c21ed35029b4. Protected installed files
