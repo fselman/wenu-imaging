@@ -1,5 +1,17 @@
 # Developer documentation
 
+30 October paired M3 inspector receipt: selected-Python Intel Mac and
+representative shared Chapman4 passed all 15 grouped controls at
+2c820effff393d5ea4e1555439397ef7c7a6cda6; protected installed files and clean
+review checkouts stayed unchanged. See [paired results](m3-project-inspection-paired-results-2026-10-30.md).
+#160 entry placement and #162 canonical fixture corrections are target-qualified;
+retain failed/earlier attempts and the read-only Chapman state confirmation.
+PR #161 is ready for bounded owner review; original #159/full M3 execution and
+inspection gates remain open. No installation, reduction, new numerical/ASDF
+behavior or permanent JSON decision. This receipt changes no tested code and
+needs no test replay. Owner instruction precedes merge/cleanup. Earlier draft/
+target-pending notes below are historical; preserve tools and all evidence.
+
 30 October M3 target finding: original a1a95c700a7bb7755cf81ac8e2213b3adc754f96
 passed 14/14 on Mac, but Chapman returned two fixture failures and one error:
 lexical /home expectations contradicted canonical /home1 identities. [#162

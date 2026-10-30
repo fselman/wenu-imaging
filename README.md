@@ -2,7 +2,8 @@
 
 M3 candidate, 30 October 2026: the new optional `pycavi project inspect` command
 provides [read-only legacy metadata inspection](docs/developer/m3-project-inspection.md). Source invocation
-and the console target pass agent checks; actual Mac/Chapman checks are pending.
+and the package entry target pass agent and actual Mac/Chapman checks (15/15
+on each target); this bounded increment is ready for owner review.
 No installed package/script is changed by this delivery; a future reviewed wheel
 provides the entry point. Existing setup commands/dependency bounds and native
 installation/engine selection remain unchanged. No installation is requested now.

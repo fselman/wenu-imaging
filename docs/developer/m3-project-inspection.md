@@ -1,5 +1,10 @@
 # M3 first increment — explicit bases and read-only legacy inspection
 
+Subsequent corrected target verification passed 15/15 on both Mac and Chapman
+at 2c820effff393d5ea4e1555439397ef7c7a6cda6, with protected installed files and
+checkouts unchanged. See [paired results](m3-project-inspection-paired-results-2026-10-30.md). Earlier draft/target-pending
+statements in this retained receipt are historical; full M3 remains open.
+
 Subsequent target run: original 14-group driver passed on Mac but failed three
 canonical fixture comparisons on Chapman. See the [correction and exact evidence](m3-inspection-canonical-fixtures-2026-10-30.md).
 The corrected driver has 15 groups and passes agent alias reproduction; corrected

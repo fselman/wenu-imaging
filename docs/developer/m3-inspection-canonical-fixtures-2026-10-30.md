@@ -1,5 +1,10 @@
 # M3 inspector canonical fixture correction — 30 October 2026
 
+Subsequent corrected target verification passed 15/15 on both Mac and Chapman
+at 2c820effff393d5ea4e1555439397ef7c7a6cda6, with protected installed files and
+checkouts unchanged. See [paired results](m3-project-inspection-paired-results-2026-10-30.md). Earlier draft/target-pending
+statements in this retained receipt are historical; full M3 remains open.
+
 PR #161 remains draft. [#162](https://github.com/fselman/wenu-imaging/issues/162)
 records an actual test-fixture portability failure at implementation
 `a1a95c700a7bb7755cf81ac8e2213b3adc754f96`. Production inspector, path resolver,
