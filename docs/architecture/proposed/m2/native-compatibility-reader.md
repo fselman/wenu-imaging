@@ -1,5 +1,15 @@
 # M2 first increment — native TOML compatibility reader
 
+30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
+C90 builds (normal engine and both probes) and native_config_toml passed at
+b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /
+249 edge settings and 41 rejection/recovery cases. Protected files/checkouts
+stayed unchanged. See [paired results](../../../developer/m2-native-toml-paired-results-2026-10-30.md). Ready for bounded owner review;
+full M2 composition/override/unit/source/migration work remains pending. No test
+replay or installation is needed for this documentation update. Earlier pending
+target notes below are historical. Merge/cleanup requires owner instruction.
+
+
 30 October 2026. Resume from owner-accepted M1 closure / merged PR #146,
 main `7d8da6b96b7b744a51e3847522a727e3f510c6f2`. The October 29 handoff records
 clean synchronized Mac/shared Chapman checkouts. Fresh Mac evidence on October 30

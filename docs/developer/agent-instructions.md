@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
+C90 builds (normal engine and both probes) and native_config_toml passed at
+b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /
+249 edge settings and 41 rejection/recovery cases. Protected files/checkouts
+stayed unchanged. See [paired results](m2-native-toml-paired-results-2026-10-30.md). Ready for bounded owner review;
+full M2 composition/override/unit/source/migration work remains pending. No test
+replay or installation is needed for this documentation update. Earlier pending
+target notes below are historical. Merge/cleanup requires owner instruction.
+
+
 30 October 2026: M1 is owner-accepted and closed following merged PR #146
 (`7d8da6b96b7b744a51e3847522a727e3f510c6f2`); the October 29 handoff and fresh
 Mac evidence confirm clean main. M2 begins with an opt-in native TOML compatibility
