@@ -1,5 +1,8 @@
 # Architecture documents
 
+- [Grouped native command/service mapping](proposed/command-line-services.md): owner-selected `mefpp cal bias` syntax; command adapters remain subsequent work.
+- [First concrete M1 bias service](proposed/m1/bias-service.md): shared legacy arithmetic, owned signal/QC result and bounded verification.
+
 - [Optional BPMs and required variances](proposed/bpm-variance-policy.md): owner-directed chain-wide contract, baseline source observations and staged acceptance; numerical implementation remains pending.
 
 - [Original Pycavi/mefpp architecture](original/pycavi-mefpp.md): source-based pre-refactor snapshot at accepted main 22a32d39463a73ab32d2ba9d811f949198852902, including the current diagram and working-directory behavior. [Mermaid source](original/pycavi-mefpp.mmd).

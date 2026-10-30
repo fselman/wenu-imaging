@@ -291,3 +291,23 @@ mef_status mef_config_dump(const mef_config *config, FILE *stream)
     fputs("\n}\n", stream);
     return ferror(stream) ? MEF_ERR_IO : MEF_OK;
 }
+
+/* Copy only the settings required by the bias operation. */
+#include "mef_bias_settings.h"
+mef_status mef_config_bias_settings(const mef_config *config, size_t detector,
+    mef_bias_settings *out)
+{
+    const mef_detector_config *ccd;
+    if (config == NULL || out == NULL || detector >= (size_t)config->nchips)
+        return MEF_ERR_CONFIG;
+    ccd = &config->detectors[detector];
+    memcpy(out->prescan, ccd->prescan_x, sizeof(out->prescan));
+    memcpy(out->overscan, ccd->overscan_x, sizeof(out->overscan));
+    memcpy(out->trim, ccd->trimreg, sizeof(out->trim));
+    memcpy(out->rejection, config->scanrej, sizeof(out->rejection));
+    out->use_prescan = config->use_prescan;
+    out->use_overscan = config->use_overscan;
+    out->minimum_frames = config->bias_minframe;
+    out->kappa = config->bias_kappa1;
+    return MEF_OK;
+}

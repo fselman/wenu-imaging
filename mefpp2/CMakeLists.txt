@@ -97,7 +97,8 @@ add_library(eclipse STATIC ${ECLIPSE_SOURCES})
 target_include_directories(eclipse PUBLIC src/include)
 target_compile_definitions(eclipse PRIVATE _ECLIPSE_)
 target_link_libraries(eclipse PUBLIC qfits)
-add_library(mefpp_common STATIC ins/mef/common/mefp_lib.c)
+add_library(mefpp_common STATIC ins/mef/common/mefp_lib.c
+  ins/mef/common/mef_bias_kernel.c)
 target_include_directories(mefpp_common PUBLIC ins/mef/common)
 target_link_libraries(mefpp_common PUBLIC eclipse)
 add_executable(mefpp ins/mef/recipes/mefpp.c)
@@ -126,19 +127,26 @@ option(MEFPP_BUILD_CONFIG_PROBES "Build isolated M1 configuration probes" OFF)
 if(MEFPP_BUILD_CONFIG_PROBES)
   add_library(mefpp_config_snapshot STATIC ins/mef/common/mef_config.c
     ins/mef/common/mef_runtime.c ins/mef/common/mef_cli_request.c
-    ins/mef/common/mef_input_request.c)
+    ins/mef/common/mef_input_request.c ins/mef/common/mef_cal_bias.c)
   target_include_directories(mefpp_config_snapshot PUBLIC ins/mef/common
     PRIVATE src/include qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_config_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(mefpp_config_snapshot PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
+  target_link_libraries(mefpp_config_snapshot PUBLIC mefpp_common)
   add_executable(config_paf_snapshot tests/config_paf_snapshot.c)
   target_link_libraries(config_paf_snapshot PRIVATE mefpp_config_snapshot mefpp_common)
   target_compile_definitions(config_paf_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   add_executable(cli_capture_probe tests/cli_capture_probe.c)
   target_link_libraries(cli_capture_probe PRIVATE mefpp_config_snapshot mefpp_common)
   target_compile_definitions(cli_capture_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  add_executable(bias_service_probe tests/bias_service_probe.c tests/bias_legacy_reference.c)
+  target_link_libraries(bias_service_probe PRIVATE mefpp_config_snapshot)
+  target_compile_definitions(bias_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(bias_service_probe PRIVATE -UNDEBUG -Wall -Wextra)
+  endif()
   add_executable(input_request_probe tests/input_request_probe.c)
   target_link_libraries(input_request_probe PRIVATE mefpp_config_snapshot eclipse)
   target_compile_definitions(input_request_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -204,6 +212,12 @@ if(BUILD_TESTING)
         --probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_cli_capture PROPERTIES TIMEOUT 300 LABELS "native;configuration;cli;ownership")
+    add_test(NAME native_bias_service
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_service_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --probe "$<TARGET_FILE:bias_service_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_bias_service PROPERTIES TIMEOUT 300 LABELS "native;bias;ownership")
     add_test(NAME native_input_request
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/input_request_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

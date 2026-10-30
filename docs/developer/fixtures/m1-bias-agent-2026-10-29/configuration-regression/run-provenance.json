@@ -1,0 +1,106 @@
+{
+  "status": "synthetic-config-snapshot-passed",
+  "host": "06020969a870",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "compiler": "/usr/bin/x86_64-linux-gnu-gcc-13",
+  "sanitize": false,
+  "c_standard": "90",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "--version"
+      ],
+      "exit_status": 0,
+      "log": "compiler.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "-std=c90",
+        "-pedantic-errors",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-UNDEBUG",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/include",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/include",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config.c",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/config_snapshot.c",
+        "-o",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/config_snapshot"
+      ],
+      "exit_status": 0,
+      "log": "compile.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/config_snapshot",
+        "omegacam",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/omegacam.json"
+      ],
+      "exit_status": 0,
+      "log": "omegacam.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/config_snapshot",
+        "wfi",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/wfi.json"
+      ],
+      "exit_status": 0,
+      "log": "wfi.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/config_snapshot",
+        "edge",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/edge.json"
+      ],
+      "exit_status": 0,
+      "log": "edge.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/config_paf_snapshot",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/config/omegacam.paf",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/omegacam-paf.json"
+      ],
+      "exit_status": 0,
+      "log": "omegacam-paf.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/config_paf_snapshot",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/config/wfi.paf",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-config-wlpiaq48/wfi-paf.json"
+      ],
+      "exit_status": 0,
+      "log": "wfi-paf.log"
+    }
+  ],
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": null,
+    "UBSAN_OPTIONS": null,
+    "LSAN_OPTIONS": null
+  },
+  "input_sha256": {
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/docs/architecture/proposed/m1/effective-settings-baseline.json": "67fdbabb855f4f0cc2e6f856a57fd5aa3d5d4addbdaaa3cd66bd3c86c969c1f4",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config.c": "749c4ff8cd09a6c4410ab3a390ef38ebd4cb6a93f5c879034911158daae37e33",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config.h": "fd057b7d97a54faccec7b377570e10272912a42d92a7816cfae137324becd4df",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config_fields.def": "ac78cd9f2d3988d84c30a6bae64028ad1bf8e65f65209f6e2cca04efc788ec95",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config_members.h": "4308b97730c3833d07399a7455b42ddedc2526c7e58d124c61375cbd12fe8122",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.h": "dc264df6194c9d3bd2b5aee24fbe894cb596320a53d0e4de38908877fac92661",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/config_snapshot.c": "a484af28b24bc4c60d3ad002ec42f37b7fd47aa71fedf1330db27d244b26fe6f",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/config_snapshot_contract.py": "42ee42c95238efd41e4115a15eabba6b05291c366f41c5f273e26c54e9755d3f",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/config_paf_snapshot": "a8ca020d4b7c223aaded9d7c7df7fa9b1ca98cb79f63db298f744f841063b6cf",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/config/omegacam.paf": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/config/wfi.paf": "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+  },
+  "paf_constructor_checked": true,
+  "scope": "configuration only; no FITS, recipe execution, installation or scientific acceptance"
+}

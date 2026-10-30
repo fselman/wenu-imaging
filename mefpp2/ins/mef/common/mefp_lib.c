@@ -32,6 +32,7 @@ Description	:	MEF library utilities, from wfi
 
 #include "eclipse.h"
 #include "mefp_lib.h"
+#include "mef_bias_kernel.h"
 #include "qfits.h"
 #include "xmemory.h"
 
@@ -2851,7 +2852,7 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 	char	 *	name_i ;
 	double		lo_thr, hi_thr ;
 	int		minframe ;
-	double		avg, avg1, sig1, kappa1 ;
+	double		avg, avg1, kappa1 ;
     float      zmedian, zstdev;
 	int		i, j, p ;
 	int	 *	valid ;
@@ -2919,6 +2920,25 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
     mef_cube_overscan_correction(i_cube,bb, what);
     e_comment(1, "Done.");
 
+    /* The bias service and legacy recipe share the extracted arithmetic. */
+    if (!strcmp(what, "bias")) {
+        mef_bias_statistics statistics;
+        stacked = mef_bias_stack(i_cube, minframe, kappa1, &statistics, NULL);
+        zIndex = bb->nxts == 1 ? 0 : bb->xtnum - 1;
+        if (statistics.measured) {
+            bb->bias_avg1[zIndex] = statistics.average;
+            bb->bias_sig1[zIndex] = statistics.sigma;
+            bb->bias_framethr_lo[zIndex] = statistics.low;
+            bb->bias_framethr_hi[zIndex] = statistics.high;
+        }
+        if (stacked != NULL) {
+            bb->bias_median[zIndex] = statistics.median;
+            bb->bias_stdev[zIndex] = statistics.stdev;
+            bb->bias_nplanes[zIndex] = statistics.accepted;
+        }
+        return stacked;
+    }
+
 	/* Compute average value for each frame, keep those in interval */
 	all_means = malloc(i_cube->np*sizeof(double));
 	nval = 0 ;
@@ -2936,37 +2956,6 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 	}
 	avg1 /= (double) i_cube->np ;
 
-	/* if we combine bias frame we do a slighltly different rejection */
-	if (!strcmp(what, "bias")) {
-		/* Compute average and sigma for rejection during bias calc. */
-		sig1 = 0.0 ;
-		for (i=0 ; i<i_cube->np ; i++) {
-			sig1 += (all_means[i]-avg1)*(all_means[i]-avg1) ;
-		}
-		sig1 /= (double)(i_cube->np-1) ;
-		sig1 = sqrt(sig1) ;
-
-		lo_thr = avg1 - kappa1*sig1 ;
-		hi_thr = avg1 +  kappa1*sig1 ;
-
-        /* fill array for QC keywords */
-        if (bb->nxts == 1) {    /* if we work in only one extension */
-                zIndex = 0;
-            } else {                        /* we are working in all the extensions */
-                zIndex = bb->xtnum-1;
-            }
-        bb->bias_avg1[zIndex] = avg1;
-        bb->bias_sig1[zIndex] = sig1;
-        bb->bias_framethr_lo[zIndex] = lo_thr;
-        bb->bias_framethr_hi[zIndex] = hi_thr;
-
-		e_comment(1, "frame rejection setup:");
-		e_comment(1, "average: %g", avg1);
-		e_comment(1, "sigma  : %g", sig1);
-		e_comment(1, "kappa  : %g", kappa1);
-		e_comment(1, "low    : %g", lo_thr);
-		e_comment(1, "high   : %g", hi_thr);
-	}
 
 	valid = malloc(i_cube->np * sizeof(int));
 	nval = 0 ;
@@ -3005,34 +2994,6 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 	e_comment(1, "Done.");
 
     *************************************************/
-
-	/*
-	 * If we are building the BIAS frame, we are almost done.
-	 * We just combine the cube, and return the stacked image...
-	 */
-
-	if (!strcmp(what, "bias")) {
-		e_comment(1, " %s frame stacking", what);
-		stacked = cube_avg_median(i_cube);
-		cube_del(i_cube);
-
-		if (stacked==NULL) {
-			e_error("in final combination: aborting");
-			return NULL ;
-		}
-	 
-		if (bb->nxts == 1) {    /* if we work in only one extension */
-	            zIndex = 0;
-	        } else {                        /* we are working in all the extensions */
-	            zIndex = bb->xtnum-1;
-	        }
-		bb->bias_median[zIndex] = image_getmedian(stacked);
-        bb->bias_stdev[zIndex] = image_getstdev(stacked);
-		bb->bias_nplanes[zIndex] = nval;
-        e_comment(1, "bias median: %f -- bias stdev: %f -- bias nplanes: %d", bb->bias_median[zIndex], bb->bias_stdev[zIndex], bb->bias_nplanes[zIndex]);
-		return stacked;
-	}
-
 
 	/* CCD clip rejection */
 	e_comment(1, "CCD clip rejection");

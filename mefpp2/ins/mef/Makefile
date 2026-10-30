@@ -71,14 +71,16 @@ veryclean:
 # ************* MEF general routines
 #
 
-mef-common:	common/mefp_lib.o
+mef-common:	common/mefp_lib.o common/mef_bias_kernel.o
 
-SRC_MEFCOM = common/mefp_lib.c
+SRC_MEFCOM = common/mefp_lib.c common/mef_bias_kernel.c
 OBJ_MEFCOM = $(SRC_MEFCOM:.c=.o)
 
-common/mefp_lib.o:	common/mefp_lib.c common/mefp_lib.h
+common/mefp_lib.o:	common/mefp_lib.c common/mefp_lib.h common/mef_bias_kernel.h
 	@(echo "compiling $@ ...")
 	($(CC) $(COMPF) -c -o common/mefp_lib.o common/mefp_lib.c)
+
+common/mef_bias_kernel.o: common/mef_bias_kernel.c common/mef_bias_kernel.h
 
 #
 # ************* MEF recipes
@@ -89,9 +91,10 @@ MEFBINS = $(BINDIR)/mefpp
 mef:	$(MEFBINS)
 
 
-$(BINDIR)/mefpp:	recipes/mefpp.c common/mefp_lib.o
+$(BINDIR)/mefpp:	recipes/mefpp.c $(OBJ_MEFCOM)
 	echo "compiling $@ ..."
 	$(CC) $(COMPF) -o $(BINDIR)/mefpp recipes/mefpp.c \
 	$(OBJ_MEFCOM) $(LINKF)
 
 # end of file
+

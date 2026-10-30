@@ -1,0 +1,33 @@
+[1merror: not enough frames to continue: 0
+[0m[1merror: not enough frames to continue: 0
+[0mxmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1226)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1227)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1230)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1231)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1232)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1233)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1234)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1235)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1236)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1237)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1261)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1262)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1263)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1264)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1265)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1266)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1267)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1268)
+xmem: free requested on NULL pointer -- /workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c (1269)
+PASS: profile 0 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 1 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 2 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 3 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 4 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 5 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 6 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 7 exact legacy pixels/QC and input/result lifetimes
+PASS: input/selection/geometry controls; 24 allocation positions x 2; 20 cycles; zero new owners
+PASS: bias service contract; legacy-compatible ADU signal, variance unavailable

@@ -1,9 +1,11 @@
 # mefpp refactor implementation plan — proposal
 
+29 October owner command-line decision: use [grouped native subcommands](command-line-services.md), one executable with `mefpp cal bias` / other `cal` operations and `mefpp sci pp`; retain the accepted C service names. Thin command adapters share the same request/settings/services as optional mefppy. M1 establishes callable operations; M3/M4 establish loaders/paths and M5/M6 connect the applicable commands. The [first bias service](m1/bias-service.md) is now implemented for bounded synthetic qualification; grouped command dispatch is not yet implemented.
+
 29 October owner decision: use the [vendored, pinned tomlc17 source](../../../third_party/tomlc17/README.wenu.md) for the planned native TOML reader. Source import and byte-identity verification are approved now; the static build target and production adapter remain M2 implementation work after their prerequisites. Qualification N1–N4 on Mac/Chapman4 is complete within the recorded limits. This source import does not advance native numerical refactoring or install packages.
 29 October owner addition: [bounded native TOML qualification](../../developer/native-toml-qualification-2026-10-29.md) now belongs to the current dependency work. Authorize private Mac/Chapman4 tests of pinned tomlc17 with a scoped C99 dependency exception, strict-C90 caller boundary, shared TOML 1.0 semantics/error controls and ownership checks before production parser adoption. Existing native source/public contracts retain C90; this does not authorize M1/M2 implementation, installation or processing. The completed Python/core-ASDF trial is preserved.
 
-Version 4, 29 October 2026. For discussion; no implementation begins from this plan.
+Version 5, 29 October 2026. Planning contract; milestone implementation requires its applicable owner authorization.
 Baseline: accepted main 22a32d39463a73ab32d2ba9d811f949198852902.
 Design: [target architecture revision 4](pycavi-mefpp.md).
 Data contracts: [WAD and ASDF processing projects](wad-processing-project.md).
@@ -104,7 +106,7 @@ Owner addition, 29 October 2026: [input BPMs are optional throughout; variance s
 - Separate static instrument/algorithm settings from filenames, detector traversal state, calibration handles, statistics and task results currently mixed in mef_bb.
 - Introduce explicit lifecycle/status contracts in .h and .c together. Existing recipe can use a compatibility adapter while extraction progresses.
 - Provide a developer-visible normalized settings dump so equivalence is observable.
-- Keep CLI parsing, initialization and informational commands out of reusable numerical routines.
+- Keep CLI parsing, initialization and informational commands out of reusable numerical routines. Use the agreed [grouped command/service mapping](command-line-services.md); private helpers remain internal.
 - Carry explicit selected/omitted input-BPM state into the resolved-operation bridge and first service. Validate supplied masks without mandatory loading when omitted; return truthful application status. Reserve required variance source/validity contracts for M6a, without implementing new noise mathematics during extraction.
 
 ### Gate
@@ -190,7 +192,7 @@ Retain the explicit legacy mapping for already qualified fixtures; fail unsuppor
 
 ### Work and deliverables
 
-- Extract mef_cal_bias, mef_cal_bpm, mef_cal_domeff, mef_cal_skyff and mef_cal_mff operations from recipe/control code into callable C services.
+- Extract mef_cal_bias, mef_cal_bpm, mef_cal_domeff, mef_cal_skyff and mef_cal_mff operations from recipe/control code into callable C services. Connect each to its agreed `mefpp cal ...` thin adapter as the loader/service boundary becomes qualified; preserve legacy invocation during migration.
 - Preserve actual algorithms, rejection order, thresholds, precision, masks and metadata.
 - Separate loading, computation and publication; expose owned calibration results.
 - Make shared dome/sky reference statistics an explicit input/result contract.

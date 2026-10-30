@@ -1,0 +1,90 @@
+{
+  "status": "runtime-lifecycle-passed",
+  "host": "06020969a870",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "python": "/usr/bin/python3",
+  "c_standard": "90",
+  "sanitize": false,
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "--version"
+      ],
+      "exit_status": 0,
+      "log": "compiler.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/x86_64-linux-gnu-gcc-13",
+        "-std=c90",
+        "-pedantic-errors",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-UNDEBUG",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/include",
+        "-I/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/include",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config.c",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_runtime.c",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/runtime_lifecycle.c",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/resolved_request.c",
+        "-o",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un/runtime_lifecycle"
+      ],
+      "exit_status": 0,
+      "log": "compile.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un/runtime_lifecycle",
+        "omegacam",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un/omegacam.json"
+      ],
+      "exit_status": 0,
+      "log": "omegacam.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un/runtime_lifecycle",
+        "wfi",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un/wfi.json"
+      ],
+      "exit_status": 0,
+      "log": "wfi.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un/runtime_lifecycle",
+        "override",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-runtime-eqiq36un/override.json"
+      ],
+      "exit_status": 0,
+      "log": "override.log"
+    }
+  ],
+  "input_sha256": {
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config.c": "749c4ff8cd09a6c4410ab3a390ef38ebd4cb6a93f5c879034911158daae37e33",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_runtime.c": "66b2db5e635601118ff054d67149b27dd54df807cc3bd3368979f83ce6df23b5",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/runtime_lifecycle.c": "718a97e3973213babb62d89666a6afc60884bb2b0131087b8e63c23032ad2b5c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/resolved_request.c": "1edde034f20bbe1c08f584a9593b42eb8439219d74a3963a41b914176cc3d674",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config.h": "fd057b7d97a54faccec7b377570e10272912a42d92a7816cfae137324becd4df",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_runtime.h": "09623a33bfcdbc91f1cd79b85f9db96176b842294c391ccc868f6b6c99a98d2c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config_fields.def": "ac78cd9f2d3988d84c30a6bae64028ad1bf8e65f65209f6e2cca04efc788ec95",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_config_members.h": "4308b97730c3833d07399a7455b42ddedc2526c7e58d124c61375cbd12fe8122",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.h": "dc264df6194c9d3bd2b5aee24fbe894cb596320a53d0e4de38908877fac92661",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/config_snapshot_contract.py": "42ee42c95238efd41e4115a15eabba6b05291c366f41c5f273e26c54e9755d3f",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/docs/architecture/proposed/m1/effective-settings-baseline.json": "67fdbabb855f4f0cc2e6f856a57fd5aa3d5d4addbdaaa3cd66bd3c86c969c1f4",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/runtime_lifecycle_contract.py": "b19e9b5096c32ea2c6cd31f1e828c7748e026397f25b0fa5ec77dbf6d13db0c4"
+  },
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": null,
+    "UBSAN_OPTIONS": null,
+    "LSAN_OPTIONS": null
+  },
+  "source_unchanged": true
+}
