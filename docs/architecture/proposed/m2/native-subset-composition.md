@@ -1,5 +1,16 @@
 # M2 second increment — native TOML subset composition
 
+30 October paired subset receipt: Intel Mac and representative Chapman4 private
+C90 builds and both focused TOML tests passed 2/2 at
+d622bbec7e9784ab9fa6211080cfd4955ff3a08d. Original exact-setting/41-case controls,
+16 composition profiles from two directories and 32 rejection/recovery cases
+passed. Protected files/checkouts stayed unchanged. See [paired results](../../../developer/m2-toml-subsets-paired-results-2026-10-30.md).
+Ready for bounded owner review; full M2 domain/unit/source/migration work remains
+pending. This documentation update requires no repeated execution or installation.
+Earlier target-pending notes below are historical. Merge/cleanup requires owner
+instruction.
+
+
 30 October 2026. Owner accepted/merged PR #147, and Mac/shared Chapman main are
 clean at `0550fb90215c636cc6b881eb67e221c24b5ed876`. Owner instructed “Proceed”
 with reusable subsets and explicit overrides. This increment preserves the
