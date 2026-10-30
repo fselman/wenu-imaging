@@ -1,5 +1,15 @@
 # wenu-imaging
 
+30 October actual Mac #173 batch stopped at b4fe1c6 during new format-probe
+compilation: missing private variadic qfits declarations (#177). No functional
+test ran; installed module/engine/config and checkout preservation passed.
+[Correction/evidence](docs/developer/native-format-prototypes-2026-10-30.md) includes existing qerror.h and makes implicit
+declarations fatal for the probe. Corrected agent C90/C17/scoped ASan format
+checks pass 1/1 each; production/other contracts unchanged. Actual corrected Mac
+then Chapman four-test qualification remains pending; keep applicable issues
+open and PR #173 draft. Use the new correction manifest, preserve the failed Mac
+run and all earlier evidence. No install, automatic merge/cleanup or matrix replay.
+
 30 October owner authorized batching reachable #74 fixes with #144 in draft
 PR #173 before target handoff. [Complete format/buffer inventory](docs/developer/native-format-safety.md) distinguishes inherited
 message/newline (#174), timestamp, conditional RTD, header-merge (#176), keyword

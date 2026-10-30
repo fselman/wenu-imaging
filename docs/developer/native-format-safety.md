@@ -1,5 +1,7 @@
 # Reachable native format and buffer safety — #74 batch
 
+Target update: [actual Mac probe declaration failure and correction](native-format-prototypes-2026-10-30.md). Earlier agent qualification below is retained; no Mac functional test ran at the first target attempt.
+
 Owner authorized adding related fixes to the existing #144 draft PR #173 before
 one combined Mac/Chapman verification. This is a separate commit based on
 2699aa97228baa22956be30d7e8a68e826ea7c93, not a separate target campaign.

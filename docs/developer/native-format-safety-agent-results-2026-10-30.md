@@ -1,5 +1,7 @@
 # Native format safety — agent results, 30 October 2026
 
+Target update: [actual Mac probe declaration failure and correction](native-format-prototypes-2026-10-30.md). Earlier agent qualification below is retained; no Mac functional test ran at the first target attempt.
+
 Owner requested batching further related fixes before target synchronization.
 PR #173 retains #144 as its first commit; this second increment addresses the
 reachable #74 slice and connected inherited #174/#176 findings. See the

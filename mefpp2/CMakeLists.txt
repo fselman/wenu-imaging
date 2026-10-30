@@ -198,7 +198,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(format_safety_probe tests/format_safety_probe.c)
   target_compile_definitions(format_safety_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
     XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
-  target_compile_options(format_safety_probe PRIVATE -UNDEBUG -Wall -Wextra)
+  target_compile_options(format_safety_probe PRIVATE -UNDEBUG -Wall -Wextra
+    -Werror=implicit-function-declaration)
   target_link_libraries(format_safety_probe PRIVATE mefpp_common)
   add_executable(input_request_probe tests/input_request_probe.c)
   target_link_libraries(input_request_probe PRIVATE mefpp_config_snapshot eclipse)

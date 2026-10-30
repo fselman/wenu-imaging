@@ -1,0 +1,146 @@
+[ 17%] Built target qfits
+[ 94%] Built target eclipse
+[ 97%] Built target mefpp_common
+[ 98%] Building C object CMakeFiles/format_safety_probe.dir/tests/format_safety_probe.c.o
+In file included from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/format_safety_probe.c:25:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:565:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  565 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:879:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  879 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+In file included from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/format_safety_probe.c:32:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_cube_framelist_load’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1732:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1732 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_cube_load’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1895:33: warning: unused variable ‘single_frames’ [-Wunused-variable]
+ 1895 |         int                     single_frames ;
+      |                                 ^~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1894:33: warning: unused variable ‘err’ [-Wunused-variable]
+ 1894 |         int                     err ;
+      |                                 ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1893:33: warning: unused variable ‘exts’ [-Wunused-variable]
+ 1893 |         int               *     exts ;
+      |                                 ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1892:33: warning: unused variable ‘i’ [-Wunused-variable]
+ 1892 |         int                     i ;
+      |                                 ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1890:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1890 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1889:20: warning: unused variable ‘mef_frame’ [-Wunused-variable]
+ 1889 |         image_t  * mef_frame ;
+      |                    ^~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_overscan_correction’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:1996:21: warning: variable ‘zIndex’ set but not used [-Wunused-but-set-variable]
+ 1996 |     int             zIndex;
+      |                     ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘simplifyFilterName’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2257:14: warning: unused variable ‘zChar’ [-Wunused-variable]
+ 2257 |         char zChar ;
+      |              ^~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_valid_subset’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2292:33: warning: unused variable ‘getval’ [-Wunused-variable]
+ 2292 |         char            *       getval ;
+      |                                 ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2894:25: warning: unused variable ‘bias’ [-Wunused-variable]
+ 2894 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2893:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+ 2893 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3587:17: warning: unused variable ‘i’ [-Wunused-variable]
+ 3587 |     int         i, nframes ;
+      |                 ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3585:18: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3585 |     char        *getval ;
+      |                  ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3581:18: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 3581 |     framelist   *fnames ;
+      |                  ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_header_eclipse’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3755:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 3755 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3754:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3754 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3750:17: warning: variable ‘exptime’ set but not used [-Wunused-but-set-variable]
+ 3750 |     float       exptime;
+      |                 ^~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3747:26: warning: unused variable ‘fh_ref’ [-Wunused-variable]
+ 3747 |         qfits_header    *fh_ref ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_get_input_filename’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4093:14: warning: unused variable ‘cval’ [-Wunused-variable]
+ 4093 |         char cval[80];
+      |              ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_get_headers_for’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4227:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 4227 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4226:26: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 4226 |         framelist       *fnames ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4225:26: warning: unused variable ‘first_name’ [-Wunused-variable]
+ 4225 |         char            *first_name ;
+      |                          ^~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4223:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 4223 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4220:26: warning: unused variable ‘out’ [-Wunused-variable]
+ 4220 |         FILE            *out ;
+      |                          ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4219:25: warning: unused variable ‘qd’ [-Wunused-variable]
+ 4219 |         qfitsdumper     qd ;
+      |                         ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4212:26: warning: unused variable ‘fh_main’ [-Wunused-variable]
+ 4212 |         qfits_header    *fh_main = NULL ;
+      |                          ^~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_create_orig_filename’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:4181:1: warning: control reaches end of non-void function [-Wreturn-type]
+ 4181 | }
+      | ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3012:20: warning: ‘lo_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+ 3012 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                    ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2899:25: note: ‘lo_thr’ was declared here
+ 2899 |         double          lo_thr, hi_thr ;
+      |                         ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3012:43: warning: ‘hi_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+ 3012 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                     ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2899:33: note: ‘hi_thr’ was declared here
+ 2899 |         double          lo_thr, hi_thr ;
+      |                                 ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2974:19: warning: ‘kappa1’ may be used uninitialized [-Wmaybe-uninitialized]
+ 2974 |         stacked = mef_bias_stack(i_cube, minframe, kappa1, &statistics, NULL);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2901:36: note: ‘kappa1’ was declared here
+ 2901 |         double          avg, avg1, kappa1 ;
+      |                                    ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:3161:9: warning: ‘normFactor’ may be used uninitialized [-Wmaybe-uninitialized]
+ 3161 |         image_cst_op_local(flat,normFactor,'*');        /* we normalize to the median of first extension */
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../ins/mef/common/mefp_lib.c:2918:25: note: ‘normFactor’ was declared here
+ 2918 |         float           normFactor ;
+      |                         ^~~~~~~~~~
+[100%] Linking C executable format_safety_probe
+[100%] Built target format_safety_probe

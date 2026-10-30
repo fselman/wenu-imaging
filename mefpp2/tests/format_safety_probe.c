@@ -24,6 +24,7 @@ static int fixed_timeofday(struct timeval *out, void *zone)
 
 #include "../qfits5/src/xmemory.c"
 #include "qfits.h"
+#include "../qfits5/src/qerror.h"
 #include "mefp_lib.h"
 static int fail_item;
 static int test_getitem(qfits_header *, int, char *, char *, char *, char *);
