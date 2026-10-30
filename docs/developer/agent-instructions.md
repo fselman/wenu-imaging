@@ -1,5 +1,17 @@
 # wenu-imaging agent instructions
 
+30 October next M2 increment after owner-accepted/merged PR #147 and clean
+Mac/shared Chapman main 0550fb90215c636cc6b881eb67e221c24b5ed876: owner instructed
+“Proceed” with [native subset composition](../architecture/proposed/m2/native-subset-composition.md). Version 2 adds containing-file
+includes and explicit per-file numeric overrides, retaining standalone version 1.
+Core composition stays C90/C17, parser shim C99; opt-in probes only, no normal
+engine/installation or numerical change. Full domain/unit/source/migration work
+remains M2. Agent C90/C17 two-test and scoped sanitizer checks passed; actual
+Mac/representative Chapman checks for this increment are pending. Build the normal
+engine and config_paf_snapshot/config_toml_snapshot/cli_capture_probe; select only
+native_config_toml and native_config_toml_subsets. Preserve prior evidence/tools;
+no historical matrix replay or automatic merge/cleanup.
+
 30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
 C90 builds (normal engine and both probes) and native_config_toml passed at
 b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /

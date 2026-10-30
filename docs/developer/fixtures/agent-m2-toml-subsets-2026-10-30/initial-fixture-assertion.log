@@ -1,0 +1,1 @@
+config_toml_snapshot: /workspace/scratch/555b377cf948/m2-subsets/mefpp2/tests/config_toml_snapshot.c:42: main: Assertion `mef_config_from_toml(argv[3], NULL, &config, diagnostic, sizeof(diagnostic)) != MEF_OK' failed.

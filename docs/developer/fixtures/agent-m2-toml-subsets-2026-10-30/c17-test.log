@@ -1,0 +1,16 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/subsets-c17
+Test project /workspace/scratch/555b377cf948/subsets-c17
+    Start 3: native_config_toml
+1/2 Test #3: native_config_toml ...............   Passed    2.03 sec
+    Start 4: native_config_toml_subsets
+2/2 Test #4: native_config_toml_subsets .......   Passed   15.15 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+composition      =  15.15 sec*proc (1 test)
+configuration    =  17.18 sec*proc (2 tests)
+native           =  17.18 sec*proc (2 tests)
+toml             =  17.18 sec*proc (2 tests)
+
+Total Test time (real) =  17.19 sec

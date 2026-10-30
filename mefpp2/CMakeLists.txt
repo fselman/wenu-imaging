@@ -144,7 +144,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(mefpp_tomlc17 PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
-  add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c)
+  add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c
+    ins/mef/common/mef_toml_bundle.c)
   target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
   target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
   target_compile_definitions(mefpp_config_toml PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -219,6 +220,14 @@ if(BUILD_TESTING)
         --paf-probe "$<TARGET_FILE:config_paf_snapshot>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_config_toml PROPERTIES TIMEOUT 300 LABELS "native;configuration;toml")
+    add_test(NAME native_config_toml_subsets
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_toml_subsets_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --toml-probe "$<TARGET_FILE:config_toml_snapshot>"
+        --paf-probe "$<TARGET_FILE:config_paf_snapshot>"
+        --cli-probe "$<TARGET_FILE:cli_capture_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_config_toml_subsets PROPERTIES TIMEOUT 300 LABELS "native;configuration;toml;composition")
     add_test(NAME native_config_snapshot
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_snapshot_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

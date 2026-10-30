@@ -13,9 +13,16 @@ typedef struct {
 /* Call once in a serial initialization phase before any parsing. No concurrent
  * option changes or concurrent parsing are qualified. Idempotent, not atomic. */
 void mef_config_toml_initialize(void);
+int mef_toml_is_initialized(void);
 mef_status mef_toml_open(const char *path, mef_toml_document **out,
     char *diagnostic, size_t capacity);
 void mef_toml_close(mef_toml_document *document);
+int mef_toml_version(const mef_toml_document *document);
+const char *mef_toml_key(const mef_toml_document *document, size_t index);
+size_t mef_toml_include_count(const mef_toml_document *document);
+const char *mef_toml_include(const mef_toml_document *document, size_t index);
+size_t mef_toml_override_count(const mef_toml_document *document);
+const char *mef_toml_override(const mef_toml_document *document, size_t index);
 size_t mef_toml_count(const mef_toml_document *document);
 mef_status mef_toml_get(const mef_toml_document *document, const char *key,
     mef_toml_value *out);

@@ -120,7 +120,7 @@ def main():
         'missing-detector': remove('MEF.CCD.GAIN.CHIP8'),
         'unknown-key': text + '"MEF.UNKNOWN" = 1\n',
         'unknown-table': text + '\n[unknown]\nx = 1\n',
-        'wrong-version': text.replace('schema_version = 1', 'schema_version = 2'),
+        'wrong-version': text.replace('schema_version = 1', 'schema_version = 3'),
         'bool-version': text.replace('schema_version = 1', 'schema_version = true'),
         'missing-version': text.replace('schema_version = 1', ''),
         'nul-root-key': text.replace('schema_version = 1', '"schema_version\\u0000ignored" = 1'),
@@ -174,6 +174,7 @@ def main():
     # Source evidence: exact new code/dependency/probe identities; no installed
     # programs, science inputs or production configuration are modified/read.
     inputs += list((root / 'mefpp2/ins/mef/common').glob('mef*toml*.[ch]'))
+    inputs.append(root / 'mefpp2/ins/mef/common/mef_toml_override_keys.def')
     inputs += [root / 'third_party/tomlc17' / name for name in ('tomlc17.c', 'tomlc17.h', 'upstream.json')]
     inputs += [root / 'mefpp2/tests/config_toml_snapshot.c', root / 'mefpp2/ins/mef/common/mef_config.c']
     report = {'status': 'native-toml-compatibility-passed', 'host': platform.node(),

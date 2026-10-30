@@ -1,0 +1,31 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/subsets-c90
+Test project /workspace/scratch/555b377cf948/subsets-c90
+    Start 3: native_config_toml
+1/2 Test #3: native_config_toml ...............   Passed    1.24 sec
+    Start 4: native_config_toml_subsets
+2/2 Test #4: native_config_toml_subsets .......***Failed   12.82 sec
+WORK DIRECTORY: /workspace/scratch/555b377cf948/subsets-c90/test-work/m2 subsets qa4cbme2
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m2-subsets/mefpp2/tests/config_toml_subsets_contract.py", line 189, in <module>
+    main()
+  File "/workspace/scratch/555b377cf948/m2-subsets/mefpp2/tests/config_toml_subsets_contract.py", line 169, in main
+    log = run([probe, good, output, bad], 'reject-' + name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/555b377cf948/m2-subsets/mefpp2/tests/config_toml_subsets_contract.py", line 47, in run
+    raise RuntimeError('STOP: ' + name + '; inspect ' + str(log))
+RuntimeError: STOP: reject-parent-undeclared; inspect /workspace/scratch/555b377cf948/subsets-c90/test-work/m2 subsets qa4cbme2/reject-parent-undeclared.log
+
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+composition      =  12.82 sec*proc (1 test)
+configuration    =  14.05 sec*proc (2 tests)
+native           =  14.05 sec*proc (2 tests)
+toml             =  14.05 sec*proc (2 tests)
+
+Total Test time (real) =  14.06 sec
+
+The following tests FAILED:
+	  4 - native_config_toml_subsets (Failed)
+Errors while running CTest
