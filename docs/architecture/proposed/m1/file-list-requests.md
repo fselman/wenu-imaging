@@ -129,12 +129,16 @@ parser library, without changing its sources or adding a new dependency.
 Agent evidence under docs/developer/fixtures/m1-inputs-agent-2026-10-29 records
 source/probe identities, compiler commands, reports and selected logs. The
 agent used the existing recorded manual probe build; actual selected-tool
-Mac/representative Chapman CMake checks remain pending. No target sanitizer
+Intel Mac and representative Chapman4 private C90 CMake builds and all four
+focused tests pass 4/4, including 51 CLI cases and seventeen new cases from two
+directories each. See the
+[paired receipt](../../../developer/m1-inputs-paired-results-2026-10-29.md)
+for returned-output provenance, exact paths and limits. No target sanitizer
 or completed general path/layout/numerical processing qualification is claimed.
 
-Next: private target configure/build and the four focused tests using the
-existing selected tools. Then owner review and the first concrete numerical
-service through the common template. Numerical extraction still needs its own
+Next: owner review, then explicitly authorized integration/cleanup and the first
+concrete numerical service through the common template. This documentation-only
+receipt requires no rebuild or repeated target execution. Numerical extraction still needs its own
 bounded equivalence and failure gate; M1 is not complete. Preserve all prior
 evidence and installations; no repeat tool qualification or duplicate Chapman
 host run is needed. This increment authorizes no automatic merge/cleanup.
