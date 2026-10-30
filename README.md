@@ -1,5 +1,12 @@
 # wenu-imaging
 
+Native M3 candidate, 30 October 2026: [explicit C execution paths](docs/developer/m3-native-paths.md)
+allow `mefpp` to select input/list/calibration/configuration and output/work/log
+locations from an unrelated caller directory. Agent C90/C17 and scoped address/
+undefined-behavior checks pass; actual Mac/Chapman qualification is pending.
+Use a private review build; retain the current installation and configured engine.
+The existing installation commands and Python dependency bounds are unchanged.
+
 M3 candidate, 30 October 2026: the new optional `pycavi project inspect` command
 provides [read-only legacy metadata inspection](docs/developer/m3-project-inspection.md). Source invocation
 and the package entry target pass agent and actual Mac/Chapman checks (15/15

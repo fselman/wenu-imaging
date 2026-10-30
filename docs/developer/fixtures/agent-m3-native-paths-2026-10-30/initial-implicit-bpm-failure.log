@@ -1,0 +1,40 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/native-paths-c90
+Test project /workspace/scratch/555b377cf948/native-paths-c90
+    Start 10: native_cli_capture
+1/2 Test #10: native_cli_capture ...............   Passed    2.78 sec
+    Start 20: native_explicit_paths
+2/2 Test #20: native_explicit_paths ............***Failed   12.76 sec
+WORK DIRECTORY: /workspace/scratch/555b377cf948/native-paths-c90/test-work/native explicit paths 48i74yqn
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBPM' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBIAS' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MDOME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MSKY' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MFF' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+EVIDENCE: /workspace/scratch/555b377cf948/native-paths-c90/test-work/native explicit paths 48i74yqn
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 251, in <module>
+    main()
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 193, in main
+    run(label, [*opts, '--split', lists / 'science.list'], caller)
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 75, in run
+    assert (result.returncode == 0) == valid, (label, result.returncode, log)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('omegacam-split-0', 1, PosixPath('/workspace/scratch/555b377cf948/native-paths-c90/test-work/native explicit paths 48i74yqn/omegacam-split-0.log'))
+
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+cli              =   2.78 sec*proc (1 test)
+configuration    =   2.78 sec*proc (1 test)
+integration      =  12.76 sec*proc (1 test)
+native           =  15.54 sec*proc (2 tests)
+ownership        =   2.78 sec*proc (1 test)
+paths            =  12.76 sec*proc (1 test)
+provenance       =  12.76 sec*proc (1 test)
+
+Total Test time (real) =  15.55 sec
+
+The following tests FAILED:
+	 20 - native_explicit_paths (Failed)
+Errors while running CTest

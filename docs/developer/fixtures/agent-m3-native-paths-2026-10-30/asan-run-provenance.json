@@ -1,0 +1,1618 @@
+{
+  "status": "passed",
+  "executable": "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+  "commands": [
+    {
+      "label": "omegacam-legacy",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/legacy reference",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-full-0",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/bpm.list",
+        "--dome",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/dome.list",
+        "--domesave",
+        "--sky",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/sky.list",
+        "--skysave",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-full-1",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-1 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-1 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/bpm.list",
+        "--dome",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/dome.list",
+        "--domesave",
+        "--sky",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/sky.list",
+        "--skysave",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-existing-calibrations-0",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-existing-calibrations-0 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-existing-calibrations-0 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-existing-calibrations-1",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-existing-calibrations-1 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-existing-calibrations-1 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-typed",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-typed output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-typed scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/typed science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-direct",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "../configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-direct output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-direct scratch",
+        "--log-file",
+        "/tmp/native explicit paths fzsf81qy/omegacam/explicit processing.log",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files/science0.fits"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-split-0",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-split-0 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-split-0 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--split",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-split-1",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-split-1 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-split-1 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--split",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 0
+    },
+    {
+      "label": "omegacam-duplicate",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-duplicate output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-duplicate scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/duplicate.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "omegacam-missing",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-missing output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-missing scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/absent.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "omegacam-partial",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-partial output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-partial scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/partial.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "omegacam-collision",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-collision output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-collision scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/collision members",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/collision.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "omegacam-unknown-base",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-unknown-base output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-unknown-base scratch",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "omegacam-incompatible",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-incompatible output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-incompatible scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam/incompatible.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller A",
+      "exit_status": 1
+    },
+    {
+      "label": "omegacam-existing-output",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/omegacam/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-existing-output output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/omegacam-existing-output scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/omegacam/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/omegacam-full-0 output/OCAM_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/omegacam/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/omegacam/unrelated caller A",
+      "exit_status": 1
+    },
+    {
+      "label": "wfi-legacy",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "mefpp.paf",
+        "--bias",
+        "bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "bpm.list",
+        "--dome",
+        "dome.list",
+        "--domesave",
+        "--sky",
+        "sky.list",
+        "--skysave",
+        "--science",
+        "science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/legacy reference",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-full-0",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/bpm.list",
+        "--dome",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/dome.list",
+        "--domesave",
+        "--sky",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/sky.list",
+        "--skysave",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-full-1",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-1 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-1 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/bias.list",
+        "--biassave",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/bpm.list",
+        "--dome",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/dome.list",
+        "--domesave",
+        "--sky",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/sky.list",
+        "--skysave",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-existing-calibrations-0",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-existing-calibrations-0 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-existing-calibrations-0 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-existing-calibrations-1",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-existing-calibrations-1 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-existing-calibrations-1 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-typed",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-typed output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-typed scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/typed science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-direct",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "../configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-direct output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-direct scratch",
+        "--log-file",
+        "/tmp/native explicit paths fzsf81qy/wfi/explicit processing.log",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files/science0.fits"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-split-0",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-split-0 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-split-0 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--split",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller A",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-split-1",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-split-1 output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-split-1 scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--split",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 0
+    },
+    {
+      "label": "wfi-duplicate",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-duplicate output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-duplicate scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/duplicate.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "wfi-missing",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-missing output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-missing scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/absent.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "wfi-partial",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-partial output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-partial scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/partial.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "wfi-collision",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-collision output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-collision scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/collision members",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/collision.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "wfi-unknown-base",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-unknown-base output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-unknown-base scratch",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller B",
+      "exit_status": 1
+    },
+    {
+      "label": "wfi-incompatible",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-incompatible output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-incompatible scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi/incompatible.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller A",
+      "exit_status": 1
+    },
+    {
+      "label": "wfi-existing-output",
+      "argv": [
+        "/workspace/scratch/555b377cf948/native-paths-asan/mefpp",
+        "--pafname",
+        "/tmp/native explicit paths fzsf81qy/wfi/configuration/parameters.paf",
+        "--output-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-existing-output output",
+        "--work-dir",
+        "/tmp/native explicit paths fzsf81qy/wfi-existing-output scratch",
+        "--list-base",
+        "/tmp/native explicit paths fzsf81qy/wfi/raw files",
+        "--bias",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MB_1x1.fits",
+        "--biassub",
+        "--bpm",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_BPM_1x1.fits",
+        "--mff",
+        "/tmp/native explicit paths fzsf81qy/wfi-full-0 output/WFI_MFF_S2_1x1.fits",
+        "--science",
+        "/tmp/native explicit paths fzsf81qy/wfi/input lists/science.list"
+      ],
+      "cwd": "/tmp/native explicit paths fzsf81qy/wfi/unrelated caller A",
+      "exit_status": 1
+    }
+  ],
+  "profiles": [
+    "omegacam-full-0",
+    "omegacam-full-1",
+    "omegacam-existing-calibrations-0",
+    "omegacam-existing-calibrations-1",
+    "omegacam-typed",
+    "omegacam-direct",
+    "omegacam-split-0",
+    "omegacam-split-1",
+    "wfi-full-0",
+    "wfi-full-1",
+    "wfi-existing-calibrations-0",
+    "wfi-existing-calibrations-1",
+    "wfi-typed",
+    "wfi-direct",
+    "wfi-split-0",
+    "wfi-split-1"
+  ],
+  "negatives": [
+    "omegacam-duplicate",
+    "omegacam-missing",
+    "omegacam-partial",
+    "omegacam-collision",
+    "omegacam-unknown-base",
+    "omegacam-incompatible",
+    "omegacam-existing-output",
+    "wfi-duplicate",
+    "wfi-missing",
+    "wfi-partial",
+    "wfi-collision",
+    "wfi-unknown-base",
+    "wfi-incompatible",
+    "wfi-existing-output"
+  ],
+  "omegacam-protected-before": {
+    "/tmp/native explicit paths fzsf81qy/omegacam/raw files": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394240281612104
+      ],
+      "bias0.fits": [
+        "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        33060,
+        1793394240265404043
+      ],
+      "bias1.fits": [
+        "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        33060,
+        1793394240275201580
+      ],
+      "bias2.fits": [
+        "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        33060,
+        1793394240281517526
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394240299758649
+      ],
+      "bpm0.fits": [
+        "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        33060,
+        1793394240287625180
+      ],
+      "bpm1.fits": [
+        "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        33060,
+        1793394240294693977
+      ],
+      "bpm2.fits": [
+        "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        33060,
+        1793394240299657321
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394240330547851
+      ],
+      "dome0.fits": [
+        "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        33060,
+        1793394240304483584
+      ],
+      "dome1.fits": [
+        "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        33060,
+        1793394240311693712
+      ],
+      "dome2.fits": [
+        "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        33060,
+        1793394240318848084
+      ],
+      "dome3.fits": [
+        "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        33060,
+        1793394240324492174
+      ],
+      "dome4.fits": [
+        "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        33060,
+        1793394240330356572
+      ],
+      "expected-bias-1.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394240380292085
+      ],
+      "expected-bias-2.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394240380586288
+      ],
+      "expected-bpm-1.npy": [
+        "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        33060,
+        1793394240380522964
+      ],
+      "expected-bpm-2.npy": [
+        "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        33060,
+        1793394240380852498
+      ],
+      "expected-flat-1.npy": [
+        "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        33060,
+        1793394240380372752
+      ],
+      "expected-flat-2.npy": [
+        "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        33060,
+        1793394240380627133
+      ],
+      "expected-science-1.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394240380474590
+      ],
+      "expected-science-2.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394240380793025
+      ],
+      "mefpp.paf": [
+        "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        33060,
+        1793394240253808231
+      ],
+      "run-provenance.json": [
+        "cf8a574f59b8c4ac958a0e47296cfceabbabe22bdeeb86b26d85b2a7bf39eb35",
+        33060,
+        1793394240382225942
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394240379832795
+      ],
+      "science0.fits": [
+        "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        33060,
+        1793394240379739450
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394240372278705
+      ],
+      "sky0.fits": [
+        "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        33060,
+        1793394240334580221
+      ],
+      "sky1.fits": [
+        "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        33060,
+        1793394240341861112
+      ],
+      "sky2.fits": [
+        "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        33060,
+        1793394240357067984
+      ],
+      "sky3.fits": [
+        "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        33060,
+        1793394240364748330
+      ],
+      "sky4.fits": [
+        "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48",
+        33060,
+        1793394240371935409
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/omegacam/configuration": {
+      "parameters.paf": [
+        "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        33060,
+        1793394240383115286
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/omegacam/input lists": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394240383726681
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394240383645732
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394240383686467
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394240383535863
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394240383598085
+      ]
+    }
+  },
+  "omegacam-protected-after": {
+    "/tmp/native explicit paths fzsf81qy/omegacam/raw files": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394240281612104
+      ],
+      "bias0.fits": [
+        "f4e65ae36398bba80fa138b0ba589256bd6065c550dac4d75a8943b67b4cca5b",
+        33060,
+        1793394240265404043
+      ],
+      "bias1.fits": [
+        "f5df06c9b0aee2f3b07814447548b5fa6628a9e1463c44c728f94ae0297a1f56",
+        33060,
+        1793394240275201580
+      ],
+      "bias2.fits": [
+        "25d278dfeb7c42af8a285f747ab726687468e4dd641eb73c17e10782a1b5d153",
+        33060,
+        1793394240281517526
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394240299758649
+      ],
+      "bpm0.fits": [
+        "8866c1759e53b1e1d093041aff9d430a23c51aa0bb8495c76b3d5986a9eaf75a",
+        33060,
+        1793394240287625180
+      ],
+      "bpm1.fits": [
+        "21e8019119f61cd7508e67592caa5fb410821d6b9d1304ae17832843695ae659",
+        33060,
+        1793394240294693977
+      ],
+      "bpm2.fits": [
+        "ef305e0dd56b371785cb4a38f1a2c8d5c9c755e4373bdd36f25dcec22ddaf2c8",
+        33060,
+        1793394240299657321
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394240330547851
+      ],
+      "dome0.fits": [
+        "d55e1fa73b2aa582ba3a4aa6781a177745992ec384564023106ca90a167979e8",
+        33060,
+        1793394240304483584
+      ],
+      "dome1.fits": [
+        "ca748ff0f434df185d0fd65bf2aa3ca75ade03632bda7a3c496199536808d158",
+        33060,
+        1793394240311693712
+      ],
+      "dome2.fits": [
+        "053d0b06c7f332b7e07436c1bf5085dfc7ac0ebfb9f84400c37b808245fa6a57",
+        33060,
+        1793394240318848084
+      ],
+      "dome3.fits": [
+        "55d1b33f5b7799bf47094d6be3e769b22ae0277ae59c813d8e1ad1465ddd88b3",
+        33060,
+        1793394240324492174
+      ],
+      "dome4.fits": [
+        "e62a63bbaa6ad1722db0feda3a9a9f19ee86d588f1e9a33aae2c59ec1812af27",
+        33060,
+        1793394240330356572
+      ],
+      "expected-bias-1.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394240380292085
+      ],
+      "expected-bias-2.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394240380586288
+      ],
+      "expected-bpm-1.npy": [
+        "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        33060,
+        1793394240380522964
+      ],
+      "expected-bpm-2.npy": [
+        "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        33060,
+        1793394240380852498
+      ],
+      "expected-flat-1.npy": [
+        "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        33060,
+        1793394240380372752
+      ],
+      "expected-flat-2.npy": [
+        "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        33060,
+        1793394240380627133
+      ],
+      "expected-science-1.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394240380474590
+      ],
+      "expected-science-2.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394240380793025
+      ],
+      "mefpp.paf": [
+        "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        33060,
+        1793394240253808231
+      ],
+      "run-provenance.json": [
+        "cf8a574f59b8c4ac958a0e47296cfceabbabe22bdeeb86b26d85b2a7bf39eb35",
+        33060,
+        1793394240382225942
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394240379832795
+      ],
+      "science0.fits": [
+        "1e5338d0a45025b423bc3a0514a0686c2aa8289df3538cc6c4fb5b23b1b950e5",
+        33060,
+        1793394240379739450
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394240372278705
+      ],
+      "sky0.fits": [
+        "a4f5950495725797230572c9286aa4b30078149de2c851882f7da296ae92e8a4",
+        33060,
+        1793394240334580221
+      ],
+      "sky1.fits": [
+        "fee91ce945cf560ab5dc74fd39c65f25025bd8ca8d812895849d843c317aaa0b",
+        33060,
+        1793394240341861112
+      ],
+      "sky2.fits": [
+        "7108c63b5622f1c2ee16f0497c34b22ad8c5b4971b56f770720b0cab8a0cc143",
+        33060,
+        1793394240357067984
+      ],
+      "sky3.fits": [
+        "ac66e9080540f2b1da80dab9cb3e58d52cdeef11fdd1d5a62579951ddd56199b",
+        33060,
+        1793394240364748330
+      ],
+      "sky4.fits": [
+        "7d8720438c2be8d12a72b4dcba0e7316b7ed2885360f7cc650b03ed0cc478f48",
+        33060,
+        1793394240371935409
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/omegacam/configuration": {
+      "parameters.paf": [
+        "cccf12159a77d81fa173a25393c95c020d8b7789e39e846d391d616260107d04",
+        33060,
+        1793394240383115286
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/omegacam/input lists": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394240383726681
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394240383645732
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394240383686467
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394240383535863
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394240383598085
+      ]
+    }
+  },
+  "wfi-protected-before": {
+    "/tmp/native explicit paths fzsf81qy/wfi/raw files": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394266644060957
+      ],
+      "bias0.fits": [
+        "1f204886e933e78b98a418b7c3fa7d1301848d26c19995b2823c79dc482bc58f",
+        33060,
+        1793394266806875656
+      ],
+      "bias1.fits": [
+        "6ad9b6edb67ba4b1056695b769fadcb2a7e4fea67eb70f6b7410144ce033f10b",
+        33060,
+        1793394266761666093
+      ],
+      "bias2.fits": [
+        "d166dfd29e78a2b0aa861bb29f72aa909826629f8e56667ca7fdd19ea3cff6e9",
+        33060,
+        1793394266761666093
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394266667839630
+      ],
+      "bpm0.fits": [
+        "36ecaef8b13004f097014664cf3d36e3f7d137a24c813940ad7c873872333c1c",
+        33060,
+        1793394266745666239
+      ],
+      "bpm1.fits": [
+        "1fe58aad7542e6b914a74c85338e06f148d95dc552e12c67e557555212a15922",
+        33060,
+        1793394266781665910
+      ],
+      "bpm2.fits": [
+        "97dc6664294fb753df969400bde7e18caf2a72dc672c9592e51ae8a2e1212712",
+        33060,
+        1793394266745666239
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394266693761333
+      ],
+      "dome0.fits": [
+        "1161becf1bed219b658a2e9dae2d2abfe1951a3bce3c3c8e74c3c88e08c6aed7",
+        33060,
+        1793394266741666276
+      ],
+      "dome1.fits": [
+        "3e3cb474d78b933219b344d4a89723056a7d77ece3c47475f5b6107ce5c3611c",
+        33060,
+        1793394266793665800
+      ],
+      "dome2.fits": [
+        "a7f2114b1000b5f9fcf286b88ad41dab4294b60054db7e027c046432684576d1",
+        33060,
+        1793394266805665690
+      ],
+      "dome3.fits": [
+        "356d9b862cebd24f8c9b2b75bc10bfb85fb741bcd99187df24112a35c40e954c",
+        33060,
+        1793394266754557159
+      ],
+      "dome4.fits": [
+        "2ee3466e206c7a1654e8c2768582125025068790b41f4268cebaa669f1b0546a",
+        33060,
+        1793394266797665764
+      ],
+      "expected-bias-1.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394266732634895
+      ],
+      "expected-bias-2.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394266733106533
+      ],
+      "expected-bpm-1.npy": [
+        "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        33060,
+        1793394266732829453
+      ],
+      "expected-bpm-2.npy": [
+        "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        33060,
+        1793394266733351669
+      ],
+      "expected-flat-1.npy": [
+        "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        33060,
+        1793394266732698268
+      ],
+      "expected-flat-2.npy": [
+        "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        33060,
+        1793394266733238505
+      ],
+      "expected-science-1.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394266732769787
+      ],
+      "expected-science-2.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394266733297400
+      ],
+      "mefpp.paf": [
+        "f86ae6719a28d3384c402eb6c153c77fe56661f67c87cb2e74b3b9c1b572ceb6",
+        33060,
+        1793394266739927097
+      ],
+      "run-provenance.json": [
+        "b07024f0932e82ba3aba361407566377d9cb24099a25b4e9284e91a61d3e2d3b",
+        33060,
+        1793394266734544771
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394266732506015
+      ],
+      "science0.fits": [
+        "87e8e0b89fea905ff7414b13f24da4b4c44cc4393d290fc92d30e047534703b4",
+        33060,
+        1793394266773665983
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394266726758536
+      ],
+      "sky0.fits": [
+        "512475be31afd6b67b44badcb95ebf48ac1fe6f6aa882562d27d78a745c19a83",
+        33060,
+        1793394266790646942
+      ],
+      "sky1.fits": [
+        "a17794cec0b068b41d9544eab6bc9038d0621fa005befee772a070d1bbaa5284",
+        33060,
+        1793394266801665727
+      ],
+      "sky2.fits": [
+        "852d325faa0fd45af20d025484c41a42c241588f6edcad8c053edbf6a8600f68",
+        33060,
+        1793394266809665654
+      ],
+      "sky3.fits": [
+        "88cf788dde1c1fa3032761592ed099bf35a95b856b3ff4c9bc8388aab8ddcd73",
+        33060,
+        1793394266753666166
+      ],
+      "sky4.fits": [
+        "da79a40eb88f779a8b569f48904ca712ecab8582857e314dddd330fc096aad06",
+        33060,
+        1793394266759432471
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/wfi/configuration": {
+      "parameters.paf": [
+        "f86ae6719a28d3384c402eb6c153c77fe56661f67c87cb2e74b3b9c1b572ceb6",
+        33060,
+        1793394266813101388
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/wfi/input lists": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394266813508368
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394266813421572
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394266813465461
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394266813309164
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394266813369440
+      ]
+    }
+  },
+  "wfi-protected-after": {
+    "/tmp/native explicit paths fzsf81qy/wfi/raw files": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394266644060957
+      ],
+      "bias0.fits": [
+        "1f204886e933e78b98a418b7c3fa7d1301848d26c19995b2823c79dc482bc58f",
+        33060,
+        1793394266806875656
+      ],
+      "bias1.fits": [
+        "6ad9b6edb67ba4b1056695b769fadcb2a7e4fea67eb70f6b7410144ce033f10b",
+        33060,
+        1793394266761666093
+      ],
+      "bias2.fits": [
+        "d166dfd29e78a2b0aa861bb29f72aa909826629f8e56667ca7fdd19ea3cff6e9",
+        33060,
+        1793394266761666093
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394266667839630
+      ],
+      "bpm0.fits": [
+        "36ecaef8b13004f097014664cf3d36e3f7d137a24c813940ad7c873872333c1c",
+        33060,
+        1793394266745666239
+      ],
+      "bpm1.fits": [
+        "1fe58aad7542e6b914a74c85338e06f148d95dc552e12c67e557555212a15922",
+        33060,
+        1793394266781665910
+      ],
+      "bpm2.fits": [
+        "97dc6664294fb753df969400bde7e18caf2a72dc672c9592e51ae8a2e1212712",
+        33060,
+        1793394266745666239
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394266693761333
+      ],
+      "dome0.fits": [
+        "1161becf1bed219b658a2e9dae2d2abfe1951a3bce3c3c8e74c3c88e08c6aed7",
+        33060,
+        1793394266741666276
+      ],
+      "dome1.fits": [
+        "3e3cb474d78b933219b344d4a89723056a7d77ece3c47475f5b6107ce5c3611c",
+        33060,
+        1793394266793665800
+      ],
+      "dome2.fits": [
+        "a7f2114b1000b5f9fcf286b88ad41dab4294b60054db7e027c046432684576d1",
+        33060,
+        1793394266805665690
+      ],
+      "dome3.fits": [
+        "356d9b862cebd24f8c9b2b75bc10bfb85fb741bcd99187df24112a35c40e954c",
+        33060,
+        1793394266754557159
+      ],
+      "dome4.fits": [
+        "2ee3466e206c7a1654e8c2768582125025068790b41f4268cebaa669f1b0546a",
+        33060,
+        1793394266797665764
+      ],
+      "expected-bias-1.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394266732634895
+      ],
+      "expected-bias-2.npy": [
+        "730a48fd3eb44a35315c2bafe88aa984fb854ac03ba6fbb068e587794562f9ac",
+        33060,
+        1793394266733106533
+      ],
+      "expected-bpm-1.npy": [
+        "2ce33546ef87007f821b5a1a4d9db1251dded91279adc6c18f8944cd64a950af",
+        33060,
+        1793394266732829453
+      ],
+      "expected-bpm-2.npy": [
+        "38c720e733b5e61850d01ebc16e6002c9f7c532ece8067c0c6eeed883c989636",
+        33060,
+        1793394266733351669
+      ],
+      "expected-flat-1.npy": [
+        "ecd1cd56288410db8c99ffdbb7901513aee34a6ef388bdee3edb6bd680f47856",
+        33060,
+        1793394266732698268
+      ],
+      "expected-flat-2.npy": [
+        "efa4001f6bcfaf69841f40da2c9decfe85a352f92591dd9373c2c792c4bb6e63",
+        33060,
+        1793394266733238505
+      ],
+      "expected-science-1.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394266732769787
+      ],
+      "expected-science-2.npy": [
+        "6194dce71283a953d9a43e95efd6b7c43d1649318d85cdff21d63518d066aa3e",
+        33060,
+        1793394266733297400
+      ],
+      "mefpp.paf": [
+        "f86ae6719a28d3384c402eb6c153c77fe56661f67c87cb2e74b3b9c1b572ceb6",
+        33060,
+        1793394266739927097
+      ],
+      "run-provenance.json": [
+        "b07024f0932e82ba3aba361407566377d9cb24099a25b4e9284e91a61d3e2d3b",
+        33060,
+        1793394266734544771
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394266732506015
+      ],
+      "science0.fits": [
+        "87e8e0b89fea905ff7414b13f24da4b4c44cc4393d290fc92d30e047534703b4",
+        33060,
+        1793394266773665983
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394266726758536
+      ],
+      "sky0.fits": [
+        "512475be31afd6b67b44badcb95ebf48ac1fe6f6aa882562d27d78a745c19a83",
+        33060,
+        1793394266790646942
+      ],
+      "sky1.fits": [
+        "a17794cec0b068b41d9544eab6bc9038d0621fa005befee772a070d1bbaa5284",
+        33060,
+        1793394266801665727
+      ],
+      "sky2.fits": [
+        "852d325faa0fd45af20d025484c41a42c241588f6edcad8c053edbf6a8600f68",
+        33060,
+        1793394266809665654
+      ],
+      "sky3.fits": [
+        "88cf788dde1c1fa3032761592ed099bf35a95b856b3ff4c9bc8388aab8ddcd73",
+        33060,
+        1793394266753666166
+      ],
+      "sky4.fits": [
+        "da79a40eb88f779a8b569f48904ca712ecab8582857e314dddd330fc096aad06",
+        33060,
+        1793394266759432471
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/wfi/configuration": {
+      "parameters.paf": [
+        "f86ae6719a28d3384c402eb6c153c77fe56661f67c87cb2e74b3b9c1b572ceb6",
+        33060,
+        1793394266813101388
+      ]
+    },
+    "/tmp/native explicit paths fzsf81qy/wfi/input lists": {
+      "bias.list": [
+        "8d4c755dedae9981068cebdd203dd5f4da94e378eb516d1adfa9b9ef934678db",
+        33060,
+        1793394266813508368
+      ],
+      "bpm.list": [
+        "5ed42f4c5759d2941fb7b8d55cac79b2836fbc71d6515d29747c0f91a88b5cc3",
+        33060,
+        1793394266813421572
+      ],
+      "dome.list": [
+        "e3e9784c6c0a454a32abd9de3a670b30f1b7e2c557cdcb3ed59a298f442e456e",
+        33060,
+        1793394266813465461
+      ],
+      "science.list": [
+        "6eb8084b4923a82f78dd8fa8a51138b2c4da128befc560bc49b0cb07732afdf6",
+        33060,
+        1793394266813309164
+      ],
+      "sky.list": [
+        "9257dfff1679ddb28eece192984b48606ee1ce1ccf81af4a4e6372cacb9ebae0",
+        33060,
+        1793394266813369440
+      ]
+    }
+  }
+}

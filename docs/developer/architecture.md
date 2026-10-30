@@ -1,5 +1,19 @@
 # wenu-imaging architecture
 
+30 October native M3 path candidate after owner-accepted/merged PR #161 and
+clean Mac/shared Chapman main ded31e876582dcbe044c2b99167c9d36e8c6ee03:
+[direct C path execution](m3-native-paths.md) adds explicit PAF/input/list/calibration,
+output/work/log selection without chdir or Python runtime routing. Agent C90/C17
+focused tests pass 2/2 (51 CLI cases plus 16 path profiles/14 rejections); scoped
+ASan/UBSan passes, with LeakSanitizer unavailable in this container. Actual
+selected-tool Mac/representative Chapman qualification remains pending.
+#163 optional-type ownership, #165 WFI fixture expectation and #166 direct-FITS
+statistics corrections remain open for targets; existing #164 swap/O_CREAT,
+#125 long FITS strings and #144 wider OOM limits remain separate. M3/#159 remains
+open; no installation, configured-engine activation, new algorithms, ASDF/JSON
+policy change or automatic merge/cleanup. Preserve all successful/failed runs and
+selected tools. Earlier inspector-only notes below are historical.
+
 29 October 2026: see the [original architecture diagram](../architecture/original/pycavi-mefpp.md) and [target architecture proposal](../architecture/proposed/pycavi-mefpp.md). The proposed execution contract resolves inputs, calibrations, configuration and output/work destinations explicitly, without changing the caller's working directory or implicitly searching for files. Existing cwd-dependent behavior remains unchanged; this is design for discussion.
 
 Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C

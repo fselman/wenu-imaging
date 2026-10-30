@@ -1,0 +1,19 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/native-paths-c90
+Test project /workspace/scratch/555b377cf948/native-paths-c90
+    Start 10: native_cli_capture
+1/2 Test #10: native_cli_capture ...............   Passed    1.87 sec
+    Start 20: native_explicit_paths
+2/2 Test #20: native_explicit_paths ............   Passed   25.28 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+cli              =   1.87 sec*proc (1 test)
+configuration    =   1.87 sec*proc (1 test)
+integration      =  25.28 sec*proc (1 test)
+native           =  27.15 sec*proc (2 tests)
+ownership        =   1.87 sec*proc (1 test)
+paths            =  25.28 sec*proc (1 test)
+provenance       =  25.28 sec*proc (1 test)
+
+Total Test time (real) =  27.16 sec

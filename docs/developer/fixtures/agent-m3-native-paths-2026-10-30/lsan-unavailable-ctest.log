@@ -1,0 +1,30 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/native-paths-asan
+Test project /workspace/scratch/555b377cf948/native-paths-asan
+    Start 10: native_explicit_paths
+1/1 Test #10: native_explicit_paths ............***Failed    5.68 sec
+WORK DIRECTORY: /tmp/native explicit paths 9k19pmgz
+EVIDENCE: /tmp/native explicit paths 9k19pmgz
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 258, in <module>
+    main()
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 118, in main
+    run(instrument + '-legacy', ['--pafname', 'mefpp.paf', *pipeline], legacy)
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 75, in run
+    assert (result.returncode == 0) == valid, (label, result.returncode, log)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('omegacam-legacy', 1, PosixPath('/tmp/native explicit paths 9k19pmgz/omegacam-legacy.log'))
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+integration    =   5.68 sec*proc (1 test)
+native         =   5.68 sec*proc (1 test)
+paths          =   5.68 sec*proc (1 test)
+provenance     =   5.68 sec*proc (1 test)
+
+Total Test time (real) =   5.69 sec
+
+The following tests FAILED:
+	 10 - native_explicit_paths (Failed)
+Errors while running CTest

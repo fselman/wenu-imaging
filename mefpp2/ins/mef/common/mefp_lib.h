@@ -24,6 +24,7 @@ Description	:	MEF library utilities, from
   ---------------------------------------------------------------------------*/
 
 #include "eclipse.h"
+#include "mef_paths.h"
 
 /*---------------------------------------------------------------------------
   Defines
@@ -326,8 +327,12 @@ typedef struct _mef_bb_ {
 
 	/* split key: if set we only split the files in image sections */
 	char		*name_split;
+    mef_paths *paths; /* Owned optional explicit I/O context; NULL is legacy. */
 
 } mef_bb ;
+
+qfits_header *mef_header_primary_at(char *, const mef_paths *);
+cube_t *mef_cube_load_at(char *, int, const mef_paths *);
 
 
 

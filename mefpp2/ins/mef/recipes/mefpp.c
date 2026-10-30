@@ -59,6 +59,10 @@ Description	:	MEF flat-field creation recipe, from WFI by
 #define OPT_SATLEVEL		2200
 #define OPT_SATMAX		2300
 #define OPT_SPLIT		3100
+#define OPT_OUTPUT_DIR 3200
+#define OPT_WORK_DIR 3201
+#define OPT_LIST_BASE 3202
+#define OPT_LOG_FILE 3203
 
 
 static char recipe_version[] = "mefpp-2.0.0";
@@ -83,6 +87,10 @@ void save_mef_hdrdump(image_t *,char *,qfits_header *,int);
 			{"noverify",	    0, 0, OPT_NOVERIFY},
 
                         {"pafname",        1, 0, OPT_PAFNAME},
+                        {"output-dir", 1, 0, OPT_OUTPUT_DIR},
+                        {"work-dir", 1, 0, OPT_WORK_DIR},
+                        {"list-base", 1, 0, OPT_LIST_BASE},
+                        {"log-file", 1, 0, OPT_LOG_FILE},
 
 			{"xtnum",           1, 0, OPT_XTNUM},
 
@@ -139,6 +147,9 @@ mef_bb * mef_bb_load (int argc, char *argv[], int *load_status)
     char *end;
     double satmax;
     char * date_ptr;
+    const char *output_dir = NULL, *work_dir = NULL, *list_base = NULL, *log_file = NULL;
+    int explicit_paf = 0;
+    mef_paths *paths = NULL;
 	mef_bb*   bb ;
 
 	display_params = 0 ;
@@ -168,8 +179,12 @@ mef_bb * mef_bb_load (int argc, char *argv[], int *load_status)
             *load_status = EXIT_SUCCESS;
             return NULL;
         case OPT_PAFNAME:
-            pafname = optarg;
+            pafname = optarg; explicit_paf = 1;
             break;
+        case OPT_OUTPUT_DIR: output_dir = optarg; break;
+        case OPT_WORK_DIR: work_dir = optarg; break;
+        case OPT_LIST_BASE: list_base = optarg; break;
+        case OPT_LOG_FILE: log_file = optarg; break;
         case '?':
         case ':':
             return NULL;
@@ -177,8 +192,23 @@ mef_bb * mef_bb_load (int argc, char *argv[], int *load_status)
             break;
         }
     }
+    if (output_dir || work_dir || list_base || log_file) {
+        if (!output_dir || !work_dir || !explicit_paf) {
+            e_error("explicit paths require --pafname, --output-dir and --work-dir");
+            return NULL;
+        }
+        paths = mef_paths_new(output_dir, work_dir, list_base, log_file);
+        if (paths == NULL) return NULL;
+        if (xmemory_set_tmpdir(mef_paths_work(paths)) != 0) {
+            mef_paths_del(paths); return NULL;
+        }
+    }
     bb = mef_bb_new_from_paf(pafname);
-    if (bb == NULL) return NULL;
+    if (bb == NULL) { mef_paths_del(paths); return NULL; }
+    bb->paths = paths;
+    /* The PAF constructor seeds the legacy BPM discovery prefix. Explicit
+     * execution accepts a BPM only when --bpm selects it (#159). */
+    if (paths != NULL) { free(bb->name_bpm); bb->name_bpm = NULL; }
     reset_options();
 
 	while (1) {
@@ -198,6 +228,10 @@ mef_bb * mef_bb_load (int argc, char *argv[], int *load_status)
 				bb->noverify = 1;
 				break ;
 
+                        case OPT_OUTPUT_DIR:
+                        case OPT_WORK_DIR:
+                        case OPT_LIST_BASE:
+                        case OPT_LOG_FILE:
                         case OPT_PAFNAME:
                                 /* Already selected and copied during context construction. */
                                 break ;
@@ -353,6 +387,9 @@ mef_bb * mef_bb_load (int argc, char *argv[], int *load_status)
 	    e_comment(0,"Using %s as output master flat name",bb->name_mf_o);
 	}
 
+    if (bb->paths != NULL && mef_paths_bind(bb) != 0) {
+        e_error("cannot resolve explicit input paths"); mef_bb_del(bb); return NULL;
+    }
 	if (display_params) {
         date_ptr = get_datetime_iso8601();
         e_comment(1,"date: %s", date_ptr);
@@ -393,7 +430,7 @@ int mef_engine(mef_bb * bb)
     char    *   mff_xtname = NULL;
     char    *   sci_xtname = NULL;
     char    *   cval_ptr;
-	char		cval[80];
+	char		cval[FILENAMESZ];
     char        cval2[80];
     double   exptime, mjdobs, mjdend;
     float   science_mean, science_median, science_stdev;
@@ -402,7 +439,7 @@ int mef_engine(mef_bb * bb)
 
 	/* if we request spliting we just do that */
 	if (bb->name_split != NULL) {
-           if ( (fnames = framelist_load(bb->name_split)) == NULL) {
+           if ( (fnames = mef_paths_frames(bb->paths, bb->name_split)) == NULL) {
              if (is_fits_file(bb->name_split)) {
                    fnames = framelist_new(1);
                    fnames->name[0] = strdup(bb->name_split);
@@ -411,14 +448,19 @@ int mef_engine(mef_bb * bb)
                    return -1 ;
              }
            }
+           if (mef_paths_split_preflight(bb, fnames) != 0) { framelist_del(fnames); return -1; }
            for (i=0 ; i<fnames->n ; i++) {
+        char *split_root;
 		e_comment(0, "---> Splitting file %s ---> %s", 
 				get_basename(fnames->name[i]),
 				get_rootname(get_basename(fnames->name[i])));
-        if (mef_split(fnames->name[i], get_rootname(get_basename(fnames->name[i])), 0) != 0) {
+        split_root = mef_paths_output(bb->paths, get_rootname(get_basename(fnames->name[i])));
+        if (split_root == NULL || mef_split(fnames->name[i], split_root, 0) != 0) {
+            free(split_root);
             framelist_del(fnames);
             return -1;
         }
+        free(split_root);
            }
            framelist_del(fnames);
 	   return 0;
@@ -491,6 +533,7 @@ int mef_engine(mef_bb * bb)
                 return -1;
            }
 
+    if (mef_paths_preflight(bb) != 0) return -1;
 	/* prepare to loop over extensions*/
 	xtnum = bb->xtnum;
     bb->xtname      = NULL;
@@ -587,8 +630,8 @@ int mef_engine(mef_bb * bb)
          *
          * */
         e_comment(0,"---> BPM name reading if it exists");
-        if (xts[j]==1) {
-            cval_ptr = mef_get_output_filename(bb,"bpm");
+        if (xts[j]==1 && (bb->paths == NULL || bb->name_bpm != NULL)) {
+            cval_ptr = bb->paths ? strdup(bb->name_bpm) : mef_get_output_filename(bb,"bpm");
             sprintf(cval, "%s", cval_ptr);
             free(cval_ptr);
             if (is_fits_file(cval) == 1) {
@@ -621,7 +664,7 @@ int mef_engine(mef_bb * bb)
 		    if (is_fits_file(bb->name_bias) == 1) {
                 e_comment(0,"---> [%d/%d] Part %d in %d: BIAS reading",xts[j],nxts,part,ALGPARTS);
                 /* we extract the origfile name of the file */
-                if ( (fh = mef_header_primary(bb->name_bias)) == NULL) {
+                if ( (fh = mef_header_primary_at(bb->name_bias, bb->paths)) == NULL) {
                     e_error("mef_engine: can not read %s primary headers",bb->name_bias);
                     free(xts); return -1;
                 }
@@ -649,7 +692,7 @@ int mef_engine(mef_bb * bb)
 
             /* Load frame names for error messages */
                 e_comment(0,"---> [%d/%d] Part %d in %d: BIAS construction",xts[j],nxts,part,ALGPARTS);
-                flist = framelist_load(bb->name_bias);
+                flist = mef_paths_frames(bb->paths, bb->name_bias);
                 bb->bias_nframes = flist->n ;
                 bb->bias_frame_name = calloc(flist->n, sizeof(char*));
                 bb->bias_scan_median = (float *)  malloc(flist->n*sizeof(float));
@@ -744,7 +787,7 @@ int mef_engine(mef_bb * bb)
                 *
                 * We check extension names only on the first frame of the list.... */
                 e_comment(1,"mef_engine: loading framelist from  ascii file %s", bb->name_bpm);
-                flist = framelist_load(bb->name_bpm);
+                flist = mef_paths_frames(bb->paths, bb->name_bpm);
                 if (flist==NULL) {
                     e_error("mef_engine: cannot load frame list [%s]", bb->name_bpm);
                     free(xts); return -1 ;
@@ -791,7 +834,7 @@ int mef_engine(mef_bb * bb)
                     e_comment(0,"---> [%d/%d] Part %d in %d: Skypping dome flat construction, reading it",xts[j],nxts,part,ALGPARTS);
 
                     /* we extract the origfile name of the file */
-                    if ( (fh = mef_header_primary(bb->name_dome)) == NULL) {
+                    if ( (fh = mef_header_primary_at(bb->name_dome, bb->paths)) == NULL) {
                         e_error("mef_engine: can not read %s primary headers",bb->name_dome);
                         free(xts); return -1;
                     }
@@ -829,7 +872,7 @@ int mef_engine(mef_bb * bb)
                     e_comment(0,"---> [%d/%d] Part %d in %d: Dome flat construction",xts[j],nxts,part,ALGPARTS);
 
                     /* Load frame names for error messages */
-                    flist = framelist_load(bb->name_dome);
+                    flist = mef_paths_frames(bb->paths, bb->name_dome);
                     bb->dome_nframes = flist->n ;
                     bb->dome_frame_name = calloc(flist->n, sizeof(char*));
                     bb->dome_scan_median = (float *)  malloc(flist->n*sizeof(float));
@@ -903,7 +946,7 @@ int mef_engine(mef_bb * bb)
 		           e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction",xts[j],nxts,part,ALGPARTS);
 
                     /* we extract the origfile name of the file */
-                    if ( (fh = mef_header_primary(bb->name_sky)) == NULL) {
+                    if ( (fh = mef_header_primary_at(bb->name_sky, bb->paths)) == NULL) {
                         e_error("mef_engine: can not read %s primary headers",bb->name_sky);
                         free(xts); return -1;
                     }
@@ -935,7 +978,7 @@ int mef_engine(mef_bb * bb)
 		           e_comment(0,"---> [%d/%d] Part %d in %d: Sky flat construction",xts[j],nxts,part,ALGPARTS);
 
                    /* Load frame names for error messages */
-                    flist = framelist_load(bb->name_sky);
+                    flist = mef_paths_frames(bb->paths, bb->name_sky);
                     bb->sky_nframes = flist->n ;
                     bb->sky_frame_name = calloc(flist->n, sizeof(char*));
                     bb->sky_scan_median = (float *)  malloc(flist->n*sizeof(float));
@@ -984,7 +1027,7 @@ int mef_engine(mef_bb * bb)
 		    } else {
                e_comment(0,"---> [%d/%d] Part %d in %d: skipping sky flat construction. We have the MFF.",xts[j],nxts,part,ALGPARTS);
 
-              if ( (fh = mef_header_primary(bb->name_mf)) == NULL) {
+              if ( (fh = mef_header_primary_at(bb->name_mf, bb->paths)) == NULL) {
                   e_error("mef_engine: can not read %s primary headers",bb->name_mf);
                   free(xts); return -1;
               }
@@ -1006,7 +1049,7 @@ int mef_engine(mef_bb * bb)
 		        e_comment(1,"reading master flat from file %s",bb->name_mf);
 
                 /* we extract the origfile name of the file */
-                if ( (fh = mef_header_primary(bb->name_mf)) == NULL) {
+                if ( (fh = mef_header_primary_at(bb->name_mf, bb->paths)) == NULL) {
                     e_error("mef_engine: can not read %s primary headers",bb->name_dome);
                     free(xts); return -1;
                 }
@@ -1066,7 +1109,7 @@ int mef_engine(mef_bb * bb)
 		part++;
 		e_comment(0,"---> [%d/%d] Part %d of %d: science frames loading.",xts[j],nxts,part,ALGPARTS,bb->science_name_i);
 		
-		prep = mef_cube_load(bb->science_name_i, bb->xtnum);
+		prep = mef_cube_load_at(bb->science_name_i, bb->xtnum, bb->paths);
 		e_comment(1,"Done.");
 
 		if (prep==NULL) {
@@ -1078,9 +1121,14 @@ int mef_engine(mef_bb * bb)
 		if (is_fits_file(bb->science_name_i)==1) {
 	            bb->science_nframes = 1 ;
 	            bb->science_frame_name = calloc(1, sizeof(char*));
+	            bb->science_scan_median = calloc(1, sizeof(float));
+	            bb->science_scan_stdev = calloc(1, sizeof(float));
+                if (bb->science_frame_name == NULL || bb->science_scan_median == NULL ||
+                    bb->science_scan_stdev == NULL) { free(xts); return -1; }
 	            bb->science_frame_name[0] = strdup(bb->science_name_i);
+                if (bb->science_frame_name[0] == NULL) { free(xts); return -1; }
 	        } else {
-                    flist = framelist_load(bb->science_name_i);
+                    flist = mef_paths_frames(bb->paths, bb->science_name_i);
                     bb->science_nframes = flist->n ;
                     bb->science_frame_name = calloc(flist->n, sizeof(char*));
                     bb->science_scan_median = (float *)  malloc(flist->n*sizeof(float));
@@ -1172,7 +1220,14 @@ int mef_engine(mef_bb * bb)
 		 for (p=0 ; p<prep->np ; p++) {
 
 		    /* Build output name */
-		    sprintf(name_o, "%s_pre.fits", get_rootname(get_basename(bb->science_frame_name[p])));
+            {
+                char leaf[FILENAMESZ], *destination;
+                if (strlen(get_basename(bb->science_frame_name[p])) + 20 >= sizeof(leaf)) goto publication_failed;
+                sprintf(leaf, "%s_pre.fits", get_rootname(get_basename(bb->science_frame_name[p])));
+                destination = mef_paths_output(bb->paths, leaf);
+                if (destination == NULL) goto publication_failed;
+                strcpy(name_o, destination); free(destination);
+            }
 		    e_comment(1, "saving calibrated extension %d of file %s into: [%s]", \
 				    xts[j], bb->science_frame_name[p], name_o);
 
@@ -1462,6 +1517,7 @@ int main(int argc, char *argv[])
 	/* Startup MEF calibration  engine */
 
 	engine_status = mef_engine(bb);
+    if (mef_paths_finish(bb->paths) != 0) engine_status = -1;
 	mef_bb_del(bb);
 
 	if (debug_active()) xmemory_status() ;
@@ -1482,6 +1538,10 @@ usage(char *pname)
 	printf(
 			"options are:\n"
 			"\t--pafname <name>   Name of PAF file, full path should be given\n"
+                        "\t--output-dir DIR  Explicit mode: existing output directory\n"
+                        "\t--work-dir DIR    Explicit mode: existing scratch directory\n"
+                        "\t--list-base DIR   Recorded base for relative list members\n"
+                        "\t--log-file FILE   Fresh log (default: work-dir/mefpp.log)\n"
 			"\t-x or --xtnum <n>  Xtension to consider (0=all)\n"
 			"\n"
 			"\t--split	      Name of file or of framelist with files to split\n"

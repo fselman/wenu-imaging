@@ -1,0 +1,14 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/native explicit paths lkjz69b_
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBPM' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBIAS' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MDOME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MSKY' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MFF' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+EVIDENCE: /workspace/scratch/555b377cf948/native explicit paths lkjz69b_
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 191, in <module>
+    main()
+  File "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py", line 181, in main
+    assert protected == {str(p): inventory(p) for p in (raw, cfg, lists)}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

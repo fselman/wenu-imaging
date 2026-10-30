@@ -1,5 +1,19 @@
 # mefpp refactor implementation plan — proposal
 
+30 October native M3 path candidate after owner-accepted/merged PR #161 and
+clean Mac/shared Chapman main ded31e876582dcbe044c2b99167c9d36e8c6ee03:
+[direct C path execution](../../developer/m3-native-paths.md) adds explicit PAF/input/list/calibration,
+output/work/log selection without chdir or Python runtime routing. Agent C90/C17
+focused tests pass 2/2 (51 CLI cases plus 16 path profiles/14 rejections); scoped
+ASan/UBSan passes, with LeakSanitizer unavailable in this container. Actual
+selected-tool Mac/representative Chapman qualification remains pending.
+#163 optional-type ownership, #165 WFI fixture expectation and #166 direct-FITS
+statistics corrections remain open for targets; existing #164 swap/O_CREAT,
+#125 long FITS strings and #144 wider OOM limits remain separate. M3/#159 remains
+open; no installation, configured-engine activation, new algorithms, ASDF/JSON
+policy change or automatic merge/cleanup. Preserve all successful/failed runs and
+selected tools. Earlier inspector-only notes below are historical.
+
 30 October paired M3 inspector receipt: selected-Python Intel Mac and
 representative shared Chapman4 passed all 15 grouped controls at
 2c820effff393d5ea4e1555439397ef7c7a6cda6; protected installed files and clean

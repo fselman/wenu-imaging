@@ -75,5 +75,7 @@ char *	xmemory_falloc(char *, size_t, size_t *, const char *, int) ;
 void    xmemory_fdealloc(void *, size_t, size_t, const char *, int) ;
 
 void xmemory_status_(const char * filename, int lineno) ;
+/* Serial process scratch selection; refuse changes with live swap files. */
+int xmemory_set_tmpdir(const char *directory);
 
 #endif

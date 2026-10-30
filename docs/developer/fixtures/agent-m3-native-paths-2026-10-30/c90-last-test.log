@@ -1,0 +1,116 @@
+Start testing: Oct 31 06:03 KST
+----------------------------------------------------------
+10/20 Testing: native_cli_capture
+10/20 Test: native_cli_capture
+Command: "/workspace/scratch/555b377cf948/m3-test-env/bin/python" "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/cli_capture_contract.py" "--source-root" "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/.." "--probe" "/workspace/scratch/555b377cf948/native-paths-c90/cli_capture_probe" "--work-parent" "/workspace/scratch/555b377cf948/native-paths-c90/test-work"
+Directory: /workspace/scratch/555b377cf948/native-paths-c90
+"native_cli_capture" start time: Oct 31 06:03 KST
+Output:
+----------------------------------------------------------
+WORK DIRECTORY: /workspace/scratch/555b377cf948/native-paths-c90/test-work/m1-cli-z0p729wi
+PASS: retained-00
+PASS: retained-01
+PASS: retained-02
+PASS: retained-03
+PASS: retained-04
+PASS: retained-05
+PASS: retained-06
+PASS: retained-07
+PASS: retained-08
+PASS: retained-09
+PASS: retained-10
+PASS: retained-11
+PASS: omegacam-defaults
+PASS: omegacam-full-overrides
+PASS: omegacam-repeated
+PASS: omegacam-partial
+PASS: omegacam-empty-binding
+PASS: omegacam-display
+PASS: omegacam-display-first
+PASS: omegacam-display-last
+PASS: omegacam-display-negative
+PASS: omegacam-display-excessive
+PASS: omegacam-rejected-0
+PASS: omegacam-rejected-1
+PASS: omegacam-rejected-2
+PASS: omegacam-rejected-3
+PASS: omegacam-rejected-4
+PASS: omegacam-rejected-5
+PASS: omegacam-rejected-6
+PASS: wfi-defaults
+PASS: wfi-full-overrides
+PASS: wfi-repeated
+PASS: wfi-partial
+PASS: wfi-empty-binding
+PASS: wfi-display
+PASS: wfi-display-first
+PASS: wfi-display-last
+PASS: wfi-display-negative
+PASS: wfi-display-excessive
+PASS: wfi-rejected-0
+PASS: wfi-rejected-1
+PASS: wfi-rejected-2
+PASS: wfi-rejected-3
+PASS: wfi-rejected-4
+PASS: wfi-rejected-5
+PASS: wfi-rejected-6
+PASS: information-help
+PASS: information-h
+PASS: information-version
+PASS: information-license
+PASS: information-L
+REPORT: /workspace/scratch/555b377cf948/native-paths-c90/test-work/m1-cli-z0p729wi/run-provenance.json
+PASS: 51 CLI cases; no reduction executed
+<end of output>
+Test time =   1.87 sec
+----------------------------------------------------------
+Test Passed.
+"native_cli_capture" end time: Oct 31 06:04 KST
+"native_cli_capture" time elapsed: 00:00:01
+----------------------------------------------------------
+
+20/20 Testing: native_explicit_paths
+20/20 Test: native_explicit_paths
+Command: "/workspace/scratch/555b377cf948/m3-test-env/bin/python" "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/tests/native_paths_contract.py" "--executable" "/workspace/scratch/555b377cf948/native-paths-c90/mefpp" "--source-root" "/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/.." "--work-parent" "/tmp"
+Directory: /workspace/scratch/555b377cf948/native-paths-c90
+"native_explicit_paths" start time: Oct 31 06:04 KST
+Output:
+----------------------------------------------------------
+WORK DIRECTORY: /tmp/native explicit paths 6zlkoeij
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBPM' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBIAS' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MDOME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MSKY' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MFF' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBPM' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBIAS' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MDOME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MSKY' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MFF' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+PASS: 16 native explicit-path profiles and 14 rejections
+PASS: independent numerical arrays, exact legacy metadata, protected inputs and cwd
+EVIDENCE: /tmp/native explicit paths 6zlkoeij
+<end of output>
+Test time =  25.28 sec
+----------------------------------------------------------
+Test Passed.
+"native_explicit_paths" end time: Oct 31 06:04 KST
+"native_explicit_paths" time elapsed: 00:00:25
+----------------------------------------------------------
+
+End testing: Oct 31 06:04 KST
+
+cli =   1.87 sec*proc
+
+configuration =   1.87 sec*proc
+
+integration =  25.28 sec*proc
+
+native =  27.15 sec*proc
+
+ownership =   1.87 sec*proc
+
+paths =  25.28 sec*proc
+
+provenance =  25.28 sec*proc
+

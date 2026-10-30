@@ -1243,6 +1243,7 @@ void mef_bb_del(mef_bb * bb)
 
 	if (bb==NULL) return ;
     mef_bb_clear_work(bb);
+    mef_paths_del(bb->paths);
     if (bb->name_paf) free(bb->name_paf);
 
 	if (bb->origin)				free(bb->origin) ;
@@ -1857,6 +1858,23 @@ cube_t * mef_cube_framelist_load(framelist *flist, int xtnum)
 /*
  *  * Loads a WFI list into a cube_t structure.
  *   */
+cube_t *mef_cube_load_at(char *filename, int xtnum, const mef_paths *paths)
+{
+    framelist *frames;
+    cube_t *loaded;
+    if (paths == NULL) return mef_cube_load(filename, xtnum);
+    frames = mef_paths_frames(paths, filename);
+    if (frames == NULL && is_fits_file(filename)) {
+        frames = framelist_new(1);
+        if (frames == NULL) return NULL;
+        frames->name[0] = strdup(filename);
+        if (frames->name[0] == NULL) { framelist_del(frames); return NULL; }
+    }
+    if (frames == NULL) return NULL;
+    loaded = mef_cube_framelist_load(frames, xtnum);
+    framelist_del(frames); return loaded;
+}
+
 cube_t * mef_cube_load(char * filename, int xtnum)
 {
 	cube_t    *     loaded ;
@@ -2262,7 +2280,7 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	framelist 	* 	input_frames = NULL ;
 	char		*	name_i ;
 	char		*	first_name = NULL ;
-	char			cval[80] ;
+	char			cval[FILENAMESZ] ;
 	char		*	getval ;
 	char			*zFilter = NULL ;
 	int			i ;
@@ -2286,7 +2304,9 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 		name_i = bb->name_bias ;
 	} else if (!strcmp(what, "bpm")) {
         /* for this to work we need to validate first the bias */
-        if (is_fits_file(bb->name_bpm)) {
+        if (bb->paths != NULL) {
+            name_i = bb->name_bpm;
+        } else if (is_fits_file(bb->name_bpm)) {
             output_name = mef_get_output_filename(bb,"bpm");
             sprintf(cval, "%s", output_name);
             free(output_name);
@@ -2331,7 +2351,7 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	e_comment(0,"\nmef_valid_subset: reading (map) and validating %s frame list: %s (same filter and binning)\n",what, name_i);
 
 
-	if ( (fh = mef_header_primary(name_i)) == NULL) {
+	if ( (fh = mef_header_primary_at(name_i, bb->paths)) == NULL) {
 		e_error("mef_valid_subset: can not read %s primary headers for %s",name_i, what);
 		goto subset_done;
 	}
@@ -2340,7 +2360,7 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	 * list to be used for its construction. In this case, we create a single
 	 * frame list with a single file in it, with the passed fits file name.
 	 */
-	if ( (input_frames = framelist_load(name_i)) == NULL) {
+	if ( (input_frames = mef_paths_frames(bb->paths, name_i)) == NULL) {
 	    if (is_fits_file(name_i)) {
 		    input_frames = framelist_new(1);
 		    input_frames->name[0] = strdup(name_i);
@@ -2352,7 +2372,8 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	    }
 
 	} else {
-	    first_name = framelist_firstname(name_i);
+	    first_name = bb->paths ? mef_paths_first(bb->paths, name_i) : framelist_firstname(name_i);
+        first_name_owned = bb->paths != NULL;
 	}
 	if (first_name==NULL) {
 		e_error("mef_valid_subset: cannot get primary FITS header from %s", name_i);
@@ -2500,7 +2521,7 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
     qfits_header *fh_ext;
     char    *   dateobs_ptr = NULL;
     int i;
-	char 	cval[80];
+	char 	cval[FILENAMESZ];
     char    cval2[80];
     char    *cval_ptr;
     char    *zname_ptr;
@@ -2508,7 +2529,7 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 	
 
         e_comment(1,"loading BPM cube");
-        if ( (cube_in = mef_cube_load(bb->name_bpm,bb->xtnum)) == NULL ) {
+        if ( (cube_in = mef_cube_load_at(bb->name_bpm,bb->xtnum,bb->paths)) == NULL ) {
             e_error("in loading cube [%s]: aborting",bb->name_bpm);
         }
         e_comment(1,"overscan correcting/trimming BPM cube");
@@ -2678,7 +2699,7 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             qfits_header_add(fhdr_extra, bb->bpm_hgainthr_key, cval, bb->bpm_hgainthr_comment, NULL);
 
             /* We add the list of frames used to determine the BPM */
-            flist = framelist_load(bb->name_bpm);
+            flist = mef_paths_frames(bb->paths, bb->name_bpm);
             sprintf(cval_prev,"NAXIS2");
             for (i=0 ; i<flist->n ; i++) {
                 sprintf(cval,"%s FRAME%03d", bb->bpm_frame_i_key, i+1);
@@ -2898,7 +2919,7 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 
 	/* Load input cube */
 	e_comment(1, "loading input cube [%s]", what);
-	i_cube = mef_cube_load(name_i, bb->xtnum) ;
+	i_cube = mef_cube_load_at(name_i, bb->xtnum, bb->paths) ;
 	if (i_cube==NULL) {
 		e_error("loading input data: [%s]", name_i);
 		return NULL ;
@@ -3254,6 +3275,17 @@ image_t * mef_image_filter_flat(image_t * im, int ksize,pixelmap *bpm)
  * reads a primary header from a FITS file or the
  * first file of a frame list.
  */
+qfits_header *mef_header_primary_at(char *filename, const mef_paths *paths)
+{
+    char *first;
+    qfits_header *header;
+    if (paths == NULL) return mef_header_primary(filename);
+    first = mef_paths_first(paths, filename);
+    if (first == NULL) return NULL;
+    header = mef_header_primary(first);
+    free(first); return header;
+}
+
 qfits_header *mef_header_primary(char *filename)
 {
 	char		*first_name = NULL ; /* Borrowed static framelist_firstname buffer. */
@@ -3294,6 +3326,13 @@ qfits_header *mef_header_ext(char *filename, mef_bb *bb)
 	char		cval[80], *ra_char, *dec_char;
 	float           CRVAL1, CRVAL2, CRPIX1, CRPIX2 ;
 
+    if (bb->paths != NULL && !is_fits_file(filename)) {
+        qfits_header *resolved_header;
+        first_name = mef_paths_first(bb->paths, filename);
+        if (first_name == NULL) return NULL;
+        resolved_header = mef_header_ext(first_name, bb);
+        free(first_name); return resolved_header;
+    }
 	xtnum = bb->xtnum ;
 
 	if (is_fits_file(filename)) {
@@ -3408,17 +3447,17 @@ qfits_header *mef_header_mainsubset(mef_bb *bb, image_t *flat)
 	 * we will some keywords from the primary headers
 	 */
 	if (bb->name_mf != NULL) {
-           if ( (fh_ref = mef_header_primary(bb->name_mf)) == NULL) {
+           if ( (fh_ref = mef_header_primary_at(bb->name_mf, bb->paths)) == NULL) {
                 e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_mf);
                 return NULL;
            }
         } else if (bb->name_sky != NULL) {
-	   if ( (fh_ref = mef_header_primary(bb->name_sky)) == NULL) {
+	   if ( (fh_ref = mef_header_primary_at(bb->name_sky, bb->paths)) == NULL) {
 		e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_sky);
 		return NULL;
 	   }
 	} else if (bb->name_bias != NULL) {
-           if ( (fh_ref = mef_header_primary(bb->name_bias)) == NULL) {
+           if ( (fh_ref = mef_header_primary_at(bb->name_bias, bb->paths)) == NULL) {
                 e_error("mef_header_mainsubset: can not read %s primary headers",bb->name_bias);
                 return NULL;
            }
@@ -3740,7 +3779,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	if (!strcmp(what,"bias")) {
 	    /* Add REC.BIASi */
 
-	    if ( (fnames = framelist_load(bb->name_bias)) == NULL) {
+	    if ( (fnames = mef_paths_frames(bb->paths, bb->name_bias)) == NULL) {
 		    if (is_fits_file(bb->name_bias)) {
 		       fnames = framelist_new(1);
 		       fnames->name[0] = strdup(bb->name_bias);
@@ -3802,7 +3841,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	if (!strcmp(what,"dome")) {
 	    /* Add REC.FLAT.DOMEi */
 
-	    if ( (fnames = framelist_load(bb->name_dome)) == NULL) {
+	    if ( (fnames = mef_paths_frames(bb->paths, bb->name_dome)) == NULL) {
 	         if (is_fits_file(bb->name_dome)) {
 	               fnames = framelist_new(1);
 	               /* fnames->name[0] = strdup(bb->name_dome); */
@@ -3847,7 +3886,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
     if (!strcmp(what,"combined")) {
         /* Add REC.FLAT.DOMEi */
 
-        if ( (fnames = framelist_load(bb->name_dome)) == NULL) {
+        if ( (fnames = mef_paths_frames(bb->paths, bb->name_dome)) == NULL) {
              if (is_fits_file(bb->name_dome)) {
                fnames = framelist_new(1);
                /* fnames->name[0] = strdup(bb->name_dome); */
@@ -3878,7 +3917,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
      */
 	if (!strcmp(what,"sky") ) {
 	    /* Add REC.FLAT.SKYi */
-	    if ( (fnames = framelist_load(bb->name_sky)) == NULL) {
+	    if ( (fnames = mef_paths_frames(bb->paths, bb->name_sky)) == NULL) {
                  if (is_fits_file(bb->name_sky)) {
                        fnames = framelist_new(1);
                        /* fnames->name[0] = strdup(bb->name_sky); */
@@ -3897,7 +3936,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 
                     /* we get the exposure time for that frame */
                     e_comment(1,"reading primary headers of %s",get_basename(fnames->name[i]));
-                    if ( (fh_sky_i = mef_header_primary(fnames->name[i])) == NULL) {
+                    if ( (fh_sky_i = mef_header_primary_at(fnames->name[i], bb->paths)) == NULL) {
                         e_error("mef_header_eclipse: can not read %s primary headers",get_basename(fnames->name[i]));
                         return NULL;
                     }
@@ -4117,63 +4156,25 @@ void *mef_create_orig_filename(mef_bb *bb, char *what)
 
 char *mef_get_output_filename(mef_bb *bb, char *what)
 {
-	char *name_o;
-	char cval[80];
-
-	/* Check entries */
-	if (bb==NULL) {
-		e_error("mef_get_output_filename: NULL bb pointer");
-		return NULL;
-	}
-	if (!what || !*what) {
-		e_error("mef_get_output_filename: NULL what pointer");
-		return NULL;
-	}
-
-
-	if (!strcmp(what, "dome")) {
-		if (bb->flat_partition != NULL) {
-                    sprintf(cval,"%s_%s.fits",bb->name_dome_o,bb->flat_partition);
-                } else {
-                    sprintf(cval,"%s.fits",bb->name_dome_o);
-                }
-		name_o = strdup(cval) ;
-
-	} else if (!strcmp(what, "sky")) {
-		if (bb->flat_partition != NULL) {
-                    sprintf(cval,"%s_%s.fits",bb->name_sky_o,bb->flat_partition);
-                } else {
-                    sprintf(cval,"%s.fits",bb->name_sky_o);
-                }
-		name_o = strdup(cval) ;
-
-	} else if (!strcmp(what, "combined")) {
-		if (bb->flat_partition != NULL) {
-                    sprintf(cval,"%s_%s.fits",bb->name_mf_o,bb->flat_partition);
-	        } else {
-	            sprintf(cval,"%s.fits",bb->name_mf_o);
-                }
-		name_o = strdup(cval) ;
-
-	} else if (!strcmp(what, "bias")) {
-		if (bb->bias_partition != NULL) {
-		    sprintf(cval,"%s_%s.fits",bb->name_bias_o,bb->bias_partition);
-		} else {
-		    sprintf(cval,"%s.fits",bb->name_bias_o);
-		}
-		name_o = strdup(cval) ;
-    } else if (!strcmp(what, "bpm")) {
-        if (bb->bpm_partition != NULL) {
-            sprintf(cval,"%s_%s.fits",bb->name_bpm_o,bb->bpm_partition);
-        } else {
-            sprintf(cval,"%s.fits",bb->name_bpm_o);
-        }
-        name_o = strdup(cval) ;
-	} else {
-		e_error("mef_get_output_filename: unknown frame type [%s] should be 'bias', 'dome', 'sky', or 'combined'",what);
-		return NULL;
-	}
-	return name_o;
+    const char *prefix, *partition;
+    char *leaf, *result;
+    size_t size;
+    if (bb == NULL || what == NULL) return NULL;
+    prefix = partition = NULL;
+    if (!strcmp(what, "bias")) { prefix = bb->name_bias_o; partition = bb->bias_partition; }
+    else if (!strcmp(what, "bpm")) { prefix = bb->name_bpm_o; partition = bb->bpm_partition; }
+    else if (!strcmp(what, "dome")) { prefix = bb->name_dome_o; partition = bb->flat_partition; }
+    else if (!strcmp(what, "sky")) { prefix = bb->name_sky_o; partition = bb->flat_partition; }
+    else if (!strcmp(what, "combined")) { prefix = bb->name_mf_o; partition = bb->flat_partition; }
+    if (prefix == NULL) return NULL;
+    size = strlen(prefix) + (partition ? strlen(partition) + 1 : 0) + 6;
+    leaf = malloc(size);
+    if (leaf == NULL) return NULL;
+    if (partition) sprintf(leaf, "%s_%s.fits", prefix, partition);
+    else sprintf(leaf, "%s.fits", prefix);
+    if (bb->paths == NULL) return leaf;
+    result = mef_paths_output(bb->paths, leaf);
+    free(leaf); return result;
 }
 
 
@@ -4240,7 +4241,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	 *
 	 */
 	e_comment(1,"reading primary headers of %s",name_i);
-	if ( (fh_ref = mef_header_primary(name_i)) == NULL) {
+	if ( (fh_ref = mef_header_primary_at(name_i, bb->paths)) == NULL) {
 		e_error("mef_get_headers_for: can not read %s primary headers",name_i);
 		goto header_fail;
 	}

@@ -1,0 +1,14 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/native-paths-asan
+Test project /workspace/scratch/555b377cf948/native-paths-asan
+    Start 10: native_explicit_paths
+1/1 Test #10: native_explicit_paths ............   Passed   53.59 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+integration    =  53.59 sec*proc (1 test)
+native         =  53.59 sec*proc (1 test)
+paths          =  53.59 sec*proc (1 test)
+provenance     =  53.59 sec*proc (1 test)
+
+Total Test time (real) =  53.59 sec

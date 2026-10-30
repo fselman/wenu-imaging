@@ -98,7 +98,7 @@ target_include_directories(eclipse PUBLIC src/include)
 target_compile_definitions(eclipse PRIVATE _ECLIPSE_)
 target_link_libraries(eclipse PUBLIC qfits)
 add_library(mefpp_common STATIC ins/mef/common/mefp_lib.c
-  ins/mef/common/mef_bias_kernel.c)
+  ins/mef/common/mef_bias_kernel.c ins/mef/common/mef_paths.c)
 target_include_directories(mefpp_common PUBLIC ins/mef/common)
 target_link_libraries(mefpp_common PUBLIC eclipse)
 add_executable(mefpp ins/mef/recipes/mefpp.c)
@@ -322,6 +322,14 @@ if(BUILD_TESTING)
     endforeach()
   endforeach()
   add_test(NAME native_cli_usage COMMAND "${CMAKE_COMMAND}" -DEXECUTABLE=$<TARGET_FILE:mefpp> -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cli_usage.cmake")
+  set(MEFPP_PATH_TEST_WORK_PARENT "${CMAKE_CURRENT_BINARY_DIR}/test-work" CACHE PATH
+    "Existing parent for private native path fixtures (may use a local filesystem)")
+  add_test(NAME native_explicit_paths
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/native_paths_contract.py"
+      --executable "$<TARGET_FILE:mefpp>"
+      --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+      --work-parent "${MEFPP_PATH_TEST_WORK_PARENT}")
+  set_tests_properties(native_explicit_paths PROPERTIES TIMEOUT 300 LABELS "native;paths;integration;provenance")
 endif()
 
 # Installation validates every required file before writing a private prefix.
