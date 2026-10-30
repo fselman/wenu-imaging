@@ -1,0 +1,227 @@
+{
+  "status": "passed",
+  "probe": "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+  "probe_sha256": "ec7a09515e2b552a7ea55dd3d0ef437a9881e7a398c30a57c50838d0a501aa57",
+  "cases": [
+    {
+      "label": "ram",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "ram",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/ram/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/ram/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/ram/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "success",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "success",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/success/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/success/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/success/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "exit",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "exit",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/exit/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/exit/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/exit/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "signal",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "signal",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/signal/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/signal/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/signal/caller",
+      "exit_status": -15
+    },
+    {
+      "label": "realloc",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "realloc",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/realloc/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/realloc/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/realloc/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "write-eintr",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "write-eintr",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-eintr/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-eintr/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-eintr/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "write-short",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "write-short",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-short/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-short/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-short/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "open",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "open",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/open/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/open/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/open/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "truncate",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "truncate",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/truncate/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/truncate/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/truncate/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "write",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "write",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "write-zero",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "write-zero",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-zero/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-zero/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/write-zero/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "map",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "map",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/map/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/map/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/map/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "unlink",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "unlink",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/unlink/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/unlink/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/unlink/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "collision",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "collision",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/collision/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/collision/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/collision/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "symlink",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "symlink",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/symlink/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/symlink/sentinel"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/symlink/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "cleanup-collision",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "cleanup-collision",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/cleanup-collision/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/cleanup-collision/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/cleanup-collision/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "overflow",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "overflow",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/overflow/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/overflow/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/overflow/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "registration-overflow",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "registration-overflow",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/registration-overflow/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/registration-overflow/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/registration-overflow/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "unmap",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "unmap",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/unmap/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/unmap/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/unmap/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "close",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-c17/qfits_swap_probe",
+        "close",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/close/scratch space",
+        "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/close/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-c17/test-work/qfits swap zeo20cev/close/caller",
+      "exit_status": 1
+    }
+  ]
+}

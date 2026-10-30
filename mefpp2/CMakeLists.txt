@@ -220,6 +220,17 @@ if(BUILD_TESTING)
   endif()
   target_compile_options(native_smoke PRIVATE -Wall -Wextra -pedantic-errors)
   file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+  # Test-local syscall seams compile the actual allocator, without adding a
+  # production fault API or changing its default memory mode/table size.
+  add_executable(qfits_swap_probe tests/qfits_swap_probe.c)
+  target_compile_definitions(qfits_swap_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+  target_compile_options(qfits_swap_probe PRIVATE -Wall -Wextra)
+  add_test(NAME native_qfits_swap
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/qfits_swap_contract.py"
+      --probe "$<TARGET_FILE:qfits_swap_probe>"
+      --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+  set_tests_properties(native_qfits_swap PROPERTIES TIMEOUT 120 LABELS "native;swap;ownership;failure")
   if(MEFPP_BUILD_CONFIG_PROBES)
     set(config_probe_sdk_args "")
     if(APPLE AND CMAKE_OSX_SYSROOT)

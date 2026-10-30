@@ -1,5 +1,17 @@
 # wenu-imaging agent instructions
 
+30 October owner-authorized qfits swap correction after accepted/merged PR #167
+and clean Mac/shared Chapman main d8f855106edda9639d6a0ad4b2ba2af964a11b84:
+[private swap storage](qfits-swap-files.md) supplies explicit owner-only exclusive creation,
+checked sizing/writes/mapping and registered cleanup, without deleting unowned
+names. #164/#168 and probe-oracle #169 remain open pending actual target gates.
+Agent optimized C90/C17 focused tests pass 2/2; scoped optimized fortify/ASan/UBSan
+forced-swap checks pass. Actual selected-tool Mac/representative Chapman private
+C90 checks are pending. Preserve all original/corrected evidence and installations;
+no numerical/allocator-mode/table-size change, full-M3 or broad OOM/thread-safety
+claim, normal engine activation or automatic merge/cleanup. Original #159/M3,
+#125 and #144 remain open. Earlier target/owner-review notes below are historical.
+
 30 October paired native M3 receipt: selected-tool Intel Mac and representative
 shared Chapman4 private C90 builds and both focused CTests passed 2/2 at
 113156b94fe68f7bf2848c93ecd7451551db2984. Installed reduction module, configured

@@ -1,0 +1,6 @@
+{
+  "mefpp2/qfits5/src/xmemory.c": "b5951fbb184f970e5cf28ab324df165587d1a586f47afa1361a062cfda56c2da",
+  "mefpp2/CMakeLists.txt": "a3d471bf2937f56f0e6a5b2e6fb7d441ee9206125b4ed9d147a42c2509ac53d9",
+  "mefpp2/tests/qfits_swap_probe.c": "8f9295657d046ca819df07e1d3e61fd5a02a57a5362dc147f7cbd78f2117b84c",
+  "mefpp2/tests/qfits_swap_contract.py": "400cee6634d2b2d2adf2bea204b81a123412fa1b725c38ce55808c62cd309de3"
+}

@@ -1,0 +1,85 @@
+[  1%] Building C object CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:560:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  560 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:874:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  874 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:516:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:516:31: note: directive argument in the range [-2147483648, 2147483647]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:516:31: note: using the range [0, 4294967295] for directive argument
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:33:
+In function ‘sprintf’,
+    inlined from ‘xmemory_tmpfilename’ at /workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/qfits5/src/xmemory.c:516:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 1052 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[  2%] Linking C static library libqfits.a
+[ 18%] Built target qfits
+[ 93%] Built target eclipse
+[ 97%] Built target mefpp_common
+[ 98%] Linking C executable mefpp
+[100%] Built target mefpp
+[  0%] Building C object CMakeFiles/qfits_swap_probe.dir/tests/qfits_swap_probe.c.o
+In file included from /workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/qfits_swap_probe.c:33:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:560:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  560 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:874:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  874 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:516:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:516:31: note: directive argument in the range [-2147483648, 2147483647]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:516:31: note: using the range [0, 4294967295] for directive argument
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/qfits_swap_probe.c:3:
+In function ‘sprintf’,
+    inlined from ‘xmemory_tmpfilename’ at /workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/../qfits5/src/xmemory.c:516:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 1052 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[100%] Linking C executable qfits_swap_probe
+[100%] Built target qfits_swap_probe

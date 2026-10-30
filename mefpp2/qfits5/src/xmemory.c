@@ -39,6 +39,8 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
+#include <errno.h>
+#include <limits.h>
 
 /*-----------------------------------------------------------------------------
                                 Defines
@@ -198,6 +200,7 @@ static int          xmemory_p_mm_refcount[XMEMORY_MAXPTRS] ;
 static unsigned xmemory_hash(char *) ;
 static void xmemory_init(void) ;
 static void xmemory_cleanup(void);
+static int xmemory_release_swap(int);
 static int xmemory_addcell(void*, size_t, const char*, int, char, int, int, char*) ;
 static int xmemory_remcell(int) ;
 static void xmemory_dumpcell(int, FILE*) ;
@@ -294,35 +297,24 @@ static void xmemory_init(void)
 
 /*----------------------------------------------------------------------------*/
 /**
-  @brief    Removes all swap files.
+  @brief    Release live swap mappings and descriptors at normal exit.
   @return   void
 
-  This routine will delete all swap files from the temporary area.
+  Successfully registered swap storage is already unlinked. This normal atexit
+  handler releases only live owners; it is not an async-signal handler.
  */
 /*----------------------------------------------------------------------------*/
 static void xmemory_cleanup(void)
 {
-    int     reg ;
-
-    if (xmemory_table.file_reg>0) {
-        xmem_debug(
-            fprintf(stderr, "xmem: cleaning up swap files... ");
-        );
-        /*
-         * Call remove() on all possible VM files. If the file exists, it
-         * is effectively removed. It it does not, ignore the error.
-         * This is not the cleanest way of doing it, but this function is
-         * meant to be called also in cases of emergency (e.g. segfault),
-         * so it should not rely on a correct memory table.
-         */
-        for (reg=0 ; reg<xmemory_table.file_reg ; reg++) {
-            remove(xmemory_tmpfilename(reg+1));
-        }
-        xmem_debug(
-            fprintf(stderr, "xmem: done cleaning swap files\n");
-        );
+    int pos;
+    /* Successfully mapped swap files are already unlinked. Never sweep
+     * generated names: an unsuccessful open may identify somebody else's file. */
+    if (xmemory_table.nswapfiles == 0) return;
+    for (pos = 0; pos < XMEMORY_MAXPTRS; ++pos) {
+        if (xmemory_p_val[pos] != NULL && xmemory_p_memtype[pos] == MEMTYPE_SWAP)
+            (void)xmemory_release_swap(pos);
     }
-    return ;
+    return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -427,6 +419,25 @@ static int xmemory_remcell(int pos)
     /* Decrement number of allocated pointers */
     xmemory_table.ncells -- ;
     return 0 ;
+}
+
+/* Release only a registered mapping/descriptor. A failed unmap retains its
+ * registration for exit cleanup. Never retry close: its error can mean that
+ * the descriptor has already been released. Refs #164 and swap ownership. */
+static int xmemory_release_swap(int pos)
+{
+    int failed;
+    if (munmap(xmemory_p_val[pos], xmemory_p_size[pos]) != 0) {
+        perror("xmem: munmap swap");
+        return -1;
+    }
+    failed = close(xmemory_p_swapfd[pos]) != 0;
+    if (failed) perror("xmem: close swap");
+    xmemory_table.alloc_swap -= xmemory_p_size[pos];
+    xmemory_table.alloc_total -= xmemory_p_size[pos];
+    --xmemory_table.nswapfiles;
+    xmemory_remcell(pos);
+    return failed ? -1 : 0;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -542,9 +553,10 @@ void * xmemory_malloc(size_t size, const char * filename, int lineno)
     int         swapfileid ;
     int         swapfd ;
     char        wbuf[MEMPAGESZ] ;
-    int         nbufs ;
+    size_t      mapped_size, remaining, offset;
+    ssize_t     written;
+    int         created;
     int         memtype ;
-    int         i ;
     int         pos ;
 #ifdef __linux__
     int         p ;
@@ -601,48 +613,61 @@ void * xmemory_malloc(size_t size, const char * filename, int lineno)
             fprintf(stderr, "xmem: hit a NULL pointer -- swapping\n");
         );
 
-        /* Create swap file with rights: rw-rw-rw- */
-        swapfileid = ++ xmemory_table.file_reg ;
+        /* Private, exclusively created storage. Keep the original zero-filled
+         * write/mmap policy but handle interrupted/short writes and size limits. */
+        ptr = MAP_FAILED;
+        swapfd = -1;
+        created = 0;
+        if (size > (size_t)-1 - (MEMPAGESZ - 1) ||
+            xmemory_table.file_reg == INT_MAX) {
+            errno = EOVERFLOW;
+            perror("xmem: swap size or registration overflow");
+            exit(EXIT_FAILURE);
+        }
+        mapped_size = ((size + MEMPAGESZ - 1) / MEMPAGESZ) * MEMPAGESZ;
+        if ((off_t)mapped_size < 0 || (size_t)(off_t)mapped_size != mapped_size) {
+            errno = EOVERFLOW;
+            perror("xmem: swap file size overflow");
+            exit(EXIT_FAILURE);
+        }
+        swapfileid = ++xmemory_table.file_reg;
         fname = xmemory_tmpfilename(swapfileid);
-        swapfd = open(fname, O_RDWR | O_CREAT);
-        if (swapfd==-1) {
-            fprintf(stderr, "xmem: fatal error: cannot create swap file\n");
-            exit(-1);
-        }
-        fchmod(swapfd, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-
-        /* Compute number of passes to insert buffer */
-        nbufs = size / MEMPAGESZ ;
-        if (size % MEMPAGESZ != 0) nbufs ++ ;
-
-        /* Dump empty buffers into file */
-        memset(wbuf, 0, MEMPAGESZ);
-        for (i=0 ; i<nbufs ; i++) {
-            if (write(swapfd, wbuf, MEMPAGESZ)==-1) {
-                perror("write");
-                fprintf(stderr,
-                        "xmem: fatal error: cannot create swapfile\n");
-                close(swapfd);
-                remove(fname);
-                exit(-1);
+        swapfd = open(fname, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+        if (swapfd < 0) goto swap_failure;
+        created = 1;
+        if (ftruncate(swapfd, (off_t)mapped_size) != 0) goto swap_failure;
+        memset(wbuf, 0, sizeof(wbuf));
+        remaining = mapped_size;
+        while (remaining != 0) {
+            offset = 0;
+            while (offset < sizeof(wbuf)) {
+                written = write(swapfd, wbuf + offset, sizeof(wbuf) - offset);
+                if (written < 0 && errno == EINTR) continue;
+                if (written <= 0) {
+                    if (written == 0) errno = EIO;
+                    goto swap_failure;
+                }
+                offset += (size_t)written;
             }
+            remaining -= sizeof(wbuf);
         }
-
-        /* mmap() the swap file */
-        ptr = (void*)mmap(0,
-                          nbufs * MEMPAGESZ,
-                          PROT_READ | PROT_WRITE,
-                          MAP_PRIVATE,
-                          swapfd,
-                          0);
-        if ((char*)ptr == (char*)-1) {
-            perror("mmap");
-            fprintf(stderr,
-                    "xmem: fatal error: mmap failed for swap file\n");
-            close(swapfd);
-            remove(fname);
-            exit(-1);
-        }
+        ptr = mmap(0, mapped_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, swapfd, 0);
+        if (ptr == MAP_FAILED) goto swap_failure;
+        /* The open descriptor retains storage after unlink. Once this succeeds,
+         * subsequent process termination cannot leave this named file behind. */
+        if (unlink(fname) != 0) goto swap_failure;
+        created = 0;
+        goto swap_ready;
+swap_failure:
+        perror("xmem: cannot create private swap storage");
+        if (ptr != MAP_FAILED && munmap(ptr, mapped_size) != 0)
+            perror("xmem: cleanup swap mapping");
+        if (swapfd >= 0 && close(swapfd) != 0)
+            perror("xmem: cleanup swap descriptor");
+        if (created && unlink(fname) != 0)
+            perror("xmem: cleanup swap path");
+        exit(EXIT_FAILURE);
+swap_ready:
 
         xmem_debug(
             fprintf(stderr, "xmem: swap [%s] created for %ld bytes\n", fname, 
@@ -960,7 +985,6 @@ void xmemory_fdealloc(
 {
     int     i ;
     int     pos ;
-    char *  swapname ;
     int     nptrs ;
     int     ii;
 
@@ -1018,27 +1042,8 @@ void xmemory_fdealloc(
             xmemory_table.alloc_ram -= xmemory_p_size[pos] ;
             break ;
         case MEMTYPE_SWAP:
-            /* --- SWAP pointer */
-            swapname = xmemory_tmpfilename(xmemory_p_swapfileid[pos]);
-            xmem_debug(
-                    fprintf(stderr, "xmem: deallocating swap file [%s]\n", 
-                        swapname);
-            );
-            /* Munmap file */
-            if (munmap(ptr, xmemory_p_size[pos])!=0) {
-                xmem_debug( perror("munmap"); );
-            }
-            /* Close swap file */
-            if (close(xmemory_p_swapfd[pos])==-1) {
-                xmem_debug( perror("close"); );
-            }
-            /* Remove swap file */
-            if (remove(swapname)!=0) {
-                xmem_debug( perror("remove"); );
-            }
-            xmemory_table.alloc_swap -= xmemory_p_size[pos] ;
-            xmemory_table.nswapfiles -- ;
-            break ;
+            if (xmemory_release_swap(pos) != 0) exit(EXIT_FAILURE);
+            return;
         case MEMTYPE_MMAP:
             /* --- MEMORY-MAPPED pointer */
             /* Decrease reference count */
@@ -1107,7 +1112,6 @@ void xmemory_free(void * ptr, const char * filename, int lineno)
 {
     int     i ;
     int     pos ;
-    char *  swapname ;
     int     nptrs ;
     int     ii;
 
@@ -1165,27 +1169,8 @@ void xmemory_free(void * ptr, const char * filename, int lineno)
             xmemory_table.alloc_ram -= xmemory_p_size[pos] ;
             break ;
         case MEMTYPE_SWAP:
-            /* --- SWAP pointer */
-            swapname = xmemory_tmpfilename(xmemory_p_swapfileid[pos]);
-            xmem_debug(
-                    fprintf(stderr, "xmem: deallocating swap file [%s]\n", 
-                        swapname);
-            );
-            /* Munmap file */
-            if (munmap(ptr, xmemory_p_size[pos])!=0) {
-                xmem_debug( perror("munmap"); );
-            }
-            /* Close swap file */
-            if (close(xmemory_p_swapfd[pos])==-1) {
-                xmem_debug( perror("close"); );
-            }
-            /* Remove swap file */
-            if (remove(swapname)!=0) {
-                xmem_debug( perror("remove"); );
-            }
-            xmemory_table.alloc_swap -= xmemory_p_size[pos] ;
-            xmemory_table.nswapfiles -- ;
-            break ;
+            if (xmemory_release_swap(pos) != 0) exit(EXIT_FAILURE);
+            return;
         case MEMTYPE_MMAP:
             /* --- MEMORY-MAPPED pointer */
             /* Decrease reference count */

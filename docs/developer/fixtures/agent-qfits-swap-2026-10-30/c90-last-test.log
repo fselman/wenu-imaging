@@ -1,0 +1,85 @@
+Start testing: Oct 31 06:56 KST
+----------------------------------------------------------
+3/21 Testing: native_qfits_swap
+3/21 Test: native_qfits_swap
+Command: "/workspace/scratch/555b377cf948/m3-test-env/bin/python" "/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/qfits_swap_contract.py" "--probe" "/workspace/scratch/555b377cf948/swap-c90/qfits_swap_probe" "--work-parent" "/workspace/scratch/555b377cf948/swap-c90/test-work"
+Directory: /workspace/scratch/555b377cf948/swap-c90
+"native_qfits_swap" start time: Oct 31 06:56 KST
+Output:
+----------------------------------------------------------
+WORK DIRECTORY: /workspace/scratch/555b377cf948/swap-c90/test-work/qfits swap nqocm_7o
+PASS: ram
+PASS: success
+PASS: exit
+PASS: signal
+PASS: realloc
+PASS: write-eintr
+PASS: write-short
+PASS: open
+PASS: truncate
+PASS: write
+PASS: write-zero
+PASS: map
+PASS: unlink
+PASS: collision
+PASS: symlink
+PASS: cleanup-collision
+PASS: overflow
+PASS: registration-overflow
+PASS: unmap
+PASS: close
+PASS: 20 forced-swap/ownership cases; no system RAM exhaustion
+EVIDENCE: /workspace/scratch/555b377cf948/swap-c90/test-work/qfits swap nqocm_7o
+<end of output>
+Test time =   0.35 sec
+----------------------------------------------------------
+Test Passed.
+"native_qfits_swap" end time: Oct 31 06:56 KST
+"native_qfits_swap" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/21 Testing: native_explicit_paths
+21/21 Test: native_explicit_paths
+Command: "/workspace/scratch/555b377cf948/m3-test-env/bin/python" "/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/native_paths_contract.py" "--executable" "/workspace/scratch/555b377cf948/swap-c90/mefpp" "--source-root" "/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/.." "--work-parent" "/tmp"
+Directory: /workspace/scratch/555b377cf948/swap-c90
+"native_explicit_paths" start time: Oct 31 06:56 KST
+Output:
+----------------------------------------------------------
+WORK DIRECTORY: /tmp/native explicit paths ahxq7ad4
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBPM' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBIAS' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MDOME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MSKY' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MFF' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBPM' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MBIAS' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MDOME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MSKY' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING: VerifyWarning: Keyword name 'ESO MPP MFF' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+PASS: 16 native explicit-path profiles and 14 rejections
+PASS: independent numerical arrays, exact legacy metadata, protected inputs and cwd
+EVIDENCE: /tmp/native explicit paths ahxq7ad4
+<end of output>
+Test time =  23.03 sec
+----------------------------------------------------------
+Test Passed.
+"native_explicit_paths" end time: Oct 31 06:57 KST
+"native_explicit_paths" time elapsed: 00:00:23
+----------------------------------------------------------
+
+End testing: Oct 31 06:57 KST
+
+failure =   0.35 sec*proc
+
+integration =  23.03 sec*proc
+
+native =  23.38 sec*proc
+
+ownership =   0.35 sec*proc
+
+paths =  23.03 sec*proc
+
+provenance =  23.03 sec*proc
+
+swap =   0.35 sec*proc
+
