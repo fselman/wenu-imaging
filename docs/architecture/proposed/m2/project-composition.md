@@ -143,7 +143,10 @@ Use selected tools and a private C90 build of `mefpp`, `mef_config_read`,
   Failed CLI input creates no output directory. No FITS/engine recipe executes.
 
 See [agent results](../../../developer/m2-project-composition-agent-results-2026-10-30.md).
-Agent C90 configuration checks passed; actual selected-tool Mac/representative
-Chapman verification remains pending. No new C17/sanitizer run is claimed: native
-C and ownership code are unchanged, and accepted evidence is retained. #155/full
-M2 closure stays open until target qualification and owner/cumulative review.
+Agent, selected-tool Intel Mac and representative shared Chapman4 C90 checks
+passed 2/2 at d0ab19e91b46e6fe6e21c541af99c21ed35029b4. See
+[paired results](../../../developer/m2-project-composition-paired-results-2026-10-30.md).
+The #155 correction is qualified for owner review; full M2 closure remains a
+cumulative review/owner decision. No new C17/sanitizer run is claimed: native C
+and ownership code are unchanged, and accepted evidence is retained. No test
+replay is needed for the documentation receipt; merge/cleanup requires instruction.

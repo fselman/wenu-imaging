@@ -1,5 +1,9 @@
 # M2 project/native composition — agent results — 30 October 2026
 
+Subsequent actual Mac/Chapman checks passed 2/2 on each host at the implementation
+revision below; see [paired results](m2-project-composition-paired-results-2026-10-30.md).
+The target-pending statements in this original agent receipt are historical.
+
 Owner accepted/merged PR #156 and instructed “merge, clean, and proceed”. Baseline:
 `ea35197a7f074ac1c44289e7bcc94336f92d6681`. This implements the configuration
 connection recorded in [#155](https://github.com/fselman/wenu-imaging/issues/155),

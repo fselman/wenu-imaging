@@ -1,5 +1,16 @@
 # wenu-imaging roadmap
 
+30 October paired project/native composition receipt: selected-tool Intel Mac
+and representative shared Chapman4 private C90 builds and both affected CTests
+passed 2/2 at d0ab19e91b46e6fe6e21c541af99c21ed35029b4. Protected installed files
+and clean review checkouts stayed unchanged. See [paired results](m2-project-composition-paired-results-2026-10-30.md).
+The #155 configuration integration correction is target-qualified and ready for
+owner review in PR #157. Full M2 closure remains a cumulative review/owner decision;
+no M3, ASDF publication, numerical processing, installation or automatic merge.
+Preserve selected tools and all evidence; this receipt needs no test replay.
+Earlier target-pending notes below are historical. Separate owner instruction
+precedes merge/cleanup.
+
 30 October owner accepted/merged PR #156 and instructed merge, clean, and
 proceed. At baseline ea35197a7f074ac1c44289e7bcc94336f92d6681, the next original-M2
 increment implements [project/native composition](../architecture/proposed/m2/project-composition.md) for #155. Project
