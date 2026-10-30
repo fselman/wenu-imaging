@@ -107,9 +107,12 @@ missing list base, incompatible calibration geometry and an existing output
 sentinel. Rejections must be controlled positive failure exits, never signals.
 Hashes, modes, mtimes and empty caller directories are checked afterward.
 
-Actual Intel Mac and representative shared Chapman qualification is pending.
-Do not install, switch the configured engine, merge, or close #163/#165/#166 until
-their applicable target/owner gates. M3/#159 remains open for its cumulative
+Selected-tool Intel Mac and representative shared Chapman qualification passed
+2/2 on each at 113156b94fe68f7bf2848c93ecd7451551db2984; see the
+[paired receipt](m3-native-paths-paired-results-2026-10-30.md). Corrections
+#163/#165/#166 are target-qualified and their bounded issues are closed.
+PR #167 is ready for owner review. Do not install, switch the configured engine
+or merge without the applicable owner instruction. M3/#159 remains open for its cumulative
 execution and inspector requirements; this increment does not claim complete
 M3, scientific acceptance, single-detector layout generalization, grouped
 service dispatch, ASDF persistence or a JSON policy change.

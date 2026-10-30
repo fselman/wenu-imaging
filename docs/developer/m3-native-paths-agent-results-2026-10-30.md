@@ -1,5 +1,7 @@
 # Native explicit paths — agent results, 30 October 2026
 
+Subsequent target status: [paired Mac/Chapman qualification](m3-native-paths-paired-results-2026-10-30.md) passed 2/2 on each at the published code revision. This agent receipt retains its original pre-target evidence and limitations; its target-pending entries below are historical.
+
 The candidate makes the C executable itself accept separated configuration,
 input lists/files, calibrations and output/work/log locations, without changing
 cwd or invoking Python. The original numerical routines and configuration
