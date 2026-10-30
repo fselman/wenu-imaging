@@ -1,0 +1,26 @@
+[
+  {
+    "directory": "/workspace/scratch/555b377cf948/migration-c90",
+    "command": "/usr/bin/gcc  -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/../third_party/tomlc17 -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common -std=c99 -Wall -Wextra -pedantic-errors -o CMakeFiles/mefpp_tomlc17.dir/ins/mef/common/mef_toml_bridge.c.o -c /workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_toml_bridge.c",
+    "file": "/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_toml_bridge.c",
+    "output": "CMakeFiles/mefpp_tomlc17.dir/ins/mef/common/mef_toml_bridge.c.o"
+  },
+  {
+    "directory": "/workspace/scratch/555b377cf948/migration-c90",
+    "command": "/usr/bin/gcc -D_BSD_SOURCE=1 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_POSIX_C_SOURCE=200809L -D_SVID_SOURCE=1 -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/src/include -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/qfits5/include -I/workspace/scratch/555b377cf948/migration-c90/generated -std=c90 -Wall -Wextra -pedantic-errors -o CMakeFiles/mefpp_config_toml.dir/ins/mef/common/mef_config_toml.c.o -c /workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_config_toml.c",
+    "file": "/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_config_toml.c",
+    "output": "CMakeFiles/mefpp_config_toml.dir/ins/mef/common/mef_config_toml.c.o"
+  },
+  {
+    "directory": "/workspace/scratch/555b377cf948/migration-c90",
+    "command": "/usr/bin/gcc -D_BSD_SOURCE=1 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_POSIX_C_SOURCE=200809L -D_SVID_SOURCE=1 -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/src/include -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/qfits5/include -I/workspace/scratch/555b377cf948/migration-c90/generated -std=c90 -Wall -Wextra -pedantic-errors -o CMakeFiles/mefpp_config_toml.dir/ins/mef/common/mef_toml_bundle.c.o -c /workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_toml_bundle.c",
+    "file": "/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_toml_bundle.c",
+    "output": "CMakeFiles/mefpp_config_toml.dir/ins/mef/common/mef_toml_bundle.c.o"
+  },
+  {
+    "directory": "/workspace/scratch/555b377cf948/migration-c90",
+    "command": "/usr/bin/gcc -D_BSD_SOURCE=1 -D_DARWIN_C_SOURCE=1 -D_DEFAULT_SOURCE=1 -D_POSIX_C_SOURCE=200809L -D_SVID_SOURCE=1 -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/src/include -I/workspace/scratch/555b377cf948/m2-migration/mefpp2/qfits5/include -I/workspace/scratch/555b377cf948/migration-c90/generated -std=c90 -o CMakeFiles/mef_config_read.dir/ins/mef/common/mef_config_read.c.o -c /workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_config_read.c",
+    "file": "/workspace/scratch/555b377cf948/m2-migration/mefpp2/ins/mef/common/mef_config_read.c",
+    "output": "CMakeFiles/mef_config_read.dir/ins/mef/common/mef_config_read.c.o"
+  }
+]

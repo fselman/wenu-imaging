@@ -20,6 +20,7 @@ typedef struct {
     binding *items;
     size_t count, capacity;
     int active;
+    int children[MAX_FILES];
 } subset;
 struct mef_toml_bundle {
     mef_allocator allocator;
@@ -143,6 +144,7 @@ static mef_status load(mef_toml_bundle *b, const char *path, size_t depth, subse
         memcpy(child_path, canonical, base); memcpy(child_path + base, include, length + 1);
         status = load(b, child_path, depth + 1, &child);
         if (status != MEF_OK) return status;
+        s->children[i] = (int)(child - b->files);
         for (j = 0; j < child->count; ++j) {
             status = insert(b, s, child->items + j, 0);
             if (status != MEF_OK) return status;
@@ -273,7 +275,9 @@ static mef_status quoted(mef_toml_bundle *b, const char *value)
 
 mef_status mef_toml_bundle_sources(mef_toml_bundle *b, const char **out)
 {
-    size_t i;
+    size_t i, j;
+    const char *key;
+    const subset *file;
     const binding *item;
     mef_domain_field field;
     mef_status status;
@@ -298,7 +302,40 @@ mef_status mef_toml_bundle_sources(mef_toml_bundle *b, const char **out)
         PUT(",\"inherited\":"); PUT(strcmp(item->source, b->files[0].path) ? "true" : "false");
         PUT(",\"explicit_override\":"); PUT(item->overridden ? "true" : "false"); PUT("}");
     }
-    PUT("}}\n"); *out = b->metadata;
+    PUT("},\"files\":[");
+    for (i = 0; i < b->count; ++i) {
+        file = b->files + i;
+        if (i) PUT(",");
+        PUT("{\"path\":"); QUOTE(file->path);
+        PUT(",\"text\":"); QUOTE(mef_toml_source_text(file->document));
+        PUT(",\"include\":[");
+        for (j = 0; j < mef_toml_include_count(file->document); ++j) {
+            if (j) PUT(",");
+            QUOTE(mef_toml_include(file->document, j));
+        }
+        PUT("],\"resolved_include\":[");
+        for (j = 0; j < mef_toml_include_count(file->document); ++j) {
+            if (j) PUT(",");
+            QUOTE(b->files[file->children[j]].path);
+        }
+        PUT("],\"override_keys\":[");
+        for (j = 0; j < mef_toml_override_count(file->document); ++j) {
+            if (j) PUT(",");
+            QUOTE(mef_toml_override(file->document, j));
+        }
+        PUT("],\"definitions\":[");
+        for (j = 0; j < mef_toml_count(file->document); ++j) {
+            key = mef_toml_key(file->document, j);
+            if (j) PUT(",");
+            PUT("{\"native_key\":"); QUOTE(key);
+            PUT(",\"source_key\":"); QUOTE(mef_toml_source_key(file->document, key));
+            sprintf(number, "%d", mef_toml_source_line(file->document, key));
+            PUT(",\"source_line\":"); PUT(number);
+            PUT("}");
+        }
+        PUT("]}");
+    }
+    PUT("]}\n"); *out = b->metadata;
 #undef PUT
 #undef QUOTE
     return MEF_OK;

@@ -158,6 +158,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(mefpp_config_toml PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
+  add_executable(mef_config_read ins/mef/common/mef_config_read.c)
+  target_link_libraries(mef_config_read PRIVATE mefpp_config_toml)
+  target_compile_definitions(mef_config_read PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   add_executable(config_domains_probe tests/config_domains_probe.c)
   target_link_libraries(config_domains_probe PRIVATE mefpp_config_toml mefpp_config_domains)
   target_compile_options(config_domains_probe PRIVATE -UNDEBUG)
@@ -245,6 +248,15 @@ if(BUILD_TESTING)
         --cli-probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_config_toml_domains PROPERTIES TIMEOUT 300 LABELS "native;configuration;toml;domains;provenance")
+    add_test(NAME native_config_migration
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_migration_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --reader "$<TARGET_FILE:mef_config_read>"
+        --paf-probe "$<TARGET_FILE:config_paf_snapshot>"
+        --cli-probe "$<TARGET_FILE:cli_capture_probe>"
+        --domain-probe "$<TARGET_FILE:config_domains_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_config_migration PROPERTIES TIMEOUT 300 LABELS "native;configuration;migration;provenance")
     add_test(NAME native_config_snapshot
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_snapshot_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

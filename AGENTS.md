@@ -1,5 +1,35 @@
 # wenu-imaging
 
+30 October paired migration receipt: selected-tool Intel Mac and representative
+shared Chapman4 private C90 builds and both focused configuration CTests passed
+2/2 at 38f4f4d4bd05c4977f1624fc8737431527bdbe8a. Protected files and clean review
+checkouts remained unchanged. See [paired migration results](docs/developer/m2-migration-paired-results-2026-10-30.md). Ready for
+bounded owner review; full M2 closure remains a separate cumulative review.
+The corrected nested-package protection lookup is target-verified (#154); retain
+the first failed handoff attempt. Establish all paths/interfaces from as-is source
+and actual host evidence; never guess layouts. No test replay for this documentation
+receipt, installation, numerical processing or normal engine activation. Preserve
+all evidence/tools and milestone order. Owner instruction precedes merge/cleanup.
+Earlier target-pending notes below are historical.
+
+30 October M2 migration implementation after accepted/merged PR #151 and clean
+Mac/shared Chapman main a09bec7e6bc0d3fa8d82245db59aaf3063ac0d94: owner authorized
+finishing configuration migration. The shared Python API/CLI and opt-in native
+configuration bridge now migrate PAF values through the original constructor,
+retain PAF/CFG text/hashes and duplicate/conflict records, preserve exact parsed
+TOML source graphs/override contributions, and freeze WAD configuration attributes
+for CLI/library requests. New examples match all 585 OCAM / 249 WFI stored values
+and selected local CLI overrides exactly. CFG values remain explicit compatibility
+evidence; no scientific associations/identities or executable plans are invented.
+Agent C90/C17 focused checks and scoped ASan/UBSan pass. Actual selected-tool Intel
+Mac and representative shared Chapman checks remain pending; full M2 closure needs
+those results and owner review. Preserve original PAFs, installed tools/prefixes,
+prior evidence and milestone order. No installation, numerical processing,
+ordinary engine activation, ASDF publication, merge or cleanup is authorized by
+this implementation. See [migration contract](docs/architecture/proposed/m2/configuration-migration.md) and
+[agent receipt](docs/developer/m2-migration-agent-results-2026-10-30.md). Earlier remaining-migration notes are historical within
+this implemented boundary.
+
 30 October paired project/readout receipt: Intel Mac and representative shared
 Chapman4 selected Python 3.11.14 authoring checks passed at
 3769f5196f9be2c2581673f89c61ae2a472167d3: six examples from two caller directories,
