@@ -1,5 +1,19 @@
 # wenu-imaging
 
+30 October M2 is owner-accepted/closed after merged PR #158 and clean Mac/shared
+Chapman main b872c8f44c1b54982069a3f94735da492a9dd739; owner instructed Proceed at M3.
+The [first M3 increment](docs/developer/m3-project-inspection.md) adds explicit path-base primitives and a
+read-only legacy project inspector, with outer-package `pycavi project inspect`
+entry, selected CFG/FITS headers, ordered lists, links, diagnostics and bounded
+coverage. Agent 14 grouped controls pass; actual selected-Python Mac/representative
+Chapman checks remain pending. #159 retains full M3 execution/overview gates; no
+M3 completion, numerical routing, installed activation or milestone reordering.
+Preserve owner-requested nested import banner (#59); #160 records new inspector
+entry correction. Keep existing JSONs for now; metadata export is stdout only,
+ASDF stays M7. Follow the plan/good practices and discuss departures first.
+Preserve evidence/tools/installations; no historical matrix replay or automatic
+merge/cleanup. Earlier M2 acceptance-pending notes below are historical.
+
 30 October final M2 cumulative review after owner-accepted/merged PR #157 and
 clean Mac/shared Chapman main 09a7aee4d69f04f5aeef954ff87c39d6f870d2d3:
 [recommend original-scope M2 closure](docs/developer/m2-final-closure-review-2026-10-30.md). The #155 project/native

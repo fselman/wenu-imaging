@@ -1,0 +1,38 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/m3 project inspection ms8acukl
+test_actual_instrument_mappings_and_cfg_authority (__main__.InspectionTests.test_actual_instrument_mappings_and_cfg_authority) ... ok
+test_cli_library_equality_and_views (__main__.InspectionTests.test_cli_library_equality_and_views) ... ERROR
+test_cli_rejections_and_table (__main__.InspectionTests.test_cli_rejections_and_table) ... ok
+test_duplicate_basenames_are_not_merged (__main__.InspectionTests.test_duplicate_basenames_are_not_merged) ... ok
+test_fits_errors_duplicate_cards_and_header_conflicts (__main__.InspectionTests.test_fits_errors_duplicate_cards_and_header_conflicts) ... ok
+test_header_and_hdu_budgets (__main__.InspectionTests.test_header_and_hdu_budgets) ... ok
+test_links_dangling_cycles_directories (__main__.InspectionTests.test_links_dangling_cycles_directories) ... ok
+test_list_legacy_first_column_and_invalid_lines (__main__.InspectionTests.test_list_legacy_first_column_and_invalid_lines) ... ok
+test_malformed_text_and_nonregular_inputs (__main__.InspectionTests.test_malformed_text_and_nonregular_inputs) ... ok
+test_nested_shared_membership_and_headers (__main__.InspectionTests.test_nested_shared_membership_and_headers) ... ok
+test_no_arrays_no_writes_and_caller_independence (__main__.InspectionTests.test_no_arrays_no_writes_and_caller_independence) ... ok
+test_no_recursive_scan_and_limits (__main__.InspectionTests.test_no_recursive_scan_and_limits) ... ok
+test_path_bases (__main__.InspectionTests.test_path_bases) ... ok
+test_unknown_base_and_missing_absolute_member (__main__.InspectionTests.test_unknown_base_and_missing_absolute_member) ... ok
+
+======================================================================
+ERROR: test_cli_library_equality_and_views (__main__.InspectionTests.test_cli_library_equality_and_views)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-project-inspection/Pycavi2/tests/project_inspection_contract.py", line 258, in test_cli_library_equality_and_views
+    self.assertEqual(json.loads(package.stdout), b)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+----------------------------------------------------------------------
+Ran 14 tests in 4.698s
+
+FAILED (errors=1)
+EVIDENCE: /workspace/scratch/555b377cf948/m3 project inspection ms8acukl

@@ -34,6 +34,7 @@ maintainers = [
 ]
 
 [project.scripts]
+pycavi = "pycavi.pycavi_project:main"
 pycavi_setup = "pycavi.pycavi_setup:main"
 pycavi_setastro = "pycavi.pycavi_setastro:main"
 [project.optional-dependencies]

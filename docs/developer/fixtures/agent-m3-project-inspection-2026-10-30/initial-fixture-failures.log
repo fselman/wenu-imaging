@@ -1,0 +1,45 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/m3 project inspection bk7yvljz
+test_actual_instrument_mappings_and_cfg_authority (__main__.InspectionTests.test_actual_instrument_mappings_and_cfg_authority) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_cli_library_equality_and_views (__main__.InspectionTests.test_cli_library_equality_and_views) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_cli_rejections_and_table (__main__.InspectionTests.test_cli_rejections_and_table) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_duplicate_basenames_are_not_merged (__main__.InspectionTests.test_duplicate_basenames_are_not_merged) ... FAIL
+test_fits_errors_duplicate_cards_and_header_conflicts (__main__.InspectionTests.test_fits_errors_duplicate_cards_and_header_conflicts) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_header_and_hdu_budgets (__main__.InspectionTests.test_header_and_hdu_budgets) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_links_dangling_cycles_directories (__main__.InspectionTests.test_links_dangling_cycles_directories) ... ok
+test_list_legacy_first_column_and_invalid_lines (__main__.InspectionTests.test_list_legacy_first_column_and_invalid_lines) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_malformed_text_and_nonregular_inputs (__main__.InspectionTests.test_malformed_text_and_nonregular_inputs) ... ok
+test_nested_shared_membership_and_headers (__main__.InspectionTests.test_nested_shared_membership_and_headers) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+FAIL
+test_no_arrays_no_writes_and_caller_independence (__main__.InspectionTests.test_no_arrays_no_writes_and_caller_independence) ... WARNING: VerifyWarning: Keyword name 'ESO INS FILT1 NAME' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_no_recursive_scan_and_limits (__main__.InspectionTests.test_no_recursive_scan_and_limits) ... ok
+test_path_bases (__main__.InspectionTests.test_path_bases) ... ok
+test_unknown_base_and_missing_absolute_member (__main__.InspectionTests.test_unknown_base_and_missing_absolute_member) ... ok
+
+======================================================================
+FAIL: test_duplicate_basenames_are_not_merged (__main__.InspectionTests.test_duplicate_basenames_are_not_merged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-project-inspection/Pycavi2/tests/project_inspection_contract.py", line 179, in test_duplicate_basenames_are_not_merged
+    self.assertEqual(len(report["assets"]), 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_nested_shared_membership_and_headers (__main__.InspectionTests.test_nested_shared_membership_and_headers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-project-inspection/Pycavi2/tests/project_inspection_contract.py", line 110, in test_nested_shared_membership_and_headers
+    self.assertTrue(report["coverage"]["complete"], report["diagnostics"])
+AssertionError: False is not true : [{'code': 'list_extra_columns', 'path': '/workspace/scratch/555b377cf948/m3 project inspection bk7yvljz/test_nested_shared_membership_and_headers-e_8uhyo8/project with spaces/calibration/bias.list', 'message': 'Line 1: legacy reader selects first token; no quoted-path support', 'incomplete': True}, {'code': 'reference_error', 'path': '/workspace/scratch/555b377cf948/m3', 'message': "[Errno 2] No such file or directory: '/workspace/scratch/555b377cf948/m3'", 'incomplete': True}]
+
+----------------------------------------------------------------------
+Ran 14 tests in 3.105s
+
+FAILED (failures=2)
+EVIDENCE: /workspace/scratch/555b377cf948/m3 project inspection bk7yvljz

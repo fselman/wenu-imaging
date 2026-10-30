@@ -1,5 +1,12 @@
 # Installation — quick start
 
+M3 candidate, 30 October 2026: the new optional `pycavi project inspect` command
+provides [read-only legacy metadata inspection](developer/m3-project-inspection.md). Source invocation
+and the console target pass agent checks; actual Mac/Chapman checks are pending.
+No installed package/script is changed by this delivery; a future reviewed wheel
+provides the entry point. Existing setup commands/dependency bounds and native
+installation/engine selection remain unchanged. No installation is requested now.
+
 Last updated: 25 October 2026. The current native candidate is on
 `fix/native-cmake-build` ([PR #81](https://github.com/fselman/wenu-imaging/pull/81));
 it is not yet merged into main.
