@@ -1,0 +1,32 @@
+# Native domain schema v1; configured values, no unit conversion.
+schema_version = 3
+include = []
+override_keys = []
+
+[processing]
+schema_version = 1
+use_prescan = { value = 0, unit = "1" }
+use_overscan = { value = 1, unit = "1" }
+name_bpm = { value = "WFI_BPM", unit = "none" }
+bias_kappa1 = { value = 2.0, unit = "1" }
+bias_minframe = { value = 3, unit = "count" }
+bpm_proportional_flag = { value = 0, unit = "1" }
+bpm_gainthr_lo = { value = 0.5, unit = "1" }
+bpm_gainthr_hi = { value = 2.0, unit = "1" }
+dome_framethr_lo = { value = 10000.0, unit = "adu" }
+dome_framethr_hi = { value = 45000.0, unit = "adu" }
+dome_minframe = { value = 3, unit = "count" }
+sky_framethr_lo = { value = 7000.0, unit = "adu" }
+sky_framethr_hi = { value = 45000.0, unit = "adu" }
+sky_minframe = { value = 3, unit = "count" }
+scanrej_min = { value = 10, unit = "count" }
+scanrej_max = { value = 10, unit = "count" }
+pixrej_lo = { value = 3.0, unit = "1" }
+pixrej_hi = { value = 3.0, unit = "1" }
+median_reg_x1 = { value = 500, unit = "pixel" }
+median_reg_x2 = { value = 1500, unit = "pixel" }
+median_reg_y1 = { value = 1500, unit = "pixel" }
+median_reg_y2 = { value = 2500, unit = "pixel" }
+kern_hsize = { value = 7, unit = "pixel" }
+sat_level = { value = 65534.0, unit = "adu" }
+sat_max = { value = 0.05, unit = "1" }

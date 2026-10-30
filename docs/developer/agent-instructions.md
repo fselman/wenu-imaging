@@ -1,5 +1,20 @@
 # wenu-imaging agent instructions
 
+30 October third M2 increment after accepted/merged/cleaned PR #148 and clean
+Mac/shared Chapman main 7e665da170e2e1af9f96a97e9f5bc2f6ebcfeef5: owner instructed
+“Proceed” with [typed native domains and sources](../architecture/proposed/m2/typed-domains-and-sources.md). Input version 3 maps
+all 151 getter templates into versioned instrument/detector, processing and
+product mappings with explicit units, plus an owned immutable settings/source
+document. Versions 1/2 remain supported. C90/C17 owns catalog/composition/report
+logic; C99 remains parser-specific. Opt-in only; no normal engine/installation or
+numerical changes. Full WAD/domain/migration/persistence work remains pending.
+Build the normal engine and config_paf_snapshot/config_toml_snapshot/
+cli_capture_probe/config_domains_probe; select only the three native_config_toml
+compatibility/subset/domain checks. Agent C90/C17 3/3 and scoped sanitizer
+checks passed; actual Mac/shared Chapman checks are pending;
+preserve selected tools/evidence and do not replay the historical matrix.
+No automatic merge/cleanup.
+
 30 October paired subset receipt: Intel Mac and representative Chapman4 private
 C90 builds and both focused TOML tests passed 2/2 at
 d622bbec7e9784ab9fa6211080cfd4955ff3a08d. Original exact-setting/41-case controls,

@@ -120,7 +120,7 @@ def main():
         'missing-detector': remove('MEF.CCD.GAIN.CHIP8'),
         'unknown-key': text + '"MEF.UNKNOWN" = 1\n',
         'unknown-table': text + '\n[unknown]\nx = 1\n',
-        'wrong-version': text.replace('schema_version = 1', 'schema_version = 3'),
+        'wrong-version': text.replace('schema_version = 1', 'schema_version = 4'),
         'bool-version': text.replace('schema_version = 1', 'schema_version = true'),
         'missing-version': text.replace('schema_version = 1', ''),
         'nul-root-key': text.replace('schema_version = 1', '"schema_version\\u0000ignored" = 1'),

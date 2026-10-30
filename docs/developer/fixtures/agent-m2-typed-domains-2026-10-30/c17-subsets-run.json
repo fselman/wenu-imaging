@@ -1,0 +1,801 @@
+{
+  "status": "native-toml-subsets-passed",
+  "host": "fb67fd168dac",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "commands": [
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_paf_snapshot",
+        "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/config/omegacam.paf",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-paf.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-paf.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-split-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-split-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-split-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-split-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/cli_capture_probe",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-request.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-cli.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+        "mefpp",
+        "--pafname",
+        "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/config/omegacam.paf",
+        "--biaskappa1",
+        "0.123456789012345",
+        "--scanrej",
+        "2 3"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-cli.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/local.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-cli-overrides-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-cli-overrides-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/local.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-cli-overrides-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-cli-overrides-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-resolved-True-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-resolved-True-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-resolved-True-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-resolved-True-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-resolved-False-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-resolved-False-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-resolved-False-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-resolved-False-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/nested.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-nested-override-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-nested-override-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/nested.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-nested-override-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-nested-override-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/diamond.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-diamond-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-diamond-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/diamond.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-diamond-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-diamond-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/aliases.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-aliases-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-aliases-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/aliases.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-aliases-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-aliases-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/noop.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-noop-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "omegacam-noop-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam/noop.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/omegacam-noop-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "omegacam-noop-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_paf_snapshot",
+        "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/config/wfi.paf",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-paf.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-paf.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-split-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-split-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-split-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-split-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/cli_capture_probe",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-request.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-cli.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+        "mefpp",
+        "--pafname",
+        "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/config/wfi.paf",
+        "--biaskappa1",
+        "0.123456789012345",
+        "--scanrej",
+        "2 3"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-cli.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/local.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-cli-overrides-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-cli-overrides-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/local.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-cli-overrides-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-cli-overrides-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-resolved-True-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-resolved-True-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-resolved-True-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-resolved-True-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-resolved-False-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-resolved-False-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/resolved.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-resolved-False-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-resolved-False-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/nested.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-nested-override-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-nested-override-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/nested.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-nested-override-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-nested-override-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/diamond.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-diamond-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-diamond-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/diamond.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-diamond-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-diamond-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/aliases.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-aliases-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-aliases-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/aliases.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-aliases-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-aliases-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/noop.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-noop-0.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "wfi-noop-0.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/noop.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi-noop-1.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd two",
+      "exit_status": 0,
+      "log": "wfi-noop-1.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/siblings-conflict-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/siblings-conflict.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-siblings-conflict.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/parent-undeclared-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/parent-undeclared.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-parent-undeclared.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/override-missing-local-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/override-missing-local.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-override-missing-local.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/override-missing-inherited-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/override-missing-inherited.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-override-missing-inherited.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/forbid-detector-count-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/forbid-detector-count.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-forbid-detector-count.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/forbid-gain-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/forbid-gain.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-forbid-gain.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/forbid-string-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/forbid-string.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-forbid-string.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/missing-include-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/missing-include.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-missing-include.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/direct-cycle-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/direct-cycle.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-direct-cycle.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/missing-final-fields-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/missing-final-fields.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-missing-final-fields.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/version1-include-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/version1-include.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-version1-include.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/unknown-key-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/unknown-key.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-unknown-key.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad-chip-number-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/bad-chip-number.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-bad-chip-number.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/oversized-chip-number-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/oversized-chip-number.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-oversized-chip-number.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad-schema-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/bad-schema.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-bad-schema.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/include-scalar-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/include-scalar.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-include-scalar.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/include-integer-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/include-integer.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-include-integer.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/include-empty-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/include-empty.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-include-empty.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/include-nul-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/include-nul.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-include-nul.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/duplicate-include-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/duplicate-include.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-duplicate-include.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/duplicate-override-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/duplicate-override.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-duplicate-override.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/unknown-override-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/unknown-override.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-unknown-override.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad-override-type-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/bad-override-type.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-bad-override-type.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/unknown-root-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/unknown-root.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-unknown-root.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/long-include-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/long-include.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-long-include.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/many-includes-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/many-includes.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-many-includes.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/indirect-cycle-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/indirect-cycle.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-indirect-cycle.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/alias-cycle-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/alias-cycle.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-alias-cycle.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/override-scope-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/override-scope.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-override-scope.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/hidden-invalid-child-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/hidden-invalid-child.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-hidden-invalid-child.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/depth-limit-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/depth-limit.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-depth-limit.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/wfi/entry.toml",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/file-limit-recovery.json",
+        "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/bad/file-limit.toml"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/domains-c17/test-work/m2 subsets p1hlv2ed/cwd one",
+      "exit_status": 0,
+      "log": "reject-file-limit.log"
+    }
+  ],
+  "profiles": [
+    "omegacam-split",
+    "omegacam-cli-overrides",
+    "omegacam-resolved-True",
+    "omegacam-resolved-False",
+    "omegacam-nested-override",
+    "omegacam-diamond",
+    "omegacam-aliases",
+    "omegacam-noop",
+    "wfi-split",
+    "wfi-cli-overrides",
+    "wfi-resolved-True",
+    "wfi-resolved-False",
+    "wfi-nested-override",
+    "wfi-diamond",
+    "wfi-aliases",
+    "wfi-noop"
+  ],
+  "rejections": [
+    "siblings-conflict",
+    "parent-undeclared",
+    "override-missing-local",
+    "override-missing-inherited",
+    "forbid-detector-count",
+    "forbid-gain",
+    "forbid-string",
+    "missing-include",
+    "direct-cycle",
+    "missing-final-fields",
+    "version1-include",
+    "unknown-key",
+    "bad-chip-number",
+    "oversized-chip-number",
+    "bad-schema",
+    "include-scalar",
+    "include-integer",
+    "include-empty",
+    "include-nul",
+    "duplicate-include",
+    "duplicate-override",
+    "unknown-override",
+    "bad-override-type",
+    "unknown-root",
+    "long-include",
+    "many-includes",
+    "indirect-cycle",
+    "alias-cycle",
+    "override-scope",
+    "hidden-invalid-child",
+    "depth-limit",
+    "file-limit"
+  ],
+  "input_sha256": {
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/tests/config_toml_subsets_contract.py": "af2c471cc6a04b41776905a73a88777eb8db2ebd27510f2d27f7e38af6c03f51",
+    "/workspace/scratch/555b377cf948/domains-c17/config_toml_snapshot": "25ac2ffe5c02e8bbce1109f84b350dd7d026035f02e8df93789e5a3b5426bdd5",
+    "/workspace/scratch/555b377cf948/domains-c17/config_paf_snapshot": "61bff214f65ed64f8606ed96f33a2121eec33c6b86137e6f737b519f2e7a231c",
+    "/workspace/scratch/555b377cf948/domains-c17/cli_capture_probe": "8e6eb5f9a36e0a8955fae3001ccf19607ab26c3c3c17c69b4a7933cc9c30731c",
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/common/mef_toml_bundle.h": "833fe314857f65aad1dad126c465d94d71219cfb0d964aa7405f9fe880055d7e",
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/common/mef_config_toml.h": "491c258a85a06db1dc1bda15259a4c1cd66c480c217c7d69c8e256ace18fd379",
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/common/mef_toml_bridge.c": "dbe5dd483810ae85baf5920ff76919b72f27d591840aeb6c7464eade7b90b8d0",
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/common/mef_toml_bundle.c": "75469219241a7ed23ae6e53f16218261771c2dd283a4692b5b532ed053c47df9",
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/common/mef_toml_bridge.h": "23ed94950061317c7b6c29e85c838f66dadc9ea65c51d440a94360e4fd67b6c9",
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/common/mef_config_toml.c": "b292e70a5abfbe7c2c3c971440f5eccdf87b19882955ac53105f85281a61fa50",
+    "/workspace/scratch/555b377cf948/m2-domains/mefpp2/ins/mef/common/mef_toml_override_keys.def": "20d3e42639e982daf4b9a739370eaf2507d46f14f6d684157f3331d0b093d673"
+  },
+  "scope": "native compatibility subsets only; no FITS/recipe/installation or complete M2"
+}

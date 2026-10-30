@@ -1,5 +1,6 @@
 /* C90 native-config composition only. No observation or calibration resolver. */
 #include "mef_toml_bundle.h"
+#include "mef_config_domains.h"
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +11,8 @@
 typedef struct {
     const char *key;
     mef_toml_value value;
-    const char *source;
+    const char *source, *source_key;
+    int line, version, overridden;
 } binding;
 typedef struct {
     char path[PATH_MAX];
@@ -24,6 +26,8 @@ struct mef_toml_bundle {
     mef_toml_check check;
     char *diagnostic;
     size_t diagnostic_capacity, count;
+    char *metadata;
+    size_t metadata_size, metadata_capacity;
     subset files[MAX_FILES];
 };
 
@@ -77,7 +81,7 @@ static mef_status insert(mef_toml_bundle *b, subset *s, const binding *item, int
             return fail(b, MEF_ERR_CONFIG, "Conflicting definitions", item->key, old->source, item->source);
         /* Parent declarations may resolve sibling conflicts, but only using
          * that parent's validated local binding. No implicit last-include wins. */
-        if (local) *old = *item;
+        if (local) { *old = *item; old->overridden = declared(s, item->key); }
         return MEF_OK;
     }
     if (s->count == s->capacity) {
@@ -116,8 +120,9 @@ static mef_status load(mef_toml_bundle *b, const char *path, size_t depth, subse
     s->count = 0; s->capacity = 0; s->active = 1;
     status = mef_toml_open(canonical, &s->document, parser_detail, sizeof(parser_detail));
     if (status != MEF_OK) return fail(b, status, parser_detail, NULL, canonical, NULL);
-    if (depth && mef_toml_version(s->document) != 2)
-        return fail(b, MEF_ERR_CONFIG, "Included subsets require schema_version=2", NULL, canonical, NULL);
+    if (depth && mef_toml_version(s->document) != mef_toml_version(b->files[0].document))
+        return fail(b, MEF_ERR_CONFIG, mef_toml_version(b->files[0].document) == 3 ?
+            "Included subsets require schema_version=3" : "Included subsets require schema_version=2", NULL, canonical, NULL);
     /* Validate every local binding, including one later replaced by a parent. */
     for (i = 0; i < mef_toml_count(s->document); ++i) {
         key = mef_toml_key(s->document, i);
@@ -149,6 +154,9 @@ static mef_status load(mef_toml_bundle *b, const char *path, size_t depth, subse
     }
     for (i = 0; i < mef_toml_count(s->document); ++i) {
         item.key = mef_toml_key(s->document, i); item.source = s->path;
+        item.source_key = mef_toml_source_key(s->document, item.key);
+        item.line = mef_toml_source_line(s->document, item.key);
+        item.version = mef_toml_version(s->document); item.overridden = 0;
         status = mef_toml_get(s->document, item.key, &item.value);
         if (status != MEF_OK) return status;
         status = insert(b, s, &item, 1);
@@ -167,6 +175,7 @@ void mef_toml_bundle_close(mef_toml_bundle *b)
         if (b->files[i].items != NULL) a.release(a.user, b->files[i].items);
         mef_toml_close(b->files[i].document);
     }
+    if (b->metadata != NULL) a.release(a.user, b->metadata);
     a.release(a.user, b);
 }
 mef_status mef_toml_bundle_open(const char *path, const mef_allocator *allocator,
@@ -191,6 +200,7 @@ mef_status mef_toml_bundle_open(const char *path, const mef_allocator *allocator
         return MEF_ERR_MEMORY;
     }
     b->allocator = a; b->check = check; b->count = 0;
+    b->metadata = NULL; b->metadata_size = b->metadata_capacity = 0;
     b->diagnostic = diagnostic; b->diagnostic_capacity = capacity;
     status = load(b, path, 0, &root);
     if (status != MEF_OK) { mef_toml_bundle_close(b); return status; }
@@ -204,4 +214,94 @@ mef_status mef_toml_bundle_get(const mef_toml_bundle *b, const char *key, mef_to
         *out = b->files[0].items[i].value; return MEF_OK;
     }
     return MEF_ERR_CONFIG;
+}
+
+static mef_status text(mef_toml_bundle *b, const char *value)
+{
+    size_t length, needed, capacity;
+    char *grown;
+    length = strlen(value);
+    if (length > (size_t)-1 - b->metadata_size - 1) return MEF_ERR_MEMORY;
+    needed = b->metadata_size + length + 1;
+    if (needed > b->metadata_capacity) {
+        capacity = b->metadata_capacity ? b->metadata_capacity : 512;
+        while (capacity < needed) {
+            if (capacity > (size_t)-1 / 2) return MEF_ERR_MEMORY;
+            capacity *= 2;
+        }
+        grown = b->allocator.allocate(b->allocator.user, capacity);
+        if (grown == NULL) return MEF_ERR_MEMORY;
+        if (b->metadata_size) memcpy(grown, b->metadata, b->metadata_size);
+        if (b->metadata != NULL) b->allocator.release(b->allocator.user, b->metadata);
+        b->metadata = grown; b->metadata_capacity = capacity;
+    }
+    memcpy(b->metadata + b->metadata_size, value, length + 1);
+    b->metadata_size += length; return MEF_OK;
+}
+static int utf8(const unsigned char *p)
+{
+    int n, i;
+    unsigned int first;
+    while (*p) {
+        first = *p;
+        if (first < 128) { ++p; continue; }
+        n = first >= 0xc2 && first <= 0xdf ? 2 : first >= 0xe0 && first <= 0xef ? 3 :
+            first >= 0xf0 && first <= 0xf4 ? 4 : 0;
+        if (!n) return 0;
+        for (i = 1; i < n; ++i) if (p[i] < 0x80 || p[i] > 0xbf) return 0;
+        if ((first == 0xe0 && p[1] < 0xa0) || (first == 0xed && p[1] >= 0xa0) ||
+            (first == 0xf0 && p[1] < 0x90) || (first == 0xf4 && p[1] >= 0x90)) return 0;
+        p += n;
+    }
+    return 1;
+}
+static mef_status quoted(mef_toml_bundle *b, const char *value)
+{
+    const unsigned char *p;
+    char escaped[8];
+    mef_status status;
+    if (!utf8((const unsigned char *)value)) return MEF_ERR_CONFIG;
+    status = text(b, "\""); if (status != MEF_OK) return status;
+    for (p = (const unsigned char *)value; *p; ++p) {
+        if (*p == '"' || *p == '\\') { escaped[0] = '\\'; escaped[1] = (char)*p; escaped[2] = '\0'; }
+        else if (*p < 32) sprintf(escaped, "\\u%04x", (unsigned int)*p);
+        else { escaped[0] = (char)*p; escaped[1] = '\0'; }
+        status = text(b, escaped); if (status != MEF_OK) return status;
+    }
+    return text(b, "\"");
+}
+
+mef_status mef_toml_bundle_sources(mef_toml_bundle *b, const char **out)
+{
+    size_t i;
+    const binding *item;
+    mef_domain_field field;
+    mef_status status;
+    char number[32];
+    if (b == NULL || out == NULL || *out != NULL) return MEF_ERR_CONFIG;
+    /* A failed serialization is never exposed; retry starts with empty text. */
+    b->metadata_size = 0;
+#define PUT(value) do { status = text(b, value); if (status != MEF_OK) goto failure; } while (0)
+#define QUOTE(value) do { status = quoted(b, value); if (status != MEF_OK) goto failure; } while (0)
+    PUT("{\"metadata_schema_version\":1,\"domain_schema_version\":1,\"source_hash_state\":\"not-recorded\",\"fields\":{");
+    for (i = 0; i < b->files[0].count; ++i) {
+        item = b->files[0].items + i;
+        if (!mef_domain_from_native(item->key, &field)) { status = MEF_ERR_CONFIG; goto failure; }
+        if (i) PUT(",");
+        QUOTE(item->key); PUT(":{\"path\":"); QUOTE(field.path);
+        PUT(",\"storage\":"); QUOTE(field.storage); PUT(",\"unit\":"); QUOTE(field.unit);
+        PUT(",\"role\":"); QUOTE(field.role); PUT(",\"authority\":\"configured\",\"source_file\":"); QUOTE(item->source);
+        PUT(",\"source_key\":"); QUOTE(item->source_key);
+        sprintf(number, "%d", item->line); PUT(",\"source_line\":"); PUT(number);
+        sprintf(number, "%d", item->version); PUT(",\"input_schema_version\":"); PUT(number);
+        PUT(",\"unit_origin\":"); QUOTE(item->version == 3 ? "declared" : "schema");
+        PUT(",\"inherited\":"); PUT(strcmp(item->source, b->files[0].path) ? "true" : "false");
+        PUT(",\"explicit_override\":"); PUT(item->overridden ? "true" : "false"); PUT("}");
+    }
+    PUT("}}\n"); *out = b->metadata;
+#undef PUT
+#undef QUOTE
+    return MEF_OK;
+failure:
+    return fail(b, status, status == MEF_ERR_MEMORY ? "Cannot allocate source record" : "Invalid UTF-8/source record", NULL, NULL, NULL);
 }

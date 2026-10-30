@@ -1,0 +1,1062 @@
+{
+  "domain_schema_version": 1,
+  "fields": [
+    {
+      "native_pattern": "MEF.NCHIPS",
+      "path_pattern": "instrument.detector_count",
+      "storage": "int32",
+      "unit": "count",
+      "role": "instrument_detector_config"
+    },
+    {
+      "native_pattern": "MEF.PRESCAN.X.MIN.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.prescan_x_min",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.PRESCAN.X.MAX.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.prescan_x_max",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.OVERSCAN.X.MIN.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.overscan_x_min",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.OVERSCAN.X.MAX.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.overscan_x_max",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.CROP.X.MIN.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.trimreg_x_min",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.CROP.X.MAX.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.trimreg_x_max",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.CROP.Y.MIN.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.trimreg_y_min",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.CROP.Y.MAX.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.trimreg_y_max",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "fits-1-based-inclusive"
+    },
+    {
+      "native_pattern": "MEF.CCD.RON.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.ron",
+      "storage": "float32",
+      "unit": "electron",
+      "role": "configured-detector"
+    },
+    {
+      "native_pattern": "MEF.CCD.GAIN.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.gain",
+      "storage": "float32",
+      "unit": "electron/adu",
+      "role": "configured-detector"
+    },
+    {
+      "native_pattern": "MEF.CRVAL1.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.crval1",
+      "storage": "float32",
+      "unit": "degree",
+      "role": "configured-detector"
+    },
+    {
+      "native_pattern": "MEF.CRVAL2.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.crval2",
+      "storage": "float32",
+      "unit": "degree",
+      "role": "configured-detector"
+    },
+    {
+      "native_pattern": "MEF.CRPIX1.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.crpix1",
+      "storage": "float32",
+      "unit": "pixel",
+      "role": "configured-detector"
+    },
+    {
+      "native_pattern": "MEF.CRPIX2.CHIP%d",
+      "path_pattern": "instrument.detectors.CHIP%d.crpix2",
+      "storage": "float32",
+      "unit": "pixel",
+      "role": "configured-detector"
+    },
+    {
+      "native_pattern": "MEF.ORIGIN",
+      "path_pattern": "instrument.origin",
+      "storage": "string",
+      "unit": "none",
+      "role": "instrument_metadata"
+    },
+    {
+      "native_pattern": "MEF.TELESCOPE",
+      "path_pattern": "instrument.telescope",
+      "storage": "string",
+      "unit": "none",
+      "role": "instrument_metadata"
+    },
+    {
+      "native_pattern": "MEF.INSTRUMENT",
+      "path_pattern": "instrument.name",
+      "storage": "string",
+      "unit": "none",
+      "role": "instrument_metadata"
+    },
+    {
+      "native_pattern": "MEF.CORRECT.REFPIXELS",
+      "path_pattern": "instrument.correct_ref_pix",
+      "storage": "int32",
+      "unit": "1",
+      "role": "instrument_detector_config"
+    },
+    {
+      "native_pattern": "MEF.RECIPE.KEY",
+      "path_pattern": "product.header.recipe_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DPR.CATG.KEY",
+      "path_pattern": "product.header.dpr_catg_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DPR.CATG.COMMENT",
+      "path_pattern": "product.header.dpr_catg_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DPR.TYPE.KEY",
+      "path_pattern": "product.header.dpr_type_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DPR.TYPE.COMMENT",
+      "path_pattern": "product.header.dpr_type_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.KEY.NAME",
+      "path_pattern": "product.header.phase3_prodcatg_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.VAL.BIAS",
+      "path_pattern": "product.header.phase3_prodcatg_val_bias",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.VAL.BPM",
+      "path_pattern": "product.header.phase3_prodcatg_val_bpm",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.VAL.DOMEFF",
+      "path_pattern": "product.header.phase3_prodcatg_val_domeff",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.VAL.SKYFF",
+      "path_pattern": "product.header.phase3_prodcatg_val_skyff",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.VAL.MFF",
+      "path_pattern": "product.header.phase3_prodcatg_val_mff",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.VAL.SCIENCE",
+      "path_pattern": "product.header.phase3_prodcatg_val_science",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PRODCATG.COMMENT",
+      "path_pattern": "product.header.phase3_prodcatg_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PROGID.KEY.NAME",
+      "path_pattern": "product.header.phase3_progid_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PROGID.HDRKEY",
+      "path_pattern": "product.header.phase3_progid_hdrkey",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PROGID.COMMENT",
+      "path_pattern": "product.header.phase3_progid_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.OBID.KEY.NAME",
+      "path_pattern": "product.header.phase3_obid_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.OBID.HDRKEY",
+      "path_pattern": "product.header.phase3_obid_hdrkey",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.OBID.COMMENT",
+      "path_pattern": "product.header.phase3_obid_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.NCOMBINE.KEY.NAME",
+      "path_pattern": "product.header.phase3_ncombine_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.NCOMBINE.COMMENT",
+      "path_pattern": "product.header.phase3_ncombine_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.OBSTECH.KEY.NAME",
+      "path_pattern": "product.header.phase3_obstech_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.OBSTECH.HDRKEY",
+      "path_pattern": "product.header.phase3_obstech_hdrkey",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.OBSTECH.COMMENT",
+      "path_pattern": "product.header.phase3_obstech_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.MJDEND.KEY.NAME",
+      "path_pattern": "product.header.phase3_mjdend_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.MJDEND.COMMENT",
+      "path_pattern": "product.header.phase3_mjdend_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PROCSOFT.KEY.NAME",
+      "path_pattern": "product.header.phase3_procsoft_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.PROCSOFT.COMMENT",
+      "path_pattern": "product.header.phase3_procsoft_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.TIMESYS.KEY.NAME",
+      "path_pattern": "product.header.phase3_timesys_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.TIMESYS.VAL",
+      "path_pattern": "product.header.phase3_timesys_val",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.TIMESYS.COMMENT",
+      "path_pattern": "product.header.phase3_timesys_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.FILTER.KEY.NAME",
+      "path_pattern": "product.header.phase3_filter_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.FILTER.COMMENT",
+      "path_pattern": "product.header.phase3_filter_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.FLUXCAL.KEY.NAME",
+      "path_pattern": "product.header.phase3_fluxcal_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.FLUXCAL.VAL",
+      "path_pattern": "product.header.phase3_fluxcal_val",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.FLUXCAL.COMMENT",
+      "path_pattern": "product.header.phase3_fluxcal_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.RADESYS.KEY.NAME",
+      "path_pattern": "product.header.phase3_radesys_keyname",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.RADESYS.HDRKEY",
+      "path_pattern": "product.header.phase3_radesys_hdrkey",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "PHASE3.RADESYS.COMMENT",
+      "path_pattern": "product.header.phase3_radesys_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.USE.PRESCAN",
+      "path_pattern": "processing.use_prescan",
+      "storage": "int32",
+      "unit": "1",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.USE.OVERSCAN",
+      "path_pattern": "processing.use_overscan",
+      "storage": "int32",
+      "unit": "1",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.BIAS.FRAME.I.KEY",
+      "path_pattern": "product.header.bias_frame_i_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BIAS.FRAME.I.COMMENT",
+      "path_pattern": "product.header.bias_frame_i_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.BIAS.KEY",
+      "path_pattern": "product.header.master_bias_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.BIAS.COMMENT",
+      "path_pattern": "product.header.master_bias_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BIAS.NAME.O",
+      "path_pattern": "product.naming.name_bias_o",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_naming_default"
+    },
+    {
+      "native_pattern": "MEF.BPM.NAME.O",
+      "path_pattern": "product.naming.name_bpm_o",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_naming_default"
+    },
+    {
+      "native_pattern": "MEF.BPM.NAME",
+      "path_pattern": "processing.name_bpm",
+      "storage": "string",
+      "unit": "none",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.BPM.FRAME.I.KEY",
+      "path_pattern": "product.header.bpm_frame_i_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BPM.FRAME.I.COMMENT",
+      "path_pattern": "product.header.bpm_frame_i_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BPM.PROPFLAG.KEY",
+      "path_pattern": "product.header.bpm_propflag_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BPM.PROPFLAG.COMMENT",
+      "path_pattern": "product.header.bpm_propflag_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BPM.LGAINTHR.KEY",
+      "path_pattern": "product.header.bpm_lgainthr_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BPM.LGAINTHR.COMMENT",
+      "path_pattern": "product.header.bpm_lgainthr_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BPM.HGAINTHR.KEY",
+      "path_pattern": "product.header.bpm_hgainthr_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BPM.HGAINTHR.COMMENT",
+      "path_pattern": "product.header.bpm_hgainthr_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.BPM.KEY",
+      "path_pattern": "product.header.master_bpm_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.BPM.COMMENT",
+      "path_pattern": "product.header.master_bpm_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.DOME.KEY",
+      "path_pattern": "product.header.master_dome_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.DOME.COMMENT",
+      "path_pattern": "product.header.master_dome_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.NAME.O",
+      "path_pattern": "product.naming.name_dome_o",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_naming_default"
+    },
+    {
+      "native_pattern": "MEF.MASTER.SKY.KEY",
+      "path_pattern": "product.header.master_sky_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.SKY.COMMENT",
+      "path_pattern": "product.header.master_sky_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.NAME.O",
+      "path_pattern": "product.naming.name_sky_o",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_naming_default"
+    },
+    {
+      "native_pattern": "MEF.MFF.NAME.O",
+      "path_pattern": "product.naming.name_mf_o",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_naming_default"
+    },
+    {
+      "native_pattern": "MEF.MASTER.FLAT.KEY",
+      "path_pattern": "product.header.master_flat_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.MASTER.FLAT.COMMENT",
+      "path_pattern": "product.header.master_flat_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.REFPIX.X",
+      "path_pattern": "instrument.refpix_x",
+      "storage": "float32",
+      "unit": "pixel",
+      "role": "instrument_detector_config"
+    },
+    {
+      "native_pattern": "MEF.REFPIX.Y",
+      "path_pattern": "instrument.refpix_y",
+      "storage": "float32",
+      "unit": "pixel",
+      "role": "instrument_detector_config"
+    },
+    {
+      "native_pattern": "MEF.FILTER.KEY",
+      "path_pattern": "product.header.filter_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BINX.KEY",
+      "path_pattern": "product.header.binx_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BINY.KEY",
+      "path_pattern": "product.header.biny_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.BIAS.KAPPA1",
+      "path_pattern": "processing.bias_kappa1",
+      "storage": "float64",
+      "unit": "1",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.BIAS.FRAMENUM.MIN",
+      "path_pattern": "processing.bias_minframe",
+      "storage": "int32",
+      "unit": "count",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.BPM.PROPFLAG",
+      "path_pattern": "processing.bpm_proportional_flag",
+      "storage": "int32",
+      "unit": "1",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.BPM.LGAINTHR",
+      "path_pattern": "processing.bpm_gainthr_lo",
+      "storage": "float32",
+      "unit": "1",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.BPM.HGAINTHR",
+      "path_pattern": "processing.bpm_gainthr_hi",
+      "storage": "float32",
+      "unit": "1",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAME.I.KEY",
+      "path_pattern": "product.header.domeff_frame_i_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAME.I.COMMENT",
+      "path_pattern": "product.header.domeff_frame_i_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMETHR.LO.KEY",
+      "path_pattern": "product.header.dome_framethr_lo_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMETHR.LO.COMMENT",
+      "path_pattern": "product.header.dome_framethr_lo_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMETHR.LO",
+      "path_pattern": "processing.dome_framethr_lo",
+      "storage": "float64",
+      "unit": "adu",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMETHR.HI.KEY",
+      "path_pattern": "product.header.dome_framethr_hi_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMETHR.HI.COMMENT",
+      "path_pattern": "product.header.dome_framethr_hi_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMETHR.HI",
+      "path_pattern": "processing.dome_framethr_hi",
+      "storage": "float64",
+      "unit": "adu",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMENUM.MIN.KEY",
+      "path_pattern": "product.header.dome_minframe_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMENUM.MIN.COMMENT",
+      "path_pattern": "product.header.dome_minframe_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.DOMEFF.FRAMENUM.MIN",
+      "path_pattern": "processing.dome_minframe",
+      "storage": "int32",
+      "unit": "count",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAME.I.KEY",
+      "path_pattern": "product.header.skyff_frame_i_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAME.I.COMMENT",
+      "path_pattern": "product.header.skyff_frame_i_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMETHR.LO.KEY",
+      "path_pattern": "product.header.sky_framethr_lo_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMETHR.LO.COMMENT",
+      "path_pattern": "product.header.sky_framethr_lo_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMETHR.LO",
+      "path_pattern": "processing.sky_framethr_lo",
+      "storage": "float64",
+      "unit": "adu",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMETHR.HI.KEY",
+      "path_pattern": "product.header.sky_framethr_hi_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMETHR.HI.COMMENT",
+      "path_pattern": "product.header.sky_framethr_hi_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMETHR.HI",
+      "path_pattern": "processing.sky_framethr_hi",
+      "storage": "float64",
+      "unit": "adu",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMENUM.MIN.KEY",
+      "path_pattern": "product.header.sky_minframe_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMENUM.MIN.COMMENT",
+      "path_pattern": "product.header.sky_minframe_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SKYFF.FRAMENUM.MIN",
+      "path_pattern": "processing.sky_minframe",
+      "storage": "int32",
+      "unit": "count",
+      "role": "calibration_algorithm_config"
+    },
+    {
+      "native_pattern": "MEF.PRESCAN.X.KEY",
+      "path_pattern": "product.header.prescan_x_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.PRESCAN.X.COMMENT",
+      "path_pattern": "product.header.prescan_x_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.OVERSCAN.X.KEY",
+      "path_pattern": "product.header.overscan_x_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.OVERSCAN.X.COMMENT",
+      "path_pattern": "product.header.overscan_x_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SCANREJ.KEY",
+      "path_pattern": "product.header.scanrej_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SCANREJ.COMMENT",
+      "path_pattern": "product.header.scanrej_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.SCANREJ.MIN",
+      "path_pattern": "processing.scanrej_min",
+      "storage": "int32",
+      "unit": "count",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.SCANREJ.MAX",
+      "path_pattern": "processing.scanrej_max",
+      "storage": "int32",
+      "unit": "count",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.TRIMREG.KEY",
+      "path_pattern": "product.header.trimreg_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.TRIMREG.COMMENT",
+      "path_pattern": "product.header.trimreg_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.CCD.RON.KEY",
+      "path_pattern": "product.header.ccd_ron_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.CCD.RON.I.KEY",
+      "path_pattern": "product.header.ccd_ron_i_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.CCD.RON.COMMENT",
+      "path_pattern": "product.header.ccd_ron_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.CCD.GAIN.KEY",
+      "path_pattern": "product.header.ccd_gain_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.CCD.GAIN.I.KEY",
+      "path_pattern": "product.header.ccd_gain_i_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.CCD.GAIN.COMMENT",
+      "path_pattern": "product.header.ccd_gain_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.PIXREJ.SIGMA.LO.KEY",
+      "path_pattern": "product.header.pixrej_lo_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.PIXREJ.SIGMA.LO.COMMENT",
+      "path_pattern": "product.header.pixrej_lo_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.PIXREJ.SIGMA.LO",
+      "path_pattern": "processing.pixrej_lo",
+      "storage": "float64",
+      "unit": "1",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.PIXREJ.SIGMA.HI.KEY",
+      "path_pattern": "product.header.pixrej_hi_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.PIXREJ.SIGMA.HI.COMMENT",
+      "path_pattern": "product.header.pixrej_hi_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.PIXREJ.SIGMA.HI",
+      "path_pattern": "processing.pixrej_hi",
+      "storage": "float64",
+      "unit": "1",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.MEDIAN.REG.KEY",
+      "path_pattern": "product.header.median_reg_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "native-index-region"
+    },
+    {
+      "native_pattern": "MEF.MEDIAN.REG.COMMENT",
+      "path_pattern": "product.header.median_reg_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "native-index-region"
+    },
+    {
+      "native_pattern": "MEF.MEDIAN.REG.X1",
+      "path_pattern": "processing.median_reg_x1",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "native-index-region"
+    },
+    {
+      "native_pattern": "MEF.MEDIAN.REG.X2",
+      "path_pattern": "processing.median_reg_x2",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "native-index-region"
+    },
+    {
+      "native_pattern": "MEF.MEDIAN.REG.Y1",
+      "path_pattern": "processing.median_reg_y1",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "native-index-region"
+    },
+    {
+      "native_pattern": "MEF.MEDIAN.REG.Y2",
+      "path_pattern": "processing.median_reg_y2",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "native-index-region"
+    },
+    {
+      "native_pattern": "MEF.KERN.HSIZE.KEY",
+      "path_pattern": "product.header.kern_hsize_key",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.KERN.HSIZE.COMMENT",
+      "path_pattern": "product.header.kern_hsize_comment",
+      "storage": "string",
+      "unit": "none",
+      "role": "product_metadata_mapping"
+    },
+    {
+      "native_pattern": "MEF.KERN.HSIZE",
+      "path_pattern": "processing.kern_hsize",
+      "storage": "int32",
+      "unit": "pixel",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.SATLEVEL",
+      "path_pattern": "processing.sat_level",
+      "storage": "float64",
+      "unit": "adu",
+      "role": "processing_config"
+    },
+    {
+      "native_pattern": "MEF.SATMAX",
+      "path_pattern": "processing.sat_max",
+      "storage": "float64",
+      "unit": "1",
+      "role": "processing_config"
+    }
+  ]
+}

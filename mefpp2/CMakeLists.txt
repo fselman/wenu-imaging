@@ -137,8 +137,14 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_link_libraries(mefpp_config_snapshot PUBLIC mefpp_common)
   # M2 parser exception: unmodified dependency and its private shim only.
   # Neither target is linked to mefpp or installed. Other code stays C90/C17.
+  add_library(mefpp_config_domains STATIC ins/mef/common/mef_config_domains.c)
+  target_include_directories(mefpp_config_domains PUBLIC ins/mef/common)
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(mefpp_config_domains PRIVATE -Wall -Wextra -pedantic-errors)
+  endif()
   add_library(mefpp_tomlc17 STATIC ../third_party/tomlc17/tomlc17.c
     ins/mef/common/mef_toml_bridge.c)
+  target_link_libraries(mefpp_tomlc17 PRIVATE mefpp_config_domains)
   set_target_properties(mefpp_tomlc17 PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_include_directories(mefpp_tomlc17 PRIVATE ../third_party/tomlc17 ins/mef/common)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
@@ -152,6 +158,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(mefpp_config_toml PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
+  add_executable(config_domains_probe tests/config_domains_probe.c)
+  target_link_libraries(config_domains_probe PRIVATE mefpp_config_toml mefpp_config_domains)
+  target_compile_options(config_domains_probe PRIVATE -UNDEBUG)
   add_executable(config_toml_snapshot tests/config_toml_snapshot.c)
   target_link_libraries(config_toml_snapshot PRIVATE mefpp_config_toml)
   target_compile_options(config_toml_snapshot PRIVATE -UNDEBUG)
@@ -228,6 +237,14 @@ if(BUILD_TESTING)
         --cli-probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_config_toml_subsets PROPERTIES TIMEOUT 300 LABELS "native;configuration;toml;composition")
+    add_test(NAME native_config_toml_domains
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_toml_domains_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --probe "$<TARGET_FILE:config_domains_probe>"
+        --paf-probe "$<TARGET_FILE:config_paf_snapshot>"
+        --cli-probe "$<TARGET_FILE:cli_capture_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_config_toml_domains PROPERTIES TIMEOUT 300 LABELS "native;configuration;toml;domains;provenance")
     add_test(NAME native_config_snapshot
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_snapshot_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

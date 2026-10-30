@@ -1,0 +1,4 @@
+# Native domain schema v1; configured values, no unit conversion.
+schema_version = 3
+include = ["shared settings/instrument.toml", "shared settings/processing.toml", "shared settings/product.toml"]
+override_keys = []

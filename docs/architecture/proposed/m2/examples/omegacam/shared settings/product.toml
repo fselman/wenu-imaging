@@ -1,0 +1,116 @@
+# Native domain schema v1; configured values, no unit conversion.
+schema_version = 3
+include = []
+override_keys = []
+
+[product]
+schema_version = 1
+
+[product.header]
+recipe_key = { value = "HIERARCH ESO MPP", unit = "none" }
+dpr_catg_key = { value = "HIERARCH ESO DPR CATG", unit = "none" }
+dpr_catg_comment = { value = "product frame category", unit = "none" }
+dpr_type_key = { value = "HIERARCH ESO DPR TYPE", unit = "none" }
+dpr_type_comment = { value = "product frame type", unit = "none" }
+phase3_prodcatg_keyname = { value = "PRODCATG", unit = "none" }
+phase3_prodcatg_val_bias = { value = "CALIB.MASTER_BIAS", unit = "none" }
+phase3_prodcatg_val_bpm = { value = "CALIB.BPM", unit = "none" }
+phase3_prodcatg_val_domeff = { value = "CALIB.MASTER_DOME_FLAT", unit = "none" }
+phase3_prodcatg_val_skyff = { value = "CALIB.MASTER_SKY_FLAT", unit = "none" }
+phase3_prodcatg_val_mff = { value = "CALIB.MASTER_FLAT", unit = "none" }
+phase3_prodcatg_val_science = { value = "SCIENCE.MEFIMAGE", unit = "none" }
+phase3_prodcatg_comment = { value = "Phase3 product category", unit = "none" }
+phase3_progid_keyname = { value = "PROG_ID", unit = "none" }
+phase3_progid_hdrkey = { value = "HIERARCH ESO OBS PROG ID", unit = "none" }
+phase3_progid_comment = { value = "Phase3 observation programme id", unit = "none" }
+phase3_obid_keyname = { value = "OBID1", unit = "none" }
+phase3_obid_hdrkey = { value = "HIERARCH ESO OBS ID", unit = "none" }
+phase3_obid_comment = { value = "Phase3 observation id", unit = "none" }
+phase3_ncombine_keyname = { value = "NCOMBINE", unit = "none" }
+phase3_ncombine_comment = { value = "Phase3 number of observations combined", unit = "none" }
+phase3_obstech_keyname = { value = "OBSTECH", unit = "none" }
+phase3_obstech_hdrkey = { value = "HIERARCH ESO DPR TECH", unit = "none" }
+phase3_obstech_comment = { value = "Phase3 observation technique", unit = "none" }
+phase3_mjdend_keyname = { value = "MJD-END", unit = "none" }
+phase3_mjdend_comment = { value = "Phase3 MJD at the end of exposure", unit = "none" }
+phase3_procsoft_keyname = { value = "PROCSOFT", unit = "none" }
+phase3_procsoft_comment = { value = "Branch from ECLIPSE by N. Devillar", unit = "none" }
+phase3_timesys_keyname = { value = "TIMESYS", unit = "none" }
+phase3_timesys_val = { value = "UTC", unit = "none" }
+phase3_timesys_comment = { value = "Phase3 standard of time", unit = "none" }
+phase3_filter_keyname = { value = "FILTER", unit = "none" }
+phase3_filter_comment = { value = "Phase3 simple filter keyword", unit = "none" }
+phase3_fluxcal_keyname = { value = "FLUXCAL", unit = "none" }
+phase3_fluxcal_val = { value = "UNCALIBRATED", unit = "none" }
+phase3_fluxcal_comment = { value = "Phase3 flux calibration:ABSOLUTE, UNCALIBRATED", unit = "none" }
+phase3_radesys_keyname = { value = "RADESYS", unit = "none" }
+phase3_radesys_hdrkey = { value = "\"RADECSYS”", unit = "none" }
+phase3_radesys_comment = { value = "Phase3 coordinate reference frame", unit = "none" }
+bias_frame_i_key = { value = "HIERARCH ESO MPP BIAS", unit = "none" }
+bias_frame_i_comment = { value = "Input bias frame", unit = "none" }
+master_bias_key = { value = "HIERARCH ESO MPP MBIAS", unit = "none" }
+master_bias_comment = { value = "Master bias used", unit = "none" }
+bpm_frame_i_key = { value = "HIERARCH ESO MPP BPM", unit = "none" }
+bpm_frame_i_comment = { value = "Input bpm frame", unit = "none" }
+bpm_propflag_key = { value = "HIERARCH ESO MPP BPM PROPFLAG", unit = "none" }
+bpm_propflag_comment = { value = "proportional flag for BPM creation", unit = "none" }
+bpm_lgainthr_key = { value = "HIERARCH ESO MPP BPM LGAINTHR", unit = "none" }
+bpm_lgainthr_comment = { value = "low gain threshold for BPM creation", unit = "none" }
+bpm_hgainthr_key = { value = "HIERARCH ESO MPP BPM HGAINTHR", unit = "none" }
+bpm_hgainthr_comment = { value = "high gain threshold for BPM creation", unit = "none" }
+master_bpm_key = { value = "HIERARCH ESO MPP MBPM", unit = "none" }
+master_bpm_comment = { value = "Master bpm used", unit = "none" }
+master_dome_key = { value = "HIERARCH ESO MPP MDOME", unit = "none" }
+master_dome_comment = { value = "Master dome used", unit = "none" }
+master_sky_key = { value = "HIERARCH ESO MPP MSKY", unit = "none" }
+master_sky_comment = { value = "Master sky used", unit = "none" }
+master_flat_key = { value = "HIERARCH ESO MPP MFF", unit = "none" }
+master_flat_comment = { value = "Master flat field", unit = "none" }
+filter_key = { value = "HIERARCH ESO INS FILT1 NAME", unit = "none" }
+binx_key = { value = "HIERARCH ESO DET WIN1 BINX", unit = "none" }
+biny_key = { value = "HIERARCH ESO DET WIN1 BINY", unit = "none" }
+domeff_frame_i_key = { value = "HIERARCH ESO MPP FLAT DOME", unit = "none" }
+domeff_frame_i_comment = { value = "Input dome frame", unit = "none" }
+dome_framethr_lo_key = { value = "HIERARCH ESO MPP FLAT DOME LFRATHD", unit = "none" }
+dome_framethr_lo_comment = { value = "low frame threshold for dome", unit = "none" }
+dome_framethr_hi_key = { value = "HIERARCH ESO MPP FLAT DOME HFRATHD", unit = "none" }
+dome_framethr_hi_comment = { value = "high frame threshold for dome", unit = "none" }
+dome_minframe_key = { value = "HIERARCH ESO MPP FLAT DOME MINFRAD", unit = "none" }
+dome_minframe_comment = { value = "minimum number of frames for dome flat", unit = "none" }
+skyff_frame_i_key = { value = "HIERARCH ESO MPP FLAT SKY", unit = "none" }
+skyff_frame_i_comment = { value = "Input sky frame", unit = "none" }
+sky_framethr_lo_key = { value = "HIERARCH ESO MPP FLAT SKY LFRATHS", unit = "none" }
+sky_framethr_lo_comment = { value = "low frame threshold for sky", unit = "none" }
+sky_framethr_hi_key = { value = "HIERARCH ESO MPP FLAT SKY HFRATHS", unit = "none" }
+sky_framethr_hi_comment = { value = "high frame threshold for sky", unit = "none" }
+sky_minframe_key = { value = "HIERARCH ESO MPP FLAT SKY MINFRAS", unit = "none" }
+sky_minframe_comment = { value = "minimum number of frames for sky flat", unit = "none" }
+prescan_x_key = { value = "HIERARCH ESO MPP PRSCX", unit = "none" }
+prescan_x_comment = { value = "Prescan xmin xmax", unit = "none" }
+overscan_x_key = { value = "HIERARCH ESO MPP OVSCX", unit = "none" }
+overscan_x_comment = { value = "Overscan xmin xmax", unit = "none" }
+scanrej_key = { value = "HIERARCH ESO MPP RJOVSC", unit = "none" }
+scanrej_comment = { value = "Rejection min max", unit = "none" }
+trimreg_key = { value = "HIERARCH ESO MPP TRIM", unit = "none" }
+trimreg_comment = { value = "xmin xmax ymin ymax", unit = "none" }
+ccd_ron_key = { value = "RDNOISE", unit = "none" }
+ccd_ron_i_key = { value = "HIERARCH ESO DET OUT%d RON", unit = "none" }
+ccd_ron_comment = { value = "Read out noise", unit = "none" }
+ccd_gain_key = { value = "GAIN", unit = "none" }
+ccd_gain_i_key = { value = "HIERARCH ESO DET OUT%d GAIN", unit = "none" }
+ccd_gain_comment = { value = "CCD gain", unit = "none" }
+pixrej_lo_key = { value = "HIERARCH ESO MPP FLAT LPIXSIG", unit = "none" }
+pixrej_lo_comment = { value = "low sigma for pixel rejection", unit = "none" }
+pixrej_hi_key = { value = "HIERARCH ESO MPP FLAT HPIXSIG", unit = "none" }
+pixrej_hi_comment = { value = "high sigma for pixel rejection", unit = "none" }
+median_reg_key = { value = "HIERARCH ESO MPP FLAT MREGDEF", unit = "none" }
+median_reg_comment = { value = "Region for median computation", unit = "none" }
+kern_hsize_key = { value = "HIERARCH ESO MPP FLAT KERNS", unit = "none" }
+kern_hsize_comment = { value = "Smoothing kernel size", unit = "none" }
+
+[product.naming]
+name_bias_o = { value = "OCAM_MB", unit = "none" }
+name_bpm_o = { value = "OCAM_BPM", unit = "none" }
+name_dome_o = { value = "OCAM_DOMEFF", unit = "none" }
+name_sky_o = { value = "OCAM_SKYFF", unit = "none" }
+name_mf_o = { value = "OCAM_MFF", unit = "none" }
