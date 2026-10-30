@@ -1,5 +1,17 @@
 # M2 configuration migration and immutable requests
 
+30 October paired migration receipt: selected-tool Intel Mac and representative
+shared Chapman4 private C90 builds and both focused configuration CTests passed
+2/2 at 38f4f4d4bd05c4977f1624fc8737431527bdbe8a. Protected files and clean review
+checkouts remained unchanged. See [paired migration results](../../../developer/m2-migration-paired-results-2026-10-30.md). Ready for
+bounded owner review; full M2 closure remains a separate cumulative review.
+The corrected nested-package protection lookup is target-verified (#154); retain
+the first failed handoff attempt. Establish all paths/interfaces from as-is source
+and actual host evidence; never guess layouts. No test replay for this documentation
+receipt, installation, numerical processing or normal engine activation. Preserve
+all evidence/tools and milestone order. Owner instruction precedes merge/cleanup.
+Earlier target-pending notes below are historical.
+
 30 October 2026. Owner authorized finishing M2 configuration migration after
 accepted/merged PR #151 and clean Mac/shared Chapman main
 `a09bec7e6bc0d3fa8d82245db59aaf3063ac0d94`. Tracked in [#152](https://github.com/fselman/wenu-imaging/issues/152).
