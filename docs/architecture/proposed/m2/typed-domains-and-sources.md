@@ -1,5 +1,15 @@
 # M2 third increment — typed native domains and owned source records
 
+30 October paired typed-domain receipt: Intel Mac and representative shared
+Chapman4 private C90 builds and all three focused TOML tests passed 3/3 at
+920dd13251287c07ca9d9e3355e1cb9afcd38370. Exact legacy settings, subset controls,
+151 catalog templates, 11 document/lifetime profiles and 25 domain/unit rejection
+cases passed. Protected installed files/checkouts stayed unchanged. See
+[paired results](../../../developer/m2-typed-domains-paired-results-2026-10-30.md). Ready for bounded owner review; full M2 remains open.
+Preserve evidence/tools; no rebuild for this documentation receipt. Earlier
+pending-target notes below are historical. Merge/cleanup requires owner instruction.
+
+
 30 October 2026. Owner accepted/merged/cleaned PR #148; Mac and shared Chapman
 main are clean at `7e665da170e2e1af9f96a97e9f5bc2f6ebcfeef5`. Owner instructed
 “Proceed” with versioned native domains, types/units/sources and complete OCAM/WFI

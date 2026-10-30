@@ -1,5 +1,15 @@
 # Developer guide: native mefpp build, installation and qualification
 
+30 October paired typed-domain receipt: Intel Mac and representative shared
+Chapman4 private C90 builds and all three focused TOML tests passed 3/3 at
+920dd13251287c07ca9d9e3355e1cb9afcd38370. Exact legacy settings, subset controls,
+151 catalog templates, 11 document/lifetime profiles and 25 domain/unit rejection
+cases passed. Protected installed files/checkouts stayed unchanged. See
+[paired results](m2-typed-domains-paired-results-2026-10-30.md). Ready for bounded owner review; full M2 remains open.
+Preserve evidence/tools; no rebuild for this documentation receipt. Earlier
+pending-target notes below are historical. Merge/cleanup requires owner instruction.
+
+
 30 October third M2 increment after accepted/merged/cleaned PR #148 and clean
 Mac/shared Chapman main 7e665da170e2e1af9f96a97e9f5bc2f6ebcfeef5: owner instructed
 “Proceed” with [typed native domains and sources](../architecture/proposed/m2/typed-domains-and-sources.md). Input version 3 maps
