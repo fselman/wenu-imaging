@@ -1,0 +1,6 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/m2 project contracts _06afbxi
+PASS: 6 authoring examples, two caller directories, retained native hashes and per-chip geometry
+PASS: immutable project/native sources survive caller mutation, edits/deletion; recipe order retained
+PASS: 66 rejection/same-process recovery cases
+PASS: malformed CLI inputs rejected; no project directories or source files changed
+REPORT: /workspace/scratch/555b377cf948/m2 project contracts _06afbxi/run-provenance.json

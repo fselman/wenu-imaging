@@ -1,0 +1,133 @@
+# Authoring validation only; no execution or physical hardware qualification.
+project_schema_version = 1
+
+[project]
+schema_version = 1
+id = "review-project:alternative-selected"
+name = "alternative-selected"
+
+[project.roots]
+raw = "review locations/raw"
+calibration = "review locations/calibration"
+output = "review locations/output"
+work = "review locations/work"
+logs = "review locations/logs"
+
+[association]
+schema_version = 1
+mode = "explicit"
+
+[[association.bindings]]
+group = "review-group:science"
+role = "bpm"
+selection = "omitted"
+
+[[association.bindings]]
+group = "review-group:science"
+role = "bias"
+selection = "selected"
+asset_id = "synthetic-asset:bias"
+asset_version = 1
+
+[reduction_profile]
+schema_version = 1
+id = "review-purpose:scientific"
+purpose = "scientific"
+
+[recipe]
+schema_version = 1
+id = "review-recipe:preprocess"
+
+[[recipe.steps]]
+id = "preprocess"
+operation = "mef_sci_pp"
+
+[execution]
+schema_version = 1
+activation = "disabled"
+mode = "serial"
+workers = 1
+numerical_threads = 1
+niceness = 10
+
+[quality]
+schema_version = 1
+policy = "record_only"
+estimator_status = "not_qualified"
+thresholds = []
+
+[product_profile]
+schema_version = 1
+id = "review-product:legacy"
+target = "legacy"
+compliance = "not_validated"
+variance_contract = "pre_m6a_unavailable"
+
+[processing]
+schema_version = 1
+native_mode = "unavailable"
+
+[readout]
+schema_version = 1
+id = "review-readout:alternative-selected"
+authority = "synthetic"
+metadata_policy = "explicit_review"
+mapping_status = "unverified"
+inventory_status = "not_established"
+
+[[readout.header_evidence]]
+detector_id = "review-detector:one"
+asset_id = "synthetic-asset:header"
+asset_version = 1
+hdu = 0
+card_index = 1
+field = "overscan_region"
+raw_card = "SYNTHSC = '[999:1000,*]' / synthetic unreviewed contradictory candidate         "
+trust = "unverified"
+disposition = "unresolved"
+
+[[readout.detectors]]
+id = "review-detector:one"
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "synthetic-channel:A"
+identity_status = "unknown"
+active = false
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = false
+
+[readout.detectors.channels.overscan.region]
+x_min = 101
+x_max = 110
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[readout.detectors.channels.signal]
+x_min = 1
+x_max = 100
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors.channels]]
+id = "synthetic-channel:B"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 1
+x_max = 10
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[readout.detectors.channels.signal]
+x_min = 11
+x_max = 110
+unit = "pixel"
+convention = "fits-1-based-inclusive"

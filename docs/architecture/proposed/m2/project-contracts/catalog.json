@@ -1,0 +1,558 @@
+{
+  "notation": "wenu-project-authoring-contract-1",
+  "version": 1,
+  "status": "validation-only",
+  "schema": {
+    "type": "table",
+    "fields": {
+      "project_schema_version": {
+        "type": "integer",
+        "enum": [
+          1
+        ]
+      },
+      "project": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "roots": {
+            "type": "table",
+            "fields": {
+              "raw": {
+                "type": "string"
+              },
+              "calibration": {
+                "type": "string"
+              },
+              "output": {
+                "type": "string"
+              },
+              "work": {
+                "type": "string"
+              },
+              "logs": {
+                "type": "string"
+              }
+            },
+            "optional": []
+          }
+        },
+        "optional": []
+      },
+      "association": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "explicit"
+            ]
+          },
+          "bindings": {
+            "type": "array",
+            "items": {
+              "type": "table",
+              "fields": {
+                "group": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "bias",
+                    "bpm",
+                    "linearity",
+                    "dark",
+                    "flat",
+                    "fringe"
+                  ]
+                },
+                "selection": {
+                  "type": "string",
+                  "enum": [
+                    "selected",
+                    "omitted"
+                  ]
+                },
+                "asset_id": {
+                  "type": "string"
+                },
+                "asset_version": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "optional": [
+                "asset_id",
+                "asset_version"
+              ]
+            },
+            "minimum": 0,
+            "maximum": 256
+          }
+        },
+        "optional": []
+      },
+      "reduction_profile": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "scientific",
+              "visual"
+            ]
+          }
+        },
+        "optional": []
+      },
+      "recipe": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "table",
+              "fields": {
+                "id": {
+                  "type": "string"
+                },
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "mef_cal_bias",
+                    "mef_cal_bpm",
+                    "mef_cal_linearity",
+                    "mef_cal_dark",
+                    "mef_cal_domeff",
+                    "mef_cal_skyff",
+                    "mef_cal_mff",
+                    "mef_cal_fringes",
+                    "mef_sci_pp"
+                  ]
+                }
+              },
+              "optional": []
+            },
+            "minimum": 1,
+            "maximum": 64
+          }
+        },
+        "optional": []
+      },
+      "execution": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "activation": {
+            "type": "string",
+            "enum": [
+              "disabled"
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "serial"
+            ]
+          },
+          "workers": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "numerical_threads": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "niceness": {
+            "type": "integer",
+            "minimum": 10,
+            "maximum": 19
+          }
+        },
+        "optional": []
+      },
+      "quality": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "policy": {
+            "type": "string",
+            "enum": [
+              "record_only"
+            ]
+          },
+          "estimator_status": {
+            "type": "string",
+            "enum": [
+              "not_qualified"
+            ]
+          },
+          "thresholds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minimum": 0,
+            "maximum": 0
+          }
+        },
+        "optional": []
+      },
+      "product_profile": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string",
+            "enum": [
+              "legacy",
+              "ESO_Phase3"
+            ]
+          },
+          "compliance": {
+            "type": "string",
+            "enum": [
+              "not_validated"
+            ]
+          },
+          "variance_contract": {
+            "type": "string",
+            "enum": [
+              "pre_m6a_unavailable"
+            ]
+          }
+        },
+        "optional": []
+      },
+      "processing": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "native_mode": {
+            "type": "string",
+            "enum": [
+              "legacy_reference",
+              "unavailable"
+            ]
+          },
+          "native_configuration": {
+            "type": "string"
+          }
+        },
+        "optional": [
+          "native_configuration"
+        ]
+      },
+      "readout": {
+        "type": "table",
+        "fields": {
+          "schema_version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "authority": {
+            "type": "string",
+            "enum": [
+              "configured",
+              "synthetic"
+            ]
+          },
+          "metadata_policy": {
+            "type": "string",
+            "enum": [
+              "explicit_review"
+            ]
+          },
+          "header_evidence": {
+            "type": "array",
+            "items": {
+              "type": "table",
+              "fields": {
+                "detector_id": {
+                  "type": "string"
+                },
+                "asset_id": {
+                  "type": "string"
+                },
+                "asset_version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "hdu": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "card_index": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "field": {
+                  "type": "string",
+                  "enum": [
+                    "amplifier_name",
+                    "active_amplifier",
+                    "overscan_region"
+                  ]
+                },
+                "raw_card": {
+                  "type": "string"
+                },
+                "trust": {
+                  "type": "string",
+                  "enum": [
+                    "unverified"
+                  ]
+                },
+                "disposition": {
+                  "type": "string",
+                  "enum": [
+                    "unresolved"
+                  ]
+                }
+              },
+              "optional": []
+            },
+            "minimum": 0,
+            "maximum": 256
+          },
+          "mapping_status": {
+            "type": "string",
+            "enum": [
+              "unverified",
+              "verified"
+            ]
+          },
+          "inventory_status": {
+            "type": "string",
+            "enum": [
+              "not_established"
+            ]
+          },
+          "detectors": {
+            "type": "array",
+            "items": {
+              "type": "table",
+              "fields": {
+                "id": {
+                  "type": "string"
+                },
+                "legacy_ordinal": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "physical_detector_id": {
+                  "type": "string"
+                },
+                "identity_status": {
+                  "type": "string",
+                  "enum": [
+                    "unknown",
+                    "verified"
+                  ]
+                },
+                "channels": {
+                  "type": "array",
+                  "items": {
+                    "type": "table",
+                    "fields": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "physical_amplifier_id": {
+                        "type": "string"
+                      },
+                      "identity_status": {
+                        "type": "string",
+                        "enum": [
+                          "unknown",
+                          "verified"
+                        ]
+                      },
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "signal": {
+                        "type": "table",
+                        "fields": {
+                          "x_min": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "x_max": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "y_min": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "y_max": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "unit": {
+                            "type": "string",
+                            "enum": [
+                              "pixel"
+                            ]
+                          },
+                          "convention": {
+                            "type": "string",
+                            "enum": [
+                              "fits-1-based-inclusive"
+                            ]
+                          }
+                        },
+                        "optional": [
+                          "y_min",
+                          "y_max"
+                        ]
+                      },
+                      "overscan": {
+                        "type": "table",
+                        "fields": {
+                          "state": {
+                            "type": "string",
+                            "enum": [
+                              "absent",
+                              "defined"
+                            ]
+                          },
+                          "subtract": {
+                            "type": "boolean"
+                          },
+                          "region": {
+                            "type": "table",
+                            "fields": {
+                              "x_min": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "x_max": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "y_min": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "y_max": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "unit": {
+                                "type": "string",
+                                "enum": [
+                                  "pixel"
+                                ]
+                              },
+                              "convention": {
+                                "type": "string",
+                                "enum": [
+                                  "fits-1-based-inclusive"
+                                ]
+                              }
+                            },
+                            "optional": [
+                              "y_min",
+                              "y_max"
+                            ]
+                          }
+                        },
+                        "optional": [
+                          "region"
+                        ]
+                      }
+                    },
+                    "optional": [
+                      "physical_amplifier_id",
+                      "signal"
+                    ]
+                  },
+                  "minimum": 1,
+                  "maximum": 16
+                }
+              },
+              "optional": [
+                "legacy_ordinal",
+                "physical_detector_id"
+              ]
+            },
+            "minimum": 1,
+            "maximum": 64
+          }
+        },
+        "optional": []
+      }
+    },
+    "optional": []
+  }
+}

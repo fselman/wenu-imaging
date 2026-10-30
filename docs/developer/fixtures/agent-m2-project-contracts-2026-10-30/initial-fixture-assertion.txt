@@ -1,0 +1,11 @@
+Initial draft-check attempt: /workspace/scratch/555b377cf948/m2 project contracts jlv7rdtq
+AssertionError at the draft independent OCAM geometry assertion:
+assert len(ocam) == 32 and all(d['channels'][0]['overscan']['region']['x_min'] == 2100 for d in ocam)
+
+The source-derived examples were correct. The draft check incorrectly assumed
+one overscan side for all OCAM chips. Source inspection showed alternating groups
+of eight; the independent check was corrected to require exact x_min/x_max
+patterns. No native source, accepted geometry, reference hash or scientific
+expectation was changed. Subsequent full authoring attempts passed, including
+the final six-example / 66-case attempt retained here. This text records the
+inspected draft assertion failure, not a native failure or full archived log.
