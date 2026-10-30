@@ -1,5 +1,17 @@
 # Developer documentation
 
+30 October cumulative M2 review at accepted merged main
+c0bbcc5866b49d64fad6498a029429b35ada9953: keep M2 open. Native configuration
+resolution/equivalence, migration and provenance have accepted paired evidence,
+but reusable project-domain composition is not connected to the frozen project
+loader. The as-is loader still requires inline project domains and one complete
+standalone native reference. [Closure review](m2-closure-review-2026-10-30.md) records the original-gate
+checklist, accepted chain and [remaining M2 integration #155](https://github.com/fselman/wenu-imaging/issues/155).
+Do not infer full M2 closure from native test success or start M3. No source code,
+new functional run, installation or numerical processing in this review; preserve
+accepted tests/tools/evidence and implement no scope reduction. Owner review and
+separate integration instruction remain required for this documentation branch.
+
 30 October paired migration receipt: selected-tool Intel Mac and representative
 shared Chapman4 private C90 builds and both focused configuration CTests passed
 2/2 at 38f4f4d4bd05c4977f1624fc8737431527bdbe8a. Protected files and clean review

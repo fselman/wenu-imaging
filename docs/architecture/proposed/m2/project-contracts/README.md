@@ -1,5 +1,17 @@
 # M2 project domains and readout authoring contract
 
+30 October cumulative M2 review at accepted merged main
+c0bbcc5866b49d64fad6498a029429b35ada9953: keep M2 open. Native configuration
+resolution/equivalence, migration and provenance have accepted paired evidence,
+but reusable project-domain composition is not connected to the frozen project
+loader. The as-is loader still requires inline project domains and one complete
+standalone native reference. [Closure review](../../../../developer/m2-closure-review-2026-10-30.md) records the original-gate
+checklist, accepted chain and [remaining M2 integration #155](https://github.com/fselman/wenu-imaging/issues/155).
+Do not infer full M2 closure from native test success or start M3. No source code,
+new functional run, installation or numerical processing in this review; preserve
+accepted tests/tools/evidence and implement no scope reduction. Owner review and
+separate integration instruction remain required for this documentation branch.
+
 30 October M2 migration implementation after accepted/merged PR #151 and clean
 Mac/shared Chapman main a09bec7e6bc0d3fa8d82245db59aaf3063ac0d94: owner authorized
 finishing configuration migration. The shared Python API/CLI and opt-in native
