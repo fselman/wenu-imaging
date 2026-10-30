@@ -1,0 +1,30 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/swap-c90
+Test project /workspace/scratch/555b377cf948/swap-c90
+    Start 3: native_qfits_swap
+1/1 Test #3: native_qfits_swap ................***Failed    0.20 sec
+WORK DIRECTORY: /workspace/scratch/555b377cf948/swap-c90/test-work/qfits swap h5t2slld
+PASS: ram
+PASS: success
+PASS: exit
+PASS: signal
+EVIDENCE: /workspace/scratch/555b377cf948/swap-c90/test-work/qfits swap h5t2slld
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/qfits-swap-files/mefpp2/tests/qfits_swap_contract.py", line 44, in <module>
+    assert result.returncode == expected, (label, result.returncode, log)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('realloc', 92, PosixPath('/workspace/scratch/555b377cf948/swap-c90/test-work/qfits swap h5t2slld/realloc/probe.log'))
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+failure      =   0.20 sec*proc (1 test)
+native       =   0.20 sec*proc (1 test)
+ownership    =   0.20 sec*proc (1 test)
+swap         =   0.20 sec*proc (1 test)
+
+Total Test time (real) =   0.21 sec
+
+The following tests FAILED:
+	  3 - native_qfits_swap (Failed)
+Errors while running CTest

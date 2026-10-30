@@ -1,0 +1,23 @@
+[
+  {
+    "label": "cleanup-baseline",
+    "argv": [
+      "/workspace/scratch/555b377cf948/swap-baseline-evidence/cleanup"
+    ],
+    "exit_status": 1
+  },
+  {
+    "label": "fortify-baseline",
+    "argv": [
+      "/usr/bin/gcc",
+      "-std=gnu90",
+      "-O1",
+      "-D_FORTIFY_SOURCE=2",
+      "-c",
+      "/workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c",
+      "-o",
+      "/workspace/scratch/555b377cf948/swap-baseline-evidence/original.o"
+    ],
+    "exit_status": 1
+  }
+]

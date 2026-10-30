@@ -1,0 +1,69 @@
+CASE ram exit=0
+PASS: descriptors, owners and RAM after exit cleanup
+CASE success exit=0
+PASS: boundaries, free/fdealloc, permissions, scratch selection
+PASS: descriptors, owners and RAM after exit cleanup
+CASE exit exit=0
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE signal exit=-15
+PASS: retained allocation data
+CASE realloc exit=0
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE write-eintr exit=0
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE write-short exit=0
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE open exit=1
+xmem: cannot create private swap storage: Permission denied
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE truncate exit=1
+xmem: cannot create private swap storage: No space left on device
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE write exit=1
+xmem: cannot create private swap storage: No space left on device
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE write-zero exit=1
+xmem: cannot create private swap storage: Input/output error
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE map exit=1
+xmem: cannot create private swap storage: Cannot allocate memory
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE unlink exit=1
+xmem: cannot create private swap storage: Permission denied
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE collision exit=1
+xmem: cannot create private swap storage: File exists
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE symlink exit=1
+xmem: cannot create private swap storage: File exists
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE cleanup-collision exit=0
+PASS: descriptors, owners and RAM after exit cleanup
+CASE overflow exit=1
+xmem: swap size or registration overflow: Value too large for defined data type
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE registration-overflow exit=1
+xmem: swap size or registration overflow: Value too large for defined data type
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE unmap exit=1
+xmem: munmap swap: Input/output error
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup
+CASE close exit=1
+xmem: close swap: Input/output error
+PASS: retained allocation data
+PASS: descriptors, owners and RAM after exit cleanup

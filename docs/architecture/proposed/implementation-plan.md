@@ -1,5 +1,18 @@
 # mefpp refactor implementation plan — proposal
 
+30 October paired qfits swap receipt: selected-tool Intel Mac and representative
+shared Chapman4 optimized private C90 builds and both focused CTests passed 2/2
+at 471f42e19e304e16872291172535e855a2f826d9. Protected installed files and clean
+review checkouts stayed unchanged. See [paired results](../../developer/qfits-swap-paired-results-2026-10-30.md).
+The 20-case forced-swap/ownership contract and real native-path regression passed;
+#164 missing mode, #168 unowned cleanup and probe-oracle #169 are target-qualified.
+PR #170 is ready for bounded owner review. Original M3/#159, long FITS strings
+#125 and wider dependency allocation failures #144 remain open. No broad leak,
+OOM/thread-safety/scientific or installed activation claim. Preserve all original
+and corrected evidence/tools; this documentation-only receipt needs no replay.
+Separate owner instruction precedes merge/cleanup. Earlier target-pending notes
+below are historical within this qualified correction.
+
 30 October paired native M3 receipt: selected-tool Intel Mac and representative
 shared Chapman4 private C90 builds and both focused CTests passed 2/2 at
 113156b94fe68f7bf2848c93ecd7451551db2984. Installed reduction module, configured

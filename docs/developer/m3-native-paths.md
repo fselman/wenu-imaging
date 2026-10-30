@@ -1,5 +1,11 @@
 # Native explicit paths — M3 candidate
 
+Subsequent status, 30 October: PR #167 is owner-accepted/merged at
+`d8f855106edda9639d6a0ad4b2ba2af964a11b84`. The separate
+[qfits swap correction](qfits-swap-files.md) has passed paired target verification
+and is ready for owner review in PR #170; earlier pending/review statements below retain
+the native-path increment's original qualification context.
+
 30 October 2026. Refs #159, #163, #165, #166. Based on accepted PR #161,
 merged main `ded31e876582dcbe044c2b99167c9d36e8c6ee03`.
 

@@ -1,0 +1,26 @@
+/workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c:505:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c:505:31: note: directive argument in the range [-2147483648, 2147483647]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c:505:31: note: using the range [0, 4294967295] for directive argument
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c:33:
+In function ‘sprintf’,
+    inlined from ‘xmemory_tmpfilename’ at /workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c:505:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 1052 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+In file included from /usr/include/fcntl.h:342,
+                 from /workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c:39:
+In function ‘open’,
+    inlined from ‘xmemory_malloc’ at /workspace/scratch/555b377cf948/swap-baseline-evidence/original-xmemory.c:607:18:
+/usr/include/x86_64-linux-gnu/bits/fcntl2.h:50:11: error: call to ‘__open_missing_mode’ declared with attribute error: open with O_CREAT or O_TMPFILE in second argument needs 3 arguments
+   50 |           __open_missing_mode ();
+      |           ^~~~~~~~~~~~~~~~~~~~~~

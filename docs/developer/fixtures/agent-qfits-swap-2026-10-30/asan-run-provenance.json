@@ -1,0 +1,227 @@
+{
+  "status": "passed",
+  "probe": "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+  "probe_sha256": "4ffee9cd037edbbfbe8332de6765124854d41380256759e933aa71c614069b01",
+  "cases": [
+    {
+      "label": "ram",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "ram",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/ram/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/ram/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/ram/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "success",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "success",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/success/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/success/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/success/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "exit",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "exit",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/exit/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/exit/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/exit/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "signal",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "signal",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/signal/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/signal/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/signal/caller",
+      "exit_status": -15
+    },
+    {
+      "label": "realloc",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "realloc",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/realloc/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/realloc/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/realloc/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "write-eintr",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "write-eintr",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-eintr/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-eintr/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-eintr/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "write-short",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "write-short",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-short/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-short/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-short/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "open",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "open",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/open/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/open/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/open/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "truncate",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "truncate",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/truncate/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/truncate/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/truncate/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "write",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "write",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "write-zero",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "write-zero",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-zero/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-zero/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/write-zero/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "map",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "map",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/map/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/map/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/map/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "unlink",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "unlink",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/unlink/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/unlink/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/unlink/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "collision",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "collision",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/collision/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/collision/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/collision/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "symlink",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "symlink",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/symlink/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/symlink/sentinel"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/symlink/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "cleanup-collision",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "cleanup-collision",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/cleanup-collision/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/cleanup-collision/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/cleanup-collision/caller",
+      "exit_status": 0
+    },
+    {
+      "label": "overflow",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "overflow",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/overflow/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/overflow/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/overflow/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "registration-overflow",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "registration-overflow",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/registration-overflow/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/registration-overflow/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/registration-overflow/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "unmap",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "unmap",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/unmap/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/unmap/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/unmap/caller",
+      "exit_status": 1
+    },
+    {
+      "label": "close",
+      "argv": [
+        "/workspace/scratch/555b377cf948/swap-asan/qfits_swap_probe",
+        "close",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/close/scratch space",
+        "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/close/alternate"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/swap-asan/test-work/qfits swap 68pi7ir6/close/caller",
+      "exit_status": 1
+    }
+  ]
+}
