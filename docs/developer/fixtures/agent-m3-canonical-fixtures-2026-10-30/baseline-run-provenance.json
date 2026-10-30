@@ -1,0 +1,16 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "executable": "/workspace/scratch/555b377cf948/m3-test-env/bin/python",
+  "astropy": "6.1.7",
+  "numpy": "1.26.4",
+  "source_root": "/workspace/scratch/555b377cf948/m3-project-inspection",
+  "tests": 14,
+  "failures": [
+    "test_actual_instrument_mappings_and_cfg_authority (__main__.InspectionTests.test_actual_instrument_mappings_and_cfg_authority)",
+    "test_path_bases (__main__.InspectionTests.test_path_bases)"
+  ],
+  "errors": [
+    "test_fits_errors_duplicate_cards_and_header_conflicts (__main__.InspectionTests.test_fits_errors_duplicate_cards_and_header_conflicts)"
+  ],
+  "successful": false
+}

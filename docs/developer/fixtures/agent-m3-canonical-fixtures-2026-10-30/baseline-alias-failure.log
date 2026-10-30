@@ -1,0 +1,51 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/m3-alias-parent/m3 project inspection 290t0n0v
+test_actual_instrument_mappings_and_cfg_authority (__main__.InspectionTests.test_actual_instrument_mappings_and_cfg_authority) ... FAIL
+test_cli_library_equality_and_views (__main__.InspectionTests.test_cli_library_equality_and_views) ... ok
+test_cli_rejections_and_table (__main__.InspectionTests.test_cli_rejections_and_table) ... ok
+test_duplicate_basenames_are_not_merged (__main__.InspectionTests.test_duplicate_basenames_are_not_merged) ... ok
+test_fits_errors_duplicate_cards_and_header_conflicts (__main__.InspectionTests.test_fits_errors_duplicate_cards_and_header_conflicts) ... ERROR
+test_header_and_hdu_budgets (__main__.InspectionTests.test_header_and_hdu_budgets) ... ok
+test_links_dangling_cycles_directories (__main__.InspectionTests.test_links_dangling_cycles_directories) ... ok
+test_list_legacy_first_column_and_invalid_lines (__main__.InspectionTests.test_list_legacy_first_column_and_invalid_lines) ... ok
+test_malformed_text_and_nonregular_inputs (__main__.InspectionTests.test_malformed_text_and_nonregular_inputs) ... ok
+test_nested_shared_membership_and_headers (__main__.InspectionTests.test_nested_shared_membership_and_headers) ... ok
+test_no_arrays_no_writes_and_caller_independence (__main__.InspectionTests.test_no_arrays_no_writes_and_caller_independence) ... ok
+test_no_recursive_scan_and_limits (__main__.InspectionTests.test_no_recursive_scan_and_limits) ... ok
+test_path_bases (__main__.InspectionTests.test_path_bases) ... FAIL
+test_unknown_base_and_missing_absolute_member (__main__.InspectionTests.test_unknown_base_and_missing_absolute_member) ... ok
+
+======================================================================
+ERROR: test_fits_errors_duplicate_cards_and_header_conflicts (__main__.InspectionTests.test_fits_errors_duplicate_cards_and_header_conflicts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-project-inspection/Pycavi2/tests/project_inspection_contract.py", line 236, in test_fits_errors_duplicate_cards_and_header_conflicts
+    asset = next(a for a in report["assets"] if a["path"] == str(path))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+FAIL: test_actual_instrument_mappings_and_cfg_authority (__main__.InspectionTests.test_actual_instrument_mappings_and_cfg_authority)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-project-inspection/Pycavi2/tests/project_inspection_contract.py", line 198, in test_actual_instrument_mappings_and_cfg_authority
+    self.assertEqual(report["configurations"][0]["sections"]["Directories"]["raw_data_dir"]["resolved"], str(self.raw / "relative"))
+AssertionError: '/wor[26 chars]8/m3-canonical-parent/m3 project inspection 29[86 chars]tive' != '/wor[26 chars]8/m3-alias-parent/m3 project inspection 290t0n[82 chars]tive'
+- /workspace/scratch/555b377cf948/m3-canonical-parent/m3 project inspection 290t0n0v/test_actual_instrument_mappings_and_cfg_authority-s7399gcj/raw with spaces/relative
+?                                    -------
++ /workspace/scratch/555b377cf948/m3-alias-parent/m3 project inspection 290t0n0v/test_actual_instrument_mappings_and_cfg_authority-s7399gcj/raw with spaces/relative
+?                                      +++
+
+
+======================================================================
+FAIL: test_path_bases (__main__.InspectionTests.test_path_bases)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m3-project-inspection/Pycavi2/tests/project_inspection_contract.py", line 94, in test_path_bases
+    self.assertEqual(resolver.argument("../raw with spaces"), self.raw)
+AssertionError: Posix[36 chars]8/m3-canonical-parent/m3 project inspection 29[44 chars]ces') != Posix[36 chars]8/m3-alias-parent/m3 project inspection 290t0n[40 chars]ces')
+
+----------------------------------------------------------------------
+Ran 14 tests in 4.229s
+
+FAILED (failures=2, errors=1)
+EVIDENCE: /workspace/scratch/555b377cf948/m3-alias-parent/m3 project inspection 290t0n0v

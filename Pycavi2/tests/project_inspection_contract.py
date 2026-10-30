@@ -41,7 +41,9 @@ def inventory(root):
 
 class InspectionTests(unittest.TestCase):
     def setUp(self):
-        self.work = Path(tempfile.mkdtemp(prefix=self._testMethodName + "-", dir=WORK))
+        # Fixture identity must match the resolver contract even when the supplied
+        # work-parent is an alias (Chapman's /home -> /home1). Refs #162.
+        self.work = Path(tempfile.mkdtemp(prefix=self._testMethodName + "-", dir=WORK)).resolve(strict=True)
         self.root = self.work / "project with spaces"
         self.root.mkdir()
         self.raw = self.work / "raw with spaces"
@@ -97,6 +99,27 @@ class InspectionTests(unittest.TestCase):
             resolver.reference("frame.fits")
         with self.assertRaises(PathResolutionError):
             PathResolver(Path("relative"))
+
+    def test_symlink_invocation_and_member_bases(self):
+        self.image(self.raw / "frame.fits")
+        self.listed()
+        alias = self.work / "work alias"
+        alias.symlink_to(self.work, target_is_directory=True)
+        declared = alias / "raw with spaces" / "frame.fits"
+        (self.root / "linked.fits").symlink_to(declared)
+        resolver = PathResolver(alias / "caller a")
+        self.assertEqual(resolver.invocation_base, self.caller_a)
+        self.assertEqual(resolver.argument("../raw with spaces"), self.raw)
+        self.assertEqual(resolver.reference("frame.fits", base=alias / "raw with spaces"),
+                         self.raw / "frame.fits")
+        report = inspect_project(alias / "project with spaces",
+                                 invocation_base=alias / "caller a", recursive=True,
+                                 list_base=alias / "raw with spaces")
+        self.assertEqual(report, self.inspect(list_base=self.raw))
+        self.assertTrue(report["coverage"]["complete"], report["diagnostics"])
+        self.assertEqual(report["links"][0]["raw_target"], str(declared))
+        self.assertEqual(report["links"][0]["resolved"], str(self.raw / "frame.fits"))
+        self.assertEqual(len(report["assets"]), 1)
 
     # Full ordered membership and shared references retain one canonical asset.
     def test_nested_shared_membership_and_headers(self):

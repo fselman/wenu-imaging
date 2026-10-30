@@ -1,5 +1,16 @@
 # wenu-imaging roadmap
 
+30 October M3 target finding: original a1a95c700a7bb7755cf81ac8e2213b3adc754f96
+passed 14/14 on Mac, but Chapman returned two fixture failures and one error:
+lexical /home expectations contradicted canonical /home1 identities. [#162
+correction/evidence](m3-inspection-canonical-fixtures-2026-10-30.md) resolves generated fixture identity and adds
+an explicit alias regression; inspector/resolver/installed code are unchanged.
+Agent reproduced all three failures and corrected 15/15 checks pass through an
+aliased work-parent. Corrected Mac/Chapman verification remains pending; preserve
+both target attempts. Chapman protected files passed but final checkout verification
+did not run after failure. PR #161 stays draft; #159/#160/#162 remain open for their
+applicable gates. No test-gate weakening, installation or automatic merge/cleanup.
+
 30 October M2 is owner-accepted/closed after merged PR #158 and clean Mac/shared
 Chapman main b872c8f44c1b54982069a3f94735da492a9dd739; owner instructed Proceed at M3.
 The [first M3 increment](m3-project-inspection.md) adds explicit path-base primitives and a

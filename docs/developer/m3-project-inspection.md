@@ -1,5 +1,10 @@
 # M3 first increment — explicit bases and read-only legacy inspection
 
+Subsequent target run: original 14-group driver passed on Mac but failed three
+canonical fixture comparisons on Chapman. See the [correction and exact evidence](m3-inspection-canonical-fixtures-2026-10-30.md).
+The corrected driver has 15 groups and passes agent alias reproduction; corrected
+actual target checks remain pending. Production inspector/path behavior is unchanged.
+
 30 October 2026. M2 was owner-accepted/closed and PR #158 merged at
 `b872c8f44c1b54982069a3f94735da492a9dd739`; returned Mac and Chapman main were clean
 and the merged branch removed. The owner instructed Proceed with original M3.

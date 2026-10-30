@@ -1,0 +1,22 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/m3-alias-parent/m3 project inspection hg0_yse2
+test_actual_instrument_mappings_and_cfg_authority (__main__.InspectionTests.test_actual_instrument_mappings_and_cfg_authority) ... ok
+test_cli_library_equality_and_views (__main__.InspectionTests.test_cli_library_equality_and_views) ... ok
+test_cli_rejections_and_table (__main__.InspectionTests.test_cli_rejections_and_table) ... ok
+test_duplicate_basenames_are_not_merged (__main__.InspectionTests.test_duplicate_basenames_are_not_merged) ... ok
+test_fits_errors_duplicate_cards_and_header_conflicts (__main__.InspectionTests.test_fits_errors_duplicate_cards_and_header_conflicts) ... ok
+test_header_and_hdu_budgets (__main__.InspectionTests.test_header_and_hdu_budgets) ... ok
+test_links_dangling_cycles_directories (__main__.InspectionTests.test_links_dangling_cycles_directories) ... ok
+test_list_legacy_first_column_and_invalid_lines (__main__.InspectionTests.test_list_legacy_first_column_and_invalid_lines) ... ok
+test_malformed_text_and_nonregular_inputs (__main__.InspectionTests.test_malformed_text_and_nonregular_inputs) ... ok
+test_nested_shared_membership_and_headers (__main__.InspectionTests.test_nested_shared_membership_and_headers) ... ok
+test_no_arrays_no_writes_and_caller_independence (__main__.InspectionTests.test_no_arrays_no_writes_and_caller_independence) ... ok
+test_no_recursive_scan_and_limits (__main__.InspectionTests.test_no_recursive_scan_and_limits) ... ok
+test_path_bases (__main__.InspectionTests.test_path_bases) ... ok
+test_symlink_invocation_and_member_bases (__main__.InspectionTests.test_symlink_invocation_and_member_bases) ... ok
+test_unknown_base_and_missing_absolute_member (__main__.InspectionTests.test_unknown_base_and_missing_absolute_member) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 4.539s
+
+OK
+EVIDENCE: /workspace/scratch/555b377cf948/m3-alias-parent/m3 project inspection hg0_yse2
