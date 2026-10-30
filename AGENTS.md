@@ -1,5 +1,42 @@
 # wenu-imaging
 
+30 October paired M3 inspector receipt: selected-Python Intel Mac and
+representative shared Chapman4 passed all 15 grouped controls at
+2c820effff393d5ea4e1555439397ef7c7a6cda6; protected installed files and clean
+review checkouts stayed unchanged. See [paired results](docs/developer/m3-project-inspection-paired-results-2026-10-30.md).
+#160 entry placement and #162 canonical fixture corrections are target-qualified;
+retain failed/earlier attempts and the read-only Chapman state confirmation.
+PR #161 is ready for bounded owner review; original #159/full M3 execution and
+inspection gates remain open. No installation, reduction, new numerical/ASDF
+behavior or permanent JSON decision. This receipt changes no tested code and
+needs no test replay. Owner instruction precedes merge/cleanup. Earlier draft/
+target-pending notes below are historical; preserve tools and all evidence.
+
+30 October M3 target finding: original a1a95c700a7bb7755cf81ac8e2213b3adc754f96
+passed 14/14 on Mac, but Chapman returned two fixture failures and one error:
+lexical /home expectations contradicted canonical /home1 identities. [#162
+correction/evidence](docs/developer/m3-inspection-canonical-fixtures-2026-10-30.md) resolves generated fixture identity and adds
+an explicit alias regression; inspector/resolver/installed code are unchanged.
+Agent reproduced all three failures and corrected 15/15 checks pass through an
+aliased work-parent. Corrected Mac/Chapman verification remains pending; preserve
+both target attempts. Chapman protected files passed but final checkout verification
+did not run after failure. PR #161 stays draft; #159/#160/#162 remain open for their
+applicable gates. No test-gate weakening, installation or automatic merge/cleanup.
+
+30 October M2 is owner-accepted/closed after merged PR #158 and clean Mac/shared
+Chapman main b872c8f44c1b54982069a3f94735da492a9dd739; owner instructed Proceed at M3.
+The [first M3 increment](docs/developer/m3-project-inspection.md) adds explicit path-base primitives and a
+read-only legacy project inspector, with outer-package `pycavi project inspect`
+entry, selected CFG/FITS headers, ordered lists, links, diagnostics and bounded
+coverage. Agent 14 grouped controls pass; actual selected-Python Mac/representative
+Chapman checks remain pending. #159 retains full M3 execution/overview gates; no
+M3 completion, numerical routing, installed activation or milestone reordering.
+Preserve owner-requested nested import banner (#59); #160 records new inspector
+entry correction. Keep existing JSONs for now; metadata export is stdout only,
+ASDF stays M7. Follow the plan/good practices and discuss departures first.
+Preserve evidence/tools/installations; no historical matrix replay or automatic
+merge/cleanup. Earlier M2 acceptance-pending notes below are historical.
+
 30 October final M2 cumulative review after owner-accepted/merged PR #157 and
 clean Mac/shared Chapman main 09a7aee4d69f04f5aeef954ff87c39d6f870d2d3:
 [recommend original-scope M2 closure](docs/developer/m2-final-closure-review-2026-10-30.md). The #155 project/native
