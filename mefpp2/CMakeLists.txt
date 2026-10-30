@@ -135,6 +135,25 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     target_compile_options(mefpp_config_snapshot PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
   target_link_libraries(mefpp_config_snapshot PUBLIC mefpp_common)
+  # M2 parser exception: unmodified dependency and its private shim only.
+  # Neither target is linked to mefpp or installed. Other code stays C90/C17.
+  add_library(mefpp_tomlc17 STATIC ../third_party/tomlc17/tomlc17.c
+    ins/mef/common/mef_toml_bridge.c)
+  set_target_properties(mefpp_tomlc17 PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_tomlc17 PRIVATE ../third_party/tomlc17 ins/mef/common)
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(mefpp_tomlc17 PRIVATE -Wall -Wextra -pedantic-errors)
+  endif()
+  add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c)
+  target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
+  target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
+  target_compile_definitions(mefpp_config_toml PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(mefpp_config_toml PRIVATE -Wall -Wextra -pedantic-errors)
+  endif()
+  add_executable(config_toml_snapshot tests/config_toml_snapshot.c)
+  target_link_libraries(config_toml_snapshot PRIVATE mefpp_config_toml)
+  target_compile_options(config_toml_snapshot PRIVATE -UNDEBUG)
   add_executable(config_paf_snapshot tests/config_paf_snapshot.c)
   target_link_libraries(config_paf_snapshot PRIVATE mefpp_config_snapshot mefpp_common)
   target_compile_definitions(config_paf_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -193,6 +212,13 @@ if(BUILD_TESTING)
     if(APPLE AND CMAKE_OSX_SYSROOT)
       list(APPEND config_probe_sdk_args --sysroot "${CMAKE_OSX_SYSROOT}")
     endif()
+    add_test(NAME native_config_toml
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_toml_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --toml-probe "$<TARGET_FILE:config_toml_snapshot>"
+        --paf-probe "$<TARGET_FILE:config_paf_snapshot>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_config_toml PROPERTIES TIMEOUT 300 LABELS "native;configuration;toml")
     add_test(NAME native_config_snapshot
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_snapshot_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
@@ -263,6 +289,12 @@ file(GLOB_RECURSE manifest_inputs CONFIGURE_DEPENDS RELATIVE "${CMAKE_CURRENT_SO
   "qfits5/src/*.c" "qfits5/src/*.h" "qfits5/include/*.h"
   "CMakeLists.txt" "Makefile" "configure" "cmake/*" "tests/*" "LICENSE" "qfits5/LICENSE")
 set(source_inventory "")
+if(MEFPP_BUILD_CONFIG_PROBES)
+  list(APPEND manifest_inputs ../third_party/tomlc17/tomlc17.c
+    ../third_party/tomlc17/tomlc17.h ../third_party/tomlc17/LICENSE
+    ../third_party/tomlc17/upstream.json)
+  list(SORT manifest_inputs)
+endif()
 foreach(input IN LISTS manifest_inputs)
   file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/${input}" digest)
   string(APPEND source_inventory "${input} ${digest}\n")

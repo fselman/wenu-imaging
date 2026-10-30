@@ -1,5 +1,24 @@
 # Developer guide: native mefpp build, installation and qualification
 
+30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
+C90 builds (normal engine and both probes) and native_config_toml passed at
+b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /
+249 edge settings and 41 rejection/recovery cases. Protected files/checkouts
+stayed unchanged. See [paired results](m2-native-toml-paired-results-2026-10-30.md). Ready for bounded owner review;
+full M2 composition/override/unit/source/migration work remains pending. No test
+replay or installation is needed for this documentation update. Earlier pending
+target notes below are historical. Merge/cleanup requires owner instruction.
+
+
+M2 opt-in configuration integration: `MEFPP_BUILD_CONFIG_PROBES=ON` additionally
+builds `config_toml_snapshot`, `mefpp_config_toml` (core C90/C17) and a private
+C99 parser/shim target from the pinned vendored source. Normal `mefpp` linking,
+installation and defaults are unchanged. Build both `config_paf_snapshot` and
+`config_toml_snapshot` and select `native_config_toml` for the focused text-only
+check. Parser sources/license/provenance are included in opt-in source inventory.
+See [scope, API and pending target acceptance](../architecture/proposed/m2/native-compatibility-reader.md). No new package install,
+resource download or repeat tool qualification is needed on the user hosts.
+
 Shared-normalization regression candidate (#94): BUILD_TESTING now retains the
 qualified four-detector dome/sky fixture as four additional CTest cases, using
 isolated recorded attempts. This raises the current five-entry suite to nine.

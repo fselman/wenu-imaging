@@ -1,5 +1,23 @@
 # wenu-imaging roadmap
 
+30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
+C90 builds (normal engine and both probes) and native_config_toml passed at
+b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /
+249 edge settings and 41 rejection/recovery cases. Protected files/checkouts
+stayed unchanged. See [paired results](m2-native-toml-paired-results-2026-10-30.md). Ready for bounded owner review;
+full M2 composition/override/unit/source/migration work remains pending. No test
+replay or installation is needed for this documentation update. Earlier pending
+target notes below are historical. Merge/cleanup requires owner instruction.
+
+
+30 October 2026: M1 is owner-accepted and closed following merged PR #146
+(`7d8da6b96b7b744a51e3847522a727e3f510c6f2`); the October 29 handoff and fresh
+Mac evidence confirm clean main. M2 begins with an opt-in native TOML compatibility
+reader producing the existing immutable configuration. Full domain composition,
+precedence/unit/source provenance and migration remain subsequent M2 work; no
+M3–M11 reordering, installation or processing. See [the M2 reader contract](../architecture/proposed/m2/native-compatibility-reader.md). Earlier pending-M1
+notes below are historical. Actual Mac/shared Chapman integration checks pending.
+
 29 October M1 closure review after accepted/merged PR #145 and clean Mac/shared Chapman main bacfa24fce45c0e7957bbc55f9cb6abfc7027219: the cumulative template/config/runtime/CLI/bindings/input/bias evidence supports proposed bounded M1 foundation closure. See [the M1 closure review](m1-closure-review-2026-10-29.md) for the requirement-by-requirement checklist, native-to-WAD conceptual/units/status crosswalk, accepted merge chain and explicit later-milestone boundaries. This is a read-only source/document/evidence review, not new execution or owner milestone acceptance. Reuse the latest paired C90 5/5 results and earlier scoped evidence; no test replay, tool qualification, installation, activation or scientific audit. #144 and wider memory limits remain open; do not claim whole-dependency OOM or thread safety. Preserve optional BPM / required M6a variances. Continue the original order at M2 after owner closure acceptance and authorized integration; other subroutines remain M5/M6, new algorithms at M6b–M6d. Do not start M2 code, merge or cleanup from this review alone.
 
 29 October M1 first bias service ready for bounded owner review: returned Intel Mac and representative Chapman4 private C90 CMake builds (including the normal engine link) and all five focused CTests passed 5/5 at f5858310e505bfc1b137491dc35676b9245ce674. Both passed the eight-profile-per-instrument exact synthetic bias/legacy-FITS bridge contract, configuration/runtime checks, all 51 CLI cases and seventeen input cases from two directories. See [the paired bias-service receipt](m1-bias-paired-results-2026-10-29.md) for exact paths and limits. Protected files and checkouts stayed unchanged. #144 remains open; no target C17/sanitizer, whole-dependency OOM, thread-safety, scientific or complete-M1 claim. Grouped command adapters and general loader/path integration remain subsequent work; required variances stay M6a. Preserve all runs/tools/installations; no duplicate Chapman run or rebuild for this documentation receipt. Owner review precedes explicitly authorized merge/cleanup.

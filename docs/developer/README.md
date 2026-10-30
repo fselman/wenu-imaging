@@ -1,5 +1,23 @@
 # Developer documentation
 
+30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
+C90 builds (normal engine and both probes) and native_config_toml passed at
+b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /
+249 edge settings and 41 rejection/recovery cases. Protected files/checkouts
+stayed unchanged. See [paired results](m2-native-toml-paired-results-2026-10-30.md). Ready for bounded owner review;
+full M2 composition/override/unit/source/migration work remains pending. No test
+replay or installation is needed for this documentation update. Earlier pending
+target notes below are historical. Merge/cleanup requires owner instruction.
+
+
+30 October 2026: M1 is owner-accepted and closed following merged PR #146
+(`7d8da6b96b7b744a51e3847522a727e3f510c6f2`); the October 29 handoff and fresh
+Mac evidence confirm clean main. M2 begins with an opt-in native TOML compatibility
+reader producing the existing immutable configuration. Full domain composition,
+precedence/unit/source provenance and migration remain subsequent M2 work; no
+M3–M11 reordering, installation or processing. See [the M2 reader contract](../architecture/proposed/m2/native-compatibility-reader.md). Earlier pending-M1
+notes below are historical. Actual Mac/shared Chapman integration checks pending.
+
 [M1 cumulative closure review](m1-closure-review-2026-10-29.md): requirement checklist, native-to-WAD units/status crosswalk, accepted evidence and original M2 handoff. Closure recommended, owner decision pending; documentation only, with no repeated execution or activation.
 
 M1 first concrete operation: [bias service](../architecture/proposed/m1/bias-service.md) and [grouped command/service mapping](../architecture/proposed/command-line-services.md). Agent synthetic numerical/ownership and focused regressions pass; actual Mac/representative Chapman C90 CMake builds and all five focused tests pass 5/5. See the [paired bias receipt](m1-bias-paired-results-2026-10-29.md); ready for owner review with no rebuild for this documentation receipt. Eclipse dependency OOM source finding #144 remains open; no installation or astronomical-data reduction.

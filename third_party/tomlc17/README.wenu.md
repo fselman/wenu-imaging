@@ -11,7 +11,7 @@ The owner approved vendoring on 29 October 2026 after private Mac/Chapman4 quali
 
 ## Integration boundary
 
-This source import does not yet add a build target or configuration adapter. Planned integration compiles tomlc17.c into a private static target in explicit C99 mode and links it through the configuration adapter. Existing numerical code and public native contracts retain the C90 baseline. tomlc17.h exposes C99 types and must stay out of C90-facing public headers. The qualified bridge is test-only; review any production adapter compilation exception explicitly.
+M2 now provides an opt-in private static C99 target and parser-specific shim through the configuration probes. See [the compatibility-reader contract](../../docs/architecture/proposed/m2/native-compatibility-reader.md). Neither is linked into normal mefpp or installed; actual paired integration acceptance and full M2 composition remain pending. Existing numerical code and public native contracts retain the C90 baseline. tomlc17.h exposes C99 types and must stay out of C90-facing public headers. The private shim exception is explicit in that contract; core mapping and public internal headers retain C90. Production activation remains a later reviewed integration.
 
 The parser supports TOML 1.1; the initial Wenu configuration language uses the TOML 1.0 subset shared with Python 3.11 tomllib, with explicit C-compatible integer/domain bounds. Adapter validation must enforce the selected contract. Enable UTF-8 checking explicitly: the upstream default is false. Set parser/allocator options once during initialization before any worker activity; this qualification does not establish concurrent parsing safety.
 

@@ -1,5 +1,13 @@
 # M1 common subroutine template — C90 design contract
 
+30 October 2026: M1 is owner-accepted and closed following merged PR #146
+(`7d8da6b96b7b744a51e3847522a727e3f510c6f2`); the October 29 handoff and fresh
+Mac evidence confirm clean main. M2 begins with an opt-in native TOML compatibility
+reader producing the existing immutable configuration. Full domain composition,
+precedence/unit/source provenance and migration remain subsequent M2 work; no
+M3–M11 reordering, installation or processing. See [the M2 reader contract](../m2/native-compatibility-reader.md). Earlier pending-M1
+notes below are historical. Actual Mac/shared Chapman integration checks pending.
+
 Current cumulative status: [M1 closure recommended for owner review](../../../developer/m1-closure-review-2026-10-29.md), after accepted PRs #136–#145 covering the template and implemented foundation increments. The closure checklist maps deliverables, native fields/units/status to WAD concepts and retained evidence. No new execution is needed; #144 remains open. Later loader/command/schema work and other numerical services retain their original milestones. Owner milestone acceptance is pending; the dated increment notes below are historical, not independent remaining-work lists.
 
 M1 current increment: [first concrete bias service](bias-service.md) extracts the existing calculation into a shared kernel and an owned operation-specific signal/QC result. Agent C90/C17/sanitizer and focused regressions pass; actual Intel Mac/representative Chapman private C90 CMake builds and all five focused tests passed 5/5 at f5858310e505bfc1b137491dc35676b9245ce674. See the [paired bias receipt](../../../developer/m1-bias-paired-results-2026-10-29.md). Ready for owner review; no rebuild is needed for the receipt. [Grouped command names](../command-line-services.md) are owner-selected, with command adapters still subsequent work. M1 is not declared complete; preserve legacy behavior and the required M6a variance boundary.
