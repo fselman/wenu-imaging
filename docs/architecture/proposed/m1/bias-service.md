@@ -115,10 +115,12 @@ not those dependencies; no dependency OOM/crash-safety, reentrancy or thread
 safety is claimed. The legacy wrapper's broader failure behavior remains its
 existing scope under #75. No full historical matrix is repeated.
 
-Actual Intel Mac and representative shared Chapman C90 CMake verification is
-pending. Build the normal engine as a link check and the opt-in probes; run
-the five focused CTests (config snapshot, runtime, CLI, input requests, bias
-service) once per platform with the selected tools. No install, observational
+Actual Intel Mac and representative shared Chapman C90 CMake builds and all five
+focused CTests now pass 5/5 at f5858310e505bfc1b137491dc35676b9245ce674,
+including the normal engine link and opt-in probes. See the
+[paired receipt](../../../developer/m1-bias-paired-results-2026-10-29.md) for exact
+paths, times and limits. Target C17/sanitizer results are not claimed. This is
+ready for bounded owner review; no repeated test/build is needed for the receipt. No install, observational
 reduction, native recipe launch, automatic repair/retry, tool requalification,
 merge or branch cleanup is performed by this delivery. The historical Makefile
 also includes the shared kernel; it has not been newly qualified as a separate
