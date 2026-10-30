@@ -1,0 +1,528 @@
+# Native domain schema v1; configured values, no unit conversion.
+schema_version = 3
+include = []
+override_keys = []
+
+[instrument]
+schema_version = 1
+detector_count = { value = 32, unit = "count" }
+origin = { value = "ESO-PARANAL", unit = "none" }
+telescope = { value = "VST", unit = "none" }
+name = { value = "OMEGACAM", unit = "none" }
+correct_ref_pix = { value = 0, unit = "1" }
+refpix_x = { value = 8590.0, unit = "pixel" }
+refpix_y = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors]
+
+[instrument.detectors.CHIP1]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.099999904632568, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 8590.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP2]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 6442.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP3]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 4294.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP4]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 2146.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP5]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 8590.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP6]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 6442.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP7]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 4294.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP8]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 2146.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP9]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.099999904632568, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 8590.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP10]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 6442.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP11]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 4294.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP12]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 2146.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP13]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 8590.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }
+
+[instrument.detectors.CHIP14]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 6442.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }
+
+[instrument.detectors.CHIP15]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 4294.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }
+
+[instrument.detectors.CHIP16]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = 2146.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }
+
+[instrument.detectors.CHIP17]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.099999904632568, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -2.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP18]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -2150.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP19]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -4298.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP20]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -6446.0, unit = "pixel" }
+crpix2 = { value = 8605.0, unit = "pixel" }
+
+[instrument.detectors.CHIP21]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -22.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP22]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -2159.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP23]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -4298.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP24]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 5, unit = "pixel" }
+trimreg_y_max = { value = 4095, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -6446.0, unit = "pixel" }
+crpix2 = { value = 4129.0, unit = "pixel" }
+
+[instrument.detectors.CHIP25]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.099999904632568, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -2.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP26]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -2150.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP27]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -4298.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP28]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -6446.0, unit = "pixel" }
+crpix2 = { value = 71.0, unit = "pixel" }
+
+[instrument.detectors.CHIP29]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -2.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }
+
+[instrument.detectors.CHIP30]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -2150.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }
+
+[instrument.detectors.CHIP31]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -4298.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }
+
+[instrument.detectors.CHIP32]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 105, unit = "pixel" }
+trimreg_y_max = { value = 4195, unit = "pixel" }
+ron = { value = 4.0, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 0.0, unit = "degree" }
+crval2 = { value = 0.0, unit = "degree" }
+crpix1 = { value = -6446.0, unit = "pixel" }
+crpix2 = { value = -4405.0, unit = "pixel" }

@@ -139,7 +139,7 @@ def main():
         'unknown-key': (document({'MEF.UNKNOWN': {'type': 'int', 'value': 1}}, ['base.toml']), 'Invalid subset setting'),
         'bad-chip-number': (document({'MEF.CCD.GAIN.CHIP01': values['MEF.CCD.GAIN.CHIP1']}, ['base.toml']), 'Invalid subset setting'),
         'oversized-chip-number': (document({'MEF.CCD.GAIN.CHIP2147483648': values['MEF.CCD.GAIN.CHIP1']}, ['base.toml']), 'Invalid subset setting'),
-        'bad-schema': (document(includes=['base.toml']).replace('schema_version = 2', 'schema_version = 3'), 'schema_version'),
+        'bad-schema': (document(includes=['base.toml']).replace('schema_version = 2', 'schema_version = 4'), 'schema_version'),
         'include-scalar': (document(includes=['base.toml']).replace('["base.toml"]', '"base.toml"'), 'arrays'),
         'include-integer': (document(includes=['base.toml']).replace('["base.toml"]', '[1]'), 'invalid string'),
         'include-empty': (document(includes=['base.toml']).replace('["base.toml"]', '[""]'), 'invalid string'),

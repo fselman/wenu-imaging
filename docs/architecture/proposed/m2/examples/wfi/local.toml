@@ -1,0 +1,10 @@
+# Native domain schema v1; configured values, no unit conversion.
+schema_version = 3
+include = ["entry.toml"]
+override_keys = ["processing.bias_kappa1", "processing.scanrej_min", "processing.scanrej_max"]
+
+[processing]
+schema_version = 1
+bias_kappa1 = { value = 0.123456789012345, unit = "1" }
+scanrej_min = { value = 2, unit = "count" }
+scanrej_max = { value = 3, unit = "count" }

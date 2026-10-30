@@ -1,0 +1,4 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/domains-asan/m2 domains 0o4sgbt8
+PASS: 11 typed/document/lifetime profiles; 151 catalog templates
+PASS: 25 domain/unit rejection/recovery cases
+REPORT: /workspace/scratch/555b377cf948/domains-asan/m2 domains 0o4sgbt8/run-provenance.json

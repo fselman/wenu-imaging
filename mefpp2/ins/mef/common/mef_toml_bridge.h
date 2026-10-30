@@ -17,6 +17,8 @@ int mef_toml_is_initialized(void);
 mef_status mef_toml_open(const char *path, mef_toml_document **out,
     char *diagnostic, size_t capacity);
 void mef_toml_close(mef_toml_document *document);
+const char *mef_toml_source_key(const mef_toml_document *document, const char *key);
+int mef_toml_source_line(const mef_toml_document *document, const char *key);
 int mef_toml_version(const mef_toml_document *document);
 const char *mef_toml_key(const mef_toml_document *document, size_t index);
 size_t mef_toml_include_count(const mef_toml_document *document);
