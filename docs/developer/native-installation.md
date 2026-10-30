@@ -1,5 +1,21 @@
 # Developer guide: native mefpp build, installation and qualification
 
+30 October owner accepted/merged PR #156 and instructed merge, clean, and
+proceed. At baseline ea35197a7f074ac1c44289e7bcc94336f92d6681, the next original-M2
+increment implements [project/native composition](../architecture/proposed/m2/project-composition.md) for #155. Project
+envelope 2 composes reusable complete domain-v1 declarations; complete version-1
+projects remain supported. The shared CLI/library loader uses the qualified C
+resolver for complete/split/local native references and validates readout against
+resolved settings, retaining all source texts/hashes/edges and domain origins.
+Project conflicts fail (empty project override allowlist); numeric overrides stay
+native. Agent focused C90 checks passed 2/2, including 18 primary profiles and 24
+composition rejection/recovery cases. Actual Mac/representative Chapman checks
+are pending. Native C/catalogs, installed software, numerical algorithms and
+milestone order are unchanged; no M3 execution or ASDF publication. See
+[agent receipt](m2-project-composition-agent-results-2026-10-30.md). #155/full M2 closure remain open pending target/owner
+review. Preserve accepted evidence; no historical matrix/tool replay or automatic
+merge/cleanup. The earlier closure review retains its original as-is baseline.
+
 30 October paired migration receipt: selected-tool Intel Mac and representative
 shared Chapman4 private C90 builds and both focused configuration CTests passed
 2/2 at 38f4f4d4bd05c4977f1624fc8737431527bdbe8a. Protected files and clean review

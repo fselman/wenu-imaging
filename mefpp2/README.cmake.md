@@ -200,3 +200,12 @@ and select `^native_config_(migration|toml_domains)$` for this increment. See th
 [migration contract](../docs/architecture/proposed/m2/configuration-migration.md)
 for source ownership, input/conflict rules and exact target gates. No existing
 installation or normal processing selection changes.
+
+
+The next M2 [project-composition increment](../docs/architecture/proposed/m2/project-composition.md)
+changes the Python configuration service and adds `native_config_project_composition`.
+For its private verification select `^native_config_(migration|project_composition)$`
+after building the existing normal engine/configuration targets above. Native C,
+parser and installation boundaries remain unchanged; actual target verification
+is pending. No C17/sanitizer or historical matrix replay is required for this
+Python integration change.

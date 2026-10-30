@@ -1,0 +1,176 @@
+project_schema_version = 2
+include = []
+
+[processing]
+schema_version = 1
+native_mode = "legacy_reference"
+native_configuration = "../../examples/wfi/local.toml"
+
+[readout]
+schema_version = 1
+id = "review-readout:wfi"
+authority = "configured"
+metadata_policy = "explicit_review"
+header_evidence = []
+mapping_status = "unverified"
+inventory_status = "not_established"
+
+[[readout.detectors]]
+id = "legacy-ordinal:1"
+legacy_ordinal = 1
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 2100
+x_max = 2142
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors]]
+id = "legacy-ordinal:2"
+legacy_ordinal = 2
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 2100
+x_max = 2142
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors]]
+id = "legacy-ordinal:3"
+legacy_ordinal = 3
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 2100
+x_max = 2142
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors]]
+id = "legacy-ordinal:4"
+legacy_ordinal = 4
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 2100
+x_max = 2142
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors]]
+id = "legacy-ordinal:5"
+legacy_ordinal = 5
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 5
+x_max = 48
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors]]
+id = "legacy-ordinal:6"
+legacy_ordinal = 6
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 5
+x_max = 48
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors]]
+id = "legacy-ordinal:7"
+legacy_ordinal = 7
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 5
+x_max = 48
+unit = "pixel"
+convention = "fits-1-based-inclusive"
+
+[[readout.detectors]]
+id = "legacy-ordinal:8"
+legacy_ordinal = 8
+identity_status = "unknown"
+
+[[readout.detectors.channels]]
+id = "legacy-selected-channel"
+identity_status = "unknown"
+active = true
+
+[readout.detectors.channels.overscan]
+state = "defined"
+subtract = true
+
+[readout.detectors.channels.overscan.region]
+x_min = 2100
+x_max = 2142
+unit = "pixel"
+convention = "fits-1-based-inclusive"
