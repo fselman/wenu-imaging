@@ -1,5 +1,14 @@
 # Candidate native CMake build
 
+M2 opt-in configuration integration: `MEFPP_BUILD_CONFIG_PROBES=ON` additionally
+builds `config_toml_snapshot`, `mefpp_config_toml` (core C90/C17) and a private
+C99 parser/shim target from the pinned vendored source. Normal `mefpp` linking,
+installation and defaults are unchanged. Build both `config_paf_snapshot` and
+`config_toml_snapshot` and select `native_config_toml` for the focused text-only
+check. Parser sources/license/provenance are included in opt-in source inventory.
+See [scope, API and pending target acceptance](../docs/architecture/proposed/m2/native-compatibility-reader.md). No new package install,
+resource download or repeat tool qualification is needed on the user hosts.
+
 For the maintained installation procedure and platform status, read the
 [native installation guide](../docs/developer/native-installation.md).
 Keep this build reference and that guide consistent when installation changes.

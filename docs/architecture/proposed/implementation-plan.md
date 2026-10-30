@@ -1,5 +1,13 @@
 # mefpp refactor implementation plan — proposal
 
+30 October 2026: M1 is owner-accepted and closed following merged PR #146
+(`7d8da6b96b7b744a51e3847522a727e3f510c6f2`); the October 29 handoff and fresh
+Mac evidence confirm clean main. M2 begins with an opt-in native TOML compatibility
+reader producing the existing immutable configuration. Full domain composition,
+precedence/unit/source provenance and migration remain subsequent M2 work; no
+M3–M11 reordering, installation or processing. See [the M2 reader contract](m2/native-compatibility-reader.md). Earlier pending-M1
+notes below are historical. Actual Mac/shared Chapman integration checks pending.
+
 29 October cumulative [M1 closure review](../../developer/m1-closure-review-2026-10-29.md): foundation deliverables and the first concrete operation are implemented and accepted incrementally through PR #145. Closure is recommended with retained limits; owner milestone acceptance remains pending. No milestone is reordered, no test replay is required, and M2 implementation has not begun. Historical preparation statements below retain their original scope.
 
 29 October owner command-line decision: use [grouped native subcommands](command-line-services.md), one executable with `mefpp cal bias` / other `cal` operations and `mefpp sci pp`; retain the accepted C service names. Thin command adapters share the same request/settings/services as optional mefppy. M1 establishes callable operations; M3/M4 establish loaders/paths and M5/M6 connect the applicable commands. The [first bias service](m1/bias-service.md) is now implemented for bounded synthetic qualification; grouped command dispatch is not yet implemented.

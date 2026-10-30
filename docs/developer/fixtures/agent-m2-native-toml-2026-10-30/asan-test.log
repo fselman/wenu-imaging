@@ -1,0 +1,6 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/m2-asan/m2 native config tkhq46hn
+PASS: omegacam 585 exact native settings; ownership/failure controls
+PASS: wfi 249 exact native settings; ownership/failure controls
+PASS: edge 249 exact native settings; ownership/failure controls
+PASS: 41 rejection/same-process recovery cases
+REPORT: /workspace/scratch/555b377cf948/m2-asan/m2 native config tkhq46hn/run-provenance.json
