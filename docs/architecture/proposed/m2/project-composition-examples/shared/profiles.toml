@@ -1,0 +1,52 @@
+project_schema_version = 2
+include = []
+
+[association]
+schema_version = 1
+mode = "explicit"
+
+[[association.bindings]]
+group = "review-group:science"
+role = "bpm"
+selection = "omitted"
+
+[[association.bindings]]
+group = "review-group:science"
+role = "bias"
+selection = "selected"
+asset_id = "synthetic-asset:bias"
+asset_version = 1
+
+[reduction_profile]
+schema_version = 1
+id = "shared-purpose:scientific"
+purpose = "scientific"
+
+[recipe]
+schema_version = 1
+id = "shared-recipe:preprocess"
+
+[[recipe.steps]]
+id = "preprocess"
+operation = "mef_sci_pp"
+
+[execution]
+schema_version = 1
+activation = "disabled"
+mode = "serial"
+workers = 1
+numerical_threads = 1
+niceness = 10
+
+[quality]
+schema_version = 1
+policy = "record_only"
+estimator_status = "not_qualified"
+thresholds = []
+
+[product_profile]
+schema_version = 1
+id = "shared-product:legacy"
+target = "legacy"
+compliance = "not_validated"
+variance_contract = "pre_m6a_unavailable"

@@ -1,0 +1,383 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/project-composition-c90/config_paf_snapshot",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/omegacam.paf",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-original.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "omegacam-original-paf.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "migrate-paf",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/omegacam.paf",
+        "--instrument-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/omegacam.cfg",
+        "--project-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/pycavi.cfg",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-cli-0"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "omegacam-cli-0.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "migrate-paf",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/omegacam.paf",
+        "--instrument-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/omegacam.cfg",
+        "--project-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/pycavi.cfg",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-cli-1"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller two",
+      "log": "omegacam-cli-1.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "migrate-paf",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/omegacam.paf",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-cli-1"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "omegacam-no-clobber.log",
+      "status": 1
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/project-composition-c90/cli_capture_probe",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-cli.json",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-cli-values.json",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+        "mefpp",
+        "--pafname",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/omegacam.paf",
+        "--biaskappa1",
+        "0.123456789012345",
+        "--scanrej",
+        "2 3"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "omegacam-overrides.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "freeze-toml",
+        "/workspace/scratch/555b377cf948/m2-project-composition/docs/architecture/proposed/m2/examples/omegacam/local.toml",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-toml-0"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "omegacam-freeze-0.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "freeze-toml",
+        "/workspace/scratch/555b377cf948/m2-project-composition/docs/architecture/proposed/m2/examples/omegacam/local.toml",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-toml-1"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller two",
+      "log": "omegacam-freeze-1.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "freeze-project",
+        "/workspace/scratch/555b377cf948/m2-project-composition/docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/omegacam-project"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "omegacam-project.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/project-composition-c90/config_paf_snapshot",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/wfi.paf",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-original.json"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "wfi-original-paf.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "migrate-paf",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/wfi.paf",
+        "--instrument-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/wfi.cfg",
+        "--project-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/pycavi.cfg",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-cli-0"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "wfi-cli-0.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "migrate-paf",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/wfi.paf",
+        "--instrument-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/wfi.cfg",
+        "--project-cfg",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/pycavi.cfg",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-cli-1"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller two",
+      "log": "wfi-cli-1.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "migrate-paf",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/wfi.paf",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-cli-1"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "wfi-no-clobber.log",
+      "status": 1
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/project-composition-c90/cli_capture_probe",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-cli.json",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-cli-values.json",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+        "mefpp",
+        "--pafname",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/config/wfi.paf",
+        "--biaskappa1",
+        "0.123456789012345",
+        "--scanrej",
+        "2 3"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "wfi-overrides.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "freeze-toml",
+        "/workspace/scratch/555b377cf948/m2-project-composition/docs/architecture/proposed/m2/examples/wfi/local.toml",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-toml-0"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "wfi-freeze-0.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "freeze-toml",
+        "/workspace/scratch/555b377cf948/m2-project-composition/docs/architecture/proposed/m2/examples/wfi/local.toml",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-toml-1"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller two",
+      "log": "wfi-freeze-1.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "freeze-project",
+        "/workspace/scratch/555b377cf948/m2-project-composition/docs/architecture/proposed/m2/project-contracts/examples/wfi.toml",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/wfi-project"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "wfi-project.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/project-composition-c90/config_domains_probe",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/private graph/local.toml",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/c-frozen-values.json",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/c-frozen-sources.json",
+        "freeze"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "c-frozen-source-owner.log",
+      "status": 0
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "migrate-paf",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/private source.paf",
+        "--resolve",
+        "bad",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/CLI malformed resolution"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "CLI-malformed-resolution.log",
+      "status": 1
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/workspace/scratch/555b377cf948/m2-project-composition/Pycavi2/pycavi/pycavi/pycavi_configuration.py",
+        "--source-root",
+        "/workspace/scratch/555b377cf948/m2-project-composition",
+        "--native-reader",
+        "/workspace/scratch/555b377cf948/project-composition-c90/mef_config_read",
+        "freeze-toml",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/invalid.toml",
+        "--output",
+        "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/CLI native failure"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/project-composition-c90/test-work/m2 migration pmc2jaw6/caller one",
+      "log": "CLI-native-failure.log",
+      "status": 1
+    }
+  ],
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "profiles": [
+    {
+      "configuration_sha256": "0a9418a476bf78a42ec7efd59ecbfcb35c518ad20707ed5c1e3346b7452daf7f",
+      "identical_duplicates": 0,
+      "instrument": "omegacam",
+      "settings": 585
+    },
+    {
+      "configuration_sha256": "048b5eb5418036646f606da4db18fe9e42750b4efc931a06533935b62d7817ae",
+      "identical_duplicates": 2,
+      "instrument": "wfi",
+      "settings": 249
+    }
+  ],
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "reader_sha256": "672b103326b260a44e5cb839c9cac81b0e6ed2f6aa058252b91cfd4ded5860f9",
+  "rejections": [
+    "conflicting PAF with occurrence ledger",
+    "invalid source-line resolution",
+    "unused resolution",
+    "frozen source tampering",
+    "frozen stored-value tampering",
+    "unknown PAF key",
+    "missing PAF key",
+    "invalid PAF number",
+    "oversized PAF line",
+    "invalid detector count",
+    "embedded NUL",
+    "unknown TOML key",
+    "wrong TOML unit",
+    "wrong TOML type",
+    "missing TOML field",
+    "subset cycle",
+    "undeclared conflict",
+    "native NUL source",
+    "unknown CFG option",
+    "duplicate CFG option",
+    "CFG DEFAULT inheritance"
+  ],
+  "source_root": "/workspace/scratch/555b377cf948/m2-project-composition"
+}

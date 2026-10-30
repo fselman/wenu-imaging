@@ -1,5 +1,32 @@
 # wenu-imaging agent instructions
 
+30 October paired project/native composition receipt: selected-tool Intel Mac
+and representative shared Chapman4 private C90 builds and both affected CTests
+passed 2/2 at d0ab19e91b46e6fe6e21c541af99c21ed35029b4. Protected installed files
+and clean review checkouts stayed unchanged. See [paired results](m2-project-composition-paired-results-2026-10-30.md).
+The #155 configuration integration correction is target-qualified and ready for
+owner review in PR #157. Full M2 closure remains a cumulative review/owner decision;
+no M3, ASDF publication, numerical processing, installation or automatic merge.
+Preserve selected tools and all evidence; this receipt needs no test replay.
+Earlier target-pending notes below are historical. Separate owner instruction
+precedes merge/cleanup.
+
+30 October owner accepted/merged PR #156 and instructed merge, clean, and
+proceed. At baseline ea35197a7f074ac1c44289e7bcc94336f92d6681, the next original-M2
+increment implements [project/native composition](../architecture/proposed/m2/project-composition.md) for #155. Project
+envelope 2 composes reusable complete domain-v1 declarations; complete version-1
+projects remain supported. The shared CLI/library loader uses the qualified C
+resolver for complete/split/local native references and validates readout against
+resolved settings, retaining all source texts/hashes/edges and domain origins.
+Project conflicts fail (empty project override allowlist); numeric overrides stay
+native. Agent focused C90 checks passed 2/2, including 18 primary profiles and 24
+composition rejection/recovery cases. Actual Mac/representative Chapman checks
+are pending. Native C/catalogs, installed software, numerical algorithms and
+milestone order are unchanged; no M3 execution or ASDF publication. See
+[agent receipt](m2-project-composition-agent-results-2026-10-30.md). #155/full M2 closure remain open pending target/owner
+review. Preserve accepted evidence; no historical matrix/tool replay or automatic
+merge/cleanup. The earlier closure review retains its original as-is baseline.
+
 30 October cumulative M2 review at accepted merged main
 c0bbcc5866b49d64fad6498a029429b35ada9953: keep M2 open. Native configuration
 resolution/equivalence, migration and provenance have accepted paired evidence,

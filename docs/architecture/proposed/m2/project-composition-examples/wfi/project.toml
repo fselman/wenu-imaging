@@ -1,0 +1,14 @@
+project_schema_version = 2
+include = ["../shared/profiles.toml", "instrument.toml"]
+
+[project]
+schema_version = 1
+id = "review-project:wfi"
+name = "wfi"
+
+[project.roots]
+raw = "review locations/raw"
+calibration = "review locations/calibration"
+output = "review locations/output"
+work = "review locations/work"
+logs = "review locations/logs"

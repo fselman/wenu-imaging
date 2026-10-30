@@ -335,33 +335,138 @@ class ConfigurationMigration:
                           contracts=[dict(path=s['path'], sha256=s['sha256']) for s in self.resources])
         return self.freeze(native, sources, provenance, cfg=cfg), text
 
-    def load_project(self, path):
-        # Reuse the accepted closed validator, not a second authoring schema.
+    def _project_contract(self):
+        # Reuse the accepted domain schema/semantic checks. Composition is a new
+        # envelope; it does not fork domain defaults, native parsing or readout math.
         resource = self.root / 'docs/architecture/proposed/m2/project-contracts/validate_project.py'
         spec = importlib.util.spec_from_file_location('wenu_m2_project_contract', resource)
         module = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = module
         spec.loader.exec_module(module)
-        project = module.load(path).as_dict()
-        require(project['native_validation'] != 'unavailable',
-                'Project has no native settings; cannot freeze an executable configuration')
-        reference = project['sources'][1]
-        # Validate the captured reference bytes, not a mutable second read.
-        with tempfile.TemporaryDirectory(prefix='wenu project config ') as work:
-            private = Path(work) / 'reference.toml'
-            private.write_bytes(reference['text'].encode('utf-8'))
-            native_document = self.native('toml', private)
-            require(len(native_document['sources']['files']) == 1, 'Project native reference must be standalone')
-            require(native_document['sources']['files'][0]['text'] == reference['text'],
-                    'Native project reference bytes differ')
-            native = native_document['settings']
-        native_sources = {k: dict(path=reference['path'], sha256=reference['sha256'],
-                                 native_key=k) for k in native}
-        provenance = dict(native_sources=native_sources, native_reader_sha256=self.reader_sha256,
-                          project_catalog_sha256=project['validation_catalog_sha256'],
-                          contracts=[dict(path=s['path'], sha256=s['sha256']) for s in self.resources])
-        # FrozenProject already rejects includes in its standalone reference.
-        return self.freeze(native, project['sources'], provenance, project=project)
+        catalog = read_source(module.CATALOG, 'project-contract')
+        return module, catalog, json.loads(catalog['text'])
+
+    def _compose_project(self, path, validator, catalog):
+        # Explicit first envelope: disjoint/identical project domains only.
+        # Project-domain override allowlist is empty. Numeric overrides remain
+        # entirely in the already qualified native schema-2/3 resolver.
+        fields = catalog['schema']['fields']
+        domains = set(fields) - {'project_schema_version'}
+        files, cached, active = [], {}, set()
+
+        def scoped(domain, value, source):
+            # Identical relative text from different containing files need not
+            # identify the same root/reference. Compare its declared path base too.
+            value = json.loads(encode(value))
+            if domain == 'project':
+                value['roots'] = {k: str(resolve(source.parent / v, strict=False))
+                                  for k, v in value['roots'].items()}
+            if domain == 'processing' and value['native_mode'] == 'legacy_reference':
+                value['native_configuration'] = str(resolve(source.parent / value['native_configuration'], strict=False))
+            return encode(value)
+
+        def resolve(member, strict=True):
+            try:
+                return Path(member).resolve(strict=strict)
+            except RuntimeError as exc:
+                raise MigrationError(f'Cannot resolve project path {member}: {exc}') from exc
+
+        def load(member, depth):
+            require(depth < 16, 'Project composition depth limit')
+            member = resolve(member)
+            key = str(member)
+            require(key not in active, f'Project include cycle: {member}')
+            if key in cached:
+                return cached[key]
+            require(len(files) < 64, 'Project composition file limit')
+            source = read_source(member, 'project-toml')
+            data = tomllib.loads(source['text'])
+            version = data.get('project_schema_version')
+            require(type(version) is int and version in (1, 2),
+                    f'{member}: unsupported project_schema_version')
+            require(not depth or version == 2, f'{member}: included project subsets require version 2')
+            require(version == 2 or 'include' not in data, f'{member}: version 1 has no includes')
+            require(not data.keys() - domains - {'project_schema_version', 'include'},
+                    f'{member}: unknown project composition keys')
+            includes = data.get('include', [])
+            require(type(includes) is list and len(includes) <= 64 and
+                    all(type(v) is str and v.strip() and all(ord(c) >= 32 and ord(c) != 127 for c in v)
+                        for v in includes), f'{member}: invalid include array')
+            require(len(includes) == len(set(includes)), f'{member}: duplicate include entry')
+            local = {domain: value for domain, value in data.items() if domain in domains}
+            for domain, value in local.items():
+                validator.check(value, fields[domain], f'{member}:{domain}')
+            source.update(input_schema_version=version, include=includes,
+                          resolved_include=[], definitions=list(local))
+            files.append(source)
+            active.add(key)
+            merged = {}
+
+            def insert(domain, binding):
+                if domain in merged:
+                    old = merged[domain]
+                    require(old['scoped'] == binding['scoped'],
+                            f'Conflicting project domain {domain}: {old["source"]} versus {binding["source"]}; '
+                            'choose one explicit domain subset; project replacements are forbidden')
+                else:
+                    merged[domain] = binding
+
+            for relative in includes:
+                child = resolve(member.parent / relative)
+                source['resolved_include'].append(str(child))
+                for domain, binding in load(child, depth + 1).items():
+                    insert(domain, binding)
+            for domain, value in local.items():
+                insert(domain, dict(value=value, source=key, sha256=source['sha256'],
+                                    scoped=scoped(domain, value, member)))
+            active.remove(key)
+            cached[key] = merged
+            return merged
+
+        bindings = load(path, 0)
+        # Envelope v2 resolves to the already versioned domain-v1 configuration.
+        # All leaf checks, cross-domain IDs and readout rules stay authoritative.
+        effective = dict(project_schema_version=1, **{k: v['value'] for k, v in bindings.items()})
+        validator.validate(effective, catalog)
+        origins = {}
+        for domain, binding in bindings.items():
+            origins[domain] = dict(source_file=binding['source'], source_sha256=binding['sha256'],
+                                   source_key=domain, selection='first-identical-domain-origin',
+                                   contributors=[dict(path=f['path'], sha256=f['sha256'])
+                                                 for f in files if domain in f['definitions']])
+        roots = {k: str(resolve(Path(bindings['project']['source']).parent / value, strict=False))
+                 for k, value in effective['project']['roots'].items()}
+        processing = effective['processing']
+        require(processing['native_mode'] == 'legacy_reference',
+                'Project has no native settings; configuration remains unavailable')
+        native_path = resolve(Path(bindings['processing']['source']).parent / processing['native_configuration'])
+        return effective, files, origins, roots, native_path
+
+    def load_project(self, path):
+        validator, catalog_source, catalog = self._project_contract()
+        data, project_sources, origins, roots, native_path = self._compose_project(path, validator, catalog)
+        # The C reader captures every actual native subset and owns resolution;
+        # do not reread mutable TOML, flatten before capture, or recreate defaults.
+        native_record = self.load_toml(native_path).as_dict()
+        settings = {field['native_key']: field['stored']
+                    for field in native_record['settings']['native'].values()}
+        normalized_native = tomllib.loads(self.render(settings))
+        validator.native_consistency(data, normalized_native)
+        sources = project_sources + native_record['sources']
+        project = dict(notation='wenu-project-configuration-snapshot-2', configuration=data,
+                       validation_catalog_sha256=catalog_source['sha256'],
+                       resolved_roots=roots, sources=sources,
+                       project_domain_sources=origins,
+                       native_validation='native-effective-settings-validated',
+                       execution_ready=False, reference_validation='not_resolved',
+                       header_metadata_review=('pending' if data['readout']['header_evidence'] else 'not_supplied'),
+                       product_compliance='not_validated', wad_validation='configuration-attributes-checked')
+        provenance = dict(native_record['provenance'],
+                          project_catalog_sha256=catalog_source['sha256'],
+                          project_domain_sources=origins,
+                          project_composition=dict(versions=[1, 2], domain_schema_version=1,
+                                                   override_allowlist=[], conflicts='reject'))
+        return self.freeze(settings, sources, provenance, project=project)
 
 
     def restore(self, path):
