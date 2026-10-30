@@ -1,0 +1,430 @@
+{
+  "status": "input-request-passed",
+  "host": "06020969a870",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "python": "/usr/bin/python3",
+  "probe": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+  "probe_sha256": "e27fbd40436ff5cd3351acdf7d126e2deead3a7a6a8e129d12ff05ee767423a5",
+  "source_sha256": {
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_input_request.c": "cb20494c639ac99134b0a9c1f5ced291c1c2b2fb3dca29e70a163b180920fb64",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_input_request.h": "99a9ecb5e5d7ace71e2ba213a3bc49e2ead28a59d9b590c6a9768be9aa867cfd",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_runtime.c": "66b2db5e635601118ff054d67149b27dd54df807cc3bd3368979f83ce6df23b5",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mef_runtime.h": "09623a33bfcdbc91f1cd79b85f9db96176b842294c391ccc868f6b6c99a98d2c",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/input_request_probe.c": "0a3ba83c86c925e85f8c791256404168d88c388371d5557d5ab2eb69092c296e",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/input_request_contract.py": "e89838e0a790966f5522a9755587b5e792a903134db87371fa4ae0f2304954ea",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/charmatrix.c": "196f3a73bf3296c83b9f348db12f74d87bc8e05d323a3c1366ec9150f35cb8f8",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/parse_tok.c": "690a1368daa1d0e97db8a98abdd3ef16e32c094124ed335a8dba855f14622ce0",
+    "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/iproc/framelist.c": "8ba7398f87c71dc6f4c15908b2a2dc29b00397c84c1754abaa42104fc62005d9"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "legacy",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces/lists/input.list"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces/members",
+      "exit_status": 0,
+      "log": "legacy.log",
+      "log_sha256": "1a514cd0f689b561252b35ae161eb015348658830756a6513637a811cf3f0c40"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "omitted",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "omitted-0.log",
+      "log_sha256": "756f4846147bc60416577bb84554a8bbd59b6a64e5daeca6c9881330b654b970"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "omitted",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "omitted-1.log",
+      "log_sha256": "756f4846147bc60416577bb84554a8bbd59b6a64e5daeca6c9881330b654b970"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "selected",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "selected-0.log",
+      "log_sha256": "ad47907be0707864ab2c0f4ef3614a8d44b216205d5f01183f597830f18dce65"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "selected",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "selected-1.log",
+      "log_sha256": "ad47907be0707864ab2c0f4ef3614a8d44b216205d5f01183f597830f18dce65"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "direct",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "direct-0.log",
+      "log_sha256": "78f8444b55088426a6a64dd0509095042b785a266a3e55f4ce163372ac563ff8"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "direct",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "direct-1.log",
+      "log_sha256": "78f8444b55088426a6a64dd0509095042b785a266a3e55f4ce163372ac563ff8"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "missing-bpm",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "missing-bpm-0.log",
+      "log_sha256": "a94f91d282cfef40fda4f4582787db0d73cb94c03798ecdcbe8dcc6c61307a26"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "missing-bpm",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "missing-bpm-1.log",
+      "log_sha256": "a94f91d282cfef40fda4f4582787db0d73cb94c03798ecdcbe8dcc6c61307a26"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "missing-member",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "missing-member-0.log",
+      "log_sha256": "207f448d5fe067f5c94ada558eed3b0cb281f00e674e4499e8f160e2034d8d18"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "missing-member",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "missing-member-1.log",
+      "log_sha256": "207f448d5fe067f5c94ada558eed3b0cb281f00e674e4499e8f160e2034d8d18"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "empty",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "empty-0.log",
+      "log_sha256": "c35b9bcc35b7e8bb4d3746d53e2b7a7c95d25892fe8b7805a60175729ff9ce6d"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "empty",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "empty-1.log",
+      "log_sha256": "c35b9bcc35b7e8bb4d3746d53e2b7a7c95d25892fe8b7805a60175729ff9ce6d"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "long-line",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "long-line-0.log",
+      "log_sha256": "0e0e6e2bf2ba7eb66b7f831d973c64740e56762ee89d6aeb61d9ca17d3111b9a"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "long-line",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "long-line-1.log",
+      "log_sha256": "0e0e6e2bf2ba7eb66b7f831d973c64740e56762ee89d6aeb61d9ca17d3111b9a"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "nul",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "nul-0.log",
+      "log_sha256": "7309b8a52f1ba108b9680855d6241eacc6aac363148f1f514e869009e2b688dd"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "nul",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "nul-1.log",
+      "log_sha256": "7309b8a52f1ba108b9680855d6241eacc6aac363148f1f514e869009e2b688dd"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "quoted-space",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "quoted-space-0.log",
+      "log_sha256": "da471eac71b5eb19033619feb5abfb6ca02471981c285533b4f4b5fade7f8a74"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "quoted-space",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "quoted-space-1.log",
+      "log_sha256": "da471eac71b5eb19033619feb5abfb6ca02471981c285533b4f4b5fade7f8a74"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "directory",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "directory-0.log",
+      "log_sha256": "d262f3eafa19c1a9df5969c30bd3d061e6181c050ca3bca13560d298afa0871a"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "directory",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "directory-1.log",
+      "log_sha256": "d262f3eafa19c1a9df5969c30bd3d061e6181c050ca3bca13560d298afa0871a"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "unknown-base",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "unknown-base-0.log",
+      "log_sha256": "6d6414fe6522423cb34e28aa40987a2f67f0032854c90a6b4a5c70f9993e8edd"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "unknown-base",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "unknown-base-1.log",
+      "log_sha256": "6d6414fe6522423cb34e28aa40987a2f67f0032854c90a6b4a5c70f9993e8edd"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "unknown-image",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "unknown-image-0.log",
+      "log_sha256": "f90af3b56e38744d4fc463f5618b6d2b45f426b3c82bae0e00ade0b24218e747"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "unknown-image",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "unknown-image-1.log",
+      "log_sha256": "f90af3b56e38744d4fc463f5618b6d2b45f426b3c82bae0e00ade0b24218e747"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "ambiguous",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "ambiguous-0.log",
+      "log_sha256": "907dc7b77ddfdd0a52abd9f8ff2889839e34ed261bac1b60405258ab02a964b9"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "ambiguous",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "ambiguous-1.log",
+      "log_sha256": "907dc7b77ddfdd0a52abd9f8ff2889839e34ed261bac1b60405258ab02a964b9"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "no-guess",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "no-guess-0.log",
+      "log_sha256": "f534fbdc153fa3129bbd2f2ceeff94dfb4a17c5e159f4fc39113bea21f740a73"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "no-guess",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "no-guess-1.log",
+      "log_sha256": "f534fbdc153fa3129bbd2f2ceeff94dfb4a17c5e159f4fc39113bea21f740a73"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "inconsistent-bpm",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "inconsistent-bpm-0.log",
+      "log_sha256": "bfbf625d7afca25e9b2890f82637d76106daa1c2adbb2b07f52b6fc4cd304450"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "inconsistent-bpm",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "inconsistent-bpm-1.log",
+      "log_sha256": "bfbf625d7afca25e9b2890f82637d76106daa1c2adbb2b07f52b6fc4cd304450"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "ownership",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "ownership-0.log",
+      "log_sha256": "6954a90226be0421e4ff73f825ca019bef99e7ef12fe70594c52bcc73022a9c3"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "ownership",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "ownership-1.log",
+      "log_sha256": "6954a90226be0421e4ff73f825ca019bef99e7ef12fe70594c52bcc73022a9c3"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "ownership-selected",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated one",
+      "exit_status": 0,
+      "log": "ownership-selected-0.log",
+      "log_sha256": "6a2f7cfc6fa8b048ba4f86c1b1f00a2d7cb0aeb0c75c5a9cdcf5221d7e26d2b0"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/regression-build/input_request_probe",
+        "ownership-selected",
+        "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/fixture with spaces"
+      ],
+      "cwd": "/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/m1-inputs-hjo1c_t_/unrelated two",
+      "exit_status": 0,
+      "log": "ownership-selected-1.log",
+      "log_sha256": "6a2f7cfc6fa8b048ba4f86c1b1f00a2d7cb0aeb0c75c5a9cdcf5221d7e26d2b0"
+    }
+  ],
+  "fixture_sha256": {
+    "nul": "db525e822d01805df1353d71b40a05d29caa2e775e7975df64a524a807088224",
+    "long-line": "265a81d47780430d537dd59b0590fc83a8fd8fa049413f3f9becfc25770de4fa",
+    "missing-member": "c27104be580a66af5b2d322b9de494bfdfb5f9243a918b26159131e4be5a0224",
+    "quoted-space": "fe37cfc58f3f78098a799678ca53b694fb2642c6b441677f7eceb6129e797fd8",
+    "empty": "4b8c1e98497ab828413869ef857ba3b8406391a6a5f891bf5ee9f4af68b95eb0",
+    "members/a.fits": "116621b19df48c487d22142e544379f27c4d5cce9ecc7a8026b68fc65b167e40",
+    "members/OCAM_BPM_1x1.fits": "60598c4a7a51a69bbfed9d486408981cd90ce0821f5357541c0b3592dec50820",
+    "members/z.fits": "076b4e778157ee85119af66ee780513be9a24c39508e35c1c782eec830dcf6d9",
+    "members/with space.fits": "116621b19df48c487d22142e544379f27c4d5cce9ecc7a8026b68fc65b167e40",
+    "lists/input.list": "4ee2287c711b279810c0109bf4b514a6c1a34bf9f9bde550ba565cc3dc5910b1",
+    "cal/bpm.fits": "3fe3b8b9ad1dc3bdeaa74b1420b56ea5ce4236680ab82fef7a220dcaa52d85bf"
+  },
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": null,
+    "UBSAN_OPTIONS": null,
+    "LSAN_OPTIONS": null
+  },
+  "scope": "synthetic file/list requests only; no engine, header/pixel reading or reduction",
+  "case_count": 17,
+  "execution_directories": 2,
+  "fixture_unchanged": true,
+  "source_unchanged": true,
+  "cwd_unchanged": true
+}

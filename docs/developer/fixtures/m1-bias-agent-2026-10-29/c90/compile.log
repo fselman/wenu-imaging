@@ -1,0 +1,315 @@
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_framelist_load’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1723:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1723 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_load’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1869:33: warning: unused variable ‘single_frames’ [-Wunused-variable]
+ 1869 |         int                     single_frames ;
+      |                                 ^~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1868:33: warning: unused variable ‘err’ [-Wunused-variable]
+ 1868 |         int                     err ;
+      |                                 ^~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1867:33: warning: unused variable ‘exts’ [-Wunused-variable]
+ 1867 |         int               *     exts ;
+      |                                 ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1866:33: warning: unused variable ‘i’ [-Wunused-variable]
+ 1866 |         int                     i ;
+      |                                 ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1864:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1864 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1863:20: warning: unused variable ‘mef_frame’ [-Wunused-variable]
+ 1863 |         image_t  * mef_frame ;
+      |                    ^~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_overscan_correction’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1970:21: warning: variable ‘zIndex’ set but not used [-Wunused-but-set-variable]
+ 1970 |     int             zIndex;
+      |                     ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘simplifyFilterName’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:2231:14: warning: unused variable ‘zChar’ [-Wunused-variable]
+ 2231 |         char zChar ;
+      |              ^~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_valid_subset’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:2266:33: warning: unused variable ‘getval’ [-Wunused-variable]
+ 2266 |         char            *       getval ;
+      |                                 ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_bpm’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:2688:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2688 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:2848:25: warning: unused variable ‘bias’ [-Wunused-variable]
+ 2848 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:2847:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+ 2847 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3645:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3645 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3521:17: warning: unused variable ‘i’ [-Wunused-variable]
+ 3521 |     int         i, nframes ;
+      |                 ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3519:18: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3519 |     char        *getval ;
+      |                  ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3515:18: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 3515 |     framelist   *fnames ;
+      |                  ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_eclipse’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3690:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 3690 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3689:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3689 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3685:17: warning: variable ‘exptime’ set but not used [-Wunused-but-set-variable]
+ 3685 |     float       exptime;
+      |                 ^~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:3682:26: warning: unused variable ‘fh_ref’ [-Wunused-variable]
+ 3682 |         qfits_header    *fh_ref ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_input_filename’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4028:14: warning: unused variable ‘cval’ [-Wunused-variable]
+ 4028 |         char cval[80];
+      |              ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_headers_for’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4200:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 4200 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4199:26: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 4199 |         framelist       *fnames ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4198:26: warning: unused variable ‘first_name’ [-Wunused-variable]
+ 4198 |         char            *first_name ;
+      |                          ^~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4196:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 4196 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4193:26: warning: unused variable ‘out’ [-Wunused-variable]
+ 4193 |         FILE            *out ;
+      |                          ^~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4192:25: warning: unused variable ‘qd’ [-Wunused-variable]
+ 4192 |         qfitsdumper     qd ;
+      |                         ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4185:26: warning: unused variable ‘fh_main’ [-Wunused-variable]
+ 4185 |         qfits_header    *fh_main = NULL ;
+      |                          ^~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_create_orig_filename’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:4116:1: warning: control reaches end of non-void function [-Wreturn-type]
+ 4116 | }
+      | ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_split’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1658:31: warning: ‘.tmp.XXXXXX’ directive writing 11 bytes into a region of size between 1 and 512 [-Wformat-overflow=]
+ 1658 |         sprintf(temporary, "%s.tmp.XXXXXX", output);
+      |                               ^~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/ins/mef/common/mefp_lib.c:1658:9: note: ‘sprintf’ output between 12 and 523 bytes into a destination of size 512
+ 1658 |         sprintf(temporary, "%s.tmp.XXXXXX", output);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:350:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  350 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:351:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  351 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:536:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  536 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:837:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  837 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:188:21: note: ‘xmemory_p_mm_filename’ declared here
+  188 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:505:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:505:31: note: directive argument in the range [-2147483648, 2147483647]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:505:31: note: using the range [0, 4294967295] for directive argument
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/xmemory.c:505:5: note: ‘sprintf’ output between 20 and 1052 bytes into a destination of size 1024
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  506 |             (long)getpid(), reg) ;
+      |             ~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/qerror.c: In function ‘qfits_warning’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/qerror.c:175:27: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1020 [-Wformat-overflow=]
+  175 |         sprintf(all, "*** %s", msg);
+      |                           ^~   ~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/qerror.c:175:9: note: ‘sprintf’ output between 5 and 1028 bytes into a destination of size 1024
+  175 |         sprintf(all, "*** %s", msg);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/qerror.c: In function ‘qfits_error’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/qerror.c:193:30: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1017 [-Wformat-overflow=]
+  193 |         sprintf(all, "error: %s", msg);
+      |                              ^~   ~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/qerror.c:193:9: note: ‘sprintf’ output between 8 and 1031 bytes into a destination of size 1024
+  193 |         sprintf(all, "error: %s", msg);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/t_iso8601.c: In function ‘qfits_get_datetime_iso8601’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/t_iso8601.c:236:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/t_iso8601.c:236:27: note: directive argument in the range [-99, 99]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/t_iso8601.c:236:5: note: ‘sprintf’ output between 20 and 40 bytes into a destination of size 20
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  237 |             GET_CCYEAR(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  238 |             GET_MONTH(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~
+  239 |             GET_DAY(curdate),
+      |             ~~~~~~~~~~~~~~~~~
+  240 |             GET_HOUR(curtime),
+      |             ~~~~~~~~~~~~~~~~~~
+  241 |             GET_MINUTE(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  242 |             GET_SECOND(curtime));
+      |             ~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/getopt.c: In function ‘getopt_internal’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/getopt.c:225:33: warning: comparison of integer expressions of different signedness: ‘size_t’ {aka ‘long unsigned int’} and ‘int’ [-Wsign-compare]
+  225 |                 if (match_chars == (int)(strlen(longopts[optindex].name))) {
+      |                                 ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c: In function ‘get_datetime_iso8601’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c:258:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c:258:27: note: directive argument in the range [-99, 99]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c:258:5: note: ‘sprintf’ output between 20 and 40 bytes into a destination of size 20
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  259 |             GET_CCYEAR(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  260 |             GET_MONTH(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~
+  261 |             GET_DAY(curdate),
+      |             ~~~~~~~~~~~~~~~~~
+  262 |             GET_HOUR(curtime),
+      |             ~~~~~~~~~~~~~~~~~~
+  263 |             GET_MINUTE(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  264 |             GET_SECOND(curtime));
+      |             ~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c: In function ‘get_datetimemili_iso8601’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c:277:58: warning: ‘%03d’ directive writing between 3 and 4 bytes into a region of size between 0 and 4 [-Wformat-overflow=]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                                                          ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c:277:27: note: directive argument in the range [-999, 999]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/t_iso8601.c:277:5: note: ‘sprintf’ output between 24 and 45 bytes into a destination of size 24
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  278 |             GET_CCYEAR(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  279 |             GET_MONTH(curdate),
+      |             ~~~~~~~~~~~~~~~~~~~
+  280 |             GET_DAY(curdate),
+      |             ~~~~~~~~~~~~~~~~~
+  281 |             GET_HOUR(curtime),
+      |             ~~~~~~~~~~~~~~~~~~
+  282 |             GET_MINUTE(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  283 |             GET_SECOND(curtime),
+      |             ~~~~~~~~~~~~~~~~~~~~
+  284 |             GET_MILI(curtime));
+      |             ~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/iproc/framelist.c: In function ‘is_ascii_list’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/iproc/framelist.c:602:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  602 |     if (sta.st_size<1)
+      |     ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/iproc/framelist.c:604:9: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  604 |         if ((in=fopen(filename, "r"))==NULL)
+      |         ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/bias_legacy_reference.c: In function ‘mef_bias_reference’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/bias_legacy_reference.c:12:25: warning: unused variable ‘bias’ [-Wunused-variable]
+   12 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/tests/bias_legacy_reference.c:11:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+   11 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/filename.c: In function ‘get_dirname’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/filename.c:98:23: warning: the comparison will always evaluate as ‘true’ for the address of ‘path’ will never be NULL [-Waddress]
+   98 |     last_slash = path != NULL ? strrchr (path, '/') : NULL;
+      |                       ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/filename.c:92:17: note: ‘path’ declared here
+   92 |     static char path[MAXNAMESZ];
+      |                 ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/filename.c: In function ‘get_rootname’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/unix/filename.c:191:9: warning: ‘memset’ used with constant zero length parameter; this could be due to transposed parameters [-Wmemset-transposed-args]
+  191 |         memset(path, MAXNAMESZ, 0);
+      |         ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/iproc/image_stats.c: In function ‘image_getmedian_mov_horz’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/src/iproc/image_stats.c:703:17: warning: variable ‘l’ set but not used [-Wunused-but-set-variable]
+  703 |     int         l,
+      |                 ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2161:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                          ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2161:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                         ^~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2161:43: note: ‘sprintf’ output between 3 and 13 bytes into a destination of size 10
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                           ^~~~~~~~~~~~~~~~~~~~
+ 2162 |                                        (int)(col->atom_nb/2)) ; break ;
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2159:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                          ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2159:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                         ^~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2159:43: note: ‘sprintf’ output between 3 and 13 bytes into a destination of size 10
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                           ^~~~~~~~~~~~~~~~~~~~
+ 2160 |                                        (int)(col->atom_nb/2)) ; break ;
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2155:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                          ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2155:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                         ^~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/tfits.c:2155:43: note: ‘sprintf’ output between 3 and 13 bytes into a destination of size 10
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                           ^~~~~~~~~~~~~~~~~~~~
+ 2156 |                                        (int)(col->atom_nb/2)) ; break ;
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/md5.c: In function ‘MD5Final’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/md5.c:165:26: warning: argument to ‘sizeof’ in ‘memset’ call is the same expression as the destination; did you mean to dereference it? [-Wsizeof-pointer-memaccess]
+  165 |     memset(ctx, 0, sizeof(ctx));        /* In case it's sensitive */
+      |                          ^
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/get_name.c: In function ‘qfits_get_dir_name’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/get_name.c:100:23: warning: the comparison will always evaluate as ‘true’ for the address of ‘path’ will never be NULL [-Waddress]
+  100 |     last_slash = path != NULL ? strrchr (path, '/') : NULL;
+      |                       ^~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/get_name.c:94:17: note: ‘path’ declared here
+   94 |     static char path[MAXNAMESZ];
+      |                 ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/get_name.c: In function ‘qfits_get_root_name’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/get_name.c:185:5: warning: ‘memset’ used with constant zero length parameter; this could be due to transposed parameters [-Wmemset-transposed-args]
+  185 |     memset(path, MAXNAMESZ, 0);
+      |     ^~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/fits_h.c: In function ‘qfits_header_dump_hdr’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/fits_h.c:1274:22: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1274 |         fprintf(out, line) ;
+      |                      ^~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/pixio.c: In function ‘qfitsloader_init’:
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/pixio.c:269:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  269 |         ql->np = naxis3 ;
+      |         ~~~~~~~^~~~~~~~
+/workspace/scratch/dd7a33151b6c/dependency-review/m1-bias/mefpp2/qfits5/src/pixio.c:272:9: note: here
+  272 |         case 2:
+      |         ^~~~

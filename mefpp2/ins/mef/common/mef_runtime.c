@@ -434,3 +434,8 @@ mef_status mef_execute(mef_context *context, mef_result **out, mef_error **error
     return fail(&context->allocator, MEF_ERR_UNSUPPORTED,
         "Numerical service is not connected", error);
 }
+
+const mef_allocator *mef_context_allocator(const mef_context *context)
+{
+    return context == NULL ? NULL : &context->allocator;
+}

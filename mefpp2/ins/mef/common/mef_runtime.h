@@ -87,6 +87,8 @@ mef_status mef_context_create(const mef_config *config, const mef_request *reque
     const mef_allocator *allocator, mef_context **out, mef_error **error);
 void mef_context_destroy(mef_context *context);
 const mef_config *mef_context_config(const mef_context *context);
+/* Borrowed allocator; its callbacks/user data retain their original lifetime. */
+const mef_allocator *mef_context_allocator(const mef_context *context);
 const mef_request *mef_context_request(const mef_context *context);
 
 /* Metadata construction only, not evidence that processing succeeded. No files
@@ -104,9 +106,9 @@ void mef_error_destroy(mef_error *error);
 mef_status mef_error_status(const mef_error *error); /* MEF_OK for NULL */
 const char *mef_error_message(const mef_error *error); /* NULL for NULL */
 
-/* No numerical service is connected in this increment. A valid context returns
- * MEF_ERR_UNSUPPORTED, never a fabricated success/result. Later operations use
- * the owner-selected mef_cal_* / mef_sci_pp service names.
+/* This metadata-only dispatcher has no image payload and returns UNSUPPORTED.
+ * The opt-in mef_cal_bias service takes its explicit operation-specific image
+ * payload through mef_cal_bias.h; no fake metadata-only processing success.
  */
 mef_status mef_execute(mef_context *context, mef_result **out, mef_error **error);
 #endif
