@@ -1,0 +1,87 @@
+{
+  "baseline": "2699aa97228baa22956be30d7e8a68e826ea7c93",
+  "mefpp_import": "c69c314a24e56311dfd0efeb5721c3549aa5cbd0",
+  "qfits_import": "9470098a68ebaf8e2ba67f2bde1f5b1090a2524b",
+  "functions": {
+    "chop_r": {
+      "path": "src/unix/comm.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "7502a400a5f361886cdbed116510107135c02af41c2ae602643165ce7de0410c"
+    },
+    "e_warning": {
+      "path": "src/unix/comm.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "6eeab7d7cfef5eb848bdf61ffb92bc70bee3c61b440c4d5194c0eac2b03c4739"
+    },
+    "e_error": {
+      "path": "src/unix/comm.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "49202a7b5eaffd94d2e990769958f6675fe65c40db6813ff848da20c291da86e"
+    },
+    "e_comment": {
+      "path": "src/unix/comm.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "a474b289a5498fd5a00aa692149d7e230dfddcf2719d39b28bffa68a2bb75117"
+    },
+    "compute_status": {
+      "path": "src/unix/comm.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "b95bfabcf85ff7bc5e5404aed3bb8882a2f1b334f72ded69c68400bd696088e2"
+    },
+    "set_logfilename": {
+      "path": "src/unix/comm.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "31d8ca524ee729f6d9e0394379aee940de13c440d98338e44d786441daa7f6fd"
+    },
+    "get_date_iso8601": {
+      "path": "src/unix/t_iso8601.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "ac9d8838cb03cbfced4b1d9b30a440febb2a51d7195c388624b3be15b9059447"
+    },
+    "get_datetime_iso8601": {
+      "path": "src/unix/t_iso8601.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "c60736eecda1b5b5d3204831a3bb459f9c95daf366e41d0c3f8568e05dbdc87c"
+    },
+    "get_datetimemili_iso8601": {
+      "path": "src/unix/t_iso8601.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "3aeb0c545a591b024c1afd62e686d577ec5e7cefda21198529642eae340094b2"
+    },
+    "rtd_swapfilename": {
+      "path": "src/iproc/image_rtd.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "df5762007f04177474d72bc0caa4d81883e6052dadefb91e1dc008463eb321be"
+    },
+    "rtd_image_put": {
+      "path": "src/iproc/image_rtd.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "154582cec6221f44d6aca0706acfff1f0f4bc2dd2fd9d69c2a15a8ac85e52e59"
+    },
+    "fits_header_merge": {
+      "path": "ins/mef/common/mefp_lib.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "34528d716c6f7a84ed778619fb4a81d4afe69fc6e363255828ed602f4bb69863"
+    },
+    "qfits_error": {
+      "path": "qfits5/src/qerror.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "e13d91f5a6a256fafb9edb70dd6dfecc339caeb2b2d6913e5a51b931dc3237d6"
+    },
+    "qfits_warning": {
+      "path": "qfits5/src/qerror.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "3f0fb7cc10c82ff6140decdaf731dc82067c5601e3caa3bcf24a02c6ed0c0799"
+    },
+    "qfits_header_dump_hdr": {
+      "path": "qfits5/src/fits_h.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "e99ca779b3646ab4e39ccdec4fa5de5a271b168cb899a1f4251339b3cb9752d1"
+    },
+    "xmemory_tmpfilename": {
+      "path": "qfits5/src/xmemory.c",
+      "identical_to_import": true,
+      "baseline_function_sha256": "77ecf1c4bb790925471b912be1385f4a40f1a3abd218cfac90c25810942100c8"
+    }
+  }
+}

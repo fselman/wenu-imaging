@@ -1,0 +1,35 @@
+In file included from /workspace/scratch/555b377cf948/format-batch-baseline/date-year.c:7:
+/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c: In function ‘get_datetime_iso8601’:
+/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:258:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:258:27: note: directive argument in the range [-99, 99]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:26:
+In function ‘sprintf’,
+    inlined from ‘get_datetime_iso8601’ at /workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:258:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 40 bytes into a destination of size 20
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c: In function ‘get_datetimemili_iso8601’:
+/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:277:58: warning: ‘%03d’ directive writing between 3 and 4 bytes into a region of size between 0 and 4 [-Wformat-overflow=]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                                                          ^~~~
+/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:277:27: note: directive argument in the range [-999, 999]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘sprintf’,
+    inlined from ‘get_datetimemili_iso8601’ at /workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:277:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 24 and 45 bytes into a destination of size 24
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~

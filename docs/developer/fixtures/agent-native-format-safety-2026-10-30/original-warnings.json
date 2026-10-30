@@ -1,0 +1,81 @@
+[
+  {
+    "file": "000_mefpp.log",
+    "count": 1,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/recipes/mefpp.c:1187:30: warning: format not a string literal and no format arguments [-Wformat-security]"
+    ]
+  },
+  {
+    "file": "001_mefp_lib.log",
+    "count": 3,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c:1853:25: warning: format not a string literal and no format arguments [-Wformat-security]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c:2226:36: warning: format not a string literal and no format arguments [-Wformat-security]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/ins/mef/common/mefp_lib.c:3197:19: warning: format not a string literal and no format arguments [-Wformat-security]"
+    ]
+  },
+  {
+    "file": "025_image_rtd.log",
+    "count": 1,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/iproc/image_rtd.c:225:26: warning: \u2018/eclipse-rtd.swp\u2019 directive writing 16 bytes into a region of size between 1 and 512 [-Wformat-overflow=]"
+    ]
+  },
+  {
+    "file": "068_gnuplot_i.log",
+    "count": 4,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:400:26: warning: \u2018 \"\u2019 directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:398:26: warning: \u2018 \"\u2019 directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:491:26: warning: \u2018 \"\u2019 directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/gnuplot_i.c:489:26: warning: \u2018 \"\u2019 directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]"
+    ]
+  },
+  {
+    "file": "078_t_iso8601.log",
+    "count": 2,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:258:53: warning: \u2018%02d\u2019 directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/mefpp2/src/unix/t_iso8601.c:277:58: warning: \u2018%03d\u2019 directive writing between 3 and 4 bytes into a region of size between 0 and 4 [-Wformat-overflow=]"
+    ]
+  },
+  {
+    "file": "084_fits_h.log",
+    "count": 1,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/fits_h.c:1274:22: warning: format not a string literal and no format arguments [-Wformat-security]"
+    ]
+  },
+  {
+    "file": "093_qerror.log",
+    "count": 2,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c:175:27: warning: \u2018%s\u2019 directive writing up to 1023 bytes into a region of size 1020 [-Wformat-overflow=]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/qerror.c:193:30: warning: \u2018%s\u2019 directive writing up to 1023 bytes into a region of size 1017 [-Wformat-overflow=]"
+    ]
+  },
+  {
+    "file": "095_t_iso8601.log",
+    "count": 1,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/t_iso8601.c:236:53: warning: \u2018%02d\u2019 directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]"
+    ]
+  },
+  {
+    "file": "096_tfits.log",
+    "count": 3,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2161:58: warning: \u2018%d\u2019 directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2159:58: warning: \u2018%d\u2019 directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]",
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/tfits.c:2155:58: warning: \u2018%d\u2019 directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]"
+    ]
+  },
+  {
+    "file": "098_xmemory.log",
+    "count": 1,
+    "warnings": [
+      "/workspace/scratch/cfd51ba369c2/native-symbol-analysis-i24rnkm5/qfits52/src/xmemory.c:505:34: warning: \u2018/vmswap_\u2019 directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]"
+    ]
+  }
+]

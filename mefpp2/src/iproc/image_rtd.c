@@ -121,6 +121,13 @@ image_t * rtd_image_get(void)
   same user. If anything wrong happens, it returns a non-zero value.
  */
 /*----------------------------------------------------------------------------*/
+static int rtd_file_command(char *out, size_t size, const char *file)
+{
+    int count;
+    count = snprintf(out, size, "config -file %s", file);
+    return count < 0 || (size_t)count >= size ? -1 : 0;
+}
+
 int rtd_image_put(image_t * im)
 {
 	int		status ;
@@ -142,8 +149,10 @@ int rtd_image_put(image_t * im)
 		rtd_disconnect();
 		return -1 ;
 	}
+    if (rtd_file_command(cmd, sizeof(cmd), rtd_dfile) != 0) {
+        e_error("RTD file command too long"); rtd_disconnect(); return -1;
+    }
 	image_save_fits(im, rtd_dfile, BPP_DEFAULT);
-	sprintf(cmd, "config -file %s", rtd_dfile);
 	status = rtd_send(cmd, &answ);
 	rtd_disconnect();
 	if (status!=0) {
@@ -217,12 +226,16 @@ static char * rtd_swapfilename(void)
 {
 	static char	swapname[FILENAMESZ];
 	char		cwd[FILENAMESZ];
+    int count;
 
     if (getcwd(cwd, FILENAMESZ-1)==NULL) {
         e_error("getting current working directory name");
         return NULL ;
     }
-    sprintf(swapname, "%s/eclipse-rtd.swp", cwd);
+    count = snprintf(swapname, sizeof(swapname), "%s/eclipse-rtd.swp", cwd);
+    if (count < 0 || (size_t)count >= sizeof(swapname)) {
+        e_error("RTD exchange filename too long"); return NULL;
+    }
 	return swapname ;
 }
 

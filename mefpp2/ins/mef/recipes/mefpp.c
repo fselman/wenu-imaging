@@ -1303,9 +1303,8 @@ int mef_engine(mef_bb * bb)
                }
 
                /* Processing software version */
-               sprintf(cval, recipe_version);
                sprintf(cval2, "Built on eclipse-%s", get_eclipse_version());
-               qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
+               qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", recipe_version, cval2, NULL);
 
                /* Product category key */
                qfits_header_add_after(fh,"PROCSOFT", bb->phase3_prodcatg_keyname, 

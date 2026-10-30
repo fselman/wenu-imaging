@@ -1,0 +1,29 @@
+In file included from /workspace/scratch/555b377cf948/format-batch-baseline/qfits-long.c:1:
+/workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c: In function ‘qfits_warning’:
+/workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c:175:27: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1020 [-Wformat-overflow=]
+  175 |         sprintf(all, "*** %s", msg);
+      |                           ^~   ~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c:25:
+In function ‘sprintf’,
+    inlined from ‘qfits_warning’ at /workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c:175:2:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 5 and 1028 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c: In function ‘qfits_error’:
+/workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c:193:30: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1017 [-Wformat-overflow=]
+  193 |         sprintf(all, "error: %s", msg);
+      |                              ^~   ~~~
+In function ‘sprintf’,
+    inlined from ‘qfits_error’ at /workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c:193:2:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 8 and 1031 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~

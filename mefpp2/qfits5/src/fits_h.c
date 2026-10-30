@@ -1271,7 +1271,7 @@ int qfits_header_dump_hdr(
 	while (k!=NULL) {
         /* Make line from information in the node */
         qfits_header_makeline(line, k, 1);
-        fprintf(out, line) ;
+        fputs(line, out) ;
         fprintf(out, "\n") ;
         n_out ++;
 		k=k->next;

@@ -1573,7 +1573,8 @@ qfits_header *fits_header_merge(qfits_header *base, qfits_header *update)
 	merged_header = qfits_header_copy(base);
 	for (i=0 ; i<update->n; i++) {
 		if (qfits_header_getitem(update,i,key,val,com,lin)) {
-			e_error("fits_header_merge: error reading item %i from update header\n");
+			e_error("fits_header_merge: error reading item %i from update header\n", i);
+            qfits_header_destroy(merged_header);
 			return NULL;
 		}
 		if (strncmp(key,"END",3) != 0) {
@@ -1599,7 +1600,7 @@ int mef_split(char *name_i, char *name_o, int xtnum)
     char output[FILENAMESZ];
     char temporary[FILENAMESZ];
     char zeros[FITS_BLOCK_SIZE];
-    int n_ext, first, last, i, fd, data_beg;
+    int n_ext, first, last, i, fd, data_beg, formatted;
     int naxis1, naxis2, bitpix;
     int result = -1;
     int temporary_exists = 0;
@@ -1655,8 +1656,15 @@ int mef_split(char *name_i, char *name_o, int xtnum)
             e_error("invalid/truncated data in [%s] extension %d", name_i, i);
             goto cleanup;
         }
-        sprintf(output, "%s_%02d.fits", name_o, i);
-        sprintf(temporary, "%s.tmp.XXXXXX", output);
+        formatted = snprintf(output, sizeof(output), "%s_%02d.fits", name_o, i);
+        if (formatted < 0 || (size_t)formatted >= sizeof(output) ||
+            strlen(output) + sizeof(".tmp.XXXXXX") > sizeof(temporary)) {
+            e_error("split output name too long"); goto cleanup;
+        }
+        formatted = snprintf(temporary, sizeof(temporary), "%s.tmp.XXXXXX", output);
+        if (formatted < 0 || (size_t)formatted >= sizeof(temporary)) {
+            e_error("cannot format split temporary name"); goto cleanup;
+        }
         fd = mkstemp(temporary);
         if (fd < 0) {
             e_error("cannot create temporary output for [%s]", output);
@@ -2508,6 +2516,16 @@ subset_done:
  * The statistics will be affected by bad pixels but this is not too bad for QC.
  *
  */
+/* A generated provenance keyword is data, never a printf format. */
+static int mef_bpm_frame_key(char *out, size_t size, const char *base, int index)
+{
+    int count;
+    if (out == NULL || size == 0 || base == NULL) return -1;
+    count = snprintf(out, size, "%s FRAME%03d", base, index);
+    if (count < 0 || (size_t)count >= size) { out[0] = '\0'; return -1; }
+    return 0;
+}
+
 pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 {
 	cube_t 	*cube_in;
@@ -2704,11 +2722,16 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             flist = mef_paths_frames(bb->paths, bb->name_bpm);
             sprintf(cval_prev,"NAXIS2");
             for (i=0 ; i<flist->n ; i++) {
-                sprintf(cval,"%s FRAME%03d", bb->bpm_frame_i_key, i+1);
+                if (mef_bpm_frame_key(cval, sizeof(cval), bb->bpm_frame_i_key, i+1) != 0) {
+                    e_error("BPM provenance keyword too long");
+                    if (dateobs_ptr != NULL) free(dateobs_ptr);
+                    framelist_del(flist); qfits_header_destroy(fhdr_extra);
+                    image_del(norm_gain); pixelmap_del(bp_map); return NULL;
+                }
                 e_comment(1, "mef_build_bpm: adding key %s",cval);
                 /* Record the filename, as for bias/dome/sky provenance. */
                 qfits_header_add_after(fhdr_extra,cval_prev, cval, get_basename(flist->name[i]), bb->bpm_frame_i_comment,NULL);
-                sprintf(cval_prev, cval);
+                memcpy(cval_prev, cval, strlen(cval) + 1);
 
                 fh = qfits_header_read(flist->name[i]);
                 if (fh==NULL) {
@@ -3685,12 +3708,11 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
 
     /* Processing software version */
     /* Processing software version */
-    sprintf(cval, recipe_version);
     sprintf(cval2, "Branch from wfi 1.19 by N. Devillard");
-    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_procsoft_keyname, cval, what);
+    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_procsoft_keyname, recipe_version, what);
     qfits_header_add_after(fh_phase3, bb->phase3_timesys_keyname, 
                                         bb->phase3_procsoft_keyname, 
-                                        cval, 
+                                        recipe_version,
                                         cval2, NULL);
 
     if (!strcmp(what,"science")) {

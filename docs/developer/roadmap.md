@@ -1,5 +1,18 @@
 # wenu-imaging roadmap
 
+30 October owner authorized batching reachable #74 fixes with #144 in draft
+PR #173 before target handoff. [Complete format/buffer inventory](native-format-safety.md) distinguishes inherited
+message/newline (#174), timestamp, conditional RTD, header-merge (#176), keyword
+and filename corrections from new probe-input mistake #175. Agent final C90/C17
+four-contract batches pass 4/4; scoped address/UB format/allocation/swap checks
+pass 3/3. [Agent receipt](native-format-safety-agent-results-2026-10-30.md) retains failures, exact origins/hashes and limits.
+Actual selected-tool Mac/representative Chapman combined four-test qualification
+is pending; applicable tickets stay open. #74 also retains unqualified gnuplot/
+FITS-table facilities; #125/#128 remain separate. No real OOM, broad leak, RTD
+operation, numerical/scientific or installed activation claim. One combined host
+handoff replaces the earlier two-test handoff; preserve all tools/installations/
+evidence and separate #144 commit. No automatic merge/cleanup or matrix replay.
+
 30 October owner authorized #144 after accepted/merged PR #170 at clean main
 e2460fb72bdbe69f92c7da8994a81d21928569b5. [Bias dependency failure correction](eclipse-allocation-failures.md)
 checks inherited image/cube, crop, overscan scratch and final QC allocations;

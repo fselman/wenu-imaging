@@ -195,6 +195,11 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
   target_compile_options(eclipse_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
   target_link_libraries(eclipse_allocation_probe PRIVATE mefpp_config_snapshot)
+  add_executable(format_safety_probe tests/format_safety_probe.c)
+  target_compile_definitions(format_safety_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+  target_compile_options(format_safety_probe PRIVATE -UNDEBUG -Wall -Wextra)
+  target_link_libraries(format_safety_probe PRIVATE mefpp_common)
   add_executable(input_request_probe tests/input_request_probe.c)
   target_link_libraries(input_request_probe PRIVATE mefpp_config_snapshot eclipse)
   target_compile_definitions(input_request_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -322,6 +327,11 @@ if(BUILD_TESTING)
         --probe "$<TARGET_FILE:eclipse_allocation_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_eclipse_allocation PROPERTIES TIMEOUT 300 LABELS "native;bias;allocation;ownership;failure")
+    add_test(NAME native_format_safety
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/format_safety_contract.py"
+        --probe "$<TARGET_FILE:format_safety_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_format_safety PROPERTIES TIMEOUT 90 LABELS "native;format;bounds;failure")
     add_test(NAME native_input_request
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/input_request_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

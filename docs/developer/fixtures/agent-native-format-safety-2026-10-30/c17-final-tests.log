@@ -1,0 +1,27 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/eclipse-oom-c17
+Test project /workspace/scratch/555b377cf948/eclipse-oom-c17
+    Start  3: native_qfits_swap
+1/4 Test  #3: native_qfits_swap ................   Passed    0.39 sec
+    Start 13: native_eclipse_allocation
+2/4 Test #13: native_eclipse_allocation ........   Passed    1.88 sec
+    Start 14: native_format_safety
+3/4 Test #14: native_format_safety .............   Passed    0.10 sec
+    Start 23: native_explicit_paths
+4/4 Test #23: native_explicit_paths ............   Passed   21.87 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Label Time Summary:
+allocation     =   1.88 sec*proc (1 test)
+bias           =   1.88 sec*proc (1 test)
+bounds         =   0.10 sec*proc (1 test)
+failure        =   2.38 sec*proc (3 tests)
+format         =   0.10 sec*proc (1 test)
+integration    =  21.87 sec*proc (1 test)
+native         =  24.25 sec*proc (4 tests)
+ownership      =   2.27 sec*proc (2 tests)
+paths          =  21.87 sec*proc (1 test)
+provenance     =  21.87 sec*proc (1 test)
+swap           =   0.39 sec*proc (1 test)
+
+Total Test time (real) =  24.26 sec

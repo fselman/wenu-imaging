@@ -1,5 +1,7 @@
 # Bias dependency allocation failures — #144
 
+Batch update: owner authorized [reachable format/buffer corrections](native-format-safety.md) in the same draft PR before one combined four-test Mac/Chapman handoff. This earlier receipt retains the original #144 snapshot, checks and evidence.
+
 Owner authorized this correction after accepted/merged PR #170 and clean Mac
 and representative Chapman main e2460fb72bdbe69f92c7da8994a81d21928569b5.
 The bounded contract is failure propagation through the existing bias dependency

@@ -1,0 +1,1 @@
+/usr/bin/gcc -O1 -D_FORTIFY_SOURCE=2 CMakeFiles/format_safety_probe.dir/tests/format_safety_probe.c.o -o format_safety_probe  libmefpp_common.a libeclipse.a libqfits.a -lm
