@@ -1,5 +1,7 @@
 # Architecture documents
 
+- [M1 cumulative closure review](../developer/m1-closure-review-2026-10-29.md): foundation gate checklist, native/WAD crosswalk and unchanged M2 sequence; owner closure decision pending.
+
 - [Grouped native command/service mapping](proposed/command-line-services.md): owner-selected `mefpp cal bias` syntax; command adapters remain subsequent work.
 - [First concrete M1 bias service](proposed/m1/bias-service.md): shared legacy arithmetic, owned signal/QC result and bounded verification.
 

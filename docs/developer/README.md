@@ -1,5 +1,7 @@
 # Developer documentation
 
+[M1 cumulative closure review](m1-closure-review-2026-10-29.md): requirement checklist, native-to-WAD units/status crosswalk, accepted evidence and original M2 handoff. Closure recommended, owner decision pending; documentation only, with no repeated execution or activation.
+
 M1 first concrete operation: [bias service](../architecture/proposed/m1/bias-service.md) and [grouped command/service mapping](../architecture/proposed/command-line-services.md). Agent synthetic numerical/ownership and focused regressions pass; actual Mac/representative Chapman C90 CMake builds and all five focused tests pass 5/5. See the [paired bias receipt](m1-bias-paired-results-2026-10-29.md); ready for owner review with no rebuild for this documentation receipt. Eclipse dependency OOM source finding #144 remains open; no installation or astronomical-data reduction.
 
 M1 current increment: [explicit file/list request adapter](../architecture/proposed/m1/file-list-requests.md) joins ordered legacy list members to a declared base and consumes a supplied detector/asset catalogue, preserving duplicates and explicit BPM omission. Agent checks pass; actual Intel Mac/representative Chapman private C90 CMake builds and all four focused tests pass 4/4, including 51 CLI cases and seventeen input cases from two directories each. See the [paired receipt](m1-inputs-paired-results-2026-10-29.md). Ready for owner review; target C17/sanitizers remain unclaimed. Normal CLI routing and the first numerical service remain next; no installation or reduction ran.

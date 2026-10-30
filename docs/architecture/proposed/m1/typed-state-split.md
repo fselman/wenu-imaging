@@ -1,5 +1,7 @@
 # M1 typed-state split — retained-source mapping
 
+Current cumulative review: [M1 closure checklist and native/WAD crosswalk](../../../developer/m1-closure-review-2026-10-29.md). The source map and precision rules below are retained; its initial implementation-status paragraph is historical. Config/runtime/CLI/bindings/input and first bias-service increments are now accepted/merged; milestone closure awaits owner review.
+
 Baseline: accepted main `7341c895e9e1eb7008915e1e2cf961532b7eb8a6`. The neighboring generated [effective-settings-baseline.json](effective-settings-baseline.json) maps every current constructor getter to its legacy destination, storage type, conversion and proposed owner domain. These domain names are implementation guidance, not new public WAD properties or a frozen ABI.
 
 | Owner | Evidence/examples | Preservation rule |
