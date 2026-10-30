@@ -1,16 +1,17 @@
 # mefpp refactor implementation plan — proposal
 
-30 October owner-authorized qfits swap correction after accepted/merged PR #167
-and clean Mac/shared Chapman main d8f855106edda9639d6a0ad4b2ba2af964a11b84:
-[private swap storage](../../developer/qfits-swap-files.md) supplies explicit owner-only exclusive creation,
-checked sizing/writes/mapping and registered cleanup, without deleting unowned
-names. #164/#168 and probe-oracle #169 remain open pending actual target gates.
-Agent optimized C90/C17 focused tests pass 2/2; scoped optimized fortify/ASan/UBSan
-forced-swap checks pass. Actual selected-tool Mac/representative Chapman private
-C90 checks are pending. Preserve all original/corrected evidence and installations;
-no numerical/allocator-mode/table-size change, full-M3 or broad OOM/thread-safety
-claim, normal engine activation or automatic merge/cleanup. Original #159/M3,
-#125 and #144 remain open. Earlier target/owner-review notes below are historical.
+30 October paired qfits swap receipt: selected-tool Intel Mac and representative
+shared Chapman4 optimized private C90 builds and both focused CTests passed 2/2
+at 471f42e19e304e16872291172535e855a2f826d9. Protected installed files and clean
+review checkouts stayed unchanged. See [paired results](../../developer/qfits-swap-paired-results-2026-10-30.md).
+The 20-case forced-swap/ownership contract and real native-path regression passed;
+#164 missing mode, #168 unowned cleanup and probe-oracle #169 are target-qualified.
+PR #170 is ready for bounded owner review. Original M3/#159, long FITS strings
+#125 and wider dependency allocation failures #144 remain open. No broad leak,
+OOM/thread-safety/scientific or installed activation claim. Preserve all original
+and corrected evidence/tools; this documentation-only receipt needs no replay.
+Separate owner instruction precedes merge/cleanup. Earlier target-pending notes
+below are historical within this qualified correction.
 
 30 October paired native M3 receipt: selected-tool Intel Mac and representative
 shared Chapman4 private C90 builds and both focused CTests passed 2/2 at

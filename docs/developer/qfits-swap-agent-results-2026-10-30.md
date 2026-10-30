@@ -1,5 +1,7 @@
 # qfits swap correction — agent results, 30 October 2026
 
+Subsequent status: [paired Mac/Chapman qualification](qfits-swap-paired-results-2026-10-30.md) passed 2/2 on each at published source 471f42e19e304e16872291172535e855a2f826d9. This original agent receipt retains its pre-target evidence and limits; target-pending entries below are historical.
+
 Owner authorized resolving #164 after accepted/merged PR #167 and clean
 Mac/shared Chapman main `d8f855106edda9639d6a0ad4b2ba2af964a11b84`.
 Branch: `fix/qfits-swap-files`. See [the contract](qfits-swap-files.md) and

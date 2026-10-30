@@ -84,6 +84,9 @@ Build the normal executable and qfits_swap_probe privately with the selected
 Mac/Chapman tools; run only native_qfits_swap and native_explicit_paths. C90 is
 the default; agent C17 and optimized fortify/ASan/UBSan lanes qualify compatibility
 and the affected allocator. Actual selected-tool Mac and representative shared
-Chapman C90 verification remains pending. Keep #164/#168/#169 open until their
-target gates pass, then record correction evidence before closing. Owner review
-precedes merge/cleanup; no install or configured-engine activation follows.
+Chapman C90 checks passed 2/2 on each at
+471f42e19e304e16872291172535e855a2f826d9; see the
+[paired receipt](qfits-swap-paired-results-2026-10-30.md). #164/#168/#169 are closed
+after correction/paired-evidence comments. PR #170 is ready for owner review.
+Separate owner instruction precedes merge/cleanup; no install or configured-engine
+activation follows.
