@@ -1,5 +1,16 @@
 # mefpp refactor implementation plan — proposal
 
+30 October paired project/readout receipt: Intel Mac and representative shared
+Chapman4 selected Python 3.11.14 authoring checks passed at
+3769f5196f9be2c2581673f89c61ae2a472167d3: six examples from two caller directories,
+66 rejection/recovery cases, immutable sources/recipe order and malformed CLI
+controls. Protected installed files/checkouts stayed unchanged. See
+[paired results](../../developer/m2-project-contracts-paired-results-2026-10-30.md). Ready for bounded owner review; full M2 remains open.
+No numerical/hardware execution or header-trust qualification is claimed. Preserve
+evidence/tools; no rerun for this documentation receipt. Earlier pending-target
+notes below are historical. Merge/cleanup requires owner instruction.
+
+
 30 October next bounded M2 increment after accepted/merged PR #149 and clean
 Mac/shared Chapman main ed949cab4f70381a1e187c7be691026c7fecf01c: owner authorized
 [remaining project-domain authoring validation](m2/project-contracts/README.md) and
