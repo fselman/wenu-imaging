@@ -1,5 +1,7 @@
 # mefpp refactor implementation plan — proposal
 
+29 October cumulative [M1 closure review](../../developer/m1-closure-review-2026-10-29.md): foundation deliverables and the first concrete operation are implemented and accepted incrementally through PR #145. Closure is recommended with retained limits; owner milestone acceptance remains pending. No milestone is reordered, no test replay is required, and M2 implementation has not begun. Historical preparation statements below retain their original scope.
+
 29 October owner command-line decision: use [grouped native subcommands](command-line-services.md), one executable with `mefpp cal bias` / other `cal` operations and `mefpp sci pp`; retain the accepted C service names. Thin command adapters share the same request/settings/services as optional mefppy. M1 establishes callable operations; M3/M4 establish loaders/paths and M5/M6 connect the applicable commands. The [first bias service](m1/bias-service.md) is now implemented for bounded synthetic qualification; grouped command dispatch is not yet implemented.
 
 29 October owner decision: use the [vendored, pinned tomlc17 source](../../../third_party/tomlc17/README.wenu.md) for the planned native TOML reader. Source import and byte-identity verification are approved now; the static build target and production adapter remain M2 implementation work after their prerequisites. Qualification N1–N4 on Mac/Chapman4 is complete within the recorded limits. This source import does not advance native numerical refactoring or install packages.
@@ -114,6 +116,8 @@ Owner addition, 29 October 2026: [input BPMs are optional throughout; variance s
 The common template syntax compiles as strict C90; implemented lifecycle helpers must pass success, occupied/invalid output, partial-construction, allocation/processing-failure and independent result/error lifetime controls before numerical modules reuse them. A declaration-only template is not runtime qualification.
 
 OCAM/WFI settings loaded through the old and adapted paths agree field-by-field, including defaults and output metadata mappings. Valid/invalid/partially constructed configurations release owned resources correctly; help/version remain independent of processing data. Targeted lifecycle diagnostics cover changed ownership, not a replay of the full historical matrix.
+
+Cumulative disposition: see the [M1 closure checklist and native/WAD crosswalk](../../developer/m1-closure-review-2026-10-29.md). It reuses accepted evidence and distinguishes the bounded foundation gate from later loader/CLI/schema/numerical work. Owner closure acceptance is pending; this review does not activate the new interfaces or close existing dependency-memory findings.
 
 ### Rollback
 
