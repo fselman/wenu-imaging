@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct mef_toml_document { toml_result_t parsed; toml_datum_t native; };
+struct mef_toml_document { toml_result_t parsed; toml_datum_t native, includes, overrides; int version; };
 static int initialized;
 /* The compatibility envelope deliberately supports single-line strings only.
  * This excludes TOML 1.1 escape additions while retaining the 1.0 emitter's
@@ -46,6 +46,8 @@ void mef_config_toml_initialize(void)
         initialized = 1;
     }
 }
+
+int mef_toml_is_initialized(void) { return initialized; }
 
 void mef_toml_close(mef_toml_document *document)
 {
@@ -101,11 +103,43 @@ mef_status mef_toml_open(const char *path, mef_toml_document **out,
     }
     version = toml_get(root, "schema_version");
     native = toml_get(root, "native");
-    if (root.u.tab.size != 2 || version.type != TOML_INT64 || version.u.int64 != 1 ||
+    if (version.type != TOML_INT64 || (version.u.int64 != 1 && version.u.int64 != 2) ||
         native.type != TOML_TABLE || !(native.flag & TOML_FLAG_STDEXPR) ||
         (native.flag & TOML_FLAG_INLINED)) {
-        detail(diagnostic, capacity, "Expected schema_version=1 and [native] only");
+        detail(diagnostic, capacity, "Expected schema_version=1/2 and [native]");
         mef_toml_close(document); return MEF_ERR_CONFIG;
+    }
+    document->version = (int)version.u.int64;
+    document->includes = toml_get(root, "include");
+    document->overrides = toml_get(root, "override_keys");
+    for (int i = 0; i < root.u.tab.size; ++i) {
+        const char *key = root.u.tab.key[i];
+        if (!strcmp(key, "schema_version") || !strcmp(key, "native")) continue;
+        if (document->version == 2 && (!strcmp(key, "include") || !strcmp(key, "override_keys"))) continue;
+        detail(diagnostic, capacity, "Unknown root key or composition in version 1");
+        mef_toml_close(document); return MEF_ERR_CONFIG;
+    }
+    for (int list = 0; list < 2; ++list) {
+        toml_datum_t array = list ? document->overrides : document->includes;
+        if (array.type == TOML_UNKNOWN) continue;
+        if (array.type != TOML_ARRAY || array.u.arr.size > 64) {
+            detail(diagnostic, capacity, "Composition lists must be arrays of at most 64 strings");
+            mef_toml_close(document); return MEF_ERR_CONFIG;
+        }
+        for (int i = 0; i < array.u.arr.size; ++i) {
+            toml_datum_t item = array.u.arr.elem[i];
+            if (item.type != TOML_STRING || item.u.str.len == 0 ||
+                strlen(item.u.str.ptr) != (size_t)item.u.str.len) {
+                detail(diagnostic, capacity, "Composition list contains invalid string");
+                mef_toml_close(document); return MEF_ERR_CONFIG;
+            }
+            for (int j = 0; j < i; ++j) {
+                if (!strcmp(array.u.arr.elem[j].u.str.ptr, item.u.str.ptr)) {
+                    detail(diagnostic, capacity, "Duplicate composition-list entry");
+                    mef_toml_close(document); return MEF_ERR_CONFIG;
+                }
+            }
+        }
     }
     /* Keys and strings must have a faithful C string representation. */
     for (int i = 0; i < native.u.tab.size; ++i) {
@@ -120,6 +154,18 @@ mef_status mef_toml_open(const char *path, mef_toml_document **out,
     *out = document;
     return MEF_OK;
 }
+
+int mef_toml_version(const mef_toml_document *document) { return document->version; }
+const char *mef_toml_key(const mef_toml_document *document, size_t index)
+{ return index < (size_t)document->native.u.tab.size ? document->native.u.tab.key[index] : NULL; }
+size_t mef_toml_include_count(const mef_toml_document *document)
+{ return document->includes.type == TOML_ARRAY ? (size_t)document->includes.u.arr.size : 0; }
+const char *mef_toml_include(const mef_toml_document *document, size_t index)
+{ return document->includes.u.arr.elem[index].u.str.ptr; }
+size_t mef_toml_override_count(const mef_toml_document *document)
+{ return document->overrides.type == TOML_ARRAY ? (size_t)document->overrides.u.arr.size : 0; }
+const char *mef_toml_override(const mef_toml_document *document, size_t index)
+{ return document->overrides.u.arr.elem[index].u.str.ptr; }
 
 size_t mef_toml_count(const mef_toml_document *document)
 {

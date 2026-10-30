@@ -1,5 +1,8 @@
 # M2 first increment — native TOML compatibility reader
 
+[Second M2 increment](native-subset-composition.md) adds version 2 composition;
+this document retains the accepted first-increment/version-1 contract.
+
 30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
 C90 builds (normal engine and both probes) and native_config_toml passed at
 b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /

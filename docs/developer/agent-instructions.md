@@ -1,5 +1,28 @@
 # wenu-imaging agent instructions
 
+30 October paired subset receipt: Intel Mac and representative Chapman4 private
+C90 builds and both focused TOML tests passed 2/2 at
+d622bbec7e9784ab9fa6211080cfd4955ff3a08d. Original exact-setting/41-case controls,
+16 composition profiles from two directories and 32 rejection/recovery cases
+passed. Protected files/checkouts stayed unchanged. See [paired results](m2-toml-subsets-paired-results-2026-10-30.md).
+Ready for bounded owner review; full M2 domain/unit/source/migration work remains
+pending. This documentation update requires no repeated execution or installation.
+Earlier target-pending notes below are historical. Merge/cleanup requires owner
+instruction.
+
+
+30 October next M2 increment after owner-accepted/merged PR #147 and clean
+Mac/shared Chapman main 0550fb90215c636cc6b881eb67e221c24b5ed876: owner instructed
+“Proceed” with [native subset composition](../architecture/proposed/m2/native-subset-composition.md). Version 2 adds containing-file
+includes and explicit per-file numeric overrides, retaining standalone version 1.
+Core composition stays C90/C17, parser shim C99; opt-in probes only, no normal
+engine/installation or numerical change. Full domain/unit/source/migration work
+remains M2. Agent C90/C17 two-test and scoped sanitizer checks passed; actual
+Mac/representative Chapman checks for this increment are pending. Build the normal
+engine and config_paf_snapshot/config_toml_snapshot/cli_capture_probe; select only
+native_config_toml and native_config_toml_subsets. Preserve prior evidence/tools;
+no historical matrix replay or automatic merge/cleanup.
+
 30 October paired M2 target receipt: Intel Mac and representative Chapman4 private
 C90 builds (normal engine and both probes) and native_config_toml passed at
 b0ea0897ff2b5257eaf3bae0029b14a11a8f7152: all 585 OCAM / 249 WFI /

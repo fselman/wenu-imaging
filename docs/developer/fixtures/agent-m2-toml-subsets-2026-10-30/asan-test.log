@@ -1,0 +1,4 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/subsets-asan/m2 subsets tbr5flz8
+PASS: 16 composition/equivalence profiles from two caller directories
+PASS: 32 composition rejection/recovery cases
+REPORT: /workspace/scratch/555b377cf948/subsets-asan/m2 subsets tbr5flz8/run-provenance.json

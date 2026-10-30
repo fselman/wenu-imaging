@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     mef_config *config, *copy, *failed;
     mef_allocator allocator;
     mef_status status;
-    char diagnostic[256], tiny;
+    char diagnostic[1024], tiny;
     const char *clone_detail;
     tracker t;
     size_t total, index;
@@ -41,6 +41,7 @@ int main(int argc, char **argv)
     if (argc == 4) {
         assert(mef_config_from_toml(argv[3], NULL, &config, diagnostic, sizeof(diagnostic)) != MEF_OK);
         assert(config == NULL);
+        printf("REJECTED: %s\n", diagnostic);
     }
     /* Normal parse/copy: parser tree is already freed when this call returns. */
     status = mef_config_from_toml(argv[1], NULL, &config, diagnostic, sizeof(diagnostic));
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
     assert(mef_config_from_toml(argv[1], NULL, &config, &tiny, 1) == MEF_ERR_CONFIG);
     assert(config == copy && tiny == '\0');
     assert(mef_config_from_toml(NULL, NULL, &copy, NULL, 0) == MEF_ERR_CONFIG);
-    /* Inject each allocation in the returned snapshot, not parser allocations. */
+    /* Inject each composition/snapshot owner allocation, not parser allocations. */
     if (argc == 3) {
     memset(&t, 0, sizeof(t)); allocator.user = &t;
     allocator.allocate = allocate; allocator.release = release;
@@ -74,6 +75,6 @@ int main(int argc, char **argv)
     status = mef_config_dump(config, output); close_error = fclose(output);
     mef_config_destroy(config);
     assert(status == MEF_OK && close_error == 0);
-    printf("PASS: TOML snapshot, clone/lifetime/occupied output, %lu snapshot allocation failures\n", (unsigned long)total);
+    printf("PASS: TOML snapshot, clone/lifetime/occupied output, %lu composition/snapshot allocation failures\n", (unsigned long)total);
     return 0;
 }
