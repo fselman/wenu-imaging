@@ -389,7 +389,7 @@ int cube_reject_planes(cube_t ** rej, int * valid)
 	int			np ;
 	int			i, j ;
 
-	if (rej==NULL || valid==NULL) return -1 ;
+	if (rej==NULL || *rej==NULL || valid==NULL) return -1 ;
 	/* Count number of valid planes */
 	nval=0 ;
 	np  =(*rej)->np ;
@@ -409,6 +409,7 @@ int cube_reject_planes(cube_t ** rej, int * valid)
 	}
 
 	squeezed = cube_new((*rej)->lx, (*rej)->ly, nval);
+    if (squeezed == NULL) return -1; /* Leave original owner/planes intact. */
 	j=0 ;
 	for (i=0 ; i<np ; i++) {
 		if (valid[i]) {

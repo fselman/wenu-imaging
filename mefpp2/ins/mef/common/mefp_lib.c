@@ -2009,12 +2009,16 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 	}
 
 
+    cropped_frame = NULL;
+    bias_line = NULL; scan_line = NULL; scan_double = NULL;
+
 	/* Bring coordinates back to C convention */
 	prescan_x[0]-- ; prescan_x[1]-- ; overscan_x[0]-- ; overscan_x[1]-- ;
 
 	/* Make out bias column */
 	bias_line = malloc(scan_width * sizeof(pixelvalue));
     scan_line = malloc(mef_frame->ly * sizeof(pixelvalue));
+    if (bias_line == NULL || scan_line == NULL) goto overscan_done;
 
 	/* Loop on all lines */
     avg_filtered = 0.0;
@@ -2032,11 +2036,8 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 			bias_line[k++] = pix[i] ;
 		   }
 		}
-		filtered =
-			function1d_average_reject(bias_line,
-					scan_width,
-					rej_int[0],
-					rej_int[1]);
+        if (function1d_average_reject_checked(bias_line, scan_width,
+                rej_int[0], rej_int[1], &filtered) != 0) goto overscan_done;
         /* e_comment(1,"Subtracting %f from each bias pixel", filtered); */
 		for (i=0 ; i<mef_frame->lx ; i++) {
 			pix[i] -= filtered ;
@@ -2047,13 +2048,12 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 	}
     medval = (double) median_pixelvalue(scan_line, mef_frame->ly);
     scan_double = pixel2double_array(scan_line, mef_frame->ly);
+    if (scan_double == NULL) goto overscan_done;
     for (j=0 ; j<mef_frame->ly ; j++) {
         scan_double[j] -= medval;
     }
     stdev_val = double_rms(scan_double, mef_frame->ly);
-    free(scan_double); /* Last use of the temporary double scan (#110). */
-    free(bias_line);
-    free(scan_line);
+
 
     e_comment(1, "********************* overscan medval: %f stdev_val: %f", medval, stdev_val);
 
@@ -2087,8 +2087,6 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
         e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->science_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
     }
 
-	/* Bring coordinates back to FITS convention */
-	prescan_x[0]++ ; prescan_x[1]++ ; overscan_x[0]++ ; overscan_x[1]++ ;
 
 	/* Extract cropped region */
 	cropped_frame = image_getvig(mef_frame,
@@ -2098,6 +2096,9 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 			crop_reg[3]);
 
 
+overscan_done:
+    free(scan_double); free(bias_line); free(scan_line);
+    prescan_x[0]++; prescan_x[1]++; overscan_x[0]++; overscan_x[1]++;
 	return cropped_frame ;
 }
 
@@ -2124,8 +2125,7 @@ int	mef_cube_overscan_correction(cube_t *i_cube,mef_bb *bb, char * what)
         scancorr = mef_overscan_correction(i_cube->plane[i], bb, i, what);
 		if (scancorr == NULL) {
 			e_error("mef_cube_overscan_correction: during overscan correction in plane %d", i+1);
-			cube_del(i_cube);
-			return -1 ;
+			return -1 ; /* Caller retains the working cube (#171). */
 		}
 		image_del(i_cube->plane[i]);
 		i_cube->plane[i] = scancorr ;
@@ -2533,7 +2533,9 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             e_error("in loading cube [%s]: aborting",bb->name_bpm);
         }
         e_comment(1,"overscan correcting/trimming BPM cube");
-        mef_cube_overscan_correction(cube_in, bb, "bpm");
+        if (cube_in == NULL || mef_cube_overscan_correction(cube_in, bb, "bpm") != 0) {
+            cube_del(cube_in); return NULL;
+        }
         /*if (bias == NULL) {
             e_error("bias is a NULL pointer");
             cube_del(cube_in);
@@ -2938,7 +2940,9 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
      * cube so we have the full input list represented.
      */
     e_comment(1, "applying overscan/prescan/trimming correction");
-    mef_cube_overscan_correction(i_cube,bb, what);
+    if (mef_cube_overscan_correction(i_cube,bb, what) != 0) {
+        cube_del(i_cube); return NULL;
+    }
     e_comment(1, "Done.");
 
     /* The bias service and legacy recipe share the extracted arithmetic. */

@@ -1,0 +1,1 @@
+baseline-probe: /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/eclipse_allocation_probe.c:95: unit: Assertion `image == NULL && dependency_fired == 1' failed.

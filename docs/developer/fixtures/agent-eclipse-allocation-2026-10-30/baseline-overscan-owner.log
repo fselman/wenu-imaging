@@ -1,0 +1,3 @@
+[1merror: in crop region definition
+[0m[1merror: mef_cube_overscan_correction: during overscan correction in plane 1
+[0mbaseline-probe: /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/eclipse_allocation_probe.c:58: unchanged: Assertion `before.bytes == after.bytes && before.ram == after.ram && before.swap == after.swap && before.cells == after.cells && before.swapfiles == after.swapfiles && before.files == after.files && before.mappings == after.mappings && before.identities == after.identities' failed.

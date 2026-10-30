@@ -1,0 +1,23 @@
+/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c: In function ‘mef_build_bpm’:
+/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c:2709:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2709 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c:3684:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3684 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c: In function ‘mef_split’:
+/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c:1659:31: warning: ‘.tmp.XXXXXX’ directive writing 11 bytes into a region of size between 1 and 512 [-Wformat-overflow=]
+ 1659 |         sprintf(temporary, "%s.tmp.XXXXXX", output);
+      |                               ^~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c:22:
+In function ‘sprintf’,
+    inlined from ‘mef_split’ at /workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c:1659:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 12 and 523 bytes into a destination of size 512
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~

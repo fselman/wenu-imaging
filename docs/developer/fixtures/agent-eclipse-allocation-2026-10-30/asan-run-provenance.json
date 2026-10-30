@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "repository": "/workspace/scratch/555b377cf948/eclipse-allocation-failures",
+  "purpose": "Synthetic bias dependency NULL-return and exact regression controls",
+  "retention": "Preserve failed and corrected attempts; no installation",
+  "probe": "/workspace/scratch/555b377cf948/eclipse-oom-asan/eclipse_allocation_probe",
+  "probe_sha256": "1412d8405acda8956f60296b5261ed08610929e8a7a4b9327209ffc6e056343e",
+  "commands": [
+    {
+      "instrument": "omegacam",
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-asan/eclipse_allocation_probe",
+        "/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/config/omegacam.paf",
+        "/workspace/scratch/555b377cf948/eclipse-oom-asan/test-work/eclipse-allocation-xjv8m7mr/synthetic"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-asan/test-work/eclipse-allocation-xjv8m7mr",
+      "exit_status": 0,
+      "log_sha256": "4327422742dc887b84754c739b51daaab170f2857b7ff660fad26d2075997f9d"
+    },
+    {
+      "instrument": "wfi",
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-asan/eclipse_allocation_probe",
+        "/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/config/wfi.paf",
+        "/workspace/scratch/555b377cf948/eclipse-oom-asan/test-work/eclipse-allocation-xjv8m7mr/synthetic"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-asan/test-work/eclipse-allocation-xjv8m7mr",
+      "exit_status": 0,
+      "log_sha256": "4327422742dc887b84754c739b51daaab170f2857b7ff660fad26d2075997f9d"
+    }
+  ],
+  "commit": "e2460fb72bdbe69f92c7da8994a81d21928569b5",
+  "branch": "fix/eclipse-allocation-failures",
+  "dirty_state": "M mefpp2/CMakeLists.txt\n M mefpp2/ins/mef/common/mef_bias_kernel.c\n M mefpp2/ins/mef/common/mefp_lib.c\n M mefpp2/ins/mef/recipes/mefpp.c\n M mefpp2/src/include/function_1d.h\n M mefpp2/src/include/image_stats.h\n M mefpp2/src/iproc/cube2image.c\n M mefpp2/src/iproc/cube_handling.c\n M mefpp2/src/iproc/extraction.c\n M mefpp2/src/iproc/image_handling.c\n M mefpp2/src/iproc/image_stats.c\n M mefpp2/src/iproc/pixel_handling.c\n M mefpp2/src/math/function_1d.c\n?? mefpp2/tests/eclipse_allocation_contract.py\n?? mefpp2/tests/eclipse_allocation_probe.c"
+}

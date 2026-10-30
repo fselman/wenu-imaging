@@ -1,5 +1,18 @@
 # Developer documentation
 
+30 October owner authorized #144 after accepted/merged PR #170 at clean main
+e2460fb72bdbe69f92c7da8994a81d21928569b5. [Bias dependency failure correction](eclipse-allocation-failures.md)
+checks inherited image/cube, crop, overscan scratch and final QC allocations;
+#171 separately records inherited borrowed-cube destruction/ignored status.
+The shared kernel and active native overscan callers propagate failure. Agent
+C90/C17 allocation/native-path CTests pass 2/2; scoped ASan/UBSan allocation suite
+passes 1/1. [Agent receipt](eclipse-allocation-agent-results-2026-10-30.md) retains original failures and new test setup #172.
+Actual selected-tool Mac/representative Chapman checks remain pending; keep
+#144/#171/#172 open. Global qfits fatal RAM/swap policy is unchanged; no real OOM,
+LeakSanitizer, complete-engine memory or scientific acceptance. Full M3/#159 and
+other recorded limits remain separate. Preserve tools/installations/all evidence;
+no historical matrix replay, automatic merge/cleanup or configured activation.
+
 30 October paired qfits swap receipt: selected-tool Intel Mac and representative
 shared Chapman4 optimized private C90 builds and both focused CTests passed 2/2
 at 471f42e19e304e16872291172535e855a2f826d9. Protected installed files and clean

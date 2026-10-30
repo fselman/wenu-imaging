@@ -809,37 +809,33 @@ int function1d_natural_spline(
   pixelvalues are averaged and the result is returned.
  */
 /*--------------------------------------------------------------------------*/
-pixelvalue function1d_average_reject(
-		pixelvalue	*	line,
-		int				npix,
-		int				pix_low,
-		int				pix_high)
+int function1d_average_reject_checked(pixelvalue *line, int npix,
+    int pix_low, int pix_high, pixelvalue *out)
 {
-	pixelvalue	*	sorted ;
-	int				i ;
-	double			avg ;
-
-	/* Sanity tests */
-	if ((line==NULL) || (npix<1)) return (pixelvalue)0 ;
-	if ((pix_low+pix_high)>=npix) return (pixelvalue)0 ;
-
-	/* Copy input line and sort it */
-	sorted = malloc(npix * sizeof(pixelvalue)) ;
-	memcpy(sorted, line, npix * sizeof(pixelvalue)) ;
-	pixel_qsort(sorted, npix);
-
-	/* Find out average of remaining values */
-	avg = 0.00 ;
-	/* The retained interval starts at zero-based pix_low (#121). */
-	for (i=pix_low ; i<(npix-pix_high) ; i++) {
-		avg += (double)sorted[i] ;
-	}
-	free(sorted);
-	avg /= (double)(npix - pix_high - pix_low) ;
-
-	return (pixelvalue)avg ;
+    pixelvalue *sorted;
+    int i;
+    double avg;
+    if (line == NULL || out == NULL || npix < 1 || pix_low < 0 || pix_high < 0 ||
+        pix_low >= npix || pix_high >= npix - pix_low) return -1;
+    sorted = malloc(npix * sizeof(pixelvalue));
+    if (sorted == NULL) return -1;
+    memcpy(sorted, line, npix * sizeof(pixelvalue));
+    pixel_qsort(sorted, npix);
+    avg = 0.00;
+    for (i = pix_low; i < npix - pix_high; ++i) avg += (double)sorted[i];
+    free(sorted);
+    avg /= (double)(npix - pix_high - pix_low);
+    *out = (pixelvalue)avg;
+    return 0;
 }
-
+pixelvalue function1d_average_reject(pixelvalue *line, int npix, int low, int high)
+{
+    pixelvalue value;
+    value = 0;
+    if (function1d_average_reject_checked(line, npix, low, high, &value) != 0)
+        e_error("cannot compute rejected line average");
+    return value;
+}
 
 /*-------------------------------------------------------------------------*/
 /**

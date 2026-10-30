@@ -1,0 +1,46 @@
+{
+  "import": "c69c314a24e56311dfd0efeb5721c3549aa5cbd0",
+  "baseline": "e2460fb72bdbe69f92c7da8994a81d21928569b5",
+  "functions": {
+    "image_new": {
+      "path": "src/iproc/image_handling.c",
+      "same_function_body_as_import": true
+    },
+    "image_copy": {
+      "path": "src/iproc/image_handling.c",
+      "same_function_body_as_import": true
+    },
+    "cube_reject_planes": {
+      "path": "src/iproc/cube_handling.c",
+      "same_function_body_as_import": true
+    },
+    "cube_avg_median": {
+      "path": "src/iproc/cube2image.c",
+      "same_function_body_as_import": true
+    },
+    "image_getvig": {
+      "path": "src/iproc/extraction.c",
+      "same_function_body_as_import": true
+    },
+    "pixel2double_array": {
+      "path": "src/iproc/pixel_handling.c",
+      "same_function_body_as_import": true
+    },
+    "image_getmedian": {
+      "path": "src/iproc/image_stats.c",
+      "same_function_body_as_import": true
+    },
+    "function1d_average_reject": {
+      "path": "src/math/function_1d.c",
+      "same_function_body_as_import": false
+    },
+    "mef_cube_overscan_correction": {
+      "path": "ins/mef/common/mefp_lib.c",
+      "same_function_body_as_import": true
+    },
+    "mef_overscan_correction": {
+      "path": "ins/mef/common/mefp_lib.c",
+      "same_function_body_as_import": false
+    }
+  }
+}

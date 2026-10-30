@@ -307,6 +307,9 @@ int function1d_natural_spline(
   pixelvalues are averaged and the result is returned.
  */
 /*--------------------------------------------------------------------------*/
+/* Checked bias-path form: output is unchanged on failure (#144). */
+int function1d_average_reject_checked(pixelvalue *, int, int, int, pixelvalue *);
+
 pixelvalue function1d_average_reject(
         pixelvalue  *   line,
         int             npix,

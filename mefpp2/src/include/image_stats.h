@@ -260,6 +260,8 @@ pixelvalue image_getmaxpos(
 /*----------------------------------------------------------------------------*/
 /* <python> */
 pixelvalue image_getmedian(image_t * in) ;
+/* Checked bias-path form: output is unchanged on failure (#144). */
+int image_getmedian_checked(image_t *, pixelvalue *);
 /* </python> */
 
 

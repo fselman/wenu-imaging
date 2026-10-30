@@ -1,0 +1,15 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/eclipse-oom-c90
+Test project /workspace/scratch/555b377cf948/eclipse-oom-c90
+    Start 13: native_eclipse_allocation
+1/1 Test #13: native_eclipse_allocation ........   Passed    1.61 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+allocation    =   1.61 sec*proc (1 test)
+bias          =   1.61 sec*proc (1 test)
+failure       =   1.61 sec*proc (1 test)
+native        =   1.61 sec*proc (1 test)
+ownership     =   1.61 sec*proc (1 test)
+
+Total Test time (real) =   1.61 sec

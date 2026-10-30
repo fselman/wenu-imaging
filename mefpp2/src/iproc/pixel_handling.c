@@ -155,6 +155,7 @@ double * pixel2double_array(
 
 	if ((arr==NULL) || (n<1)) return NULL ;
 	d = malloc(n * sizeof(double));
+    if (d == NULL) return NULL;
 	for (i=0 ; i<n ; i++) {
 		d[i] = (double)arr[i];
 	}

@@ -1,0 +1,5 @@
+-- Found Python3: /workspace/scratch/555b377cf948/m3-test-env/bin/python (found version "3.12.14") found components: Interpreter
+-- Candidate mefpp: C17; /usr/bin/gcc; resources=OFF
+-- Configuring done (0.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/555b377cf948/eclipse-oom-c17
