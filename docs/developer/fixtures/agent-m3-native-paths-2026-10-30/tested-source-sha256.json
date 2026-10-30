@@ -1,0 +1,11 @@
+{
+  "mefpp2/CMakeLists.txt": "05666443da927694b13d3921fcd3b281a8ada39f80c608155bce02be80ead7e0",
+  "mefpp2/ins/mef/recipes/mefpp.c": "5a348460c1ec9adac9e849554dd60e8a26d5b66ff050c8f323817a57cae1e449",
+  "mefpp2/ins/mef/common/mefp_lib.c": "262281add4ea1ab0e967bdfbbf4a21bce5ba01d3342ff69be1ce855b36ec9531",
+  "mefpp2/ins/mef/common/mefp_lib.h": "6774d9ad8e76fa63c32a10a39b1982a52c75b294c689abc70afc213a21581c37",
+  "mefpp2/ins/mef/common/mef_paths.c": "f29b248ea2d687e6cee41d864f57025f0f98a2a89bd52cb416db96f262c312f8",
+  "mefpp2/ins/mef/common/mef_paths.h": "9504d0c4dabd252b479a8c109ae4309ceb84648266639ccecd1130c56c764f72",
+  "mefpp2/qfits5/src/xmemory.c": "b0c91bf8f0ae9fd3b52fd5d2af3e7dcc9cdeeca64ad0a4c5d5e95fcf9ddce729",
+  "mefpp2/qfits5/include/xmemory.h": "918cb4a8360f845f8c8bacf9844038e7593b12025c50073989e6ff6469025ff5",
+  "mefpp2/tests/native_paths_contract.py": "6bb74b246cb05d244bfa06b736ede3720a032b34362f9a4a05b254dfb4e04451"
+}

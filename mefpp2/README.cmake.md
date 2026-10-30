@@ -1,5 +1,12 @@
 # Candidate native CMake build
 
+Native M3 path qualification, 30 October 2026: [paired Mac/Chapman checks](LINK)
+passed both affected CTests at 113156b94fe68f7bf2848c93ecd7451551db2984,
+including actual C execution from unrelated directories with separate inputs,
+calibrations and destinations. Protected installed files/checkouts stayed unchanged.
+PR #167 is ready for owner review; full M3 remains open. Current installation,
+configured engine and Python dependency bounds remain unchanged.
+
 30 October paired typed-domain receipt: Intel Mac and representative shared
 Chapman4 private C90 builds and all three focused TOML tests passed 3/3 at
 920dd13251287c07ca9d9e3355e1cb9afcd38370. Exact legacy settings, subset controls,

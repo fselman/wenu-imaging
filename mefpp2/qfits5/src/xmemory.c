@@ -507,6 +507,18 @@ static char * xmemory_tmpfilename(int reg)
     return xmem_tmpfilename ;
 }
 
+/* Only destination selection changes; allocation/fallback policy is unchanged.
+ * Keep enough room for the generated PID/registration suffix. Refs #159. */
+int xmemory_set_tmpdir(const char *directory)
+{
+    if (directory == NULL || directory[0] != '/' ||
+        strlen(directory) + 64 >= TMPFILENAMESZ ||
+        strlen(directory) >= TMPDIRNAMESZ ||
+        (xmemory_initialized && xmemory_table.nswapfiles != 0)) return -1;
+    strcpy(xmemory_tmpdirname, directory);
+    return 0;
+}
+
 /*----------------------------------------------------------------------------*/
 /**
   @brief    Allocate memory.

@@ -1,0 +1,202 @@
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (251)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (273)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (292)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (343)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (2417)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (2419)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (2499)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (2499)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (2441)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (2443)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (4113)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (4120)
+
+
+
+ ----------> MEFPP REDUCTION ENGINE. VERSION: mefpp-2.0.0 <----------
+
+
+
+Initializing eclipse environment
+Loading parameters...
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-28T00:00:00.000']/[Date of observation of first frame]
+[ZNAME]=['F1_CCD_A']/[Original extension name]
+[ORIGIN]=['ESO FROZEN F1']/[European Southern Observatory]
+[TELESCOP]=['VST     ']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM']/[European Southern Observatory]
+[MJD-OBS]=[61341.0]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[bpm0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[bpm1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[bpm2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-31T05:59:03.379.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[0]/[# of axes in frame]
+[EXTEND]=[T]/[Extension may be present.]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-28T00:00:00.000']/[Date of observation of first frame]
+[ORIGIN]=['ESO FROZEN F1']/[European Southern Observatory]
+[TELESCOP]=['VST     ']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM']/[European Southern Observatory]
+[MJD-OBS]=[61341.0]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[bpm0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[bpm1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[bpm2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-31T05:59:03.379.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[XTENSION]=[IMAGE]/[Extension first keyword (see SIMPLE)]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[EXTNAMxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (4127)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (4134)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (4141)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (4148)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (1453)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (1457)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (1458)
+E]=['F1_CCD_A']/[Extension first keyword (see SIMPLE)]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-28T00:00:00.000']/[Date of observation of first frame]
+[ORIGIN]=['ESO FROZEN F1']/[European Southern Observatory]
+[TELESCOP]=['VST     ']/[European Southern Observatory]
+[INSTRUME]=['OMEGACAM']/[European Southern Observatory]
+[MJD-OBS]=[61341.0]/[European Southern Observatory]
+[HIERARCH ESO DET WIN1 BINX]=[1]/[Binning factor along X]
+[HIERARCH ESO DET WIN1 BINY]=[1]/[Binning factor along Y]
+[HIERARCH ESO MPP BPM FRAME001]=[bpm0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[bpm1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[bpm2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-31T05:59:03.379.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[SIMPLE]=[T]/[Fits format]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-28T00:00:00.000']/[Date of observation of first frame]
+[ZNAME]=['F1_CCD_B']/[Original extension name]
+[HIERARCH ESO MPP BPM FRAME001]=[bpm0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[bpm1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[bpm2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-31T05:59:03.379.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSCX X2]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP OVSCX X1]=[10]/[Overscan xmin xmax]
+[HIERARCH ESO MPP OVSCX X2]=[18]/[Overscan xmin xmax]
+[HIERARCH ESO MPP RJOVSC NLOW]=[0]/[Rejection min max]
+[HIERARCH ESO MPP RJOVSC NHIGH]=[0]/[Rejection min max]
+[HIERARCH ESO MPP TRIM X1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM X2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y1]=[1]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP TRIM Y2]=[9]/[xmin xmax ymin ymax]
+[HIERARCH ESO MPP BPM PROPFLAG]=[0]/[proportional flag for BPM creation]
+[HIERARCH ESO MPP BPM LGAINTHR]=[0.500000]/[low gain threshold for BPM creation]
+[HIERARCH ESO MPP BPM HGAINTHR]=[1.500000]/[high gain threshold for BPM creation]
+[HIERARCH ESO MPP QC NGOODPIX]=[79]/[Number of good pixels]
+[HIERARCH ESO MPP QC NBADPIX]=[2]/[Number of bad pixels]
+[END]=[]
+------------------------------------
+[XTENSION]=[IMAGE]/[Extension first keyword (see SIMPLE)]
+[BITPIX]=[8]/[bits per pixel]
+[NAXIS]=[2]/[single image]
+[NAXIS1]=[9]/[x axis]
+[NAXIS2]=[9]/[y axis]
+[EXTNAME]=['F1_CCD_B']/[Extension first keyword (see SIMPLE)]
+[PRODCATG]=[CALIB.BPM]/[Phase3 product category]
+[DATE-OBS]=['2026-10-28T00:00:00.000']/[Date of observation of first frame]
+[HIERARCH ESO MPP BPM FRAME001]=[bpm0.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME002]=[bpm1.fits]/[Input bpm frame]
+[HIERARCH ESO MPP BPM FRAME003]=[bpm2.fits]/[Input bpm frame]
+[ORIGFILE]=[CMDP.OMEGACAM.2026-10-31T05:59:03.379.fits]/[Original file name]
+[ECLIPSE]=[5.5.0]/[Based on Eclipse version 5.0.0 by N. Devillard]
+[HIERARCH ESO MPP PRSCX X1]=[1]/[Prescan xmin xmax]
+[HIERARCH ESO MPP PRSxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (1453)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (1457)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/recipes/mefpp.c (1458)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1226)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1227)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1230)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1231)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1232)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1233)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1234)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1235)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1236)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/ins/mef/common/mefp_lib.c (1237)
+==14==Can't open /proc/13/task for reading.
+==13==LeakSanitizer has encountered a fatal error.
+==13==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1
+==13==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)

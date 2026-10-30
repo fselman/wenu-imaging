@@ -1,5 +1,18 @@
 # wenu-imaging roadmap
 
+30 October paired native M3 receipt: selected-tool Intel Mac and representative
+shared Chapman4 private C90 builds and both focused CTests passed 2/2 at
+113156b94fe68f7bf2848c93ecd7451551db2984. Installed reduction module, configured
+engine/configuration and clean review checkouts stayed unchanged. See
+[paired results](m3-native-paths-paired-results-2026-10-30.md). The actual C engine passed the native path contract
+alongside the 51-case CLI regression. #163/#165/#166 corrections are target-qualified;
+PR #167 is ready for bounded owner review. Original M3/#159 remains open, as do
+#164 swap/O_CREAT, #125 long FITS strings and #144 wider OOM limits. No leak/OOM,
+concurrency, scientific, complete-M3 or installed activation claim. Preserve
+selected tools and all evidence; this documentation-only receipt needs no test
+replay. Owner instruction precedes merge/cleanup. Earlier agent/target-pending
+notes below are historical within this qualified scope.
+
 30 October paired M3 inspector receipt: selected-Python Intel Mac and
 representative shared Chapman4 passed all 15 grouped controls at
 2c820effff393d5ea4e1555439397ef7c7a6cda6; protected installed files and clean

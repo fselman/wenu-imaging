@@ -1,0 +1,193 @@
+[  1%] Building C object CMakeFiles/qfits.dir/qfits5/src/cache.c.o
+[  2%] Building C object CMakeFiles/qfits.dir/qfits5/src/byteswap.c.o
+[  3%] Building C object CMakeFiles/qfits.dir/qfits5/src/expkey.c.o
+[  4%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_h.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/fits_h.c: In function ‘qfits_header_dump_hdr’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/fits_h.c:1274:22: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1274 |         fprintf(out, line) ;
+      |                      ^~~~
+[  5%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_md5.c.o
+[  6%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_p.c.o
+[  7%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_rw.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/fits_rw.c: In function ‘is_fits_file’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/fits_rw.c:397:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  397 |     fread(magic, 1, FITS_MAGIC_SZ, fp) ;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[  8%] Building C object CMakeFiles/qfits.dir/qfits5/src/get_name.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/get_name.c: In function ‘qfits_get_dir_name’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/get_name.c:100:23: warning: the comparison will always evaluate as ‘true’ for the address of ‘path’ will never be NULL [-Waddress]
+  100 |     last_slash = path != NULL ? strrchr (path, '/') : NULL;
+      |                       ^~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/get_name.c:94:17: note: ‘path’ declared here
+   94 |     static char path[MAXNAMESZ];
+      |                 ^~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/get_name.c: In function ‘qfits_get_root_name’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/get_name.c:185:5: warning: ‘memset’ used with constant zero length parameter; this could be due to transposed parameters [-Wmemset-transposed-args]
+  185 |     memset(path, MAXNAMESZ, 0);
+      |     ^~~~~~
+[  8%] Building C object CMakeFiles/qfits.dir/qfits5/src/ieeefp-compat.c.o
+[  9%] Building C object CMakeFiles/qfits.dir/qfits5/src/md5.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/md5.c: In function ‘MD5Final’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/md5.c:165:26: warning: argument to ‘sizeof’ in ‘memset’ call is the same expression as the destination; did you mean to dereference it? [-Wsizeof-pointer-memaccess]
+  165 |     memset(ctx, 0, sizeof(ctx));        /* In case it's sensitive */
+      |                          ^
+[ 10%] Building C object CMakeFiles/qfits.dir/qfits5/src/pafs.c.o
+[ 11%] Building C object CMakeFiles/qfits.dir/qfits5/src/pixio.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/pixio.c: In function ‘qfitsloader_init’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/pixio.c:269:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  269 |         ql->np = naxis3 ;
+      |         ~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/pixio.c:272:9: note: here
+  272 |         case 2:
+      |         ^~~~
+[ 12%] Building C object CMakeFiles/qfits.dir/qfits5/src/qerror.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/qerror.c: In function ‘qfits_warning’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/qerror.c:175:27: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1020 [-Wformat-overflow=]
+  175 |         sprintf(all, "*** %s", msg);
+      |                           ^~   ~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/qerror.c:25:
+In function ‘sprintf’,
+    inlined from ‘qfits_warning’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/qerror.c:175:2:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 5 and 1028 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/qerror.c: In function ‘qfits_error’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/qerror.c:193:30: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1017 [-Wformat-overflow=]
+  193 |         sprintf(all, "error: %s", msg);
+      |                              ^~   ~~~
+In function ‘sprintf’,
+    inlined from ‘qfits_error’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/qerror.c:193:2:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 8 and 1031 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 13%] Building C object CMakeFiles/qfits.dir/qfits5/src/simple.c.o
+[ 14%] Building C object CMakeFiles/qfits.dir/qfits5/src/t_iso8601.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/t_iso8601.c: In function ‘qfits_get_datetime_iso8601’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/t_iso8601.c:236:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/t_iso8601.c:236:27: note: directive argument in the range [-99, 99]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/t_iso8601.c:25:
+In function ‘sprintf’,
+    inlined from ‘qfits_get_datetime_iso8601’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/t_iso8601.c:236:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 40 bytes into a destination of size 20
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 15%] Building C object CMakeFiles/qfits.dir/qfits5/src/tfits.c.o
+[ 16%] Building C object CMakeFiles/qfits.dir/qfits5/src/version.c.o
+[ 17%] Building C object CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2161:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                          ^~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2161:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                         ^~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:23:
+In function ‘sprintf’,
+    inlined from ‘qfits_build_format’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2161:29:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 3 and 13 bytes into a destination of size 10
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2159:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                          ^~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2159:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                         ^~~~~
+In function ‘sprintf’,
+    inlined from ‘qfits_build_format’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2159:29:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 3 and 13 bytes into a destination of size 10
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2155:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                          ^~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2155:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                         ^~~~~
+In function ‘sprintf’,
+    inlined from ‘qfits_build_format’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/tfits.c:2155:29:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 3 and 13 bytes into a destination of size 10
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:350:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  350 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:351:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  351 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:548:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  548 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:849:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  849 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:188:21: note: ‘xmemory_p_mm_filename’ declared here
+  188 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:505:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:505:31: note: directive argument in the range [-2147483648, 2147483647]
+  505 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:505:31: note: using the range [0, 4294967295] for directive argument
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:33:
+In function ‘sprintf’,
+    inlined from ‘xmemory_tmpfilename’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:505:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 1052 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+In file included from /usr/include/fcntl.h:342,
+                 from /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:39:
+In function ‘open’,
+    inlined from ‘xmemory_malloc’ at /workspace/scratch/555b377cf948/m3-native-paths/mefpp2/qfits5/src/xmemory.c:607:18:
+/usr/include/x86_64-linux-gnu/bits/fcntl2.h:50:11: error: call to ‘__open_missing_mode’ declared with attribute error: open with O_CREAT or O_TMPFILE in second argument needs 3 arguments
+   50 |           __open_missing_mode ();
+      |           ^~~~~~~~~~~~~~~~~~~~~~
+gmake[3]: *** [CMakeFiles/qfits.dir/build.make:314: CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o] Error 1
+gmake[3]: *** Waiting for unfinished jobs....
+gmake[2]: *** [CMakeFiles/Makefile2:849: CMakeFiles/qfits.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:937: CMakeFiles/mefpp.dir/rule] Error 2
+gmake: *** [Makefile:583: mefpp] Error 2

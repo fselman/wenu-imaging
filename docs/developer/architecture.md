@@ -1,5 +1,18 @@
 # wenu-imaging architecture
 
+30 October paired native M3 receipt: selected-tool Intel Mac and representative
+shared Chapman4 private C90 builds and both focused CTests passed 2/2 at
+113156b94fe68f7bf2848c93ecd7451551db2984. Installed reduction module, configured
+engine/configuration and clean review checkouts stayed unchanged. See
+[paired results](m3-native-paths-paired-results-2026-10-30.md). The actual C engine passed the native path contract
+alongside the 51-case CLI regression. #163/#165/#166 corrections are target-qualified;
+PR #167 is ready for bounded owner review. Original M3/#159 remains open, as do
+#164 swap/O_CREAT, #125 long FITS strings and #144 wider OOM limits. No leak/OOM,
+concurrency, scientific, complete-M3 or installed activation claim. Preserve
+selected tools and all evidence; this documentation-only receipt needs no test
+replay. Owner instruction precedes merge/cleanup. Earlier agent/target-pending
+notes below are historical within this qualified scope.
+
 29 October 2026: see the [original architecture diagram](../architecture/original/pycavi-mefpp.md) and [target architecture proposal](../architecture/proposed/pycavi-mefpp.md). The proposed execution contract resolves inputs, calibrations, configuration and output/work destinations explicitly, without changing the caller's working directory or implicitly searching for files. Existing cwd-dependent behavior remains unchanged; this is design for discussion.
 
 Native roadmap revision 1.2, 25 October 2026: retain C89/C90 as the portable C
