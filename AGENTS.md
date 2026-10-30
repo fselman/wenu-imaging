@@ -1,5 +1,22 @@
 # wenu-imaging
 
+30 October next bounded M2 increment after accepted/merged PR #149 and clean
+Mac/shared Chapman main ed949cab4f70381a1e187c7be691026c7fecf01c: owner authorized
+[remaining project-domain authoring validation](docs/architecture/proposed/m2/project-contracts/README.md) and
+[optional/amplifier-specific overscan](docs/architecture/proposed/overscan-readout-policy.md). Explicit omission requires no
+region, defined geometry can be retained without subtraction, and enabled
+subtraction requires valid selected-channel geometry. Distinguish available from
+active amplifiers; no physical IDs/hardware counts inferred from legacy ordinals.
+Header amplifier/scan values remain reported, unverified evidence; conflicts need
+explicit review, not automatic header/config authority.
+Python standard-library review validator and six examples only; ordinary native
+engine/Pycavi/installation/numerics unchanged. Legacy mapper still needs retained
+geometry and one active channel; no geometry-free/multi-amplifier execution claim.
+Full M2/WAD/migration integration remains pending. Agent six-example/66-case
+authoring checks passed; actual target authoring checks pending; preserve accepted native evidence/tools, no matrix replay. Owner review
+precedes separately instructed merge/cleanup.
+
+
 30 October paired typed-domain receipt: Intel Mac and representative shared
 Chapman4 private C90 builds and all three focused TOML tests passed 3/3 at
 920dd13251287c07ca9d9e3355e1cb9afcd38370. Exact legacy settings, subset controls,

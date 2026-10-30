@@ -1,0 +1,293 @@
+{
+  "check": "project-authoring-contract",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "examples": [
+    "wfi",
+    "omegacam",
+    "no-overscan",
+    "defined-disabled",
+    "dual-active",
+    "alternative-selected"
+  ],
+  "caller_directories": 2,
+  "rejected": [
+    {
+      "case": "unsupported root version",
+      "diagnostic": "project.project_schema_version: unsupported value 2"
+    },
+    {
+      "case": "unsupported project",
+      "diagnostic": "project.project.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key project",
+      "diagnostic": "project.project: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported association",
+      "diagnostic": "project.association.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key association",
+      "diagnostic": "project.association: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported reduction_profile",
+      "diagnostic": "project.reduction_profile.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key reduction_profile",
+      "diagnostic": "project.reduction_profile: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported recipe",
+      "diagnostic": "project.recipe.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key recipe",
+      "diagnostic": "project.recipe: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported execution",
+      "diagnostic": "project.execution.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key execution",
+      "diagnostic": "project.execution: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported quality",
+      "diagnostic": "project.quality.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key quality",
+      "diagnostic": "project.quality: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported product_profile",
+      "diagnostic": "project.product_profile.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key product_profile",
+      "diagnostic": "project.product_profile: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported processing",
+      "diagnostic": "project.processing.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key processing",
+      "diagnostic": "project.processing: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unsupported readout",
+      "diagnostic": "project.readout.schema_version: unsupported value 2"
+    },
+    {
+      "case": "unknown key readout",
+      "diagnostic": "project.readout: unknown keys: ['unknown']"
+    },
+    {
+      "case": "unknown root",
+      "diagnostic": "project: unknown keys: ['unknown']"
+    },
+    {
+      "case": "missing roots",
+      "diagnostic": "project.project: missing keys: ['roots']"
+    },
+    {
+      "case": "bool is not integer",
+      "diagnostic": "project.execution.workers: expected integer, no coercion"
+    },
+    {
+      "case": "no coercion",
+      "diagnostic": "project.execution.workers: expected integer, no coercion"
+    },
+    {
+      "case": "no activation",
+      "diagnostic": "project.execution.activation: unsupported value 'enabled'"
+    },
+    {
+      "case": "no parallel promise",
+      "diagnostic": "project.execution.workers: unsupported value 2"
+    },
+    {
+      "case": "batch niceness",
+      "diagnostic": "project.execution.niceness: outside minimum"
+    },
+    {
+      "case": "no compliance claim",
+      "diagnostic": "project.product_profile.compliance: unsupported value 'certified'"
+    },
+    {
+      "case": "no zero variance",
+      "diagnostic": "project.product_profile.variance_contract: unsupported value 'zero'"
+    },
+    {
+      "case": "no hidden thresholds",
+      "diagnostic": "project.quality.thresholds: array length outside contract"
+    },
+    {
+      "case": "separate profiles",
+      "diagnostic": "profile/recipe/project/readout IDs: duplicate identity"
+    },
+    {
+      "case": "unknown operation",
+      "diagnostic": "project.recipe.steps[0].operation: unsupported value 'system'"
+    },
+    {
+      "case": "duplicate step identity",
+      "diagnostic": "recipe.steps: duplicate identity"
+    },
+    {
+      "case": "duplicate binding",
+      "diagnostic": "association.bindings: duplicate identity"
+    },
+    {
+      "case": "selected exact version",
+      "diagnostic": "association.bindings: selected requires exact asset ID/version; omitted forbids them"
+    },
+    {
+      "case": "omitted forbids file identity",
+      "diagnostic": "association.bindings: selected requires exact asset ID/version; omitted forbids them"
+    },
+    {
+      "case": "unknown physical identity",
+      "diagnostic": "readout.review-detector:one: verified detector identity requires ID; unknown forbids an invented ID"
+    },
+    {
+      "case": "unsubstantiated verified mapping",
+      "diagnostic": "readout: verified mapping requires verified selected detector/amplifier identities"
+    },
+    {
+      "case": "absent cannot subtract",
+      "diagnostic": "readout.review-detector:one.synthetic-channel:A: subtraction requires active channel with defined overscan"
+    },
+    {
+      "case": "absent cannot define region",
+      "diagnostic": "readout.review-detector:one.synthetic-channel:A: defined requires region; absent forbids region"
+    },
+    {
+      "case": "defined requires region",
+      "diagnostic": "readout.review-detector:one.synthetic-channel:A: defined requires region; absent forbids region"
+    },
+    {
+      "case": "inactive cannot subtract",
+      "diagnostic": "readout.review-detector:one.synthetic-channel:A: subtraction requires active channel with defined overscan"
+    },
+    {
+      "case": "unknown amplifier ID",
+      "diagnostic": "readout.review-detector:one.synthetic-channel:A: verified amplifier identity requires ID; unknown forbids an invented ID"
+    },
+    {
+      "case": "no active channels",
+      "diagnostic": "readout.review-detector:one: at least one selected active channel required"
+    },
+    {
+      "case": "duplicate channels",
+      "diagnostic": "readout.review-detector:one: duplicate identity"
+    },
+    {
+      "case": "duplicate detectors",
+      "diagnostic": "readout.detectors: duplicate identity"
+    },
+    {
+      "case": "reversed scan",
+      "diagnostic": "readout.review-detector:one.synthetic-channel:A.overscan: reversed x endpoints"
+    },
+    {
+      "case": "zero scan index",
+      "diagnostic": "project.readout.detectors[0].channels[0].overscan.region.x_min: outside minimum"
+    },
+    {
+      "case": "wrong scan unit",
+      "diagnostic": "project.readout.detectors[0].channels[0].overscan.region.unit: unsupported value 'mm'"
+    },
+    {
+      "case": "wrong endpoint convention",
+      "diagnostic": "project.readout.detectors[0].channels[0].overscan.region.convention: unsupported value 'zero-based'"
+    },
+    {
+      "case": "partial y interval",
+      "diagnostic": "readout.review-detector:one.synthetic-channel:A.overscan: both y endpoints required or both omitted"
+    },
+    {
+      "case": "signal scan overlap",
+      "diagnostic": "readout.review-detector:one: signal overlaps active overscan"
+    },
+    {
+      "case": "dual requires signal",
+      "diagnostic": "readout.review-detector:one: multi-channel readout requires explicit signal regions"
+    },
+    {
+      "case": "dual signal overlap",
+      "diagnostic": "readout.review-detector:one: active signal regions overlap"
+    },
+    {
+      "case": "native fallback forbidden",
+      "diagnostic": "processing: legacy_reference requires native file; unavailable forbids fallback file"
+    },
+    {
+      "case": "native missing ref",
+      "diagnostic": "processing: legacy_reference requires native file; unavailable forbids fallback file"
+    },
+    {
+      "case": "no automatic header authority",
+      "diagnostic": "project.readout.metadata_policy: unsupported value 'trust_headers'"
+    },
+    {
+      "case": "no trusted header claim",
+      "diagnostic": "project.readout.header_evidence[0].trust: unsupported value 'trusted'"
+    },
+    {
+      "case": "no unresolved header selection",
+      "diagnostic": "project.readout.header_evidence[0].disposition: unsupported value 'selected'"
+    },
+    {
+      "case": "exact raw card preserved",
+      "diagnostic": "header_evidence: retain one exact 80-byte ASCII FITS card; do not reinterpret it"
+    },
+    {
+      "case": "header reference detector",
+      "diagnostic": "header_evidence: unknown local detector reference"
+    },
+    {
+      "case": "duplicate header occurrence",
+      "diagnostic": "readout.header_evidence: duplicate identity"
+    },
+    {
+      "case": "control in roots",
+      "diagnostic": "project.project.roots.raw: empty/control text is not allowed"
+    },
+    {
+      "case": "native geometry mismatch",
+      "diagnostic": "native: legacy overscan endpoints differ"
+    },
+    {
+      "case": "native subtraction mismatch",
+      "diagnostic": "native: readout/native subtraction disagreement"
+    },
+    {
+      "case": "native missing ordinal",
+      "diagnostic": "native: exact legacy detector ordinal coverage required"
+    },
+    {
+      "case": "native dual active unsupported",
+      "diagnostic": "native: legacy bridge supports one active channel per detector only"
+    }
+  ],
+  "source_sha256": {
+    "/workspace/scratch/555b377cf948/m2-project-contracts/docs/architecture/proposed/m2/project-contracts/examples/wfi.toml": "daedd775c6ec6dd32b8ba060e178410488930a2b56c62972531c257f18e1c6bd",
+    "/workspace/scratch/555b377cf948/m2-project-contracts/docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml": "c703399715072286d2c4d65addcbfd52b0988bbe5020a22d6daf960be1c54888",
+    "/workspace/scratch/555b377cf948/m2-project-contracts/docs/architecture/proposed/m2/project-contracts/examples/no-overscan.toml": "13e6e024866f3f8d063753264c8127bec3800ca1ad25dd86c9d4350848add16a",
+    "/workspace/scratch/555b377cf948/m2-project-contracts/docs/architecture/proposed/m2/project-contracts/examples/defined-disabled.toml": "953b962321756bfa1e21350c9c9db43b15df456a22203f473124c7e52b621c48",
+    "/workspace/scratch/555b377cf948/m2-project-contracts/docs/architecture/proposed/m2/project-contracts/examples/dual-active.toml": "48a501aeb4e167ccb0ad2cdbc6c9670ecaad5b0b7f41a5b72d0e43471c29a966",
+    "/workspace/scratch/555b377cf948/m2-project-contracts/docs/architecture/proposed/m2/project-contracts/examples/alternative-selected.toml": "628a9a6b749823e0414b0c8d6af1d956dc9e648f168ced4b4163dc425c5637bb"
+  },
+  "freeze": "passed",
+  "native_execution": false,
+  "fits_access": false,
+  "installation": false,
+  "source_revision": "ed949cab4f70381a1e187c7be691026c7fecf01c"
+}

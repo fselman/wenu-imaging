@@ -1,0 +1,16 @@
+{
+  "docs/architecture/proposed/m2/project-contracts/README.md": "89537ebb1abda52df75baee092c2a06aec484155adcdb75775f7223e096addd7",
+  "docs/architecture/proposed/m2/project-contracts/build_catalog.py": "0972c92df4dfc646aea24d408e79f6d86d8b12c7788befbea221df08cd3afdf4",
+  "docs/architecture/proposed/m2/project-contracts/build_examples.py": "ee154789f1a86fcc7f5dc058850480ade4324a057cdc8858f665bead1226c2bc",
+  "docs/architecture/proposed/m2/project-contracts/catalog.json": "2f7e11e58015d7d8367fbff561520ec16488bd4a81008e0808eaeacbc6b2cce9",
+  "docs/architecture/proposed/m2/project-contracts/check_contract.py": "9606cba2ec391e7d377907a21bf6ef712a717b5b1d0bf81e339c0a5b11d7569b",
+  "docs/architecture/proposed/m2/project-contracts/examples/alternative-selected.toml": "628a9a6b749823e0414b0c8d6af1d956dc9e648f168ced4b4163dc425c5637bb",
+  "docs/architecture/proposed/m2/project-contracts/examples/defined-disabled.toml": "953b962321756bfa1e21350c9c9db43b15df456a22203f473124c7e52b621c48",
+  "docs/architecture/proposed/m2/project-contracts/examples/dual-active.toml": "48a501aeb4e167ccb0ad2cdbc6c9670ecaad5b0b7f41a5b72d0e43471c29a966",
+  "docs/architecture/proposed/m2/project-contracts/examples/no-overscan.toml": "13e6e024866f3f8d063753264c8127bec3800ca1ad25dd86c9d4350848add16a",
+  "docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml": "c703399715072286d2c4d65addcbfd52b0988bbe5020a22d6daf960be1c54888",
+  "docs/architecture/proposed/m2/project-contracts/examples/wfi.toml": "daedd775c6ec6dd32b8ba060e178410488930a2b56c62972531c257f18e1c6bd",
+  "docs/architecture/proposed/m2/project-contracts/validate_project.py": "d303beb907e813a23271b1f6924715d20238549e72077f564b6ff56bf1d61e97",
+  "docs/architecture/proposed/m2/examples/wfi/full.toml": "b3b74e20304b563e3d61c76b62e360adff77769571acd7f7da11cb5b5e19c855",
+  "docs/architecture/proposed/m2/examples/omegacam/full.toml": "1d936378c9d91c4f6979ad2c5b6daceefc359abfac3fa18cadd22eb900ad4b0c"
+}
