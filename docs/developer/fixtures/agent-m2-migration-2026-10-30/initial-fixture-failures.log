@@ -1,0 +1,31 @@
+Internal ctest changing into directory: /workspace/scratch/555b377cf948/migration-c90
+Test project /workspace/scratch/555b377cf948/migration-c90
+    Start 5: native_config_toml_domains
+1/2 Test #5: native_config_toml_domains .......   Passed   23.69 sec
+    Start 6: native_config_migration
+2/2 Test #6: native_config_migration ..........***Failed    4.77 sec
+WORK DIRECTORY: /workspace/scratch/555b377cf948/migration-c90/test-work/m2 migration 0y3fbqvp
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m2-migration/mefpp2/tests/config_migration_contract.py", line 237, in <module>
+    main()
+  File "/workspace/scratch/555b377cf948/m2-migration/mefpp2/tests/config_migration_contract.py", line 141, in main
+    assert values(resolved)['MEF.BIAS.KAPPA1']['value'] == '41120000'  # independently encoded float32 9.125
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+configuration    =  28.46 sec*proc (2 tests)
+domains          =  23.69 sec*proc (1 test)
+migration        =   4.77 sec*proc (1 test)
+native           =  28.46 sec*proc (2 tests)
+provenance       =  28.46 sec*proc (2 tests)
+toml             =  23.69 sec*proc (1 test)
+
+Total Test time (real) =  28.47 sec
+
+The following tests FAILED:
+	  6 - native_config_migration (Failed)
+Errors while running CTest

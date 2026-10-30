@@ -18,7 +18,9 @@ mef_status mef_config_from_toml(const char *path, const mef_allocator *allocator
 /* Owned settings + frozen per-field domain/unit/source records. Borrow the
  * const settings only while this document lives. Clone owns both components.
  * Source records describe winning file/line and explicit/inherited selection;
- * source content hashes and complete override histories are not recorded here.
+ * files retain exact parsed UTF-8 source text, ordered include edges, explicit
+ * override declarations and every local definition. Clients may hash these
+ * frozen bytes; the native serializer itself does not compute content hashes.
  * No file is reopened when inspecting/cloning a successfully loaded document.
  * Allocator covers these new C90 owners, not parser/shim/temp detector storage. */
 typedef struct mef_config_document mef_config_document;

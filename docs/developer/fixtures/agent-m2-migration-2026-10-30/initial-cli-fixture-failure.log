@@ -1,0 +1,10 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/m2 migration hyfk67ub
+Traceback (most recent call last):
+  File "/workspace/scratch/555b377cf948/m2-migration/mefpp2/tests/config_migration_contract.py", line 238, in <module>
+    main()
+  File "/workspace/scratch/555b377cf948/m2-migration/mefpp2/tests/config_migration_contract.py", line 99, in main
+    run([args.cli_probe, cli_json, cli_values, callers[0], 'mefpp', '--pafname', source,
+  File "/workspace/scratch/555b377cf948/m2-migration/mefpp2/tests/config_migration_contract.py", line 44, in run
+    assert result.returncode == 0, (label, result.stdout[-3000:])
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('omegacam-overrides', b"mefpp: invalid option -- `-b'\n")

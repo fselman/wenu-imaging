@@ -1,0 +1,4 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/migration-asan/m2 domains 91ltvuqm
+PASS: 11 typed/document/lifetime profiles; 151 catalog templates
+PASS: 25 domain/unit rejection/recovery cases
+REPORT: /workspace/scratch/555b377cf948/migration-asan/m2 domains 91ltvuqm/run-provenance.json

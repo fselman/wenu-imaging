@@ -23,3 +23,9 @@ from the legacy text. Complete general migration/conflict handling remains M2.
 
 Do not install these examples or switch the normal engine selection from this
 review package. Actual Mac/representative Chapman qualification is pending.
+
+
+The reusable [configuration migration API/CLI](../configuration-migration.md) now
+produces [source-preserving migrated examples](../migration-examples/).
+These earlier domain fixtures remain the accepted split/local-override references;
+they are not installed defaults or automatically rewritten during migration.

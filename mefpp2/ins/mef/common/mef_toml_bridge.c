@@ -12,6 +12,7 @@
 typedef struct { char key[96], path[192]; toml_datum_t value; } domain_entry;
 struct mef_toml_document {
     toml_result_t parsed;
+    char *source_text;
     toml_datum_t native, includes, overrides;
     int version;
     domain_entry *entries;
@@ -60,7 +61,7 @@ int mef_toml_is_initialized(void) { return initialized; }
 
 void mef_toml_close(mef_toml_document *document)
 {
-    if (document != NULL) { toml_free(document->parsed); free(document->entries); free(document); }
+    if (document != NULL) { toml_free(document->parsed); free(document->entries); free(document->source_text); free(document); }
 }
 
 /* Translation of the versioned parsed tree only; merge policy remains C90. */
@@ -141,15 +142,16 @@ mef_status mef_toml_open(const char *path, mef_toml_document **out,
     if (actual != (size_t)length || read_error || close_error) {
         free(bytes); detail(diagnostic, capacity, "TOML read failed or size changed"); return MEF_ERR_IO;
     }
-    if (!shared_strings(bytes, (size_t)length)) {
+    if (memchr(bytes, 0, (size_t)length) != NULL || !shared_strings(bytes, (size_t)length)) {
         free(bytes); detail(diagnostic, capacity, "Requires TOML 1.0 single-line strings/escapes");
         return MEF_ERR_CONFIG;
     }
     document = malloc(sizeof(*document));
     if (document == NULL) { free(bytes); detail(diagnostic, capacity, "Cannot allocate TOML owner"); return MEF_ERR_MEMORY; }
     document->entries = NULL; document->count = 0; document->capacity = 0;
+    bytes[length] = '\0';
+    document->source_text = bytes;
     document->parsed = toml_parse_named(bytes, (int)length, path);
-    free(bytes);
     if (!document->parsed.ok) {
         detail(diagnostic, capacity, document->parsed.errmsg);
         mef_toml_close(document); return MEF_ERR_CONFIG;
@@ -239,6 +241,7 @@ mef_status mef_toml_open(const char *path, mef_toml_document **out,
     return MEF_OK;
 }
 
+const char *mef_toml_source_text(const mef_toml_document *document) { return document->source_text; }
 int mef_toml_version(const mef_toml_document *document) { return document->version; }
 const char *mef_toml_key(const mef_toml_document *document, size_t index)
 { return document->version == 3 ? (index < document->count ? document->entries[index].key : NULL)

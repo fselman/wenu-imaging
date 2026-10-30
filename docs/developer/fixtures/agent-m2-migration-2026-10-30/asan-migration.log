@@ -1,0 +1,5 @@
+WORK DIRECTORY: /workspace/scratch/555b377cf948/migration-asan/m2 migration _9c28781
+PASS: exact OCAM/WFI PAF and local CLI values; shared CLI/library from two directories
+PASS: duplicate/conflict ledger, frozen parsed source graphs and WAD configuration records
+PASS: 21 rejection/recovery controls; no-clobber and source/caller independence
+REPORT: /workspace/scratch/555b377cf948/migration-asan/m2 migration _9c28781/run-provenance.json

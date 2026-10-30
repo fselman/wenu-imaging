@@ -184,3 +184,19 @@ The focused failure/configuration correction adds the nonempty CTest entry
 engines and normal selection remain unchanged. Source regression checks passed;
 rebuilt target build/install, installed-wrapper and observational acceptance remain
 pending. See [the correction record](../docs/developer/native-failure-correction-2026-10-26.md).
+
+
+## Opt-in M2 configuration migration
+
+`MEFPP_BUILD_CONFIG_PROBES=ON` also builds `mef_config_read`, a configuration-only
+bridge for the shared Python migration API/CLI. It calls the original PAF
+constructor or the existing TOML document reader, never `mef_engine`. It is not
+installed and is not linked into the ordinary executable. Build resources can
+remain disabled for these text checks. Keep C90 as the default, C17 as the
+compatibility lane and C99 scoped to the parser/shim.
+
+Build `mefpp mef_config_read config_domains_probe config_paf_snapshot cli_capture_probe`
+and select `^native_config_(migration|toml_domains)$` for this increment. See the
+[migration contract](../docs/architecture/proposed/m2/configuration-migration.md)
+for source ownership, input/conflict rules and exact target gates. No existing
+installation or normal processing selection changes.
