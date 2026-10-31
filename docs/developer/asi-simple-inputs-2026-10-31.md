@@ -152,3 +152,12 @@ previous interface only; their evidence remains retained in PR #188 and the
 [provenance contract](zwo-asi-provenance-2026-10-31.md). No historical test campaign
 or native M4 replay is required for this preparation-only change. Full-tree copy,
 reduction, partitioning, calibration applicability and M4 closure remain separate.
+
+## Retained reference PDFs
+
+Owner-requested local documentation copies are indexed in
+[the papers directory](../papers/README.md) (the original Bath article) and
+[ESO standards](../standards/eso/README.md) (DICB ESO-044156 version 8).
+The PDFs are unchanged; copy identities, source URL/DOI and document version
+are recorded by those indexes. This addition changes reference storage/links
+only and does not require a preparation or native test replay.

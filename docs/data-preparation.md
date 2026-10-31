@@ -27,7 +27,8 @@ Partitioning is deferred; no change to native C or calibration selection is made
 ## ESO definitions and actual FITS names
 
 Reviewed source: [ESO Data Interface Control Document, ESO-044156, version 8,
-5 March 2025](https://archive.eso.org/cms/tools-documentation/dicb/ESO-044156_8_Data_Interface_Control_Document.pdf),
+5 March 2025](standards/eso/ESO-044156_8_Data_Interface_Control_Document.pdf)
+([official source](https://archive.eso.org/cms/tools-documentation/dicb/ESO-044156_8_Data_Interface_Control_Document.pdf)),
 section 4.4.2.1, pages 37–40, Tables 9–11; the official
 [DICB index](https://archive.eso.org/cms/tools-documentation/eso-data-interface-control.html)
 identifies this version as current at review. These are raw-observation
