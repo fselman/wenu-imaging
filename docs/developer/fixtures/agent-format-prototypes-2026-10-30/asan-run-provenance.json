@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "purpose": "Bounded actual-format controls, no observations or system exhaustion.",
+  "repository": "/workspace/scratch/555b377cf948/eclipse-allocation-failures",
+  "python": "/workspace/scratch/555b377cf948/m3-test-env/bin/python",
+  "retention": "Preserve all failed/corrected attempts",
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0:halt_on_error=1",
+    "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+  },
+  "probe": "/workspace/scratch/555b377cf948/eclipse-oom-asan/format_safety_probe",
+  "probe_sha256": "47edf548cf92f18d9be8df4d8b34330bcb55e93b3b428065d0b495e8165097e2",
+  "commands": [
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-asan/format_safety_probe"
+      ],
+      "exit_status": 0,
+      "log_sha256": "f5b294bd35175bdc386dba410c4c3ec6f25d78a1602daa9691980f93d6af95e2"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-asan/format_safety_probe",
+        "--swap-overflow"
+      ],
+      "exit_status": 47,
+      "log_sha256": "cd771a2c456635824fc8017fb83f49d0c652664927c6800324aaf98d169aa9db"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-asan/format_safety_probe",
+        "--rtd-cwd-overflow"
+      ],
+      "exit_status": 0,
+      "log_sha256": "1cfb5de139489bc24c32a15d67a222b6878ba2d701200297990122be93bf7fb8"
+    }
+  ],
+  "commit": "b4fe1c6a0cbea8728562e60400999da32a1b4547",
+  "branch": "fix/eclipse-allocation-failures",
+  "dirty_state": "M mefpp2/CMakeLists.txt\n M mefpp2/tests/format_safety_probe.c"
+}

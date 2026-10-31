@@ -1,0 +1,47 @@
+=================================================================
+==31==ERROR: AddressSanitizer: global-buffer-overflow on address 0x000000405194 at pc 0x7fb53f78bd69 bp 0x7ffc150cc200 sp 0x7ffc150cb990
+WRITE of size 21 at 0x000000405194 thread T0
+    #0 0x7fb53f78bd68 in vsprintf ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1671
+    #1 0x7fb53f78d643 in __sprintf_chk ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1719
+    #2 0x401d4e in sprintf /usr/include/x86_64-linux-gnu/bits/stdio2.h:30
+    #3 0x401d4e in get_datetime_iso8601 /workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:258
+    #4 0x401ec7 in main /workspace/scratch/555b377cf948/format-batch-baseline/date-year.c:8
+    #5 0x7fb53edd61c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #6 0x7fb53edd628a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #7 0x401274 in _start (/workspace/scratch/555b377cf948/format-batch-baseline/date-year+0x401274) (BuildId: 844802b36ff14711e74a431811273073b2938e18)
+
+0x000000405194 is located 44 bytes before global variable 'date_iso8601' defined in '/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:227:17' (0x4051c0) of size 20
+0x000000405194 is located 0 bytes after global variable 'date_iso8601' defined in '/workspace/scratch/555b377cf948/format-batch-baseline/src_unix_t_iso8601.c:251:17' (0x405180) of size 20
+SUMMARY: AddressSanitizer: global-buffer-overflow ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1671 in vsprintf
+Shadow bytes around the buggy address:
+  0x000000404f00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x000000404f80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x000000405000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x000000405080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  0x000000405100: f9 f9 f9 f9 00 00 00 00 00 00 00 f9 f9 f9 f9 f9
+=>0x000000405180: 00 00[04]f9 f9 f9 f9 f9 00 00 04 f9 f9 f9 f9 f9
+  0x000000405200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000000405280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000000405300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000000405380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x000000405400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==31==ABORTING

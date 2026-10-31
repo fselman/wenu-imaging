@@ -1,0 +1,20 @@
+{
+  "mefpp2/CMakeLists.txt": "1d67a6c2572b3df237a4a3a43a4e5951291515b99ad9059bb69bc8726ca7be46",
+  "mefpp2/ins/mef/common/mef_bias_kernel.c": "8124d8288184309be437fa27a2b0b1675d27cf3d8152f1e21d3f344fdd448751",
+  "mefpp2/ins/mef/common/mefp_lib.c": "f1b5519e74a84728860a74ac16b81d529f287d65e999bf708da166d09f9ba6ce",
+  "mefpp2/ins/mef/recipes/mefpp.c": "94b779eab5bc3758e4ac277ad475ffe38efe2c4e396ea542b4036047f6661411",
+  "mefpp2/src/include/function_1d.h": "1c356657267c58ab2bb32a4d85ea84171d05541c123bd0b8cc1985a8ed5961fa",
+  "mefpp2/src/include/image_stats.h": "c9682188446c02d7b1d09f701c4466b8769cf2aeebcb1e8bb586df858b32305b",
+  "mefpp2/src/iproc/cube2image.c": "1227caea075dfd2a662a71e05b9810d8015f73356489bf15db2f9e42702ed273",
+  "mefpp2/src/iproc/cube_handling.c": "1cf52f07802a6705d19fe65620503c679787980822ae711543e7eba0a353f46b",
+  "mefpp2/src/iproc/extraction.c": "f1cea01ca46275d20b45abe0ae5b355de341a8782b97437af4e67fb47d7a2b4a",
+  "mefpp2/src/iproc/image_handling.c": "62d07dbee370829b3aecafc2f1c6e7045d724b9cd8e251c5ecc23fed07a01755",
+  "mefpp2/src/iproc/image_stats.c": "737a990992d829b15f4f339799973c5529c0a0f73ef10ae85a62fedbb26fca8b",
+  "mefpp2/src/iproc/pixel_handling.c": "9a0aafdb6e9254fca278b47f0da7cf5a4792d071bef07b072e473ec3d13f2aae",
+  "mefpp2/src/math/function_1d.c": "d6644e0ddde2506a1c4a638d95d8e2e641596d0f135ba1531d89b305fdc9ea32",
+  "mefpp2/tests/eclipse_allocation_contract.py": "e6aebd823d327824b186a12b5c9f1a81d31f2f01dfc9e5e42d5c2804ae95a680",
+  "mefpp2/tests/eclipse_allocation_probe.c": "499d0045b78607f45c2c6886c40973ea991a238f60a4398a40a6cc4c5074e2de",
+  "mefpp2/tests/bias_service_probe.c": "8310c00ed8ad5d56e91ff52a41d32a35226b1c8566373b1a309d8e3f299573bc",
+  "mefpp2/tests/bias_legacy_reference.c": "503f88663c9c4c4fa79395ec8d4bf15d3fd952ec217b9ca2781ecc28b7989673",
+  "mefpp2/tests/bias_service_contract.py": "f55afc82a3e9ec3220bf6efe7a3c09408dee16c7938673bb0f9cdc0ffd2419ea"
+}

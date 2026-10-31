@@ -82,9 +82,23 @@ static void chop_r(char * s)
 {
 	if (s) {
 		if (strlen(s)>1) {
-			while (s[strlen(s)-1] == (char)'\n') s[strlen(s)-1]=(char)0 ;
+			while (s[0] != '\0' && s[strlen(s)-1] == (char)'\n') s[strlen(s)-1]=(char)0 ;
 		}
 	}
+}
+
+/* Log buffers are bounded independently of streamed terminal diagnostics.
+ * Long diagnostics carry an explicit marker; ordinary bytes stay unchanged. */
+static void finish_log_message(char *text, size_t size, int count)
+{
+    const char marker[] = "...[truncated]";
+    if (count < 0) strcpy(text, "[format error]");
+    else if ((size_t)count >= size)
+        memcpy(text + size - sizeof(marker), marker, sizeof(marker));
+}
+static void format_log_message(char *text, size_t size, const char *fmt, va_list ap)
+{
+    finish_log_message(text, size, vsnprintf(text, size, fmt, ap));
 }
 
 /* Initialize ANSI term support status */
@@ -234,6 +248,12 @@ void set_logfilename(char * name)
         comm_config.logfilename[0]=(char)0 ;
         return ;
     }
+    if (strlen(name) >= sizeof(comm_config.logfilename)) {
+        comm_config.logfilename[0] = '\0';
+        comm_config.logfile = 0;
+        fputs("error: log filename too long\n", stderr);
+        return;
+    }
 	strcpy(comm_config.logfilename, name) ;
 }
 
@@ -312,6 +332,7 @@ void e_warning(char *fmt, ...)
 	}
 
 	msg = strdup(fmt) ;
+    if (msg == NULL) { fputs("error: cannot copy message format\n", stderr); return; }
 	chop_r(msg) ;
 
 	if (comm_config.ansiterm) {
@@ -322,7 +343,7 @@ void e_warning(char *fmt, ...)
     vfprintf(stderr, msg, ap) ;
     va_end(ap);
     va_start(ap, fmt);
-    vsprintf(logmsg, msg, ap) ;
+    format_log_message(logmsg, sizeof(logmsg), msg, ap) ;
     va_end(ap) ;
 	if (comm_config.ansiterm) {
 		fprintf(stderr, ansiterm_reset);
@@ -371,13 +392,14 @@ void e_error(char *fmt, ...)
 	}
 	fprintf(stderr, "error: ") ;
 	msg = strdup(fmt) ;
+    if (msg == NULL) { fputs("error: cannot copy message format\n", stderr); return; }
 	chop_r(msg) ;
 
     va_start(ap, fmt);
     vfprintf(stderr, msg, ap) ;
     va_end(ap);
     va_start(ap, fmt);
-    vsprintf(logmsg, msg, ap) ;
+    format_log_message(logmsg, sizeof(logmsg), msg, ap) ;
     va_end(ap) ;
 	
 	free(msg) ;
@@ -425,12 +447,13 @@ void e_comment(int level, char * fmt, ...)
 				fprintf(stderr, "\t") ;
 
 		msg = strdup(fmt) ;
+    if (msg == NULL) { fputs("error: cannot copy message format\n", stderr); return; }
 		chop_r(msg) ;
         va_start(ap, fmt);
         vfprintf(stderr, msg, ap) ;
         va_end(ap);
         va_start(ap, fmt);
-        vsprintf(logmsg, msg, ap) ;
+        format_log_message(logmsg, sizeof(logmsg), msg, ap) ;
         va_end(ap) ;
 
 		free(msg) ;
@@ -510,7 +533,8 @@ void __NOTRACE__ compute_status(char *Msg, int done, int total, int level)
 	}
 	if (done==total && comm_config.verbose) {
 		if (comm_config.logfile) {
-			sprintf(logmsg, "%s: completed", Msg);
+			finish_log_message(logmsg, sizeof(logmsg),
+                snprintf(logmsg, sizeof(logmsg), "%s: completed", Msg));
 			e_logfile("info", logmsg);
 		}
 	}

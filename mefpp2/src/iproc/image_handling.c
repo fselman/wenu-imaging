@@ -64,10 +64,12 @@ image_t * image_new(
     }
 
     image_new = calloc(1, sizeof(image_t)) ;
+    if (image_new == NULL) return NULL;
 
     image_new->lx = size_x ;
     image_new->ly = size_y ;
-    image_new->data = calloc(size_x * size_y, sizeof(pixelvalue));
+    image_new->data = calloc((size_t)size_x * (size_t)size_y, sizeof(pixelvalue));
+    if (image_new->data == NULL) { free(image_new); return NULL; }
     return image_new ;
 }
 
@@ -141,6 +143,7 @@ image_t * image_copy(image_t * src_img)
 
     if (src_img==NULL) return NULL ;
     dest_img = image_new(src_img->lx, src_img->ly) ;
+    if (dest_img == NULL) return NULL;
     memcpy(dest_img->data,
            src_img->data,
            src_img->lx * src_img->ly * sizeof(pixelvalue)) ;

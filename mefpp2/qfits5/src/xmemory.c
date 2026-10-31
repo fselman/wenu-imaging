@@ -512,9 +512,14 @@ static void xmemory_dumpcell(int pos, FILE * out)
 static char * xmemory_tmpfilename(int reg)
 {
     static char xmem_tmpfilename[TMPFILENAMESZ] ;
-    /* Create file name using tmp directory as a base */
-    sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+    int count;
+    /* Create file name using tmp directory as a base; reject, never truncate. */
+    count = snprintf(xmem_tmpfilename, sizeof(xmem_tmpfilename), "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
             (long)getpid(), reg) ;
+    if (count < 0 || (size_t)count >= sizeof(xmem_tmpfilename)) {
+        fputs("xmemory: temporary filename too long\n", stderr);
+        exit(-2001);
+    }
     return xmem_tmpfilename ;
 }
 

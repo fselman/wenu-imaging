@@ -1573,7 +1573,8 @@ qfits_header *fits_header_merge(qfits_header *base, qfits_header *update)
 	merged_header = qfits_header_copy(base);
 	for (i=0 ; i<update->n; i++) {
 		if (qfits_header_getitem(update,i,key,val,com,lin)) {
-			e_error("fits_header_merge: error reading item %i from update header\n");
+			e_error("fits_header_merge: error reading item %i from update header\n", i);
+            qfits_header_destroy(merged_header);
 			return NULL;
 		}
 		if (strncmp(key,"END",3) != 0) {
@@ -1599,7 +1600,7 @@ int mef_split(char *name_i, char *name_o, int xtnum)
     char output[FILENAMESZ];
     char temporary[FILENAMESZ];
     char zeros[FITS_BLOCK_SIZE];
-    int n_ext, first, last, i, fd, data_beg;
+    int n_ext, first, last, i, fd, data_beg, formatted;
     int naxis1, naxis2, bitpix;
     int result = -1;
     int temporary_exists = 0;
@@ -1655,8 +1656,15 @@ int mef_split(char *name_i, char *name_o, int xtnum)
             e_error("invalid/truncated data in [%s] extension %d", name_i, i);
             goto cleanup;
         }
-        sprintf(output, "%s_%02d.fits", name_o, i);
-        sprintf(temporary, "%s.tmp.XXXXXX", output);
+        formatted = snprintf(output, sizeof(output), "%s_%02d.fits", name_o, i);
+        if (formatted < 0 || (size_t)formatted >= sizeof(output) ||
+            strlen(output) + sizeof(".tmp.XXXXXX") > sizeof(temporary)) {
+            e_error("split output name too long"); goto cleanup;
+        }
+        formatted = snprintf(temporary, sizeof(temporary), "%s.tmp.XXXXXX", output);
+        if (formatted < 0 || (size_t)formatted >= sizeof(temporary)) {
+            e_error("cannot format split temporary name"); goto cleanup;
+        }
         fd = mkstemp(temporary);
         if (fd < 0) {
             e_error("cannot create temporary output for [%s]", output);
@@ -2009,12 +2017,16 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 	}
 
 
+    cropped_frame = NULL;
+    bias_line = NULL; scan_line = NULL; scan_double = NULL;
+
 	/* Bring coordinates back to C convention */
 	prescan_x[0]-- ; prescan_x[1]-- ; overscan_x[0]-- ; overscan_x[1]-- ;
 
 	/* Make out bias column */
 	bias_line = malloc(scan_width * sizeof(pixelvalue));
     scan_line = malloc(mef_frame->ly * sizeof(pixelvalue));
+    if (bias_line == NULL || scan_line == NULL) goto overscan_done;
 
 	/* Loop on all lines */
     avg_filtered = 0.0;
@@ -2032,11 +2044,8 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 			bias_line[k++] = pix[i] ;
 		   }
 		}
-		filtered =
-			function1d_average_reject(bias_line,
-					scan_width,
-					rej_int[0],
-					rej_int[1]);
+        if (function1d_average_reject_checked(bias_line, scan_width,
+                rej_int[0], rej_int[1], &filtered) != 0) goto overscan_done;
         /* e_comment(1,"Subtracting %f from each bias pixel", filtered); */
 		for (i=0 ; i<mef_frame->lx ; i++) {
 			pix[i] -= filtered ;
@@ -2047,13 +2056,12 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 	}
     medval = (double) median_pixelvalue(scan_line, mef_frame->ly);
     scan_double = pixel2double_array(scan_line, mef_frame->ly);
+    if (scan_double == NULL) goto overscan_done;
     for (j=0 ; j<mef_frame->ly ; j++) {
         scan_double[j] -= medval;
     }
     stdev_val = double_rms(scan_double, mef_frame->ly);
-    free(scan_double); /* Last use of the temporary double scan (#110). */
-    free(bias_line);
-    free(scan_line);
+
 
     e_comment(1, "********************* overscan medval: %f stdev_val: %f", medval, stdev_val);
 
@@ -2087,8 +2095,6 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
         e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->science_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
     }
 
-	/* Bring coordinates back to FITS convention */
-	prescan_x[0]++ ; prescan_x[1]++ ; overscan_x[0]++ ; overscan_x[1]++ ;
 
 	/* Extract cropped region */
 	cropped_frame = image_getvig(mef_frame,
@@ -2098,6 +2104,9 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 			crop_reg[3]);
 
 
+overscan_done:
+    free(scan_double); free(bias_line); free(scan_line);
+    prescan_x[0]++; prescan_x[1]++; overscan_x[0]++; overscan_x[1]++;
 	return cropped_frame ;
 }
 
@@ -2124,8 +2133,7 @@ int	mef_cube_overscan_correction(cube_t *i_cube,mef_bb *bb, char * what)
         scancorr = mef_overscan_correction(i_cube->plane[i], bb, i, what);
 		if (scancorr == NULL) {
 			e_error("mef_cube_overscan_correction: during overscan correction in plane %d", i+1);
-			cube_del(i_cube);
-			return -1 ;
+			return -1 ; /* Caller retains the working cube (#171). */
 		}
 		image_del(i_cube->plane[i]);
 		i_cube->plane[i] = scancorr ;
@@ -2508,6 +2516,16 @@ subset_done:
  * The statistics will be affected by bad pixels but this is not too bad for QC.
  *
  */
+/* A generated provenance keyword is data, never a printf format. */
+static int mef_bpm_frame_key(char *out, size_t size, const char *base, int index)
+{
+    int count;
+    if (out == NULL || size == 0 || base == NULL) return -1;
+    count = snprintf(out, size, "%s FRAME%03d", base, index);
+    if (count < 0 || (size_t)count >= size) { out[0] = '\0'; return -1; }
+    return 0;
+}
+
 pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 {
 	cube_t 	*cube_in;
@@ -2533,7 +2551,9 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             e_error("in loading cube [%s]: aborting",bb->name_bpm);
         }
         e_comment(1,"overscan correcting/trimming BPM cube");
-        mef_cube_overscan_correction(cube_in, bb, "bpm");
+        if (cube_in == NULL || mef_cube_overscan_correction(cube_in, bb, "bpm") != 0) {
+            cube_del(cube_in); return NULL;
+        }
         /*if (bias == NULL) {
             e_error("bias is a NULL pointer");
             cube_del(cube_in);
@@ -2702,11 +2722,16 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
             flist = mef_paths_frames(bb->paths, bb->name_bpm);
             sprintf(cval_prev,"NAXIS2");
             for (i=0 ; i<flist->n ; i++) {
-                sprintf(cval,"%s FRAME%03d", bb->bpm_frame_i_key, i+1);
+                if (mef_bpm_frame_key(cval, sizeof(cval), bb->bpm_frame_i_key, i+1) != 0) {
+                    e_error("BPM provenance keyword too long");
+                    if (dateobs_ptr != NULL) free(dateobs_ptr);
+                    framelist_del(flist); qfits_header_destroy(fhdr_extra);
+                    image_del(norm_gain); pixelmap_del(bp_map); return NULL;
+                }
                 e_comment(1, "mef_build_bpm: adding key %s",cval);
                 /* Record the filename, as for bias/dome/sky provenance. */
                 qfits_header_add_after(fhdr_extra,cval_prev, cval, get_basename(flist->name[i]), bb->bpm_frame_i_comment,NULL);
-                sprintf(cval_prev, cval);
+                memcpy(cval_prev, cval, strlen(cval) + 1);
 
                 fh = qfits_header_read(flist->name[i]);
                 if (fh==NULL) {
@@ -2938,7 +2963,9 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
      * cube so we have the full input list represented.
      */
     e_comment(1, "applying overscan/prescan/trimming correction");
-    mef_cube_overscan_correction(i_cube,bb, what);
+    if (mef_cube_overscan_correction(i_cube,bb, what) != 0) {
+        cube_del(i_cube); return NULL;
+    }
     e_comment(1, "Done.");
 
     /* The bias service and legacy recipe share the extracted arithmetic. */
@@ -3681,12 +3708,11 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
 
     /* Processing software version */
     /* Processing software version */
-    sprintf(cval, recipe_version);
     sprintf(cval2, "Branch from wfi 1.19 by N. Devillard");
-    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_procsoft_keyname, cval, what);
+    e_comment(1, "PHASE3: adding key %s with value %s to %s frame", bb->phase3_procsoft_keyname, recipe_version, what);
     qfits_header_add_after(fh_phase3, bb->phase3_timesys_keyname, 
                                         bb->phase3_procsoft_keyname, 
-                                        cval, 
+                                        recipe_version,
                                         cval2, NULL);
 
     if (!strcmp(what,"science")) {

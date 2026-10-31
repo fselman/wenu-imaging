@@ -1,0 +1,266 @@
+> )
+Python: /Users/fselman/anaconda3/envs/wenu-imaging/bin/python
+Protected installed module: /Users/fselman/anaconda3/envs/wenu-imaging/lib/python3.11/site-packages/pycavi/pycavi/pycavi_associate_reduction.py
+Protected configured engine: /Users/fselman/opt/local/mefpp/bin/mefpp
+Protected engine configuration: /Users/fselman/.pycavi/pycavi_astrosoft.cfg
+WORK DIRECTORY: /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp
+Protected-file baseline recorded.
+Running: export | log: /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/export.log
+Running: extract | log: /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/extract.log
+Running: configure | log: /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/configure.log
+Running: build | log: /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/build.log
+/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:4223:9: warning: unused variable 'getval' [-Wunused-variable]
+        char            *getval ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:4225:9: warning: unused variable 'first_name' [-Wunused-variable]
+        char            *first_name ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:4226:13: warning: unused variable 'fnames' [-Wunused-variable]
+        framelist       *fnames ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:4227:7: warning: unused variable 'nchips' [-Wunused-variable]
+        int             nchips ;
+                        ^
+[ 97%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mef_paths.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mef_paths.c:284:43: warning: passing 'const char *' to parameter of type 'char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+            header = qfits_header_readext(names[i], xt);
+                                          ^~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/qfits5/include/qfits.h:598:44: note: passing argument to parameter 'filename' here
+qfits_header * qfits_header_readext(char * filename, int xtnum) ;
+                                           ^
+1 warning generated.
+33 warnings generated.
+[ 97%] Linking C static library libmefpp_common.a
+[ 97%] Built target mefpp_common
+[ 98%] Building C object CMakeFiles/mefpp.dir/ins/mef/recipes/mefpp.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/recipes/mefpp.c:411:12: warning: unused variable 'bpm' [-Wunused-variable]
+        image_t         *bpm=NULL;
+                         ^
+1 warning generated.
+[100%] Linking C executable mefpp
+[100%] Built target mefpp
+[  0%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/image_handling.c.o
+[ 15%] Built target qfits
+[ 16%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/cube_handling.c.o
+[ 16%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/cube2image.c.o
+[ 18%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/extraction.c.o
+[ 85%] Built target eclipse
+[ 87%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/pixel_handling.c.o
+[ 89%] Built target mefpp_common
+[ 89%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/image_stats.c.o
+[ 90%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/math/function_1d.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/src/iproc/image_stats.c:1580:23: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+                                                        (pixelvalue)(-1<<15),
+                                                                     ~~^
+1 warning generated.
+[ 92%] Building C object CMakeFiles/eclipse_allocation_units.dir/ins/mef/common/mefp_lib.c.o
+[ 93%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_config.c.o
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:3408:28: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+        if ( (bb->correct_ref_pix == 1) ) {
+              ~~~~~~~~~~~~~~~~~~~~^~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:3408:28: note: remove extraneous parentheses around the comparison to silence this warning
+        if ( (bb->correct_ref_pix == 1) ) {
+             ~                    ^   ~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:3408:28: note: use '=' to turn this equality comparison into an assignment
+        if ( (bb->correct_ref_pix == 1) ) {
+                                  ^~
+                                  =
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/ins/mef/common/mefp_lib.c:4181:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+}
+^
+[ 94%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_runtime.c.o
+2 warnings generated.
+[ 94%] Building C object CMakeFiles/eclipse_allocation_units.dir/ins/mef/common/mef_bias_kernel.c.o
+[ 94%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_cli_request.c.o
+[ 94%] Built target eclipse_allocation_units
+[ 96%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_input_request.c.o
+[ 97%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_cal_bias.c.o
+[ 97%] Linking C static library libmefpp_config_snapshot.a
+[ 97%] Built target mefpp_config_snapshot
+[ 97%] Building C object CMakeFiles/eclipse_allocation_probe.dir/tests/eclipse_allocation_probe.c.o
+[ 98%] Building C object CMakeFiles/eclipse_allocation_probe.dir/tests/bias_legacy_reference.c.o
+In file included from /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/eclipse_allocation_probe.c:3:
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../qfits5/src/xmemory.c:342:27: warning: unused parameter 'filename' [-Wunused-parameter]
+        const char    *   filename,
+                          ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../qfits5/src/xmemory.c:343:21: warning: unused parameter 'lineno' [-Wunused-parameter]
+        int         lineno,
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../qfits5/src/xmemory.c:565:17: warning: variable 'pos' set but not used [-Wunused-but-set-variable]
+    int         pos ;
+                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/bias_legacy_reference.c:11:12: warning: unused variable 'scancorr' [-Wunused-variable]
+        image_t *       scancorr ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/bias_legacy_reference.c:12:14: warning: unused variable 'bias' [-Wunused-variable]
+        image_t *       bias ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/bias_legacy_reference.c:306:13: warning: variable 'normFactor' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+        } else if (!strcmp(what,"sky")) {
+                   ^~~~~~~~~~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/bias_legacy_reference.c:317:26: note: uninitialized use occurs here
+        image_cst_op_local(flat,normFactor,'*');        /* we normalize to the median of first extension */
+                                ^~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/bias_legacy_reference.c:306:9: note: remove the 'if' if its condition is always true
+        } else if (!strcmp(what,"sky")) {
+               ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/bias_legacy_reference.c:36:19: note: initialize the variable 'normFactor' to silence this warning
+        float           normFactor ;
+                                  ^
+                                   = 0.0
+3 warnings generated.
+3 warnings generated.
+[100%] Linking C executable eclipse_allocation_probe
+[100%] Built target eclipse_allocation_probe
+[ 17%] Built target qfits
+[ 94%] Built target eclipse
+[ 97%] Built target mefpp_common
+[ 98%] Building C object CMakeFiles/format_safety_probe.dir/tests/format_safety_probe.c.o
+In file included from /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/format_safety_probe.c:25:
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../qfits5/src/xmemory.c:342:27: warning: unused parameter 'filename' [-Wunused-parameter]
+        const char    *   filename,
+                          ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../qfits5/src/xmemory.c:343:21: warning: unused parameter 'lineno' [-Wunused-parameter]
+        int         lineno,
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../qfits5/src/xmemory.c:565:17: warning: variable 'pos' set but not used [-Wunused-but-set-variable]
+    int         pos ;
+                ^
+In file included from /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/format_safety_probe.c:31:
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1732:23: warning: unused variable 'pt' [-Wunused-variable]
+        register pixelvalue *pt;
+                             ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1889:13: warning: unused variable 'mef_frame' [-Wunused-variable]
+        image_t  * mef_frame ;
+                   ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1890:23: warning: unused variable 'pt' [-Wunused-variable]
+        register pixelvalue *pt;
+                             ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1892:26: warning: unused variable 'i' [-Wunused-variable]
+        int                     i ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1893:26: warning: unused variable 'exts' [-Wunused-variable]
+        int               *     exts ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1894:26: warning: unused variable 'err' [-Wunused-variable]
+        int                     err ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1895:26: warning: unused variable 'single_frames' [-Wunused-variable]
+        int                     single_frames ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1987:21: warning: variable 'avg_filtered' set but not used [-Wunused-but-set-variable]
+    pixelvalue      avg_filtered;
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1988:21: warning: variable 'nfiltered' set but not used [-Wunused-but-set-variable]
+    int             nfiltered;
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:1996:21: warning: variable 'zIndex' set but not used [-Wunused-but-set-variable]
+    int             zIndex;
+                    ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:2257:7: warning: unused variable 'zChar' [-Wunused-variable]
+        char zChar ;
+             ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:2292:10: warning: unused variable 'getval' [-Wunused-variable]
+        char            *       getval ;
+                                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:2893:12: warning: unused variable 'scancorr' [-Wunused-variable]
+        image_t *       scancorr ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:2894:14: warning: unused variable 'bias' [-Wunused-variable]
+        image_t *       bias ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:2901:15: warning: variable 'avg1' set but not used [-Wunused-but-set-variable]
+        double          avg, avg1, kappa1 ;
+                             ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3150:13: warning: variable 'normFactor' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+        } else if (!strcmp(what,"sky")) {
+                   ^~~~~~~~~~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3161:26: note: uninitialized use occurs here
+        image_cst_op_local(flat,normFactor,'*');        /* we normalize to the median of first extension */
+                                ^~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3150:9: note: remove the 'if' if its condition is always true
+        } else if (!strcmp(what,"sky")) {
+               ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:2918:19: note: initialize the variable 'normFactor' to silence this warning
+        float           normFactor ;
+                                  ^
+                                   = 0.0
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3408:28: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+        if ( (bb->correct_ref_pix == 1) ) {
+              ~~~~~~~~~~~~~~~~~~~~^~~~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3408:28: note: remove extraneous parentheses around the comparison to silence this warning
+        if ( (bb->correct_ref_pix == 1) ) {
+             ~                    ^   ~
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3408:28: note: use '=' to turn this equality comparison into an assignment
+        if ( (bb->correct_ref_pix == 1) ) {
+                                  ^~
+                                  =
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3581:18: warning: unused variable 'fnames' [-Wunused-variable]
+    framelist   *fnames ;
+                 ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3585:18: warning: unused variable 'getval' [-Wunused-variable]
+    char        *getval ;
+                 ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3587:17: warning: unused variable 'i' [-Wunused-variable]
+    int         i, nframes ;
+                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3747:16: warning: unused variable 'fh_ref' [-Wunused-variable]
+        qfits_header    *fh_ref ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3750:17: warning: variable 'exptime' set but not used [-Wunused-but-set-variable]
+    float       exptime;
+                ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3754:9: warning: unused variable 'getval' [-Wunused-variable]
+        char            *getval ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:3755:7: warning: unused variable 'nchips' [-Wunused-variable]
+        int             nchips ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4093:7: warning: unused variable 'cval' [-Wunused-variable]
+        char cval[80];
+             ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4181:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+}
+^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4212:16: warning: unused variable 'fh_main' [-Wunused-variable]
+        qfits_header    *fh_main = NULL ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4219:14: warning: unused variable 'qd' [-Wunused-variable]
+        qfitsdumper     qd ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4220:9: warning: unused variable 'out' [-Wunused-variable]
+        FILE            *out ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4223:9: warning: unused variable 'getval' [-Wunused-variable]
+        char            *getval ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4225:9: warning: unused variable 'first_name' [-Wunused-variable]
+        char            *first_name ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4226:13: warning: unused variable 'fnames' [-Wunused-variable]
+        framelist       *fnames ;
+                         ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/../ins/mef/common/mefp_lib.c:4227:7: warning: unused variable 'nchips' [-Wunused-variable]
+        int             nchips ;
+                        ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/format_safety_probe.c:68:5: error: implicit declaration of function 'qfits_warning' [-Werror,-Wimplicit-function-declaration]
+    qfits_warning("%s %d", "100% literal %n", 7);
+    ^
+/Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp/source/mefpp2/tests/format_safety_probe.c:70:5: error: implicit declaration of function 'qfits_error' [-Werror,-Wimplicit-function-declaration]
+    qfits_error("%s", "100% literal %n");
+    ^
+36 warnings and 2 errors generated.
+make[3]: *** [CMakeFiles/format_safety_probe.dir/tests/format_safety_probe.c.o] Error 1
+make[2]: *** [CMakeFiles/format_safety_probe.dir/all] Error 2
+make[1]: *** [CMakeFiles/format_safety_probe.dir/rule] Error 2
+make: *** [format_safety_probe] Error 2
+
+PASS: protected installed files unchanged.
+PASS: checkout unchanged.
+EVIDENCE: /Users/fselman/Software/build/wenu-imaging/mac-native-safety-batch-0q_fourp
+Traceback (most recent call last):
+  File "<stdin>", line 247, in <module>
+  File "<stdin>", line 184, in <module>
+  File "<stdin>", line 138, in run
+RuntimeError: build failed: exit 2
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 

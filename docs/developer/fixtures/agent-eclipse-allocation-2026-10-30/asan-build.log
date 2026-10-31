@@ -1,0 +1,810 @@
+[  1%] Building C object CMakeFiles/qfits.dir/qfits5/src/byteswap.c.o
+[  2%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/image_handling.c.o
+[  3%] Building C object CMakeFiles/qfits.dir/qfits5/src/cache.c.o
+[  5%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/cube_handling.c.o
+[  5%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/cube2image.c.o
+[  6%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/extraction.c.o
+[  7%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/pixel_handling.c.o
+[  7%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/iproc/image_stats.c.o
+[  7%] Building C object CMakeFiles/qfits.dir/qfits5/src/expkey.c.o
+[  8%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_h.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/fits_h.c: In function ‘qfits_header_dump_hdr’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/fits_h.c:1274:22: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1274 |         fprintf(out, line) ;
+      |                      ^~~~
+[ 10%] Building C object CMakeFiles/eclipse_allocation_units.dir/src/math/function_1d.c.o
+[ 11%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_md5.c.o
+[ 11%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_p.c.o
+[ 12%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_rw.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/fits_rw.c: In function ‘is_fits_file’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/fits_rw.c:397:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  397 |     fread(magic, 1, FITS_MAGIC_SZ, fp) ;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 13%] Building C object CMakeFiles/qfits.dir/qfits5/src/get_name.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/get_name.c: In function ‘qfits_get_dir_name’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/get_name.c:100:23: warning: the comparison will always evaluate as ‘true’ for the address of ‘path’ will never be NULL [-Waddress]
+  100 |     last_slash = path != NULL ? strrchr (path, '/') : NULL;
+      |                       ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/get_name.c:94:17: note: ‘path’ declared here
+   94 |     static char path[MAXNAMESZ];
+      |                 ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/get_name.c: In function ‘qfits_get_root_name’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/get_name.c:185:5: warning: ‘memset’ used with constant zero length parameter; this could be due to transposed parameters [-Wmemset-transposed-args]
+  185 |     memset(path, MAXNAMESZ, 0);
+      |     ^~~~~~
+[ 15%] Building C object CMakeFiles/eclipse_allocation_units.dir/ins/mef/common/mefp_lib.c.o
+[ 15%] Building C object CMakeFiles/qfits.dir/qfits5/src/ieeefp-compat.c.o
+[ 16%] Building C object CMakeFiles/qfits.dir/qfits5/src/md5.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_bpm’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2711:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2711 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3688:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3688 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/md5.c: In function ‘MD5Final’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/md5.c:165:26: warning: argument to ‘sizeof’ in ‘memset’ call is the same expression as the destination; did you mean to dereference it? [-Wsizeof-pointer-memaccess]
+  165 |     memset(ctx, 0, sizeof(ctx));        /* In case it's sensitive */
+      |                          ^
+[ 17%] Building C object CMakeFiles/qfits.dir/qfits5/src/pafs.c.o
+[ 17%] Building C object CMakeFiles/qfits.dir/qfits5/src/pixio.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/pixio.c: In function ‘qfitsloader_init’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/pixio.c:269:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  269 |         ql->np = naxis3 ;
+      |         ~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/pixio.c:272:9: note: here
+  272 |         case 2:
+      |         ^~~~
+[ 18%] Building C object CMakeFiles/qfits.dir/qfits5/src/qerror.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/qerror.c: In function ‘qfits_warning’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/qerror.c:175:27: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1020 [-Wformat-overflow=]
+  175 |         sprintf(all, "*** %s", msg);
+      |                           ^~   ~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/qerror.c:25:
+In function ‘sprintf’,
+    inlined from ‘qfits_warning’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/qerror.c:175:2:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 5 and 1028 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/qerror.c: In function ‘qfits_error’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/qerror.c:193:30: warning: ‘%s’ directive writing up to 1023 bytes into a region of size 1017 [-Wformat-overflow=]
+  193 |         sprintf(all, "error: %s", msg);
+      |                              ^~   ~~~
+In function ‘sprintf’,
+    inlined from ‘qfits_error’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/qerror.c:193:2:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 8 and 1031 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 20%] Building C object CMakeFiles/qfits.dir/qfits5/src/simple.c.o
+[ 20%] Building C object CMakeFiles/qfits.dir/qfits5/src/t_iso8601.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/t_iso8601.c: In function ‘qfits_get_datetime_iso8601’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/t_iso8601.c:236:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/t_iso8601.c:236:27: note: directive argument in the range [-99, 99]
+  236 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/t_iso8601.c:25:
+In function ‘sprintf’,
+    inlined from ‘qfits_get_datetime_iso8601’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/t_iso8601.c:236:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 40 bytes into a destination of size 20
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 21%] Building C object CMakeFiles/qfits.dir/qfits5/src/tfits.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2161:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                          ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2161:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2161 |                 case TFITS_BIN_TYPE_P: nb=sprintf(sval, "%dP",
+      |                                                         ^~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:23:
+In function ‘sprintf’,
+    inlined from ‘qfits_build_format’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2161:29:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 3 and 13 bytes into a destination of size 10
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2159:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                          ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2159:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2159 |                 case TFITS_BIN_TYPE_M: nb=sprintf(sval, "%dM",
+      |                                                         ^~~~~
+In function ‘sprintf’,
+    inlined from ‘qfits_build_format’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2159:29:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 3 and 13 bytes into a destination of size 10
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c: In function ‘qfits_build_format’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2155:58: warning: ‘%d’ directive writing between 1 and 11 bytes into a region of size 10 [-Wformat-overflow=]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                          ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2155:57: note: directive argument in the range [-1073741824, 1073741823]
+ 2155 |                 case TFITS_BIN_TYPE_C: nb=sprintf(sval, "%dC",
+      |                                                         ^~~~~
+In function ‘sprintf’,
+    inlined from ‘qfits_build_format’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/tfits.c:2155:29:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 3 and 13 bytes into a destination of size 10
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_split’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1659:31: warning: ‘.tmp.XXXXXX’ directive writing 11 bytes into a region of size between 1 and 512 [-Wformat-overflow=]
+ 1659 |         sprintf(temporary, "%s.tmp.XXXXXX", output);
+      |                               ^~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:22:
+In function ‘sprintf’,
+    inlined from ‘mef_split’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1659:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 12 and 523 bytes into a destination of size 512
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 22%] Building C object CMakeFiles/qfits.dir/qfits5/src/version.c.o
+[ 22%] Building C object CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:560:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  560 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:874:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  874 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:516:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:516:31: note: directive argument in the range [-2147483648, 2147483647]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:516:31: note: using the range [0, 4294967295] for directive argument
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:33:
+In function ‘sprintf’,
+    inlined from ‘xmemory_tmpfilename’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/src/xmemory.c:516:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 1052 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 23%] Linking C static library libqfits.a
+[ 23%] Built target qfits
+[ 23%] Building C object CMakeFiles/eclipse.dir/src/iproc/corner.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/corner.c: In function ‘image_detect_corners’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/corner.c:64:25: warning: variable ‘pts_list’ set but not used [-Wunused-but-set-variable]
+   64 |         double3  *      pts_list ;
+      |                         ^~~~~~~~
+[ 25%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube2image.c.o
+[ 25%] Building C object CMakeFiles/eclipse_allocation_units.dir/ins/mef/common/mef_bias_kernel.c.o
+[ 25%] Built target eclipse_allocation_units
+[ 26%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_arith.c.o
+[ 26%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_filters.c.o
+[ 27%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_handling.c.o
+[ 28%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_load.c.o
+[ 28%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_save.c.o
+[ 30%] Building C object CMakeFiles/eclipse.dir/src/iproc/dead_pixels.c.o
+[ 31%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect.c.o
+[ 31%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect_ks.c.o
+[ 32%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect_sq.c.o
+[ 33%] Building C object CMakeFiles/eclipse.dir/src/iproc/detector.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/detector.c: In function ‘detector_linearity_fit’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/detector.c:498:21: warning: variable ‘npix’ set but not used [-Wunused-but-set-variable]
+  498 |     int             npix ;
+      |                     ^~~~
+[ 33%] Building C object CMakeFiles/eclipse.dir/src/iproc/extraction.c.o
+[ 35%] Building C object CMakeFiles/eclipse.dir/src/iproc/fourier.c.o
+[ 36%] Building C object CMakeFiles/eclipse.dir/src/iproc/framelist.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/framelist.c: In function ‘is_ascii_list’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/framelist.c:602:5: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  602 |     if (sta.st_size<1)
+      |     ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/framelist.c:604:9: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  604 |         if ((in=fopen(filename, "r"))==NULL)
+      |         ^~
+[ 36%] Building C object CMakeFiles/eclipse.dir/src/iproc/generate.c.o
+[ 37%] Building C object CMakeFiles/eclipse.dir/src/iproc/histogram.c.o
+[ 38%] Building C object CMakeFiles/eclipse.dir/src/iproc/history.c.o
+[ 38%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_arith.c.o
+[ 40%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_filters.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_filters.c: In function ‘image_filter_horizontal_median’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_filters.c:711:33: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  711 |                                 if (coldif<0)
+      |                                 ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_filters.c:713:41: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  713 |                                         memcpy(save_slit,&(in->data[col-f2+row*in->lx]),
+      |                                         ^~~~~~
+[ 41%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_handling.c.o
+[ 41%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_intops.c.o
+[ 42%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_io.c.o
+[ 43%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_rtd.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c: In function ‘rtd_image_put’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c:225:26: warning: ‘/eclipse-rtd.swp’ directive writing 16 bytes into a region of size between 1 and 512 [-Wformat-overflow=]
+  225 |     sprintf(swapname, "%s/eclipse-rtd.swp", cwd);
+      |                          ^~~~~~~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c:22:
+In function ‘sprintf’,
+    inlined from ‘rtd_swapfilename’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c:225:5,
+    inlined from ‘rtd_image_put’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c:140:14:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 17 and 528 bytes into a destination of size 512
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c: In function ‘rtd_image_put’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c:146:36: warning: ‘%s’ directive writing up to 511 bytes into a region of size 499 [-Wformat-overflow=]
+  146 |         sprintf(cmd, "config -file %s", rtd_dfile);
+      |                                    ^~
+......
+  226 |         return swapname ;
+      |                ~~~~~~~~             
+In function ‘sprintf’,
+    inlined from ‘rtd_image_put’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_rtd.c:146:2:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 14 and 525 bytes into a destination of size 512
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 43%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_stats.c.o
+[ 45%] Building C object CMakeFiles/eclipse.dir/src/iproc/intimage.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_stats.c: In function ‘image_getmedian_mov_horz’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_stats.c:710:17: warning: variable ‘l’ set but not used [-Wunused-but-set-variable]
+  710 |     int         l,
+      |                 ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_stats.c: In function ‘image_compute_entropy’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_stats.c:1580:72: warning: left shift of negative value [-Wshift-negative-value]
+ 1580 |                                                         (pixelvalue)(-1<<15),
+      |                                                                        ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/intimage.c: In function ‘intimage_floodfill’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/intimage.c:266:13: warning: this ‘for’ clause does not guard... [-Wmisleading-indentation]
+  266 | skip:       for (x++; x<=x2 && lab->data[x+y*lab->lx]!=ov; x++);
+      |             ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/intimage.c:267:25: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+  267 |                         l = x;
+      |                         ^
+[ 46%] Building C object CMakeFiles/eclipse.dir/src/iproc/irstd.c.o
+[ 46%] Building C object CMakeFiles/eclipse.dir/src/iproc/matchpoint.c.o
+[ 47%] Building C object CMakeFiles/eclipse.dir/src/iproc/photometry.c.o
+[ 47%] Building C object CMakeFiles/eclipse.dir/src/iproc/pixel_handling.c.o
+[ 48%] Building C object CMakeFiles/eclipse.dir/src/iproc/pixelmaps.c.o
+[ 50%] Building C object CMakeFiles/eclipse.dir/src/iproc/resampling.c.o
+[ 50%] Building C object CMakeFiles/eclipse.dir/src/iproc/shift.c.o
+[ 51%] Building C object CMakeFiles/eclipse.dir/src/iproc/slitposition.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/slitposition.c: In function ‘slitpos_analysis’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/slitposition.c:74:25: warning: variable ‘spec_size’ set but not used [-Wunused-but-set-variable]
+   74 |     int                 spec_size ;
+      |                         ^~~~~~~~~
+[ 52%] Building C object CMakeFiles/eclipse.dir/src/iproc/xcorrelation.c.o
+[ 52%] Building C object CMakeFiles/eclipse.dir/src/math/chebyshev.c.o
+[ 53%] Building C object CMakeFiles/eclipse.dir/src/math/doubles.c.o
+[ 55%] Building C object CMakeFiles/eclipse.dir/src/math/dstats.c.o
+[ 55%] Building C object CMakeFiles/eclipse.dir/src/math/fft_base.c.o
+[ 56%] Building C object CMakeFiles/eclipse.dir/src/math/fit_curve.c.o
+[ 57%] Building C object CMakeFiles/eclipse.dir/src/math/function_1d.c.o
+[ 57%] Building C object CMakeFiles/eclipse.dir/src/math/ipow.c.o
+[ 58%] Building C object CMakeFiles/eclipse.dir/src/math/legendre.c.o
+[ 60%] Building C object CMakeFiles/eclipse.dir/src/math/matrix.c.o
+[ 60%] Building C object CMakeFiles/eclipse.dir/src/math/median.c.o
+[ 61%] Building C object CMakeFiles/eclipse.dir/src/math/optimization.c.o
+[ 62%] Building C object CMakeFiles/eclipse.dir/src/math/poly2d.c.o
+[ 62%] Building C object CMakeFiles/eclipse.dir/src/math/polygon.c.o
+[ 63%] Building C object CMakeFiles/eclipse.dir/src/math/random.c.o
+[ 65%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectral_lines.c.o
+[ 65%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_arcs.c.o
+[ 66%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_detect.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/spectro/spectro_detect.c: In function ‘valid_spectrum’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/spectro/spectro_detect.c:82:33: warning: variable ‘objlen’ set but not used [-Wunused-but-set-variable]
+   82 |         int                     objlen   = -1,
+      |                                 ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/spectro/spectro_detect.c:72:57: warning: unused parameter ‘min_spec_length’ [-Wunused-parameter]
+   72 |                 int                                     min_spec_length,
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/spectro/spectro_detect.c: In function ‘select_valid_spectra’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/spectro/spectro_detect.c:185:28: warning: variable ‘j’ set but not used [-Wunused-but-set-variable]
+  185 |         int             i, j ;
+      |                            ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/spectro/spectro_detect.c: In function ‘find_brightest_spectrum_1d’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/spectro/spectro_detect.c:383:41: warning: variable ‘brightest’ set but not used [-Wunused-but-set-variable]
+  383 |         int                             brightest ;
+      |                                         ^~~~~~~~~
+[ 67%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_wave.c.o
+[ 67%] Building C object CMakeFiles/eclipse.dir/src/unix/calendar.c.o
+[ 68%] Building C object CMakeFiles/eclipse.dir/src/unix/charmatrix.c.o
+[ 70%] Building C object CMakeFiles/eclipse.dir/src/unix/chronos.c.o
+[ 70%] Building C object CMakeFiles/eclipse.dir/src/unix/cmdline.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/cmdline.c: In function ‘cmdline_parse’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/cmdline.c:185:41: warning: variable ‘len’ set but not used [-Wunused-but-set-variable]
+  185 |         int                             len ;
+      |                                         ^~~
+[ 71%] Building C object CMakeFiles/eclipse.dir/src/unix/comm.c.o
+[ 72%] Building C object CMakeFiles/eclipse.dir/src/unix/dictionary.c.o
+[ 72%] Building C object CMakeFiles/eclipse.dir/src/unix/e_config.c.o
+[ 73%] Building C object CMakeFiles/eclipse.dir/src/unix/e_version.c.o
+[ 75%] Building C object CMakeFiles/eclipse.dir/src/unix/file_handling.c.o
+[ 75%] Building C object CMakeFiles/eclipse.dir/src/unix/filelock.c.o
+[ 76%] Building C object CMakeFiles/eclipse.dir/src/unix/filename.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filename.c: In function ‘get_dirname’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filename.c:98:23: warning: the comparison will always evaluate as ‘true’ for the address of ‘path’ will never be NULL [-Waddress]
+   98 |     last_slash = path != NULL ? strrchr (path, '/') : NULL;
+      |                       ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filename.c:92:17: note: ‘path’ declared here
+   92 |     static char path[MAXNAMESZ];
+      |                 ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filename.c: In function ‘get_rootname’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filename.c:191:9: warning: ‘memset’ used with constant zero length parameter; this could be due to transposed parameters [-Wmemset-transposed-args]
+  191 |         memset(path, MAXNAMESZ, 0);
+      |         ^~~~~~
+In file included from /usr/include/string.h:548,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/filename.h:57,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filename.c:52:
+In function ‘strncpy’,
+    inlined from ‘get_program_path’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filename.c:280:13:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:95:10: warning: ‘__builtin_strncpy’ destination unchanged after copying no bytes [-Wstringop-truncation]
+   95 |   return __builtin___strncpy_chk (__dest, __src, __len,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   96 |                                   __glibc_objsize (__dest));
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 77%] Building C object CMakeFiles/eclipse.dir/src/unix/filesys.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filesys.c: In function ‘get_avail_kbytes’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filesys.c:120:30: warning: unused parameter ‘path’ [-Wunused-parameter]
+  120 | long get_avail_kbytes(char * path)
+      |                       ~~~~~~~^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filesys.c: In function ‘get_disk_list’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filesys.c:261:5: warning: ignoring return value of ‘fgets’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  261 |     fgets(line, ASCIILINESZ, df_prog) ;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filesys.c:270:5: warning: ignoring return value of ‘fgets’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  270 |     fgets(line, ASCIILINESZ, df_prog) ;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/filesys.c:272:9: warning: ignoring return value of ‘fgets’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  272 |         fgets(line, ASCIILINESZ, df_prog) ;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 77%] Building C object CMakeFiles/eclipse.dir/src/unix/getopt.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/getopt.c: In function ‘getopt_internal’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/getopt.c:225:33: warning: comparison of integer expressions of different signedness: ‘size_t’ {aka ‘long unsigned int’} and ‘int’ [-Wsign-compare]
+  225 |                 if (match_chars == (int)(strlen(longopts[optindex].name))) {
+      |                                 ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/getopt.c:300:47: warning: ‘cp’ may be used uninitialized [-Wmaybe-uninitialized]
+  300 |                     fprintf(stderr, "-%c'\n", *cp);
+      |                                               ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/getopt.c:137:11: note: ‘cp’ was declared here
+  137 |     char *cp;
+      |           ^~
+[ 78%] Building C object CMakeFiles/eclipse.dir/src/unix/gnuplot_i.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_x’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:386:17: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  386 |                 write(tmpfd, line, strlen(line));
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_xy’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:477:17: warning: ignoring return value of ‘write’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  477 |                 write(tmpfd, line, strlen(line));
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/string.h:548,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/gnuplot_i.h:32,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:27:
+In function ‘strncpy’,
+    inlined from ‘gnuplot_get_program_path’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:96:13:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:95:10: warning: ‘__builtin_strncpy’ destination unchanged after copying no bytes [-Wstringop-truncation]
+   95 |   return __builtin___strncpy_chk (__dest, __src, __len,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   96 |                                   __glibc_objsize (__dest));
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 78%] Building C object CMakeFiles/eclipse.dir/src/unix/iniparser.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_x’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:400:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  400 |         sprintf(line, "%s \"%s\" title \"%s\" with %s", cmd, name,
+      |                          ^~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/gnuplot_i.h:30:
+In function ‘sprintf’,
+    inlined from ‘gnuplot_plot_x’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:400:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output 19 or more bytes (assuming 2224) into a destination of size 2048
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_x’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:398:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  398 |         sprintf(line, "%s \"%s\" with %s", cmd, name, handle->pstyle) ;
+      |                          ^~~
+In function ‘sprintf’,
+    inlined from ‘gnuplot_plot_x’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:398:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 10 and 2215 bytes into a destination of size 2048
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_xy’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:491:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  491 |         sprintf(line, "%s \"%s\" title \"%s\" with %s", cmd, name,
+      |                          ^~~
+In function ‘sprintf’,
+    inlined from ‘gnuplot_plot_xy’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:491:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output 19 or more bytes (assuming 2224) into a destination of size 2048
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c: In function ‘gnuplot_plot_xy’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:489:26: warning: ‘ "’ directive writing 2 bytes into a region of size between 1 and 2048 [-Wformat-overflow=]
+  489 |         sprintf(line, "%s \"%s\" with %s", cmd, name, handle->pstyle) ;
+      |                          ^~~
+In function ‘sprintf’,
+    inlined from ‘gnuplot_plot_xy’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/gnuplot_i.c:489:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 10 and 2215 bytes into a destination of size 2048
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 80%] Building C object CMakeFiles/eclipse.dir/src/unix/manpage.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/iniparser.c: In function ‘iniparser_load’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/iniparser.c:49:32: warning: ‘__builtin___sprintf_chk’ may write a terminating nul past the end of the destination [-Wformat-overflow=]
+   49 |         sprintf(longkey, "%s:%s", sec, key);
+      |                                ^
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/iniparser.h:26,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/iniparser.c:23:
+In function ‘sprintf’,
+    inlined from ‘iniparser_add_entry’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/iniparser.c:49:9,
+    inlined from ‘iniparser_load’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/iniparser.c:519:17:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 2 and 2050 bytes into a destination of size 2049
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 81%] Building C object CMakeFiles/eclipse.dir/src/unix/memstr.c.o
+[ 81%] Building C object CMakeFiles/eclipse.dir/src/unix/parse_tok.c.o
+[ 82%] Building C object CMakeFiles/eclipse.dir/src/unix/pid_i.c.o
+[ 83%] Building C object CMakeFiles/eclipse.dir/src/unix/ptrace.c.o
+[ 83%] Building C object CMakeFiles/eclipse.dir/src/unix/rtd_i.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/ptrace.c: In function ‘__cyg_profile_func_enter’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/ptrace.c:110:47: warning: unused parameter ‘call_site’ [-Wunused-parameter]
+  110 | __cyg_profile_func_enter(void *this_fn, void *call_site)
+      |                                         ~~~~~~^~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/ptrace.c: In function ‘__cyg_profile_func_exit’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/ptrace.c:117:46: warning: unused parameter ‘call_site’ [-Wunused-parameter]
+  117 | __cyg_profile_func_exit(void *this_fn, void *call_site)
+      |                                        ~~~~~~^~~~~~~~~
+[ 85%] Building C object CMakeFiles/eclipse.dir/src/unix/show.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/show.c: In function ‘show_image’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/show.c:66:5: warning: ignoring return value of ‘system’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   66 |     system(launch_cmd) ;
+      |     ^~~~~~~~~~~~~~~~~~
+[ 86%] Building C object CMakeFiles/eclipse.dir/src/unix/strlib.c.o
+[ 86%] Building C object CMakeFiles/eclipse.dir/src/unix/t_iso8601.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c: In function ‘get_datetime_iso8601’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c:258:53: warning: ‘%02d’ directive writing between 2 and 3 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                                                     ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c:258:27: note: directive argument in the range [-99, 99]
+  258 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c:26:
+In function ‘sprintf’,
+    inlined from ‘get_datetime_iso8601’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c:258:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 40 bytes into a destination of size 20
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c: In function ‘get_datetimemili_iso8601’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c:277:58: warning: ‘%03d’ directive writing between 3 and 4 bytes into a region of size between 0 and 4 [-Wformat-overflow=]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                                                          ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c:277:27: note: directive argument in the range [-999, 999]
+  277 |     sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function ‘sprintf’,
+    inlined from ‘get_datetimemili_iso8601’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/unix/t_iso8601.c:277:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 24 and 45 bytes into a destination of size 24
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[ 87%] Building C object CMakeFiles/eclipse.dir/src/unix/t_stamp.c.o
+[ 88%] Building C object CMakeFiles/eclipse.dir/src/unix/userid.c.o
+[ 88%] Linking C static library libeclipse.a
+[ 88%] Built target eclipse
+[ 90%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mefp_lib.c.o
+[ 91%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mef_bias_kernel.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_framelist_load’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1724:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1724 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_load’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1887:33: warning: unused variable ‘single_frames’ [-Wunused-variable]
+ 1887 |         int                     single_frames ;
+      |                                 ^~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1886:33: warning: unused variable ‘err’ [-Wunused-variable]
+ 1886 |         int                     err ;
+      |                                 ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1885:33: warning: unused variable ‘exts’ [-Wunused-variable]
+ 1885 |         int               *     exts ;
+      |                                 ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1884:33: warning: unused variable ‘i’ [-Wunused-variable]
+ 1884 |         int                     i ;
+      |                                 ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1882:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1882 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1881:20: warning: unused variable ‘mef_frame’ [-Wunused-variable]
+ 1881 |         image_t  * mef_frame ;
+      |                    ^~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_overscan_correction’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1988:21: warning: variable ‘zIndex’ set but not used [-Wunused-but-set-variable]
+ 1988 |     int             zIndex;
+      |                     ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘simplifyFilterName’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2249:14: warning: unused variable ‘zChar’ [-Wunused-variable]
+ 2249 |         char zChar ;
+      |              ^~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_valid_subset’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2284:33: warning: unused variable ‘getval’ [-Wunused-variable]
+ 2284 |         char            *       getval ;
+      |                                 ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_bpm’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2711:36: warning: format not a string literal and no format arguments [-Wformat-security]
+ 2711 |                 sprintf(cval_prev, cval);
+      |                                    ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+[ 91%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mef_paths.c.o
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2871:25: warning: unused variable ‘bias’ [-Wunused-variable]
+ 2871 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2870:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+ 2870 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3688:19: warning: format not a string literal and no format arguments [-Wformat-security]
+ 3688 |     sprintf(cval, recipe_version);
+      |                   ^~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3564:17: warning: unused variable ‘i’ [-Wunused-variable]
+ 3564 |     int         i, nframes ;
+      |                 ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3562:18: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3562 |     char        *getval ;
+      |                  ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3558:18: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 3558 |     framelist   *fnames ;
+      |                  ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_eclipse’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3733:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 3733 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3732:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3732 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3728:17: warning: variable ‘exptime’ set but not used [-Wunused-but-set-variable]
+ 3728 |     float       exptime;
+      |                 ^~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3725:26: warning: unused variable ‘fh_ref’ [-Wunused-variable]
+ 3725 |         qfits_header    *fh_ref ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_input_filename’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4071:14: warning: unused variable ‘cval’ [-Wunused-variable]
+ 4071 |         char cval[80];
+      |              ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_headers_for’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4205:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 4205 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4204:26: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 4204 |         framelist       *fnames ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4203:26: warning: unused variable ‘first_name’ [-Wunused-variable]
+ 4203 |         char            *first_name ;
+      |                          ^~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4201:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 4201 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4198:26: warning: unused variable ‘out’ [-Wunused-variable]
+ 4198 |         FILE            *out ;
+      |                          ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_paths.c: In function ‘calibration_geometry’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_paths.c:284:48: warning: passing argument 1 of ‘qfits_header_readext’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  284 |             header = qfits_header_readext(names[i], xt);
+      |                                           ~~~~~^~~
+In file included from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/cube_load.h:36,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/cube_handling.h:32,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/image_handling.h:31,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/corner.h:27,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include/eclipse.h:54,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.h:26,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_paths.c:8:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/include/qfits.h:598:44: note: expected ‘char *’ but argument is of type ‘const char *’
+  598 | qfits_header * qfits_header_readext(char * filename, int xtnum) ;
+      |                                     ~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4197:25: warning: unused variable ‘qd’ [-Wunused-variable]
+ 4197 |         qfitsdumper     qd ;
+      |                         ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4190:26: warning: unused variable ‘fh_main’ [-Wunused-variable]
+ 4190 |         qfits_header    *fh_main = NULL ;
+      |                          ^~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_create_orig_filename’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:4159:1: warning: control reaches end of non-void function [-Wreturn-type]
+ 4159 | }
+      | ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_split’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1659:31: warning: ‘.tmp.XXXXXX’ directive writing 11 bytes into a region of size between 1 and 512 [-Wformat-overflow=]
+ 1659 |         sprintf(temporary, "%s.tmp.XXXXXX", output);
+      |                               ^~~~~~~~~~~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:22:
+In function ‘sprintf’,
+    inlined from ‘mef_split’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:1659:9:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 12 and 523 bytes into a destination of size 512
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2989:20: warning: ‘lo_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+ 2989 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                    ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2876:25: note: ‘lo_thr’ was declared here
+ 2876 |         double          lo_thr, hi_thr ;
+      |                         ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2989:43: warning: ‘hi_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+ 2989 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                     ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2876:33: note: ‘hi_thr’ was declared here
+ 2876 |         double          lo_thr, hi_thr ;
+      |                                 ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2951:19: warning: ‘kappa1’ may be used uninitialized [-Wmaybe-uninitialized]
+ 2951 |         stacked = mef_bias_stack(i_cube, minframe, kappa1, &statistics, NULL);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2878:36: note: ‘kappa1’ was declared here
+ 2878 |         double          avg, avg1, kappa1 ;
+      |                                    ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:3138:9: warning: ‘normFactor’ may be used uninitialized [-Wmaybe-uninitialized]
+ 3138 |         image_cst_op_local(flat,normFactor,'*');        /* we normalize to the median of first extension */
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2895:25: note: ‘normFactor’ was declared here
+ 2895 |         float           normFactor ;
+      |                         ^~~~~~~~~~
+[ 92%] Linking C static library libmefpp_common.a
+[ 92%] Built target mefpp_common
+[ 93%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_config.c.o
+[ 93%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_runtime.c.o
+[ 95%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_cli_request.c.o
+[ 96%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_input_request.c.o
+[ 96%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_cal_bias.c.o
+[ 97%] Linking C static library libmefpp_config_snapshot.a
+[ 97%] Built target mefpp_config_snapshot
+[ 98%] Building C object CMakeFiles/eclipse_allocation_probe.dir/tests/eclipse_allocation_probe.c.o
+[100%] Building C object CMakeFiles/eclipse_allocation_probe.dir/tests/bias_legacy_reference.c.o
+In file included from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/eclipse_allocation_probe.c:3:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:560:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  560 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:874:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  874 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c: In function ‘mef_bias_reference’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:12:25: warning: unused variable ‘bias’ [-Wunused-variable]
+   12 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:11:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+   11 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:114:39: warning: ‘kappa1’ may be used uninitialized [-Wmaybe-uninitialized]
+  114 |                 lo_thr = avg1 - kappa1*sig1 ;
+      |                                 ~~~~~~^~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:19:42: note: ‘kappa1’ was declared here
+   19 |         double          avg, avg1, sig1, kappa1 ;
+      |                                          ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:140:20: warning: ‘lo_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+  140 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                    ^
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:17:25: note: ‘lo_thr’ was declared here
+   17 |         double          lo_thr, hi_thr ;
+      |                         ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:140:43: warning: ‘hi_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+  140 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                     ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:17:33: note: ‘hi_thr’ was declared here
+   17 |         double          lo_thr, hi_thr ;
+      |                                 ^~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:317:9: warning: ‘normFactor’ may be used uninitialized [-Wmaybe-uninitialized]
+  317 |         image_cst_op_local(flat,normFactor,'*');        /* we normalize to the median of first extension */
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/bias_legacy_reference.c:36:25: note: ‘normFactor’ was declared here
+   36 |         float           normFactor ;
+      |                         ^~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_tmpfilename’:
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:516:34: warning: ‘/vmswap_’ directive writing 8 bytes into a region of size between 1 and 1024 [-Wformat-overflow=]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                                  ^~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:516:31: note: directive argument in the range [-2147483648, 2147483647]
+  516 |     sprintf(xmem_tmpfilename, "%s/vmswap_%05ld_%05x", xmemory_tmpdirname,
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:516:31: note: using the range [0, 4294967295] for directive argument
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:33:
+In function ‘sprintf’,
+    inlined from ‘xmemory_tmpfilename’ at /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/tests/../qfits5/src/xmemory.c:516:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 20 and 1052 bytes into a destination of size 1024
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[100%] Linking C executable eclipse_allocation_probe
+[100%] Built target eclipse_allocation_probe

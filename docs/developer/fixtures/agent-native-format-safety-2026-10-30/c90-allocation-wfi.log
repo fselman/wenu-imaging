@@ -1,0 +1,471 @@
+[1merror: not enough frames to continue: 0
+[0m[1merror: not enough frames to continue: 0
+[0mxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1226)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1227)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1230)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1231)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1232)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1233)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1234)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1235)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1236)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1237)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1262)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1263)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1264)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1265)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1266)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1267)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1268)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1269)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1270)
+[1merror: cannot allocate cube structure
+[0m[1merror: cannot allocate cube plane list
+[0m[1merror: in crop region definition
+[0m[1merror: mef_cube_overscan_correction: during overscan correction in plane 1
+[0mPASS: profile 0 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 1 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 2 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 3 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 4 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 5 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 6 exact legacy pixels/QC and input/result lifetimes
+PASS: profile 7 exact legacy pixels/QC and input/result lifetimes
+PASS: input/selection/geometry controls; 24 allocation positions x 2; 20 cycles; zero new owners
+PASS: bias service contract; legacy-compatible ADU signal, variance unavailable
+PASS: direct image-structure failure preserves owners/input
+PASS: direct image-pixels failure preserves owners/input
+PASS: direct median-structure failure preserves owners/input
+PASS: direct median-pixels failure preserves owners/input
+PASS: direct median-timeline failure preserves owners/input
+PASS: direct reject-structure failure preserves owners/input
+PASS: direct reject-planes failure preserves owners/input
+PASS: direct overscan-owner failure preserves owners/input
+SITES: rejection=0 positions=73
+SITE 1 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube_handling.c:56
+SITE 2 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube_handling.c:61
+SITE 3 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 4 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 5 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 6 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 7 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 8 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 9 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 10 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 11 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 12 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 13 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 14 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 15 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 16 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 17 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 18 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 19 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 20 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 21 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 22 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 23 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 24 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 25 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 26 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 27 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 28 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 29 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 30 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 31 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 32 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 33 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 34 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 35 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 36 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 37 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 38 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 39 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 40 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 41 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 42 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 43 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 44 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 45 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 46 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 47 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 48 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 49 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 50 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 51 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 52 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 53 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 54 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 55 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 56 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 57 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 58 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 59 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 60 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 61 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 62 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 63 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 64 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 65 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 66 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 67 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 68 /workspace/scratch/555b3[1merror: cannot allocate cube structure
+[0m[1merror: cannot allocate cube plane list
+[0mxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (59)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (60)
+[1merror: cannot allocate cube structure
+[0m[1merror: cannot allocate cube plane list
+[0mxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (59)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (60)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (60)
+77cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c:21
+SITE 69 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c:22
+SITE 70 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 71 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 72 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube2image.c:524
+SITE 73 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_stats.c:571
+PASS: rejection=0 all 73 dependency positions x2, recovery and preserved sources
+SITES: rejection=1 positions=75
+SITE 1 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube_handling.c:56
+SITE 2 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube_handling.c:61
+SITE 3 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 4 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 5 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 6 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 7 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 8 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 9 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 10 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 11 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 12 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 13 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 14 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 15 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 16 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 17 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 18 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 19 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 20 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 21 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 22 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 23 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 24 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 25 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 26 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 27 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 28 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 29 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 30 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 31 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 32 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 33 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 34 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 35 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 36 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 37 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 38 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 39 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 40 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 41 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 42 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 43 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 44 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 45 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 46 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 47 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 48 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 49 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 50 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 51 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 52 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 53 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 54 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 55 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 56 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 57 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2027
+SITE 58 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c:2028
+SITE 59 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 60 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 61 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 62 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 63 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 64 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/math/function_1d.c:820
+SITE 65 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/pixel_handling.c:157
+SITE 66 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:66
+SITE 67 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 68 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c:21
+SITE 69 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c:22
+SITE 70 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube_handling.c:56
+SITE 71 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube_handling.c:61
+SITE 72 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_hand[1merror: cannot allocate cube structure
+[0m[1merror: cannot allocate cube plane list
+[0mxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (59)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (60)
+[1merror: cannot allocate cube structure
+[0m[1merror: cannot allocate cube plane list
+[0m[1merror: cannot allocate cube structure
+[0m[1merror: cannot allocate cube plane list
+[0mxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (2108)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (59)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (60)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mef_bias_kernel.c (60)
+[1merror: cannot allocate cube structure
+[0m[1merror: cannot allocate cube plane list
+[0mxmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1226)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1227)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1230)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1231)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1232)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1233)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1234)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1235)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1236)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1237)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1262)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1263)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1264)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1265)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1266)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1267)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1268)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1269)
+xmem: free requested on NULL pointer -- /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common/mefp_lib.c (1270)
+ling.c:66
+SITE 73 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_handling.c:71
+SITE 74 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/cube2image.c:524
+SITE 75 /workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/iproc/image_stats.c:571
+PASS: rejection=1 all 75 dependency positions x2, recovery and preserved sources
+PASS: Eclipse dependency failure contract

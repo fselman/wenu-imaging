@@ -222,13 +222,15 @@ static long timer_to_time(time_t time_secs)
   */
 /*--------------------------------------------------------------------------*/
 
+/* 96 bytes cover every signed-int field width in these formats, including
+ * non-four-digit years; ordinary timestamp bytes/time policy are unchanged. */
 char * get_date_iso8601(void)
 {
-    static char date_iso8601[20] ;
+    static char date_iso8601[96] ;
     long        curdate ;
 
     curdate  = date_now() ;
-    sprintf(date_iso8601, "%04d-%02d-%02d",
+    snprintf(date_iso8601, sizeof(date_iso8601), "%04d-%02d-%02d",
             GET_CCYEAR(curdate),
             GET_MONTH(curdate),
             GET_DAY(curdate));
@@ -248,14 +250,14 @@ char * get_date_iso8601(void)
 
 char * get_datetime_iso8601(void)
 {
-    static char date_iso8601[20] ;
+    static char date_iso8601[96] ;
     long        curdate ;
     long        curtime ;
 
     curdate  = date_now() ;
     curtime  = time_now() ;
 
-    sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d",
+    snprintf(date_iso8601, sizeof(date_iso8601), "%04d-%02d-%02dT%02d:%02d:%02d",
             GET_CCYEAR(curdate),
             GET_MONTH(curdate),
             GET_DAY(curdate),
@@ -267,14 +269,14 @@ char * get_datetime_iso8601(void)
 
 char * get_datetimemili_iso8601(void)
 {
-    static char date_iso8601[24] ;
+    static char date_iso8601[96] ;
     long        curdate ;
     long        curtime ;
 
     curdate  = date_now() ;
     curtime  = time_now() ;
 
-    sprintf(date_iso8601, "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
+    snprintf(date_iso8601, sizeof(date_iso8601), "%04d-%02d-%02dT%02d:%02d:%02d.%03d",
             GET_CCYEAR(curdate),
             GET_MONTH(curdate),
             GET_DAY(curdate),

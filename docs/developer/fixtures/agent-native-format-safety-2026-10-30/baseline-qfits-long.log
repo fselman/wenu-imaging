@@ -1,0 +1,53 @@
+=================================================================
+==25==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7fd144900460 at pc 0x7fd1471da0c9 bp 0x7fff9205a840 sp 0x7fff92059fd0
+WRITE of size 6000 at 0x7fd144900460 thread T0
+    #0 0x7fd1471da0c8 in __vsprintf_chk ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1676
+    #1 0x401b4d in vsprintf /usr/include/x86_64-linux-gnu/bits/stdio2.h:44
+    #2 0x401b4d in qfits_error /workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c:190
+    #3 0x401ce7 in main /workspace/scratch/555b377cf948/format-batch-baseline/qfits-long.c:2
+    #4 0x7fd1468241c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #5 0x7fd14682428a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: 274eec488d230825a136fa9c4d85370fed7a0a5e)
+    #6 0x4012f4 in _start (/workspace/scratch/555b377cf948/format-batch-baseline/qfits-long+0x4012f4) (BuildId: e5a27fb9ff8ddbe547c55ff77493b540f1c4d94b)
+
+Address 0x7fd144900460 is located in stack of thread T0 at offset 1120 in frame
+    #0 0x401957 in qfits_error /workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_qerror.c:180
+
+  This frame has 3 object(s):
+    [32, 56) 'ap' (line 183)
+    [96, 1120) 'msg' (line 181)
+    [1248, 2272) 'all' (line 182) <== Memory access at offset 1120 partially underflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1676 in __vsprintf_chk
+Shadow bytes around the buggy address:
+  0x7fd144900180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7fd144900200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7fd144900280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7fd144900300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7fd144900380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x7fd144900400: 00 00 00 00 00 00 00 00 00 00 00 00[f2]f2 f2 f2
+  0x7fd144900480: f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 00 00 00 00
+  0x7fd144900500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7fd144900580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7fd144900600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7fd144900680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==25==ABORTING

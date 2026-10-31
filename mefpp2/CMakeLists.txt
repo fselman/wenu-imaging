@@ -179,6 +179,28 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(bias_service_probe PRIVATE -UNDEBUG -Wall -Wextra)
   endif()
+  # NULL-return seams exist only in these test copies of the actual dependency
+  # units. Normal Eclipse/qfits targets and allocator policy remain unchanged.
+  add_library(eclipse_allocation_units OBJECT
+    src/iproc/image_handling.c src/iproc/cube_handling.c src/iproc/cube2image.c
+    src/iproc/extraction.c src/iproc/pixel_handling.c src/iproc/image_stats.c
+    src/math/function_1d.c ins/mef/common/mefp_lib.c ins/mef/common/mef_bias_kernel.c)
+  target_include_directories(eclipse_allocation_units PRIVATE src/include
+    ins/mef/common qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(eclipse_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+  add_executable(eclipse_allocation_probe tests/eclipse_allocation_probe.c
+    tests/bias_legacy_reference.c $<TARGET_OBJECTS:eclipse_allocation_units>)
+  target_compile_definitions(eclipse_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+  target_compile_options(eclipse_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+  target_link_libraries(eclipse_allocation_probe PRIVATE mefpp_config_snapshot)
+  add_executable(format_safety_probe tests/format_safety_probe.c)
+  target_compile_definitions(format_safety_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+  target_compile_options(format_safety_probe PRIVATE -UNDEBUG -Wall -Wextra
+    -Werror=implicit-function-declaration)
+  target_link_libraries(format_safety_probe PRIVATE mefpp_common)
   add_executable(input_request_probe tests/input_request_probe.c)
   target_link_libraries(input_request_probe PRIVATE mefpp_config_snapshot eclipse)
   target_compile_definitions(input_request_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -300,6 +322,17 @@ if(BUILD_TESTING)
         --probe "$<TARGET_FILE:bias_service_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_bias_service PROPERTIES TIMEOUT 300 LABELS "native;bias;ownership")
+    add_test(NAME native_eclipse_allocation
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/eclipse_allocation_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --probe "$<TARGET_FILE:eclipse_allocation_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_eclipse_allocation PROPERTIES TIMEOUT 300 LABELS "native;bias;allocation;ownership;failure")
+    add_test(NAME native_format_safety
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/format_safety_contract.py"
+        --probe "$<TARGET_FILE:format_safety_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_format_safety PROPERTIES TIMEOUT 90 LABELS "native;format;bounds;failure")
     add_test(NAME native_input_request
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/input_request_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

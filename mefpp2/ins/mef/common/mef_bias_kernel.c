@@ -10,6 +10,7 @@ image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
     double average, sigma, low, high;
     int i, count, kept;
     image_t *stacked;
+    pixelvalue median;
     means = NULL;
     valid = NULL;
     stacked = NULL;
@@ -48,7 +49,10 @@ image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
     if (kept < count && cube_reject_planes(&cube, valid) != 0) goto cleanup;
     stacked = cube_avg_median(cube);
     if (stacked == NULL) goto cleanup;
-    statistics->median = image_getmedian(stacked);
+    if (image_getmedian_checked(stacked, &median) != 0) {
+        image_del(stacked); stacked = NULL; goto cleanup;
+    }
+    statistics->median = median;
     statistics->stdev = image_getstdev(stacked);
     statistics->accepted = kept;
 cleanup:

@@ -1,0 +1,1 @@
+/usr/bin/gcc -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-pie -fsanitize=address,undefined -no-pie CMakeFiles/format_safety_probe.dir/tests/format_safety_probe.c.o -o format_safety_probe  libmefpp_common.a libeclipse.a libqfits.a -lm

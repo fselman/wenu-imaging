@@ -1,5 +1,54 @@
 # mefpp refactor implementation plan — proposal
 
+30 October paired native safety receipt: selected-tool Intel Mac and representative
+shared Chapman4 private optimized C90 builds and all four contracts passed 4/4
+at 87ed266a109741c4998bfc8c978d07c9306f0091 (32.74 s / 20.77 s). Protected
+installed module/engine/configuration and clean review checkouts stayed unchanged.
+[Paired results](../../developer/native-safety-paired-results-2026-10-30.md) qualify the bounded #144/#171/#172/#174/#175/#176/#177
+corrections; PR #173 is ready for owner review. #74 retains unqualified legacy
+facilities; #125/#128, unresolved #116 and full M3/#159 remain separate. No real
+OOM, broad leak/concurrency, RTD display or scientific/installed activation claim.
+Preserve failed/corrected runs, manifests and tools. This documentation receipt
+needs no functional replay; synchronize review checkouts, then await owner review.
+Separate owner instruction precedes merge/cleanup. Earlier target-pending notes
+below are historical within this qualified batch.
+
+30 October actual Mac #173 batch stopped at b4fe1c6 during new format-probe
+compilation: missing private variadic qfits declarations (#177). No functional
+test ran; installed module/engine/config and checkout preservation passed.
+[Correction/evidence](../../developer/native-format-prototypes-2026-10-30.md) includes existing qerror.h and makes implicit
+declarations fatal for the probe. Corrected agent C90/C17/scoped ASan format
+checks pass 1/1 each; production/other contracts unchanged. Actual corrected Mac
+then Chapman four-test qualification remains pending; keep applicable issues
+open and PR #173 draft. Use the new correction manifest, preserve the failed Mac
+run and all earlier evidence. No install, automatic merge/cleanup or matrix replay.
+
+30 October owner authorized batching reachable #74 fixes with #144 in draft
+PR #173 before target handoff. [Complete format/buffer inventory](../../developer/native-format-safety.md) distinguishes inherited
+message/newline (#174), timestamp, conditional RTD, header-merge (#176), keyword
+and filename corrections from new probe-input mistake #175. Agent final C90/C17
+four-contract batches pass 4/4; scoped address/UB format/allocation/swap checks
+pass 3/3. [Agent receipt](../../developer/native-format-safety-agent-results-2026-10-30.md) retains failures, exact origins/hashes and limits.
+Actual selected-tool Mac/representative Chapman combined four-test qualification
+is pending; applicable tickets stay open. #74 also retains unqualified gnuplot/
+FITS-table facilities; #125/#128 remain separate. No real OOM, broad leak, RTD
+operation, numerical/scientific or installed activation claim. One combined host
+handoff replaces the earlier two-test handoff; preserve all tools/installations/
+evidence and separate #144 commit. No automatic merge/cleanup or matrix replay.
+
+30 October owner authorized #144 after accepted/merged PR #170 at clean main
+e2460fb72bdbe69f92c7da8994a81d21928569b5. [Bias dependency failure correction](../../developer/eclipse-allocation-failures.md)
+checks inherited image/cube, crop, overscan scratch and final QC allocations;
+#171 separately records inherited borrowed-cube destruction/ignored status.
+The shared kernel and active native overscan callers propagate failure. Agent
+C90/C17 allocation/native-path CTests pass 2/2; scoped ASan/UBSan allocation suite
+passes 1/1. [Agent receipt](../../developer/eclipse-allocation-agent-results-2026-10-30.md) retains original failures and new test setup #172.
+Actual selected-tool Mac/representative Chapman checks remain pending; keep
+#144/#171/#172 open. Global qfits fatal RAM/swap policy is unchanged; no real OOM,
+LeakSanitizer, complete-engine memory or scientific acceptance. Full M3/#159 and
+other recorded limits remain separate. Preserve tools/installations/all evidence;
+no historical matrix replay, automatic merge/cleanup or configured activation.
+
 30 October paired qfits swap receipt: selected-tool Intel Mac and representative
 shared Chapman4 optimized private C90 builds and both focused CTests passed 2/2
 at 471f42e19e304e16872291172535e855a2f826d9. Protected installed files and clean

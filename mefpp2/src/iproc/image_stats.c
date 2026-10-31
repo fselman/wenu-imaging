@@ -561,22 +561,29 @@ pixelvalue image_getmaxpos(
   Finds the median pixel value in the image.
  */
 /*----------------------------------------------------------------------------*/
-pixelvalue image_getmedian(image_t * in)
+int image_getmedian_checked(image_t *in, pixelvalue *out)
 {
-	pixelvalue	*	copybuf ;
-	int				npix ;
-	pixelvalue		median ;
-
-	if (in==NULL) return 0 ;
-
-	npix = in->lx * in->ly ;
-	copybuf = malloc(npix * sizeof(pixelvalue));
-	memcpy(copybuf, in->data, npix * sizeof(pixelvalue));
-	median = median_pixelvalue(copybuf, npix);
-	free(copybuf);
-	return median ;
+    pixelvalue *copybuf, median;
+    size_t npix;
+    if (in == NULL || out == NULL || in->data == NULL || in->lx < 1 || in->ly < 1)
+        return -1;
+    npix = (size_t)in->lx * (size_t)in->ly;
+    copybuf = malloc(npix * sizeof(pixelvalue));
+    if (copybuf == NULL) return -1;
+    memcpy(copybuf, in->data, npix * sizeof(pixelvalue));
+    median = median_pixelvalue(copybuf, (int)npix);
+    free(copybuf);
+    *out = median;
+    return 0;
 }
-
+pixelvalue image_getmedian(image_t *in)
+{
+    pixelvalue value;
+    value = 0;
+    if (image_getmedian_checked(in, &value) != 0)
+        e_error("cannot compute image median");
+    return value;
+}
 
 /*----------------------------------------------------------------------------*/
 /**

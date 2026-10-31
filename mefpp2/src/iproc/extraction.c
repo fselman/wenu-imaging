@@ -134,6 +134,7 @@ image_t * image_getvig(
     outlx = upright_x - loleft_x + 1 ;
     outly = upright_y - loleft_y + 1 ; 
     slit_img = image_new(outlx, outly) ;
+    if (slit_img == NULL) return NULL;
 
     for (j=0 ; j<outly ; j++) {
         inpt = image_in->data+loleft_x-1 + (j+loleft_y-1)*image_in->lx ;

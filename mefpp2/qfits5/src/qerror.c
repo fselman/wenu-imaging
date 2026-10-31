@@ -157,42 +157,33 @@ int qfits_err_register(qfits_err_dispfunc dispfn)
 	return 0 ;
 }
 
-/* Public warning/error functions */
+/* Public warning/error functions. Diagnostics may be shortened, but never
+ * silently: ordinary messages retain exact prefixes/bytes. Refs #74. */
+static void qfits_message(const char *prefix, const char *fmt, va_list ap)
+{
+    char all[QFITS_ERR_MSGSIZE];
+    const char marker[] = "...[truncated]";
+    size_t offset;
+    int count;
+    offset = strlen(prefix);
+    memcpy(all, prefix, offset);
+    count = vsnprintf(all + offset, sizeof(all) - offset, fmt, ap);
+    if (count < 0) strcpy(all + offset, "[format error]");
+    else if ((size_t)count >= sizeof(all) - offset)
+        memcpy(all + sizeof(all) - sizeof(marker), marker, sizeof(marker));
+    qfits_err_main_display(all);
+}
 void qfits_warning(const char *fmt, ...)
 {
-    char msg[QFITS_ERR_MSGSIZE] ;
-    char all[QFITS_ERR_MSGSIZE] ;
-    va_list ap ;
-
-	/* Check if display is activated */
-	if (qfits_err_control.active==0) {
-		return ;
-	}
-    va_start(ap, fmt) ;
-    vsprintf(msg, fmt, ap) ;
-    va_end(ap);
-
-	sprintf(all, "*** %s", msg);
-	qfits_err_main_display(all);
-    return ;
+    va_list ap;
+    if (qfits_err_control.active == 0) return;
+    va_start(ap, fmt); qfits_message("*** ", fmt, ap); va_end(ap);
 }
 void qfits_error(const char *fmt, ...)
 {
-    char msg[QFITS_ERR_MSGSIZE] ;
-    char all[QFITS_ERR_MSGSIZE] ;
-    va_list ap ;
-
-	/* Check if display is activated */
-	if (qfits_err_control.active==0) {
-		return ;
-	}
-    va_start(ap, fmt) ;
-    vsprintf(msg, fmt, ap) ;
-    va_end(ap);
-
-	sprintf(all, "error: %s", msg);
-	qfits_err_main_display(all);
-    return ;
+    va_list ap;
+    if (qfits_err_control.active == 0) return;
+    va_start(ap, fmt); qfits_message("error: ", fmt, ap); va_end(ap);
 }
 
 /* vim: set ts=4 et sw=4 tw=75 */

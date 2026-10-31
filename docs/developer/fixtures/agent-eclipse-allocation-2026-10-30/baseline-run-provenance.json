@@ -1,0 +1,221 @@
+{
+  "baseline": "e2460fb72bdbe69f92c7da8994a81d21928569b5",
+  "status": "passed-original-defects-reproduced",
+  "purpose": "Original source NULL-return and borrowed-owner reproductions; no real OOM",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/gcc",
+        "-D_BSD_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_POSIX_C_SOURCE=200809L",
+        "-D_SVID_SOURCE=1",
+        "-Dxmemory_calloc=mef_test_dependency_calloc",
+        "-Dxmemory_malloc=mef_test_dependency_malloc",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-oom-c90/generated",
+        "-O1",
+        "-D_FORTIFY_SOURCE=2",
+        "-std=c90",
+        "-c",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/image_handling.c",
+        "-o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/image_handling.o"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-c90",
+      "status": 0,
+      "log": "image_handling-compile.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/gcc",
+        "-D_BSD_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_POSIX_C_SOURCE=200809L",
+        "-D_SVID_SOURCE=1",
+        "-Dxmemory_calloc=mef_test_dependency_calloc",
+        "-Dxmemory_malloc=mef_test_dependency_malloc",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-oom-c90/generated",
+        "-O1",
+        "-D_FORTIFY_SOURCE=2",
+        "-std=c90",
+        "-c",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/cube_handling.c",
+        "-o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/cube_handling.o"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-c90",
+      "status": 0,
+      "log": "cube_handling-compile.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/gcc",
+        "-D_BSD_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_POSIX_C_SOURCE=200809L",
+        "-D_SVID_SOURCE=1",
+        "-Dxmemory_calloc=mef_test_dependency_calloc",
+        "-Dxmemory_malloc=mef_test_dependency_malloc",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-oom-c90/generated",
+        "-O1",
+        "-D_FORTIFY_SOURCE=2",
+        "-std=c90",
+        "-c",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/cube2image.c",
+        "-o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/cube2image.o"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-c90",
+      "status": 0,
+      "log": "cube2image-compile.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/gcc",
+        "-D_BSD_SOURCE=1",
+        "-D_DARWIN_C_SOURCE=1",
+        "-D_DEFAULT_SOURCE=1",
+        "-D_POSIX_C_SOURCE=200809L",
+        "-D_SVID_SOURCE=1",
+        "-Dxmemory_calloc=mef_test_dependency_calloc",
+        "-Dxmemory_malloc=mef_test_dependency_malloc",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/src/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/ins/mef/common",
+        "-I/workspace/scratch/555b377cf948/eclipse-allocation-failures/mefpp2/qfits5/include",
+        "-I/workspace/scratch/555b377cf948/eclipse-oom-c90/generated",
+        "-O1",
+        "-D_FORTIFY_SOURCE=2",
+        "-std=c90",
+        "-c",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.c",
+        "-o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.o"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-c90",
+      "status": 0,
+      "log": "mefp_lib-compile.log"
+    },
+    {
+      "argv": [
+        "/usr/bin/gcc",
+        "-O1",
+        "-D_FORTIFY_SOURCE=2",
+        "CMakeFiles/eclipse_allocation_probe.dir/tests/eclipse_allocation_probe.c.o",
+        "CMakeFiles/eclipse_allocation_probe.dir/tests/bias_legacy_reference.c.o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/image_handling.o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/cube_handling.o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/cube2image.o",
+        "CMakeFiles/eclipse_allocation_units.dir/src/iproc/extraction.c.o",
+        "CMakeFiles/eclipse_allocation_units.dir/src/iproc/pixel_handling.c.o",
+        "CMakeFiles/eclipse_allocation_units.dir/src/iproc/image_stats.c.o",
+        "CMakeFiles/eclipse_allocation_units.dir/src/math/function_1d.c.o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/mefp_lib.o",
+        "CMakeFiles/eclipse_allocation_units.dir/ins/mef/common/mef_bias_kernel.c.o",
+        "-o",
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "libmefpp_config_snapshot.a",
+        "libmefpp_common.a",
+        "libeclipse.a",
+        "libqfits.a",
+        "-lm"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-c90",
+      "status": 0,
+      "log": "link.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=image-structure"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -11,
+      "log": "image-structure.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=image-pixels"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -6,
+      "log": "image-pixels.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=median-structure"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -11,
+      "log": "median-structure.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=median-pixels"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -11,
+      "log": "median-pixels.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=median-timeline"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -11,
+      "log": "median-timeline.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=reject-structure"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -11,
+      "log": "reject-structure.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=reject-planes"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -11,
+      "log": "reject-planes.log"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/555b377cf948/eclipse-oom-baseline/baseline-probe",
+        "--site=overscan-owner"
+      ],
+      "cwd": "/workspace/scratch/555b377cf948/eclipse-oom-baseline",
+      "status": -6,
+      "log": "overscan-owner.log"
+    }
+  ],
+  "source_sha256": {
+    "src/iproc/image_handling.c": "deb9e2d77aaba593777527b666c84e4c8d162a061f177bdf5fd00cf572538f70",
+    "src/iproc/cube_handling.c": "77384f40f88c2370eaf72e187b74ae4cfb045300e023370e7ede9b8eb8546cff",
+    "src/iproc/cube2image.c": "d7e21b4842b2ccb4c4e7fae65cf85c5389736b25bbe329bac49e2fff2ed6cf5a",
+    "ins/mef/common/mefp_lib.c": "262281add4ea1ab0e967bdfbbf4a21bce5ba01d3342ff69be1ce855b36ec9531"
+  },
+  "repository": "/workspace/scratch/555b377cf948/eclipse-allocation-failures",
+  "branch": "fix/eclipse-allocation-failures",
+  "dirty": true,
+  "retention": "Preserve original expected failures; original four units combined with corrected test harness/other units"
+}

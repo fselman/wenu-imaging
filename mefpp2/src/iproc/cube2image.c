@@ -519,8 +519,10 @@ image_t * cube_avg_median(cube_t * to_average)
 	}
 
 	avg = image_new(to_average->lx, to_average->ly) ;
+    if (avg == NULL) return NULL;
 	nplanes = to_average->np;
 	timeline = calloc(nplanes, sizeof(pixelvalue)) ;
+    if (timeline == NULL) { image_del(avg); return NULL; }
 
 	for (j=0 ; j<to_average->ly ; j++) {
 	     offset = j*to_average->lx ;

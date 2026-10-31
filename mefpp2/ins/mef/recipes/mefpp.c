@@ -1178,7 +1178,7 @@ int mef_engine(mef_bb * bb)
 		/* Overscan/prescan correction and trimming */
 		part++;
 		e_comment(0, "--> [%d/%d] Part %d of %d: applying overscan/prescan/trimming", xts[j], nxts, part, ALGPARTS);
-		mef_cube_overscan_correction(prep,bb, "science");
+		if (mef_cube_overscan_correction(prep,bb, "science") != 0) goto publication_failed;
 
 		/* Bias correction */
 
@@ -1303,9 +1303,8 @@ int mef_engine(mef_bb * bb)
                }
 
                /* Processing software version */
-               sprintf(cval, recipe_version);
                sprintf(cval2, "Built on eclipse-%s", get_eclipse_version());
-               qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", cval, cval2, NULL);
+               qfits_header_add_after(fh, "TIMESYS", "PROCSOFT", recipe_version, cval2, NULL);
 
                /* Product category key */
                qfits_header_add_after(fh,"PROCSOFT", bb->phase3_prodcatg_keyname, 
@@ -1462,7 +1461,7 @@ int mef_engine(mef_bb * bb)
 	return 0 ;
 
 publication_failed:
-    /* Only new publication errors enter here; the caller still owns bb. */
+    /* Processing/publication failure: the caller still owns bb. */
     if (fh != NULL) qfits_header_destroy(fh);
     if (fh_ext != NULL) qfits_header_destroy(fh_ext);
     if (fh_aux1 != NULL) qfits_header_destroy(fh_aux1);

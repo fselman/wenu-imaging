@@ -1,0 +1,5 @@
+In file included from /workspace/scratch/555b377cf948/format-batch-baseline/header-percent.c:1:
+/workspace/scratch/555b377cf948/format-batch-baseline/qfits5_src_fits_h.c:44:10: fatal error: fits_p.h: No such file or directory
+   44 | #include "fits_p.h"
+      |          ^~~~~~~~~~
+compilation terminated.
