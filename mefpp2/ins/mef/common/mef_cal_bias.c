@@ -101,8 +101,8 @@ static mef_status validate(mef_context *context, const mef_bias_input *input,
     for (i = 0; i < input->count; ++i) {
         if (strcmp(request->inputs[i].detector_id, request->inputs[0].detector_id))
             return MEF_ERR_UNSUPPORTED;
-        /* Initial CCD/MEF lane. Primary images remain M4, not guessed here. */
-        if (request->inputs[i].hdu_index == 0) return MEF_ERR_UNSUPPORTED;
+        /* M4: the caller supplies the same validated plane for primary or MEF
+         * storage. Numerical validation must not depend on the file's HDU. */
         if (input->frames[i] == NULL || input->frames[i]->data == NULL ||
             input->frames[i]->lx != width || input->frames[i]->ly != height)
             return MEF_ERR_INPUT;

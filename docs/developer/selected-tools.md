@@ -6,6 +6,15 @@ preparing host commands, native builds, tests, installation or dependency work.
 
 ## Mandatory selection rules
 
+31 October M4 runner correction (#193): these are executable **invocation paths**.
+Do not substitute a symlink's resolved target for the selected command: tools
+such as ar/ranlib may dispatch by their invoked basename. Record canonical
+target/hash separately as provenance. The selected Mac archiver and ranlib stay
+`/usr/bin/ar` and `/usr/bin/ranlib`; xcrun discovery is not a replacement selection.
+The first M4 qualifier incorrectly dereferenced supplied Xcode entry points and
+failed in static archiving before tests. Retain that failed run; use this record
+directly for the corrected task, without another PATH/tool-discovery gate.
+
 1. Use absolute tool paths from the tables below. Do not select tools through
    PATH, a bare `cmake`/`ctest`/`cc`/`gcc`/`python`, Conda activation alone,
    or an inherited `CC`. In particular, Chapman system CMake 2.8.12.2, its

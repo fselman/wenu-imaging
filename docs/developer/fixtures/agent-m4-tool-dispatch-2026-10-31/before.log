@@ -1,0 +1,30 @@
+test_multicall_symlink_preserves_selected_entry_point (__main__.ToolInvocationTests.test_multicall_symlink_preserves_selected_entry_point) ...
+  test_multicall_symlink_preserves_selected_entry_point (__main__.ToolInvocationTests.test_multicall_symlink_preserves_selected_entry_point) (entry_point='ar') ... FAIL
+  test_multicall_symlink_preserves_selected_entry_point (__main__.ToolInvocationTests.test_multicall_symlink_preserves_selected_entry_point) (entry_point='ranlib') ... FAIL
+
+======================================================================
+FAIL: test_multicall_symlink_preserves_selected_entry_point (__main__.ToolInvocationTests.test_multicall_symlink_preserves_selected_entry_point) (entry_point='ar')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/test_qualify_native_layout.py", line 23, in test_multicall_symlink_preserves_selected_entry_point
+    self.assertEqual(output.strip(), name)
+AssertionError: 'multicall' != 'ar'
+- multicall
++ ar
+
+
+======================================================================
+FAIL: test_multicall_symlink_preserves_selected_entry_point (__main__.ToolInvocationTests.test_multicall_symlink_preserves_selected_entry_point) (entry_point='ranlib')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/test_qualify_native_layout.py", line 23, in test_multicall_symlink_preserves_selected_entry_point
+    self.assertEqual(output.strip(), name)
+AssertionError: 'multicall' != 'ranlib'
+- multicall
++ ranlib
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+FAILED (failures=2)

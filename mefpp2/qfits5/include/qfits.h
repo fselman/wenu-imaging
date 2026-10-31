@@ -22,6 +22,9 @@ extern char * qfits_version(void);
  */
 /*----------------------------------------------------------------------------*/
 void qfits_cache_purge(void);
+/* Checked discovery using the existing cache walker. Counts include primary.
+ * Byte offsets remain int-valued; oversized files are rejected, not truncated. */
+int qfits_cache_prime_bounded(char *, size_t max_hdus, size_t max_header_bytes);
 /*----------------------------------------------------------------------------*/
 /**
   @brief    Expand a keyword from shortFITS to HIERARCH notation.
@@ -73,6 +76,11 @@ typedef struct qfits_header {
  */
 /*----------------------------------------------------------------------------*/
 qfits_header * qfits_header_new(void) ;
+/* Borrowed card views, in original order, including duplicates. Nonzero visitor
+ * result stops iteration; no mutation/serialization is performed. */
+int qfits_header_visit(const qfits_header *,
+    int (*visitor)(const char *, const char *, const char *, void *), void *);
+
 
 /*----------------------------------------------------------------------------*/
 /**

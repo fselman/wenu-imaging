@@ -127,7 +127,8 @@ option(MEFPP_BUILD_CONFIG_PROBES "Build isolated M1 configuration probes" OFF)
 if(MEFPP_BUILD_CONFIG_PROBES)
   add_library(mefpp_config_snapshot STATIC ins/mef/common/mef_config.c
     ins/mef/common/mef_runtime.c ins/mef/common/mef_cli_request.c
-    ins/mef/common/mef_input_request.c ins/mef/common/mef_cal_bias.c)
+    ins/mef/common/mef_input_request.c ins/mef/common/mef_cal_bias.c
+    ins/mef/common/mef_layout.c)
   target_include_directories(mefpp_config_snapshot PUBLIC ins/mef/common
     PRIVATE src/include qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_config_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -173,9 +174,15 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(cli_capture_probe tests/cli_capture_probe.c)
   target_link_libraries(cli_capture_probe PRIVATE mefpp_config_snapshot mefpp_common)
   target_compile_definitions(cli_capture_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  add_executable(qfits_discovery_probe tests/qfits_discovery_probe.c)
+  target_link_libraries(qfits_discovery_probe PRIVATE qfits)
   add_executable(bias_service_probe tests/bias_service_probe.c tests/bias_legacy_reference.c)
   target_link_libraries(bias_service_probe PRIVATE mefpp_config_snapshot)
   target_compile_definitions(bias_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  add_executable(layout_probe tests/layout_probe.c)
+  target_link_libraries(layout_probe PRIVATE mefpp_config_snapshot)
+  target_compile_definitions(layout_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_compile_options(layout_probe PRIVATE -UNDEBUG)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(bias_service_probe PRIVATE -UNDEBUG -Wall -Wextra)
   endif()
@@ -297,6 +304,17 @@ if(BUILD_TESTING)
         --cli-probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_config_project_composition PROPERTIES TIMEOUT 300 LABELS "native;configuration;project;composition;provenance")
+    add_test(NAME native_qfits_discovery
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/qfits_discovery_contract.py"
+        --probe "$<TARGET_FILE:qfits_discovery_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_qfits_discovery PROPERTIES TIMEOUT 120 LABELS "native;qfits;layout;bounds")
+    add_test(NAME native_layout
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/layout_contract.py"
+        --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+        --probe "$<TARGET_FILE:layout_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_layout PROPERTIES TIMEOUT 180 LABELS "native;layout;detector;ownership")
     add_test(NAME native_config_snapshot
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/config_snapshot_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

@@ -1,0 +1,19 @@
+PLAN: /workspace/scratch/104db3d59fe9/native-performance-final-plan-h62j06st/plan.json
+PREPARED ONLY: 16 native launches planned; none executed
+PLAN SHA256: b7ab5e503b82f39766374f68e0b8a86e70ec2d2772df2d09f80c70735a1f1925
+omegacam-warmup-0-reference
+omegacam-warmup-0-candidate
+omegacam-measured-1-reference
+omegacam-measured-1-candidate
+omegacam-measured-2-candidate
+omegacam-measured-2-reference
+omegacam-measured-3-reference
+omegacam-measured-3-candidate
+wfi-warmup-0-reference
+wfi-warmup-0-candidate
+wfi-measured-1-reference
+wfi-measured-1-candidate
+wfi-measured-2-candidate
+wfi-measured-2-reference
+wfi-measured-3-reference
+wfi-measured-3-candidate

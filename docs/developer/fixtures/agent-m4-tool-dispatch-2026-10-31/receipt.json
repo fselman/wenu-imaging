@@ -1,0 +1,14 @@
+{
+  "issue": 193,
+  "failed_mac_revision": "5b265fe504d4e07f5d7244a179e0551ac2637ae5",
+  "failed_mac_run": "/Users/fselman/Software/build/wenu-imaging/mac-m4-layout-DRyH42lM",
+  "failed_stage": "build-c90: libqfits static archive; no functional tests or C17 run",
+  "mac_preservation": {
+    "installed_files": true,
+    "checkout": true,
+    "exported_source": true
+  },
+  "agent_regression": "one test; ar and ranlib dispatch subcases fail before, both pass after (0.005 s)",
+  "native_sources": "unchanged; no native replay for runner-only correction",
+  "target_status": "actual link/tool evidence and corrected Mac/Chapman pending"
+}

@@ -1,0 +1,87 @@
+{
+  "provenance": "owner-returned console receipt; full results JSON remains on host",
+  "script_and_candidate_revision": "5b2518312b962e4e7aeff72e08d370b5e1c6a81a",
+  "reference_revision": "2d662b148db56b0292ca6ec3ee9bceb1bc463595",
+  "run": "/home1/fselman/Software/build/wenu-imaging/chapman-m4-performance-corrected-2yqy7u5t/plan",
+  "plan_sha256": "6d0ef4b23f5cd92d5a2a1749f67a6375f9ab8ba3a3da93e7eb251910de40e7dc",
+  "status": "completed-awaiting-performance-review",
+  "native_calls": 16,
+  "exact_products": "passed",
+  "preservation": {
+    "installed_files": true,
+    "checkout": true
+  },
+  "omegacam": {
+    "wall_ratios": [
+      0.9679636747487975,
+      0.8729395997696839,
+      1.012128911532121
+    ],
+    "cpu_ratios": [
+      0.905523282027441,
+      0.6244194744880466,
+      1.044183553405674
+    ],
+    "rss_diff_bytes": [
+      2101248,
+      1871872,
+      4202496
+    ],
+    "io_blocks_diff": [
+      [
+        0,
+        -88
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        -56
+      ]
+    ],
+    "retained_bytes_diff": [
+      0,
+      0,
+      0
+    ]
+  },
+  "wfi": {
+    "wall_ratios": [
+      0.9438960236622997,
+      0.9539572892090232,
+      0.9841577395577201
+    ],
+    "cpu_ratios": [
+      0.8324992245060054,
+      0.8426176087934536,
+      0.9473555104645957
+    ],
+    "rss_diff_bytes": [
+      10108928,
+      12288,
+      -6279168
+    ],
+    "io_blocks_diff": [
+      [
+        0,
+        -56
+      ],
+      [
+        0,
+        -56
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "retained_bytes_diff": [
+      0,
+      0,
+      0
+    ]
+  },
+  "interpretation": "No consistent timing penalty in corrected bounded case. No proven general speedup/lower-RSS/full-size/opt-in-layout performance claim. Prior results retained."
+}

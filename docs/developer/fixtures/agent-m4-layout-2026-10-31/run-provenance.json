@@ -1,0 +1,45 @@
+{
+  "baseline": "c81cb86f79659fba89bed9ba16e6a96cbad62992",
+  "branch": "feat/m4-native-layout-20261031",
+  "source_root": "/workspace/scratch/104db3d59fe9/wenu-imaging",
+  "initial_source_retained": "/workspace/scratch/104db3d59fe9/m4-layout-initial-source",
+  "initial_source_sha256": {
+    "mefpp2/tests/layout_probe.c": "f3f5faf201cdeb5bcef9b56d118d4109d12728df61074cb8aea7a09d52c3de71",
+    "mefpp2/tests/layout_contract.py": "f6341791dc8aff9c9f8e33f2ddb68e408b015341ecb67bc93682a3bf2f3dd1c1",
+    "mefpp2/ins/mef/common/mef_layout.c": "23268823e211a3ecc5fe364069f2cbf315926f7a502d0dbfe140044c5ae75cb1"
+  },
+  "compiler": "/usr/bin/cc",
+  "compiler_version": "cc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "cmake": "/workspace/scratch/555b377cf948/build-tools/bin/cmake",
+  "cmake_pythonpath": "/workspace/scratch/555b377cf948/build-tools",
+  "python": "/workspace/scratch/555b377cf948/m3-test-env/bin/python",
+  "builds": {
+    "c90": "/workspace/scratch/104db3d59fe9/m4-layout-c90",
+    "c17": "/workspace/scratch/104db3d59fe9/m4-layout-c17",
+    "asan": "/workspace/scratch/104db3d59fe9/m4-layout-asan"
+  },
+  "configure_settings": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "MEFPP_BUILD_CONFIG_PROBES": "ON",
+    "MEFPP_BUILD_RESOURCES": "OFF"
+  },
+  "targets": [
+    "layout_probe",
+    "bias_service_probe",
+    "mefpp (optimized integration builds only)"
+  ],
+  "focused_ctest_regex": "^(native_layout|native_bias_service)$",
+  "final_ctest_regex": "^native_layout$",
+  "asan_c_flags_release": "-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer",
+  "asan_link_flags": "-fsanitize=address,undefined",
+  "diagnostic_environment": {
+    "ASAN_OPTIONS": "detect_leaks=0:halt_on_error=1:exitcode=86",
+    "UBSAN_OPTIONS": "halt_on_error=1:exitcode=86"
+  },
+  "limits": [
+    "agent Linux only",
+    "no normal pipeline/install activation",
+    "no observed FIFO hang",
+    "no leak/CMOS/normalization/performance/Windows acceptance"
+  ]
+}

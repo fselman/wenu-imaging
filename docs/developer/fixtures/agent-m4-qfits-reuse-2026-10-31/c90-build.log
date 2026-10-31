@@ -1,0 +1,18 @@
+[ 92%] Built target qfits
+[ 92%] Building C object mefpp2/CMakeFiles/qfits_discovery_probe.dir/tests/qfits_discovery_probe.c.o
+[100%] Linking C executable qfits_discovery_probe
+[100%] Built target qfits_discovery_probe
+[ 16%] Built target qfits
+[ 88%] Built target eclipse
+[ 91%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[100%] Built target layout_probe
+[ 16%] Built target qfits
+[ 88%] Built target eclipse
+[ 91%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[100%] Built target bias_service_probe
+[ 17%] Built target qfits
+[ 94%] Built target eclipse
+[ 97%] Built target mefpp_common
+[100%] Built target mefpp

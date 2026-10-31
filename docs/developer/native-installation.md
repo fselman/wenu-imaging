@@ -1,5 +1,30 @@
 # Developer guide: native mefpp build, installation and qualification
 
+31 October [bounded M4 closure review](m4-bounded-closure-review-2026-10-31.md):
+qualified native source 5b251831 is ready for owner review with paired preservation
+and bounded follow-up evidence. No new installation or test replay is required;
+normal selected engines stay unchanged. Large-file/full-size/resource limits remain
+explicit. Merge/cleanup and later installed activation are separate decisions.
+
+31 October unmerged [qfits offset-storage follow-up](qfits-offset-storage-correction-2026-10-31.md)
+removes avoidable temporary heap allocations for ordinary files without changing
+reader validation or numerical behavior. Agent focused gates pass; revised target
+checks are pending. Keep selected tools/installations and existing evidence intact;
+no installation or performance acceptance is implied.
+
+31 October [qfits-backed M4 paired receipt](m4-qfits-paired-results-2026-10-31.md):
+owner accepts all four functional contracts in both C90/C17 on Mac and Chapman4.
+Installed files and clean main stay unchanged. No install/merge/M4 closure is
+implied; performance-plan review remains. Reuse retained builds/canonical tools,
+without new dependency/tool qualification. Earlier target-pending notes are historical.
+
+31 October unmerged [M4 qfits reuse candidate](m4-qfits-reader-adapter-2026-10-31.md):
+existing FITS I/O is reused with checked discovery and unchanged numerical services.
+Agent C90/C17 focused gates pass; selected Mac/Chapman verification is pending.
+The candidate explicitly rejects whole files above INT_MAX bytes (under 2 GiB);
+this is not a large-file migration or installed activation. Private qualifier uses
+four synthetic contracts per lane and the canonical selected tools. No reinstall.
+
 30 October paired native safety receipt: selected-tool Intel Mac and representative
 shared Chapman4 private optimized C90 builds and all four contracts passed 4/4
 at 87ed266a109741c4998bfc8c978d07c9306f0091 (32.74 s / 20.77 s). Protected

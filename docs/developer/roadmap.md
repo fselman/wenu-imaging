@@ -1,5 +1,85 @@
 # wenu-imaging roadmap
 
+31 October [bounded M4 closure review](m4-bounded-closure-review-2026-10-31.md)
+recommends owner acceptance of the detector/layout foundation, then M5 calibration
+decomposition after explicit integration. Native source 5b251831 passes paired
+Mac/Chapman C90/C17 four-contract gates and scoped agent sanitizers. Corrected
+Chapman16-call performance comparison preserves exact products/inputs/install/
+checkout and shows no consistent timing penalty; lower medians are not proof of
+general speedup or lower memory. #197 source-specific allocation correction closed;
+#195 large-file support and broader full-size/opt-in throughput limits remain.
+End this unchanged-source test cycle; no extra matrices/benchmarks by default.
+No automatic M4 closure, merge/cleanup, installed activation or M5 code before the
+owner's stage decision. Earlier target/performance-pending entries are historical
+within their stated source/scope; retain all failed/original/corrected evidence.
+
+31 October [Chapman performance inspection and #197 correction](qfits-offset-storage-correction-2026-10-31.md):
+prior sixteen-call products/preservation pass, but timing ratios remain under
+review. Recorded load is low; existing sleep(1) protects ORIGFILE names and stays
+unchanged. The reuse patch added two avoidable temporary offset heap allocations;
+restore original-sized stack buffers and grow only on actual count >128. All
+bounds/offset checks, numerical code and int-range limit remain. Agent C90/C17
+four contracts and scoped sanitizer three pass, including repeated growth to300.
+New selected-tool Mac then Chapman functional gates are pending; no new benchmark
+or claim that prior timing variation is explained. Retain all earlier results;
+no automatic retry/slowdown allowance, installed activation or M4/M5 closure.
+
+31 October owner accepts [paired qfits-backed M4 behavior](m4-qfits-paired-results-2026-10-31.md)
+at 5e6bd83beafa744cd2a3be64b5405083c3ae634b: Mac/representative Chapman each4/4
+in C90/C17 with installations, clean main and exports preserved. #194 count bounds
+closed; #195 wider-file boundary remains explicit. This is not merge/cleanup or
+permanent adoption of the 2 GiB support limit. Next [performance plan](m4-performance-comparison-plan-2026-10-31.md)
+uses retained private builds and prepares commands only; sixteen launches planned,
+none measured. Review script/plan before execution under the existing contract.
+No native changes, observations, installation, repeated tool discovery or automatic
+M4 closure/M5 extraction. Earlier target-pending entries below are historical.
+
+31 October owner accepts qfits/Eclipse reuse. The [M4 adapter](m4-qfits-reader-adapter-2026-10-31.md)
+removes M4 FITS block/seek parsing, reuses qfits headers/offsets and keeps detector
+maps/validation and the Eclipse plane loader. Narrow shared-cache bounds fixes
+#194/#195 and single-pass card views preserve legacy APIs. Files above INT_MAX
+bytes (just under 2 GiB total) fail explicitly; no 64-bit offset redesign is claimed.
+Agent C90/C17 discovery/layout/bias/native-path contracts pass 4/4; scoped sanitizer
+discovery plus layout/bias pass, with initial premature-launch log retained (#196,
+closed). Old library reproduces both bounds defects with expected diagnostic86.
+New four-contract Mac then representative Chapman gates are pending. Use recorded
+tools directly; no original observations, installation, performance/M4 closure or
+M5 extraction. Earlier review hold applies to the superseded scanner design.
+
+31 October owner challenges the additional native FITS reader and instructs
+[existing-reader reuse review](m4-header-reader-reuse-review-2026-10-31.md). qfits already supports primary/extension
+headers, order/duplicate preservation and HDU discovery; prefer M4 metadata/maps
+above existing qfits/Eclipse I/O. Concrete count/offset gaps #194/#195 are recorded
+without fixes or execution. Candidate 2d662b1 passes layout+bias C90/C17 on Mac and
+representative Chapman4; #185/#193 closed with paired receipts. Those tests do not
+approve the reader design. Keep PR #186/M4 open for the scope decision; hold the
+unpublished native audit client and actual-header handoff. No native change,
+installation, observation access, new test campaign or M5 extraction in this review.
+Earlier target-pending and automatic-next-audit notes below are historical.
+
+31 October resumed [native M4](m4-native-layout-2026-10-31.md) toward subroutine decomposition.
+Merged accepted preflight main c4a5ba4 into the candidate without changing native
+C sources; resolved status-document conflicts by retaining both histories.
+ESO preflight paired/actual-header evidence and Mac/Chapman cleanup are accepted
+in PR #192. Agent merged-source C90/C17 layout+bias both pass 2/2 (1.22/1.24 s),
+and normal engines link. Private target runner is syntax-checked, not target-run;
+selected-tool actual Mac then Chapman qualification remains next. Preserve #185,
+M4 #182 and PR #186 pending gates; no install, performance claim or M5 extraction.
+Earlier target-pending preflight entries below are historical.
+
+31 October owner accepted M4 interface/fixture review and instructed proceeding.
+First [native layout increment](m4-native-layout-2026-10-31.md)
+implements opt-in C90 bounded header catalogues, independent detector maps,
+selector/unit/active-region/reference checks and existing Eclipse plane loading.
+Primary/extension/MEF inputs reach the same existing bias service. Agent optimized
+C90/C17 layout+bias and scoped ASan/UBSan checks pass; final affected-layout controls
+also pass. New candidate FIFO finding #185 is corrected and remains target-pending.
+M4/#182 stays open: actual Mac/Chapman, instrument mapping/integration, original
+normalization equivalence and performance gates remain pending. No install, engine
+switch or full Bath/CMOS qualification. Windows notes are informational only.
+Native work uses feat/m4-native-layout-20261031. Its prerequisite preflight stack
+is now merged into main c4a5ba4; retained historical helper receipts stay valid.
+
 31 October owner accepts [ESO data preflight](eso-data-preflight-2026-10-31.md) and explicitly
 requires immutable original raw data. Initial OmegaCAM/WFI raw-imaging service
 reuses M3's bounded read-only reader and actual instrument configurations; public

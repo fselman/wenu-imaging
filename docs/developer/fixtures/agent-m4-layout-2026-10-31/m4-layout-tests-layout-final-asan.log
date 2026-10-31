@@ -1,0 +1,14 @@
+Internal ctest changing into directory: /workspace/scratch/104db3d59fe9/m4-layout-asan
+Test project /workspace/scratch/104db3d59fe9/m4-layout-asan
+    Start 9: native_layout
+1/1 Test #9: native_layout ....................   Passed    1.01 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+detector     =   1.01 sec*proc (1 test)
+layout       =   1.01 sec*proc (1 test)
+native       =   1.01 sec*proc (1 test)
+ownership    =   1.01 sec*proc (1 test)
+
+Total Test time (real) =   1.01 sec

@@ -1,0 +1,22 @@
+{
+  "native_source_unchanged_from": "a7bb518116cc5df674507e6c3cca24a70ca335fe",
+  "integrated_main": "c4a5ba491b087e7e690ef6e53ed5ff2a250dd3ca",
+  "checks": {
+    "c90": "2/2 passed, 1.22 s",
+    "c17": "2/2 passed, 1.24 s",
+    "normal_engine": "linked both lanes; not run",
+    "target_runner": "syntax checked; actual target execution pending"
+  },
+  "logs_sha256": {
+    "c90-build.log": "5e3975f638de3af9cf4b03100bafeb173f76eaceeb733b64534287ca6b33cbde",
+    "c17-build.log": "f46aca70ba714109824e7b115b0e63f2c76c223df14ebab970daaf4274953900",
+    "c90-last-test.log": "9d0fc05e51a6b8ad07c61826a8db76d5047f5aac80ac63a029bb62f7b2e049b8",
+    "c17-tests.log": "d1ad792c7e3c7e754e2ce4f5a6d158afb673d94e951e796a7d850b98640a702a"
+  },
+  "limits": [
+    "agent Linux only",
+    "no installation or observations",
+    "no performance or complete normalization acceptance"
+  ],
+  "log_note": "CTest LastTest log trailing blank lines normalized; full original retained in private build."
+}
