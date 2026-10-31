@@ -15,6 +15,14 @@ installation, engine activation, reduction or new scientific policy is supplied.
 The original [M4 scope](../architecture/proposed/implementation-plan.md#m4--detector-identity-and-image-layout-layer)
 and [readiness review](m4-readiness-review-2026-10-31.md) remain the foundation.
 
+Subsequent owner addition: raw inputs must carry reviewed DPR.TYPE/CATG/TECH
+before pipeline admission. The [data preparation guide](../data-preparation.md)
+reviews ESO DICB v8 and the actual camera manual; #184 adds a dataset-specific
+Python plan/copy helper with consistency checks, outside C numerical processing.
+This explicitly authorized helper is an addition to this review PR, not M4 C
+implementation, automatic classification policy inside mefpp or generic CMOS
+acceptance. Actual-target preparation qualification remains pending.
+
 ## Returned Bath header evidence
 
 Source: owner-pasted output from the read-only Mac inventory in this Work chat.

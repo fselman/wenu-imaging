@@ -1,5 +1,16 @@
 # wenu-imaging roadmap
 
+31 October owner added raw-input DPR.TYPE/CATG/TECH preparation to M4 review.
+The [data preparation guide](../data-preparation.md) reviews official ESO DICB v8
+and ZWO ASI1600 manual rev1.5. Dataset-specific Python helper #184 proposes Bath
+directory roles with header checks, then writes explicit reviewed-plan copies
+with unchanged payload bytes; originals stay untouched. Nine synthetic agent
+controls pass, including conflict/stale-plan refusal, header growth/scaling and
+incomplete-copy handling. Actual Mac full 260-file dry run/copy verification is
+pending. No C numerical changes, reduction, install, generic CMOS qualification
+or automatic classification/association policy is introduced. PR #183 remains a
+draft review with an explicitly authorized preparation helper; preserve M4 gates.
+
 31 October M3 is owner accepted/closed and PR #178 merged at
 6c4b0f0eff639da8dbef890f0df10f86c70bb0ee; owner-returned Mac and Chapman4
 cleanup confirms clean main, merged review branch removal and protected installs
