@@ -5,10 +5,13 @@ import json
 from pathlib import Path
 import struct
 import tempfile
+import sys
 import unittest
 from unittest import mock
 
 from astropy.io import fits
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 SPEC = importlib.util.spec_from_file_location(
     "prepare_zwo_bath", Path(__file__).resolve().parents[1] / "tools/prepare_zwo_bath.py")

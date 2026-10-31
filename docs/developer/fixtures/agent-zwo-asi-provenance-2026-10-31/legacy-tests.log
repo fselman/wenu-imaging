@@ -1,0 +1,20 @@
+RETAINED SYNTHETIC EVIDENCE: /tmp/zwo-bath-preparation-controls-ynmobs5z
+test_boundary_growth_and_incomplete_failure_marker (__main__.PreparationTests.test_boundary_growth_and_incomplete_failure_marker) ... ok
+test_conflicting_duplicate_and_alias_cards (__main__.PreparationTests.test_conflicting_duplicate_and_alias_cards) ... WARNING: VerifyWarning: Keyword name 'DPR.TYPE' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+ok
+test_copy_payload_cards_scaling_and_checksum_policy (__main__.PreparationTests.test_copy_payload_cards_scaling_and_checksum_policy) ... ok
+test_directory_roles_and_no_source_writes (__main__.PreparationTests.test_directory_roles_and_no_source_writes) ... ok
+test_flat_acknowledgement_and_existing_classification (__main__.PreparationTests.test_flat_acknowledgement_and_existing_classification) ... ok
+test_metadata_misclassification_controls (__main__.PreparationTests.test_metadata_misclassification_controls) ... ok
+test_output_and_report_source_protection (__main__.PreparationTests.test_output_and_report_source_protection) ... STOP: Report must be outside raw inputs
+ok
+test_stale_or_changed_plan_refuses_output (__main__.PreparationTests.test_stale_or_changed_plan_refuses_output) ... ok
+test_unknown_symlink_and_extra_hdu_inputs_block_all (__main__.PreparationTests.test_unknown_symlink_and_extra_hdu_inputs_block_all) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.067s
+
+OK
+PREPARED: /tmp/zwo-bath-preparation-controls-ynmobs5z/test_boundary_growth_and_incomplete_failure_marker-ck2l3e8r/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/zwo-bath-preparation-controls-ynmobs5z/test_copy_payload_cards_scaling_and_checksum_policy-3ev3d87l/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/zwo-bath-preparation-controls-ynmobs5z/test_flat_acknowledgement_and_existing_classification-gorh60xn/prepared | files: 1 | payload bytes verified

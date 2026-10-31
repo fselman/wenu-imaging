@@ -1,0 +1,51 @@
+Start testing: Nov 01 04:37 CST
+----------------------------------------------------------
+9/24 Testing: native_layout
+9/24 Test: native_layout
+Command: "/workspace/scratch/555b377cf948/m3-test-env/bin/python" "/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/layout_contract.py" "--source-root" "/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/.." "--probe" "/workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2/layout_probe" "--work-parent" "/workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2/test-work"
+Directory: /workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2
+"native_layout" start time: Nov 01 04:37 CST
+Output:
+----------------------------------------------------------
+WORK DIRECTORY: /workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2/test-work/m4-layout-vkio3x_s
+PASS: omegacam six native groups; immutable fixture bytes preserved
+PASS: wfi six native groups; immutable fixture bytes preserved
+PASS: M4 layout contract; no target/performance/scientific acceptance
+<end of output>
+Test time =   0.36 sec
+----------------------------------------------------------
+Test Passed.
+"native_layout" end time: Nov 01 04:37 CST
+"native_layout" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/24 Testing: native_bias_service
+13/24 Test: native_bias_service
+Command: "/workspace/scratch/555b377cf948/m3-test-env/bin/python" "/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/bias_service_contract.py" "--source-root" "/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/.." "--probe" "/workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2/bias_service_probe" "--work-parent" "/workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2/test-work"
+Directory: /workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2
+"native_bias_service" start time: Nov 01 04:37 CST
+Output:
+----------------------------------------------------------
+WORK DIRECTORY: /workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2/test-work/m1-bias-m7t09gs9
+PASS: omegacam 8 legacy equivalence profiles and failure/lifetime controls
+PASS: wfi 8 legacy equivalence profiles and failure/lifetime controls
+REPORT: /workspace/scratch/104db3d59fe9/m4-layout-c90/mefpp2/test-work/m1-bias-m7t09gs9/run-provenance.json
+<end of output>
+Test time =   0.85 sec
+----------------------------------------------------------
+Test Passed.
+"native_bias_service" end time: Nov 01 04:37 CST
+"native_bias_service" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 01 04:37 CST
+
+bias =   0.85 sec*proc
+
+detector =   0.36 sec*proc
+
+layout =   0.36 sec*proc
+
+native =   1.21 sec*proc
+
+ownership =   1.21 sec*proc

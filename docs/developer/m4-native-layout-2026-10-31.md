@@ -7,6 +7,37 @@ is on `feat/m4-native-layout-20261031`, based on the unchanged review/helper
 branch `docs/m4-interface-fixtures-20261031` (PR #183). The owner's pending Mac
 helper command therefore remains pinned to its accepted source.
 
+## Integration and next target step
+
+PR #192 is accepted and merged at `c4a5ba491b087e7e690ef6e53ed5ff2a250dd3ca`.
+Both actual checkouts are clean there and installations are preserved. PR #186
+now targets main; its prerequisite branch was deleted after integration. The
+historical pending-helper wording above describes the original publication only.
+The merged candidate retains both native and preflight histories and changes no
+native C, CMake, fixture or oracle bytes from `a7bb518116cc5df674507e6c3cca24a70ca335fe`.
+Agent Linux C90/C17 layout+bias pass 2/2 in 1.22/1.24 s; normal mefpp links in both
+lanes but is not executed. [Integration receipts](fixtures/agent-m4-integration-2026-10-31/receipt.json)
+retain logs; these durations are not benchmarks.
+
+[qualify_native_layout.py](../../mefpp2/tests/qualify_native_layout.py) is the new
+private Mac/Chapman runner. It requires explicit absolute selected tools, pinned
+source, niceness >=10 and clean main c4a5ba4. It exports exact tracked source into
+a fresh retained build directory, builds layout/bias probes and links the normal
+engine in optimized C90 and C17, inventories exactly the two focused contracts,
+and runs only tiny synthetic FITS. Original observations are never opened. It
+verifies installed module/engine/configuration, checkout and exported source on
+success/failure and retains qualification.json plus command logs. No install,
+normal-engine execution, sanitizer, scientific or performance claim. Runner
+syntax is checked; actual target runs remain pending. Tool discovery precedes
+the first Mac launch rather than guessing compiler/SDK/CMake paths.
+
+The original M4 gate compares an extracted detector with its mosaic counterpart
+under the same required shared context. Full calibration/science command adapters
+belong to M5/M6. Target layout/bias acceptance alone must not be described as full
+M4 closure: instrument mapping, applicable shared-reference equivalence and
+matched performance assessment remain for cumulative review. Keep this boundary
+explicit so deferred services do not silently become prerequisites or claims.
+
 ## Implemented C boundary
 
 [mef_layout.h](../../mefpp2/ins/mef/common/mef_layout.h) and

@@ -1,5 +1,15 @@
 # wenu-imaging roadmap
 
+31 October resumed [native M4](m4-native-layout-2026-10-31.md) toward subroutine decomposition.
+Merged accepted preflight main c4a5ba4 into the candidate without changing native
+C sources; resolved status-document conflicts by retaining both histories.
+ESO preflight paired/actual-header evidence and Mac/Chapman cleanup are accepted
+in PR #192. Agent merged-source C90/C17 layout+bias both pass 2/2 (1.22/1.24 s),
+and normal engines link. Private target runner is syntax-checked, not target-run;
+selected-tool actual Mac then Chapman qualification remains next. Preserve #185,
+M4 #182 and PR #186 pending gates; no install, performance claim or M5 extraction.
+Earlier target-pending preflight entries below are historical.
+
 31 October owner accepted M4 interface/fixture review and instructed proceeding.
 First [native layout increment](m4-native-layout-2026-10-31.md)
 implements opt-in C90 bounded header catalogues, independent detector maps,
@@ -10,8 +20,60 @@ also pass. New candidate FIFO finding #185 is corrected and remains target-pendi
 M4/#182 stays open: actual Mac/Chapman, instrument mapping/integration, original
 normalization equivalence and performance gates remain pending. No install, engine
 switch or full Bath/CMOS qualification. Windows notes are informational only.
-Native work uses feat/m4-native-layout-20261031, based on unchanged review/helper
-PR #183; the owner's pending Mac helper command remains valid at c81cb86.
+Native work uses feat/m4-native-layout-20261031. Its prerequisite preflight stack
+is now merged into main c4a5ba4; retained historical helper receipts stay valid.
+
+31 October owner accepts [ESO data preflight](eso-data-preflight-2026-10-31.md) and explicitly
+requires immutable original raw data. Initial OmegaCAM/WFI raw-imaging service
+reuses M3's bounded read-only reader and actual instrument configurations; public
+preflight writes a separate report outside raw directories, never repairs headers
+or writes raw copies. Correct complete metadata needs no additions. Source/HDU
+mapping/authority, unknowns and scoped readiness are explicit; no scientific or
+payload-integrity acceptance is implied. Agent corrected ESO 10/10 and inspector
+24/24 pass. Candidate filter cross-keyword finding #190 fixed, target-pending;
+WFI gain issue #131 remains independent, never substituted or repaired. Actual
+Mac then representative Chapman/real-input metadata qualification remain pending.
+No automatic legacy-pipeline gate, installation, reduction, native/M4 or full WAD
+runtime claim. Other adapter/profile integration remains subsequent work.
+
+31 October owner makes [data preflight subordinate to WAD](../architecture/proposed/wad-processing-project.md#data-preflight-under-wad).
+WAD governs metadata/authority/assessment/plan contracts; preflight is a shared
+read-only ingestion service with instrument adapters, explicit apply writes copies.
+Current ASI adapter is not claimed to be a general WAD/ASDF runtime. Current
+observatory schema v2 uses a stable telescope name and separate profile_date;
+frame DATE-OBS remains original evidence, never part of equipment identity.
+Generated dataset notation v3 prevents silent old-plan reinterpretation. Affected
+13-group agent suite passes; scoped Mac 13-group/full-header-preflight verification
+pending. Preserve earlier 32/260/ten-copy Mac evidence and all existing outputs.
+No repeated legacy/native matrix, partitioning, installation, reduction, automatic
+merge/cleanup or M4 closure. Earlier dated-name notes are historical.
+
+31 October owner approves [practical ASI preparation inputs](asi-simple-inputs-2026-10-31.md):
+reusable observatory/camera TOMLs and directory role/filter names generate the
+detailed dataset TOML; no manual exposure/gain/offset/temperature/filename rules.
+Role/filter directories work in either order. Header-first filters are checked
+against directory labels; missing filters can be proposed, unknowns stay unknown.
+Dome/sky/unspecified flats remain distinct, conflicts block and flat-Light labels
+still require acknowledgement. Agent 9+11+12 controls pass; actual Mac new-interface
+qualification is pending. Prior explicit-interface Mac 20 controls/full 260 plan/
+ten-copy passes at 7bf1c824 remain valid for that version. Uploaded manual saved
+unchanged under docs/manuals/cameras, facts sourced without inferring acquisition
+mode/physical gain. Preserve originals/installations and native boundaries;
+partitioning is deferred. No automatic merge, reduction, installation or M4 closure.
+
+31 October owner authorizes [generic TOML-driven ZWO ASI preparation](zwo-asi-provenance-2026-10-31.md)
+after previous-helper actual Mac 260-file plan and ten-copy checks passed.
+The generic entry point separates camera/dataset rules and sourced provenance;
+existing INSTRUME/original cards/payload remain, conflicts block preparation.
+Bath Physics Observatory/institution and paper/data DOI are configured. Returned
+260-frame 200/1600 mm header signature identifies the StellaLyra RC; configured
+checks add a dated WENU telescope label while preserving TELESCOP=SynScan.
+Observer, coordinates and software versions stay unknown.
+Agent legacy 9/9 and current generic 11/11 pass; candidate #187 parse-error
+reporting is fixed but target-pending. Fresh Mac provenance plan/copy checks remain
+pending. No reduction, installation, native changes, M4 closure or automatic
+merge/cleanup; original review/helper PR #183 and native PR #186 stay unchanged.
+Earlier pending statements retain historical scope.
 
 31 October owner clarification: identifying native Windows obstacles is
 informational preparation for a possible later port. It must not affect Mac/Linux
