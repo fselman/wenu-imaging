@@ -1,5 +1,11 @@
 # M4 qfits reader adapter — 31 October 2026
 
+Current [bounded closure review](m4-bounded-closure-review-2026-10-31.md):
+revised paired functional gates and the corrected Chapman performance follow-up
+are complete at native source 5b251831. Recommend owner acceptance with explicit
+limits; do not repeat this test cycle. Earlier pending statements below retain
+their historical scope. No automatic merge, installed activation or milestone advance.
+
 Current follow-up: [offset storage correction](qfits-offset-storage-correction-2026-10-31.md)
 restores the ordinary stack-buffer path after inspecting the first performance
 series. New agent gates pass; revised target qualification is pending. Prior

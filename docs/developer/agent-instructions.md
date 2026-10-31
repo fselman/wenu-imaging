@@ -1,5 +1,18 @@
 # wenu-imaging agent instructions
 
+31 October [bounded M4 closure review](m4-bounded-closure-review-2026-10-31.md)
+recommends owner acceptance of the detector/layout foundation, then M5 calibration
+decomposition after explicit integration. Native source 5b251831 passes paired
+Mac/Chapman C90/C17 four-contract gates and scoped agent sanitizers. Corrected
+Chapman16-call performance comparison preserves exact products/inputs/install/
+checkout and shows no consistent timing penalty; lower medians are not proof of
+general speedup or lower memory. #197 source-specific allocation correction closed;
+#195 large-file support and broader full-size/opt-in throughput limits remain.
+End this unchanged-source test cycle; no extra matrices/benchmarks by default.
+No automatic M4 closure, merge/cleanup, installed activation or M5 code before the
+owner's stage decision. Earlier target/performance-pending entries are historical
+within their stated source/scope; retain all failed/original/corrected evidence.
+
 31 October [Chapman performance inspection and #197 correction](qfits-offset-storage-correction-2026-10-31.md):
 prior sixteen-call products/preservation pass, but timing ratios remain under
 review. Recorded load is low; existing sleep(1) protects ORIGFILE names and stays

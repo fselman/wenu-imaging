@@ -1,5 +1,11 @@
 # M4 first native layout increment — 31 October 2026
 
+Current [bounded closure review](m4-bounded-closure-review-2026-10-31.md):
+revised paired functional gates and the corrected Chapman performance follow-up
+are complete at native source 5b251831. Recommend owner acceptance with explicit
+limits; do not repeat this test cycle. Earlier pending statements below retain
+their historical scope. No automatic merge, installed activation or milestone advance.
+
 Current candidate: owner accepted the [qfits reuse recommendation](m4-qfits-reader-adapter-2026-10-31.md).
 M4's separate framing scanner has been removed; it consumes existing qfits headers
 and checked shared discovery. Agent C90/C17 four-contract gates and scoped sanitizer

@@ -1,5 +1,11 @@
 # Developer guide: native mefpp build, installation and qualification
 
+31 October [bounded M4 closure review](m4-bounded-closure-review-2026-10-31.md):
+qualified native source 5b251831 is ready for owner review with paired preservation
+and bounded follow-up evidence. No new installation or test replay is required;
+normal selected engines stay unchanged. Large-file/full-size/resource limits remain
+explicit. Merge/cleanup and later installed activation are separate decisions.
+
 31 October unmerged [qfits offset-storage follow-up](qfits-offset-storage-correction-2026-10-31.md)
 removes avoidable temporary heap allocations for ordinary files without changing
 reader validation or numerical behavior. Agent focused gates pass; revised target

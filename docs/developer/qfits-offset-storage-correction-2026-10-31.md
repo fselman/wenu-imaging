@@ -1,5 +1,11 @@
 # qfits temporary offset storage correction — 31 October 2026
 
+Current [bounded closure review](m4-bounded-closure-review-2026-10-31.md):
+revised paired functional gates and the corrected Chapman performance follow-up
+are complete at native source 5b251831. Recommend owner acceptance with explicit
+limits; do not repeat this test cycle. Earlier pending statements below retain
+their historical scope. No automatic merge, installed activation or milestone advance.
+
 The prior matched comparison completed all sixteen calls on Mac and Chapman with
 exact product agreement and preservation. Mac medians were near parity; Chapman
 candidate wall medians were 1.026416 (OmegaCAM) and 1.041726 (WFI), with mixed and
