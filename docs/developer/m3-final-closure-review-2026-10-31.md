@@ -1,5 +1,15 @@
 # M3 final cumulative closure review — 31 October 2026
 
+31 October #180 [corrected paired and real-tree receipt](m3-eso-header-paired-results-2026-10-31.md): source
+f7967fd1ee93f2a5a1a4faa227cadd460c054fa5 passed 22/22 on selected Intel Mac
+(4.788 s) and representative Chapman4 (2.405 s), with installed files and clean
+main preserved. Actual CN Ori redisplay now retains all five 80 s r_SDSS headers,
+33 HDUs each, while retaining 36 warnings and one separate missing master-flat
+reference. The original-scope M3 closure recommendation is reinstated for owner
+acceptance; PR #178 is ready. No test replay/install/host sync for this receipt.
+Separate owner merge/cleanup precedes M4 review; earlier held/pending notes are
+historical. #181 remains a separate suffix-convention follow-up.
+
 31 October subsequent actual-tree finding #180: nonstandard ESO telemetry
 caused strict inspector verification to discard otherwise readable HDU metadata.
 The [bounded correction](m3-eso-header-inspection-2026-10-31.md) retains diagnostics and readable fields,
@@ -10,9 +20,9 @@ recommendation and PR #178 in draft; preserve all earlier evidence. No native,
 scientific, installation or M4 work. Earlier 21-group receipts retain their scope.
 
 Accepted native baseline: main `3a61df627edfdbb1ef43cc3c956dff74bd28c066`.
-Completed inspector candidate: PR #178 source
-`0d8f2978a4ef4c78c47f1526b48e03d77351c024`, tree
-`7239d8feb2e1908db7122aefbde0c612d5e86c37`.
+Current corrected inspector candidate: PR #178 source
+`f7967fd1ee93f2a5a1a4faa227cadd460c054fa5`, tree
+`2a47848d07ce083252abfb38e2d37a1d1b2464a9`.
 
 **Recommendation: accept M3 as complete within its original explicit-path and
 legacy project-inspection scope.** The gap in the
@@ -57,6 +67,7 @@ the same interface when their actual services/records exist, as the plan specifi
 | Swap correction plus native-path regression | `471f42e19e304e16872291172535e855a2f826d9`, 2/2 on both, accepted #170 | Bounded native path/dependency behavior preserved |
 | Allocation/format safety plus native-path regression | `87ed266a109741c4998bfc8c978d07c9306f0091`, 4/4 on both, accepted #173 | Latest native boundary; no new C changes in #178 |
 | Completed stage inspector and shared client conventions | `0d8f2978a4ef4c78c47f1526b48e03d77351c024`, Mac 21/21 in 4.639 s, Chapman4 21/21 in 2.702 s | Original missing inspector boundary qualified |
+| Nonstandard ESO header correction and actual-tree redisplay | `f7967fd1ee93f2a5a1a4faa227cadd460c054fa5`, Mac 22/22 in 4.788 s, Chapman4 22/22 in 2.405 s; five real science headers each readable through 33 HDUs, warnings retained | #180 correction qualified; no missing-reference repair or compliance claim |
 
 Earlier accepted review/merge ancestry and equal-tree checks are retained in the
 baseline review. Current candidate descends from that baseline. New source differs

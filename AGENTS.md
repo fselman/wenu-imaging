@@ -1,5 +1,15 @@
 # wenu-imaging
 
+31 October #180 [corrected paired and real-tree receipt](docs/developer/m3-eso-header-paired-results-2026-10-31.md): source
+f7967fd1ee93f2a5a1a4faa227cadd460c054fa5 passed 22/22 on selected Intel Mac
+(4.788 s) and representative Chapman4 (2.405 s), with installed files and clean
+main preserved. Actual CN Ori redisplay now retains all five 80 s r_SDSS headers,
+33 HDUs each, while retaining 36 warnings and one separate missing master-flat
+reference. The original-scope M3 closure recommendation is reinstated for owner
+acceptance; PR #178 is ready. No test replay/install/host sync for this receipt.
+Separate owner merge/cleanup precedes M4 review; earlier held/pending notes are
+historical. #181 remains a separate suffix-convention follow-up.
+
 31 October subsequent actual-tree finding #180: nonstandard ESO telemetry
 caused strict inspector verification to discard otherwise readable HDU metadata.
 The [bounded correction](docs/developer/m3-eso-header-inspection-2026-10-31.md) retains diagnostics and readable fields,
