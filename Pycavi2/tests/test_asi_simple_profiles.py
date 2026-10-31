@@ -124,7 +124,7 @@ class SimpleTests(unittest.TestCase):
         self.assertEqual(h["FILTER"],"Blue");self.assertEqual(h.count("FILTER"),1)
         self.assertEqual(h["ESO DPR TYPE"],"FLAT,SKY")
         self.assertEqual(h["TELESCOP"],"SynScan")
-        self.assertEqual(h["WENU PROV TELESCOPE"],"BPO StellaLyra RC 8-inch 2022-02-05")
+        self.assertEqual(h["WENU PROV TELESCOPE"],"BPO StellaLyra RC 8-inch")
         self.assertEqual(h["WENU PROV SENSOR"],"Panasonic MN34230ALJ")
         self.assertNotIn("ADCBITS",h);self.assertNotIn("CHECKSUM",h)
         with fits.open(product,memmap=False) as hdus:
@@ -172,6 +172,30 @@ class SimpleTests(unittest.TestCase):
         self.assertTrue((out2/"PREPARATION_INCOMPLETE").is_file())
         self.assertFalse((out2/"PREPARATION_COMPLETE").exists())
 
+    def test_stable_telescope_and_profile_date(self):
+        # Stable equipment: observation/profile dates stay separate, including missing DATE-OBS.
+        self.frame("Science/a.fits",{"DATE-OBS":"2022-01-08T22:04:06.108"})
+        self.frame("Science/b.fits",{"DATE-OBS":"2022-02-06T19:06:04.613"})
+        self.frame("Science/c.fits",{"DATE-OBS":None})
+        result=self.inventory();self.assertEqual(result["errors"],[])
+        self.assertEqual({r["additions"]["WENU PROV TELESCOPE"] for r in result["entries"]},
+                         {"BPO StellaLyra RC 8-inch"})
+        self.assertEqual(result["profile"]["observatory"]["settings"]["profile_date"],"2026-10-31")
+        row=next(r for r in result["entries"] if r["file"]=="Science/c.fits")
+        self.assertIn("DATE-OBS",row["missing_metadata"])
+        plan,digest=self.plan();out=self.work/"prepared"
+        prep.apply_plan(plan,digest,out,False,self.bundle())
+        for r in result["entries"]:
+            hdr=fits.getheader(out/r["file"])
+            self.assertEqual(hdr["WENU PROV TELESCOPE"],"BPO StellaLyra RC 8-inch")
+            if "DATE-OBS" in r["reported"]:
+                self.assertEqual(hdr["DATE-OBS"],r["reported"]["DATE-OBS"])
+            else:
+                self.assertNotIn("DATE-OBS",hdr)
+        self.inputs[0].write_text(self.inputs[0].read_text().replace('2026-10-31','2026-10-30'))
+        self.assertEqual({r["additions"]["WENU PROV TELESCOPE"] for r in self.inventory()["entries"]},
+                         {"BPO StellaLyra RC 8-inch"})
+
     def test_camera_telescope_bad_header_and_link_controls(self):
         # Ingestion refusal: camera/geometry conflicts, malformed cards, duplicates, symlinks and extra HDUs.
         for name,changes,extra in [("a.fits",{"INSTRUME":"Other"},()),("b.fits",{"FOCALLEN":910.0},()),
@@ -200,7 +224,7 @@ class SimpleTests(unittest.TestCase):
         self.frame();helper=Path(__file__).resolve().parents[1]/"tools/prepare_zwo_asi.py"
         common=["--observatory",str(self.inputs[0]),"--camera",str(self.inputs[1]),"--directories",str(self.inputs[2])]
         plan=self.work/"cli-dataset.toml";out=self.work/"prepared"
-        subprocess.run([sys.executable,"-B",str(helper),"plan",*common,"--root",str(self.root),"--report",str(plan)],check=True)
+        subprocess.run([sys.executable,"-B",str(helper),"preflight",*common,"--root",str(self.root),"--report",str(plan)],check=True)
         value=tomllib.loads(plan.read_text());self.assertEqual(value,self.inventory())
         subprocess.run([sys.executable,"-B",str(helper),"apply",*common,"--plan",str(plan),
                         "--expected-plan-sha256",prep.sha(plan.read_bytes()),"--output",str(out)],check=True)

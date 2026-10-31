@@ -76,8 +76,8 @@ def main():
         camera=tomllib.loads((config/"zwo_asi1600mm_pro.toml").read_text())
         require(receipt["source_sha256"]["docs/manuals/cameras/ASI1600_Manual_EN_V1.5.pdf"]==camera["manual"]["sha256"],"Manual identity mismatch")
         env=dict(os.environ,TMPDIR=str(run),PYTHONDONTWRITEBYTECODE="1",OPENBLAS_NUM_THREADS="1",OMP_NUM_THREADS="1",MKL_NUM_THREADS="1",NUMEXPR_NUM_THREADS="1")
-        # Synthetic controls: exercise legacy 9, existing generic 11 and simple-input 12 groups.
-        for name in ("test_zwo_bath_preparation.py","test_zwo_asi_preparation.py","test_asi_simple_profiles.py"):
+        # Focused controls: exercise the affected 13-group suite; retain prior compatibility evidence.
+        for name in ("test_asi_simple_profiles.py",):
             log=run/(name+".log")
             with log.open("x") as f:
                 result=subprocess.run([sys.executable,"-B",str(source/"Pycavi2/tests"/name)],cwd=run,env=env,stdout=f,stderr=subprocess.STDOUT)
@@ -85,7 +85,7 @@ def main():
             require(result.returncode==0,"Synthetic controls failed: "+name)
         # Header-only dataset generation: the new public CLI learns all Bath frame settings.
         plan=run/"bath-dataset.toml";log=run/"bath-dataset.log"
-        command=[sys.executable,"-B",str(source/"Pycavi2/tools/prepare_zwo_asi.py"),"plan",
+        command=[sys.executable,"-B",str(source/"Pycavi2/tools/prepare_zwo_asi.py"),"preflight",
                  "--observatory",str(config/"bath_observatory.toml"),"--camera",str(config/"zwo_asi1600mm_pro.toml"),
                  "--directories",str(config/"bath_directories.toml"),"--root",str(raw),"--report",str(plan)]
         with log.open("x") as f:
@@ -98,6 +98,7 @@ def main():
         receipt["roles"]=dict(counts)
         receipt["telescope_names"]=dict(collections.Counter(r["additions"]["WENU PROV TELESCOPE"] for r in value["entries"]))
         receipt["mode_unknown"]=sum("detector_mode" in r["missing_metadata"] for r in value["entries"])
+        require(receipt["telescope_names"]=={"BPO StellaLyra RC 8-inch":260},"Unstable telescope identity")
         print("TELESCOPE NAMES:",json.dumps(receipt["telescope_names"],indent=2))
         print("DETECTOR MODE UNKNOWN:",receipt["mode_unknown"])
         print("GENERATED DATASET TOML:",plan)

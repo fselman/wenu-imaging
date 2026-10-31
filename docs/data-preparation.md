@@ -9,6 +9,17 @@ C numerical kernels and from calibration association. Track
 The new helper implements preparation only; global CLI/C enforcement is not yet
 implemented, and these cards alone do not establish processing readiness.
 
+## WAD-governed data preflight
+
+Data preflight is the standard WAD-governed ingestion service. WAD owns metadata
+meaning, provenance/authority and scoped assessment/plan contracts; the ASI helper
+implements an adapter and remains distinct from a qualified general WAD runtime.
+Read-only `preflight` collects/reconciles metadata and writes a report; explicit
+`apply` prepares reviewed copies. Telescope names are stable: the current example
+uses `BPO StellaLyra RC 8-inch`, with a separate profile_date in the observatory
+TOML and unchanged acquisition DATE-OBS. See the
+[WAD boundary](architecture/proposed/wad-processing-project.md#data-preflight-under-wad).
+
 ## Practical inputs and generated dataset TOML
 
 The owner-approved [simple-input interface](developer/asi-simple-inputs-2026-10-31.md)

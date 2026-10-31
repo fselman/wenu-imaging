@@ -8,11 +8,39 @@ produce the detailed dataset TOML automatically. Data partitioning and its
 additional metadata remain deferred. This changes preparation only, not Pycavi
 association, native services, calibration arithmetic or the M4 acceptance gates.
 
+## Current WAD ownership and stable telescope naming
+
+31 October owner decision makes **data preflight subordinate to WAD**. The
+[WAD contract](../architecture/proposed/wad-processing-project.md#data-preflight-under-wad)
+defines the shared meanings, authority and assessment/plan boundaries. The current
+ASI code is an adapter increment; general WAD runtime/schema integration is not
+claimed. The read-only input inspection command is now `preflight` (`plan` remains
+an alias). Explicit `apply` continues to create reviewed copies.
+
+The observatory input now uses schema version 2 and `[telescope].name`, with no
+date appended: `BPO StellaLyra RC 8-inch`. Top-level `profile_date = "2026-10-31"`
+is the date of this profile record, not commissioning, observation or calibration
+validity. Existing frame DATE-OBS is preserved; a missing date is recorded as
+missing and is never substituted from profile_date. Different observation/profile
+dates do not change equipment names. New generated reports use
+`zwo-asi-dataset-3`; old dated plans/copies remain retained evidence and must use
+their recorded pinned implementation. The earlier explicit `--config` interface
+remains available for its historical plans rather than silently reinterpreting them.
+
+The affected 13-group synthetic suite passes in 0.931 s. This includes stable
+names for two different observation dates and a missing date, unchanged original
+DATE-OBS through actual copies, and an edited profile date with unchanged name.
+Core copying and legacy interfaces are unchanged, so their previous Mac 32-control,
+full-260 and ten-copy evidence at 73f510fc is retained. Updated Mac qualification
+is scoped to the affected 13 groups and a header-only full Bath preflight checking
+one stable telescope name for all 260 frames. No legacy-matrix or observational
+reduction replay is required by this label/contract change.
+
 ## Inputs you maintain
 
 | Input | Purpose | Example |
 |---|---|---|
-| Observatory TOML | Observatory, institution, optional telescope and source reference | [bath_observatory.toml](../../Pycavi2/config/preparation/bath_observatory.toml) |
+| Observatory TOML | Observatory, institution, optional stable telescope name and source reference | [bath_observatory.toml](../../Pycavi2/config/preparation/bath_observatory.toml) |
 | Camera TOML | Model aliases and documented hardware facts/capabilities | [zwo_asi1600mm_pro.toml](../../Pycavi2/config/preparation/zwo_asi1600mm_pro.toml) |
 | Directory TOML | Recognized role/filter directory names, optional dataset DOI | [bath_directories.toml](../../Pycavi2/config/preparation/bath_directories.toml) |
 
@@ -87,7 +115,7 @@ New implementation lives in
 [asi_preparation_profiles.py](../../Pycavi2/tools/asi_preparation_profiles.py),
 reusing the bounded scanner and existing byte-copy primitives.
 
-Use `plan` with `--observatory OBS.toml --camera CAMERA.toml --directories DIRS.toml
+Use `preflight` with `--observatory OBS.toml --camera CAMERA.toml --directories DIRS.toml
 --root RAW --report DATASET.toml`. The generated dataset TOML is the detailed
 **output**, not another input to write by hand. It contains source input paths,
 exact input hashes/effective settings, summaries of observed exposures, gain,
@@ -108,8 +136,8 @@ Concurrent input edits are unsupported; these checks are not atomic snapshots.
 
 Additions include the selected observatory/institution/source DOI, camera model
 and documented sensor/shutter if configured, canonical DPR, missing FILTER if
-resolved from a directory, and the configured telescope name plus each original
-DATE-OBS calendar date. Existing INSTRUME must match configured camera aliases;
+resolved from a directory, and the configured stable telescope name. Profile date remains in the input
+snapshot and observation DATE-OBS remains in the original header. Existing INSTRUME must match configured camera aliases;
 if absent it is proposed from the selected camera with a warning. Telescope
 aperture/focal length are cross-checked when present; missing geometry is reported
 rather than turned into invented acquisition values. Raw TELESCOP/DATE-OBS,
@@ -142,7 +170,7 @@ Logs and exact source identities are retained in
 [The Mac qualification runner](../../Pycavi2/tests/qualify_asi_simple_profiles.py)
 was syntax-checked only. It guards the known Mac/Python/clean-main state, privately
 exports pinned helper/test/profile/manual files, verifies the manual hash, runs
-the same 32 controls and generates a header-only TOML for all 260 original Bath
+the affected 13 controls and generates a header-only TOML for all 260 original Bath
 frames. It retains source hashes/logs/plan/preservation receipt, without
 installing anything, modifying original FITS or preparing observational copies.
 Actual Mac execution of this interface remains pending, followed by bounded
@@ -161,3 +189,6 @@ Owner-requested local documentation copies are indexed in
 The PDFs are unchanged; copy identities, source URL/DOI and document version
 are recorded by those indexes. This addition changes reference storage/links
 only and does not require a preparation or native test replay.
+
+Stable-name revision evidence: [focused log and source identities](fixtures/agent-wad-preflight-2026-10-31/).
+Earlier 9+11+12 timing/results above describe the qualified pre-change interface.

@@ -1,5 +1,17 @@
 # wenu-imaging agent instructions
 
+31 October owner makes [data preflight subordinate to WAD](../architecture/proposed/wad-processing-project.md#data-preflight-under-wad).
+WAD governs metadata/authority/assessment/plan contracts; preflight is a shared
+read-only ingestion service with instrument adapters, explicit apply writes copies.
+Current ASI adapter is not claimed to be a general WAD/ASDF runtime. Current
+observatory schema v2 uses a stable telescope name and separate profile_date;
+frame DATE-OBS remains original evidence, never part of equipment identity.
+Generated dataset notation v3 prevents silent old-plan reinterpretation. Affected
+13-group agent suite passes; scoped Mac 13-group/full-header-preflight verification
+pending. Preserve earlier 32/260/ten-copy Mac evidence and all existing outputs.
+No repeated legacy/native matrix, partitioning, installation, reduction, automatic
+merge/cleanup or M4 closure. Earlier dated-name notes are historical.
+
 31 October owner approves [practical ASI preparation inputs](asi-simple-inputs-2026-10-31.md):
 reusable observatory/camera TOMLs and directory role/filter names generate the
 detailed dataset TOML; no manual exposure/gain/offset/temperature/filename rules.

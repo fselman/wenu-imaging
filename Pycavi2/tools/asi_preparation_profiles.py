@@ -5,7 +5,7 @@ profile interface remains available in prepare_zwo_asi.py.
 """
 import argparse
 import collections
-from datetime import datetime
+from datetime import date
 import json
 import math
 from pathlib import Path
@@ -16,7 +16,7 @@ import tomllib
 from astropy.io import fits
 from fits_preparation import require, sha, stamp, raw_header, outside, copy_prepared, write_json
 
-VERSION = "zwo-asi-dataset-2"
+VERSION = "zwo-asi-dataset-3"
 ROLES = {"bias": "BIAS", "dark": "DARK", "science": "OBJECT", "flat": "FLAT",
          "dome_flat": "FLAT,DOME", "sky_flat": "FLAT,SKY"}
 DPR = ("ESO DPR TYPE", "ESO DPR CATG", "ESO DPR TECH")
@@ -87,16 +87,20 @@ def load_bundle(observatory, camera, directories):
         raw = path.read_bytes()
         require(len(raw) <= 256*1024, "Input TOML exceeds limit")
         cfg = tomllib.loads(raw.decode("utf-8"))
-        require(type(cfg.get("schema_version")) is int and cfg["schema_version"] == 1,
+        require(type(cfg.get("schema_version")) is int and cfg["schema_version"] == (2 if label == "observatory" else 1),
                 "Unknown input schema: " + label)
         bundle[label] = {"path": str(path.resolve()), "sha256": sha(raw), "settings": cfg}
     obs, cam, layout = [bundle[k]["settings"] for k in ("observatory", "camera", "directories")]
-    keys(obs, {"schema_version", "name", "origin", "paper_doi", "telescope"}, {"schema_version", "name"})
+    keys(obs, {"schema_version", "name", "profile_date", "origin", "paper_doi", "telescope"}, {"schema_version", "name"})
     require(all(text(v) for k, v in obs.items() if k not in ("schema_version", "telescope")), "Invalid observatory text")
+    if "profile_date" in obs:
+        require(re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}",obs["profile_date"]) is not None,
+                "Expected ISO profile_date")
+        date.fromisoformat(obs["profile_date"])
     if "telescope" in obs:
-        keys(obs["telescope"], {"name_prefix", "aperture_mm", "focal_length_mm"}, {"name_prefix"})
-        require(text(obs["telescope"]["name_prefix"]), "Invalid telescope name")
-        require(all(number(v) and v > 0 for k, v in obs["telescope"].items() if k != "name_prefix"),
+        keys(obs["telescope"], {"name", "aperture_mm", "focal_length_mm"}, {"name"})
+        require(text(obs["telescope"]["name"]), "Invalid telescope name")
+        require(all(number(v) and v > 0 for k, v in obs["telescope"].items() if k != "name"),
                 "Invalid telescope dimensions")
     required = {"schema_version", "model", "instrume", "monochrome", "width_pixels", "height_pixels", "pixel_size_um"}
     keys(cam, required | {"sensor", "shutter", "manual", "capabilities"}, required)
@@ -196,9 +200,8 @@ def inspect(path, root, bundle):
         for src, key in [("aperture_mm", "APTDIA"), ("focal_length_mm", "FOCALLEN")]:
             if src in telescope and key in h:
                 require(math.isclose(h[key], telescope[src], rel_tol=1e-6), "Telescope geometry conflict: " + key)
-        observed = h.get("DATE-OBS", "")
-        require(type(observed) is str and re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?", observed), "Missing/invalid DATE-OBS for dated telescope name")
-        additions["WENU PROV TELESCOPE"] = telescope["name_prefix"] + " " + datetime.fromisoformat(observed).date().isoformat()
+        # WAD equipment identity is independent of acquisition/profile dates.
+        additions["WENU PROV TELESCOPE"] = telescope["name"]
         if not all(k in h for k in ("APTDIA", "FOCALLEN")):
             warnings.append("telescope_geometry_not_fully_reported")
     # Every directory component has meaning independent of its position in the path.
@@ -242,7 +245,7 @@ def inspect(path, root, bundle):
         if key in h:
             value = h[key]
             reported[key] = value if type(value) in (str,int,bool) or number(value) else str(value)
-    missing = [k for k in ("GAIN", "OFFSET", "CCD-TEMP", "EXPTIME", "XBINNING", "YBINNING") if k not in h]
+    missing = [k for k in ("GAIN", "OFFSET", "CCD-TEMP", "EXPTIME", "DATE-OBS", "XBINNING", "YBINNING") if k not in h]
     if not any(k in h for k in MODE_KEYS):
         missing.append("detector_mode")
     return {"file": relative.as_posix(), "source_stat": before, "header_sha256": sha(raw),
@@ -296,11 +299,11 @@ def apply_plan(plan_path, expected_sha, output, accept_flats, bundle):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command",required=True)
-    for action in ("plan","apply"):
-        p=commands.add_parser(action)
+    for action in ("preflight","apply"):
+        p=commands.add_parser(action,aliases=["plan"] if action == "preflight" else [])
         for name in ("observatory","camera","directories"):
             p.add_argument("--"+name,type=Path,required=True)
-        if action=="plan":
+        if action=="preflight":
             p.add_argument("--root",type=Path,required=True)
             p.add_argument("--report",type=Path,required=True,help="Generated dataset TOML")
         else:
@@ -311,7 +314,7 @@ def main(argv=None):
     args=parser.parse_args(argv)
     try:
         bundle=load_bundle(args.observatory,args.camera,args.directories)
-        if args.command=="plan":
+        if args.command in ("preflight","plan"):
             require(outside(args.report,args.root),"Report must be outside raw inputs")
             plan=inventory(args.root,bundle)
             with args.report.open("x",encoding="utf-8") as stream:
