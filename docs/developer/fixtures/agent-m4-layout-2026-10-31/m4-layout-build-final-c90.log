@@ -1,0 +1,34 @@
+[ 16%] Built target qfits
+[ 87%] Built target eclipse
+[ 91%] Built target mefpp_common
+[ 92%] Building C object mefpp2/CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_layout.c.o
+[ 94%] Linking C static library libmefpp_config_snapshot.a
+[ 98%] Built target mefpp_config_snapshot
+[ 98%] Building C object mefpp2/CMakeFiles/layout_probe.dir/tests/layout_probe.c.o
+/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/layout_probe.c: In function ‘read_layout’:
+/workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/layout_probe.c:25:22: warning: ‘%s’ directive writing up to 4093 bytes into a region of size between 2 and 4095 [-Wformat-overflow=]
+   25 |     sprintf(out, "%s/%s", directory, leaf);
+      |                      ^~
+In file included from /usr/include/stdio.h:980,
+                 from /workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/ins/mef/common/mef_config.h:6,
+                 from /workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/ins/mef/common/mef_runtime.h:4,
+                 from /workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/ins/mef/common/mef_layout.h:4,
+                 from /workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/layout_probe.c:2:
+In function ‘sprintf’,
+    inlined from ‘filename’ at /workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/layout_probe.c:25:5,
+    inlined from ‘read_layout’ at /workspace/scratch/104db3d59fe9/wenu-imaging/mefpp2/tests/layout_probe.c:38:5:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 2 and 8188 bytes into a destination of size 4096
+   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   31 |                                   __glibc_objsize (__s), __fmt,
+      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   32 |                                   __va_arg_pack ());
+      |                                   ~~~~~~~~~~~~~~~~~
+[100%] Linking C executable layout_probe
+[100%] Built target layout_probe
+[ 16%] Built target qfits
+[ 87%] Built target eclipse
+[ 91%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[ 98%] Linking C executable bias_service_probe
+[100%] Built target bias_service_probe

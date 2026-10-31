@@ -1,0 +1,8 @@
+[ 16%] Built target qfits
+[ 87%] Built target eclipse
+[ 91%] Built target mefpp_common
+[ 92%] Building C object mefpp2/CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_layout.c.o
+[ 94%] Linking C static library libmefpp_config_snapshot.a
+[ 98%] Built target mefpp_config_snapshot
+[100%] Linking C executable layout_probe
+[100%] Built target layout_probe

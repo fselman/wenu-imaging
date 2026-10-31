@@ -29,7 +29,8 @@ typedef struct {
 /* Copies raw pixels before existing overscan/trimming and stacking. Requires a
  * resolved CAL_BIAS v1 request, one detector and explicit BPM omission. Selected
  * BPM/calibrations return UNSUPPORTED, never silently ignored. Finite data and
- * valid legacy geometry required. No I/O, cwd changes, publication or discovery.
+ * valid legacy geometry required. M4 primary/extension planes share this entry;
+ * the loader owns selector validation. No I/O, cwd changes, publication or discovery.
  * Result/error start NULL; occupied outputs are rejected intact. Status is
  * authoritative if diagnostic allocation fails. Result outlives context/input.
  * Legacy-compatible ADU signal only: variance UNAVAILABLE until M6a; no new

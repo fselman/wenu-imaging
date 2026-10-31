@@ -274,6 +274,7 @@ static void controls(mef_bb *legacy, int detector_index)
     input.frames = borrowed; input.count = 3; input.configuration_detector = (size_t)detector_index;
     expect_failure(NULL, &input, MEF_ERR_INPUT);
     for (mode = 1; mode <= 4; ++mode) {
+        if (mode == 3) continue; /* Primary-image numerical equality is checked by M4. */
         context = context_for(legacy, 3, mode, NULL);
         expect_failure(context, &input, mode == 4 ? MEF_ERR_INPUT : MEF_ERR_UNSUPPORTED);
         mef_context_destroy(context);
