@@ -135,7 +135,7 @@ def main():
             raise RuntimeError("Missing/ambiguous suite receipt")
         receipt = json.loads(receipts[0].read_text())
         report["suite"] = receipt
-        if not receipt["successful"] or receipt["tests"] != 21:
+        if not receipt["successful"] or receipt["tests"] != 22:
             code = 1
         print((run / "tests.log").read_text(), flush=True)
     finally:
@@ -152,7 +152,7 @@ def main():
         raise RuntimeError("Protected checkout/installation changed; inspect retained evidence")
     if code:
         raise RuntimeError("Focused qualification failed; inspect retained evidence, do not retry blindly")
-    print("PASS: 21 groups; actual checkout, installed module, configured engine/config preserved.", flush=True)
+    print("PASS: 22 groups; actual checkout, installed module, configured engine/config preserved.", flush=True)
 
 
 if __name__ == "__main__":

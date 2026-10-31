@@ -268,6 +268,38 @@ class InspectionTests(unittest.TestCase):
         self.assertIn("hdu_limit", self.codes(self.inspect(limits=Limits(hdus=1))))
         self.assertIn("fits_error", self.codes(self.inspect(limits=Limits(header_bytes=10))))
 
+    # Real ESO inspection must retain readable metadata around malformed cards,
+    # while reporting the problem and never repairing bytes or loading pixels (#180).
+    def test_nonstandard_eso_telemetry_and_selected_card_isolation(self):
+        for selected in (False, True):
+            path = self.image(self.root / ("selected.fits" if selected else "telemetry.fits"))
+            if selected:
+                raw = path.read_bytes()
+                offset = next(i for i in range(0, 2880, 80) if raw[i:i+8] == b"EXPTIME ")
+                bad = "EXPTIME = invalid-token"
+            else:
+                with fits.open(path, mode="update") as hdus:
+                    hdus[0].header["COMMENT"] = "TELEMETRY_PLACEHOLDER"
+                raw = path.read_bytes()
+                offset = next(i for i in range(0, 2880, 80)
+                              if b"TELEMETRY_PLACEHOLDER" in raw[i:i+80])
+                bad = "HIERARCH ESO DET TLM2 END = invalid-token"
+            path.write_bytes(raw[:offset] + bad.ljust(80).encode("ascii") + raw[offset+80:])
+            path.chmod(0o444)
+            before = inventory(self.work)
+            with patch.object(_ImageBaseHDU, "_get_scaled_image_data", side_effect=AssertionError("pixel read")):
+                report = self.inspect()
+            self.assertEqual(before, inventory(self.work))
+            asset = next(a for a in report["assets"] if a["path"] == str(path))
+            self.assertEqual(len(asset["hdus"]), 3)
+            self.assertEqual(asset["hdus"][0]["fields"]["target"], "field")
+            self.assertEqual(asset["hdus"][1]["extname"], "CCD_A")
+            self.assertEqual(asset["hdus"][0]["fields"]["exposure"], None if selected else 10.)
+            self.assertIn("fits_warning", self.codes(report))
+            self.assertFalse(report["coverage"]["complete"])
+            if selected:
+                self.assertIn("header_card_error", self.codes(report))
+
     # Actual CLI JSON and views must agree across unrelated caller directories.
     def test_cli_library_equality_and_views(self):
         self.image(self.raw / "frame.fits")

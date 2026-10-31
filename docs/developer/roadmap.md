@@ -1,5 +1,14 @@
 # wenu-imaging roadmap
 
+31 October subsequent actual-tree finding #180: nonstandard ESO telemetry
+caused strict inspector verification to discard otherwise readable HDU metadata.
+The [bounded correction](m3-eso-header-inspection-2026-10-31.md) retains diagnostics and readable fields,
+with no fixes to source files or image reads. New regression fails before; agent
+corrected suite passes 22/22. Corrected Mac/Chapman qualification and repeated
+bounded Chapman tree display remain pending. Hold the earlier M3 closure
+recommendation and PR #178 in draft; preserve all earlier evidence. No native,
+scientific, installation or M4 work. Earlier 21-group receipts retain their scope.
+
 31 October M3 inspector [paired qualification](m3-inspector-stages-paired-results-2026-10-31.md): exact source
 0d8f2978a4ef4c78c47f1526b48e03d77351c024 passed all 21 groups on selected Intel
 Mac (4.639 s) and representative Chapman4 (2.702 s), with installed module,

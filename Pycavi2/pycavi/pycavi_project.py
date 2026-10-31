@@ -169,6 +169,8 @@ class _Inspector:
         primary_fields = None
         selected = set(self.keys.values()) | set(self.columns) | STAGE_CARDS | {
             "EXTNAME", "EXTVER", "BUNIT", "ESO PRO CATG", "PRODCATG"}
+        caught = []
+        selected_errors = False
         try:
             with warnings.catch_warnings(record=True) as caught:
                 warnings.simplefilter("always")
@@ -185,11 +187,30 @@ class _Inspector:
                             if index == self.limits.hdus:
                                 self.diagnostic("hdu_limit", path, "HDU limit reached")
                                 break
-                            hdu.verify("exception")
+                            # Legacy ESO telemetry can be nonstandard while the
+                            # image geometry and selected metadata are readable.
+                            # Report, never fix, those cards; inspection is not
+                            # product compliance validation. Refs #180.
+                            hdu.verify("warn")
                             header = hdu.header
-                            cards = [dict(key=c.keyword, value=_safe_value(c.value), comment=c.comment)
-                                     for c in header.cards if c.keyword in selected or
-                                     "HIERARCH " + c.keyword in selected]
+                            cards = []
+                            for card in header.cards:
+                                key = card.keyword
+                                if key not in selected and "HIERARCH " + key not in selected:
+                                    continue
+                                try:
+                                    cards.append(dict(key=key, value=_safe_value(card.value),
+                                                      comment=card.comment))
+                                except (ValueError, TypeError, fits.verify.VerifyError) as exc:
+                                    selected_errors = True
+                                    try:
+                                        raw_card = card.image
+                                    except (ValueError, TypeError, fits.verify.VerifyError):
+                                        raw_card = None
+                                    cards.append(dict(key=key, value=None, comment=None,
+                                                      raw=raw_card, parse_error=str(exc)))
+                                    self.diagnostic("header_card_error", path,
+                                                    f"HDU {index}: {key}: {exc}")
                             values = {}
                             for card in cards:
                                 values.setdefault(card["key"], []).append(card["value"])
@@ -213,12 +234,14 @@ class _Inspector:
                                 fields_source_hdu=0,
                                 selected={key: single(key) for key in self.columns if key not in ROW_KEYS},
                                 authority="reported-unverified"))
-                for warning in caught:
-                    self.diagnostic("fits_warning", path, str(warning.message))
-            item["metadata"] = "read"
+            item["metadata"] = "incomplete" if selected_errors else "read"
         except (OSError, ValueError, TypeError, fits.verify.VerifyError) as exc:
             self.diagnostic("fits_error", path, str(exc))
             item["metadata"] = "incomplete"
+        finally:
+            # Keep verification evidence even if a later structural read fails.
+            for warning in caught:
+                self.diagnostic("fits_warning", path, str(warning.message))
 
     def add_rows(self, asset, partition, stage, member=None):
         if asset is None:

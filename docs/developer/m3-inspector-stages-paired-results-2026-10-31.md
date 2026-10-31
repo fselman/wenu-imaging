@@ -1,5 +1,14 @@
 # M3 inspector stages — paired target results, 31 October 2026
 
+31 October subsequent actual-tree finding #180: nonstandard ESO telemetry
+caused strict inspector verification to discard otherwise readable HDU metadata.
+The [bounded correction](m3-eso-header-inspection-2026-10-31.md) retains diagnostics and readable fields,
+with no fixes to source files or image reads. New regression fails before; agent
+corrected suite passes 22/22. Corrected Mac/Chapman qualification and repeated
+bounded Chapman tree display remain pending. Hold the earlier M3 closure
+recommendation and PR #178 in draft; preserve all earlier evidence. No native,
+scientific, installation or M4 work. Earlier 21-group receipts retain their scope.
+
 Both selected Intel Mac and representative shared Chapman4 passed all 21 focused
 groups at PR #178 source `0d8f2978a4ef4c78c47f1526b48e03d77351c024`, tree
 `7239d8feb2e1908db7122aefbde0c612d5e86c37`. Both report successful installed
