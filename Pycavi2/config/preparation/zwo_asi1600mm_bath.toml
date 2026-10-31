@@ -1,0 +1,118 @@
+# Bath example, not universal ASI1600 camera/calibration defaults.
+# Source: Scowcroft et al. 2023, Physics Education 58, 035014.
+schema_version = 1
+
+[camera]
+model = "ZWO ASI1600MM Pro"
+instrume = ["ZWO CCD ASI1600MM Pro"]
+monochrome = true
+
+[dataset]
+temperature_c = -5.0
+
+[dataset.expected]
+BITPIX = 16
+NAXIS1 = 4656
+NAXIS2 = 3520
+BSCALE = 1
+BZERO = 32768
+XBINNING = 1
+YBINNING = 1
+# Acquisition settings from the observed FITS headers, NOT physical e-/ADU gain.
+GAIN = 139.0
+OFFSET = 10.0
+
+[provenance]
+# Paper section 1; affiliation. Do not misidentify the frames as ESO observations.
+OBSERVAT = "Bath Physics Observatory"
+ORIGIN = "University of Bath"
+"WENU PROV PAPER DOI" = "10.1088/1361-6552/acbf1b"
+"WENU PROV DATA DOI" = "10.15125/BATH-01225"
+# TELESCOP and OBSERVER deliberately absent: not established per exposure.
+
+[reference]
+# Reference information stays in the plan/manifest, not per-frame acquisition cards.
+citation = "Scowcroft, Davies, Mathlin and Sloan (2023), Physics Education 58, 035014"
+source_sections = "1: BPO name; 2 and Tables 1-3: equipment; Fig. 1(d) and data statement: M51 archive"
+site = "Edge of University of Bath main campus, United Kingdom; section 2.1"
+site_coordinates = "Precise latitude, longitude and elevation not supplied by this paper"
+main_telescopes = "StellaLyra M-LRS Ritchey-Chretien 200 mm / 1600 mm; TS Optics Photoline triplet 130 mm / 910 mm"
+camera = "ZWO ASI1600MM Pro monochrome; 3.8 micrometre pixels; 4656 x 3520; Table 2"
+other_cameras = "ZWO ASI178MC colour; ZWO ASI120MM Mini monochrome; Table 2"
+mounts = "Sky-Watcher EQ6 Pro SynScan; section 2"
+filter_wheel = "ZWO EFW8; LRGB, H-alpha, O-III, S-II; section 2"
+focuser = "ZWO EAF stepper; section 2"
+control_stack = "Raspberry Pi 4 / Astroberry / INDI / KStars / Ekos; section 2; versions not established"
+unknowns = "Per-frame telescope, observer, software versions, filter response, physical gain/RON and ADC mode"
+
+[[rules]]
+directory = "Bias"
+type = "BIAS"
+exposure_s = 3.2e-05
+filename_prefix = "Bias"
+
+[[rules]]
+directory = "Darks"
+type = "DARK"
+exposure_s = 30.0
+filename_prefix = "Dark"
+
+[[rules]]
+directory = "Blue"
+type = "OBJECT"
+exposure_s = 32.0
+filename_prefix = "M_51_Light_Blue"
+filter = "Blue"
+
+[[rules]]
+directory = "Green"
+type = "OBJECT"
+exposure_s = 32.0
+filename_prefix = "M_51_Light_Green"
+filter = "Green"
+
+[[rules]]
+directory = "Red"
+type = "OBJECT"
+exposure_s = 32.0
+filename_prefix = "M_51_Light_Red"
+filter = "Red"
+
+[[rules]]
+directory = "Luminance"
+type = "OBJECT"
+exposure_s = 32.0
+filename_prefix = "M_51_Light_Luminance"
+filter = "Luminance"
+
+[[rules]]
+directory = "Flats/Blue"
+type = "FLAT"
+exposure_s = 0.035
+filename_prefix = "Light_Blue"
+filter = "Blue"
+allow_light_flat = true
+
+[[rules]]
+directory = "Flats/Green"
+type = "FLAT"
+exposure_s = 0.055
+filename_prefix = "Light_Green"
+filter = "Green"
+allow_light_flat = true
+
+[[rules]]
+directory = "Flats/Red"
+type = "FLAT"
+exposure_s = 0.1
+filename_prefix = "Light_Red"
+filter = "Red"
+allow_light_flat = true
+
+[[rules]]
+directory = "Flats/Luminance"
+type = "FLAT"
+exposure_s = 0.018
+filename_prefix = "Light_Luminance"
+filter = "Luminance"
+allow_light_flat = true

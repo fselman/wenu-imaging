@@ -40,6 +40,31 @@ do not stamp raw classifications onto master products or mistake three added
 cards for complete DICB/ESO Phase 3 compliance. Preserve non-ESO origin and all
 acquisition metadata; never invent an ESO programme, OB or template.
 
+## TOML-driven ZWO ASI preparation
+
+The current candidate is [prepare_zwo_asi.py](../Pycavi2/tools/prepare_zwo_asi.py),
+with the [Bath TOML entry](../Pycavi2/config/preparation/zwo_asi1600mm_bath.toml).
+Supply `--config` to both `plan` and `apply`. Camera identity, acquisition checks,
+directory roles and provenance are explicit configuration, rather than embedded
+Bath policy. Existing `INSTRUME` is checked and preserved. `OBSERVAT`, `ORIGIN`
+and paper/data DOI cards are proposed only in new copies; conflicting existing
+values block preparation. Exact TOML bytes and effective settings are bound to
+the reviewed plan and manifest. See [the provenance contract and paper evidence](developer/zwo-asi-provenance-2026-10-31.md)
+for keyword mappings, unknowns, allowlisted fields and qualification limits.
+
+The paper documents two telescope systems and does not establish a unique one
+for every archive frame. Telescope, observer, site coordinates and software
+versions are not filled from inference. Descriptive equipment references remain
+in TOML/manifest. The interface currently supports configured monochrome primary
+images; arbitrary ASI models/colour layouts remain unqualified.
+
+Legacy commands below describe the previously qualified Bath-specific helper.
+Its nine controls and the new nine TOML/provenance controls pass in the agent
+environment; actual Mac qualification of the TOML path is pending. The previous
+Mac full 260-file plan and ten-copy qualification passed, with original files,
+installed components and clean main preserved. Do not reuse a legacy plan with
+the new tool: create and review a fresh plan including provenance.
+
 ## Initial Bath/ASI1600MM Pro mapping
 
 Use [prepare_zwo_bath.py](../Pycavi2/tools/prepare_zwo_bath.py), a checkout-only
@@ -153,5 +178,6 @@ payload/scaling and incomplete-output markers. See
 [test_zwo_bath_preparation.py](../Pycavi2/tests/test_zwo_bath_preparation.py).
 Agent results and actual-target status are recorded in the corresponding
 [M4 preparation receipt](developer/m4-preparation-helper-2026-10-31.md).
-Actual Mac full-dataset dry run and selected-copy verification are pending;
-no observational write or installed activation follows from agent tests.
+Previous-helper actual Mac full-dataset plan and ten representative-copy checks passed;
+new TOML/provenance target checks remain pending. No installed activation follows
+from agent tests. See the provenance contract linked above for the dated receipts.
