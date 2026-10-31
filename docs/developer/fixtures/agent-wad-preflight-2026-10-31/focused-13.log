@@ -1,0 +1,28 @@
+RETAINED EVIDENCE: /tmp/asi-simple-profile-controls-3r_1crgk
+test_camera_telescope_bad_header_and_link_controls (__main__.SimpleTests.test_camera_telescope_bad_header_and_link_controls) ... ok
+test_cli_generated_toml_roundtrip_and_output_guard (__main__.SimpleTests.test_cli_generated_toml_roundtrip_and_output_guard) ... DATASET TOML: /tmp/asi-simple-profile-controls-3r_1crgk/test_cli_generated_toml_roundtrip_and_output_guard-23r_w04v/cli-dataset.toml | SHA256: 98d662226eee1168ce8a2e6fa25504bd405b02e33630a41ba0ef899211197821
+CLASSIFICATIONS: {'OBJECT': 1} | BLOCKED: 0
+DISCOVERED SETTINGS: {"CCD-TEMP": {"-5.0": 1}, "EXPTIME": {"32.0": 1}, "GAIN": {"139.0": 1}, "OFFSET": {"10.0": 1}, "XBINNING": {"1": 1}, "YBINNING": {"1": 1}}
+WARNINGS: {}
+PREPARED: /tmp/asi-simple-profile-controls-3r_1crgk/test_cli_generated_toml_roundtrip_and_output_guard-23r_w04v/prepared | files: 1 | payload bytes verified
+STOP: Report must be outside raw inputs
+ok
+test_copy_cards_filter_payload_and_manifest (__main__.SimpleTests.test_copy_cards_filter_payload_and_manifest) ... ok
+test_directory_conflicts_and_header_contradictions (__main__.SimpleTests.test_directory_conflicts_and_header_contradictions) ... ok
+test_discovered_settings_and_missing_values (__main__.SimpleTests.test_discovered_settings_and_missing_values) ... ok
+test_filter_fallback_and_unknown (__main__.SimpleTests.test_filter_fallback_and_unknown) ... ok
+test_filter_mismatch_for_all_roles (__main__.SimpleTests.test_filter_mismatch_for_all_roles) ... ok
+test_flat_light_acknowledgement_and_existing_dpr (__main__.SimpleTests.test_flat_light_acknowledgement_and_existing_dpr) ... ok
+test_header_filter_without_filter_directory (__main__.SimpleTests.test_header_filter_without_filter_directory) ... ok
+test_input_validation_and_explicit_filter_alias (__main__.SimpleTests.test_input_validation_and_explicit_filter_alias) ... ok
+test_roles_both_orders_and_flat_subtypes (__main__.SimpleTests.test_roles_both_orders_and_flat_subtypes) ... ok
+test_stable_telescope_and_profile_date (__main__.SimpleTests.test_stable_telescope_and_profile_date) ... ok
+test_stale_config_plan_source_and_incomplete_marker (__main__.SimpleTests.test_stale_config_plan_source_and_incomplete_marker) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.931s
+
+OK
+PREPARED: /tmp/asi-simple-profile-controls-3r_1crgk/test_copy_cards_filter_payload_and_manifest-1c141jka/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/asi-simple-profile-controls-3r_1crgk/test_flat_light_acknowledgement_and_existing_dpr-dgaivton/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/asi-simple-profile-controls-3r_1crgk/test_stable_telescope_and_profile_date-djv5tlcx/prepared | files: 3 | payload bytes verified

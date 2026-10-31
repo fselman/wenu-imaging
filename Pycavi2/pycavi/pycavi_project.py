@@ -392,6 +392,19 @@ def inspect_project(root, *, invocation_base, recursive=False, list_base=None,
                 authority="legacy-evidence-only", execution_ready=False)
 
 
+def inspect_fits_headers(path, *, invocation_base, keys=(), limits=Limits()):
+    """Shared bounded single-asset reader; no arrays, writes or association policy.
+
+    Preflight and the project inspector use the same header parser, diagnostics
+    and limits. Locations are resolved against the explicitly supplied base.
+    """
+    resolver = PathResolver(Path(invocation_base))
+    resolved = resolver.argument(path)
+    inspector = _Inspector(resolved.parent, resolver, False, None, tuple(keys), limits)
+    asset = inspector.asset(resolved)
+    return {"asset": asset, "diagnostics": inspector.diagnostics}
+
+
 def _cell(value):
     # Keep embedded tabs/newlines/control bytes from corrupting terminal tables.
     return json.dumps(value, ensure_ascii=True, allow_nan=False) if value is not None else "-"
@@ -504,8 +517,16 @@ def _print_summary(report, summary):
 
 
 def main(argv=None):
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if arguments and arguments[0] == "preflight":
+        if __package__:
+            from .pycavi_preflight import main as preflight_main
+        else:
+            from pycavi_preflight import main as preflight_main
+        return preflight_main(arguments[1:])
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("preflight", help="Read-only raw imaging metadata assessment")
     project = commands.add_parser("project").add_subparsers(dest="action", required=True)
     inspect = project.add_parser("inspect")
     inspect.add_argument("root", type=Path)

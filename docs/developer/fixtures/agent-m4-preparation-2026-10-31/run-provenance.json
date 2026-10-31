@@ -1,0 +1,31 @@
+{
+  "baseline_review_head": "0e0739f56053a09763804101401a4c6c6b89b660",
+  "python": "/workspace/scratch/555b377cf948/m3-test-env/bin/python",
+  "python_version": "3.12.14",
+  "astropy": "6.1.7",
+  "numpy": "1.26.4",
+  "command": [
+    "/workspace/scratch/555b377cf948/m3-test-env/bin/python",
+    "Pycavi2/tests/test_zwo_bath_preparation.py"
+  ],
+  "cwd": "/workspace/scratch/104db3d59fe9/wenu-imaging",
+  "initial": {
+    "groups": 9,
+    "seconds": 3.179,
+    "status": "passed",
+    "source_hash_not_captured": true,
+    "synthetic_root": "/tmp/zwo-bath-preparation-controls-drgy5isp"
+  },
+  "final": {
+    "groups": 9,
+    "seconds": 0.834,
+    "status": "passed",
+    "source_manifest": "source-sha256.json",
+    "synthetic_root": "/tmp/zwo-bath-preparation-controls-zyi_pbg1"
+  },
+  "limits": [
+    "synthetic helper controls only",
+    "no observational/native/installed execution",
+    "Mac and Chapman helper qualification pending"
+  ]
+}

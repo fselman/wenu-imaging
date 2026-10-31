@@ -1,5 +1,50 @@
 # Developer documentation
 
+31 October owner clarification: identifying native Windows obstacles is
+informational preparation for a possible later port. It must not affect Mac/Linux
+design, introduce Windows-driven adapters/abstractions or overhead, or block their
+acceptance. If Windows is ported later, that version receives the required adapters
+then. Preserve efficient native Mac/Linux facilities and the no-speed-penalty
+refactoring requirement. This supersedes any earlier Windows wording suggesting
+current Mac/Linux design restrictions; no source changes or tests are needed.
+
+31 October owner makes native speed/efficiency preservation an explicit
+refactoring requirement and requests early native-Windows difficulty identification.
+The [performance/portability contract](native-performance-portability-contract-2026-10-31.md)
+requires no reproducible same-workload slowdown, with wall/CPU time, memory and I/O
+compared on matched optimized builds; no percentage penalty is preapproved.
+Concrete source barriers include the Windows build guard, qfits mapping/swap,
+FITS stream/offset handling, Unix path/permission assumptions and Eclipse OS helpers.
+This is source/design review only: no benchmark, Windows build or portability patch.
+Apply at changed native boundaries and cumulative acceptance; retain existing
+Windows sequencing, C90/numerical behavior, all evidence and working installations.
+
+31 October owner added raw-input DPR.TYPE/CATG/TECH preparation to M4 review.
+The [data preparation guide](../data-preparation.md) reviews official ESO DICB v8
+and ZWO ASI1600 manual rev1.5. Dataset-specific Python helper #184 proposes Bath
+directory roles with header checks, then writes explicit reviewed-plan copies
+with unchanged payload bytes; originals stay untouched. Nine synthetic agent
+controls pass, including conflict/stale-plan refusal, header growth/scaling and
+incomplete-copy handling. Actual Mac full 260-file dry run/copy verification is
+pending. No C numerical changes, reduction, install, generic CMOS qualification
+or automatic classification/association policy is introduced. PR #183 remains a
+draft review with an explicitly authorized preparation helper; preserve M4 gates.
+
+31 October M3 is owner accepted/closed and PR #178 merged at
+6c4b0f0eff639da8dbef890f0df10f86c70bb0ee; owner-returned Mac and Chapman4
+cleanup confirms clean main, merged review branch removal and protected installs
+preserved. Owner instructed M4 review and inclusion of `~/Pictures/ZWO_Bath/`.
+The [M4 interface/fixture review](m4-interface-fixture-review-2026-10-31.md) tracks #182:
+independent detector/HDU maps, optional selectors, scaling, selection/reference
+context and an astrophotography profile within existing visual-purpose vocabulary.
+Returned Bath inventory samples 256/260 FITS: primary images, unsigned-16 scaling,
+explicit flat-role ambiguity and 30 s dark/32 s light mismatch. Four headers remain
+uninspected; no raw report/pixels independently audited. This is documentation and
+source review, not M4 C implementation, reduction, profile activation or generic
+CMOS acceptance. Review interfaces/fixtures before code; preserve original gates,
+Pycavi grouping ownership, all evidence and installed environments. Earlier pending
+M3 receipts below retain their historical scope.
+
 31 October [summary/alignment paired receipt](m3-summary-paired-results-2026-10-31.md): source
 fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2 passed 24/24 on selected Intel Mac
 (6.938 s) and representative Chapman4 (3.563 s), with installed files and clean
@@ -494,3 +539,11 @@ Functional acceptance, scientific validation and archive compliance are distinct
 Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 
 - [Native configuration/failure correction and 26 October evidence](native-failure-correction-2026-10-26.md).
+
+- [TOML-driven ZWO ASI provenance and Bath paper evidence](zwo-asi-provenance-2026-10-31.md).
+
+- [Practical ASI inputs and generated dataset TOML](asi-simple-inputs-2026-10-31.md).
+
+- Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
+
+- [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).

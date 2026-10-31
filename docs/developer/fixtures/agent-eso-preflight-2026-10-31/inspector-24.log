@@ -1,0 +1,39 @@
+WORK DIRECTORY: /workspace/scratch/104db3d59fe9/eso-preflight-evidence/m3 project inspection b5niypdg
+test_actual_instrument_mappings_and_cfg_authority (__main__.InspectionTests.test_actual_instrument_mappings_and_cfg_authority) ... ok
+test_cli_library_equality_and_views (__main__.InspectionTests.test_cli_library_equality_and_views) ... ok
+test_cli_rejections_and_table (__main__.InspectionTests.test_cli_rejections_and_table) ... ok
+test_duplicate_basenames_are_not_merged (__main__.InspectionTests.test_duplicate_basenames_are_not_merged) ... ok
+test_exposure_stage_sequence_and_missing_products (__main__.InspectionTests.test_exposure_stage_sequence_and_missing_products) ... ok
+test_fits_errors_duplicate_cards_and_header_conflicts (__main__.InspectionTests.test_fits_errors_duplicate_cards_and_header_conflicts) ... ok
+test_header_and_hdu_budgets (__main__.InspectionTests.test_header_and_hdu_budgets) ... ok
+test_links_dangling_cycles_directories (__main__.InspectionTests.test_links_dangling_cycles_directories) ... ok
+test_list_legacy_first_column_and_invalid_lines (__main__.InspectionTests.test_list_legacy_first_column_and_invalid_lines) ... ok
+test_malformed_text_and_nonregular_inputs (__main__.InspectionTests.test_malformed_text_and_nonregular_inputs) ... ok
+test_nested_shared_membership_and_headers (__main__.InspectionTests.test_nested_shared_membership_and_headers) ... ok
+test_no_arrays_no_writes_and_caller_independence (__main__.InspectionTests.test_no_arrays_no_writes_and_caller_independence) ... ok
+test_no_recursive_scan_and_limits (__main__.InspectionTests.test_no_recursive_scan_and_limits) ... ok
+test_nonstandard_eso_telemetry_and_selected_card_isolation (__main__.InspectionTests.test_nonstandard_eso_telemetry_and_selected_card_isolation) ... ok
+test_path_bases (__main__.InspectionTests.test_path_bases) ... ok
+test_shared_and_unbuilt_calibration_stage_references (__main__.InspectionTests.test_shared_and_unbuilt_calibration_stage_references) ... ok
+test_shared_conventions_preserve_existing_client_results (__main__.InspectionTests.test_shared_conventions_preserve_existing_client_results) ... WARNING: VerifyWarning: Keyword name 'ESO PYCAVI LIGHTCOR' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING:astropy:VerifyWarning: Keyword name 'ESO PYCAVI LIGHTCOR' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created.
+ok
+test_stage_conflicts_and_ambiguous_exposure_names (__main__.InspectionTests.test_stage_conflicts_and_ambiguous_exposure_names) ... WARNING: VerifyWarning: Keyword name 'ESO PRO CATG' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created. [astropy.io.fits.card]
+WARNING:astropy:VerifyWarning: Keyword name 'ESO PRO CATG' is greater than 8 characters or contains characters not allowed by the FITS standard; a HIERARCH card will be created.
+ok
+test_stage_headers_views_and_read_only_preservation (__main__.InspectionTests.test_stage_headers_views_and_read_only_preservation) ... ok
+test_stage_unknown_base_limits_and_deterministic_callers (__main__.InspectionTests.test_stage_unknown_base_limits_and_deterministic_callers) ... ok
+test_summary_and_detailed_titles_align_with_variable_width_fields (__main__.InspectionTests.test_summary_and_detailed_titles_align_with_variable_width_fields) ... ok
+test_summary_memberships_json_and_stage_selection (__main__.InspectionTests.test_summary_memberships_json_and_stage_selection) ... ok
+test_symlink_invocation_and_member_bases (__main__.InspectionTests.test_symlink_invocation_and_member_bases) ... ok
+test_unknown_base_and_missing_absolute_member (__main__.InspectionTests.test_unknown_base_and_missing_absolute_member) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 6.593s
+
+OK
+wcs_fits: /workspace/scratch/104db3d59fe9/eso-preflight-evidence/m3 project inspection b5niypdg/test_shared_conventions_preserve_existing_client_results-f8qa2wxa/original/frame_pre/CCD_A_solve_field//CCD_A.fits
+wcs_fits: /workspace/scratch/104db3d59fe9/eso-preflight-evidence/m3 project inspection b5niypdg/test_shared_conventions_preserve_existing_client_results-f8qa2wxa/original/frame_pre/CCD_B_solve_field//CCD_B.fits
+wcs_fits: /workspace/scratch/104db3d59fe9/eso-preflight-evidence/m3 project inspection b5niypdg/test_shared_conventions_preserve_existing_client_results-f8qa2wxa/shared/frame_pre/CCD_A_solve_field//CCD_A.fits
+wcs_fits: /workspace/scratch/104db3d59fe9/eso-preflight-evidence/m3 project inspection b5niypdg/test_shared_conventions_preserve_existing_client_results-f8qa2wxa/shared/frame_pre/CCD_B_solve_field//CCD_B.fits
+EVIDENCE: /workspace/scratch/104db3d59fe9/eso-preflight-evidence/m3 project inspection b5niypdg

@@ -1,8 +1,16 @@
 # Wenu Attribute Dictionary and ASDF processing projects
 
+31 October owner decision: **data preflight is subordinate to WAD** and is the
+standard ingestion service governed by its metadata/authority/validation contracts.
+Preflight inspects and proposes normalized records without changing FITS. Explicit
+preparation applies a reviewed metadata plan to copies. Equipment names/identities
+are stable; profile dates and observation DATE-OBS are separate attributes. See
+[the accepted preflight boundary](#data-preflight-under-wad). The current ASI
+adapter is an implementation increment, not a qualified general WAD/ASDF runtime.
+
 29 October owner addition: [optional input BPMs / required variance support](bpm-variance-policy.md). WAD records explicit BPM omission or selected identity/coverage, independently of generated validity masks. A broken selected reference is an error, not omission. From M6a, supported new-chain signal products require variance initialization/propagation and provenance; pre-M6a unavailable variance is a historical/compatibility state, not a normal complete new-chain result. Numeric model/parameter uncertainty and integer BPM outputs retain type-appropriate contracts.
 
-Design direction recorded 29 October 2026; version 1. Owner instructed "Proceed" after reviewing WAD and the ASDF processing-project proposal. This authorizes this architecture/roadmap update. Concrete schemas, APIs, packaging and numerical implementation remain pending milestones, not installed capabilities.
+Design direction recorded 29 October 2026; version 2 includes the 31 October preflight decision. Owner instructed "Proceed" after reviewing WAD and the ASDF processing-project proposal. This authorizes this architecture/roadmap update. Concrete schemas, APIs, packaging and numerical implementation remain pending milestones, not installed capabilities.
 
 See the [target architecture](pycavi-mefpp.md) and [implementation plan](implementation-plan.md). Existing accepted Stage 2/2.1 evidence and original files remain unchanged.
 
@@ -20,6 +28,7 @@ An evolving project points to exact-version records and plans. A frozen plan nev
 |---|---|
 | WAD | Names, meanings, types, units/conventions, required fields, schema versions, authority/source rules and reference contracts |
 | Data-model layer | Shared typed view of records, validation and adapters; used by notebooks, commands and serializers |
+| Data preflight service | Apply WAD meaning/authority/check contracts to ingestion candidates; return normalized records and scoped assessments |
 | ASDF adapter | Read/write records, schema/tag compatibility and packaged schema resolution |
 | FITS resolver/I/O | Resolve locations and detector/HDU selectors; check layout and declared integrity; read/write arrays |
 | TOML loader | Compose settings and declared overrides into an immutable effective configuration |
@@ -43,6 +52,7 @@ Initially maintain the WAD definitions within the monorepo with independent sche
 | Group/association | Stable group definition and exact ordered membership; policy version, candidates, selected versions, reasons and overrides |
 | ExecutionPlan | Exact source project revision, frozen inputs/associations/settings/software requirements, finite task DAG and expected outputs |
 | Run/attempt/result | Plan identity, actual software/environment/resource information, task attempts, diagnostics, outcomes and exact published-product references |
+| Preflight assessment (assessment specialization) | Exact asset/profile/mapping/check versions; reported/configured/derived evidence, unknowns/conflicts, diagnostics and purpose-scoped readiness |
 | Product/assessment | Exact parents; detector coverage, FITS references, units/variance/masks/WCS/correction state; validation and publication state; scoped quality information |
 
 A logical asset ID, record version, schema version, content identity, project revision and task/attempt ID serve different purposes. Do not substitute a filename or modification time for these identities.
@@ -64,6 +74,53 @@ Validate at separate levels:
 5. Product profile: output and archive/compliance requirements, separately assessed.
 
 Use primitives, mappings and lists for most metadata; qualify any richer tagged type and its cross-language reader requirements. Keep the C core independent of ASDF object internals. Validate typed native requests at their boundary as well as validating serialized records; documentation alone does not enforce the contract.
+
+### Data preflight under WAD
+
+The owner-approved relationship is WAD contract → shared preflight service →
+instrument adapters and user interfaces. WAD defines attribute meanings, types,
+units, source/authority rules, missing states and assessment contracts; it does
+not execute scans or modify files. CLI and notebooks call the same service.
+Directory names, FITS keyword aliases and camera-specific interpretation are
+adapter configuration, not universal WAD requirements.
+
+**Original raw files are immutable.** Preflight never repairs source headers or
+writes into raw directories; approved preparation writes new copies.
+The default `preflight` action is read-only with respect to inputs: inventory
+files/layout, collect original evidence, normalize available attributes, check
+cross-source agreement, retain unknowns and return a reviewable assessment. It
+can write its report. A missing detector mode can coexist with completed
+inventory; applicability to a particular calibration or scientific profile is a
+separate assessed requirement. No single pass flag implies scientific quality.
+
+An explicit `prepare`/`apply` action uses a frozen reviewed metadata request to
+write copies. Model this request as a metadata-preparation specialization of the
+existing ExecutionPlan contract, preserving exact inputs/settings, proposed
+additions, acknowledgements and software/check versions; do not create a second
+independent planning system. The resulting copied assets retain their original
+parents and a preparation result. Preflight assessments use the shared assessment
+contract, scoped to exact asset versions and declared checks.
+
+Record header-reported, configured (including directory declarations and sourced
+manual facts), and derived values distinctly. An input directory named SkyFlats
+states the intended exposure role; it does not independently establish flat
+illumination quality. Conflicts are exposed for review, not silently overwritten.
+Telescope identity/name is independent of profile date or acquisition date;
+DATE-OBS remains original evidence. A dated profile is not evidence of telescope
+commissioning or a scientific calibration validity interval.
+
+Current generated dataset TOML is an adapter report/request snapshot. Its fields
+must map to WAD observation/image records, scoped assessments and metadata plan
+contracts as those runtime schemas become qualified. It is not a competing WAD
+schema, and the present helper does not claim WAD/ASDF schema conformance merely
+by producing TOML. WAD/ASDF persistence and general instrument services retain
+their existing implementation milestones. FITS copies continue to supply required
+metadata for current consumers; no present raw-admission gate is removed. WAD-aware
+consumers may use qualified normalized records when integrated, without requiring
+source rewrites solely for internal vocabulary.
+
+Grouping, partitioning, calibration selection, numerical validation, execution
+preflight and product compliance retain their separate services and gates.
 
 ## 4. Project, plan and run lifecycle
 

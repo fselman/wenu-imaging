@@ -1,5 +1,18 @@
 # Pycavi checkout tools
 
+## Bath raw-data preparation
+
+`prepare_zwo_bath.py` is a dataset-specific ASI1600MM Pro helper, not a native
+processing replacement or installed command. `plan --root RAW --report NEW_JSON`
+proposes ESO DPR classification with directory/header consistency checks;
+`apply --plan JSON --expected-plan-sha256 HASH --output NEW_DIRECTORY` makes
+verified copies only. Known flat files labelled Light require explicit
+`--accept-directory-flats` after review. No originals are edited, no calibration
+is selected and no reduction is launched. Read the
+[data preparation guide](../../docs/data-preparation.md) for definitions,
+limits, checksum/payload preservation and incomplete-output handling. Actual Mac
+qualification is pending; retain the selected interpreter and host guards.
+
 ## Portable synthetic dependency checks
 
 `check_dependencies.py` runs the same bounded checks on Linux and macOS. It is

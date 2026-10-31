@@ -1,0 +1,22 @@
+# Reusable camera facts; no dataset exposure/gain/temperature defaults.
+schema_version = 1
+model = "ZWO ASI1600MM Pro"
+instrume = ["ZWO CCD ASI1600MM Pro"]
+monochrome = true
+sensor = "Panasonic MN34230ALJ"
+width_pixels = 4656
+height_pixels = 3520
+pixel_size_um = 3.8
+shutter = "rolling"
+
+[manual]
+path = "../../../docs/manuals/cameras/ASI1600_Manual_EN_V1.5.pdf"
+revision = "1.5"
+date = "2021-08"
+sha256 = "36e89bf491d51949495fc51aaf4b93c39fc4b79c9bf0efd433ae3070a6040474"
+sections = "2 p4: MM Pro sensor; 4 p6: dimensions/pixels/shutter; 6.6-6.7 p12: ADC/binning"
+
+[capabilities]
+# Available capabilities, NOT the mode selected for any particular exposure.
+adc_bits = [10, 12]
+cooling = "regulated TEC"

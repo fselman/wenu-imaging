@@ -1,5 +1,102 @@
 # wenu-imaging agent instructions
 
+31 October owner accepts [ESO data preflight](eso-data-preflight-2026-10-31.md) and explicitly
+requires immutable original raw data. Initial OmegaCAM/WFI raw-imaging service
+reuses M3's bounded read-only reader and actual instrument configurations; public
+preflight writes a separate report outside raw directories, never repairs headers
+or writes raw copies. Correct complete metadata needs no additions. Source/HDU
+mapping/authority, unknowns and scoped readiness are explicit; no scientific or
+payload-integrity acceptance is implied. Agent corrected ESO 10/10 and inspector
+24/24 pass. Candidate filter cross-keyword finding #190 fixed, target-pending;
+WFI gain issue #131 remains independent, never substituted or repaired. Actual
+Mac then representative Chapman/real-input metadata qualification remain pending.
+No automatic legacy-pipeline gate, installation, reduction, native/M4 or full WAD
+runtime claim. Other adapter/profile integration remains subsequent work.
+
+31 October owner makes [data preflight subordinate to WAD](../architecture/proposed/wad-processing-project.md#data-preflight-under-wad).
+WAD governs metadata/authority/assessment/plan contracts; preflight is a shared
+read-only ingestion service with instrument adapters, explicit apply writes copies.
+Current ASI adapter is not claimed to be a general WAD/ASDF runtime. Current
+observatory schema v2 uses a stable telescope name and separate profile_date;
+frame DATE-OBS remains original evidence, never part of equipment identity.
+Generated dataset notation v3 prevents silent old-plan reinterpretation. Affected
+13-group agent suite passes; scoped Mac 13-group/full-header-preflight verification
+pending. Preserve earlier 32/260/ten-copy Mac evidence and all existing outputs.
+No repeated legacy/native matrix, partitioning, installation, reduction, automatic
+merge/cleanup or M4 closure. Earlier dated-name notes are historical.
+
+31 October owner approves [practical ASI preparation inputs](asi-simple-inputs-2026-10-31.md):
+reusable observatory/camera TOMLs and directory role/filter names generate the
+detailed dataset TOML; no manual exposure/gain/offset/temperature/filename rules.
+Role/filter directories work in either order. Header-first filters are checked
+against directory labels; missing filters can be proposed, unknowns stay unknown.
+Dome/sky/unspecified flats remain distinct, conflicts block and flat-Light labels
+still require acknowledgement. Agent 9+11+12 controls pass; actual Mac new-interface
+qualification is pending. Prior explicit-interface Mac 20 controls/full 260 plan/
+ten-copy passes at 7bf1c824 remain valid for that version. Uploaded manual saved
+unchanged under docs/manuals/cameras, facts sourced without inferring acquisition
+mode/physical gain. Preserve originals/installations and native boundaries;
+partitioning is deferred. No automatic merge, reduction, installation or M4 closure.
+
+31 October owner authorizes [generic TOML-driven ZWO ASI preparation](zwo-asi-provenance-2026-10-31.md)
+after previous-helper actual Mac 260-file plan and ten-copy checks passed.
+The generic entry point separates camera/dataset rules and sourced provenance;
+existing INSTRUME/original cards/payload remain, conflicts block preparation.
+Bath Physics Observatory/institution and paper/data DOI are configured. Returned
+260-frame 200/1600 mm header signature identifies the StellaLyra RC; configured
+checks add a dated WENU telescope label while preserving TELESCOP=SynScan.
+Observer, coordinates and software versions stay unknown.
+Agent legacy 9/9 and current generic 11/11 pass; candidate #187 parse-error
+reporting is fixed but target-pending. Fresh Mac provenance plan/copy checks remain
+pending. No reduction, installation, native changes, M4 closure or automatic
+merge/cleanup; original review/helper PR #183 and native PR #186 stay unchanged.
+Earlier pending statements retain historical scope.
+
+31 October owner clarification: identifying native Windows obstacles is
+informational preparation for a possible later port. It must not affect Mac/Linux
+design, introduce Windows-driven adapters/abstractions or overhead, or block their
+acceptance. If Windows is ported later, that version receives the required adapters
+then. Preserve efficient native Mac/Linux facilities and the no-speed-penalty
+refactoring requirement. This supersedes any earlier Windows wording suggesting
+current Mac/Linux design restrictions; no source changes or tests are needed.
+
+31 October owner makes native speed/efficiency preservation an explicit
+refactoring requirement and requests early native-Windows difficulty identification.
+The [performance/portability contract](native-performance-portability-contract-2026-10-31.md)
+requires no reproducible same-workload slowdown, with wall/CPU time, memory and I/O
+compared on matched optimized builds; no percentage penalty is preapproved.
+Concrete source barriers include the Windows build guard, qfits mapping/swap,
+FITS stream/offset handling, Unix path/permission assumptions and Eclipse OS helpers.
+This is source/design review only: no benchmark, Windows build or portability patch.
+Apply at changed native boundaries and cumulative acceptance; retain existing
+Windows sequencing, C90/numerical behavior, all evidence and working installations.
+
+31 October owner added raw-input DPR.TYPE/CATG/TECH preparation to M4 review.
+The [data preparation guide](../data-preparation.md) reviews official ESO DICB v8
+and ZWO ASI1600 manual rev1.5. Dataset-specific Python helper #184 proposes Bath
+directory roles with header checks, then writes explicit reviewed-plan copies
+with unchanged payload bytes; originals stay untouched. Nine synthetic agent
+controls pass, including conflict/stale-plan refusal, header growth/scaling and
+incomplete-copy handling. Actual Mac full 260-file dry run/copy verification is
+pending. No C numerical changes, reduction, install, generic CMOS qualification
+or automatic classification/association policy is introduced. PR #183 remains a
+draft review with an explicitly authorized preparation helper; preserve M4 gates.
+
+31 October M3 is owner accepted/closed and PR #178 merged at
+6c4b0f0eff639da8dbef890f0df10f86c70bb0ee; owner-returned Mac and Chapman4
+cleanup confirms clean main, merged review branch removal and protected installs
+preserved. Owner instructed M4 review and inclusion of `~/Pictures/ZWO_Bath/`.
+The [M4 interface/fixture review](m4-interface-fixture-review-2026-10-31.md) tracks #182:
+independent detector/HDU maps, optional selectors, scaling, selection/reference
+context and an astrophotography profile within existing visual-purpose vocabulary.
+Returned Bath inventory samples 256/260 FITS: primary images, unsigned-16 scaling,
+explicit flat-role ambiguity and 30 s dark/32 s light mismatch. Four headers remain
+uninspected; no raw report/pixels independently audited. This is documentation and
+source review, not M4 C implementation, reduction, profile activation or generic
+CMOS acceptance. Review interfaces/fixtures before code; preserve original gates,
+Pycavi grouping ownership, all evidence and installed environments. Earlier pending
+M3 receipts below retain their historical scope.
+
 31 October [summary/alignment paired receipt](m3-summary-paired-results-2026-10-31.md): source
 fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2 passed 24/24 on selected Intel Mac
 (6.938 s) and representative Chapman4 (3.563 s), with installed files and clean

@@ -1,0 +1,26 @@
+RETAINED EVIDENCE: /tmp/asi-simple-profile-controls-tmdvvpc7
+test_camera_telescope_bad_header_and_link_controls (__main__.SimpleTests.test_camera_telescope_bad_header_and_link_controls) ... ok
+test_cli_generated_toml_roundtrip_and_output_guard (__main__.SimpleTests.test_cli_generated_toml_roundtrip_and_output_guard) ... DATASET TOML: /tmp/asi-simple-profile-controls-tmdvvpc7/test_cli_generated_toml_roundtrip_and_output_guard-zce171hy/cli-dataset.toml | SHA256: c18c35415b1e5204ab870e1b658c50098d2054bee073cac89501afdd11cdf07a
+CLASSIFICATIONS: {'OBJECT': 1} | BLOCKED: 0
+DISCOVERED SETTINGS: {"CCD-TEMP": {"-5.0": 1}, "EXPTIME": {"32.0": 1}, "GAIN": {"139.0": 1}, "OFFSET": {"10.0": 1}, "XBINNING": {"1": 1}, "YBINNING": {"1": 1}}
+WARNINGS: {}
+PREPARED: /tmp/asi-simple-profile-controls-tmdvvpc7/test_cli_generated_toml_roundtrip_and_output_guard-zce171hy/prepared | files: 1 | payload bytes verified
+STOP: Report must be outside raw inputs
+ok
+test_copy_cards_filter_payload_and_manifest (__main__.SimpleTests.test_copy_cards_filter_payload_and_manifest) ... ok
+test_directory_conflicts_and_header_contradictions (__main__.SimpleTests.test_directory_conflicts_and_header_contradictions) ... ok
+test_discovered_settings_and_missing_values (__main__.SimpleTests.test_discovered_settings_and_missing_values) ... ok
+test_filter_fallback_and_unknown (__main__.SimpleTests.test_filter_fallback_and_unknown) ... ok
+test_filter_mismatch_for_all_roles (__main__.SimpleTests.test_filter_mismatch_for_all_roles) ... ok
+test_flat_light_acknowledgement_and_existing_dpr (__main__.SimpleTests.test_flat_light_acknowledgement_and_existing_dpr) ... ok
+test_header_filter_without_filter_directory (__main__.SimpleTests.test_header_filter_without_filter_directory) ... ok
+test_input_validation_and_explicit_filter_alias (__main__.SimpleTests.test_input_validation_and_explicit_filter_alias) ... ok
+test_roles_both_orders_and_flat_subtypes (__main__.SimpleTests.test_roles_both_orders_and_flat_subtypes) ... ok
+test_stale_config_plan_source_and_incomplete_marker (__main__.SimpleTests.test_stale_config_plan_source_and_incomplete_marker) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.891s
+
+OK
+PREPARED: /tmp/asi-simple-profile-controls-tmdvvpc7/test_copy_cards_filter_payload_and_manifest-cudzfzxn/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/asi-simple-profile-controls-tmdvvpc7/test_flat_light_acknowledgement_and_existing_dpr-oze2ytp6/prepared | files: 1 | payload bytes verified

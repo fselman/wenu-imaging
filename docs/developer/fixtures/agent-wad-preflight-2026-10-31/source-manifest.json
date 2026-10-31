@@ -1,0 +1,15 @@
+{
+  "baseline_qualified_revision": "73f510fc7234b53fa6c171c4f8a2fa5577488de2",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "source_sha256": {
+    "Pycavi2/config/preparation/bath_observatory.toml": "ae617653c2489ad38138ad1b2d7443a7a914736aeba2fbf3d2d4dd9d1a745a7f",
+    "Pycavi2/tools/asi_preparation_profiles.py": "8c3dec9e88138b8e390836db5428f6e1e25f1c09157c13e17beccfab9324f4b9",
+    "Pycavi2/tests/test_asi_simple_profiles.py": "d7f810258874565b87751ef075701837224def911c2cdde09580f5415aa4e92c",
+    "Pycavi2/tests/qualify_asi_simple_profiles.py": "b18bee4d65cb97d4ca962b55b1e6b592a88a7814a8ef4f06488102b5f9aeff7f"
+  },
+  "tests": 13,
+  "seconds": 0.931,
+  "status": "passed agent focused synthetic suite; changed-interface Mac preflight pending",
+  "local_link_targets": 28,
+  "preservation": "No numerical/core-copy/legacy-interface changes; earlier Mac 32/260/ten-copy evidence retained at baseline revision."
+}

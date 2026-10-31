@@ -1,6 +1,6 @@
 # Installation — quick start
 
-Native M3 path qualification, 30 October 2026: [paired Mac/Chapman checks](LINK)
+Native M3 path qualification, 30 October 2026: [paired Mac/Chapman checks](developer/m3-native-paths-paired-results-2026-10-30.md)
 passed both affected CTests at 113156b94fe68f7bf2848c93ecd7451551db2984,
 including actual C execution from unrelated directories with separate inputs,
 calibrations and destinations. Protected installed files/checkouts stayed unchanged.
@@ -61,3 +61,12 @@ does not install mefpp, SExtractor, SCAMP, SWarp, Astrometry.net or reference da
 A pip-versus-Conda/micromamba distribution is a deferred [roadmap TODO](developer/roadmap.md).
 No mefpp package has been published through either route. Detailed tests, build
 flags and acceptance histories stay under `docs/developer`.
+
+## Data preflight candidate
+
+The read-only `pycavi preflight` subcommand is introduced by the
+[ESO preflight candidate](developer/eso-data-preflight-2026-10-31.md). It reuses
+the existing Python dependencies/configuration resources. Actual Mac/Chapman
+qualification and explicit installation remain pending; existing installed
+commands are unchanged until an approved source version is installed. The
+private source runner can test the candidate without installing it.
