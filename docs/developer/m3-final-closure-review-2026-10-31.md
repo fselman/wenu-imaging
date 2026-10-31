@@ -1,5 +1,15 @@
 # M3 final cumulative closure review — 31 October 2026
 
+31 October [summary/alignment paired receipt](m3-summary-paired-results-2026-10-31.md): source
+fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2 passed 24/24 on selected Intel Mac
+(6.938 s) and representative Chapman4 (3.563 s), with installed files and clean
+main preserved. Direct real --summary displays five aligned CN Ori exposure rows,
+retaining warnings and the missing historical flat reference without a wrapper.
+The owner-requested interface addition is qualified; M3 closure is recommended
+for owner acceptance, then separately instructed merge/cleanup and M4 review.
+Documentation-only receipt: no executable change, test replay, install or host sync.
+Earlier pending/held notes retain their stated historical scopes.
+
 31 October owner requested [direct --summary output and aligned titles](m3-inspector-summary-2026-10-31.md)
 before M3 closure. Compact exposure rows/diagnostic counts now need no wrapper;
 detailed tables also use measured spaces. Agent suite passes 24/24; actual Mac,
@@ -28,9 +38,9 @@ recommendation and PR #178 in draft; preserve all earlier evidence. No native,
 scientific, installation or M4 work. Earlier 21-group receipts retain their scope.
 
 Accepted native baseline: main `3a61df627edfdbb1ef43cc3c956dff74bd28c066`.
-Current corrected inspector candidate: PR #178 source
-`f7967fd1ee93f2a5a1a4faa227cadd460c054fa5`, tree
-`2a47848d07ce083252abfb38e2d37a1d1b2464a9`.
+Current qualified inspector candidate: PR #178 source
+`fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2`, tree
+`19f20810a4f4443b043a295876b2e75bb686ca84`.
 
 **Recommendation: accept M3 as complete within its original explicit-path and
 legacy project-inspection scope.** The gap in the
@@ -76,6 +86,7 @@ the same interface when their actual services/records exist, as the plan specifi
 | Allocation/format safety plus native-path regression | `87ed266a109741c4998bfc8c978d07c9306f0091`, 4/4 on both, accepted #173 | Latest native boundary; no new C changes in #178 |
 | Completed stage inspector and shared client conventions | `0d8f2978a4ef4c78c47f1526b48e03d77351c024`, Mac 21/21 in 4.639 s, Chapman4 21/21 in 2.702 s | Original missing inspector boundary qualified |
 | Nonstandard ESO header correction and actual-tree redisplay | `f7967fd1ee93f2a5a1a4faa227cadd460c054fa5`, Mac 22/22 in 4.788 s, Chapman4 22/22 in 2.405 s; five real science headers each readable through 33 HDUs, warnings retained | #180 correction qualified; no missing-reference repair or compliance claim |
+| Owner-requested direct summary/aligned titles | `fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2`, Mac 24/24 in 6.938 s, Chapman4 24/24 in 3.563 s; direct real CN Ori --summary retained | Compact output needs no wrapper; both table formats align titles/values |
 
 Earlier accepted review/merge ancestry and equal-tree checks are retained in the
 baseline review. Current candidate descends from that baseline. New source differs

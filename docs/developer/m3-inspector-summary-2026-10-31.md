@@ -1,5 +1,15 @@
 # M3 inspector compact summary and aligned tables — 31 October 2026
 
+31 October [summary/alignment paired receipt](m3-summary-paired-results-2026-10-31.md): source
+fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2 passed 24/24 on selected Intel Mac
+(6.938 s) and representative Chapman4 (3.563 s), with installed files and clean
+main preserved. Direct real --summary displays five aligned CN Ori exposure rows,
+retaining warnings and the missing historical flat reference without a wrapper.
+The owner-requested interface addition is qualified; M3 closure is recommended
+for owner acceptance, then separately instructed merge/cleanup and M4 review.
+Documentation-only receipt: no executable change, test replay, install or host sync.
+Earlier pending/held notes retain their stated historical scopes.
+
 Owner-requested addition before M3 closure, based on review head
 `400d237e673083556a54be726dce0a0a477393a0`, refs #159/PR #178.
 

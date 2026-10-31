@@ -1,5 +1,15 @@
 # wenu-imaging
 
+31 October [summary/alignment paired receipt](docs/developer/m3-summary-paired-results-2026-10-31.md): source
+fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2 passed 24/24 on selected Intel Mac
+(6.938 s) and representative Chapman4 (3.563 s), with installed files and clean
+main preserved. Direct real --summary displays five aligned CN Ori exposure rows,
+retaining warnings and the missing historical flat reference without a wrapper.
+The owner-requested interface addition is qualified; M3 closure is recommended
+for owner acceptance, then separately instructed merge/cleanup and M4 review.
+Documentation-only receipt: no executable change, test replay, install or host sync.
+Earlier pending/held notes retain their stated historical scopes.
+
 31 October owner requested [direct --summary output and aligned titles](docs/developer/m3-inspector-summary-2026-10-31.md)
 before M3 closure. Compact exposure rows/diagnostic counts now need no wrapper;
 detailed tables also use measured spaces. Agent suite passes 24/24; actual Mac,
