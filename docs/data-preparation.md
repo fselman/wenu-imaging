@@ -9,6 +9,21 @@ C numerical kernels and from calibration association. Track
 The new helper implements preparation only; global CLI/C enforcement is not yet
 implemented, and these cards alone do not establish processing readiness.
 
+## Practical inputs and generated dataset TOML
+
+The owner-approved [simple-input interface](developer/asi-simple-inputs-2026-10-31.md)
+uses separate reusable observatory/camera TOMLs and a small directory-name map.
+Exposure/settings/filenames are discovered from headers. Directory role/filter
+components work in either order; dome, sky and unspecified flats remain distinct.
+FILTER is header-first and checked against a directory label when present;
+missing filters can be proposed from a directory, otherwise remain unknown.
+The detailed dataset TOML is generated output for review and exact-plan copying.
+The [uploaded camera manual](manuals/cameras/ASI1600_Manual_EN_V1.5.pdf) is retained
+unchanged and referenced by the camera input. Agent controls pass 9+11+12; actual
+Mac qualification of this new interface is pending. The explicit-profile interface
+below remains qualified at its recorded revision and available for compatibility.
+Partitioning is deferred; no change to native C or calibration selection is made.
+
 ## ESO definitions and actual FITS names
 
 Reviewed source: [ESO Data Interface Control Document, ESO-044156, version 8,

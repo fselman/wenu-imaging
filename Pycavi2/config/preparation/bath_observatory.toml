@@ -1,0 +1,10 @@
+# Reusable site/setup provenance. Paper: Scowcroft et al. 2023.
+schema_version = 1
+name = "Bath Physics Observatory"
+origin = "University of Bath"
+paper_doi = "10.1088/1361-6552/acbf1b"
+
+[telescope]
+name_prefix = "BPO StellaLyra RC 8-inch"
+aperture_mm = 200.0
+focal_length_mm = 1600.0

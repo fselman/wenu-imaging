@@ -1,5 +1,18 @@
 # wenu-imaging agent instructions
 
+31 October owner approves [practical ASI preparation inputs](asi-simple-inputs-2026-10-31.md):
+reusable observatory/camera TOMLs and directory role/filter names generate the
+detailed dataset TOML; no manual exposure/gain/offset/temperature/filename rules.
+Role/filter directories work in either order. Header-first filters are checked
+against directory labels; missing filters can be proposed, unknowns stay unknown.
+Dome/sky/unspecified flats remain distinct, conflicts block and flat-Light labels
+still require acknowledgement. Agent 9+11+12 controls pass; actual Mac new-interface
+qualification is pending. Prior explicit-interface Mac 20 controls/full 260 plan/
+ten-copy passes at 7bf1c824 remain valid for that version. Uploaded manual saved
+unchanged under docs/manuals/cameras, facts sourced without inferring acquisition
+mode/physical gain. Preserve originals/installations and native boundaries;
+partitioning is deferred. No automatic merge, reduction, installation or M4 closure.
+
 31 October owner authorizes [generic TOML-driven ZWO ASI preparation](zwo-asi-provenance-2026-10-31.md)
 after previous-helper actual Mac 260-file plan and ten-copy checks passed.
 The generic entry point separates camera/dataset rules and sourced provenance;

@@ -186,7 +186,9 @@ def inspect(path, root, profile):
             "checksum_cards_removed_in_copy": [k for k in ("CHECKSUM", "DATASUM") if k in header]}
 
 
-def inventory(root, profile):
+def inventory(root, profile, inspector=None):
+    if inspector is None:
+        inspector = inspect
     require(root.is_dir() and not root.is_symlink(), "Expected regular input directory")
     entries, errors, ignored = [], [], collections.Counter()
     total = 0
@@ -211,7 +213,7 @@ def inventory(root, profile):
                 ignored[path.suffix.lower() or "(none)"] += 1
                 continue
             try:
-                entries.append(inspect(path, root, profile))
+                entries.append(inspector(path, root, profile))
             except (OSError, ValueError, KeyError, TypeError, fits.verify.VerifyError) as exc:
                 errors.append({"file": relative, "error": str(exc)})
     require(entries or errors, "No FITS candidates found")
@@ -251,6 +253,11 @@ def apply_plan(plan_path, expected_sha, output, accept_flats, config):
 
 
 def main(argv=None):
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if any(a in ("--observatory", "--camera", "--directories") or
+           a.startswith(("--observatory=", "--camera=", "--directories=")) for a in arguments):
+        from asi_preparation_profiles import main as simple_main
+        return simple_main(arguments)
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     for name in ("plan", "apply"):
