@@ -1,5 +1,11 @@
 # Bounded M4 performance comparison plan — 31 October 2026
 
+Subsequent execution: the initial plan completed on Mac and Chapman, with exact
+products and preservation; performance is still under review. See the
+[Chapman inspection and source correction](qfits-offset-storage-correction-2026-10-31.md).
+The protocol below records that first series. Do not replay old attempts; a future
+qualified candidate uses an explicit --candidate-revision and a fresh reviewed plan.
+
 The owner accepts the paired functional qualification at
 `5e6bd83beafa744cd2a3be64b5405083c3ae634b`. PR #186 remains unmerged.
 This plan addresses the remaining shared-qfits performance question without

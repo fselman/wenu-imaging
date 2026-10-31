@@ -57,8 +57,8 @@
 #define QFITS_CACHESZ		128
 
 /* Legacy query discovery admits at most this many total HDUs. The bounded
- * entry point uses caller-sized temporary storage and checks before every
- * offset write; this default is not a fixed-array memory-safety assumption. */
+ * entry point grows temporary storage only as needed, up to the caller limit,
+ * and checks before every offset write; ordinary files retain stack storage. */
 
 #define QFITS_MAX_EXTS			128
 
@@ -425,8 +425,10 @@ int qfits_cache_prime_bounded(char *filename, size_t max_hdus, size_t max_header
 static int qfits_cache_scan(char * filename, size_t max_hdus, size_t max_header_bytes)
 {
 	FILE    *	in = NULL ;
-	int *off_hdr = NULL;
-	int *off_dat = NULL;
+    int local_hdr[QFITS_MAX_EXTS], local_dat[QFITS_MAX_EXTS];
+    int *off_hdr = local_hdr, *off_dat = local_dat;
+    int *grown_hdr, *grown_dat;
+    size_t capacity, grown_capacity;
 	char		buf[FITS_BLOCK_SIZE] ;
 	char	*	buf_c ;
 	int			n_blocks ;
@@ -467,9 +469,9 @@ static int qfits_cache_scan(char * filename, size_t max_hdus, size_t max_header_
     /* Existing public offset APIs are int-valued: reject before arithmetic. */
     if (!S_ISREG(sta.st_mode) || sta.st_size <= 0 || sta.st_size > INT_MAX) goto failed;
     if (max_header_bytes && sta.st_size % FITS_BLOCK_SIZE) goto failed;
-    off_hdr = malloc(max_hdus * sizeof(*off_hdr));
-    off_dat = malloc(max_hdus * sizeof(*off_dat));
-    if (off_hdr == NULL || off_dat == NULL) goto failed;
+    /* Preserve the legacy ordinary-file stack fast path. Grow only when an
+     * actual additional HDU needs storage, never merely because the limit is high. */
+    capacity = max_hdus < QFITS_MAX_EXTS ? max_hdus : QFITS_MAX_EXTS;
 	/* Open input file */
 	if ((in=fopen(filename, "r"))==NULL) {
 		qdebug(
@@ -679,6 +681,19 @@ static int qfits_cache_scan(char * filename, size_t max_hdus, size_t max_header_
 					/* Got an extension */
 					found_it=1 ;
                     if ((size_t)last >= max_hdus) goto failed;
+                    if ((size_t)last >= capacity) {
+                        grown_capacity = capacity > max_hdus / 2 ? max_hdus : capacity * 2;
+                        grown_hdr = malloc(grown_capacity * sizeof(*grown_hdr));
+                        grown_dat = malloc(grown_capacity * sizeof(*grown_dat));
+                        if (grown_hdr == NULL || grown_dat == NULL) {
+                            free(grown_hdr); free(grown_dat); goto failed;
+                        }
+                        memcpy(grown_hdr, off_hdr, (size_t)last * sizeof(*grown_hdr));
+                        memcpy(grown_dat, off_dat, (size_t)last * sizeof(*grown_dat));
+                        if (off_hdr != local_hdr) free(off_hdr);
+                        if (off_dat != local_dat) free(off_dat);
+                        off_hdr = grown_hdr; off_dat = grown_dat; capacity = grown_capacity;
+                    }
 					off_hdr[last] = n_blocks-1 ;
 				}
                 if (max_header_bytes && !found_it) goto failed;
@@ -816,7 +831,8 @@ static int qfits_cache_scan(char * filename, size_t max_hdus, size_t max_header_
         free(qfits_cache[qfits_cache_last].dsiz); --qfits_cache_entries;
     }
     qfits_cache[qfits_cache_last] = pending;
-    free(off_hdr); free(off_dat);
+    if (off_hdr != local_hdr) free(off_hdr);
+    if (off_dat != local_dat) free(off_dat);
     qfits_cache_entries ++ ;
 
     qdebug(
@@ -826,7 +842,8 @@ static int qfits_cache_scan(char * filename, size_t max_hdus, size_t max_header_
 	return qfits_cache_last ;
 failed:
     if (in != NULL) fclose(in);
-    free(off_hdr); free(off_dat);
+    if (off_hdr != local_hdr) free(off_hdr);
+    if (off_dat != local_dat) free(off_dat);
     free(pending.name); free(pending.ohdr); free(pending.data);
     free(pending.shdr); free(pending.dsiz);
     return -1;

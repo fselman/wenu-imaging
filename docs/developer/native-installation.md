@@ -1,5 +1,11 @@
 # Developer guide: native mefpp build, installation and qualification
 
+31 October unmerged [qfits offset-storage follow-up](qfits-offset-storage-correction-2026-10-31.md)
+removes avoidable temporary heap allocations for ordinary files without changing
+reader validation or numerical behavior. Agent focused gates pass; revised target
+checks are pending. Keep selected tools/installations and existing evidence intact;
+no installation or performance acceptance is implied.
+
 31 October [qfits-backed M4 paired receipt](m4-qfits-paired-results-2026-10-31.md):
 owner accepts all four functional contracts in both C90/C17 on Mac and Chapman4.
 Installed files and clean main stay unchanged. No install/merge/M4 closure is

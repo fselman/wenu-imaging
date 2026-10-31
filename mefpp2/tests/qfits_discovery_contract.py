@@ -17,7 +17,7 @@ def main():
     args.work_parent.mkdir(parents=True, exist_ok=True)
     root = Path(tempfile.mkdtemp(prefix="qfits-discovery-", dir=args.work_parent))
     cases = {}
-    for count in (0, 1, 8, 32, 140):
+    for count in (0, 1, 8, 32, 140, 300):
         path = root / f"mef-{count}.fits"
         path.write_bytes(EMPTY + b"".join(image(str(i)) for i in range(count)))
         cases[count] = path
@@ -68,7 +68,7 @@ def main():
     assert (after.st_size, after.st_mtime_ns, after.st_mode) == (sparse_before.st_size, sparse_before.st_mtime_ns, sparse_before.st_mode)
     (root / "receipt.json").write_text(json.dumps({"status": "passed", "commands": records,
         "sparse_integrity": "stat only; sparse payload never hashed/read"}, indent=2) + "\n")
-    print("PASS: qfits shared discovery: legacy/checked offsets, exact budgets, 140 extensions, duplicates, overflow refusal")
+    print("PASS: qfits shared discovery: legacy/checked offsets, exact budgets, repeated growth to 300 extensions, duplicates, overflow refusal")
     print("RETAINED EVIDENCE:", root)
 
 

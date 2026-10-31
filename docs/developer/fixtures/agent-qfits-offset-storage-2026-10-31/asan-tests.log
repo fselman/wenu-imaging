@@ -1,0 +1,21 @@
+Internal ctest changing into directory: /workspace/scratch/104db3d59fe9/m4-reuse-asan
+Test project /workspace/scratch/104db3d59fe9/m4-reuse-asan
+    Start  9: native_qfits_discovery
+1/3 Test  #9: native_qfits_discovery ...........   Passed    4.23 sec
+    Start 10: native_layout
+2/3 Test #10: native_layout ....................   Passed    2.11 sec
+    Start 14: native_bias_service
+3/3 Test #14: native_bias_service ..............   Passed    2.57 sec
+
+100% tests passed, 0 tests failed out of 3
+
+Label Time Summary:
+bias         =   2.57 sec*proc (1 test)
+bounds       =   4.23 sec*proc (1 test)
+detector     =   2.11 sec*proc (1 test)
+layout       =   6.34 sec*proc (2 tests)
+native       =   8.91 sec*proc (3 tests)
+ownership    =   4.68 sec*proc (2 tests)
+qfits        =   4.23 sec*proc (1 test)
+
+Total Test time (real) =   8.92 sec

@@ -40,11 +40,11 @@ def prepare(args):
         require(all((args.reference_run, args.candidate_run, args.repository)), "Both qualified runs and repository required")
         caches = []
         for role, revision in (("reference", "2d662b148db56b0292ca6ec3ee9bceb1bc463595"),
-                               ("candidate", "5e6bd83beafa744cd2a3be64b5405083c3ae634b")):
+                               ("candidate", args.candidate_revision)):
             prior = getattr(args, role + "_run").resolve(strict=True)
             report_path = prior / "qualification.json"
             report = json.loads(report_path.read_text())
-            require(report["revision"] == revision and report["status"] == "passed" and
+            require(len(revision) == 40 and report["revision"] == revision and report["status"] == "passed" and
                     all(report["preservation"].values()), "Unexpected qualified source/status")
             require(report["host"] == platform.node().split(".")[0], "Different qualification host")
             setattr(args, role, prior / "build-c90/mefpp2/mefpp")
@@ -80,6 +80,7 @@ def prepare(args):
             "script_sha256": identity(Path(__file__))["sha256"], "executables": {}, "inputs": {}, "runs": [],
             "host": platform.node(), "scope": "tiny synthetic legacy/explicit native pipeline; shared qfits change",
             "qualified_pair": bool(qualified_files), "qualification_inputs": qualified_files,
+            "candidate_revision": args.candidate_revision,
             "limits": ["not representative full-size image throughput", "does not time opt-in layout adapters",
                        "no automatic performance acceptance", "no observations/install/cache flush"]}
     for role in ("reference", "candidate"):
@@ -233,6 +234,7 @@ def main():
     parser.add_argument("--source-root", type=Path)
     parser.add_argument("--reference-run", type=Path)
     parser.add_argument("--candidate-run", type=Path)
+    parser.add_argument("--candidate-revision", default="5e6bd83beafa744cd2a3be64b5405083c3ae634b")
     parser.add_argument("--repository", type=Path)
     parser.add_argument("--run", type=Path)
     args = parser.parse_args()

@@ -1,5 +1,10 @@
 # M4 qfits reader adapter — 31 October 2026
 
+Current follow-up: [offset storage correction](qfits-offset-storage-correction-2026-10-31.md)
+restores the ordinary stack-buffer path after inspecting the first performance
+series. New agent gates pass; revised target qualification is pending. Prior
+performance results remain under review and are not replaced by test durations.
+
 Subsequent [paired actual-target qualification](m4-qfits-paired-results-2026-10-31.md)
 passes at 5e6bd83 and is owner accepted. Current next step is the
 [performance plan review/preparation](m4-performance-comparison-plan-2026-10-31.md),

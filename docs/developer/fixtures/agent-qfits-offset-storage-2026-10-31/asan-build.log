@@ -1,0 +1,25 @@
+-- GLOB mismatch!
+-- Candidate mefpp: C90; /usr/bin/cc; resources=OFF
+-- Configuring done (0.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/104db3d59fe9/m4-reuse-asan
+[  7%] Building C object mefpp2/CMakeFiles/qfits.dir/qfits5/src/cache.c.o
+[ 15%] Linking C static library libqfits.a
+[ 92%] Built target qfits
+[100%] Linking C executable qfits_discovery_probe
+[100%] Built target qfits_discovery_probe
+[ 16%] Built target qfits
+[ 88%] Built target eclipse
+[ 91%] Built target mefpp_common
+[ 92%] Building C object mefpp2/CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_layout.c.o
+[ 94%] Linking C static library libmefpp_config_snapshot.a
+[ 98%] Built target mefpp_config_snapshot
+[ 98%] Building C object mefpp2/CMakeFiles/layout_probe.dir/tests/layout_probe.c.o
+[100%] Linking C executable layout_probe
+[100%] Built target layout_probe
+[ 16%] Built target qfits
+[ 88%] Built target eclipse
+[ 91%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[ 98%] Linking C executable bias_service_probe
+[100%] Built target bias_service_probe

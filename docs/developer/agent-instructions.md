@@ -1,5 +1,16 @@
 # wenu-imaging agent instructions
 
+31 October [Chapman performance inspection and #197 correction](qfits-offset-storage-correction-2026-10-31.md):
+prior sixteen-call products/preservation pass, but timing ratios remain under
+review. Recorded load is low; existing sleep(1) protects ORIGFILE names and stays
+unchanged. The reuse patch added two avoidable temporary offset heap allocations;
+restore original-sized stack buffers and grow only on actual count >128. All
+bounds/offset checks, numerical code and int-range limit remain. Agent C90/C17
+four contracts and scoped sanitizer three pass, including repeated growth to300.
+New selected-tool Mac then Chapman functional gates are pending; no new benchmark
+or claim that prior timing variation is explained. Retain all earlier results;
+no automatic retry/slowdown allowance, installed activation or M4/M5 closure.
+
 31 October owner accepts [paired qfits-backed M4 behavior](m4-qfits-paired-results-2026-10-31.md)
 at 5e6bd83beafa744cd2a3be64b5405083c3ae634b: Mac/representative Chapman each4/4
 in C90/C17 with installations, clean main and exports preserved. #194 count bounds

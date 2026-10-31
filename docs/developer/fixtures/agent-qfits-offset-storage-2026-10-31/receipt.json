@@ -1,0 +1,29 @@
+{
+  "issue": 197,
+  "before_source": "5e6bd83beafa744cd2a3be64b5405083c3ae634b",
+  "scope": "temporary offset storage only; no numerical/naming/offset-range change",
+  "agent_checks": {
+    "c90": "4/4,23.64s",
+    "c17": "4/4,24.75s",
+    "asan_ubsan": "3/3,8.92s; legacy leak limitation remains"
+  },
+  "source_sha256": {
+    "mefpp2/qfits5/src/cache.c": "a5b0d8fbaf01d4002bfbb503ad8a853c14e4f99eb0828ddacacc59dc718dcabd",
+    "mefpp2/tests/qfits_discovery_contract.py": "4d4cece73d08d948828f744f10fe1093a32cb386b203d974502f19ee8391c3a6",
+    "mefpp2/tests/benchmark_native_paths.py": "3eea9a14ad086a77b1f2d45e5cb6c768f2622a5365b55ebf19d1ed6b2efcd66b"
+  },
+  "limits": [
+    "agent only; actual Mac/Chapman pending",
+    "no new performance measurement",
+    "no attribution of prior slowdown proved"
+  ],
+  "logs_sha256": {
+    "c90-tests.log": "130e65d4a9736c9068044099a62987d87e2288c317d4ede5f91bdd1626629eaf",
+    "c17-build.log": "39f1d602db352f85cc770051cd2ac964c9c8b2ce395d96ec1e76707451cb2c5d",
+    "asan-tests.log": "6c655b358e59c5472111831ac4cf7735b4f9c2b95145a6dd8615024b8c34b739",
+    "c17-tests.log": "d567adcef10b6c8a56d8b5cf7e2c3c70c1aa3808b4aead19ecc4f7c78024522d",
+    "asan-build.log": "834a2593504c01148d4b671d84cb48a3ccbafe54c92e754d61b8e78c3303e3cb",
+    "c90-build.log": "55796a7a6c5730a6e282d9732e2e8d26335fd8f9eff82890d548b27781b7fd9a"
+  },
+  "note": "Final cache comment edit only after tests; executable behavior unchanged."
+}
