@@ -7,6 +7,30 @@ is on `feat/m4-native-layout-20261031`, based on the unchanged review/helper
 branch `docs/m4-interface-fixtures-20261031` (PR #183). The owner's pending Mac
 helper command therefore remains pinned to its accepted source.
 
+## Mac runner failure and bounded correction (#193)
+
+The first actual Mac attempt at `5b265fe504d4e07f5d7244a179e0551ac2637ae5`
+configured C90 but failed while archiving libqfits: Xcode libtool reported
+"no output file specified". Retained run:
+`/Users/fselman/Software/build/wenu-imaging/mac-m4-layout-DRyH42lM`.
+No functional test or C17 lane ran. Installed files, checkout and exported-source
+preservation all passed. Existing dependency warnings are retained; this correction
+does not suppress them or change dependency/native source.
+
+The runner resolved selected tool symlinks before passing them to CMake. That can
+replace a basename-sensitive ar/ranlib entry point with libtool and change its
+command-line interpretation. Correction preserves the explicit absolute command
+path and records resolved target plus SHA256 separately. The corrected handoff uses the already canonical selected-tools.md paths, including
+/usr/bin/ar and /usr/bin/ranlib; it prints the retained failed link command before
+a fresh corrected attempt. No further PATH/tool-discovery gate is appropriate.
+
+[Regression evidence](fixtures/agent-m4-tool-dispatch-2026-10-31/receipt.json)
+records the actual executable test: ar and ranlib symlinks dispatch incorrectly
+before and correctly after. One stdlib test passes (two subcases, 0.005 s), using
+only private tiny shell fixtures. Runner/regression syntax checked; no native
+replay is warranted for this command-path correction. #193 and #185 remain open
+pending corrected actual target qualification. The original failed run is retained.
+
 ## Integration and next target step
 
 PR #192 is accepted and merged at `c4a5ba491b087e7e690ef6e53ed5ff2a250dd3ca`.

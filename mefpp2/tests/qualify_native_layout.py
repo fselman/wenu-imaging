@@ -1,4 +1,4 @@
-"""Private target qualification of M4 layout and existing bias contracts (#182)."""
+"""Private M4 qualification; tool arguments must follow docs/developer/selected-tools.md."""
 import argparse
 import hashlib
 import io
@@ -23,6 +23,15 @@ def require(ok, message):
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def selected_tool(declared):
+    require(declared.is_absolute(), "Require absolute tool paths")
+    require(declared.is_file() and os.access(declared, os.X_OK), "Tool is not executable")
+    # Tool entry points may dispatch by argv[0] (for example Xcode ar/ranlib).
+    # Canonical identity is evidence only; do not substitute it for invocation.
+    declared.resolve(strict=True)
+    return declared
 
 
 def main():
@@ -71,11 +80,10 @@ def main():
             "Unexpected private run directory")
     require(not any(run.iterdir()) or {p.name for p in run.iterdir()} == {"qualify.py"}, "Run directory is not fresh")
     tools = {}
+    # Invocation paths come from selected-tools.md, never PATH/xcrun rediscovery.
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
         declared = getattr(args, name)
-        require(declared.is_absolute(), "Require absolute tool paths")
-        tools[name] = declared.resolve(strict=True)
-        require(tools[name].is_file() and os.access(tools[name], os.X_OK), "Tool is not executable")
+        tools[name] = selected_tool(declared)
     if args.host == "mac":
         require(args.sdk is not None and args.sdk.is_absolute() and args.sdk.is_dir(), "Require selected SDK")
     else:
@@ -85,7 +93,8 @@ def main():
     protected = guard["protected_paths"]()
     installed_before = [guard["identity"](p) for p in protected]
     receipt = {"revision": args.revision, "host": host, "status": "running", "commands": [],
-               "tool_sha256": {name: {"path": str(path), "sha256": sha(path)} for name, path in tools.items()},
+               "tool_sha256": {name: {"path": str(path), "resolved_path": str(path.resolve(strict=True)),
+                                      "sha256": sha(path)} for name, path in tools.items()},
                "installation_performed": False, "observational_inputs": "none opened",
                "limits": ["synthetic layout/bias contracts only", "no science/normalization/performance acceptance",
                           "no sanitizer or leak-tool claim on targets"]}
@@ -139,7 +148,7 @@ def main():
                          "-DCMAKE_AR=" + str(tools["ar"]), "-DCMAKE_RANLIB=" + str(tools["ranlib"]),
                          "-DPython3_EXECUTABLE=" + sys.executable]
             if args.host == "mac":
-                configure += ["-DCMAKE_OSX_ARCHITECTURES=x86_64", "-DCMAKE_OSX_SYSROOT=" + str(args.sdk.resolve())]
+                configure += ["-DCMAKE_OSX_ARCHITECTURES=x86_64", "-DCMAKE_OSX_SYSROOT=" + str(args.sdk)]
             command("configure-c" + standard, configure)
             command("build-c" + standard, [tools["cmake"], "--build", build, "--parallel", "2",
                                            "--target", "layout_probe", "bias_service_probe", "mefpp"])
