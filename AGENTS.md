@@ -1,5 +1,16 @@
 # wenu-imaging
 
+31 October owner challenges the additional native FITS reader and instructs
+[existing-reader reuse review](docs/developer/m4-header-reader-reuse-review-2026-10-31.md). qfits already supports primary/extension
+headers, order/duplicate preservation and HDU discovery; prefer M4 metadata/maps
+above existing qfits/Eclipse I/O. Concrete count/offset gaps #194/#195 are recorded
+without fixes or execution. Candidate 2d662b1 passes layout+bias C90/C17 on Mac and
+representative Chapman4; #185/#193 closed with paired receipts. Those tests do not
+approve the reader design. Keep PR #186/M4 open for the scope decision; hold the
+unpublished native audit client and actual-header handoff. No native change,
+installation, observation access, new test campaign or M5 extraction in this review.
+Earlier target-pending and automatic-next-audit notes below are historical.
+
 31 October resumed [native M4](docs/developer/m4-native-layout-2026-10-31.md) toward subroutine decomposition.
 Merged accepted preflight main c4a5ba4 into the candidate without changing native
 C sources; resolved status-document conflicts by retaining both histories.

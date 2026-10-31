@@ -1,5 +1,13 @@
 # M4 first native layout increment — 31 October 2026
 
+Current hold: the owner challenged the new header reader. The
+[reuse review](m4-header-reader-reuse-review-2026-10-31.md) recommends existing
+qfits/Eclipse I/O with M4 metadata/maps above it, and identifies dependency gaps
+#194/#195 for explicit scope review. [Paired target checks](m4-native-layout-paired-results-2026-10-31.md)
+pass for the current implementation; that does not approve its reader design.
+No actual-header audit or replacement implementation starts before that decision.
+Earlier next-step wording below is historical and superseded by this hold.
+
 Owner accepted the interface/fixture review and instructed implementation after
 the Windows clarification at `c81cb86f79659fba89bed9ba16e6a96cbad62992`.
 Track [M4 #182](https://github.com/fselman/wenu-imaging/issues/182); this candidate
