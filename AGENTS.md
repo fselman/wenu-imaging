@@ -1,5 +1,72 @@
 # wenu-imaging
 
+31 October [summary/alignment paired receipt](docs/developer/m3-summary-paired-results-2026-10-31.md): source
+fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2 passed 24/24 on selected Intel Mac
+(6.938 s) and representative Chapman4 (3.563 s), with installed files and clean
+main preserved. Direct real --summary displays five aligned CN Ori exposure rows,
+retaining warnings and the missing historical flat reference without a wrapper.
+The owner-requested interface addition is qualified; M3 closure is recommended
+for owner acceptance, then separately instructed merge/cleanup and M4 review.
+Documentation-only receipt: no executable change, test replay, install or host sync.
+Earlier pending/held notes retain their stated historical scopes.
+
+31 October owner requested [direct --summary output and aligned titles](docs/developer/m3-inspector-summary-2026-10-31.md)
+before M3 closure. Compact exposure rows/diagnostic counts now need no wrapper;
+detailed tables also use measured spaces. Agent suite passes 24/24; actual Mac,
+then representative Chapman presentation qualification remains pending. Prior
+22-group reader and real-tree evidence stay valid; no reader/C/scientific change.
+PR #178 stays draft for the added interface gate. No installation or activation;
+owner acceptance/merge-clean precedes M4 review.
+
+31 October #180 [corrected paired and real-tree receipt](docs/developer/m3-eso-header-paired-results-2026-10-31.md): source
+f7967fd1ee93f2a5a1a4faa227cadd460c054fa5 passed 22/22 on selected Intel Mac
+(4.788 s) and representative Chapman4 (2.405 s), with installed files and clean
+main preserved. Actual CN Ori redisplay now retains all five 80 s r_SDSS headers,
+33 HDUs each, while retaining 36 warnings and one separate missing master-flat
+reference. The original-scope M3 closure recommendation is reinstated for owner
+acceptance; PR #178 is ready. No test replay/install/host sync for this receipt.
+Separate owner merge/cleanup precedes M4 review; earlier held/pending notes are
+historical. #181 remains a separate suffix-convention follow-up.
+
+31 October subsequent actual-tree finding #180: nonstandard ESO telemetry
+caused strict inspector verification to discard otherwise readable HDU metadata.
+The [bounded correction](docs/developer/m3-eso-header-inspection-2026-10-31.md) retains diagnostics and readable fields,
+with no fixes to source files or image reads. New regression fails before; agent
+corrected suite passes 22/22. Corrected Mac/Chapman qualification and repeated
+bounded Chapman tree display remain pending. Hold the earlier M3 closure
+recommendation and PR #178 in draft; preserve all earlier evidence. No native,
+scientific, installation or M4 work. Earlier 21-group receipts retain their scope.
+
+31 October M3 inspector [paired qualification](docs/developer/m3-inspector-stages-paired-results-2026-10-31.md): exact source
+0d8f2978a4ef4c78c47f1526b48e03d77351c024 passed all 21 groups on selected Intel
+Mac (4.639 s) and representative Chapman4 (2.702 s), with installed module,
+configured engine/configuration and clean main 3a61df6 preserved. The
+[final original-scope M3 review](docs/developer/m3-final-closure-review-2026-10-31.md) recommends milestone closure: the
+inspector gap is resolved alongside accepted native paths. Owner acceptance and
+separate merge/cleanup remain pending; then review M4 detector/layout interfaces.
+This receipt is documentation only: no test replay, installation or host sync.
+Earlier pending/gap notes retain their historical source/evidence contexts.
+
+31 October owner authorized completing the remaining original M3 inspector work.
+[Stage-view candidate](docs/developer/m3-inspector-stages-2026-10-31.md) adds evidence-linked calibration/preprocessing/
+normalization/WCS views and shared pure client conventions. Agent final 21/21
+checks pass; initial test-only oracle #179 failure is preserved. Selected Mac,
+then representative Chapman 21-group qualification remains pending; #159/M3 and
+#179 stay open. No C code, numerical tuning, installation or normal activation.
+Use exact private exports and protected-host runner; no historical matrix replay.
+Cumulative closure precedes M4 implementation; merge/cleanup needs owner acceptance.
+
+31 October cumulative review at accepted main 3a61df6: [original M3 checklist](docs/developer/m3-cumulative-review-2026-10-31.md)
+retains #159/M3 open. Native explicit paths have paired acceptance; the original
+associated-calibration/preprocessing/normalization/WCS inspector overview remains
+incomplete. Complete that bounded read-only integration before closure; no new
+timing/debugging or historical test campaign is a prerequisite. [M4 readiness](docs/developer/m4-readiness-review-2026-10-31.md)
+is preparatory review only, with no implementation or milestone advance. Preserve
+ESO OB/template/exposure metadata distinctions; grouping/association belongs in
+Pycavi, while mefpp processes selected lists with compatibility checks. Review
+only: no native/Python code, execution, installation or merge/cleanup. Earlier
+increment receipts retain their original scopes and evidence.
+
 30 October paired native safety receipt: selected-tool Intel Mac and representative
 shared Chapman4 private optimized C90 builds and all four contracts passed 4/4
 at 87ed266a109741c4998bfc8c978d07c9306f0091 (32.74 s / 20.77 s). Protected

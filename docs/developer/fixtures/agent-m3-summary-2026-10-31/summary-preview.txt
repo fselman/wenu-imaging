@@ -1,0 +1,10 @@
+Project: "/tmp/m3-inspector-summary-mavbn_gl/m3 project inspection mqjzcdwp/test_summary_and_detailed_titles_align_with_variable_width_fields-x9imk5r9/project with spaces"
+Coverage: complete | partitions: 1 | assets: 2 | stage records: 7
+SCIENCE EXPOSURES: 2
+Member  File                               Target                Filter  Exposure (s)  HDUs read
+------  ---------------------------------  --------------------  ------  ------------  ---------
+     1  short.fits                         CN Ori                r               80.0          3
+     2  much-longer-science-exposure.fits  A much longer target  r             1200.0          3
+Exposure headers only; processing completion remains unverified.
+Diagnostic counts (whole inspection):
+None

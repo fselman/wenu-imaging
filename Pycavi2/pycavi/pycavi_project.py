@@ -13,12 +13,15 @@ from pathlib import Path
 import re
 import stat
 import sys
+import unicodedata
 import warnings
 
 if __package__:
     from .pycavi_paths import PathResolver, PathResolutionError
+    from .pycavi_inspection_stages import build_stages, STAGE_CARDS
 else:
     from pycavi_paths import PathResolver, PathResolutionError
+    from pycavi_inspection_stages import build_stages, STAGE_CARDS
 
 
 # Names come from PartitionsTree/ExposuresPartition, not directory-name guesses.
@@ -29,9 +32,10 @@ PRIMARY_FIELDS = {"instrument": "inst_name_key", "target": "object_key",
                   "filter": "filt_key", "exposure": "inst_exp_key"}
 STANDARD_KEYS = {"instrument": "INSTRUME", "target": "OBJECT",
                  "filter": "FILTER", "exposure": "EXPTIME"}
-DEFAULT_COLUMNS = ("partition", "stage", "member", "hdu", "extname",
-                   "instrument", "target", "filter", "exposure", "status")
-ROW_KEYS = set(DEFAULT_COLUMNS) | {"path", "hdu_type", "dimensions"}
+DEFAULT_COLUMNS = ("partition", "stage", "role", "member", "hdu", "extname",
+                   "instrument", "target", "filter", "exposure", "status", "relation", "completion")
+ROW_KEYS = set(DEFAULT_COLUMNS) | {"path", "hdu_type", "dimensions", "role", "relation",
+                                 "completion", "validation", "publication", "source", "input"}
 
 
 @dataclass(frozen=True)
@@ -164,8 +168,10 @@ class _Inspector:
     def headers(self, path, item):
         from astropy.io import fits
         primary_fields = None
-        selected = set(self.keys.values()) | set(self.columns) | {
+        selected = set(self.keys.values()) | set(self.columns) | STAGE_CARDS | {
             "EXTNAME", "EXTVER", "BUNIT", "ESO PRO CATG", "PRODCATG"}
+        caught = []
+        selected_errors = False
         try:
             with warnings.catch_warnings(record=True) as caught:
                 warnings.simplefilter("always")
@@ -182,11 +188,30 @@ class _Inspector:
                             if index == self.limits.hdus:
                                 self.diagnostic("hdu_limit", path, "HDU limit reached")
                                 break
-                            hdu.verify("exception")
+                            # Legacy ESO telemetry can be nonstandard while the
+                            # image geometry and selected metadata are readable.
+                            # Report, never fix, those cards; inspection is not
+                            # product compliance validation. Refs #180.
+                            hdu.verify("warn")
                             header = hdu.header
-                            cards = [dict(key=c.keyword, value=_safe_value(c.value), comment=c.comment)
-                                     for c in header.cards if c.keyword in selected or
-                                     "HIERARCH " + c.keyword in selected]
+                            cards = []
+                            for card in header.cards:
+                                key = card.keyword
+                                if key not in selected and "HIERARCH " + key not in selected:
+                                    continue
+                                try:
+                                    cards.append(dict(key=key, value=_safe_value(card.value),
+                                                      comment=card.comment))
+                                except (ValueError, TypeError, fits.verify.VerifyError) as exc:
+                                    selected_errors = True
+                                    try:
+                                        raw_card = card.image
+                                    except (ValueError, TypeError, fits.verify.VerifyError):
+                                        raw_card = None
+                                    cards.append(dict(key=key, value=None, comment=None,
+                                                      raw=raw_card, parse_error=str(exc)))
+                                    self.diagnostic("header_card_error", path,
+                                                    f"HDU {index}: {key}: {exc}")
                             values = {}
                             for card in cards:
                                 values.setdefault(card["key"], []).append(card["value"])
@@ -210,19 +235,22 @@ class _Inspector:
                                 fields_source_hdu=0,
                                 selected={key: single(key) for key in self.columns if key not in ROW_KEYS},
                                 authority="reported-unverified"))
-                for warning in caught:
-                    self.diagnostic("fits_warning", path, str(warning.message))
-            item["metadata"] = "read"
+            item["metadata"] = "incomplete" if selected_errors else "read"
         except (OSError, ValueError, TypeError, fits.verify.VerifyError) as exc:
             self.diagnostic("fits_error", path, str(exc))
             item["metadata"] = "incomplete"
+        finally:
+            # Keep verification evidence even if a later structural read fails.
+            for warning in caught:
+                self.diagnostic("fits_warning", path, str(warning.message))
 
     def add_rows(self, asset, partition, stage, member=None):
         if asset is None:
             return
         for hdu in asset["hdus"] or [dict(hdu=None, extname=None, fields={}, selected={})]:
             row = dict(partition=partition, stage=stage, member=member,
-                       path=asset["path"], status=asset["status"])
+                       path=asset["path"], status=asset["status"],
+                       input=asset["path"] if stage in ("science", "standard") else None)
             row.update({k: v for k, v in hdu.items() if k in ROW_KEYS})
             row.update(hdu["fields"])
             row.update(hdu["selected"])
@@ -346,6 +374,7 @@ def inspect_project(root, *, invocation_base, recursive=False, list_base=None,
         if path is not None:
             inspector.config(resolver.argument(path), role)
     inspector.walk(root)
+    stages = build_stages(inspector)
     counts = {}
     for diagnostic in inspector.diagnostics:
         counts[diagnostic["code"]] = counts.get(diagnostic["code"], 0) + 1
@@ -353,9 +382,10 @@ def inspect_project(root, *, invocation_base, recursive=False, list_base=None,
                 configurations=inspector.configurations, partitions=inspector.partitions,
                 assets=list(inspector.assets.values()), links=inspector.links,
                 rows=inspector.rows, diagnostics=inspector.diagnostics,
-                attempt_evidence=inspector.attempt_evidence,
+                attempt_evidence=inspector.attempt_evidence, stages=stages,
                 coverage=dict(recursive=recursive, directories=inspector.directories,
                               assets=len(inspector.assets), partitions=len(inspector.partitions),
+                              stages=len(stages),
                               diagnostics=len(inspector.diagnostics), diagnostics_by_code=counts,
                               complete=not any(d["incomplete"] for d in inspector.diagnostics),
                               limits=dict(vars(limits))),
@@ -365,6 +395,112 @@ def inspect_project(root, *, invocation_base, recursive=False, list_base=None,
 def _cell(value):
     # Keep embedded tabs/newlines/control bytes from corrupting terminal tables.
     return json.dumps(value, ensure_ascii=True, allow_nan=False) if value is not None else "-"
+
+
+def _human_cell(value):
+    if isinstance(value, str):
+        # Escape terminal controls, retaining ordinary readable names and spaces.
+        if any(unicodedata.category(c).startswith("C") for c in value):
+            return json.dumps(value, ensure_ascii=True)[1:-1]
+        return value
+    return _cell(value)
+
+
+def _width(value):
+    return sum(0 if unicodedata.combining(c) else
+               2 if unicodedata.east_asian_width(c) in ("W", "F") else 1 for c in value)
+
+
+def _print_table(titles, values, *, human=False, numeric=()):
+    cell = _human_cell if human else _cell
+    rendered = [[cell(value) for value in row] for row in values]
+    widths = [max([_width(title)] + [_width(row[i]) for row in rendered])
+              for i, title in enumerate(titles)]
+
+    def line(row):
+        padded = []
+        for i, value in enumerate(row):
+            spaces = " " * (widths[i] - _width(value))
+            padded.append(spaces + value if i in numeric else value + spaces)
+        return "  ".join(padded).rstrip()
+
+    print(line(titles))
+    print("  ".join("-" * width for width in widths))
+    for row in rendered:
+        print(line(row))
+
+
+def _exposure_summary(report, rows, *, selected_only=False, sorted_view=False):
+    """Summarize existing raw-header evidence, preserving distinct memberships.
+
+    Filters can select an exposure by any represented stage or detector; displayed
+    metadata still comes from its raw asset. No additional file/header read occurs.
+    """
+    assets = {asset["path"]: asset for asset in report["assets"]}
+    lists = {(p["partition"], p["stage"]): p["list_path"] for p in report["partitions"]}
+    selected = {}
+    for index, row in enumerate(rows):
+        source = row.get("source") or {}
+        list_path = (lists.get((row["partition"], row["stage"]))
+                     if row["stage"] in ("science", "standard") else source.get("list"))
+        if list_path and row.get("member") is not None:
+            selected.setdefault((list_path, row["member"]), index)
+    summary = []
+    for partition in report["partitions"]:
+        if partition["stage"] not in ("science", "standard"):
+            continue
+        for index, member in enumerate(partition["members"], 1):
+            key = (partition["list_path"], index)
+            if selected_only and key not in selected:
+                continue
+            asset = assets.get(member["path"], {})
+            hdus = asset.get("hdus", [])
+            fields = hdus[0]["fields"] if hdus else {}
+            summary.append(dict(partition=partition["partition"], stage=partition["stage"],
+                                member=index, path=member["path"],
+                                file=Path(member["path"] or member["columns"][0]).name,
+                                target=fields.get("target"), filter=fields.get("filter"),
+                                exposure=fields.get("exposure"), hdus_read=len(hdus),
+                                status=asset.get("status", "unresolved"),
+                                list_path=partition["list_path"]))
+    if sorted_view:
+        summary.sort(key=lambda r: selected.get((r["list_path"], r["member"]), len(rows)))
+    return summary
+
+
+def _print_summary(report, summary):
+    standard = any(r["stage"] == "standard" for r in summary)
+    print("SCIENCE/STANDARD EXPOSURES:" if standard else "SCIENCE EXPOSURES:", len(summary))
+    columns = []
+    if len({r["partition"] for r in summary}) > 1:
+        columns.append(("Partition", "partition"))
+    if standard:
+        columns.append(("Role", "stage"))
+    columns += [("Member", "member"), ("File", "file"), ("Target", "target"),
+                ("Filter", "filter"), ("Exposure (s)", "exposure"), ("HDUs read", "hdus_read")]
+    _print_table([title for title, _ in columns],
+                 [[r[key] for _, key in columns] for r in summary], human=True,
+                 numeric={i for i, (_, key) in enumerate(columns)
+                          if key in ("member", "exposure", "hdus_read")})
+    print("Exposure headers only; processing completion remains unverified.")
+    print("Diagnostic counts (whole inspection):")
+    counts = report["coverage"]["diagnostics_by_code"]
+    if counts:
+        _print_table(["Diagnostic", "Count"], sorted(counts.items()), human=True, numeric={1})
+    else:
+        print("None")
+    for diagnostic in report["diagnostics"]:
+        if diagnostic["code"] != "fits_warning":
+            print("DIAGNOSTIC", _cell(diagnostic))
+    warnings = [d for d in report["diagnostics"] if d["code"] == "fits_warning"]
+    if warnings:
+        path = warnings[0]["path"]
+        print("Retained FITS warnings for first affected file:", _human_cell(path))
+        for warning in warnings:
+            if warning["path"] == path:
+                for line in warning["message"].splitlines():
+                    print(_human_cell(line))
+        print("Use --format json for every diagnostic and its full evidence.")
 
 
 def main(argv=None):
@@ -378,11 +514,14 @@ def main(argv=None):
     inspect.add_argument("--project-config", type=Path)
     inspect.add_argument("--instrument-config", type=Path)
     inspect.add_argument("--format", choices=("table", "json"), default="table")
+    inspect.add_argument("--summary", action="store_true",
+                         help="Aligned exposure-header summary and compact diagnostic counts")
     inspect.add_argument("--columns", nargs="+", default=list(DEFAULT_COLUMNS))
     inspect.add_argument("--where", action="append", default=[], metavar="COLUMN=VALUE")
     inspect.add_argument("--sort", metavar="COLUMN")
     inspect.add_argument("--partition")
     inspect.add_argument("--stage")
+    inspect.add_argument("--exposure", type=Path, help="Exact input path, resolved from invocation directory")
     inspect.add_argument("--detector", help="Reported EXTNAME; not hardware identity validation")
     args = parser.parse_args(argv)
     try:
@@ -391,6 +530,8 @@ def main(argv=None):
                                  instrument_config=args.instrument_config, columns=args.columns)
         rows = report["rows"]
         filters = list(args.where)
+        if args.exposure is not None:
+            filters.append("input=" + str(PathResolver(Path.cwd()).argument(args.exposure)))
         for key, value in (("partition", args.partition), ("stage", args.stage), ("extname", args.detector)):
             if value is not None:
                 filters.append(key + "=" + value)
@@ -410,19 +551,31 @@ def main(argv=None):
             rows = sorted(rows, key=order)
         report["view"] = dict(rows=rows, columns=args.columns, filters=filters, sort=args.sort,
                               selection_only=True)
+        if args.summary:
+            report["summary"] = dict(
+                rows=_exposure_summary(report, rows, selected_only=bool(filters),
+                                       sorted_view=bool(args.sort)),
+                authority="raw-header-evidence-only", completion="unverified")
         if args.format == "json":
             print(json.dumps(report, indent=2, ensure_ascii=True, allow_nan=False))
         else:
             print("Project:", _cell(report["root"]))
             print("Coverage:", "complete" if report["coverage"]["complete"] else "incomplete",
-                  "| partitions:", len(report["partitions"]), "| assets:", len(report["assets"]))
-            print("Sequence: listed inputs -> linked calibration evidence -> available file headers")
-            print("Processing/normalization/WCS completion: unverified; no filename-based inference")
-            print("\t".join(args.columns))
-            for row in rows:
-                print("\t".join(_cell(row.get(key)) for key in args.columns))
-            for diagnostic in report["diagnostics"]:
-                print("DIAGNOSTIC", _cell(diagnostic))
+                  "| partitions:", len(report["partitions"]), "| assets:", len(report["assets"]),
+                  "| stage records:", len(report["stages"]))
+            if args.summary:
+                _print_summary(report, report["summary"]["rows"])
+            else:
+                print("Sequence: listed inputs -> calibration -> preprocessing -> normalization (in place) -> WCS")
+                print("Stage relationships: declared evidence or expected locations; never filename-based completion")
+                print("Processing/normalization/WCS completion: unverified; no filename-based inference")
+                values = [[row.get(key) for key in args.columns] for row in rows]
+                numeric = {i for i in range(len(args.columns)) if values and
+                           any(row[i] is not None for row in values) and
+                           all(row[i] is None or type(row[i]) in (int, float) for row in values)}
+                _print_table(args.columns, values, numeric=numeric)
+                for diagnostic in report["diagnostics"]:
+                    print("DIAGNOSTIC", _cell(diagnostic))
         return 0
     except (OSError, ValueError, configparser.Error, ImportError) as exc:
         print(f"INVALID: {exc}", file=sys.stderr)
