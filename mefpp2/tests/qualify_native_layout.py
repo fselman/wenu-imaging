@@ -13,7 +13,7 @@ import tarfile
 
 
 MAIN = "c4a5ba491b087e7e690ef6e53ed5ff2a250dd3ca"
-TESTS = {"native_layout", "native_bias_service"}
+TESTS = {"native_qfits_discovery", "native_layout", "native_bias_service", "native_explicit_paths"}
 
 
 def require(ok, message):
@@ -96,14 +96,18 @@ def main():
                "tool_sha256": {name: {"path": str(path), "resolved_path": str(path.resolve(strict=True)),
                                       "sha256": sha(path)} for name, path in tools.items()},
                "installation_performed": False, "observational_inputs": "none opened",
-               "limits": ["synthetic layout/bias contracts only", "no science/normalization/performance acceptance",
+               "limits": ["synthetic discovery/layout/bias and existing native-path contracts only", "no observational/scientific/performance acceptance",
                           "no sanitizer or leak-tool claim on targets"]}
     print("RETAINED RUN:", run, flush=True)
     env = dict(os.environ, TMPDIR=str(run), PYTHONDONTWRITEBYTECODE="1", OPENBLAS_NUM_THREADS="1",
                OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", NUMEXPR_NUM_THREADS="1")
     # Do not inherit compiler/linker selection or preload overrides.
-    for name in ("CC", "CFLAGS", "CPPFLAGS", "LDFLAGS", "CMAKE_GENERATOR", "CMAKE_TOOLCHAIN_FILE",
-                 "LD_PRELOAD", "DYLD_INSERT_LIBRARIES"):
+    inherited = ("CC", "CXX", "CFLAGS", "CPPFLAGS", "LDFLAGS", "SDKROOT", "MACOSX_DEPLOYMENT_TARGET",
+                 "CPATH", "C_INCLUDE_PATH", "LIBRARY_PATH", "LD_LIBRARY_PATH", "DYLD_LIBRARY_PATH",
+                 "GCC_EXEC_PREFIX", "COMPILER_PATH", "CMAKE_GENERATOR", "CMAKE_TOOLCHAIN_FILE",
+                 "LD_PRELOAD", "DYLD_INSERT_LIBRARIES")
+    receipt["ignored_build_variables"] = {name: env[name] for name in inherited if name in env}
+    for name in inherited:
         env.pop(name, None)
 
     def command(label, argv, timeout=600):
@@ -137,7 +141,7 @@ def main():
         receipt["source_sha256"] = {
             str(p.relative_to(source)): sha(p) for p in sorted(source.rglob("*")) if p.is_file()}
         for standard in ("90", "17"):
-            # Matched optimized language lanes: probes plus normal-engine link only.
+            # Matched optimized lanes: private probes/engine, used only by synthetic contracts.
             build = run / ("build-c" + standard)
             configure = [tools["cmake"], "-S", source, "-B", build, "-G", "Unix Makefiles",
                          "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_C_FLAGS_RELEASE=-O2 -DNDEBUG",
@@ -151,9 +155,9 @@ def main():
                 configure += ["-DCMAKE_OSX_ARCHITECTURES=x86_64", "-DCMAKE_OSX_SYSROOT=" + str(args.sdk)]
             command("configure-c" + standard, configure)
             command("build-c" + standard, [tools["cmake"], "--build", build, "--parallel", "2",
-                                           "--target", "layout_probe", "bias_service_probe", "mefpp"])
-            # Inventory exactly two real C contracts, then run their tiny synthetic fixtures.
-            selection = "^(native_layout|native_bias_service)$"
+                                           "--target", "qfits_discovery_probe", "layout_probe", "bias_service_probe", "mefpp"])
+            # Inventory four focused native contracts; all inputs are synthetic fixtures.
+            selection = "^(native_qfits_discovery|native_layout|native_bias_service|native_explicit_paths)$"
             inventory = command("inventory-c" + standard,
                                 [tools["ctest"], "--test-dir", build, "--show-only=json-v1", "-R", selection])
             require({t["name"] for t in json.loads(inventory.read_text())["tests"]} == TESTS,

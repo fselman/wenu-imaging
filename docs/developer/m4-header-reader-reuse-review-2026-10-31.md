@@ -1,5 +1,9 @@
 # M4 FITS reader reuse review — 31 October 2026
 
+Subsequent owner decision: accepts the reuse recommendation. See the
+[qfits-backed adapter and explicit limits](m4-qfits-reader-adapter-2026-10-31.md).
+The source/design review below records the challenged prior implementation.
+
 **Recommendation: reuse the existing qfits/Eclipse FITS I/O. M4 should validate
 metadata and construct independent detector maps, without a second file-framing
 parser.** This is a source/design review for owner decision, not an implemented

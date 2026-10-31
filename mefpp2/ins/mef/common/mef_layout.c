@@ -113,18 +113,36 @@ static int multiply(size_t *value, size_t factor)
     *value *= factor; return 1;
 }
 
-/* Framing is bounded before calling the existing qfits card-value parser.
- * Unselected card values (including unrelated ESO telemetry) are not parsed.
- * No duplicate-key coalescing can hide a selected-card conflict. */
-static mef_status read_hdu(FILE *stream, const mef_layout_options *options,
-    size_t *header_bytes, mef_hdu_layout *hdu, size_t *payload)
-{
+/* qfits owns file framing/discovery and stored cards. This layer selects and
+ * validates metadata, without interpreting FITS blocks or seeking over payloads. */
+typedef struct {
     const char *keys[22];
-    char values[22][MEF_LAYOUT_TEXT], block[2880], line[81], *key, *value, extension[81];
+    char values[22][MEF_LAYOUT_TEXT];
     unsigned long seen;
-    size_t i, j, end, bytes, pixels, pcount, gcount;
-    int done, index;
+} selected_header;
+static int select_card(const char *key, const char *value, const char *line, void *user)
+{
+    selected_header *selected;
+    size_t j;
+    (void)line; selected = user;
+    for (j = 0; j < 22; ++j) if (selected->keys[j] != NULL && !strcmp(key, selected->keys[j])) {
+        if (selected->seen & (1UL << j)) return -1;
+        selected->seen |= 1UL << j;
+        if (!fixed(selected->values[j], value) || !text(value)) return -1;
+        break;
+    }
+    return 0;
+}
+static mef_status inspect_header(const qfits_header *header, const mef_layout_options *options,
+    mef_hdu_layout *hdu, size_t *payload)
+{
+    selected_header selected;
+    const char **keys;
+    char (*values)[MEF_LAYOUT_TEXT], extension[81];
+    unsigned long seen;
+    size_t i, j, bytes, pixels, pcount, gcount;
     long n;
+    memset(&selected, 0, sizeof(selected)); keys = selected.keys; values = selected.values;
     keys[0] = "SIMPLE"; keys[1] = "XTENSION"; keys[2] = "BITPIX"; keys[3] = "NAXIS";
     keys[4] = "NAXIS1"; keys[5] = "NAXIS2"; keys[6] = "NAXIS3";
     keys[7] = "PCOUNT"; keys[8] = "GCOUNT"; keys[9] = "GROUPS";
@@ -138,30 +156,8 @@ static mef_status read_hdu(FILE *stream, const mef_layout_options *options,
         if (!text(keys[i]) || strlen(keys[i]) > 80) return MEF_ERR_INPUT;
         for (j = 0; j < i; ++j) if (keys[j] != NULL && !strcmp(keys[i], keys[j])) return MEF_ERR_INPUT;
     }
-    memset(values, 0, sizeof(values)); seen = 0; done = 0;
-    while (!done) {
-        if (*header_bytes > options->max_header_bytes ||
-            options->max_header_bytes - *header_bytes < sizeof(block)) return MEF_ERR_INPUT;
-        if (fread(block, 1, sizeof(block), stream) != sizeof(block)) return MEF_ERR_IO;
-        *header_bytes += sizeof(block);
-        for (i = 0; i < sizeof(block); i += 80) {
-            if (!memcmp(block + i, "END     ", 8)) {
-                for (end = i + 8; end < sizeof(block); ++end) if (block[end] != ' ') return MEF_ERR_INPUT;
-                done = 1; break;
-            }
-            memcpy(line, block + i, 80); line[80] = '\0';
-            if (memchr(line, '\0', 80) != NULL) return MEF_ERR_INPUT;
-            key = qfits_getkey(line);
-            if (key == NULL) continue;
-            index = -1;
-            for (j = 0; j < 22; ++j) if (keys[j] != NULL && !strcmp(key, keys[j])) { index = (int)j; break; }
-            if (index < 0) continue;
-            if (seen & (1UL << index)) return MEF_ERR_INPUT;
-            seen |= 1UL << index;
-            value = qfits_getvalue(line);
-            if (!fixed(values[index], value) || !text(value)) return MEF_ERR_INPUT;
-        }
-    }
+    if (qfits_header_visit(header, select_card, &selected) != 0) return MEF_ERR_INPUT;
+    seen = selected.seen;
     if (hdu->hdu_index == 0) {
         if (strcmp(values[0], "T") || (seen & (1UL << 1))) return MEF_ERR_INPUT;
         hdu->kind = MEF_HDU_IMAGE;
@@ -225,12 +221,12 @@ mef_status mef_layout_read(const char *path, const mef_layout_options *options,
     mef_layout_options defaults;
     mef_layout *layout;
     mef_allocator a;
-    FILE *stream;
+    qfits_header *header;
     struct stat after;
     mef_hdu_layout hdu, *grown;
     mef_status status;
-    size_t bytes, payload, capacity;
-    off_t position;
+    size_t payload, capacity;
+    int nextensions, index, header_start, header_size, data_start, data_size;
     if (out == NULL || *out != NULL || (error != NULL && *error != NULL)) return MEF_ERR_INPUT;
     if (!allocator_for(allocator, &a)) return MEF_ERR_INPUT;
     if (path == NULL || path[0] != '/') return failure(MEF_ERR_INPUT, "Layout requires an absolute input path", &a, error);
@@ -241,28 +237,33 @@ mef_status mef_layout_read(const char *path, const mef_layout_options *options,
     layout = a.allocate(a.user, sizeof(*layout));
     if (layout == NULL) return failure(MEF_ERR_MEMORY, "Cannot allocate layout", &a, error);
     memset(layout, 0, sizeof(*layout)); layout->allocator = a;
-    layout->path = copy_path(&a, path); stream = NULL; status = MEF_ERR_MEMORY;
+    layout->path = copy_path(&a, path); header = NULL; status = MEF_ERR_MEMORY;
     if (layout->path == NULL) goto failed;
     status = MEF_ERR_IO;
-    /* #185: reject FIFOs/devices before a potentially blocking fopen. Files
-     * remain caller-immutable; also verify the opened regular-file identity. */
-    if (stat(path, &after) != 0 || !S_ISREG(after.st_mode) || after.st_size <= 0) goto failed;
-    stream = fopen(path, "rb");
-    if (stream == NULL || fstat(fileno(stream), &layout->identity) != 0 ||
-        !S_ISREG(layout->identity.st_mode) || !same_identity(&after, &layout->identity)) goto failed;
-    bytes = 0;
-    for (;;) {
-        position = ftello(stream);
-        if (position < 0) { status = MEF_ERR_IO; goto failed; }
-        if (position == layout->identity.st_size) break;
-        if (position > layout->identity.st_size || layout->count >= options->max_hdus) { status = MEF_ERR_INPUT; goto failed; }
-        memset(&hdu, 0, sizeof(hdu)); hdu.hdu_index = (int)layout->count;
-        status = read_hdu(stream, options, &bytes, &hdu, &payload);
+    /* #185: reject nonregular inputs before the dependency opens them. */
+    if (stat(path, &layout->identity) != 0 || !S_ISREG(layout->identity.st_mode) ||
+        layout->identity.st_size <= 0) goto failed;
+    if (layout->identity.st_size > INT_MAX) { status = MEF_ERR_UNSUPPORTED; goto failed; }
+    /* Additive checked entry point shares the existing qfits cache walker.
+     * It enforces HDU/header budgets before publishing an offset catalogue. */
+    status = MEF_ERR_INPUT;
+    if (qfits_cache_prime_bounded(layout->path, options->max_hdus, options->max_header_bytes) != 0) goto failed;
+    nextensions = qfits_query_n_ext(layout->path);
+    if (nextensions < 0 || (size_t)nextensions >= options->max_hdus) goto failed;
+    for (index = 0; index <= nextensions; ++index) {
+        if (qfits_get_hdrinfo(layout->path, index, &header_start, &header_size) != 0 ||
+            qfits_get_datinfo(layout->path, index, &data_start, &data_size) != 0 ||
+            header_start < 0 || header_size < 2880 || data_start < 0 || data_size < 0) goto failed;
+        header = qfits_header_readext(layout->path, index);
+        if (header == NULL) { status = MEF_ERR_IO; goto failed; }
+        memset(&hdu, 0, sizeof(hdu)); hdu.hdu_index = index;
+        status = inspect_header(header, options, &hdu, &payload);
+        qfits_header_destroy(header); header = NULL;
         if (status != MEF_OK) goto failed;
-        position = ftello(stream);
-        if (position < 0 || position > layout->identity.st_size ||
-            payload > (size_t)(layout->identity.st_size - position)) { status = MEF_ERR_IO; goto failed; }
-        if (fseeko(stream, (off_t)payload, SEEK_CUR) != 0) { status = MEF_ERR_IO; goto failed; }
+        /* Validate the dependency's reported storage span against metadata. */
+        if (payload != (size_t)data_size ||
+            data_start > layout->identity.st_size ||
+            payload > (size_t)(layout->identity.st_size - data_start)) { status = MEF_ERR_IO; goto failed; }
         if (layout->count == layout->capacity) {
             capacity = layout->capacity ? layout->capacity * 2 : 4;
             if (capacity > options->max_hdus) capacity = options->max_hdus;
@@ -273,11 +274,10 @@ mef_status mef_layout_read(const char *path, const mef_layout_options *options,
         }
         layout->hdus[layout->count++] = hdu;
     }
-    if (!layout->count || fstat(fileno(stream), &after) != 0 || !same_identity(&layout->identity, &after)) { status = MEF_ERR_IO; goto failed; }
-    if (fclose(stream) != 0) { stream = NULL; status = MEF_ERR_IO; goto failed; }
+    if (!layout->count || stat(path, &after) != 0 || !same_identity(&layout->identity, &after)) { status = MEF_ERR_IO; goto failed; }
     *out = layout; return MEF_OK;
 failed:
-    if (stream != NULL) (void)fclose(stream);
+    if (header != NULL) qfits_header_destroy(header);
     mef_layout_destroy(layout);
     return failure(status, "Cannot discover bounded FITS layout (required card, limit, I/O or allocation)", &a, error);
 }

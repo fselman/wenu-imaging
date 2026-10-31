@@ -1,5 +1,12 @@
 # M4 first native layout increment — 31 October 2026
 
+Current candidate: owner accepted the [qfits reuse recommendation](m4-qfits-reader-adapter-2026-10-31.md).
+M4's separate framing scanner has been removed; it consumes existing qfits headers
+and checked shared discovery. Agent C90/C17 four-contract gates and scoped sanitizer
+checks pass. New target gates remain pending; earlier two-contract receipts apply
+to the earlier implementation. The explicit int-offset file limit is documented.
+Earlier reader-design hold/source descriptions below are historical, not current.
+
 Current hold: the owner challenged the new header reader. The
 [reuse review](m4-header-reader-reuse-review-2026-10-31.md) recommends existing
 qfits/Eclipse I/O with M4 metadata/maps above it, and identifies dependency gaps

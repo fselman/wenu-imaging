@@ -1,0 +1,26 @@
+Internal ctest changing into directory: /workspace/scratch/104db3d59fe9/m4-reuse-c17
+Test project /workspace/scratch/104db3d59fe9/m4-reuse-c17
+    Start  9: native_qfits_discovery
+1/4 Test  #9: native_qfits_discovery ...........   Passed    1.14 sec
+    Start 10: native_layout
+2/4 Test #10: native_layout ....................   Passed    0.84 sec
+    Start 14: native_bias_service
+3/4 Test #14: native_bias_service ..............   Passed    0.92 sec
+    Start 25: native_explicit_paths
+4/4 Test #25: native_explicit_paths ............   Passed   22.69 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Label Time Summary:
+bias           =   0.92 sec*proc (1 test)
+bounds         =   1.14 sec*proc (1 test)
+detector       =   0.84 sec*proc (1 test)
+integration    =  22.69 sec*proc (1 test)
+layout         =   1.98 sec*proc (2 tests)
+native         =  25.59 sec*proc (4 tests)
+ownership      =   1.75 sec*proc (2 tests)
+paths          =  22.69 sec*proc (1 test)
+provenance     =  22.69 sec*proc (1 test)
+qfits          =   1.14 sec*proc (1 test)
+
+Total Test time (real) =  25.59 sec

@@ -28,6 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <limits.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "static_sz.h"
@@ -54,15 +56,9 @@
  */
 #define QFITS_CACHESZ		128
 
-/**
- * This static definition declares the maximum possible number of
- * extensions in a FITS file. It only has effects in the qfits_cache_add
- * function where a table is statically allocated for efficiency reasons.
- * If the number of extensions grows over this limit, change the value of
- * this constant. If the number of extensions is a priori unknown but can
- * grow much larger than a predictable value, the best solution is to
- * implement a dynamic memory allocation in qfits_cache_add.
- */
+/* Legacy query discovery admits at most this many total HDUs. The bounded
+ * entry point uses caller-sized temporary storage and checks before every
+ * offset write; this default is not a fixed-array memory-safety assumption. */
 
 #define QFITS_MAX_EXTS			128
 
@@ -106,6 +102,7 @@ static int qfits_cache_init = 0 ;
 static void qfits_cache_activate(void);
 static int qfits_is_cached(char * filename);
 static int qfits_cache_add(char * name);
+static int qfits_cache_scan(char *, size_t, size_t);
 
 /*-----------------------------------------------------------------------------
   							Function codes
@@ -402,11 +399,34 @@ int	qfits_query(char * filename, int what)
     and extension data start.
  */
 /*----------------------------------------------------------------------------*/
-static int qfits_cache_add(char * filename)
+/* Checked value conversion for the shared existing cache walker (#194/#195).
+ * The ordinary legacy APIs keep their signatures and cached lookup path. */
+static int qfits_cache_integer(const char *value, int *out)
 {
-	FILE    *	in ;
-	int			off_hdr[QFITS_MAX_EXTS];
-	int			off_dat[QFITS_MAX_EXTS];
+    char *end;
+    long n;
+    if (value == NULL) return 0;
+    errno = 0; n = strtol(value, &end, 10);
+    if (end == value || errno || n < INT_MIN || n > INT_MAX) return 0;
+    while (*end == ' ') ++end;
+    if (*end != '\0') return 0;
+    *out = (int)n; return 1;
+}
+static int qfits_cache_add(char *filename)
+{
+    return qfits_cache_scan(filename, QFITS_MAX_EXTS, 0);
+}
+int qfits_cache_prime_bounded(char *filename, size_t max_hdus, size_t max_header_bytes)
+{
+    if (max_header_bytes < FITS_BLOCK_SIZE) return -1;
+    return qfits_cache_scan(filename, max_hdus, max_header_bytes) < 0 ? -1 : 0;
+}
+
+static int qfits_cache_scan(char * filename, size_t max_hdus, size_t max_header_bytes)
+{
+	FILE    *	in = NULL ;
+	int *off_hdr = NULL;
+	int *off_dat = NULL;
 	char		buf[FITS_BLOCK_SIZE] ;
 	char	*	buf_c ;
 	int			n_blocks ;
@@ -417,6 +437,9 @@ static int qfits_cache_add(char * filename)
 	int			last ;
 	int			end_of_file ;
 	int			data_bytes ;
+    int factor;
+    size_t header_bytes = 0;
+    qfits_cache_cell pending;
 	int			skip_blocks ;
 	struct stat sta ;
     int         seeked ;
@@ -424,6 +447,9 @@ static int qfits_cache_add(char * filename)
 
 	qfits_cache_cell * qc ;
 
+    if (filename == NULL || max_hdus == 0 || max_hdus > INT_MAX ||
+        max_hdus > (size_t)-1 / sizeof(int)) return -1;
+    memset(&pending, 0, sizeof(pending)); qc = &pending;
     /* Initialize cache if not done yet (done only once) */
 	if (qfits_cache_init==0) {
         qfits_cache_init++ ;
@@ -435,15 +461,21 @@ static int qfits_cache_add(char * filename)
 		qdebug(
 			printf("qfits: cannot stat file %s\n", filename);
 		);
-		return -1 ;
+		goto failed;
 	}
 
+    /* Existing public offset APIs are int-valued: reject before arithmetic. */
+    if (!S_ISREG(sta.st_mode) || sta.st_size <= 0 || sta.st_size > INT_MAX) goto failed;
+    if (max_header_bytes && sta.st_size % FITS_BLOCK_SIZE) goto failed;
+    off_hdr = malloc(max_hdus * sizeof(*off_hdr));
+    off_dat = malloc(max_hdus * sizeof(*off_dat));
+    if (off_hdr == NULL || off_dat == NULL) goto failed;
 	/* Open input file */
 	if ((in=fopen(filename, "r"))==NULL) {
 		qdebug(
 			printf("qfits: cannot open file %s\n", filename);
 		);
-		return -1 ;
+		goto failed;
 	}
 
 	/* Read first block in */
@@ -451,8 +483,8 @@ static int qfits_cache_add(char * filename)
 		qdebug(
 			printf("qfits: error reading first block from %s\n", filename);
 		);
-		fclose(in);
-		return -1 ;
+		if (in != NULL) { fclose(in); in = NULL; }
+		goto failed;
 	}
 	/* Identify FITS magic number */
 	if (buf[0]!='S' ||
@@ -467,8 +499,8 @@ static int qfits_cache_add(char * filename)
 		qdebug(
 			printf("qfits: file %s is not FITS\n", filename);
 		);
-		fclose(in);
-		return -1 ;
+		if (in != NULL) { fclose(in); in = NULL; }
+		goto failed;
 	}
 
 	/*
@@ -490,19 +522,27 @@ static int qfits_cache_add(char * filename)
 
 	/* Start looking for END card */
 	while (found_it==0) {
+        if (max_header_bytes && (header_bytes > max_header_bytes ||
+            max_header_bytes - header_bytes < FITS_BLOCK_SIZE)) goto failed;
+        header_bytes += FITS_BLOCK_SIZE;
 		/* Read one FITS block */
 		if (fread(buf, 1, FITS_BLOCK_SIZE, in)!=FITS_BLOCK_SIZE) {
 			qdebug(
 				printf("qfits: error reading file %s\n", filename);
 			);
-			fclose(in);
-			return -1 ;
+			if (in != NULL) { fclose(in); in = NULL; }
+			goto failed;
 		}
 		n_blocks ++ ;
 		/* Browse through current block */
 		buf_c = buf ;
 		for (i=0 ; i<FITS_NCARDS ; i++) {
 
+            if (max_header_bytes && (!memcmp(buf_c, "PCOUNT  ", 8) ||
+                !memcmp(buf_c, "GCOUNT  ", 8))) {
+                if (!qfits_cache_integer(qfits_getvalue(buf_c), &factor) ||
+                    factor != (!memcmp(buf_c, "GCOUNT  ", 8) ? 1 : 0)) goto failed;
+            }
 			/* Look for BITPIX keyword */
 			if (buf_c[0]=='B' &&
 				buf_c[1]=='I' &&
@@ -512,7 +552,11 @@ static int qfits_cache_add(char * filename)
 				buf_c[5]=='X' &&
 				buf_c[6]==' ') {
 				read_val = qfits_getvalue(buf_c);
-				data_bytes *= (int)atoi(read_val) / 8 ;
+				if (!qfits_cache_integer(read_val, &factor) ||
+                    (factor != 8 && factor != 16 && factor != 32 && factor != 64 && factor != -32 && factor != -64)) goto failed;
+                factor = abs(factor) / 8;
+                if (data_bytes > INT_MAX / factor) goto failed;
+                data_bytes *= factor ;
 				if (data_bytes<0) data_bytes *= -1 ;
 			} else
 			/* Look for NAXIS keyword */
@@ -525,11 +569,13 @@ static int qfits_cache_add(char * filename)
 				if (buf_c[5]==' ') {
 					/* NAXIS keyword */
 					read_val = qfits_getvalue(buf_c);
-					naxis = (int)atoi(read_val);
+					if (!qfits_cache_integer(read_val, &naxis) || naxis < 0) goto failed;
 				} else {
 					/* NAXIS?? keyword (axis size) */
 					read_val = qfits_getvalue(buf_c);
-					data_bytes *= (int)atoi(read_val);
+					if (!qfits_cache_integer(read_val, &factor) || factor < 0 ||
+                    (factor && data_bytes > INT_MAX / factor)) goto failed;
+                data_bytes *= factor;
 				}
 			} else
 			/* Look for EXTEND keyword */
@@ -542,6 +588,7 @@ static int qfits_cache_add(char * filename)
 				buf_c[6]==' ') {
 				/* The EXTEND keyword is present: might be some extensions */
 				read_val = qfits_getvalue(buf_c);
+				if (read_val == NULL) goto failed;
 				if (read_val[0]=='T' || read_val[0]=='1') {
 					xtend=1 ;
 				}
@@ -560,25 +607,6 @@ static int qfits_cache_add(char * filename)
 	/*
 	 * Prepare qfits cache for addition of a new entry
 	 */
-	qfits_cache_last++ ;
-    /* Rotate buffer if needed */
-    if (qfits_cache_last >= QFITS_CACHESZ) {
-        qfits_cache_last = 0 ;
-    }
-	/* Alias to current pointer in cache for easier reading */
-	qc = &(qfits_cache[qfits_cache_last]);
-
-    /* Clean cache cell if needed */
-    if (qc->name!=NULL) {
-        free(qc->name) ;
-        qc->name = NULL ;
-        free(qc->ohdr);
-        free(qc->data);
-        free(qc->shdr);
-        free(qc->dsiz);
-        qfits_cache_entries -- ;
-    }
-	
 	/* Initialize cache cell */
 	qc->exts=0 ;
 	qc->name = strdup(filename);
@@ -611,14 +639,16 @@ static int qfits_cache_add(char * filename)
                 if ((data_bytes % FITS_BLOCK_SIZE)!=0) {
                     skip_blocks ++ ;
                 }
+                if (skip_blocks > INT_MAX / FITS_BLOCK_SIZE ||
+                    n_blocks > INT_MAX / FITS_BLOCK_SIZE - skip_blocks) goto failed;
                 seeked = fseek(in, skip_blocks*FITS_BLOCK_SIZE, SEEK_CUR);
                 if (seeked<0) {
                     qdebug(
                         printf("qfits: error seeking file %s\n", filename);
                     );
-                    free(qc->name);
-                    fclose(in);
-                    return -1 ;
+                    free(qc->name); qc->name = NULL;
+                    if (in != NULL) { fclose(in); in = NULL; }
+                    goto failed;
                 }
                 /* Increase counter of current seen blocks. */
                 n_blocks += skip_blocks ;
@@ -627,6 +657,9 @@ static int qfits_cache_add(char * filename)
             /* Look for extension start */
 			found_it=0 ;
 			while ((found_it==0) && (end_of_file==0)) {
+                if (ftell(in) == sta.st_size) { end_of_file = 1; break; }
+                if (max_header_bytes && (header_bytes > max_header_bytes ||
+                    max_header_bytes - header_bytes < FITS_BLOCK_SIZE)) goto failed;
 				if (fread(buf,1,FITS_BLOCK_SIZE,in)!=FITS_BLOCK_SIZE) {
 					/* Reached end of file */
 					end_of_file=1 ;
@@ -645,8 +678,10 @@ static int qfits_cache_add(char * filename)
 					buf[8]=='=') {
 					/* Got an extension */
 					found_it=1 ;
+                    if ((size_t)last >= max_hdus) goto failed;
 					off_hdr[last] = n_blocks-1 ;
 				}
+                if (max_header_bytes && !found_it) goto failed;
 			}
             if (end_of_file) break ;
 
@@ -659,27 +694,31 @@ static int qfits_cache_add(char * filename)
 				qdebug(
 					printf("qfits: error fseeking file backwards\n");
 				) ;
-                free(qc->name);
-				fclose(in);
-				return -1 ;
+                free(qc->name); qc->name = NULL;
+				if (in != NULL) { fclose(in); in = NULL; }
+				goto failed;
 			}
 			n_blocks -- ;
 			found_it=0 ;
             data_bytes = 1 ;
             naxis = 0 ;
 			while ((found_it==0) && (end_of_file==0)) {
+                if (max_header_bytes && (header_bytes > max_header_bytes ||
+                    max_header_bytes - header_bytes < FITS_BLOCK_SIZE)) goto failed;
+                header_bytes += FITS_BLOCK_SIZE;
 				if (fread(buf,1,FITS_BLOCK_SIZE,in)!=FITS_BLOCK_SIZE) {
-					qdebug(
-					printf("qfits: XTENSION without END in %s\n", filename);
-					);
-					end_of_file=1;
-					break ;
+					goto failed;
 				}
 				n_blocks++ ;
 
 				/* Browse current block */
 				buf_c = buf ;
 				for (i=0 ; i<FITS_NCARDS ; i++) {
+            if (max_header_bytes && (!memcmp(buf_c, "PCOUNT  ", 8) ||
+                !memcmp(buf_c, "GCOUNT  ", 8))) {
+                if (!qfits_cache_integer(qfits_getvalue(buf_c), &factor) ||
+                    factor != (!memcmp(buf_c, "GCOUNT  ", 8) ? 1 : 0)) goto failed;
+            }
                     /* Look for BITPIX keyword */
                     if (buf_c[0]=='B' &&
                         buf_c[1]=='I' &&
@@ -689,7 +728,11 @@ static int qfits_cache_add(char * filename)
                         buf_c[5]=='X' &&
                         buf_c[6]==' ') {
                         read_val = qfits_getvalue(buf_c);
-                        data_bytes *= (int)atoi(read_val) / 8 ;
+                        if (!qfits_cache_integer(read_val, &factor) ||
+                    (factor != 8 && factor != 16 && factor != 32 && factor != 64 && factor != -32 && factor != -64)) goto failed;
+                factor = abs(factor) / 8;
+                if (data_bytes > INT_MAX / factor) goto failed;
+                data_bytes *= factor ;
                         if (data_bytes<0) data_bytes *= -1 ;
                     } else
                     /* Look for NAXIS keyword */
@@ -702,11 +745,13 @@ static int qfits_cache_add(char * filename)
                         if (buf_c[5]==' ') {
                             /* NAXIS keyword */
                             read_val = qfits_getvalue(buf_c);
-                            naxis = (int)atoi(read_val);
+                            if (!qfits_cache_integer(read_val, &naxis) || naxis < 0) goto failed;
                         } else {
                             /* NAXIS?? keyword (axis size) */
                             read_val = qfits_getvalue(buf_c);
-                            data_bytes *= (int)atoi(read_val);
+                            if (!qfits_cache_integer(read_val, &factor) || factor < 0 ||
+                    (factor && data_bytes > INT_MAX / factor)) goto failed;
+                data_bytes *= factor;
                         }
                     } else
                     /* Look for END keyword */
@@ -729,13 +774,15 @@ static int qfits_cache_add(char * filename)
 	}
 
 	/* Close file */
-	fclose(in);
+	if (in != NULL) { fclose(in); in = NULL; }
 
 	/* Allocate buffers in cache */
 	qc->ohdr = malloc(last * sizeof(int));
 	qc->data = malloc(last * sizeof(int));
 	qc->shdr = malloc(last * sizeof(int));
 	qc->dsiz = malloc(last * sizeof(int));
+    if (qc->name == NULL || qc->ohdr == NULL || qc->data == NULL ||
+        qc->shdr == NULL || qc->dsiz == NULL) goto failed;
 	/* Store retrieved pointers in the cache */
 	for (i=0 ; i<last ; i++) {
 		/* Offsets to start */
@@ -755,6 +802,21 @@ static int qfits_cache_add(char * filename)
 	qc->mtime = sta.st_mtime ;
 	qc->filesize  = sta.st_size ;
 	qc->ctime = sta.st_ctime ;
+    /* Bounded priming replaces only matching entries after a successful scan. */
+    for (i = 0; i < QFITS_CACHESZ; ++i) if (qfits_cache[i].name != NULL &&
+        !strcmp(qfits_cache[i].name, filename)) {
+        free(qfits_cache[i].name); free(qfits_cache[i].ohdr); free(qfits_cache[i].data);
+        free(qfits_cache[i].shdr); free(qfits_cache[i].dsiz);
+        memset(qfits_cache + i, 0, sizeof(qfits_cache[i])); --qfits_cache_entries;
+    }
+    qfits_cache_last = (qfits_cache_last + 1) % QFITS_CACHESZ;
+    if (qfits_cache[qfits_cache_last].name != NULL) {
+        free(qfits_cache[qfits_cache_last].name); free(qfits_cache[qfits_cache_last].ohdr);
+        free(qfits_cache[qfits_cache_last].data); free(qfits_cache[qfits_cache_last].shdr);
+        free(qfits_cache[qfits_cache_last].dsiz); --qfits_cache_entries;
+    }
+    qfits_cache[qfits_cache_last] = pending;
+    free(off_hdr); free(off_dat);
     qfits_cache_entries ++ ;
 
     qdebug(
@@ -762,6 +824,12 @@ static int qfits_cache_add(char * filename)
     );
 	/* Return index of the added file in the cache */
 	return qfits_cache_last ;
+failed:
+    if (in != NULL) fclose(in);
+    free(off_hdr); free(off_dat);
+    free(pending.name); free(pending.ohdr); free(pending.data);
+    free(pending.shdr); free(pending.dsiz);
+    return -1;
 }
 
 /* vim: set ts=4 et sw=4 tw=75 */

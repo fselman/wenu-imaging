@@ -57,6 +57,9 @@
  */
 /*----------------------------------------------------------------------------*/
 void qfits_cache_purge(void);
+/* Checked discovery using the existing cache walker. Counts include primary.
+ * Byte offsets remain int-valued; oversized files are rejected, not truncated. */
+int qfits_cache_prime_bounded(char *, size_t max_hdus, size_t max_header_bytes);
 /* </dox> */
 
 /*----------------------------------------------------------------------------*/

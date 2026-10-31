@@ -70,6 +70,11 @@ typedef struct qfits_header {
  */
 /*----------------------------------------------------------------------------*/
 qfits_header * qfits_header_new(void) ;
+/* Borrowed card views, in original order, including duplicates. Nonzero visitor
+ * result stops iteration; no mutation/serialization is performed. */
+int qfits_header_visit(const qfits_header *,
+    int (*visitor)(const char *, const char *, const char *, void *), void *);
+
 
 /*----------------------------------------------------------------------------*/
 /**

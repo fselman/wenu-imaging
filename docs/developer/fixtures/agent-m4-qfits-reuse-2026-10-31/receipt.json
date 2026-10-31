@@ -1,0 +1,57 @@
+{
+  "baseline": "45cb855ff96b6c1d5deec2e86fcb37f6ba2f3854",
+  "agent": "Linux GCC13.3, existing CMake/private Python",
+  "source_sha256": {
+    "mefpp2/CMakeLists.txt": "3c185f9237715b571f4c8631f7297260949962e5b544d66103fda85c93fde4b2",
+    "mefpp2/ins/mef/common/mef_layout.c": "a08ed297a69ec7c18ac109e0c61e5b1b9dbd9849804ec641426ac941a88944b5",
+    "mefpp2/ins/mef/common/mef_layout.h": "abaa2b81616a80b223270599a6b5bba1fc40a99072c2443bcf0a51a70d4279be",
+    "mefpp2/qfits5/include/qfits.h": "23f5662bdeb981e828d3a3e3898e810aa438837bf1fcb9b54cab5605bcdfcbc9",
+    "mefpp2/qfits5/src/cache.c": "770a484aaca44d1410a5d6ddd9b64699174e4e496ec0bb6b556ee9f2a382fca3",
+    "mefpp2/qfits5/src/cache.h": "986b882c68676921e74dd8a3000aa8e9cecea06a11cb4f67dbeb6f2b2216642f",
+    "mefpp2/qfits5/src/fits_h.c": "31865a9603aa20c347ae661963edaa7352bb9d47525ecd2f572d43f1382ef25c",
+    "mefpp2/qfits5/src/fits_h.h": "11656c06524d62ccc854edaa50faec4f95cd048316b71701c4e5d23db9d1a801",
+    "mefpp2/tests/qualify_native_layout.py": "41e3ccfd3781f67ac26100512341e81b6bd9dca0de3b1f08f92fe86dbe7188ab",
+    "mefpp2/tests/qfits_discovery_probe.c": "2505e8c4d1c35f9f11eca19efc619258469fd901f27fb11539bc3dfc36f5c5b7",
+    "mefpp2/tests/qfits_discovery_contract.py": "80e63afdfa2e1cfb68a0f146e160929291322cfa5e1a09275d78328b94dea9c5"
+  },
+  "c90": "4/4 passed,23.91s",
+  "c17": "4/4 passed,25.59s",
+  "asan_ubsan": {
+    "discovery": "passed5.37s in initial launch",
+    "layout_bias": "2/2 passed5.39s after observing build completion",
+    "leaks": "disabled; legacy-cache limitation",
+    "setup_issue": 196,
+    "initial_launch": "layout/bias executables missing; logs retained, no finding in those tests"
+  },
+  "before_fix": {
+    "high_count": "expected86, array index128 out of bounds",
+    "overflow": "expected86, signed multiplication overflow",
+    "library": "/workspace/scratch/104db3d59fe9/m4-layout-asan/mefpp2/libqfits.a",
+    "library_sha256": "67b9deb4fa1f11f0c4dd8809d6b1c883abbac7840f78cfbb1918b4861cca4fa0"
+  },
+  "profile_limit": "whole file <=INT_MAX bytes; bounded raw-image profile excludes heaps/groups",
+  "limits": [
+    "agent only; selected Mac/Chapman pending",
+    "no observations or install",
+    "no performance acceptance",
+    "final header/cache comment edits only after runtime checks; no behavior change"
+  ],
+  "logs_sha256": {
+    "asan-premature-launch.log": "eed83f2661fbb63df8109e2fc69719821fb018386ea64ddb4c373f9e1aabfdba",
+    "c90-configure.log": "c43310854f2be045ebd76edce7b82d42ce2969a730cd2c43c3fc5f6d7c5b54c1",
+    "c90-reconfigure.log": "5900ebe579c8ed29754d26746595de5d09d3a70eb3be9d64f05eaaad69e700f6",
+    "c90-tests.log": "14e32115a136bd6ddac84973019ea397007f7a4cae4c875f58acd70bb90bc62f",
+    "c17-build.log": "2529914b37fc5c70566547351fa9b91eeced07c4c4a832a6468bc2c6c3d0f36d",
+    "before-high-count.log": "1e5bf5fadbc0d59aa09a3ce223031235e216fc17a683a46f2279b8aea31c83d8",
+    "asan-configure.log": "b824dc290cbb4a6cb30663406b9b294c6110ec51de1c6fe87ada274f2c3816be",
+    "asan-completed-build-tests.log": "cbc805a6f6a5d4741cbf2c3990f1d0e31b66c2748f6d0bf525ba03c28f216688",
+    "initial-layout-bias.log": "cfa1f5fff5ac3d3484c9c4a8ab8fbc03b1e50347cadd313f81a89df5335e2de9",
+    "c17-configure.log": "a001e4d5d83c80c1a4d90e847b6cd565d92f44cdd7be132958c7f0e1ad832b0b",
+    "c90-new-target-before-reconfigure.log": "b3024007b8c8727eb5e8878e6c89db24b4a8d145f685f009f5e19e3caf4c2088",
+    "c17-tests.log": "2ab786ba6fa9b32fe33def92acf455c58e4aafb05a33799c19333cf4738c56b8",
+    "asan-build.log": "fc564eb9348f85c76c27a7026da5866feec791c712f77e55e69465029006016b",
+    "before-overflow.log": "68a33db3c7017f4406fe388a07d05d7221a221eb53f2bf00f88b47fa2a53d868",
+    "c90-build.log": "3aca83978a0f1393452a4865405c7e37ebfd1f0a31840fab5441bd29b2bb5985"
+  },
+  "log_note": "Repository logs have trailing whitespace normalized; original full private run logs retained."
+}

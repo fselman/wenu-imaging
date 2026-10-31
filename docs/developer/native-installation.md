@@ -1,5 +1,12 @@
 # Developer guide: native mefpp build, installation and qualification
 
+31 October unmerged [M4 qfits reuse candidate](m4-qfits-reader-adapter-2026-10-31.md):
+existing FITS I/O is reused with checked discovery and unchanged numerical services.
+Agent C90/C17 focused gates pass; selected Mac/Chapman verification is pending.
+The candidate explicitly rejects whole files above INT_MAX bytes (under 2 GiB);
+this is not a large-file migration or installed activation. Private qualifier uses
+four synthetic contracts per lane and the canonical selected tools. No reinstall.
+
 30 October paired native safety receipt: selected-tool Intel Mac and representative
 shared Chapman4 private optimized C90 builds and all four contracts passed 4/4
 at 87ed266a109741c4998bfc8c978d07c9306f0091 (32.74 s / 20.77 s). Protected

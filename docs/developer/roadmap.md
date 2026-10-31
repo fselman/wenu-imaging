@@ -1,5 +1,17 @@
 # wenu-imaging roadmap
 
+31 October owner accepts qfits/Eclipse reuse. The [M4 adapter](m4-qfits-reader-adapter-2026-10-31.md)
+removes M4 FITS block/seek parsing, reuses qfits headers/offsets and keeps detector
+maps/validation and the Eclipse plane loader. Narrow shared-cache bounds fixes
+#194/#195 and single-pass card views preserve legacy APIs. Files above INT_MAX
+bytes (just under 2 GiB total) fail explicitly; no 64-bit offset redesign is claimed.
+Agent C90/C17 discovery/layout/bias/native-path contracts pass 4/4; scoped sanitizer
+discovery plus layout/bias pass, with initial premature-launch log retained (#196,
+closed). Old library reproduces both bounds defects with expected diagnostic86.
+New four-contract Mac then representative Chapman gates are pending. Use recorded
+tools directly; no original observations, installation, performance/M4 closure or
+M5 extraction. Earlier review hold applies to the superseded scanner design.
+
 31 October owner challenges the additional native FITS reader and instructs
 [existing-reader reuse review](m4-header-reader-reuse-review-2026-10-31.md). qfits already supports primary/extension
 headers, order/duplicate preservation and HDU discovery; prefer M4 metadata/maps

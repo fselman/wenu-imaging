@@ -747,6 +747,16 @@ void qfits_header_destroy(qfits_header * hdr)
   Returns NULL if no matching key is found or no value is attached.
  */
 /*----------------------------------------------------------------------------*/
+int qfits_header_visit(const qfits_header *header,
+    int (*visitor)(const char *, const char *, const char *, void *), void *user)
+{
+    const keytuple *card;
+    if (header == NULL || visitor == NULL) return -1;
+    for (card = (const keytuple *)header->first; card != NULL; card = card->next)
+        if (visitor(card->key, card->val, card->lin, user) != 0) return -1;
+    return 0;
+}
+
 char * qfits_header_getstr(qfits_header * hdr, const char * key)
 {
 	keytuple    *   k ;

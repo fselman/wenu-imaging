@@ -69,7 +69,11 @@ typedef struct {
 /* Bounded header-only catalogue. Uses existing qfits card parsing; no arrays,
  * writes, association or hardware-ID inference. Currently Mac/Linux absolute
  * paths and regular immutable files; source identity is checked before/after.
- * Default limits: 4096 HDUs, 16 MiB header bytes; NAXIS<=3, no random groups.
+ * Existing qfits owns headers/offsets; no second FITS framing parser here.
+ * Limits: 4096 HDUs, 16 MiB header bytes; NAXIS<=3, no random groups.
+ * Existing int offset APIs limit files to INT_MAX bytes; larger files fail
+ * explicitly. The bounded raw-image profile excludes nonzero PCOUNT/heaps
+ * and GCOUNT other than one. No general large-file/table migration is claimed.
  * Caller freezes files during read/bind/load; this is not a snapshot lock.
  * Owners use the selected allocator. Error starts NULL; occupied outputs/error
  * are rejected intact. Status remains authoritative if error allocation fails.
