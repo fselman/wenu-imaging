@@ -1,5 +1,7 @@
 # Format probe declaration correction — 30 October 2026
 
+Subsequent status: [paired Mac/Chapman checks](native-safety-paired-results-2026-10-30.md) passed 4/4 each at 87ed266a109741c4998bfc8c978d07c9306f0091; protected files/checkouts stayed unchanged. This original receipt retains its historical pending-target entries and failed/corrected evidence.
+
 Actual selected-tool Intel Mac verification of PR #173 at
 b4fe1c6a0cbea8728562e60400999da32a1b4547 stopped in the private build, before test
 inventory or any functional test. Apple clang rejected implicit declarations of

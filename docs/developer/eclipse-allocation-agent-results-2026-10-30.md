@@ -1,5 +1,7 @@
 # Eclipse allocation correction — agent results, 30 October 2026
 
+Subsequent status: [paired Mac/Chapman checks](native-safety-paired-results-2026-10-30.md) passed 4/4 each at 87ed266a109741c4998bfc8c978d07c9306f0091; protected files/checkouts stayed unchanged. This original receipt retains its historical pending-target entries and failed/corrected evidence.
+
 Batch update: owner authorized [reachable format/buffer corrections](native-format-safety.md) in the same draft PR before one combined four-test Mac/Chapman handoff. This earlier receipt retains the original #144 snapshot, checks and evidence.
 
 Owner authorized #144 at merged main e2460fb72bdbe69f92c7da8994a81d21928569b5.

@@ -1,5 +1,18 @@
 # wenu-imaging roadmap
 
+30 October paired native safety receipt: selected-tool Intel Mac and representative
+shared Chapman4 private optimized C90 builds and all four contracts passed 4/4
+at 87ed266a109741c4998bfc8c978d07c9306f0091 (32.74 s / 20.77 s). Protected
+installed module/engine/configuration and clean review checkouts stayed unchanged.
+[Paired results](native-safety-paired-results-2026-10-30.md) qualify the bounded #144/#171/#172/#174/#175/#176/#177
+corrections; PR #173 is ready for owner review. #74 retains unqualified legacy
+facilities; #125/#128, unresolved #116 and full M3/#159 remain separate. No real
+OOM, broad leak/concurrency, RTD display or scientific/installed activation claim.
+Preserve failed/corrected runs, manifests and tools. This documentation receipt
+needs no functional replay; synchronize review checkouts, then await owner review.
+Separate owner instruction precedes merge/cleanup. Earlier target-pending notes
+below are historical within this qualified batch.
+
 30 October actual Mac #173 batch stopped at b4fe1c6 during new format-probe
 compilation: missing private variadic qfits declarations (#177). No functional
 test ran; installed module/engine/config and checkout preservation passed.

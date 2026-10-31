@@ -1,5 +1,7 @@
 # Native format safety — agent results, 30 October 2026
 
+Subsequent status: [paired Mac/Chapman checks](native-safety-paired-results-2026-10-30.md) passed 4/4 each at 87ed266a109741c4998bfc8c978d07c9306f0091; protected files/checkouts stayed unchanged. This original receipt retains its historical pending-target entries and failed/corrected evidence.
+
 Target update: [actual Mac probe declaration failure and correction](native-format-prototypes-2026-10-30.md). Earlier agent qualification below is retained; no Mac functional test ran at the first target attempt.
 
 Owner requested batching further related fixes before target synchronization.
