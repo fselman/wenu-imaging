@@ -1,3 +1,52 @@
+# Current scope: reading large FITS/MEF files only
+
+**Owner clarification supersedes the broader proposal below.** Enable reading
+large files containing ordinary-sized detector planes. Do not convert Eclipse
+or mefpp numerical types or undertake a general 64-bit library migration.
+The prior 20+6-file inventory remains audit evidence, not an implementation list.
+
+The narrowed read-path inventory is **12 existing files**:
+
+| File | Required read-path change |
+|---|---|
+| mefpp2/qfits5/src/cache.c | Wide internal file sizes, block/byte positions and checked traversal; keep counts bounded and old queries checked. |
+| mefpp2/qfits5/src/cache.h | Add wide read-segment query contract. |
+| mefpp2/qfits5/src/simple.c | Wide segment queries and header-keyword read consumers; leave replacement operations outside scope. |
+| mefpp2/qfits5/src/simple.h | Matching wide read declarations. |
+| mefpp2/qfits5/src/pixio.c | Wide loader positions, plane-start arithmetic and seeks/mapping bounds; retain supported per-plane pixel and byte limits. Leave writers unchanged. |
+| mefpp2/qfits5/src/pixio.h | Loader file-position/span fields and read documentation only. |
+| mefpp2/qfits5/src/fits_rw.c | Late header reading, mapping bounds and pointer differences; leave zeropad/output unchanged. |
+| mefpp2/qfits5/include/qfits.h | Match wide read APIs and loader fields; leave table/dump interfaces unchanged. |
+| mefpp2/qfits5/src/xmemory.c | Checked file-to-memory size conversions and mapped read spans; preserve allocator policy and existing size_t interface. |
+| mefpp2/ins/mef/common/mef_layout.c | Wide read consumers; remove whole-file INT_MAX refusal only after the read chain is safe. Keep per-plane/count limits. |
+| mefpp2/ins/mef/common/mef_layout.h | Updated read capability and retained limits. |
+| mefpp2/CMakeLists.txt | Verify wide seek/tell declarations; retain existing 64-bit off_t requirement and selected tools. |
+
+Eclipse image_io/cube_load and mef_load_ext delegate pixel reads to qfitsloader:
+rebuild coherently, without changing their numerical structures. cube_getinfo
+can retain a narrow compatibility query for bounded primary-header length.
+Old int segment queries must safely reject unrepresentable requested values;
+table/split consumers can remain outside the new large-file capability. Traversing
+headers in a large file does not enable table-payload reading.
+
+Exclude writers/padding, Eclipse filesize/cube_info widening, table APIs/structs,
+mef_split, standalone tools, pixel numeric types and image-index redesign.
+#198/#199 remain separate findings. No new FITS reader or library replacement.
+
+Only disk positions in the read chain need a wide type: use the already required
+64-bit off_t and checked size_t at memory boundaries. Keep C90 and existing
+numerical/count types. Widening qfitsloader fields changes its struct layout,
+so linked clients need rebuilding; this is not wholesale library widening.
+
+Later verification should use valid private sparse files with small recognizable
+detectors/planes beyond 2 and 4 GiB, header and exact-pixel reads via mapped/copied/
+window paths, ordinary-file regression and controlled malformed/bounds refusals.
+Retain explicit unsupported single-plane limits. No writer/checksum-tool tests,
+broad numerical campaign, original-data writes or installation is included.
+No C code, build or test was changed/run for this scope correction.
+
+---
+
 # File-offset migration audit — 31 October 2026
 
 Audit baseline: merged main `38b27f8da943acfdd83b9f1cc9a243405e346a96`.
