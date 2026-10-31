@@ -1,5 +1,16 @@
 # mefpp refactor implementation plan — proposal
 
+31 October cumulative review at accepted main 3a61df6: [original M3 checklist](../../developer/m3-cumulative-review-2026-10-31.md)
+retains #159/M3 open. Native explicit paths have paired acceptance; the original
+associated-calibration/preprocessing/normalization/WCS inspector overview remains
+incomplete. Complete that bounded read-only integration before closure; no new
+timing/debugging or historical test campaign is a prerequisite. [M4 readiness](../../developer/m4-readiness-review-2026-10-31.md)
+is preparatory review only, with no implementation or milestone advance. Preserve
+ESO OB/template/exposure metadata distinctions; grouping/association belongs in
+Pycavi, while mefpp processes selected lists with compatibility checks. Review
+only: no native/Python code, execution, installation or merge/cleanup. Earlier
+increment receipts retain their original scopes and evidence.
+
 30 October paired native safety receipt: selected-tool Intel Mac and representative
 shared Chapman4 private optimized C90 builds and all four contracts passed 4/4
 at 87ed266a109741c4998bfc8c978d07c9306f0091 (32.74 s / 20.77 s). Protected
