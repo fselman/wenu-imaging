@@ -1,5 +1,13 @@
 # Developer documentation
 
+31 October owner clarification: identifying native Windows obstacles is
+informational preparation for a possible later port. It must not affect Mac/Linux
+design, introduce Windows-driven adapters/abstractions or overhead, or block their
+acceptance. If Windows is ported later, that version receives the required adapters
+then. Preserve efficient native Mac/Linux facilities and the no-speed-penalty
+refactoring requirement. This supersedes any earlier Windows wording suggesting
+current Mac/Linux design restrictions; no source changes or tests are needed.
+
 31 October owner makes native speed/efficiency preservation an explicit
 refactoring requirement and requests early native-Windows difficulty identification.
 The [performance/portability contract](native-performance-portability-contract-2026-10-31.md)

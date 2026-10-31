@@ -165,11 +165,11 @@ performance evidence. No benchmark is launched by this review amendment.
 
 Keep layout discovery/identity validation at the I/O boundary and reuse its owned
 immutable view. Avoid repeated header scans, unnecessary image copies/conversions
-or OS/metadata calls in pixel loops. Current Windows obstacles are explicitly
-registered at build, FITS mapping/swap/stream, path and optional dependency resource
-boundaries. Do not expose POSIX paths/handles in the detector arithmetic contract.
-Windows implementation remains at its original later stage; preserve efficient
-Mac/Linux behavior while preparing the eventual adapters.
+or OS/metadata calls in pixel loops. Current Windows obstacles are recorded at
+build, FITS mapping/swap/stream, path and optional dependency resource boundaries
+as information only. They do not constrain Mac/Linux design, introduce current
+portability abstractions/overhead or block acceptance. If a Windows port is
+undertaken later, adapters for that version will address the recorded obstacles.
 
 ## Proposed bounded fixtures and gates
 

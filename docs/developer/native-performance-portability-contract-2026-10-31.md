@@ -10,8 +10,22 @@ are unchanged from accepted main `6c4b0f0eff639da8dbef890f0df10f86c70bb0ee`.
 This is a cross-cutting acceptance requirement for M4 and subsequent refactoring,
 not a new milestone, platform port, optimization campaign or authorization to
 change algorithms. Existing native Windows stage remains later; identify barriers
-now and avoid adding more of them. No performance measurements or native Windows
+now as information for a possible later port. Windows obstacles must not constrain
+the Mac/Linux design or acceptance. No performance measurements or native Windows
 compilation were performed for this document.
+
+## Owner clarification: Windows notes do not govern Mac/Linux design
+
+Windows identification is informational preparation only. Design and optimize the
+Mac/Linux versions for their actual requirements, retaining their efficient native
+facilities. Do not introduce Windows-driven abstractions, fallback I/O, dependencies,
+runtime indirection or design restrictions into the current refactor. A Windows
+obstacle is not a Mac/Linux blocker or an acceptance gate.
+
+If a native Windows port is undertaken, implement and qualify adapters for that
+version then. The register below records where that later work is likely needed;
+its migration suggestions apply to that future port, not to current Mac/Linux
+implementation. The no-speed-penalty requirement remains fully in force.
 
 ## Performance contract
 
@@ -101,9 +115,9 @@ Mac/Linux numerical results or repeat their past campaigns.
 Keep layout/identity discovery and file opening at the I/O boundary; detector
 kernels receive validated planes/configuration and retain efficient array access.
 Carry only required metadata through request/result ownership. Review any new
-full-frame allocation/read, persistent cache or OS call with a concrete reason
-and a performance/portability disposition. Use small OS adapters at resource
-boundaries while retaining optimized native implementations per platform.
+full-frame allocation/read, persistent cache or OS call for its Mac/Linux purpose
+and performance cost. Windows findings may be recorded without changing that
+design. Windows-specific adapters belong to a later port, if undertaken.
 
 Documentation/source review only: no compiler probe, build, benchmark, profile,
 observation reduction, dependency upgrade, Windows execution or installation ran.

@@ -1,5 +1,13 @@
 # mefpp refactor implementation plan — proposal
 
+31 October owner clarification: identifying native Windows obstacles is
+informational preparation for a possible later port. It must not affect Mac/Linux
+design, introduce Windows-driven adapters/abstractions or overhead, or block their
+acceptance. If Windows is ported later, that version receives the required adapters
+then. Preserve efficient native Mac/Linux facilities and the no-speed-penalty
+refactoring requirement. This supersedes any earlier Windows wording suggesting
+current Mac/Linux design restrictions; no source changes or tests are needed.
+
 31 October owner makes native speed/efficiency preservation an explicit
 refactoring requirement and requests early native-Windows difficulty identification.
 The [performance/portability contract](../../developer/native-performance-portability-contract-2026-10-31.md)
@@ -456,8 +464,10 @@ checks/ownership and numerical equivalence. No arbitrary slowdown percentage is
 adopted, and noisy/incomparable results are inconclusive. Required new operation
 costs and one-time preparation are accounted for separately and end to end.
 
-Identify native Windows obstacles while each interface is reviewed, isolate OS
-resource operations from numerical loops, and retain efficient Mac/Linux paths.
+Record native Windows obstacles as information for a possible later port.
+They impose no design constraints, abstraction requirements, runtime overhead or
+acceptance blockers on Mac/Linux. Windows-specific adapters are work for that
+later port, if undertaken; retain efficient native Mac/Linux facilities now.
 The [concrete contract and source register](../../developer/native-performance-portability-contract-2026-10-31.md)
 record measurement protocol, actual source locations and pending evidence.
 This requirement applies to M4 and later implementation/acceptance; it does not
@@ -808,7 +818,7 @@ Record adopt/defer with evidence. A deferred binding does not block the serial C
 
 ### Gate
 
-Owner reviews the bounded functional results and actual target limitations. Earlier accepted Stage 2/2.1 evidence remains preserved; new refactor acceptance is a separate result. No scientific/Phase 3 certification or automatic downstream full-survey processing. Acceptance also includes the cross-cutting native performance-preservation evidence and the current Windows difficulty register; no unmeasured performance or native Windows support is implied.
+Owner reviews the bounded functional results and actual target limitations. Earlier accepted Stage 2/2.1 evidence remains preserved; new refactor acceptance is a separate result. No scientific/Phase 3 certification or automatic downstream full-survey processing. Acceptance also includes the cross-cutting native performance-preservation evidence. Windows notes are informational and impose no Mac/Linux design or acceptance gate; no unmeasured performance or native Windows support is implied.
 
 ### Activation and rollback
 
