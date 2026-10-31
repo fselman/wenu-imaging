@@ -1,5 +1,11 @@
 # Developer guide: native mefpp build, installation and qualification
 
+31 October [qfits-backed M4 paired receipt](m4-qfits-paired-results-2026-10-31.md):
+owner accepts all four functional contracts in both C90/C17 on Mac and Chapman4.
+Installed files and clean main stay unchanged. No install/merge/M4 closure is
+implied; performance-plan review remains. Reuse retained builds/canonical tools,
+without new dependency/tool qualification. Earlier target-pending notes are historical.
+
 31 October unmerged [M4 qfits reuse candidate](m4-qfits-reader-adapter-2026-10-31.md):
 existing FITS I/O is reused with checked discovery and unchanged numerical services.
 Agent C90/C17 focused gates pass; selected Mac/Chapman verification is pending.

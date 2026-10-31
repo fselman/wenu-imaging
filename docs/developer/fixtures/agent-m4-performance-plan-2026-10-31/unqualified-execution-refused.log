@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/104db3d59fe9/m4-reader-reuse/mefpp2/tests/benchmark_native_paths.py", line 248, in <module>
+    main()
+  File "/workspace/scratch/104db3d59fe9/m4-reader-reuse/mefpp2/tests/benchmark_native_paths.py", line 240, in main
+    execute(args.execute_plan.resolve(strict=True))
+  File "/workspace/scratch/104db3d59fe9/m4-reader-reuse/mefpp2/tests/benchmark_native_paths.py", line 139, in execute
+    require(plan.get("qualified_pair", False), "Execution requires matched qualified builds; preparation-only examples cannot execute")
+  File "/workspace/scratch/104db3d59fe9/m4-reader-reuse/mefpp2/tests/benchmark_native_paths.py", line 22, in require
+    raise RuntimeError(message)
+RuntimeError: Execution requires matched qualified builds; preparation-only examples cannot execute

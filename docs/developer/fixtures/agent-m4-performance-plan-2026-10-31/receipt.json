@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "script_sha256": "a3ef1a7ee8a8ec3ae77b4f511df232f16656b2449ef145ba5c7406fa26a9f166",
+  "prepared_launches": 16,
+  "native_launches": 0,
+  "unqualified_execution": "refused before attempt or process launch",
+  "run": "/workspace/scratch/104db3d59fe9/native-performance-final-plan-h62j06st",
+  "limits": [
+    "execution/measurement path not run",
+    "agent program paths are planning examples, not matched benchmark builds",
+    "actual qualified target preparation pending"
+  ]
+}

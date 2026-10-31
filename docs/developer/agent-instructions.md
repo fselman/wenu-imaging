@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+31 October owner accepts [paired qfits-backed M4 behavior](m4-qfits-paired-results-2026-10-31.md)
+at 5e6bd83beafa744cd2a3be64b5405083c3ae634b: Mac/representative Chapman each4/4
+in C90/C17 with installations, clean main and exports preserved. #194 count bounds
+closed; #195 wider-file boundary remains explicit. This is not merge/cleanup or
+permanent adoption of the 2 GiB support limit. Next [performance plan](m4-performance-comparison-plan-2026-10-31.md)
+uses retained private builds and prepares commands only; sixteen launches planned,
+none measured. Review script/plan before execution under the existing contract.
+No native changes, observations, installation, repeated tool discovery or automatic
+M4 closure/M5 extraction. Earlier target-pending entries below are historical.
+
 31 October owner accepts qfits/Eclipse reuse. The [M4 adapter](m4-qfits-reader-adapter-2026-10-31.md)
 removes M4 FITS block/seek parsing, reuses qfits headers/offsets and keeps detector
 maps/validation and the Eclipse plane loader. Narrow shared-cache bounds fixes

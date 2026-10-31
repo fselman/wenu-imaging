@@ -1,5 +1,10 @@
 # M4 qfits reader adapter — 31 October 2026
 
+Subsequent [paired actual-target qualification](m4-qfits-paired-results-2026-10-31.md)
+passes at 5e6bd83 and is owner accepted. Current next step is the
+[performance plan review/preparation](m4-performance-comparison-plan-2026-10-31.md),
+not a repeat of the functional gates. Earlier pending-target text below is historical.
+
 The owner accepted the [reuse recommendation](m4-header-reader-reuse-review-2026-10-31.md).
 M4 now consumes qfits-owned headers and offsets. Its independent maps, strict
 selected metadata validation, selector/reference checks and existing Eclipse
