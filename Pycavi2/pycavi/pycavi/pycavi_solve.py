@@ -8,6 +8,7 @@ from textwrap import wrap
 from astropy.io import fits
 
 from pycavi.pycavi import pycavi_tools
+from pycavi.pycavi_product_paths import wcs_product_path
 from pycavi.pycavi.pycavi_metadata import science_exposure_header, detector_science_header
 
 def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_astrometry: bool = False, solve_field_path: str = None):
@@ -49,7 +50,7 @@ def run_py4_solve(observation_dir: str, instrument, cpu_count: int = 32, redo_as
         logging.info("solving image {0:02d}/{1:02d}: {2}".format(i, len(list_to_solve), file_name[:-5] + '.fits', ))
         # if wcs image exist, continue to the next
         # this must be more flexible, allowing the option to redo the astrometry if the user wants to.
-        mosaic_wcs = observation_dir + "/" + file_name[:-5] + "/" + file_name[:-5] + "_wcs.fits"
+        mosaic_wcs = str(wcs_product_path(os.path.join(observation_dir, file_name)))
         if (os.path.isfile(mosaic_wcs) and not redo_astrometry):
             logging.info("wcs image already exist, skipping to the next image")
             continue
@@ -353,7 +354,7 @@ def create_wcs_frame(argv, instrument, mode="continue"):
         new_hdul.append(image_hdu)
 
     logging.info('create_wcs_frame: creating {0}'.format(dir_name + "/" + file_name[:-5] + "_wcs.fits"))
-    new_hdul.writeto(dir_name + "/" + file_name[:-5] + "_wcs.fits", output_verify="ignore", overwrite=True, checksum=True)
+    new_hdul.writeto(str(wcs_product_path(os.path.abspath(file_name))), output_verify="ignore", overwrite=True, checksum=True)
     new_hdul.close()
 
 

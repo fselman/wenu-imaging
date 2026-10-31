@@ -1,5 +1,10 @@
 # M3 cumulative review — 31 October 2026
 
+Subsequent owner-authorized [inspector-stage completion](m3-inspector-stages-2026-10-31.md)
+is implemented with agent 21/21 checks. Actual paired target qualification is
+pending; this original baseline review remains historical evidence of the gap.
+M3 is not yet declared closed.
+
 Reviewed baseline: accepted merged main
 `3a61df627edfdbb1ef43cc3c956dff74bd28c066`.
 Owner request: review cumulatively, close M3, then review M4. Closure is conditional

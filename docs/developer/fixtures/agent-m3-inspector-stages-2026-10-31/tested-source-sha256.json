@@ -1,0 +1,11 @@
+{
+  "Pycavi2/pycavi/pycavi_project.py": "6a070c659518776274f1e56ad8af2f8b83425e0da5f867a9e80a0163e1c43a93",
+  "Pycavi2/pycavi/pycavi_paths.py": "fe23bff89a8b5bdcbb16e62372e8328a0400aae391bc203ecdac53d153aa35f6",
+  "Pycavi2/pycavi/pycavi_inspection_stages.py": "7d086bb7208ee2e60ef2adfe95617411c68812c2c50cef9f7d78898123aec87b",
+  "Pycavi2/pycavi/pycavi_product_paths.py": "6ecd0071edef0d109641806942cf40c3acc3bf37bdcccda44a250e2572f8491d",
+  "Pycavi2/pycavi/pycavi/pycavi_associate_reduction.py": "eef47e04e008f328a284a9f7b739c69cc69aa29264b503bcc4a5b29428afe06a",
+  "Pycavi2/pycavi/pycavi/pycavi_solve.py": "982a8e2653426b76f9b80a4ee1a5ca974bfef986e406f7ebc13509f7c4e195f9",
+  "Pycavi2/pycavi/pycavi/pycavi_metadata.py": "9a8ee5ebec1ab168e6a785403537c82c2351dfe9fc7ca382a881dc4dfe1752b4",
+  "Pycavi2/tests/project_inspection_contract.py": "a7788ceabf1b0787479db2833f4db9b049f66af125446f7f7175b6795f581815",
+  "Pycavi2/tests/fixtures/m3_inspection_legacy_clients.py": "89a59661528ab1c89330e87e849ce622a32c0ee328527a80ce64f314a9c15e47"
+}

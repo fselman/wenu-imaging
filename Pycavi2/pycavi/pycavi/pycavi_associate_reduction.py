@@ -10,6 +10,7 @@ import shutil
 import numpy as np
 from pathlib import Path
 from astropy.io import fits
+from pycavi.pycavi_product_paths import NORMALIZED_UNIT
 
 
 class PartitionsTree:
@@ -1417,7 +1418,7 @@ def mefpp_normalize_science(sci_part_list, instrument, apply_light_corr=False):
                     logging.debug('mefpp_normalize_science: failed to insert keyword AIRMASS after FILTER')
 
 
-                header0["BUNIT"] = ("e-/s", "units of image pixels")
+                header0["BUNIT"] = (NORMALIZED_UNIT, "units of image pixels")
                 exptime = header0["EXPTIME"]
 
                 # we also update the saturation key TBD

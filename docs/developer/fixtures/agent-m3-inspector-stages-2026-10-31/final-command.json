@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/usr/bin/nice",
+    "-n",
+    "10",
+    "/workspace/scratch/555b377cf948/m3-test-env/bin/python",
+    "-B",
+    "Pycavi2/tests/project_inspection_contract.py",
+    "--work-parent",
+    "/tmp/m3-inspector-stages-final-iugme394"
+  ],
+  "exit": 0,
+  "source_root": "/workspace/scratch/104db3d59fe9/wenu-imaging"
+}

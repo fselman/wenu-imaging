@@ -1,5 +1,6 @@
 """Focused metadata-only M3 controls; generated fixtures remain under work-parent."""
 import argparse
+import ast
 import hashlib
 import importlib.util
 import json
@@ -8,6 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import types
 import tomllib
 import unittest
 from unittest.mock import patch
@@ -22,6 +24,7 @@ MODULES = ROOT / "Pycavi2/pycavi"
 sys.path.insert(0, str(MODULES))
 from pycavi_paths import PathResolver, PathResolutionError
 from pycavi_project import inspect_project, Limits, main
+from pycavi_product_paths import science_product_paths, wcs_product_path, NORMALIZED_UNIT
 
 WORK = None
 
@@ -307,6 +310,165 @@ class InspectionTests(unittest.TestCase):
         self.assertIn("completion: unverified", result.stdout)
         self.assertNotIn("frame\tname", result.stdout)
         self.assertIn("frame\\tname", result.stdout)
+
+    # Stage expectations are not completion receipts; normalization is in place.
+    def test_exposure_stage_sequence_and_missing_products(self):
+        self.image(self.raw / "frame.fits")
+        listed = self.listed(content="frame.fits\nother.fits\n")
+        (listed.parent / "mefpp.log").write_text("success published complete")
+        report = self.inspect(list_base=self.raw)
+        stages = [r for r in report["stages"] if r["member"] is not None]
+        self.assertEqual([s["stage"] for s in stages], ["preprocessing", "normalization", "wcs"] * 2)
+        self.assertEqual(stages[0]["path"], stages[1]["path"])
+        self.assertEqual(stages[2]["path"], str(wcs_product_path(stages[0]["path"])))
+        self.assertTrue(all(s["status"] == "unavailable" and s["completion"] == "unknown" for s in stages))
+        self.assertTrue(all(s["source"]["identity_verified"] is False for s in stages))
+        self.assertEqual(report["partitions"][0]["attempt_evidence"][0]["completion"], "unknown")
+        self.assertTrue(any(s["relation"] == "not-declared" for s in report["stages"]))
+
+    # Existing header claims remain unverified; misleading names cannot certify a run.
+    def test_stage_headers_views_and_read_only_preservation(self):
+        raw = self.image(self.raw / "frame.fits")
+        listed = self.listed()
+        paths = science_product_paths(raw, listed.parent)
+        pre = self.image(paths["preprocessing"])
+        with fits.open(pre, mode="update") as hdus:
+            hdus[0].header["PRODCATG"] = "SCIENCE.MEFIMAGE"
+            hdus[0].header["BUNIT"] = NORMALIZED_UNIT
+            hdus[0].header["ONEADU"] = 0.2
+            hdus[0].header["HIERARCH ESO OBS START"] = "2026-10-29T20:00:00"
+            hdus[0].header["HIERARCH ESO TPL START"] = "2026-10-29T21:00:00"
+        self.image(paths["wcs"])
+        before = inventory(self.work)
+        with patch.object(_ImageBaseHDU, "_get_scaled_image_data", side_effect=AssertionError("pixel read")):
+            report = self.inspect(list_base=self.raw)
+        self.assertEqual(before, inventory(self.work))
+        normalization = next(s for s in report["stages"] if s["stage"] == "normalization")
+        self.assertTrue(normalization["in_place"] and normalization["reported_normalized_unit"])
+        self.assertEqual(normalization["status"], "existing-unverified")
+        self.assertEqual(normalization["completion"], "unknown")
+        result = self.cli(self.caller_a, "--list-base", self.raw, "--stage", "wcs",
+                          "--exposure", raw, "--columns", "stage", "path", "completion", "input")
+        self.assertEqual(len(result["view"]["rows"]), 3)
+        self.assertTrue(all(r["stage"] == "wcs" and r["input"] == str(raw) for r in result["view"]["rows"]))
+        self.assertEqual(before, inventory(self.work))
+
+    # Shared and unbuilt calibration references come from links/list roles, not selection.
+    def test_shared_and_unbuilt_calibration_stage_references(self):
+        self.image(self.raw / "frame.fits")
+        science = self.listed()
+        producer = self.root / "bias producer"
+        producer.mkdir()
+        (producer / "bias.list").write_text(str(self.raw / "frame.fits") + "\n")
+        target = producer / "unbuilt.fits"
+        for directory in (science.parent, self.root / "another partition"):
+            directory.mkdir(exist_ok=True)
+            (directory / "science.list").write_text(str(self.raw / "frame.fits") + "\n")
+            (directory / "selected.fits").symlink_to(target)
+        report = self.inspect(list_base=self.raw)
+        refs = [s for s in report["stages"] if s["relation"] == "declared-link"]
+        self.assertEqual(len(refs), 2)
+        self.assertTrue(all(s["role"] == "bias" and s["status"] == "unavailable" for s in refs))
+        self.assertEqual(len({s["source"]["resolved"] for s in refs}), 1)
+
+    def test_stage_conflicts_and_ambiguous_exposure_names(self):
+        self.image(self.raw / "one" / "same.fits")
+        self.image(self.raw / "two" / "same.fits")
+        listed = self.listed(content="one/same.fits\ntwo/same.fits\n")
+        report = self.inspect(list_base=self.raw)
+        self.assertIn("ambiguous_stage_location", self.codes(report))
+        self.assertTrue(all(s["path"] is None for s in report["stages"] if s["member"]))
+        listed.write_text("one/same.fits\n")
+        product = self.image(science_product_paths(self.raw / "one/same.fits", listed.parent)["preprocessing"])
+        with fits.open(product, mode="update") as hdus:
+            hdus[0].header["PRODCATG"] = "CALIB.MASTER_BIAS"
+        report = self.inspect(list_base=self.raw)
+        self.assertIn("stage_header_conflict", self.codes(report))
+        self.assertTrue(any(s["relation"] == "conflicting-expected-location" for s in report["stages"]))
+        producer = self.root / "bias producer"; producer.mkdir()
+        (producer / "bias.list").write_text(str(self.raw / "one/same.fits") + "\n")
+        contradictory = self.image(producer / "master.fits")
+        with fits.open(contradictory, mode="update") as hdus:
+            hdus[0].header["PRODCATG"] = "CALIB.MASTER_DOME_FLAT"
+        (listed.parent / "selected.fits").symlink_to(contradictory)
+        self.assertIn("calibration_role_conflict", self.codes(self.inspect(list_base=self.raw)))
+        with fits.open(contradictory, mode="update") as hdus:
+            hdus[0].header["ESO PRO CATG"] = "CALIB.MASTER_BIAS"
+        report = self.inspect(list_base=self.raw)
+        self.assertTrue(any(s["relation"] == "conflicting-declared-link" and s["role"] is None
+                            for s in report["stages"]))
+
+    def test_stage_unknown_base_limits_and_deterministic_callers(self):
+        self.listed(content="unknown.fits\nunknown.fits\n")
+        report = self.inspect()
+        self.assertTrue(all(s["path"] is None for s in report["stages"] if s["member"]))
+        limited = self.inspect(limits=Limits(files=3))
+        self.assertLessEqual(len(limited["stages"]), 3)
+        self.assertIn("stage_limit", self.codes(limited))
+        self.assertEqual(self.cli(self.caller_a), self.cli(self.caller_b))
+
+    # Exercise the actual changed numerical-client function bodies on tiny arrays.
+    # Baseline bodies come from retained source, never a second scientific implementation.
+    def test_shared_conventions_preserve_existing_client_results(self):
+        import logging
+        import glob
+        metadata_spec = importlib.util.spec_from_file_location(
+            "m3_metadata", MODULES / "pycavi/pycavi_metadata.py")
+        metadata = importlib.util.module_from_spec(metadata_spec)
+        metadata_spec.loader.exec_module(metadata)
+        sources = [ROOT / "Pycavi2/tests/fixtures/m3_inspection_legacy_clients.py",
+                   MODULES / "pycavi/pycavi_associate_reduction.py",
+                   MODULES / "pycavi/pycavi_solve.py"]
+        functions = []
+        for path in sources:
+            nodes = [n for n in ast.parse(path.read_text()).body if isinstance(n, ast.FunctionDef)
+                     and n.name in ("mefpp_normalize_science", "create_wcs_frame")]
+            scope = dict(os=os, fits=fits, np=np, glob=glob, logging=logging,
+                         NORMALIZED_UNIT=NORMALIZED_UNIT, wcs_product_path=wcs_product_path,
+                         science_exposure_header=metadata.science_exposure_header,
+                         detector_science_header=metadata.detector_science_header)
+            exec(compile(ast.Module(body=nodes, type_ignores=[]), str(path), "exec"), scope)
+            functions.append(scope)
+        results = []
+        instrument = types.SimpleNamespace(valid_ext_names=["CCD_A", "CCD_B"],
+            valid_ext_gain_dict={"CCD_A": "GAIN", "CCD_B": "GAIN"}, next_valid=2,
+            filt_key="FILTER", airm_start_key="AIR1", airm_end_key="AIR2")
+        for label, normalize, assemble in (
+            ("original", functions[0]["mefpp_normalize_science"], functions[0]["create_wcs_frame"]),
+            ("shared", functions[1]["mefpp_normalize_science"], functions[2]["create_wcs_frame"])):
+            directory = self.work / label; directory.mkdir()
+            pre = self.image(directory / "frame_pre.fits")
+            with fits.open(pre, mode="update") as hdus:
+                hdus[0].header["MJD-OBS"] = 60000.
+                hdus[0].header["LST"] = 1.
+                for hdu in hdus[1:]:
+                    hdu.data = hdu.data.astype(np.float32)
+                    hdu.header["GAIN"] = 2.
+            part = type("Partition", (), {"base_path": str(directory)})()
+            normalize([part], instrument, apply_light_corr=False)
+            with fits.open(pre) as hdus:
+                self.assertEqual(hdus[0].header["BUNIT"], NORMALIZED_UNIT)
+                self.assertTrue(np.array_equal(hdus[1].data, np.arange(6, dtype=np.float32).reshape(2, 3) * np.float32(0.2)))
+                for hdu in hdus[1:]:
+                    detector = pre.with_suffix("") / (hdu.name + "_solve_field")
+                    detector.mkdir(parents=True)
+                    fits.PrimaryHDU(hdu.data, header=hdu.header).writeto(detector / (hdu.name + ".fits"))
+            cwd = Path.cwd()
+            try:
+                os.chdir(directory)
+                assemble(str(pre), instrument, mode="continue")
+            finally:
+                os.chdir(cwd)
+            output = wcs_product_path(pre)
+            self.assertTrue(output.exists())
+            with fits.open(output) as hdus:
+                results.append([(None if h.data is None else h.data.copy(),
+                                 [(c.keyword, c.value, c.comment) for c in h.header.cards
+                                  if c.keyword not in ("CHECKSUM", "DATASUM")]) for h in hdus])
+        self.assertEqual(len(results[0]), len(results[1]))
+        for (a, ha), (b, hb) in zip(*results):
+            self.assertTrue(a is None and b is None or np.array_equal(a, b))
+            self.assertEqual(ha, hb)
 
 
 if __name__ == "__main__":

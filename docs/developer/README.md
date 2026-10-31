@@ -1,5 +1,14 @@
 # Developer documentation
 
+31 October owner authorized completing the remaining original M3 inspector work.
+[Stage-view candidate](m3-inspector-stages-2026-10-31.md) adds evidence-linked calibration/preprocessing/
+normalization/WCS views and shared pure client conventions. Agent final 21/21
+checks pass; initial test-only oracle #179 failure is preserved. Selected Mac,
+then representative Chapman 21-group qualification remains pending; #159/M3 and
+#179 stay open. No C code, numerical tuning, installation or normal activation.
+Use exact private exports and protected-host runner; no historical matrix replay.
+Cumulative closure precedes M4 implementation; merge/cleanup needs owner acceptance.
+
 31 October cumulative review at accepted main 3a61df6: [original M3 checklist](m3-cumulative-review-2026-10-31.md)
 retains #159/M3 open. Native explicit paths have paired acceptance; the original
 associated-calibration/preprocessing/normalization/WCS inspector overview remains

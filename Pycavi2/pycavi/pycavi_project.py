@@ -17,8 +17,10 @@ import warnings
 
 if __package__:
     from .pycavi_paths import PathResolver, PathResolutionError
+    from .pycavi_inspection_stages import build_stages, STAGE_CARDS
 else:
     from pycavi_paths import PathResolver, PathResolutionError
+    from pycavi_inspection_stages import build_stages, STAGE_CARDS
 
 
 # Names come from PartitionsTree/ExposuresPartition, not directory-name guesses.
@@ -29,9 +31,10 @@ PRIMARY_FIELDS = {"instrument": "inst_name_key", "target": "object_key",
                   "filter": "filt_key", "exposure": "inst_exp_key"}
 STANDARD_KEYS = {"instrument": "INSTRUME", "target": "OBJECT",
                  "filter": "FILTER", "exposure": "EXPTIME"}
-DEFAULT_COLUMNS = ("partition", "stage", "member", "hdu", "extname",
-                   "instrument", "target", "filter", "exposure", "status")
-ROW_KEYS = set(DEFAULT_COLUMNS) | {"path", "hdu_type", "dimensions"}
+DEFAULT_COLUMNS = ("partition", "stage", "role", "member", "hdu", "extname",
+                   "instrument", "target", "filter", "exposure", "status", "relation", "completion")
+ROW_KEYS = set(DEFAULT_COLUMNS) | {"path", "hdu_type", "dimensions", "role", "relation",
+                                 "completion", "validation", "publication", "source", "input"}
 
 
 @dataclass(frozen=True)
@@ -164,7 +167,7 @@ class _Inspector:
     def headers(self, path, item):
         from astropy.io import fits
         primary_fields = None
-        selected = set(self.keys.values()) | set(self.columns) | {
+        selected = set(self.keys.values()) | set(self.columns) | STAGE_CARDS | {
             "EXTNAME", "EXTVER", "BUNIT", "ESO PRO CATG", "PRODCATG"}
         try:
             with warnings.catch_warnings(record=True) as caught:
@@ -222,7 +225,8 @@ class _Inspector:
             return
         for hdu in asset["hdus"] or [dict(hdu=None, extname=None, fields={}, selected={})]:
             row = dict(partition=partition, stage=stage, member=member,
-                       path=asset["path"], status=asset["status"])
+                       path=asset["path"], status=asset["status"],
+                       input=asset["path"] if stage in ("science", "standard") else None)
             row.update({k: v for k, v in hdu.items() if k in ROW_KEYS})
             row.update(hdu["fields"])
             row.update(hdu["selected"])
@@ -346,6 +350,7 @@ def inspect_project(root, *, invocation_base, recursive=False, list_base=None,
         if path is not None:
             inspector.config(resolver.argument(path), role)
     inspector.walk(root)
+    stages = build_stages(inspector)
     counts = {}
     for diagnostic in inspector.diagnostics:
         counts[diagnostic["code"]] = counts.get(diagnostic["code"], 0) + 1
@@ -353,9 +358,10 @@ def inspect_project(root, *, invocation_base, recursive=False, list_base=None,
                 configurations=inspector.configurations, partitions=inspector.partitions,
                 assets=list(inspector.assets.values()), links=inspector.links,
                 rows=inspector.rows, diagnostics=inspector.diagnostics,
-                attempt_evidence=inspector.attempt_evidence,
+                attempt_evidence=inspector.attempt_evidence, stages=stages,
                 coverage=dict(recursive=recursive, directories=inspector.directories,
                               assets=len(inspector.assets), partitions=len(inspector.partitions),
+                              stages=len(stages),
                               diagnostics=len(inspector.diagnostics), diagnostics_by_code=counts,
                               complete=not any(d["incomplete"] for d in inspector.diagnostics),
                               limits=dict(vars(limits))),
@@ -383,6 +389,7 @@ def main(argv=None):
     inspect.add_argument("--sort", metavar="COLUMN")
     inspect.add_argument("--partition")
     inspect.add_argument("--stage")
+    inspect.add_argument("--exposure", type=Path, help="Exact input path, resolved from invocation directory")
     inspect.add_argument("--detector", help="Reported EXTNAME; not hardware identity validation")
     args = parser.parse_args(argv)
     try:
@@ -391,6 +398,8 @@ def main(argv=None):
                                  instrument_config=args.instrument_config, columns=args.columns)
         rows = report["rows"]
         filters = list(args.where)
+        if args.exposure is not None:
+            filters.append("input=" + str(PathResolver(Path.cwd()).argument(args.exposure)))
         for key, value in (("partition", args.partition), ("stage", args.stage), ("extname", args.detector)):
             if value is not None:
                 filters.append(key + "=" + value)
@@ -415,8 +424,10 @@ def main(argv=None):
         else:
             print("Project:", _cell(report["root"]))
             print("Coverage:", "complete" if report["coverage"]["complete"] else "incomplete",
-                  "| partitions:", len(report["partitions"]), "| assets:", len(report["assets"]))
-            print("Sequence: listed inputs -> linked calibration evidence -> available file headers")
+                  "| partitions:", len(report["partitions"]), "| assets:", len(report["assets"]),
+                  "| stage records:", len(report["stages"]))
+            print("Sequence: listed inputs -> calibration -> preprocessing -> normalization (in place) -> WCS")
+            print("Stage relationships: declared evidence or expected locations; never filename-based completion")
             print("Processing/normalization/WCS completion: unverified; no filename-based inference")
             print("\t".join(args.columns))
             for row in rows:
