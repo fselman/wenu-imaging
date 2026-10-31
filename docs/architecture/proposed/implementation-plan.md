@@ -1,5 +1,16 @@
 # mefpp refactor implementation plan — proposal
 
+31 October owner makes native speed/efficiency preservation an explicit
+refactoring requirement and requests early native-Windows difficulty identification.
+The [performance/portability contract](../../developer/native-performance-portability-contract-2026-10-31.md)
+requires no reproducible same-workload slowdown, with wall/CPU time, memory and I/O
+compared on matched optimized builds; no percentage penalty is preapproved.
+Concrete source barriers include the Windows build guard, qfits mapping/swap,
+FITS stream/offset handling, Unix path/permission assumptions and Eclipse OS helpers.
+This is source/design review only: no benchmark, Windows build or portability patch.
+Apply at changed native boundaries and cumulative acceptance; retain existing
+Windows sequencing, C90/numerical behavior, all evidence and working installations.
+
 31 October owner added raw-input DPR.TYPE/CATG/TECH preparation to M4 review.
 The [data preparation guide](../../data-preparation.md) reviews official ESO DICB v8
 and ZWO ASI1600 manual rev1.5. Dataset-specific Python helper #184 proposes Bath
@@ -435,6 +446,23 @@ Milestone IDs below organize this refactor; they do not renumber the global road
 
 Some schema/source work can be developed independently after its prerequisites, but integrate one reviewed boundary at a time. M0a establishes the WAD/project schema contracts early; M7 persistence can be prepared against them before all kernel extraction is complete. Final executable descriptors must agree with the actual native contracts. This dependency flexibility does not authorize concurrent uncontrolled changes or agent delegation.
 
+## Cross-cutting native performance and portability contract
+
+Owner clarification, 31 October 2026: refactoring must preserve mefpp's speed and
+efficiency for equivalent reductions. No reproducible slowdown is accepted as an
+automatic cost of restructuring. Compare matched optimized serial execution,
+wall/CPU time, peak memory and I/O at the changed native boundary; keep necessary
+checks/ownership and numerical equivalence. No arbitrary slowdown percentage is
+adopted, and noisy/incomparable results are inconclusive. Required new operation
+costs and one-time preparation are accounted for separately and end to end.
+
+Identify native Windows obstacles while each interface is reviewed, isolate OS
+resource operations from numerical loops, and retain efficient Mac/Linux paths.
+The [concrete contract and source register](../../developer/native-performance-portability-contract-2026-10-31.md)
+record measurement protocol, actual source locations and pending evidence.
+This requirement applies to M4 and later implementation/acceptance; it does not
+launch benchmarks, accelerate the Windows stage or authorize unrelated patches.
+
 ## M0 — Freeze the contracts and verification boundary
 
 ### Work and deliverables
@@ -780,7 +808,7 @@ Record adopt/defer with evidence. A deferred binding does not block the serial C
 
 ### Gate
 
-Owner reviews the bounded functional results and actual target limitations. Earlier accepted Stage 2/2.1 evidence remains preserved; new refactor acceptance is a separate result. No scientific/Phase 3 certification or automatic downstream full-survey processing.
+Owner reviews the bounded functional results and actual target limitations. Earlier accepted Stage 2/2.1 evidence remains preserved; new refactor acceptance is a separate result. No scientific/Phase 3 certification or automatic downstream full-survey processing. Acceptance also includes the cross-cutting native performance-preservation evidence and the current Windows difficulty register; no unmeasured performance or native Windows support is implied.
 
 ### Activation and rollback
 

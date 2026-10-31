@@ -153,6 +153,24 @@ guard cannot establish a usable no-scan calibration workflow. Keep this visible
 in #182/#12; review the existing correction/trim kernel before the applicable
 service increment. No numerical bypass or replacement is implemented here.
 
+## Owner addition: native speed and Windows design review
+
+The [cross-cutting performance/portability contract](native-performance-portability-contract-2026-10-31.md)
+requires preserving mefpp speed and efficiency during refactoring, with no
+preapproved slowdown allowance. Prepare matched optimized serial comparisons when
+this native boundary becomes executable; retain numerical equivalence, necessary
+checks and input ownership. Record wall/CPU time, memory and I/O and distinguish
+measurement noise from regressions. Earlier helper/test durations are not native
+performance evidence. No benchmark is launched by this review amendment.
+
+Keep layout discovery/identity validation at the I/O boundary and reuse its owned
+immutable view. Avoid repeated header scans, unnecessary image copies/conversions
+or OS/metadata calls in pixel loops. Current Windows obstacles are explicitly
+registered at build, FITS mapping/swap/stream, path and optional dependency resource
+boundaries. Do not expose POSIX paths/handles in the detector arithmetic contract.
+Windows implementation remains at its original later stage; preserve efficient
+Mac/Linux behavior while preparing the eventual adapters.
+
 ## Proposed bounded fixtures and gates
 
 These are planned checks, not executed tests. Use small synthetic arrays for

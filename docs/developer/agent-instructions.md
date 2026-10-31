@@ -1,5 +1,16 @@
 # wenu-imaging agent instructions
 
+31 October owner makes native speed/efficiency preservation an explicit
+refactoring requirement and requests early native-Windows difficulty identification.
+The [performance/portability contract](native-performance-portability-contract-2026-10-31.md)
+requires no reproducible same-workload slowdown, with wall/CPU time, memory and I/O
+compared on matched optimized builds; no percentage penalty is preapproved.
+Concrete source barriers include the Windows build guard, qfits mapping/swap,
+FITS stream/offset handling, Unix path/permission assumptions and Eclipse OS helpers.
+This is source/design review only: no benchmark, Windows build or portability patch.
+Apply at changed native boundaries and cumulative acceptance; retain existing
+Windows sequencing, C90/numerical behavior, all evidence and working installations.
+
 31 October owner added raw-input DPR.TYPE/CATG/TECH preparation to M4 review.
 The [data preparation guide](../data-preparation.md) reviews official ESO DICB v8
 and ZWO ASI1600 manual rev1.5. Dataset-specific Python helper #184 proposes Bath
