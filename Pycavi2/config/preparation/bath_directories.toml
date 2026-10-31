@@ -1,0 +1,17 @@
+# Dataset-specific names only; all frame settings are discovered from headers.
+schema_version = 1
+data_doi = "10.15125/BATH-01225"
+
+[directories]
+bias = ["Bias"]
+dark = ["Darks"]
+science = ["Science", "Lights"]
+flat = ["Flats"]
+dome_flat = ["DomeFlats"]
+sky_flat = ["SkyFlats"]
+
+[filters]
+Blue = "Blue"
+Green = "Green"
+Red = "Red"
+Luminance = "Luminance"

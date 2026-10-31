@@ -1,5 +1,30 @@
 # wenu-imaging roadmap
 
+31 October owner makes [data preflight subordinate to WAD](../architecture/proposed/wad-processing-project.md#data-preflight-under-wad).
+WAD governs metadata/authority/assessment/plan contracts; preflight is a shared
+read-only ingestion service with instrument adapters, explicit apply writes copies.
+Current ASI adapter is not claimed to be a general WAD/ASDF runtime. Current
+observatory schema v2 uses a stable telescope name and separate profile_date;
+frame DATE-OBS remains original evidence, never part of equipment identity.
+Generated dataset notation v3 prevents silent old-plan reinterpretation. Affected
+13-group agent suite passes; scoped Mac 13-group/full-header-preflight verification
+pending. Preserve earlier 32/260/ten-copy Mac evidence and all existing outputs.
+No repeated legacy/native matrix, partitioning, installation, reduction, automatic
+merge/cleanup or M4 closure. Earlier dated-name notes are historical.
+
+31 October owner approves [practical ASI preparation inputs](asi-simple-inputs-2026-10-31.md):
+reusable observatory/camera TOMLs and directory role/filter names generate the
+detailed dataset TOML; no manual exposure/gain/offset/temperature/filename rules.
+Role/filter directories work in either order. Header-first filters are checked
+against directory labels; missing filters can be proposed, unknowns stay unknown.
+Dome/sky/unspecified flats remain distinct, conflicts block and flat-Light labels
+still require acknowledgement. Agent 9+11+12 controls pass; actual Mac new-interface
+qualification is pending. Prior explicit-interface Mac 20 controls/full 260 plan/
+ten-copy passes at 7bf1c824 remain valid for that version. Uploaded manual saved
+unchanged under docs/manuals/cameras, facts sourced without inferring acquisition
+mode/physical gain. Preserve originals/installations and native boundaries;
+partitioning is deferred. No automatic merge, reduction, installation or M4 closure.
+
 31 October owner authorizes [generic TOML-driven ZWO ASI preparation](zwo-asi-provenance-2026-10-31.md)
 after previous-helper actual Mac 260-file plan and ten-copy checks passed.
 The generic entry point separates camera/dataset rules and sourced provenance;
