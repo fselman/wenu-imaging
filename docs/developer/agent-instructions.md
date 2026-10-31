@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+31 October M3 inspector [paired qualification](m3-inspector-stages-paired-results-2026-10-31.md): exact source
+0d8f2978a4ef4c78c47f1526b48e03d77351c024 passed all 21 groups on selected Intel
+Mac (4.639 s) and representative Chapman4 (2.702 s), with installed module,
+configured engine/configuration and clean main 3a61df6 preserved. The
+[final original-scope M3 review](m3-final-closure-review-2026-10-31.md) recommends milestone closure: the
+inspector gap is resolved alongside accepted native paths. Owner acceptance and
+separate merge/cleanup remain pending; then review M4 detector/layout interfaces.
+This receipt is documentation only: no test replay, installation or host sync.
+Earlier pending/gap notes retain their historical source/evidence contexts.
+
 31 October owner authorized completing the remaining original M3 inspector work.
 [Stage-view candidate](m3-inspector-stages-2026-10-31.md) adds evidence-linked calibration/preprocessing/
 normalization/WCS views and shared pure client conventions. Agent final 21/21

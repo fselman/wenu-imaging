@@ -1,5 +1,11 @@
 # M3 cumulative review — 31 October 2026
 
+Subsequent [paired inspector qualification](m3-inspector-stages-paired-results-2026-10-31.md)
+passed 21/21 on both actual hosts at 0d8f2978a4ef4c78c47f1526b48e03d77351c024.
+The [final cumulative review](m3-final-closure-review-2026-10-31.md) recommends M3
+closure pending owner acceptance. Earlier gap/target-pending statements below
+retain their original baseline context. No M4 implementation starts here.
+
 Subsequent owner-authorized [inspector-stage completion](m3-inspector-stages-2026-10-31.md)
 is implemented with agent 21/21 checks. Actual paired target qualification is
 pending; this original baseline review remains historical evidence of the gap.

@@ -1,5 +1,11 @@
 # M3 processing-stage inspector completion — candidate, 31 October 2026
 
+Subsequent [paired inspector qualification](m3-inspector-stages-paired-results-2026-10-31.md)
+passed 21/21 on both actual hosts at 0d8f2978a4ef4c78c47f1526b48e03d77351c024.
+The [final cumulative review](m3-final-closure-review-2026-10-31.md) recommends M3
+closure pending owner acceptance. Earlier gap/target-pending statements below
+retain their original baseline context. No M4 implementation starts here.
+
 Owner authorized completing the remaining original M3 inspector boundary after
 the [cumulative review](m3-cumulative-review-2026-10-31.md), before M4 review.
 Refs #159 and new test-only #179. Based on PR #178 review head

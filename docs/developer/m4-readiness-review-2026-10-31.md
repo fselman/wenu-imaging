@@ -1,5 +1,11 @@
 # M4 readiness review — 31 October 2026
 
+Subsequent [paired inspector qualification](m3-inspector-stages-paired-results-2026-10-31.md)
+passed 21/21 on both actual hosts at 0d8f2978a4ef4c78c47f1526b48e03d77351c024.
+The [final cumulative review](m3-final-closure-review-2026-10-31.md) recommends M3
+closure pending owner acceptance. Earlier gap/target-pending statements below
+retain their original baseline context. No M4 implementation starts here.
+
 Baseline: accepted merged main `3a61df627edfdbb1ef43cc3c956dff74bd28c066`.
 This is source/contract review in preparation for the owner's requested M4 review.
 It starts no implementation, test, installation or data processing. The
