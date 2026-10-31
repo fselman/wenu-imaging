@@ -1,0 +1,20 @@
+RETAINED EVIDENCE: /tmp/eso-preflight-controls-72dyzitb
+test_bad_detector_identity_and_invalid_metadata (__main__.EsoTests.test_bad_detector_identity_and_invalid_metadata) ... ok
+test_cli_report_and_existing_report_protection (__main__.EsoTests.test_cli_report_and_existing_report_protection) ... {"assets": 1, "blocked": 0}
+REPORT: /tmp/eso-preflight-controls-72dyzitb/test_cli_report_and_existing_report_protection-mvntugi4/report.json
+{"assets": 1, "blocked": 0}
+REPORT: /tmp/eso-preflight-controls-72dyzitb/test_cli_report_and_existing_report_protection-mvntugi4/public.json
+ok
+test_complete_native_instruments_need_no_preparation (__main__.EsoTests.test_complete_native_instruments_need_no_preparation) ... ok
+test_conflicting_filters_and_extension_metadata (__main__.EsoTests.test_conflicting_filters_and_extension_metadata) ... ok
+test_limits_fifo_missing_and_duplicate_inputs (__main__.EsoTests.test_limits_fifo_missing_and_duplicate_inputs) ... ok
+test_missing_classification_and_filter (__main__.EsoTests.test_missing_classification_and_filter) ... ok
+test_no_arrays_no_writes_and_source_base (__main__.EsoTests.test_no_arrays_no_writes_and_source_base) ... ok
+test_shuffled_detectors_keep_identity_and_order (__main__.EsoTests.test_shuffled_detectors_keep_identity_and_order) ... ok
+test_unknown_mode_gain_and_partial_coverage (__main__.EsoTests.test_unknown_mode_gain_and_partial_coverage) ... ok
+test_wfi_screen_and_omegacam_dome_are_preserved (__main__.EsoTests.test_wfi_screen_and_omegacam_dome_are_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.263s
+
+OK

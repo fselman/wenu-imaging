@@ -1,0 +1,15 @@
+RETAINED EVIDENCE: /tmp/eso-preflight-controls-fgqume0z
+test_conflicting_filters_and_extension_metadata (__main__.EsoTests.test_conflicting_filters_and_extension_metadata) ... FAIL
+
+======================================================================
+FAIL: test_conflicting_filters_and_extension_metadata (__main__.EsoTests.test_conflicting_filters_and_extension_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/104db3d59fe9/zwo-asi-provenance/Pycavi2/tests/test_eso_preflight.py", line 108, in test_conflicting_filters_and_extension_metadata
+    self.assertEqual(self.inspect(p)["summary"]["blocked"],1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.343s
+
+FAILED (failures=1)

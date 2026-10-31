@@ -9,6 +9,17 @@ C numerical kernels and from calibration association. Track
 The new helper implements preparation only; global CLI/C enforcement is not yet
 implemented, and these cards alone do not establish processing readiness.
 
+## Original raw data are immutable
+
+All preflight paths must open original raw FITS read-only and report conflicts
+without repairing files. Reports belong outside raw input directories; explicit
+metadata preparation, when needed, produces new copies. The owner restated this
+requirement on 31 October 2026. Initial read-only
+[OmegaCAM/WFI preflight](developer/eso-data-preflight-2026-10-31.md) now reuses the
+shared bounded header reader and native keyword mappings. Correct sufficient ESO
+headers require no additions/copies. Actual ESO target qualification and automatic
+new-workflow intake integration remain pending; installed reducers are unchanged.
+
 ## WAD-governed data preflight
 
 Data preflight is the standard WAD-governed ingestion service. WAD owns metadata

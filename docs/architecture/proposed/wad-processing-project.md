@@ -84,6 +84,8 @@ not execute scans or modify files. CLI and notebooks call the same service.
 Directory names, FITS keyword aliases and camera-specific interpretation are
 adapter configuration, not universal WAD requirements.
 
+**Original raw files are immutable.** Preflight never repairs source headers or
+writes into raw directories; approved preparation writes new copies.
 The default `preflight` action is read-only with respect to inputs: inventory
 files/layout, collect original evidence, normalize available attributes, check
 cross-source agreement, retain unknowns and return a reviewable assessment. It

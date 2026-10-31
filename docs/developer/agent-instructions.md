@@ -1,5 +1,18 @@
 # wenu-imaging agent instructions
 
+31 October owner accepts [ESO data preflight](eso-data-preflight-2026-10-31.md) and explicitly
+requires immutable original raw data. Initial OmegaCAM/WFI raw-imaging service
+reuses M3's bounded read-only reader and actual instrument configurations; public
+preflight writes a separate report outside raw directories, never repairs headers
+or writes raw copies. Correct complete metadata needs no additions. Source/HDU
+mapping/authority, unknowns and scoped readiness are explicit; no scientific or
+payload-integrity acceptance is implied. Agent corrected ESO 10/10 and inspector
+24/24 pass. Candidate filter cross-keyword finding #190 fixed, target-pending;
+WFI gain issue #131 remains independent, never substituted or repaired. Actual
+Mac then representative Chapman/real-input metadata qualification remain pending.
+No automatic legacy-pipeline gate, installation, reduction, native/M4 or full WAD
+runtime claim. Other adapter/profile integration remains subsequent work.
+
 31 October owner makes [data preflight subordinate to WAD](../architecture/proposed/wad-processing-project.md#data-preflight-under-wad).
 WAD governs metadata/authority/assessment/plan contracts; preflight is a shared
 read-only ingestion service with instrument adapters, explicit apply writes copies.

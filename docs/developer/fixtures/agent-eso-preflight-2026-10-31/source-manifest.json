@@ -1,0 +1,34 @@
+{
+  "parent_revision": "5941e37354ffe1fa5d5bebc912140837c640f7f1",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "source_sha256": {
+    "Pycavi2/pycavi/pycavi_preflight.py": "a71a47486f09759a595535e2a039dc01e8f15604991bb91edd8f7e171693e8f0",
+    "Pycavi2/pycavi/pycavi_project.py": "01cdc533f55554f2706f101121e4d21f4f9900e1e29108d4607b688479dfc7d1",
+    "Pycavi2/pycavi/pycavi_paths.py": "fe23bff89a8b5bdcbb16e62372e8328a0400aae391bc203ecdac53d153aa35f6",
+    "Pycavi2/pycavi/pycavi_inspection_stages.py": "7d086bb7208ee2e60ef2adfe95617411c68812c2c50cef9f7d78898123aec87b",
+    "Pycavi2/pycavi/pycavi_product_paths.py": "6ecd0071edef0d109641806942cf40c3acc3bf37bdcccda44a250e2572f8491d",
+    "Pycavi2/pycavi/config/omegacam.cfg": "64436f06898294e57a04afe968479cdd9749e5465b42f5e6953dd4612382cb14",
+    "Pycavi2/pycavi/config/wfi.cfg": "ce295639a81565071e91598bc0acb981bd5be239b9e5b090b9f98f86dcec00f7",
+    "Pycavi2/tests/test_eso_preflight.py": "066ee71451a194df2ffc78501cea49fbe46199f49518835a37adb39e8347512f",
+    "Pycavi2/tests/qualify_eso_preflight.py": "8b4f4155ab44ca286607b111e70a370c84b4a8d2edb8f4debe8b2e5137a26484"
+  },
+  "checks": {
+    "eso_final": {
+      "tests": 10,
+      "seconds": 3.144,
+      "status": "passed"
+    },
+    "inspector_regression": {
+      "tests": 24,
+      "seconds": 6.576,
+      "status": "passed"
+    },
+    "regression_190_before": {
+      "tests": 1,
+      "status": "failed as expected; retained"
+    },
+    "local_links": 24,
+    "target_runner": "syntax checked only; actual Mac/Chapman pending"
+  },
+  "scope": "Synthetic only; no original observations, native program, install or automatic pipeline activation."
+}

@@ -545,3 +545,5 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - [Practical ASI inputs and generated dataset TOML](asi-simple-inputs-2026-10-31.md).
 
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
+
+- [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
