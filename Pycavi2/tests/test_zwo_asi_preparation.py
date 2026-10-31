@@ -25,7 +25,13 @@ class AsiTests(unittest.TestCase):
         self.config = self.work / "profile.toml"
         self.config.write_bytes(CONFIG.read_bytes())
 
-    frame = legacy.PreparationTests.frame
+    def frame(self, relative="Blue/M_51_Light_Blue_32_secs_001.fits", changes=None, extra=None):
+        # Synthetic telescope signature mirrors the owner-returned 260-frame inventory.
+        geometry = {"TELESCOP": "SynScan", "FOCALLEN": 1600.0, "APTDIA": 200.0,
+                    "SCALE": 0.4899625, "PIXSIZE1": 3.8, "PIXSIZE2": 3.8,
+                    "XPIXSZ": 3.8, "YPIXSZ": 3.8}
+        geometry.update(changes or {})
+        return legacy.PreparationTests.frame(self, relative, geometry, extra)
 
     def inventory(self):
         return prep.inventory(self.root, prep.load_profile(self.config))
@@ -69,7 +75,8 @@ class AsiTests(unittest.TestCase):
             self.assertEqual(hdr[k], v)
             self.assertEqual(hdr.count(k), 1)
         self.assertEqual(hdr["INSTRUME"], "ZWO CCD ASI1600MM Pro")
-        self.assertNotIn("TELESCOP", hdr)
+        self.assertEqual(hdr["TELESCOP"], "SynScan")
+        self.assertEqual(hdr["WENU PROV TELESCOPE"], "BPO StellaLyra RC 8-inch 2020-01-01")
         self.assertNotIn("CHECKSUM", hdr)
         self.assertNotIn("DATASUM", hdr)
         with fits.open(product, memmap=False) as hdus:
@@ -177,6 +184,33 @@ class AsiTests(unittest.TestCase):
         (self.root/"linked.fits").symlink_to(source)
         (self.root/"unknown.fits").write_bytes(b"not a fits")
         self.assertEqual(len(self.inventory()["errors"]), 2)
+
+    def test_dated_telescope_names(self):
+        # Dated identity: each original DATE-OBS supplies its own calendar date.
+        first = self.frame(changes={"DATE-OBS": "2022-01-08T22:04:06.108"})
+        second = self.frame("Blue/M_51_Light_Blue_32_secs_002.fits",
+                            changes={"DATE-OBS": "2022-02-06T19:06:04.613"})
+        plan, digest = self.plan()
+        output = self.work / "prepared"
+        prep.apply_plan(plan, digest, output, False, self.config)
+        for source, day in [(first, "2022-01-08"), (second, "2022-02-06")]:
+            hdr = fits.getheader(output / source.relative_to(self.root))
+            self.assertEqual(hdr["WENU PROV TELESCOPE"], "BPO StellaLyra RC 8-inch " + day)
+            self.assertEqual(hdr["TELESCOP"], "SynScan")
+            self.assertEqual(hdr["DATE-OBS"], fits.getheader(source)["DATE-OBS"])
+
+    def test_telescope_signature_date_and_conflict_controls(self):
+        # Identification refusal: geometry/date errors and duplicate/conflicting identity block copies.
+        cases = [({"FOCALLEN": 910.0}, []), ({"APTDIA": 130.0}, []),
+                 ({"SCALE": 0.86}, []), ({"TELESCOP": "Other"}, []),
+                 ({"DATE-OBS": None}, []), ({"DATE-OBS": "2022-02-30T12:00:00"}, []),
+                 ({"DATE-OBS": "20220108"}, []),
+                 ({}, [("DATE-OBS", "2020-01-01T01:02:03")]),
+                 ({}, [("HIERARCH WENU PROV TELESCOPE", "Another telescope")])]
+        for changes, extra in cases:
+            source = self.frame(changes=changes, extra=extra)
+            self.assertTrue(self.inventory()["errors"], (changes, extra))
+            source.unlink()
 
     def test_cli_plan_apply_and_destination_guards(self):
         # CLI integration: actual plan/apply calls and report/input separation use fresh outputs.

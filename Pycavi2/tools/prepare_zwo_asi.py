@@ -5,6 +5,7 @@ Header-only plan, then reviewed-plan copy. No reduction or pixel interpretation.
 """
 import argparse
 import collections
+from datetime import datetime
 import json
 import math
 import os
@@ -22,6 +23,8 @@ PROVENANCE = {"OBSERVAT", "ORIGIN", "TELESCOP", "OBSERVER",
               "WENU PROV PAPER DOI", "WENU PROV DATA DOI"}
 EXPECTED = {"BITPIX", "NAXIS1", "NAXIS2", "BSCALE", "BZERO", "XBINNING", "YBINNING",
             "GAIN", "OFFSET"}
+TELESCOPE_EXPECTED = {"TELESCOP", "FOCALLEN", "APTDIA", "SCALE", "PIXSIZE1",
+                      "PIXSIZE2", "XPIXSZ", "YPIXSZ"}
 
 
 def keys(table, allowed, required=()):
@@ -38,7 +41,7 @@ def load_profile(path):
     raw = path.read_bytes()
     require(len(raw) <= 256 * 1024, "Configuration exceeds limit")
     cfg = tomllib.loads(raw.decode("utf-8"))
-    keys(cfg, {"schema_version", "camera", "dataset", "provenance", "rules", "reference"},
+    keys(cfg, {"schema_version", "camera", "dataset", "provenance", "rules", "reference", "telescope"},
          {"schema_version", "camera", "dataset", "provenance", "rules"})
     require(type(cfg["schema_version"]) is int and cfg["schema_version"] == 1, "Unknown schema version")
     keys(cfg["camera"], {"model", "instrume", "monochrome"}, {"model", "instrume", "monochrome"})
@@ -64,6 +67,18 @@ def load_profile(path):
                 "Provenance must be printable ASCII: " + k)
         require(len(fits.Card(k if len(k) <= 8 else "HIERARCH " + k, v).image) <= 80,
                 "Provenance value too long: " + k)
+    if "telescope" in cfg:
+        telescope = cfg["telescope"]
+        keys(telescope, {"name_prefix", "expected"}, {"name_prefix", "expected"})
+        prefix = telescope["name_prefix"]
+        require(type(prefix) is str and prefix.strip() and prefix.isascii()
+                and all(32 <= ord(c) < 127 for c in prefix), "Invalid telescope name prefix")
+        require(len(fits.Card("HIERARCH WENU PROV TELESCOPE", prefix + " 2000-01-01").image) <= 80,
+                "Telescope name exceeds one FITS card")
+        keys(telescope["expected"], TELESCOPE_EXPECTED, TELESCOPE_EXPECTED)
+        require(type(telescope["expected"]["TELESCOP"]) is str, "Expected TELESCOP must be text")
+        require(all(number(v) and v > 0 for k, v in telescope["expected"].items()
+                    if k != "TELESCOP"), "Invalid telescope geometry checks")
     rules = cfg["rules"]
     require(isinstance(rules, list) and 0 < len(rules) <= 256, "Expected bounded classification rules")
     directories = set()
@@ -102,6 +117,8 @@ def inspect(path, root, profile):
     selected = {"SIMPLE", "NAXIS", "INSTRUME", "EXPTIME", "EXPOSURE", "CCD-TEMP",
                 "FILTER", "FRAME", "IMAGETYP", "BAYERPAT", "GROUPS", "CHECKSUM", "DATASUM",
                 *EXPECTED, *DPR, *cfg["provenance"]}
+    if "telescope" in cfg:
+        selected.update({"DATE-OBS", "WENU PROV TELESCOPE", *TELESCOPE_EXPECTED})
     counts = collections.Counter(card.keyword for card in header.cards)
     require(all(counts[k] <= 1 for k in selected), "Duplicate selected header card")
     for k in header:
@@ -144,6 +161,18 @@ def inspect(path, root, profile):
             "Filename/exposure disagrees with profile")
     classification = dict(zip(DPR, (kind, "SCIENCE" if kind == "OBJECT" else "CALIB", "IMAGE")))
     additions = {**classification, **cfg["provenance"]}
+    if "telescope" in cfg:
+        # Identification requires the complete reviewed header signature, not a camera guess.
+        for k, v in cfg["telescope"]["expected"].items():
+            actual = header.get(k)
+            require((type(actual) is str and actual == v) if k == "TELESCOP"
+                    else (number(actual) and actual == v), "Telescope signature mismatch: " + k)
+        observed = header.get("DATE-OBS")
+        require(type(observed) is str and re.fullmatch(
+            r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:Z|[+-][0-9]{2}:[0-9]{2})?",
+            observed) is not None, "Expected ISO DATE-OBS timestamp for telescope name")
+        day = datetime.fromisoformat(observed).date().isoformat()
+        additions["WENU PROV TELESCOPE"] = cfg["telescope"]["name_prefix"] + " " + day
     for k, v in additions.items():
         require(k not in header or type(header[k]) is type(v) and header[k] == v,
                 "Existing header conflicts with profile: " + k)

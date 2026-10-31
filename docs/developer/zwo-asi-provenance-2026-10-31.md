@@ -10,6 +10,52 @@ The owner supplied the complete 14-page PDF (13 article pages plus cover),
 Tracks #184; candidate malformed-header reporting correction #187 remains
 target-pending. M4 and native PR #186 retain their separate gates.
 
+## Telescope identification from returned Mac headers
+
+The owner-returned read-only inspection reports all 260 FITS files share one
+signature: `TELESCOP=SynScan`, `FOCALLEN=1600.0` mm, `APTDIA=200.0` mm,
+`SCALE=0.4899625` arcsec/pixel, `PIXSIZE1/2=XPIXSZ/YPIXSZ=3.8` micrometres,
+and 1x1 binning. DATE-OBS spans `2022-01-08T22:04:06.108` to
+`2022-02-06T19:06:04.613`. Together with paper Table 1, this distinguishes the
+StellaLyra RC from the 130/910 mm refractor. This is identification from the
+reported acquisition setup, not an independent plate-scale or optics measurement.
+
+The TOML now has optional `[telescope]` name-prefix and complete expected-header
+signature checks. Only matching frames receive `HIERARCH WENU PROV TELESCOPE`,
+e.g. `BPO StellaLyra RC 8-inch 2022-01-08`. The suffix is the calendar date
+recorded by each frame's valid ISO DATE-OBS, with no timezone conversion or
+inference of commissioning/build date. It is a descriptive dated setup label,
+not a new detector ID or calibration-association key. Preserve original
+`TELESCOP=SynScan`, DATE-OBS and all other acquisition cards byte for byte.
+Missing/duplicate/invalid dates, mismatched geometry or conflicting derived
+provenance block preparation. No current Pycavi grouping policy is changed.
+
+The affected generic suite passes 11/11 in 1.993 s, including two-date copies
+and geometry/date/conflict refusal. The legacy shared-copy source is unchanged
+from its previous 9/9 run. Log and new exact source hashes are retained beside
+the earlier evidence. Actual Mac TOML plan/copy qualification remains pending;
+this returned header inspection did not execute the new helper.
+
+## Complete detector-mode header audit
+
+Owner-returned Mac audit inspected every primary-header card name, value and
+comment in all 260 frames. Full local inventory retained at
+`/Users/fselman/Software/build/wenu-imaging/mac-asi-mode-audit-oox7oh3e/all-primary-headers.json`.
+The console reports no explicit detector/readout mode, ADC bit depth, readout
+speed, USB-bandwidth, driver, firmware or acquisition-software metadata. All 260
+have INSTRUME `ZWO CCD ASI1600MM Pro`, GAIN setting 139.0, OFFSET setting 10.0,
+XBINNING/YBINNING 1, BITPIX 16 and BZERO 32768. File sizes and modification times
+were preserved. This is owner-returned console evidence; the complete JSON was
+not transferred or independently read in the agent workspace.
+
+Record acquisition mode/ADC/readout/software as unknown. FITS unsigned-16 storage
+is not evidence of acquisition ADC bit depth or readout mode; gain/offset numbers
+are reported acquisition settings without physical-unit conversion. Do not add
+inferred mode/gain/RON metadata or change pixels. No code change is needed to
+retain these unknowns. The full keyword list additionally includes SITELAT,
+SITELONG and OBSERVER, but their values were not printed; inspect those before
+asserting absence, filling provenance or assigning precise site coordinates.
+
 ## Provenance established by the paper
 
 | Information | Source | Treatment |
@@ -19,7 +65,7 @@ target-pending. M4 and native PR #186 retain their separate gates.
 | Paper DOI | Article p. 13 | `HIERARCH WENU PROV PAPER DOI` |
 | M51 dataset DOI `10.15125/BATH-01225` | Figure 1(d), data availability, reference 8 | `HIERARCH WENU PROV DATA DOI` |
 | ASI1600MM Pro monochrome, 4656 × 3520, 3.8 µm | Section 2, Table 2 | Camera entry and descriptive reference; existing `INSTRUME` checked and preserved |
-| StellaLyra 200/1600 mm RC and TS Optics 130/910 mm triplet | Table 1 | Descriptive reference only; no per-frame `TELESCOP` assignment |
+| StellaLyra 200/1600 mm RC and TS Optics 130/910 mm triplet | Table 1 | Paper alone: reference only; returned headers now support dated WENU telescope provenance |
 | EQ6 Pro SynScan mounts, ZWO EFW8 and EAF | Section 2, pp. 5–6 | Descriptive reference only |
 | Raspberry Pi 4, Astroberry, INDI, KStars and Ekos | Section 2, p. 4 | Descriptive reference only; no acquisition software/version claims per frame |
 | Campus-edge site near sports pitch | Section 2.1 | Descriptive reference only; no invented coordinates or elevation |
@@ -31,9 +77,9 @@ compliance claim. The archive DOI is supported by the paper's explicit link
 between Figure 1(d)'s M51 data and the archive. Association with the owner's
 local Bath tree comes from the supplied dataset context, not an independent
 byte-level comparison with an archive download. The paper does not identify
-per-frame observers, exact telescope, filter transmission, physical gain/RON,
-ADC mode or precise coordinates; these remain unknown. Do not assign its two
-possible telescope setups or historical configurations to every exposure.
+per-frame observers, filter transmission, physical gain/RON,
+ADC mode or precise coordinates; these remain unknown. The telescope identification above depends on the returned header signature,
+not the paper alone; other historical configurations remain unassigned.
 
 ## Interfaces and policy
 
@@ -63,6 +109,8 @@ is inferred. The output must be separate and new; originals are never rewritten.
 Only the allowlisted provenance keys may be added from `[provenance]`:
 `OBSERVAT`, `ORIGIN`, optional `TELESCOP`/`OBSERVER`, and the two DOI cards.
 Existing equal values remain once; conflicts/duplicates block the file.
+Optional `[telescope]` checks allow only the eight signature keys recorded above
+and derive only `WENU PROV TELESCOPE` from a configured prefix and DATE-OBS.
 `INSTRUME` must match an explicit string in the camera entry and is never added
 or replaced. Arbitrary structural/pixel/date/ESO programme cards cannot be
 injected through provenance. Unknown policy keys are errors. Descriptive

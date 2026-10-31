@@ -28,7 +28,23 @@ OBSERVAT = "Bath Physics Observatory"
 ORIGIN = "University of Bath"
 "WENU PROV PAPER DOI" = "10.1088/1361-6552/acbf1b"
 "WENU PROV DATA DOI" = "10.15125/BATH-01225"
-# TELESCOP and OBSERVER deliberately absent: not established per exposure.
+# Preserve raw TELESCOP='SynScan'; identified telescope is a separate provenance card.
+# OBSERVER remains unknown.
+
+[telescope]
+# Appended date is the calendar date recorded in each frame's DATE-OBS.
+# Identification combines all 260 returned header signatures with paper Table 1.
+name_prefix = "BPO StellaLyra RC 8-inch"
+
+[telescope.expected]
+TELESCOP = "SynScan"
+FOCALLEN = 1600.0
+APTDIA = 200.0
+SCALE = 0.4899625
+PIXSIZE1 = 3.8
+PIXSIZE2 = 3.8
+XPIXSZ = 3.8
+YPIXSZ = 3.8
 
 [reference]
 # Reference information stays in the plan/manifest, not per-frame acquisition cards.
@@ -43,7 +59,7 @@ mounts = "Sky-Watcher EQ6 Pro SynScan; section 2"
 filter_wheel = "ZWO EFW8; LRGB, H-alpha, O-III, S-II; section 2"
 focuser = "ZWO EAF stepper; section 2"
 control_stack = "Raspberry Pi 4 / Astroberry / INDI / KStars / Ekos; section 2; versions not established"
-unknowns = "Per-frame telescope, observer, software versions, filter response, physical gain/RON and ADC mode"
+unknowns = "Observer, software versions, filter response, physical gain/RON and ADC mode"
 
 [[rules]]
 directory = "Bias"

@@ -52,14 +52,16 @@ values block preparation. Exact TOML bytes and effective settings are bound to
 the reviewed plan and manifest. See [the provenance contract and paper evidence](developer/zwo-asi-provenance-2026-10-31.md)
 for keyword mappings, unknowns, allowlisted fields and qualification limits.
 
-The paper documents two telescope systems and does not establish a unique one
-for every archive frame. Telescope, observer, site coordinates and software
-versions are not filled from inference. Descriptive equipment references remain
+The paper documents two telescope systems; the subsequently returned uniform
+200/1600 mm header signature identifies the StellaLyra RC for all 260 frames.
+The TOML now checks that signature and adds a dated `WENU PROV TELESCOPE` label,
+preserving original `TELESCOP=SynScan`. Observer, site coordinates and software
+versions remain unknown. Descriptive equipment references remain
 in TOML/manifest. The interface currently supports configured monochrome primary
 images; arbitrary ASI models/colour layouts remain unqualified.
 
 Legacy commands below describe the previously qualified Bath-specific helper.
-Its nine controls and the new nine TOML/provenance controls pass in the agent
+Its nine controls and the new eleven TOML/provenance controls pass in the agent
 environment; actual Mac qualification of the TOML path is pending. The previous
 Mac full 260-file plan and ten-copy qualification passed, with original files,
 installed components and clean main preserved. Do not reuse a legacy plan with
