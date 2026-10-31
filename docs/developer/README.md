@@ -539,3 +539,5 @@ Functional acceptance, scientific validation and archive compliance are distinct
 Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 
 - [Native configuration/failure correction and 26 October evidence](native-failure-correction-2026-10-26.md).
+
+- [TOML-driven ZWO ASI provenance and Bath paper evidence](zwo-asi-provenance-2026-10-31.md).

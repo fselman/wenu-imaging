@@ -1,0 +1,18 @@
+{
+  "base": "c81cb86f79659fba89bed9ba16e6a96cbad62992",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "executable": "/workspace/scratch/555b377cf948/m3-test-env/bin/python",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "astropy": "6.1.7",
+  "numpy": "1.26.4",
+  "source_sha256": {
+    "Pycavi2/tools/fits_preparation.py": "62736ad6cb8ac76e9c9235493c6721d71ca9cc5c9c1fcbc0f7243fee61cbb667",
+    "Pycavi2/tools/prepare_zwo_asi.py": "6ee22c92b9f5b81d0b541c59733187ae7e95650749330b3dd14cda30436e0d09",
+    "Pycavi2/tools/prepare_zwo_bath.py": "6bfef4d9d806ddfa537925f125e78493005c2fcfbe2bc274281540bd4afb0791",
+    "Pycavi2/tests/test_zwo_asi_preparation.py": "2d1f333133bf3bfae43e6abd394fbe4d73d73bae309cf3eaf4058bed5c861df0",
+    "Pycavi2/tests/test_zwo_bath_preparation.py": "db220a75523eba6f4cb9c7b35b12b82322f9a326ecb165389cbc04b3ffc9dd83",
+    "Pycavi2/config/preparation/zwo_asi1600mm_bath.toml": "fd983bd1b7be89349329c92377e23fe8a6490a163626bce11a31cdb1dc61bbe8"
+  },
+  "scope": "synthetic helpers only; actual TOML Mac/Chapman pending",
+  "telescope_update": "Generic signature/date extension passed 11/11 in 1.993 s; source hashes below match this tested version."
+}

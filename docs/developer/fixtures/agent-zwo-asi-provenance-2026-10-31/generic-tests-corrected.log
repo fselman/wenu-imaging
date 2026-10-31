@@ -1,0 +1,23 @@
+RETAINED EVIDENCE: /tmp/zwo-asi-provenance-controls-3721phsu
+test_all_roles_and_bands (__main__.AsiTests.test_all_roles_and_bands) ... ok
+test_cli_plan_apply_and_destination_guards (__main__.AsiTests.test_cli_plan_apply_and_destination_guards) ... PLAN: /tmp/zwo-asi-provenance-controls-3721phsu/test_cli_plan_apply_and_destination_guards-_p4wykna/cli-plan.json | SHA256: ab701a4bfeffd1a1f13ac289d68beaa97e109fd7c4d4d923ab18b24961d59690
+CLASSIFICATIONS: {'OBJECT': 1} | BLOCKED: 0
+WARNINGS: {}
+PREPARED: /tmp/zwo-asi-provenance-controls-3721phsu/test_cli_plan_apply_and_destination_guards-_p4wykna/prepared | files: 1 | payload bytes verified
+STOP: Report must be outside raw inputs
+ok
+test_config_and_source_staleness (__main__.AsiTests.test_config_and_source_staleness) ... ok
+test_configuration_restrictions (__main__.AsiTests.test_configuration_restrictions) ... ok
+test_copy_provenance_and_preservation (__main__.AsiTests.test_copy_provenance_and_preservation) ... ok
+test_flat_acknowledgement_and_aliases (__main__.AsiTests.test_flat_acknowledgement_and_aliases) ... ok
+test_other_camera_policy_and_shape (__main__.AsiTests.test_other_camera_policy_and_shape) ... ok
+test_provenance_conflicts_duplicates_and_consistent_values (__main__.AsiTests.test_provenance_conflicts_duplicates_and_consistent_values) ... ok
+test_unknown_inputs_and_source_changes (__main__.AsiTests.test_unknown_inputs_and_source_changes) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.644s
+
+OK
+PREPARED: /tmp/zwo-asi-provenance-controls-3721phsu/test_copy_provenance_and_preservation-dshq9310/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/zwo-asi-provenance-controls-3721phsu/test_flat_acknowledgement_and_aliases-nio__bfs/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/zwo-asi-provenance-controls-3721phsu/test_provenance_conflicts_duplicates_and_consistent_values-1yrkj_e2/prepared | files: 1 | payload bytes verified

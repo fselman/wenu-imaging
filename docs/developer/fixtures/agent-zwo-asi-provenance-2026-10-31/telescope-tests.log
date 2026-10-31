@@ -1,0 +1,26 @@
+RETAINED EVIDENCE: /tmp/zwo-asi-provenance-controls-jtwu3l9t
+test_all_roles_and_bands (__main__.AsiTests.test_all_roles_and_bands) ... ok
+test_cli_plan_apply_and_destination_guards (__main__.AsiTests.test_cli_plan_apply_and_destination_guards) ... PLAN: /tmp/zwo-asi-provenance-controls-jtwu3l9t/test_cli_plan_apply_and_destination_guards-ly7tptqs/cli-plan.json | SHA256: 1cc061eb4d8edf7cc73df7cff4152ec59061a9d8070512fb922fa9b89ccdb9b7
+CLASSIFICATIONS: {'OBJECT': 1} | BLOCKED: 0
+WARNINGS: {}
+PREPARED: /tmp/zwo-asi-provenance-controls-jtwu3l9t/test_cli_plan_apply_and_destination_guards-ly7tptqs/prepared | files: 1 | payload bytes verified
+STOP: Report must be outside raw inputs
+ok
+test_config_and_source_staleness (__main__.AsiTests.test_config_and_source_staleness) ... ok
+test_configuration_restrictions (__main__.AsiTests.test_configuration_restrictions) ... ok
+test_copy_provenance_and_preservation (__main__.AsiTests.test_copy_provenance_and_preservation) ... ok
+test_dated_telescope_names (__main__.AsiTests.test_dated_telescope_names) ... ok
+test_flat_acknowledgement_and_aliases (__main__.AsiTests.test_flat_acknowledgement_and_aliases) ... ok
+test_other_camera_policy_and_shape (__main__.AsiTests.test_other_camera_policy_and_shape) ... ok
+test_provenance_conflicts_duplicates_and_consistent_values (__main__.AsiTests.test_provenance_conflicts_duplicates_and_consistent_values) ... ok
+test_telescope_signature_date_and_conflict_controls (__main__.AsiTests.test_telescope_signature_date_and_conflict_controls) ... ok
+test_unknown_inputs_and_source_changes (__main__.AsiTests.test_unknown_inputs_and_source_changes) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.993s
+
+OK
+PREPARED: /tmp/zwo-asi-provenance-controls-jtwu3l9t/test_copy_provenance_and_preservation-_eq9wzk0/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/zwo-asi-provenance-controls-jtwu3l9t/test_dated_telescope_names-92qm0inp/prepared | files: 2 | payload bytes verified
+PREPARED: /tmp/zwo-asi-provenance-controls-jtwu3l9t/test_flat_acknowledgement_and_aliases-8gv_lqnt/prepared | files: 1 | payload bytes verified
+PREPARED: /tmp/zwo-asi-provenance-controls-jtwu3l9t/test_provenance_conflicts_duplicates_and_consistent_values-0db2xkoa/prepared | files: 1 | payload bytes verified

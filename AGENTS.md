@@ -1,5 +1,19 @@
 # wenu-imaging
 
+31 October owner authorizes [generic TOML-driven ZWO ASI preparation](docs/developer/zwo-asi-provenance-2026-10-31.md)
+after previous-helper actual Mac 260-file plan and ten-copy checks passed.
+The generic entry point separates camera/dataset rules and sourced provenance;
+existing INSTRUME/original cards/payload remain, conflicts block preparation.
+Bath Physics Observatory/institution and paper/data DOI are configured. Returned
+260-frame 200/1600 mm header signature identifies the StellaLyra RC; configured
+checks add a dated WENU telescope label while preserving TELESCOP=SynScan.
+Observer, coordinates and software versions stay unknown.
+Agent legacy 9/9 and current generic 11/11 pass; candidate #187 parse-error
+reporting is fixed but target-pending. Fresh Mac provenance plan/copy checks remain
+pending. No reduction, installation, native changes, M4 closure or automatic
+merge/cleanup; original review/helper PR #183 and native PR #186 stay unchanged.
+Earlier pending statements retain historical scope.
+
 31 October owner clarification: identifying native Windows obstacles is
 informational preparation for a possible later port. It must not affect Mac/Linux
 design, introduce Windows-driven adapters/abstractions or overhead, or block their
