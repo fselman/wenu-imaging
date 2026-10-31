@@ -1,5 +1,20 @@
 # mefpp refactor implementation plan — proposal
 
+31 October M3 is owner accepted/closed and PR #178 merged at
+6c4b0f0eff639da8dbef890f0df10f86c70bb0ee; owner-returned Mac and Chapman4
+cleanup confirms clean main, merged review branch removal and protected installs
+preserved. Owner instructed M4 review and inclusion of `~/Pictures/ZWO_Bath/`.
+The [M4 interface/fixture review](../../developer/m4-interface-fixture-review-2026-10-31.md) tracks #182:
+independent detector/HDU maps, optional selectors, scaling, selection/reference
+context and an astrophotography profile within existing visual-purpose vocabulary.
+Returned Bath inventory samples 256/260 FITS: primary images, unsigned-16 scaling,
+explicit flat-role ambiguity and 30 s dark/32 s light mismatch. Four headers remain
+uninspected; no raw report/pixels independently audited. This is documentation and
+source review, not M4 C implementation, reduction, profile activation or generic
+CMOS acceptance. Review interfaces/fixtures before code; preserve original gates,
+Pycavi grouping ownership, all evidence and installed environments. Earlier pending
+M3 receipts below retain their historical scope.
+
 31 October [summary/alignment paired receipt](../../developer/m3-summary-paired-results-2026-10-31.md): source
 fc4b26cd1a1eed828a88d818fcdbb7912a2acbe2 passed 24/24 on selected Intel Mac
 (6.938 s) and representative Chapman4 (3.563 s), with installed files and clean
