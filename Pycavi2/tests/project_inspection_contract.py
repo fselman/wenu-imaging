@@ -343,6 +343,67 @@ class InspectionTests(unittest.TestCase):
         self.assertNotIn("frame\tname", result.stdout)
         self.assertIn("frame\\tname", result.stdout)
 
+    # Summary preserves memberships (including repeated/missing inputs) rather
+    # than multiplying rows by HDUs or conflating same-named exposures.
+    def test_summary_memberships_json_and_stage_selection(self):
+        raw = self.image(self.raw / "frame.fits")
+        listed = self.listed(content="frame.fits\nframe.fits\nmissing.fits\n")
+        before = inventory(self.work)
+        report = self.cli(self.caller_a, "--summary", "--list-base", self.raw)
+        summary = report["summary"]["rows"]
+        self.assertEqual([r["member"] for r in summary], [1, 2, 3])
+        self.assertEqual([r["hdus_read"] for r in summary], [3, 3, 0])
+        self.assertEqual([r["target"] for r in summary], ["field", "field", None])
+        self.assertEqual(summary[2]["status"], "unavailable")
+        selected = self.cli(self.caller_b, "--summary", "--list-base", self.raw,
+                            "--stage", "wcs", "--exposure", raw)
+        self.assertEqual([r["member"] for r in selected["summary"]["rows"]], [1, 2])
+        self.assertTrue(all(r["path"] == str(raw) for r in selected["summary"]["rows"]))
+        unknown = self.cli(self.caller_a, "--summary")
+        self.assertEqual(len(unknown["summary"]["rows"]), 3)
+        self.assertTrue(all(r["path"] is None and r["hdus_read"] == 0 for r in unknown["summary"]["rows"]))
+        self.assertEqual(before, inventory(self.work))
+        # Distinct partitions and standard lists must retain their identities.
+        other = self.root / "other"; other.mkdir()
+        (other / "std.list").write_text(str(raw) + "\n")
+        report = self.cli(self.caller_a, "--summary", "--list-base", self.raw)
+        self.assertEqual(len(report["summary"]["rows"]), 4)
+        self.assertEqual({r["stage"] for r in report["summary"]["rows"]}, {"science", "standard"})
+
+    # Check rendered column positions against actual field values, not tabs.
+    def test_summary_and_detailed_titles_align_with_variable_width_fields(self):
+        self.image(self.raw / "short.fits", target="CN Ori", exposure=80.)
+        self.image(self.raw / "much-longer-science-exposure.fits", target="A much longer target", exposure=1200.)
+        self.listed(content="short.fits\nmuch-longer-science-exposure.fits\n")
+        before = inventory(self.work)
+        for summary in (True, False):
+            command = [sys.executable, "-B", str(MODULES / "pycavi_project.py"),
+                       "project", "inspect", str(self.root), "--recursive", "--list-base", str(self.raw)]
+            if summary:
+                command += ["--summary"]
+            else:
+                command += ["--stage", "science", "--columns", "member", "target", "exposure"]
+            result = subprocess.run(command, cwd=self.caller_a, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            lines = result.stdout.splitlines()
+            header = next(line for line in lines if ("HDUs read" in line if summary else line.startswith("member")))
+            start = lines.index(header)
+            data = lines[start + 2:start + 4]
+            self.assertNotIn("\t", header)
+            if summary:
+                self.assertEqual(data[0].index("short.fits"), header.index("File"))
+                self.assertEqual(data[1].index("much-longer-science-exposure.fits"), header.index("File"))
+                self.assertEqual(data[0].index("CN Ori"), header.index("Target"))
+                self.assertEqual(data[1].index("A much longer target"), header.index("Target"))
+                end = header.index("HDUs read") - 2
+                self.assertEqual(data[0].index("80.0") + len("80.0"), end)
+                self.assertEqual(data[1].index("1200.0") + len("1200.0"), end)
+                self.assertIn("SCIENCE EXPOSURES: 2", result.stdout)
+                self.assertIn("Diagnostic counts (whole inspection):", result.stdout)
+            else:
+                self.assertEqual(data[0].index('"CN Ori"'), header.index("target"))
+            self.assertEqual(before, inventory(self.work))
+
     # Stage expectations are not completion receipts; normalization is in place.
     def test_exposure_stage_sequence_and_missing_products(self):
         self.image(self.raw / "frame.fits")

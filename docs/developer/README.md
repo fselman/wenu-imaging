@@ -1,5 +1,13 @@
 # Developer documentation
 
+31 October owner requested [direct --summary output and aligned titles](m3-inspector-summary-2026-10-31.md)
+before M3 closure. Compact exposure rows/diagnostic counts now need no wrapper;
+detailed tables also use measured spaces. Agent suite passes 24/24; actual Mac,
+then representative Chapman presentation qualification remains pending. Prior
+22-group reader and real-tree evidence stay valid; no reader/C/scientific change.
+PR #178 stays draft for the added interface gate. No installation or activation;
+owner acceptance/merge-clean precedes M4 review.
+
 31 October #180 [corrected paired and real-tree receipt](m3-eso-header-paired-results-2026-10-31.md): source
 f7967fd1ee93f2a5a1a4faa227cadd460c054fa5 passed 22/22 on selected Intel Mac
 (4.788 s) and representative Chapman4 (2.405 s), with installed files and clean
