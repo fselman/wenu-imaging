@@ -1,0 +1,17 @@
+Internal ctest changing into directory: /workspace/scratch/104db3d59fe9/m4-layout-asan
+Test project /workspace/scratch/104db3d59fe9/m4-layout-asan
+    Start  9: native_layout
+1/2 Test  #9: native_layout ....................   Passed    1.07 sec
+    Start 13: native_bias_service
+2/2 Test #13: native_bias_service ..............   Passed    3.51 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+bias         =   3.51 sec*proc (1 test)
+detector     =   1.07 sec*proc (1 test)
+layout       =   1.07 sec*proc (1 test)
+native       =   4.57 sec*proc (2 tests)
+ownership    =   4.57 sec*proc (2 tests)
+
+Total Test time (real) =   4.57 sec

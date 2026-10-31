@@ -1,5 +1,18 @@
 # wenu-imaging
 
+31 October owner accepted M4 interface/fixture review and instructed proceeding.
+First [native layout increment](docs/developer/m4-native-layout-2026-10-31.md)
+implements opt-in C90 bounded header catalogues, independent detector maps,
+selector/unit/active-region/reference checks and existing Eclipse plane loading.
+Primary/extension/MEF inputs reach the same existing bias service. Agent optimized
+C90/C17 layout+bias and scoped ASan/UBSan checks pass; final affected-layout controls
+also pass. New candidate FIFO finding #185 is corrected and remains target-pending.
+M4/#182 stays open: actual Mac/Chapman, instrument mapping/integration, original
+normalization equivalence and performance gates remain pending. No install, engine
+switch or full Bath/CMOS qualification. Windows notes are informational only.
+Native work uses feat/m4-native-layout-20261031, based on unchanged review/helper
+PR #183; the owner's pending Mac helper command remains valid at c81cb86.
+
 31 October owner clarification: identifying native Windows obstacles is
 informational preparation for a possible later port. It must not affect Mac/Linux
 design, introduce Windows-driven adapters/abstractions or overhead, or block their
