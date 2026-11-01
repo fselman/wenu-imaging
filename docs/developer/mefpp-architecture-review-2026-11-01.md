@@ -1,6 +1,12 @@
 # mefpp architecture review and proposed delivery roadmap
 
-Date: 1 November 2026, America/Santiago. Review version 1.
+Date: 1 November 2026, America/Santiago. Review version 2. Word review edition.
+
+Owner update: add target command/TOML examples; complete the first bias stage with
+PAF, then connect TOML immediately and repeat bias with equivalent TOML settings.
+For this refactoring cycle, iterate on Intel Mac using C17 only, followed by a
+consolidated Mac C90 check and then Chapman verification. No native execution is
+started by this document revision.
 
 **Status: source audit and design proposal for owner review, not implementation acceptance.**
 Source is pinned to `493e4f6e6674bbf30f09dd6bdfa6af24fc2a3cf7`, the merged
@@ -454,9 +460,9 @@ runtime changes. No implementation starts merely because this report is publishe
 |---|---|---|
 | M5.0 — review contracts | Approve service boundaries, dual invocation, product/statistics/keyword authority and output policy; triage #204–#207 | Concrete schemas/signature sketches and fixture matrix; retain accepted native baseline and all old products |
 | M5.1 — common result and metadata boundary | Operation-specific owned results, explicit normalization/reference metadata, original input-index decisions, keyword policy above qfits | Tiny lifetime/partial-failure and card-authority controls; no new estimator or numerical reordering |
-| M5.2 — production configuration connection | Connect accepted PAF/TOML readers to the same effective settings; add configurable identity-prefix policy with compatibility defaults | Exact PAF/TOML effective-setting and old CLI comparisons; preserve parser/source/override provenance; normal activation separate |
-| M5.3 — publication service | Runtime creation identity, ordered primary/extensions, category/provenance, common calibration directory and returned final paths | Clock/collision/non-overwrite/partial-write controls; #206/#207 scoped work; old naming mode retained until migration accepted |
-| M5.4 — bias adapter | Existing `mef_cal_bias` to explicit loader/result/writer and `mefpp cal bias`; legacy recipe calls same operation boundary | Existing bias oracle plus changed I/O/header/lifetime controls; no replay of unrelated matrices |
+| M5.2 — first bias adapter with PAF | Existing `mef_cal_bias` to explicit loader/result/minimal writer and `mefpp cal bias`; legacy recipe calls the same operation boundary | Mac C17: existing bias oracle plus changed I/O/header/lifetime controls; preserve PAF reference and avoid unrelated matrices |
+| M5.3 — TOML immediately after bias | Connect the accepted TOML reader to the same effective settings; repeat the complete bias operation with equivalent TOML files before starting BPM or flats | Mac C17: exact PAF/TOML settings and signal/metadata agreement, except separately generated product identities; preserve original sources and explicit override history |
+| M5.4 — extend publication service | Extend bias publication to all product roles, configurable CMDP/SMDP prefixes, ordered primary/extensions, category/provenance, common calibration directory and returned final paths | Mac C17: clock/collision/non-overwrite/partial-write controls; #206/#207 scoped work; old naming mode retained until migration accepted |
 | M5.5 — BPM service | Extract existing construction, separate its embedded publication and expose `mefpp cal bpm` | Exact mask/QC/category/provenance and optional-bias cases; distinguish supplied-mask Pycavi recipe; no silent new mask generation |
 | M5.6 — dome and sky services | Two callable services sharing existing private arithmetic; preserve reference levels and frame identities | Built-vs-reloaded normalization and #204/#205 controls, ordered input decisions and selected-region semantics; separate documented corrections from extraction |
 | M5.7 — master-flat service and calibration coordinator | Controlled input ownership; same combination routine; individual and in-recipe use with explicit prerequisites | Mixed supplied/built calibration paths, bias-scaled combination, with/without BPM and non-mutation/transfer checks; keep old coupled recipe until equivalent |
@@ -468,7 +474,7 @@ runtime changes. No implementation starts merely because this report is publishe
 | M6d — fringes | Native template builder; explicit handoff for later Python subtraction | Source masking/normalization/coverage, membership and shared-template uncertainty; no automatic subtraction in mefpp |
 | M7–M9 — project integration | Persist the same native contracts, frozen selected plans and returned product identities in WAD/ASDF; thin notebook/headless planner and serial executor | Round trips, exact versions, offline resources, original order, failed attempts and reuse; does not force native C kernels to parse ASDF |
 | M10 — optional mefppy | Evaluate a narrow binding only after hosting/fatal-exit/lifetime review | Repeated success/failure in one interpreter; no thread-safety claim; CLI remains fallback |
-| M11 — cumulative serial acceptance | Accepted OCAM and WFI coverage, primary/one-extension operation, metadata and downstream normalization/WCS boundaries | Actual Mac and representative shared Chapman, no reproducible same-workload slowdown; separate scientific/ESO acceptance and explicit normal activation |
+| M11 — cumulative serial acceptance | Accepted OCAM and WFI coverage, primary/one-extension operation, metadata and downstream normalization/WCS boundaries | Mac C17 development, then consolidated Mac C90 and representative shared Chapman verification, no reproducible same-workload slowdown; separate scientific/ESO acceptance and explicit normal activation |
 | P — process parallelism | Allocation-aware detector workers, frozen reference barriers and bounded ordered assembly | One-versus-many exact equivalence, reversed completion, exclusions, failure/cancel/restart, shared calibration once, memory/I/O and timing evidence |
 | G1–G4 — later reduction cascades | Advisory impact plans, then explicitly approved incremental execution and only later bounded automatic/iterative policies | Preserve frozen releases, recompute only effective changed dependencies, bound resources and reject executable cycles |
 
@@ -480,8 +486,10 @@ one native invocation to construct all its prerequisites.
 ### First implementation recommendation
 
 Review M5.0 first. Then use the existing bias service as the first end-to-end
-result/header/writer example while implementing only the common infrastructure
-it actually requires. M5.1–M5.3 identify separable boundaries, not a mandate to
+result/header/writer example with PAF, implementing only the common infrastructure
+it actually requires. Immediately afterwards connect TOML and repeat the bias
+stage with equivalent TOML settings, as the owner now requests. Only then proceed
+to BPM and flat services. M5.1–M5.4 identify separable boundaries, not a mandate to
 build a large unused framework before bias works. #204/#205 belong to flat
 acceptance; #206/#207 touch publication and require earlier scope decisions.
 Clock/header/normalization corrections have their own commits and controls;
@@ -516,7 +524,14 @@ No benchmarks or platform matrices are launched by this document. For each
 implementation increment explain actual routines/inputs/writes/criteria first,
 then run only affected controls, using selected tools, niceness at least 10,
 two build jobs and one numerical thread unless the reviewed task states otherwise.
-Qualify actual Intel Mac and one representative shared Chapman host. Later
+For this refactoring cycle, perform implementation and affected functional checks
+on the actual Intel Mac in C17 only. After the agreed Mac C17 refactoring work is
+ready, perform a consolidated C90 compatibility check on that Mac, then qualify
+the same candidate on one representative shared Chapman host with the applicable
+C90/C17 controls. Do not repeat Chapman or dual-language matrices for every
+intermediate edit. Preserve C90-compatible core source throughout; C17 is the
+iteration/build lane, not permission to introduce C17-only constructs. A failure
+at a later gate is corrected and rechecked at the affected boundary. Later
 Apple Silicon/Ubuntu remain required; Windows preparation is informational and
 must not impose overhead or a new Mac/Linux gate. Optional accelerators and
 threading remain separate decisions.
@@ -569,5 +584,294 @@ links and pinned source anchors, balanced Mermaid fences and absence of changes
 to native/Python/build/configuration files. They do not execute the recipe,
 reproduce #204–#207, render a scientific product or establish numerical, memory,
 performance, FITS-standard or ESO compliance. A textual Mermaid structure check
-is not visual rendering validation. The review remains a proposal until the owner
-accepts the concrete contracts and implementation scope.
+is not visual rendering validation. The Word review edition additionally renders
+the equivalent diagrams and all document pages for visual layout inspection;
+this does not change the native execution limits above. The review remains a
+proposal until the owner accepts the concrete contracts and implementation scope.
+
+## 15. Target command line examples and required TOML files
+
+These are **illustrative target invocations and proposed request-file syntax**.
+The grouped commands, `--config`, `--request` and request schema shown here are
+not implemented by the audited production engine. Do not run these examples
+against the current installed executable. They make the interface reviewable;
+option names and the new request fields must be settled before code. The native
+configuration schema version 3 and its included domain files already exist.
+
+### 15.1 The configuration files
+
+For the smallest setup, two TOML files are sufficient: one complete native
+configuration and one operation request. Reusable composition can instead use
+an entry file plus three native domain files. This is an organizational choice,
+not a requirement to hand-write four files for every reduction.
+
+| File | Required content | Existing or proposed |
+|---|---|---|
+| `native.toml` | One complete native schema-3 document, or an entry including the three complete domain subsets below | Existing native TOML format; production command connection is pending |
+| `instrument.toml` | Instrument identity, all configured detector characteristics, scan/crop geometry, gain/RON and configured reference coordinates | Existing schema-3 instrument domain; CHIPn is the legacy configuration ordinal, not the physical detector ID |
+| `processing.toml` | Complete retained processing parameters: rejection thresholds/counts, minimum frames, median region, smoothing and saturation controls | Existing schema-3 processing domain; retain exact migrated stored values |
+| `product.toml` | Complete existing product/header mappings, categories and legacy output roots | Existing schema-3 product domain; the new CMDP/SMDP naming fields below are not yet part of that schema |
+| `bias-request.toml` or another operation request | Explicit input list, detector selection/map, supplied prerequisite paths or build requests, output/work/log locations and requested product policy | Proposed target request schema, separate from the native settings schema |
+
+An existing valid native entry has this shape:
+
+```toml
+schema_version = 3
+include = ["instrument.toml", "processing.toml", "product.toml"]
+override_keys = []
+```
+
+Each included native file also declares `schema_version = 3`. Its domain table
+has `schema_version = 1`, and each leaf is a typed `value`/`unit` descriptor.
+All required legacy settings must be present after composition, even when the
+selected operation only uses some of them. Operation-specific partial settings
+are not an existing supported mode. A complete standalone migrated profile is
+an equally valid alternative.
+
+The following instrument fragment illustrates the format; it is not a complete
+32-detector configuration:
+
+```toml
+schema_version = 3
+
+[instrument]
+schema_version = 1
+detector_count = { value = 32, unit = "count" }
+name = { value = "OMEGACAM", unit = "none" }
+
+[instrument.detectors.CHIP1]
+gain = { value = 2.0, unit = "electron/adu" }
+ron = { value = 4.099999904632568, unit = "electron" }
+```
+
+The long decimal is an example of preserving the migrated binary32 value, not a
+new detector measurement. Use the complete retained profiles in
+`docs/architecture/proposed/m2/examples/omegacam/` or the complete standalone
+`migration-examples/omegacam.toml` as the source of settings. Do not complete the
+fragment above by guessing values. An equivalent WFI example exists alongside it.
+
+Native include paths resolve against the containing TOML file. Native explicit
+overrides use the existing allowlist; detector, identity and header changes must
+not be introduced through a forbidden override. The proposed request-file
+schema is separate: it cannot be pasted into an existing schema-3 native file,
+whose unknown-key rejection remains valuable.
+
+### 15.2 First construct the bias with PAF then repeat with TOML
+
+The first end-to-end bias adapter remains PAF-driven. Its illustrative invocation
+is:
+
+```bash
+mefpp cal bias \
+  --pafname /config/omegacam.paf \
+  --request /config/bias-request.toml
+```
+
+Immediately after that stage, connect the existing TOML configuration reader and
+repeat the same operation with the same frames and effective settings:
+
+```bash
+mefpp cal bias \
+  --config /config/native.toml \
+  --request /config/bias-request.toml
+```
+
+Use distinct output/work/log locations for the paired attempts. Compare effective
+configuration bits, all bias pixels, frame acceptance, scan/QC measurements,
+detector order and relevant headers. Creation identities will be generated
+separately; compare provenance consistency without pretending timestamps should
+match. No other numerical/header difference may be ignored silently. Future
+BPM, flat and science examples then use TOML.
+
+### 15.3 Request a bias product alone
+
+The proposed request below identifies all raw bias frames through an existing
+absolute-path list and explicitly omits an input BPM. The input detector map must
+be validated against the instrument's actual FITS identity convention. A numeric
+HDU is a separate selector, never the detector's identity.
+
+```toml
+request_schema_version = 1
+operation = "cal.bias"
+inputs = "/data/lists/bias.list"
+detector_selection = "all_configured"
+input_bpm = "omitted"
+
+[output]
+calibration_dir = "/reduction/calibrations"
+work_dir = "/reduction/work/bias-001"
+log_path = "/reduction/logs/bias-001.log"
+result_record = "/reduction/records/bias-001.json"
+publish_requested_product = true
+```
+
+`all_configured` means use the supplied validated map to select configured
+logical detectors and preserve physical output order. It does not infer hardware
+identity from CHIP1 or HDU1. A subset request will name logical detector IDs and
+explicitly account for a required normalization reference. The exact mapping
+serialization remains a review item; it must reuse M4 rather than invent another
+FITS parser. Full paths in `bias.list` are used unchanged and list order is kept.
+
+The command creates only the requested bias. Its result record reports the
+actual final path, ORIGFILE, category, detector coverage and status. Until the
+writer begins creation, that final path is unknown. A JSON record here is a small
+proposed native handoff, not adoption of the later ASDF project service or a
+requirement to encode image arrays as JSON.
+
+### 15.4 Build a master flat using supplied calibrations
+
+```bash
+mefpp cal mff \
+  --config /config/native.toml \
+  --request /config/mff-request.toml
+```
+
+An illustrative `mff-request.toml` contains:
+
+```toml
+request_schema_version = 1
+operation = "cal.mff"
+detector_selection = "all_configured"
+input_bpm = "omitted"
+flat_bias_subtraction = true
+
+[calibrations.bias]
+source = "product"
+path = "/reduction/calibrations/CMDP.OMEGACAM.2026-11-01T10:00:00.000.fits"
+
+[calibrations.domeff]
+source = "product"
+path = "/reduction/calibrations/CMDP.OMEGACAM.2026-11-01T10:01:00.000.fits"
+
+[calibrations.skyff]
+source = "product"
+path = "/reduction/calibrations/CMDP.OMEGACAM.2026-11-01T10:02:00.000.fits"
+
+[output]
+calibration_dir = "/reduction/calibrations"
+work_dir = "/reduction/work/mff-001"
+log_path = "/reduction/logs/mff-001.log"
+result_record = "/reduction/records/mff-001.json"
+publish_requested_product = true
+```
+
+The timestamped paths are examples of products that already exist; they are not
+predictions of names a future run will create. The shown request explicitly omits BPM and enables flat bias subtraction under
+the reviewed compatibility convention. Existing
+product readers must recover original normalization/reference metadata and
+correction state, rather than estimate the lost levels from normalized pixels.
+That is the #204 acceptance boundary. Only the master flat is constructed here;
+existing dome/sky products must not be modified in place through borrowed handles.
+
+### 15.5 Process science using already prepared calibrations
+
+```bash
+mefpp sci pp \
+  --config /config/native.toml \
+  --request /config/science-ready.toml
+```
+
+The proposed science request names its science list and explicitly selected bias
+and MFF product paths, with BPM selection reported separately. It supplies science
+output/work/log roots and the result record. There are no calibration build tasks
+unless explicitly supplied. The service applies the requested native corrections
+once, preserves authoritative science keywords and writes native preprocessed
+pixels. The later Python e-/s normalization remains a separate declared step.
+
+### 15.6 Run the full cascade starting with no prepared calibrations
+
+The grouped science operation remains the entry point. A request can supply raw
+calibration lists instead of product paths:
+
+```bash
+mefpp sci pp \
+  --config /config/native.toml \
+  --request /config/science-build.toml
+```
+
+An illustrative request structure is:
+
+```toml
+request_schema_version = 1
+operation = "sci.pp"
+inputs = "/data/lists/science.list"
+detector_selection = "all_configured"
+input_bpm = "omitted"
+
+[calibrations.bias]
+source = "build"
+inputs = "/data/lists/bias.list"
+
+[calibrations.domeff]
+source = "build"
+inputs = "/data/lists/dome-r.list"
+
+[calibrations.skyff]
+source = "build"
+inputs = "/data/lists/sky-r.list"
+
+[calibrations.mff]
+source = "build"
+domeff = "request:calibrations.domeff"
+skyff = "request:calibrations.skyff"
+bias = "request:calibrations.bias"
+
+[output]
+calibration_dir = "/reduction/calibrations"
+science_dir = "/reduction/science"
+work_dir = "/reduction/work/science-001"
+log_path = "/reduction/logs/science-001.log"
+result_record = "/reduction/records/science-001.json"
+publish_built_calibrations = true
+```
+
+The `request:` values are local logical handles for the requested products, not
+filename templates or global catalogue queries. The coordinator resolves them,
+builds required prerequisites once and passes ready detector results downstream.
+The writer supplies creation-time identities and eventual published paths. This
+example deliberately omits input BPM, as the accepted optional-input policy
+allows; adding BPM construction requires its own explicit raw input list and
+validated prerequisites. It does not change the numerical compatibility recipe
+by making native mask construction mandatory.
+
+Mixed requests are permitted: bias can be `source = "product"` while dome/sky/MFF
+are `source = "build"`. A missing product is not silently replaced by a build;
+the request must name the raw construction inputs. Required reference statistics
+are resolved before dependent detector work. These examples do not schedule
+parallel workers: serial service equivalence still comes first.
+
+### 15.7 Naming settings and later operations
+
+The configuration must eventually expose separate calibration and science
+identity prefixes, initially CMDP and SMDP, and retain the existing category and
+legacy-root mappings. Their precise TOML key names and supported domain-version
+change are still to be reviewed. Do not add an invented `product.naming` table
+to a schema-3 document and imply that the current strict reader accepts it.
+The physical final basename follows the reviewed creation-time naming policy;
+the category remains explicit metadata regardless of whether it is also included
+in a future filename grammar.
+
+Dark creation/subtraction, linearity model creation/application and fringe-frame
+creation later add their own operation/request contracts, applicability and
+correction-state fields. They call the same configuration, result, keyword and
+publication boundaries. Their algorithms, scientific order and uncertainty
+policies are not introduced by these examples. M6a required variance and the
+later Python fringe subtraction retain their separate gates.
+
+### 15.8 Verification sequence agreed for this work
+
+1. Implement and iterate the current refactoring on the actual Intel Mac with
+   C17, using affected controls and the already selected compiler/tools.
+2. Complete the first bias adapter using PAF, connect TOML immediately next,
+   and repeat bias with equivalent TOML settings before moving to other builders.
+3. Continue the agreed Mac C17 work without repeating a dual-language or Chapman
+   matrix for every intermediate edit. Keep core source C90-compatible throughout.
+4. When the agreed candidate is ready, check C90 on the Mac; then run the
+   applicable verification on one representative shared Chapman host. Record
+   actual host/source/tool/results, and repair failures at the affected boundary.
+5. Normal installation/activation, merge and cleanup remain explicit later actions.
+
+The Word review copy retains editable paragraphs, code examples and tables.
+Figures have numbered captions so comments can identify a diagram precisely.
+Word comments and tracked suggestions can be returned in the same file; they
+will be read with their anchored text before any subsequent revision.

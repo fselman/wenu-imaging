@@ -1,5 +1,15 @@
 # mefpp refactor implementation plan — proposal
 
+1 November owner update for the current refactoring cycle: use actual Intel Mac
+C17 for native implementation and iterative affected checks. After the agreed
+candidate is ready, perform consolidated Mac C90 compatibility, then representative
+shared Chapman verification. Preserve C90-compatible core source and selected tools;
+do not repeat paired-language/Chapman matrices for every intermediate edit.
+Finish the first bias adapter with PAF, connect the existing TOML reader immediately
+next, and repeat bias with equivalent TOML settings before subsequent builders.
+The architecture review now includes proposed command/request examples and a Word
+review copy for owner comments. Examples are not implemented CLI/schema contracts.
+
 1 November 2026: the owner requests architecture/roadmap review before M5 code.
 The [source-grounded M5 refinement](../../developer/mefpp-architecture-review-2026-11-01.md#10-proposed-roadmap-refinement-within-m5m11-and-later-pg)
 proposes result/normalization/keyword contracts, production configuration connection,
