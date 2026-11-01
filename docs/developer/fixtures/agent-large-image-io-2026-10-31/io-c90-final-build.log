@@ -1,0 +1,45 @@
+-- Candidate mefpp: C90; /usr/bin/cc; resources=OFF
+-- Configuring done (0.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/104db3d59fe9/io-c90
+[  0%] Building C object CMakeFiles/qfits.dir/qfits5/src/pixio.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfitsloader_init’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:271:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  271 |         ql->np = naxis3 ;
+      |         ~~~~~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:274:9: note: here
+  274 |         case 2:
+      |         ^~~~
+[  1%] Linking C static library libqfits.a
+[ 17%] Built target qfits
+[ 89%] Built target eclipse
+[ 92%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[ 98%] Linking C executable large_file_io_probe
+[100%] Built target large_file_io_probe
+[ 17%] Built target qfits
+[ 89%] Built target eclipse
+[ 92%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[ 98%] Linking C executable layout_probe
+[100%] Built target layout_probe
+[ 92%] Built target qfits
+[ 92%] Building C object CMakeFiles/qfits_discovery_probe.dir/tests/qfits_discovery_probe.c.o
+[100%] Linking C executable qfits_discovery_probe
+[100%] Built target qfits_discovery_probe
+[ 18%] Built target qfits
+[ 95%] Built target eclipse
+[ 98%] Built target mefpp_common
+[ 98%] Building C object CMakeFiles/mefpp.dir/ins/mef/recipes/mefpp.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c: In function ‘mef_engine’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c:815:33: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  815 |                                 if (bias != NULL) image_del(bias); bias = NULL;
+      |                                 ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c:815:68: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  815 |                                 if (bias != NULL) image_del(bias); bias = NULL;
+      |                                                                    ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c:411:26: warning: unused variable ‘bpm’ [-Wunused-variable]
+  411 |         image_t         *bpm=NULL;
+      |                          ^~~
+[100%] Linking C executable mefpp
+[100%] Built target mefpp

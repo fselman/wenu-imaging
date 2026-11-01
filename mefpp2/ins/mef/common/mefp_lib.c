@@ -4683,6 +4683,9 @@ int mef_hdrpix_dump(image_t *image, char *filename, qfits_header *fh, int bpp)
     /* Retain the legacy BPP_DEFAULT storage policy; bpp was never used. */
     (void)bpp;
     if (filename == NULL || fh == NULL) return -1;
+    if (image != NULL && (image->lx <= 0 || image->ly <= 0 ||
+        image->lx > INT_MAX / image->ly ||
+        image->lx * image->ly > INT_MAX / BYTESPERPIXEL(BPP_DEFAULT))) return -1;
     out = fopen(filename, image == NULL ? "w" : "a");
     if (out == NULL) goto failed;
     status = qfits_header_dump(fh, out);
@@ -4700,8 +4703,10 @@ int mef_hdrpix_dump(image_t *image, char *filename, qfits_header *fh, int bpp)
 #endif
     qd.out_ptype = BPP_DEFAULT;
     if (stat(filename, &before) != 0 || !S_ISREG(before.st_mode)) goto failed;
+    if (before.st_size < 0 || before.st_size > LONG_MAX - (off_t)qd.npix * BYTESPERPIXEL(qd.out_ptype)) goto failed;
     expected = before.st_size + (off_t)qd.npix * BYTESPERPIXEL(qd.out_ptype);
-    /* The legacy pixel writer ignores some write/close errors: verify its size. */
+    if (expected > LONG_MAX - (FITS_BLOCK_SIZE - 1)) goto failed;
+    /* Check both pixel-writer status and expected cumulative output length. */
     if (qfits_pixdump(&qd) != 0 || stat(filename, &after) != 0 || after.st_size != expected) goto failed;
 
     /* Identical zero padding, with checked writes/close instead of void zeropad. */

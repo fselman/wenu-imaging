@@ -73,6 +73,16 @@ unset(CMAKE_EXTRA_INCLUDE_FILES)
 if(NOT SIZEOF_OFF_T OR SIZEOF_OFF_T LESS 8)
   message(FATAL_ERROR "Required 64-bit off_t unavailable")
 endif()
+check_c_source_compiles("#include <sys/types.h>\n#include <stddef.h>\n#include <limits.h>\nint main(void) { typedef char wide_io[(sizeof(long)>=8 && sizeof(off_t)<=sizeof(long) && sizeof(size_t)>=sizeof(off_t) && sizeof(ptrdiff_t)>=sizeof(off_t) && (off_t)-1<0) ? 1 : -1]; return sizeof(wide_io)!=1; }" HAVE_WIDE_IO_TYPES)
+foreach(symbol IN ITEMS fseeko ftello)
+  check_symbol_exists(${symbol} "stdio.h;sys/types.h" HAVE_${symbol})
+  if(NOT HAVE_${symbol})
+    message(FATAL_ERROR "Required wide file I/O interface unavailable: ${symbol}")
+  endif()
+endforeach()
+if(NOT HAVE_WIDE_IO_TYPES)
+  message(FATAL_ERROR "Wide I/O requires the selected signed-off_t LP64 representation")
+endif()
 test_big_endian(WORDS_BIGENDIAN)
 set(OS_LINUX 0)
 set(OS_DARWIN 0)
@@ -179,6 +189,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(bias_service_probe tests/bias_service_probe.c tests/bias_legacy_reference.c)
   target_link_libraries(bias_service_probe PRIVATE mefpp_config_snapshot)
   target_compile_definitions(bias_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  add_executable(large_file_io_probe tests/large_file_io_probe.c)
+  target_link_libraries(large_file_io_probe PRIVATE mefpp_config_snapshot)
+  target_compile_definitions(large_file_io_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   add_executable(layout_probe tests/layout_probe.c)
   target_link_libraries(layout_probe PRIVATE mefpp_config_snapshot)
   target_compile_definitions(layout_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -304,6 +317,11 @@ if(BUILD_TESTING)
         --cli-probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_config_project_composition PROPERTIES TIMEOUT 300 LABELS "native;configuration;project;composition;provenance")
+    add_test(NAME native_large_file_io
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/large_file_io_contract.py"
+        --probe "$<TARGET_FILE:large_file_io_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work" --phase focused)
+    set_tests_properties(native_large_file_io PROPERTIES TIMEOUT 300 LABELS "native;io;large-file;bounds")
     add_test(NAME native_qfits_discovery
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/qfits_discovery_contract.py"
         --probe "$<TARGET_FILE:qfits_discovery_probe>"

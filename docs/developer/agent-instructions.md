@@ -1,5 +1,48 @@
 # wenu-imaging agent instructions
 
+[Large image I/O paired target qualification](large-file-image-io-paired-results-2026-10-31.md) is complete at
+native c66b8158: actual Mac C90/C17 four contracts each4/4; representative Chapman
+each4/4; each host's single C90 >4-GiB processed MEF independently passes every
+pixel/relevant header/scaling/order/padding check. Installed files, clean main
+38b27f8 and exported source preserved. Approved IO-0–IO-5 gates have evidence;
+IO-6 owner acceptance and explicit merge/cleanup remain next. No new unchanged-
+source tests, install, full-size benchmark campaign or M5 code by default.
+#195 stays open for acceptance; #201 bounded window correction is target-qualified.
+Keep ordinary-plane/count/addressability limits and theoretical-vs-tested size
+distinction. Earlier IO-5-pending notes below are historical at their source/date.
+
+
+Approved large image I/O roadmap v1.0: [IO-0 through IO-4 agent results](large-file-image-io-agent-results-2026-10-31.md).
+Fourteen production files and three focused test/runner files implement off_t
+positions, checked memory/transfer arithmetic, legacy wrappers and processed
+output; numerical types/routines unchanged. C90/C17 focused/ordinary gates and
+scoped ASan/UBSan pass. One 4,362,324,480-byte processed MEF has every pixel,
+header/scaling/order and padding independently verified. #201 copied-window
+count correction is agent-qualified within IO-2, actual-target pending.
+Next IO-5: actual Mac then representative Chapman, selected tools, private C90/C17
+builds/focused checks and one large C90 processed output per host. No original
+observations, installation, extra full matrices or benchmark campaign. Keep
+#195/#201 and IO-6 open until target acceptance; no merge/M5 advance yet.
+Retain approved gates and amendment control; earlier pending statements below
+are historical within their stated scope.
+
+
+Owner approved large image I/O roadmap v1.0 after reviewing 6f502658.
+Execute IO-0 through IO-6 strictly; frozen interfaces/fixtures/resources:
+large-file-image-io-io0-plan.md.
+No merge/install authorization. Subsequent proposal-pending language is historical.
+
+1 November [large image I/O roadmap v1.0](large-file-image-io-roadmap-v1.md) is PROPOSED,
+awaiting owner approval. Owner requires large FITS/MEF reading AND processed
+output, without general numerical-type widening. This supersedes the prior
+read-only offset proposal. Fourteen production/header/build files, off_t disk
+positions, checked size_t memory/transfer lengths, unchanged numerical types
+and original-data immutability; stages IO-0 through IO-6 and explicit amendment
+control. No implementation/test/install/merge authorization follows merely
+from preparing this roadmap. M5 waits for this selected I/O increment.
+M4/PR #186 was accepted and merged at 38b27f8; Mac and Chapman returned clean
+synchronized main and branch cleanup. Older M4-pending notes are historical.
+
 31 October [bounded M4 closure review](m4-bounded-closure-review-2026-10-31.md)
 recommends owner acceptance of the detector/layout foundation, then M5 calibration
 decomposition after explicit integration. Native source 5b251831 passes paired

@@ -71,8 +71,8 @@ typedef struct {
  * paths and regular immutable files; source identity is checked before/after.
  * Existing qfits owns headers/offsets; no second FITS framing parser here.
  * Limits: 4096 HDUs, 16 MiB header bytes; NAXIS<=3, no random groups.
- * Existing int offset APIs limit files to INT_MAX bytes; larger files fail
- * explicitly. The bounded raw-image profile excludes nonzero PCOUNT/heaps
+ * Wide off_t file positions support large files, with existing per-plane
+ * numerical and addressability limits retained. The bounded raw-image profile excludes nonzero PCOUNT/heaps
  * and GCOUNT other than one. No general large-file/table migration is claimed.
  * Caller freezes files during read/bind/load; this is not a snapshot lock.
  * Owners use the selected allocator. Error starts NULL; occupied outputs/error

@@ -812,7 +812,8 @@ char * xmemory_falloc(
             else exit(1) ;
         }
         /* Check offset request does not go past end of file */
-        if (offs>=(size_t)sta.st_size) {
+        if (sta.st_size <= 0 || (size_t)sta.st_size > (size_t)LONG_MAX ||
+        offs >= (size_t)sta.st_size) {
             xmem_debug(
                 fprintf(stderr,
                     "xmem: falloc offsets larger than file size");
@@ -903,7 +904,7 @@ char * xmemory_falloc(
                     ptr = (char*)xmemory_p_val[i] + offs ;
                     /* Available size is filesize minus offset */
                     if (size!=NULL) {
-                        *size = xmemory_p_size[i] - offs ;
+                        *size = xmemory_p_size[i] ; /* Full mapped length, same as first map. */
                     }
                     /* Return constructed pointer as void * */
                     return (void*)ptr ;
@@ -923,7 +924,8 @@ char * xmemory_falloc(
         return NULL ;
     }
     /* Check offset request does not go past end of file */
-    if (offs>=(size_t)sta.st_size) {
+    if (sta.st_size <= 0 || (size_t)sta.st_size > (size_t)LONG_MAX ||
+        offs >= (size_t)sta.st_size) {
         xmem_debug(
             fprintf(stderr,
                 "xmem: falloc offsets larger than file size");

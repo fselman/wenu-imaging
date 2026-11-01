@@ -1,0 +1,27 @@
+Internal ctest changing into directory: /workspace/scratch/104db3d59fe9/io-c90
+Test project /workspace/scratch/104db3d59fe9/io-c90
+    Start  9: native_large_file_io
+1/4 Test  #9: native_large_file_io .............   Passed    1.08 sec
+    Start 10: native_qfits_discovery
+2/4 Test #10: native_qfits_discovery ...........   Passed    1.69 sec
+    Start 11: native_layout
+3/4 Test #11: native_layout ....................   Passed    0.64 sec
+    Start 26: native_explicit_paths
+4/4 Test #26: native_explicit_paths ............   Passed   21.10 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Label Time Summary:
+bounds         =   2.77 sec*proc (2 tests)
+detector       =   0.64 sec*proc (1 test)
+integration    =  21.10 sec*proc (1 test)
+io             =   1.08 sec*proc (1 test)
+large-file     =   1.08 sec*proc (1 test)
+layout         =   2.33 sec*proc (2 tests)
+native         =  24.51 sec*proc (4 tests)
+ownership      =   0.64 sec*proc (1 test)
+paths          =  21.10 sec*proc (1 test)
+provenance     =  21.10 sec*proc (1 test)
+qfits          =   1.69 sec*proc (1 test)
+
+Total Test time (real) =  24.52 sec

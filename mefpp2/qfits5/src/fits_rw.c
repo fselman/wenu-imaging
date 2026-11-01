@@ -265,8 +265,8 @@ qfits_header * qfits_header_readext(char * filename, int xtnum)
     char        *   key,
                 *   val,
                 *   com ;
-    int             seg_start ;
-    int             seg_size ;
+    off_t           seg_start ;
+    off_t           seg_size ;
     size_t          size ;
 
     /* Check input */
@@ -282,17 +282,21 @@ qfits_header * qfits_header_readext(char * filename, int xtnum)
     }
 
     /* Get offset to the extension header */
-    if (qfits_get_hdrinfo(filename, xtnum, &seg_start, &seg_size)!=0) {
+    if (qfits_get_hdrinfo_wide(filename, xtnum, &seg_start, &seg_size)!=0) {
         return NULL ;
     }
 
     /* Memory-map the input file */
-    start = falloc(filename, seg_start, &size) ;
+    if (seg_start < 0 || seg_size < 80) return NULL;
+    start = falloc(filename, (size_t)seg_start, &size) ;
     if (start==NULL) return NULL ;
 
     hdr   = qfits_header_new() ;
     where = start ;
     while (1) {
+        if ((off_t)(where-start) > seg_size - 80) {
+            qfits_header_destroy(hdr); hdr = NULL; break;
+        }
         memcpy(line, where, 80);
         line[80] = (char)0;
 
@@ -321,7 +325,7 @@ qfits_header * qfits_header_readext(char * filename, int xtnum)
         }
         where += 80 ;
         /* If reaching the end of file, trigger an error */
-        if ((int)(where-start)>=(int)(seg_size+80)) {
+        if ((off_t)(where-start)>=seg_size) {
             qfits_header_destroy(hdr);
             hdr = NULL ;
             break ;
@@ -344,7 +348,7 @@ qfits_header * qfits_header_readext(char * filename, int xtnum)
 void qfits_zeropad(char * filename)
 {
     struct stat sta ;
-    int         size ;
+    off_t       size ;
     int         remaining;
     FILE    *   out ;
     char    *   buf;
@@ -355,9 +359,10 @@ void qfits_zeropad(char * filename)
     if (stat(filename, &sta)!=0) {
         return ;
     }
-    size = (int)sta.st_size ;
+    if (sta.st_size < 0) return;
+    size = sta.st_size ;
     /* Compute number of zeros to pad */
-    remaining = size % FITS_BLOCK_SIZE ;
+    remaining = (int)(size % FITS_BLOCK_SIZE) ;
     if (remaining==0) return ;
     remaining = FITS_BLOCK_SIZE - remaining ;
 

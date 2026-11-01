@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -78,14 +79,14 @@ int qfitsloader_init(qfitsloader * ql)
     qfits_header    *   fh ;
 
     int     n_ext ;
-    int     seg_start ;
-    int     seg_size ;
+    off_t   seg_start ;
+    off_t   seg_size ;
     int     bitpix, naxis, naxis1, naxis2, naxis3 ;
     char *  xt_type ;
     char *  sval ;
     struct stat sta ;
 #if QFITS_DEBUGLOADERINIT==1
-    int     expsize ;
+    off_t   expsize ;
 #endif
 
     /* Check passed object is allocated */
@@ -142,7 +143,7 @@ int qfitsloader_init(qfitsloader * ql)
     }
     ql->exts = n_ext ;
     /* Get segment offset and size for the requested buffer */
-    if (qfits_get_datinfo(ql->filename,
+    if (qfits_get_datinfo_wide(ql->filename,
                           ql->xtnum,
                           &seg_start,
                           &seg_size)!=0) {
@@ -152,7 +153,8 @@ int qfitsloader_init(qfitsloader * ql)
         return -1 ;
     }
     /* Check segment size is consistent with file size */
-    if (sta.st_size < (seg_start+seg_size)) {
+    if (seg_start < 0 || seg_size < 0 || seg_start > sta.st_size ||
+        seg_size > sta.st_size - seg_start) {
         return -1 ;
     }
     ql->seg_start = seg_start ;
@@ -279,17 +281,26 @@ int qfitsloader_init(qfitsloader * ql)
         break ;
     }
     /* Check that requested plane number falls within range */
-    if (ql->pnum >= ql->np) {
+    if (ql->pnum < 0 || ql->pnum >= ql->np) {
         qfits_error("pixio: requested plane %d but NAXIS3=%d",
                     ql->pnum,
                     ql->np);
         return -1 ;
     }
 
+    /* Retain ordinary int-indexed, int-byte-sized planes. Aggregate spans
+     * and later-plane positions are wide; no numerical-array migration. */
+    if (ql->lx <= 0 || ql->ly <= 0 || ql->np <= 0 ||
+        ql->lx > INT_MAX / ql->ly ||
+        ql->lx * ql->ly > INT_MAX / BYTESPERPIXEL(ql->bitpix) ||
+        ql->lx * ql->ly > INT_MAX / (int)(ql->ptype == PTYPE_DOUBLE ? sizeof(double) : sizeof(float)) ||
+        (off_t)ql->lx * ql->ly * BYTESPERPIXEL(ql->bitpix) > ql->seg_size / ql->np)
+        return -1;
+
 /* Disabled, should only be done in debug mode */
 #if QFITS_DEBUGLOADERINIT==1
     /* Check segment size is consistent with declared size */
-    expsize = BYTESPERPIXEL(ql->bitpix) * ql->lx * ql->ly * ql->np ;
+    expsize = (off_t)BYTESPERPIXEL(ql->bitpix) * ql->lx * ql->ly * ql->np ;
     /* Round up to next multiple of FITS_BLOCK_SIZE */
     if (expsize % FITS_BLOCK_SIZE) {
         expsize = FITS_BLOCK_SIZE * (1 + (expsize/FITS_BLOCK_SIZE)) ;
@@ -297,10 +308,10 @@ int qfitsloader_init(qfitsloader * ql)
 
     if (expsize != ql->seg_size) {
         qfits_warning("invalid data segment size\n"
-                      "found:    %d blocks\n"
-                      "expected: %d blocks\n",
-                      ql->seg_size / 2880,
-                      expsize / 2880);
+                      "found:    %ld blocks\n"
+                      "expected: %ld blocks\n",
+                      (long)(ql->seg_size / 2880),
+                      (long)(expsize / 2880));
     }
 #endif
     /* Everything Ok, fields have been filled along. */
@@ -322,7 +333,7 @@ int qfits_loadpix(qfitsloader * ql)
     if (ql==NULL) return -1 ;
     return qfits_loadpix_window(ql, 1, 1, ql->lx, ql->ly) ;
 }
-    
+
 /*----------------------------------------------------------------------------*/
 /**
   @brief    Load a pixel buffer for one image window
@@ -339,7 +350,7 @@ int qfits_loadpix(qfitsloader * ql)
 
   This function will fill up the ibuf/fbuf/dbuf field, depending
   on the requested pixel type (resp. int, float or double).
-  
+
   If llx lly urx and ury do not specify the whole image, ql->map must be 0, 
   we do not want to mmap a file an load only a part of it.
  */
@@ -353,10 +364,11 @@ int qfits_loadpix_window(
 {
     byte    *   fptr ;
     size_t      fsize ;
-    int         datastart ;
-    int         imagesize, window_size, linesize ;
+    off_t       datastart ;
+    size_t      imagesize, window_size, linesize;
+    off_t       zone_start;
     FILE    *   lfile ;
-    int         dataread ;
+    size_t      dataread ;
     int         nx, ny ;
     int         i ;
 
@@ -366,6 +378,8 @@ int qfits_loadpix_window(
         qfits_error("pixio: called with unitialized obj");
         return -1 ;
     }
+    if (ql->np <= 0 || ql->pnum < 0 || ql->pnum >= ql->np ||
+        ql->seg_start < 0 || ql->seg_size < 0) return -1;
     if (llx>urx || lly>ury || llx<1 || lly<1 || urx>ql->lx || ury>ql->ly) {
         qfits_error("pixio: invalid window specification");
         return -1 ;
@@ -382,15 +396,18 @@ int qfits_loadpix_window(
     /* Initialise */
     nx = urx-llx+1 ;
     ny = ury-lly+1 ;
-    imagesize = ql->lx * ql->ly * BYTESPERPIXEL(ql->bitpix);
-    window_size = nx * ny * BYTESPERPIXEL(ql->bitpix);
-    linesize = nx * BYTESPERPIXEL(ql->bitpix);
-    datastart = ql->seg_start + ql->pnum * imagesize ;
+    imagesize = (size_t)ql->lx * ql->ly * BYTESPERPIXEL(ql->bitpix);
+    window_size = (size_t)nx * ny * BYTESPERPIXEL(ql->bitpix);
+    linesize = (size_t)nx * BYTESPERPIXEL(ql->bitpix);
+    if ((off_t)imagesize > LONG_MAX / ql->np ||
+        ql->seg_start > LONG_MAX - (off_t)imagesize * ql->pnum) return -1;
+    datastart = ql->seg_start + (off_t)ql->pnum * (off_t)imagesize;
+    zone_start = ((off_t)(lly-1) * ql->lx + llx-1) * BYTESPERPIXEL(ql->bitpix);
 
     /* Check loading mode */
     if (ql->map) {
         /* Map the file in */
-        fptr = (byte*)falloc(ql->filename, datastart, &fsize);
+        fptr = (byte*)falloc(ql->filename, (size_t)datastart, &fsize);
         if (fptr==NULL) {
             qfits_error("pixio: cannot falloc(%s)", ql->filename);
             return -1 ;
@@ -402,27 +419,28 @@ int qfits_loadpix_window(
             return -1 ;
         }
         /* Go to the start of the image */
-        if (fseek(lfile, datastart, SEEK_SET)!=0) {
+        if (fseeko(lfile, datastart, SEEK_SET)!=0) {
             qfits_error("pixio: cannot seek %s", ql->filename);
             fclose(lfile);
             return -1 ;
         }
         /* Go to the start of the zone */
-        if (fseek(lfile, (llx-1+(lly-1)*ql->lx)*BYTESPERPIXEL(ql->bitpix), 
+        if (fseeko(lfile, zone_start,
                     SEEK_CUR)!=0) {
             qfits_error("pixio: cannot seek %s", ql->filename);
             fclose(lfile);
             return -1 ;
         }
-        
+
         fptr = (byte*)malloc(window_size) ;
-       
+        if (fptr == NULL) { fclose(lfile); return -1; }
+
         /* Only a window is specified */
         if (llx != 1 || lly != 1 || urx != ql->lx || ury != ql->ly) {
             /* Loop on the lines */
             for (i=0 ; i<ny ; i++) {
                 /* Read the file */
-                dataread=fread(fptr+i*linesize, sizeof(byte), linesize, lfile);
+                dataread=fread(fptr+(size_t)i*linesize, sizeof(byte), linesize, lfile);
                 if (dataread!=linesize) {
                     free(fptr) ;
                     fclose(lfile);
@@ -430,10 +448,10 @@ int qfits_loadpix_window(
                     return -1 ;
                 }
                 /* Go to the next line */
-                if (fseek(lfile,ql->lx*BYTESPERPIXEL(ql->bitpix)-linesize, 
+                if (fseeko(lfile,(off_t)ql->lx*BYTESPERPIXEL(ql->bitpix)-(off_t)linesize,
                            SEEK_CUR)!=0){
                     qfits_error("pixio: cannot seek %s", ql->filename);
-                    fclose(lfile);
+                    free(fptr); fclose(lfile);
                     return -1 ;
                 }
             }
@@ -449,7 +467,7 @@ int qfits_loadpix_window(
             }
         }
     }
-        
+
     /* Initialize buffer pointers */
     ql->ibuf = NULL ;
     ql->fbuf = NULL ;
@@ -479,7 +497,7 @@ int qfits_loadpix_window(
     switch (ql->ptype) {
         case PTYPE_FLOAT:
         ql->fbuf = qfits_pixin_float(   fptr,
-                                        ql->lx * ql->ly,
+                                        nx * ny,
                                         ql->bitpix,
                                         ql->bscale,
                                         ql->bzero);
@@ -487,7 +505,7 @@ int qfits_loadpix_window(
 
         case PTYPE_INT:
         ql->ibuf = qfits_pixin_int( fptr,
-                                    ql->lx * ql->ly,
+                                    nx * ny,
                                     ql->bitpix,
                                     ql->bscale,
                                     ql->bzero);
@@ -495,13 +513,13 @@ int qfits_loadpix_window(
 
         case PTYPE_DOUBLE:
         ql->dbuf = qfits_pixin_double(  fptr,
-                                        ql->lx * ql->ly,
+                                        nx * ny,
                                         ql->bitpix,
                                         ql->bscale,
                                         ql->bzero);
         break ;
     }
-   
+
     if (ql->map) {
         fdealloc((char*)fptr, datastart, fsize) ;
     } else {
@@ -551,7 +569,7 @@ float * qfits_pixin_float(
     int         lpix ;
     float       fpix ;
     byte        XLpix[8] ;
-    
+
 
     baseptr = p_dest = malloc(npix * sizeof(float));
     switch (bitpix) {
@@ -654,7 +672,7 @@ int * qfits_pixin_int(
     int         lpix ;
     float       fpix ;
     byte        XLpix[8] ;
-    
+
     baseptr = p_dest = malloc(npix * sizeof(int));
     switch (bitpix) {
 
@@ -756,7 +774,7 @@ double * qfits_pixin_double(
     int         lpix ;
     float       fpix ;
     byte        XLpix[8] ;
-    
+
 
     baseptr = p_dest = malloc(npix * sizeof(double));
     switch (bitpix) {
@@ -863,11 +881,15 @@ int qfits_pixdump(qfitsdumper * qd)
     FILE    *   f_out ;
     byte    *   buf_out ;
     int         buf_free ;
-    int         buf_sz ;
+    size_t      buf_sz;
+    int         status;
 
     /* Check inputs */
     if (qd==NULL) return -1 ;
     if (qd->filename==NULL) return -1 ;
+    if (qd->npix <= 0 || (qd->out_ptype != 8 && qd->out_ptype != 16 &&
+        qd->out_ptype != 32 && qd->out_ptype != -32 && qd->out_ptype != -64) ||
+        qd->npix > INT_MAX / BYTESPERPIXEL(qd->out_ptype)) return -1;
     switch (qd->ptype) {
         case PTYPE_FLOAT:
         if (qd->fbuf==NULL) return -1 ;
@@ -904,7 +926,7 @@ int qfits_pixdump(qfitsdumper * qd)
         buf_free=0 ;
     }
 #endif
-    buf_sz = qd->npix * BYTESPERPIXEL(qd->out_ptype);
+    buf_sz = (size_t)qd->npix * BYTESPERPIXEL(qd->out_ptype);
 
     /* General case */
     if (buf_out==NULL) {
@@ -943,17 +965,18 @@ int qfits_pixdump(qfitsdumper * qd)
         f_out = fopen(qd->filename, "a");
     }
     if (f_out==NULL) {
-        free(buf_out);
+        if (buf_free) free(buf_out);
         return -1 ;
     }
-    fwrite(buf_out, buf_sz, 1, f_out);
+    status = fwrite(buf_out, 1, buf_sz, f_out) == buf_sz ? 0 : -1;
+    if (fflush(f_out) != 0 || ferror(f_out)) status = -1;
     if (buf_free) {
         free(buf_out);
     }
     if (f_out!=stdout) {
-        fclose(f_out);
+        if (fclose(f_out) != 0) status = -1;
     }
-    return 0 ;
+    return status;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -979,7 +1002,11 @@ byte * qfits_pixdump_float(float * buf, int npix, int ptype)
     short       spix ;
     double      dpix ;
 
-    buf_out = malloc(npix * BYTESPERPIXEL(ptype));
+    if (buf == NULL || npix <= 0 ||
+        (ptype != 8 && ptype != 16 && ptype != 32 && ptype != -32 && ptype != -64) ||
+        npix > INT_MAX / BYTESPERPIXEL(ptype)) return NULL;
+    buf_out = malloc((size_t)npix * BYTESPERPIXEL(ptype));
+    if (buf_out == NULL) return NULL;
     op = buf_out ;
     switch (ptype) {
         case 8:
@@ -1093,7 +1120,11 @@ byte * qfits_pixdump_int(int * buf, int npix, int ptype)
     float   fpix ;
     double  dpix ;
 
-    buf_out = malloc(npix * BYTESPERPIXEL(ptype));
+    if (buf == NULL || npix <= 0 ||
+        (ptype != 8 && ptype != 16 && ptype != 32 && ptype != -32 && ptype != -64) ||
+        npix > INT_MAX / BYTESPERPIXEL(ptype)) return NULL;
+    buf_out = malloc((size_t)npix * BYTESPERPIXEL(ptype));
+    if (buf_out == NULL) return NULL;
     op = buf_out ;
     switch (ptype) {
         case 8:
@@ -1160,7 +1191,7 @@ byte * qfits_pixdump_int(int * buf, int npix, int ptype)
             memcpy(op, &dpix, 8);
             op += 8 ;
         }
-        break ; 
+        break ;
 
         default:
         qfits_error("not supported yet");
@@ -1194,7 +1225,11 @@ byte * qfits_pixdump_double(double * buf, int npix, int ptype)
     float   fpix ;
     int     lpix ;
 
-    buf_out = malloc(npix * BYTESPERPIXEL(ptype));
+    if (buf == NULL || npix <= 0 ||
+        (ptype != 8 && ptype != 16 && ptype != 32 && ptype != -32 && ptype != -64) ||
+        npix > INT_MAX / BYTESPERPIXEL(ptype)) return NULL;
+    buf_out = malloc((size_t)npix * BYTESPERPIXEL(ptype));
+    if (buf_out == NULL) return NULL;
     op = buf_out ;
     switch (ptype) {
         case 8:
@@ -1260,14 +1295,14 @@ byte * qfits_pixdump_double(double * buf, int npix, int ptype)
 
         case -64:
         /* Convert from double to double */
-        memcpy(op, buf, npix * 8) ;
+        memcpy(op, buf, (size_t)npix * 8) ;
 #ifndef WORDS_BIGENDIAN
         for (i=0 ; i<npix ; i++) {
             swap_bytes(op, 8);
             op += 8 ;
         }
 #endif
-        break ; 
+        break ;
 
         default:
         qfits_error("not supported yet");
@@ -1290,7 +1325,7 @@ static void qfitsloader_dump(qfitsloader * ql)
             "ly        : %d\n"
             "np        : %d\n"
             "bitpix    : %d\n"
-            "seg_start : %d\n"
+            "seg_start : %ld\n"
             "bscale    : %g\n"
             "bzero     : %g\n"
             "ibuf      : %p\n"
@@ -1304,7 +1339,7 @@ static void qfitsloader_dump(qfitsloader * ql)
             ql->ly,
             ql->np,
             ql->bitpix,
-            ql->seg_start,
+            (long)ql->seg_start,
             ql->bscale,
             ql->bzero,
             ql->ibuf,

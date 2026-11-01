@@ -3,6 +3,7 @@
 
 
 #include <stdio.h>
+#include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -23,7 +24,7 @@ extern char * qfits_version(void);
 /*----------------------------------------------------------------------------*/
 void qfits_cache_purge(void);
 /* Checked discovery using the existing cache walker. Counts include primary.
- * Byte offsets remain int-valued; oversized files are rejected, not truncated. */
+ * Wide disk spans use off_t; legacy int queries reject unrepresentable outputs. */
 int qfits_cache_prime_bounded(char *, size_t max_hdus, size_t max_header_bytes);
 /*----------------------------------------------------------------------------*/
 /**
@@ -993,8 +994,8 @@ int main(int argc, char * argv[])
 			"size Y       : %d\n"
 			"planes       : %d\n"
 			"bitpix       : %d\n"
-			"datastart    : %d\n"
-            "datasize     : %d\n"
+			"datastart    : %ld\n"
+            "datasize     : %ld\n"
 			"bscale       : %g\n"
 			"bzero        : %g\n",
 			ql.filename,
@@ -1005,8 +1006,8 @@ int main(int argc, char * argv[])
 			ql.ly,
 			ql.np,
 			ql.bitpix,
-			ql.seg_start,
-            ql.seg_size,
+			(long)ql.seg_start,
+            (long)ql.seg_size,
 			ql.bscale,
 			ql.bzero);
 	return 0 ;
@@ -1041,9 +1042,9 @@ typedef struct qfitsloader {
 	/** output: BITPIX for this extension */
 	int			bitpix ;
 	/** output: Start of the data segment (in bytes) for your request */
-	int			seg_start ;
+	off_t		seg_start ;
     /** output: Size of the data segment (in bytes) for your request */
-    int         seg_size ;
+    off_t       seg_size ;
 	/** output: BSCALE found for this extension */
 	double		bscale ;
 	/** output: BZERO found for this extension */
@@ -1608,6 +1609,10 @@ int qfits_get_type(char * s) ;
   main header in the file.
  */
 /*----------------------------------------------------------------------------*/
+/* Wide disk spans; status 0 on success. Outputs unchanged on failure. */
+int qfits_get_hdrinfo_wide(char *, int, off_t *, off_t *);
+int qfits_get_datinfo_wide(char *, int, off_t *, off_t *);
+
 int qfits_get_hdrinfo(
         char * filename,
         int    xtnum,

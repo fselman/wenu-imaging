@@ -1,0 +1,5 @@
+PLAN: two sparse ~4.063-GiB inputs; one <=4.063-GiB materialized output only in large phase; native planned <1 GiB RAM
+RETAINED RUN: /workspace/scratch/104db3d59fe9/io-evidence-c90/large-file-io-pxzh3wyc
+START: existing image_loadext -> image_sub_local -> mef_hdrpix_dump; output: /workspace/scratch/104db3d59fe9/io-evidence-c90/large-file-io-pxzh3wyc/large-processed.fits
+VALIDATING: every output pixel, header order/scaling and padding in one bounded-memory pass
+PASS: IO-4 large wide I/O controls; RETAINED: /workspace/scratch/104db3d59fe9/io-evidence-c90/large-file-io-pxzh3wyc

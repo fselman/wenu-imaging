@@ -1,0 +1,317 @@
+-- GLOB mismatch!
+-- Candidate mefpp: C17; /usr/bin/cc; resources=OFF
+-- Configuring done (0.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/104db3d59fe9/io-c17
+[  0%] Building C object CMakeFiles/qfits.dir/qfits5/src/fits_rw.c.o
+[  0%] Building C object CMakeFiles/qfits.dir/qfits5/src/pixio.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c: In function ‘is_fits_file’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c:402:5: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  402 |     fread(magic, 1, FITS_MAGIC_SZ, fp) ;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfitsloader_init’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:271:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  271 |         ql->np = naxis3 ;
+      |         ~~~~~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:274:9: note: here
+  274 |         case 2:
+      |         ^~~~
+[  1%] Building C object CMakeFiles/qfits.dir/qfits5/src/simple.c.o
+[  1%] Building C object CMakeFiles/qfits.dir/qfits5/src/xmemory.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:565:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  565 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:880:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  880 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+[  2%] Linking C static library libqfits.a
+[ 17%] Built target qfits
+[ 18%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube2image.c.o
+[ 20%] Building C object CMakeFiles/eclipse.dir/src/iproc/corner.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/corner.c: In function ‘image_detect_corners’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/corner.c:64:25: warning: variable ‘pts_list’ set but not used [-Wunused-but-set-variable]
+   64 |         double3  *      pts_list ;
+      |                         ^~~~~~~~
+[ 20%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_arith.c.o
+[ 21%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_filters.c.o
+[ 21%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_handling.c.o
+[ 23%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_load.c.o
+[ 23%] Building C object CMakeFiles/eclipse.dir/src/iproc/dead_pixels.c.o
+[ 24%] Building C object CMakeFiles/eclipse.dir/src/iproc/cube_save.c.o
+[ 26%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect.c.o
+[ 27%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect_ks.c.o
+[ 27%] Building C object CMakeFiles/eclipse.dir/src/iproc/detect_sq.c.o
+[ 28%] Building C object CMakeFiles/eclipse.dir/src/iproc/detector.c.o
+[ 28%] Building C object CMakeFiles/eclipse.dir/src/iproc/extraction.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/detector.c: In function ‘detector_linearity_fit’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/detector.c:498:21: warning: variable ‘npix’ set but not used [-Wunused-but-set-variable]
+  498 |     int             npix ;
+      |                     ^~~~
+[ 30%] Building C object CMakeFiles/eclipse.dir/src/iproc/fourier.c.o
+[ 30%] Building C object CMakeFiles/eclipse.dir/src/iproc/generate.c.o
+[ 31%] Building C object CMakeFiles/eclipse.dir/src/iproc/histogram.c.o
+[ 33%] Building C object CMakeFiles/eclipse.dir/src/iproc/history.c.o
+[ 33%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_arith.c.o
+[ 34%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_filters.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/image_filters.c: In function ‘image_filter_horizontal_median’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/image_filters.c:711:33: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  711 |                                 if (coldif<0)
+      |                                 ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/image_filters.c:713:41: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  713 |                                         memcpy(save_slit,&(in->data[col-f2+row*in->lx]),
+      |                                         ^~~~~~
+[ 34%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_handling.c.o
+[ 36%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_intops.c.o
+[ 37%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_io.c.o
+[ 37%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_rtd.c.o
+[ 39%] Building C object CMakeFiles/eclipse.dir/src/iproc/image_stats.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/image_stats.c: In function ‘image_getmedian_mov_horz’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/image_stats.c:710:17: warning: variable ‘l’ set but not used [-Wunused-but-set-variable]
+  710 |     int         l,
+      |                 ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/image_stats.c: In function ‘image_compute_entropy’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/image_stats.c:1580:72: warning: left shift of negative value [-Wshift-negative-value]
+ 1580 |                                                         (pixelvalue)(-1<<15),
+      |                                                                        ^~
+[ 39%] Building C object CMakeFiles/eclipse.dir/src/iproc/intimage.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/intimage.c: In function ‘intimage_floodfill’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/intimage.c:266:13: warning: this ‘for’ clause does not guard... [-Wmisleading-indentation]
+  266 | skip:       for (x++; x<=x2 && lab->data[x+y*lab->lx]!=ov; x++);
+      |             ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/intimage.c:267:25: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘for’
+  267 |                         l = x;
+      |                         ^
+[ 40%] Building C object CMakeFiles/eclipse.dir/src/iproc/irstd.c.o
+[ 42%] Building C object CMakeFiles/eclipse.dir/src/iproc/matchpoint.c.o
+[ 42%] Building C object CMakeFiles/eclipse.dir/src/iproc/photometry.c.o
+[ 43%] Building C object CMakeFiles/eclipse.dir/src/iproc/pixelmaps.c.o
+[ 43%] Building C object CMakeFiles/eclipse.dir/src/iproc/resampling.c.o
+[ 44%] Building C object CMakeFiles/eclipse.dir/src/iproc/shift.c.o
+[ 44%] Building C object CMakeFiles/eclipse.dir/src/iproc/slitposition.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/slitposition.c: In function ‘slitpos_analysis’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/iproc/slitposition.c:74:25: warning: variable ‘spec_size’ set but not used [-Wunused-but-set-variable]
+   74 |     int                 spec_size ;
+      |                         ^~~~~~~~~
+[ 46%] Building C object CMakeFiles/eclipse.dir/src/iproc/xcorrelation.c.o
+[ 47%] Building C object CMakeFiles/eclipse.dir/src/math/function_1d.c.o
+[ 49%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_arcs.c.o
+[ 50%] Building C object CMakeFiles/eclipse.dir/src/math/poly2d.c.o
+[ 52%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_detect.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_arcs.c: In function ‘dist_engine’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_arcs.c:696:18: warning: ‘left’ may be used uninitialized [-Wmaybe-uninitialized]
+  696 |         if (right-left < min_arc_range) {
+      |             ~~~~~^~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_arcs.c:656:41: note: ‘left’ was declared here
+  656 |         int                             left,
+      |                                         ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_arcs.c:696:18: warning: ‘right’ may be used uninitialized [-Wmaybe-uninitialized]
+  696 |         if (right-left < min_arc_range) {
+      |             ~~~~~^~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_arcs.c:657:41: note: ‘right’ was declared here
+  657 |                                         right,
+      |                                         ^~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_detect.c: In function ‘valid_spectrum’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_detect.c:82:33: warning: variable ‘objlen’ set but not used [-Wunused-but-set-variable]
+   82 |         int                     objlen   = -1,
+      |                                 ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_detect.c:72:57: warning: unused parameter ‘min_spec_length’ [-Wunused-parameter]
+   72 |                 int                                     min_spec_length,
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_detect.c: In function ‘select_valid_spectra’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_detect.c:185:28: warning: variable ‘j’ set but not used [-Wunused-but-set-variable]
+  185 |         int             i, j ;
+      |                            ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_detect.c: In function ‘find_brightest_spectrum_1d’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/spectro/spectro_detect.c:383:41: warning: variable ‘brightest’ set but not used [-Wunused-but-set-variable]
+  383 |         int                             brightest ;
+      |                                         ^~~~~~~~~
+[ 52%] Building C object CMakeFiles/eclipse.dir/src/spectro/spectro_wave.c.o
+[ 53%] Linking C static library libeclipse.a
+[ 89%] Built target eclipse
+[ 89%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mef_bias_kernel.c.o
+[ 91%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mefp_lib.c.o
+[ 92%] Building C object CMakeFiles/mefpp_common.dir/ins/mef/common/mef_paths.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mef_paths.c: In function ‘calibration_geometry’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mef_paths.c:284:48: warning: passing argument 1 of ‘qfits_header_readext’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  284 |             header = qfits_header_readext(names[i], xt);
+      |                                           ~~~~~^~~
+In file included from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/cube_load.h:36,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/cube_handling.h:32,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/image_handling.h:31,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/corner.h:27,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/eclipse.h:54,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.h:26,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mef_paths.c:8:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/qfits.h:607:44: note: expected ‘char *’ but argument is of type ‘const char *’
+  607 | qfits_header * qfits_header_readext(char * filename, int xtnum) ;
+      |                                     ~~~~~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_framelist_load’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1732:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1732 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_load’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1895:33: warning: unused variable ‘single_frames’ [-Wunused-variable]
+ 1895 |         int                     single_frames ;
+      |                                 ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1894:33: warning: unused variable ‘err’ [-Wunused-variable]
+ 1894 |         int                     err ;
+      |                                 ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1893:33: warning: unused variable ‘exts’ [-Wunused-variable]
+ 1893 |         int               *     exts ;
+      |                                 ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1892:33: warning: unused variable ‘i’ [-Wunused-variable]
+ 1892 |         int                     i ;
+      |                                 ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1890:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1890 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1889:20: warning: unused variable ‘mef_frame’ [-Wunused-variable]
+ 1889 |         image_t  * mef_frame ;
+      |                    ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_overscan_correction’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1996:21: warning: variable ‘zIndex’ set but not used [-Wunused-but-set-variable]
+ 1996 |     int             zIndex;
+      |                     ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘simplifyFilterName’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2257:14: warning: unused variable ‘zChar’ [-Wunused-variable]
+ 2257 |         char zChar ;
+      |              ^~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_valid_subset’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2292:33: warning: unused variable ‘getval’ [-Wunused-variable]
+ 2292 |         char            *       getval ;
+      |                                 ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2894:25: warning: unused variable ‘bias’ [-Wunused-variable]
+ 2894 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2893:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+ 2893 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3587:17: warning: unused variable ‘i’ [-Wunused-variable]
+ 3587 |     int         i, nframes ;
+      |                 ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3585:18: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3585 |     char        *getval ;
+      |                  ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3581:18: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 3581 |     framelist   *fnames ;
+      |                  ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_eclipse’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3755:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 3755 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3754:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3754 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3750:17: warning: variable ‘exptime’ set but not used [-Wunused-but-set-variable]
+ 3750 |     float       exptime;
+      |                 ^~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3747:26: warning: unused variable ‘fh_ref’ [-Wunused-variable]
+ 3747 |         qfits_header    *fh_ref ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_input_filename’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4093:14: warning: unused variable ‘cval’ [-Wunused-variable]
+ 4093 |         char cval[80];
+      |              ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_headers_for’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4227:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 4227 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4226:26: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 4226 |         framelist       *fnames ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4225:26: warning: unused variable ‘first_name’ [-Wunused-variable]
+ 4225 |         char            *first_name ;
+      |                          ^~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4223:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 4223 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4220:26: warning: unused variable ‘out’ [-Wunused-variable]
+ 4220 |         FILE            *out ;
+      |                          ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4219:25: warning: unused variable ‘qd’ [-Wunused-variable]
+ 4219 |         qfitsdumper     qd ;
+      |                         ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4212:26: warning: unused variable ‘fh_main’ [-Wunused-variable]
+ 4212 |         qfits_header    *fh_main = NULL ;
+      |                          ^~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_create_orig_filename’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4181:1: warning: control reaches end of non-void function [-Wreturn-type]
+ 4181 | }
+      | ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3012:20: warning: ‘lo_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+ 3012 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                    ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2899:25: note: ‘lo_thr’ was declared here
+ 2899 |         double          lo_thr, hi_thr ;
+      |                         ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3012:43: warning: ‘hi_thr’ may be used uninitialized [-Wmaybe-uninitialized]
+ 3012 |                 if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
+      |                     ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2899:33: note: ‘hi_thr’ was declared here
+ 2899 |         double          lo_thr, hi_thr ;
+      |                                 ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2974:19: warning: ‘kappa1’ may be used uninitialized [-Wmaybe-uninitialized]
+ 2974 |         stacked = mef_bias_stack(i_cube, minframe, kappa1, &statistics, NULL);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2901:36: note: ‘kappa1’ was declared here
+ 2901 |         double          avg, avg1, kappa1 ;
+      |                                    ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3161:9: warning: ‘normFactor’ may be used uninitialized [-Wmaybe-uninitialized]
+ 3161 |         image_cst_op_local(flat,normFactor,'*');        /* we normalize to the median of first extension */
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2918:25: note: ‘normFactor’ was declared here
+ 2918 |         float           normFactor ;
+      |                         ^~~~~~~~~~
+[ 92%] Linking C static library libmefpp_common.a
+[ 92%] Built target mefpp_common
+[ 92%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_config.c.o
+[ 94%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_cli_request.c.o
+[ 95%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_cal_bias.c.o
+[ 95%] Building C object CMakeFiles/mefpp_config_snapshot.dir/ins/mef/common/mef_layout.c.o
+[ 97%] Linking C static library libmefpp_config_snapshot.a
+[ 98%] Built target mefpp_config_snapshot
+[100%] Building C object CMakeFiles/large_file_io_probe.dir/tests/large_file_io_probe.c.o
+[100%] Linking C executable large_file_io_probe
+[100%] Built target large_file_io_probe
+[ 17%] Built target qfits
+[ 89%] Built target eclipse
+[ 92%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[100%] Building C object CMakeFiles/layout_probe.dir/tests/layout_probe.c.o
+[100%] Linking C executable layout_probe
+[100%] Built target layout_probe
+[ 92%] Built target qfits
+[ 92%] Building C object CMakeFiles/qfits_discovery_probe.dir/tests/qfits_discovery_probe.c.o
+[100%] Linking C executable qfits_discovery_probe
+[100%] Built target qfits_discovery_probe
+[ 18%] Built target qfits
+[ 95%] Built target eclipse
+[ 98%] Built target mefpp_common
+[ 98%] Building C object CMakeFiles/mefpp.dir/ins/mef/recipes/mefpp.c.o
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c: In function ‘mef_engine’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c:815:33: warning: this ‘if’ clause does not guard... [-Wmisleading-indentation]
+  815 |                                 if (bias != NULL) image_del(bias); bias = NULL;
+      |                                 ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c:815:68: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
+  815 |                                 if (bias != NULL) image_del(bias); bias = NULL;
+      |                                                                    ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/recipes/mefpp.c:411:26: warning: unused variable ‘bpm’ [-Wunused-variable]
+  411 |         image_t         *bpm=NULL;
+      |                          ^~~
+[100%] Linking C executable mefpp
+[100%] Built target mefpp

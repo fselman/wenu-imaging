@@ -1,0 +1,749 @@
+mefpp2/qfits5/src/cache.c
+mefpp2/qfits5/src/fits_rw.c
+In file included from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c:32:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c: In function ‘qfits_header_readext’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c:334:21: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  334 |     fdealloc(start, seg_start, size) ;
+      |                     ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:62:44: note: in definition of macro ‘fdealloc’
+   62 | #define fdealloc(f,o,s) xmemory_fdealloc(f,o,s, __FILE__,__LINE__)
+      |                                            ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c: In function ‘qfits_zeropad’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c:372:18: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  372 |     buf = calloc(remaining, sizeof(char));
+      |                  ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:57:40: note: in definition of macro ‘calloc’
+   57 | #define calloc(n,s)     xmemory_calloc(n,s,     __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/fits_rw.c:373:20: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  373 |     fwrite(buf, 1, remaining, out);
+      |                    ^~~~~~~~~
+mefpp2/qfits5/src/pixio.c
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfits_loadpix_window’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:399:32: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  399 |     imagesize = (size_t)ql->lx * ql->ly * BYTESPERPIXEL(ql->bitpix);
+      |                                ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:400:30: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  400 |     window_size = (size_t)nx * ny * BYTESPERPIXEL(ql->bitpix);
+      |                              ^
+In file included from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.h:30,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:30:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:524:31: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  524 |         fdealloc((char*)fptr, datastart, fsize) ;
+      |                               ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:62:44: note: in definition of macro ‘fdealloc’
+   62 | #define fdealloc(f,o,s) xmemory_fdealloc(f,o,s, __FILE__,__LINE__)
+      |                                            ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfits_pixin_float’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:574:36: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  574 |     baseptr = p_dest = malloc(npix * sizeof(float));
+      |                                    ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:589:34: warning: conversion to ‘short unsigned int’ from ‘short int’ may change the sign of the result [-Wsign-conversion]
+  589 |             spix = swap_bytes_16(spix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:589:20: warning: conversion to ‘short int’ from ‘short unsigned int’ may change the sign of the result [-Wsign-conversion]
+  589 |             spix = swap_bytes_16(spix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:600:34: warning: conversion to ‘unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  600 |             lpix = swap_bytes_32(lpix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:600:20: warning: conversion to ‘int’ from ‘unsigned int’ may change the sign of the result [-Wsign-conversion]
+  600 |             lpix = swap_bytes_32(lpix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:611:34: warning: conversion to ‘unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  611 |             lpix = swap_bytes_32(lpix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:611:20: warning: conversion to ‘int’ from ‘unsigned int’ may change the sign of the result [-Wsign-conversion]
+  611 |             lpix = swap_bytes_32(lpix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfits_pixin_int’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:676:36: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  676 |     baseptr = p_dest = malloc(npix * sizeof(int));
+      |                                    ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:691:34: warning: conversion to ‘short unsigned int’ from ‘short int’ may change the sign of the result [-Wsign-conversion]
+  691 |             spix = swap_bytes_16(spix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:691:20: warning: conversion to ‘short int’ from ‘short unsigned int’ may change the sign of the result [-Wsign-conversion]
+  691 |             spix = swap_bytes_16(spix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:702:34: warning: conversion to ‘unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  702 |             lpix = swap_bytes_32(lpix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:702:20: warning: conversion to ‘int’ from ‘unsigned int’ may change the sign of the result [-Wsign-conversion]
+  702 |             lpix = swap_bytes_32(lpix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:713:34: warning: conversion to ‘unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  713 |             lpix = swap_bytes_32(lpix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:713:20: warning: conversion to ‘int’ from ‘unsigned int’ may change the sign of the result [-Wsign-conversion]
+  713 |             lpix = swap_bytes_32(lpix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfits_pixin_double’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:779:36: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  779 |     baseptr = p_dest = malloc(npix * sizeof(double));
+      |                                    ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:794:34: warning: conversion to ‘short unsigned int’ from ‘short int’ may change the sign of the result [-Wsign-conversion]
+  794 |             spix = swap_bytes_16(spix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:794:20: warning: conversion to ‘short int’ from ‘short unsigned int’ may change the sign of the result [-Wsign-conversion]
+  794 |             spix = swap_bytes_16(spix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:805:34: warning: conversion to ‘unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  805 |             lpix = swap_bytes_32(lpix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:805:20: warning: conversion to ‘int’ from ‘unsigned int’ may change the sign of the result [-Wsign-conversion]
+  805 |             lpix = swap_bytes_32(lpix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:816:34: warning: conversion to ‘unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+  816 |             lpix = swap_bytes_32(lpix);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:816:20: warning: conversion to ‘int’ from ‘unsigned int’ may change the sign of the result [-Wsign-conversion]
+  816 |             lpix = swap_bytes_32(lpix);
+      |                    ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfits_pixdump_float’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:1036:25: warning: conversion from ‘int’ to ‘byte’ {aka ‘unsigned char’} may change value [-Wconversion]
+ 1036 |                 *op++ = (spix >> 8) ;
+      |                         ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:1037:25: warning: conversion from ‘int’ to ‘byte’ {aka ‘unsigned char’} may change value [-Wconversion]
+ 1037 |                 *op++ = (spix & (byte)0xff) ;
+      |                         ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:1067:30: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 1067 |         memcpy(op, buf, npix * sizeof(float));
+      |                              ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c: In function ‘qfits_pixdump_int’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/pixio.c:1163:30: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 1163 |         memcpy(op, buf, npix * sizeof(int));
+      |                              ^
+mefpp2/qfits5/src/simple.c
+In file included from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:41:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c: In function ‘qfits_query_ext’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:183:29: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  183 |             fdealloc(start, seg_start, size) ;
+      |                             ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:62:44: note: in definition of macro ‘fdealloc’
+   62 | #define fdealloc(f,o,s) xmemory_fdealloc(f,o,s, __FILE__,__LINE__)
+      |                                            ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:191:29: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  191 |             fdealloc(start, seg_start, size) ;
+      |                             ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:62:44: note: in definition of macro ‘fdealloc’
+   62 | #define fdealloc(f,o,s) xmemory_fdealloc(f,o,s, __FILE__,__LINE__)
+      |                                            ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:198:21: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  198 |     fdealloc(start, seg_start, size) ;
+      |                     ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:62:44: note: in definition of macro ‘fdealloc’
+   62 | #define fdealloc(f,o,s) xmemory_fdealloc(f,o,s, __FILE__,__LINE__)
+      |                                            ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c: In function ‘qfits_query_card’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:585:23: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  585 |                       hs,
+      |                       ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:597:21: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  597 |     buf2 = malloc(hs+1) ;
+      |                   ~~^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:598:23: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  598 |     memcpy(buf2, buf, hs) ;
+      |                       ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:605:24: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  605 |             munmap(buf,hs);
+      |                        ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:621:17: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  621 |     munmap(buf, hs) ;
+      |                 ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c: In function ‘qfits_replace_card’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:677:23: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  677 |                       hs,
+      |                       ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:689:21: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  689 |     buf2 = malloc(hs+1) ;
+      |                   ~~^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:690:23: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  690 |     memcpy(buf2, buf, hs) ;
+      |                       ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:697:24: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  697 |             munmap(buf,hs);
+      |                        ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/simple.c:712:17: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  712 |     munmap(buf, hs) ;
+      |                 ^~
+mefpp2/qfits5/src/xmemory.c
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_hash’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:233:11: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+  233 |     len = strlen(key);
+      |           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_init’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:286:33: warning: conversion from ‘rlim_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+  286 |     xmemory_table.rlimit_data = rlim.rlim_cur ;
+      |                                 ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:117:23: warning: conversion from ‘long unsigned int’ to ‘int’ may change value [-Wconversion]
+  117 | #define PTR_HASH(ptr) (((unsigned long int) ptr) % XMEMORY_MAXPTRS)
+      |                       ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:358:11: note: in expansion of macro ‘PTR_HASH’
+  358 |     pos = PTR_HASH(pointer);
+      |           ^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:717:29: warning: conversion from ‘int’ to ‘char’ may change value [-Wconversion]
+  717 |                             memtype,
+      |                             ^~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:565:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  565 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:836:33: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘__off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  836 |         ptr = (char*)mmap(0, sta.st_size,
+      |                              ~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:856:35: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘__off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  856 |         if (size!=NULL) (*size) = sta.st_size ;
+      |                                   ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:880:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  880 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:946:29: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘__off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  946 |     ptr = (char*)mmap(0, sta.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE,fd,0);
+      |                          ~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:967:43: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘__off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  967 |     (void) xmemory_addcell((void*)ptr, sta.st_size, srcname, srclin,
+      |                                        ~~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:970:31: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘__off_t’ {aka ‘long int’} may change the sign of the result [-Wsign-conversion]
+  970 |     if (size!=NULL) (*size) = sta.st_size ;
+      |                               ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_fdealloc’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:117:23: warning: conversion from ‘long unsigned int’ to ‘int’ may change value [-Wconversion]
+  117 | #define PTR_HASH(ptr) (((unsigned long int) ptr) % XMEMORY_MAXPTRS)
+      |                       ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:1015:9: note: in expansion of macro ‘PTR_HASH’
+ 1015 |     i = PTR_HASH(ptr);
+      |         ^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c: In function ‘xmemory_free’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:117:23: warning: conversion from ‘long unsigned int’ to ‘int’ may change value [-Wconversion]
+  117 | #define PTR_HASH(ptr) (((unsigned long int) ptr) % XMEMORY_MAXPTRS)
+      |                       ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/src/xmemory.c:1142:9: note: in expansion of macro ‘PTR_HASH’
+ 1142 |     i = PTR_HASH(ptr);
+      |         ^~~~~~~~
+mefpp2/src/iproc/cube_save.c
+mefpp2/ins/mef/common/mefp_lib.c
+In file included from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/fit_curve.h:25,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/eclipse.h:42,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:33:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_bb_new_from_paf’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:130:24: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  130 |         ccd = calloc(bb->nchips, sizeof(mef_ccd));
+      |                      ~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:57:40: note: in definition of macro ‘calloc’
+   57 | #define calloc(n,s)     xmemory_calloc(n,s,     __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:196:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  196 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:202:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  202 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:210:43: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+  210 |             (ccd+i)->crval1             = ivalue;
+      |                                           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:216:43: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+  216 |             (ccd+i)->crval2             = ivalue;
+      |                                           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:220:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  220 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:226:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  226 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:756:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  756 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:762:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  762 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:795:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  795 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:813:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  813 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:819:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  819 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:853:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  853 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:874:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  874 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:894:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+  894 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:928:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  928 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:948:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  948 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:968:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+  968 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1016:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1016 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1022:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1022 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1138:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1138 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1144:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1144 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1150:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1150 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1156:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1156 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1180:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1180 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_split’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1691:19: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘long int’ may change the sign of the result [-Wsign-conversion]
+ 1691 |         padding = (FITS_BLOCK_SIZE - (position % FITS_BLOCK_SIZE)) % FITS_BLOCK_SIZE;
+      |                   ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_framelist_load’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1750:32: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 1750 |         exts = malloc(flist->n * sizeof(int));
+      |                                ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1732:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1732 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_load’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1895:33: warning: unused variable ‘single_frames’ [-Wunused-variable]
+ 1895 |         int                     single_frames ;
+      |                                 ^~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1894:33: warning: unused variable ‘err’ [-Wunused-variable]
+ 1894 |         int                     err ;
+      |                                 ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1893:33: warning: unused variable ‘exts’ [-Wunused-variable]
+ 1893 |         int               *     exts ;
+      |                                 ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1892:33: warning: unused variable ‘i’ [-Wunused-variable]
+ 1892 |         int                     i ;
+      |                                 ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1890:30: warning: unused variable ‘pt’ [-Wunused-variable]
+ 1890 |         register pixelvalue *pt;
+      |                              ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1889:20: warning: unused variable ‘mef_frame’ [-Wunused-variable]
+ 1889 |         image_t  * mef_frame ;
+      |                    ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_overscan_correction’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2027:39: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 2027 |         bias_line = malloc(scan_width * sizeof(pixelvalue));
+      |                                       ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2028:38: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 2028 |     scan_line = malloc(mef_frame->ly * sizeof(pixelvalue));
+      |                                      ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2075:40: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2075 |         bb->bias_scan_median[nplane] = medval ;
+      |                                        ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2076:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2076 |         bb->bias_scan_stdev[nplane] = stdev_val ;
+      |                                       ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2081:40: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2081 |         bb->dome_scan_median[nplane] = medval ;
+      |                                        ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2082:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2082 |         bb->dome_scan_stdev[nplane] = stdev_val ;
+      |                                       ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2087:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2087 |         bb->sky_scan_median[nplane] = medval ;
+      |                                       ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2088:38: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2088 |         bb->sky_scan_stdev[nplane] = stdev_val ;
+      |                                      ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2093:43: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2093 |         bb->science_scan_median[nplane] = medval ;
+      |                                           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2094:42: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2094 |         bb->science_scan_stdev[nplane] = stdev_val ;
+      |                                          ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1996:21: warning: variable ‘zIndex’ set but not used [-Wunused-but-set-variable]
+ 1996 |     int             zIndex;
+      |                     ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘simplifyFilterName’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2257:14: warning: unused variable ‘zChar’ [-Wunused-variable]
+ 2257 |         char zChar ;
+      |              ^~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_valid_subset’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2292:33: warning: unused variable ‘getval’ [-Wunused-variable]
+ 2292 |         char            *       getval ;
+      |                                 ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2991:38: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 2991 |         all_means = malloc(i_cube->np*sizeof(double));
+      |                                      ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3008:35: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 3008 |         valid = malloc(i_cube->np * sizeof(int));
+      |                                   ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3065:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3065 |         zstdev = image_getstdev(cur_p);
+      |                  ^~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3088:51: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 3088 |                 validpix = malloc(bb->median_surf * sizeof(pixelvalue));
+      |                                                   ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3130:51: warning: conversion from ‘double’ to ‘pixelvalue’ {aka ‘float’} may change value [-Wfloat-conversion]
+ 3130 |                                 cur_p->data[i] /= medval ;
+      |                                                   ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3132:41: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3132 |                         frame_median += medval ;
+      |                                         ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3133:31: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3133 |             frame_variance += stdev_val*stdev_val;
+      |                               ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3137:37: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+ 3137 |         frame_median = frame_median / frame_nplanes ;
+      |                                     ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3138:37: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+ 3138 |     frame_variance = frame_variance / frame_nplanes ;
+      |                                     ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3147:34: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3147 |         bb->dome_stdev[zIndex] = sqrt(frame_variance);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3152:33: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3152 |         bb->sky_stdev[zIndex] = sqrt(frame_variance);
+      |                                 ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2894:25: warning: unused variable ‘bias’ [-Wunused-variable]
+ 2894 |         image_t *       bias ;
+      |                         ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2893:25: warning: unused variable ‘scancorr’ [-Wunused-variable]
+ 2893 |         image_t *       scancorr ;
+      |                         ^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_ff_combine’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3245:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3245 |     bb->combined_flat_stdev[zIndex] = image_getstdev(smoothed);
+      |                                       ^~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘strtrim_right’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3553:11: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+ 3553 |     len = strlen( p);
+      |           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3561:15: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+ 3561 |         len = strlen( p);
+      |               ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘rtrim’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3567:13: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+ 3567 |     int l = strlen(s);
+      |             ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3572:23: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 3572 |     return strndup(s, l);
+      |                       ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3692:15: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3692 |     exptime = atof(qfits_header_getstr(fh_ref, "EXPTIME"));
+      |               ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3693:14: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3693 |     mjdobs = atof(qfits_header_getstr(fh_ref, "MJD-OBS"));
+      |              ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3694:14: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3694 |     mjdend = mjdobs + exptime/86400.;
+      |              ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3587:17: warning: unused variable ‘i’ [-Wunused-variable]
+ 3587 |     int         i, nframes ;
+      |                 ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3585:18: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3585 |     char        *getval ;
+      |                  ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3581:18: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 3581 |     framelist   *fnames ;
+      |                  ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_eclipse’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3973:35: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3973 |                         exptime = atof(exptime_str);
+      |                                   ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3755:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 3755 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3754:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 3754 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3750:17: warning: variable ‘exptime’ set but not used [-Wunused-but-set-variable]
+ 3750 |     float       exptime;
+      |                 ^~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3747:26: warning: unused variable ‘fh_ref’ [-Wunused-variable]
+ 3747 |         qfits_header    *fh_ref ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_input_filename’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4093:14: warning: unused variable ‘cval’ [-Wunused-variable]
+ 4093 |         char cval[80];
+      |              ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_get_headers_for’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4227:25: warning: unused variable ‘nchips’ [-Wunused-variable]
+ 4227 |         int             nchips ;
+      |                         ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4226:26: warning: unused variable ‘fnames’ [-Wunused-variable]
+ 4226 |         framelist       *fnames ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4225:26: warning: unused variable ‘first_name’ [-Wunused-variable]
+ 4225 |         char            *first_name ;
+      |                          ^~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4223:26: warning: unused variable ‘getval’ [-Wunused-variable]
+ 4223 |         char            *getval ;
+      |                          ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4220:26: warning: unused variable ‘out’ [-Wunused-variable]
+ 4220 |         FILE            *out ;
+      |                          ^~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4219:25: warning: unused variable ‘qd’ [-Wunused-variable]
+ 4219 |         qfitsdumper     qd ;
+      |                         ^~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:4212:26: warning: unused variable ‘fh_main’ [-Wunused-variable]
+ 4212 |         qfits_header    *fh_main = NULL ;
+      |                          ^~~~~~~
+mefpp2/ins/mef/common/mef_layout.c
+mefpp2/ins/mef/common/mefp_lib.c
+In file included from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/fit_curve.h:25,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/src/include/eclipse.h:42,
+                 from /workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:33:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_bb_new_from_paf’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:130:24: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+  130 |         ccd = calloc(bb->nchips, sizeof(mef_ccd));
+      |                      ~~^~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:57:40: note: in definition of macro ‘calloc’
+   57 | #define calloc(n,s)     xmemory_calloc(n,s,     __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:196:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  196 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:202:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  202 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:210:43: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+  210 |             (ccd+i)->crval1             = ivalue;
+      |                                           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:216:43: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+  216 |             (ccd+i)->crval2             = ivalue;
+      |                                           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:220:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  220 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:226:22: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  226 |             fvalue = atof(value);
+      |                      ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:756:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  756 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:762:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  762 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:795:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  795 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:813:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  813 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:819:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  819 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:853:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  853 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:874:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  874 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:894:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+  894 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:928:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  928 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:948:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+  948 |         fvalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:968:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+  968 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1016:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1016 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1022:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1022 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1138:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1138 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1144:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1144 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1150:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1150 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1156:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1156 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1180:18: warning: conversion from ‘double’ to ‘int’ may change value [-Wfloat-conversion]
+ 1180 |         ivalue = atof(value);
+      |                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_split’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1691:19: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘long int’ may change the sign of the result [-Wsign-conversion]
+ 1691 |         padding = (FITS_BLOCK_SIZE - (position % FITS_BLOCK_SIZE)) % FITS_BLOCK_SIZE;
+      |                   ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_cube_framelist_load’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:1750:32: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 1750 |         exts = malloc(flist->n * sizeof(int));
+      |                                ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_overscan_correction’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2027:39: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 2027 |         bias_line = malloc(scan_width * sizeof(pixelvalue));
+      |                                       ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2028:38: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 2028 |     scan_line = malloc(mef_frame->ly * sizeof(pixelvalue));
+      |                                      ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2075:40: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2075 |         bb->bias_scan_median[nplane] = medval ;
+      |                                        ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2076:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2076 |         bb->bias_scan_stdev[nplane] = stdev_val ;
+      |                                       ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2081:40: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2081 |         bb->dome_scan_median[nplane] = medval ;
+      |                                        ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2082:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2082 |         bb->dome_scan_stdev[nplane] = stdev_val ;
+      |                                       ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2087:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2087 |         bb->sky_scan_median[nplane] = medval ;
+      |                                       ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2088:38: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2088 |         bb->sky_scan_stdev[nplane] = stdev_val ;
+      |                                      ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2093:43: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2093 |         bb->science_scan_median[nplane] = medval ;
+      |                                           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2094:42: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 2094 |         bb->science_scan_stdev[nplane] = stdev_val ;
+      |                                          ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_build_cal’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:2991:38: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 2991 |         all_means = malloc(i_cube->np*sizeof(double));
+      |                                      ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3008:35: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 3008 |         valid = malloc(i_cube->np * sizeof(int));
+      |                                   ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3065:18: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3065 |         zstdev = image_getstdev(cur_p);
+      |                  ^~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3088:51: warning: conversion to ‘long unsigned int’ from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 3088 |                 validpix = malloc(bb->median_surf * sizeof(pixelvalue));
+      |                                                   ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/qfits5/include/xmemory.h:56:40: note: in definition of macro ‘malloc’
+   56 | #define malloc(s)       xmemory_malloc(s,       __FILE__,__LINE__)
+      |                                        ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3130:51: warning: conversion from ‘double’ to ‘pixelvalue’ {aka ‘float’} may change value [-Wfloat-conversion]
+ 3130 |                                 cur_p->data[i] /= medval ;
+      |                                                   ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3132:41: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3132 |                         frame_median += medval ;
+      |                                         ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3133:31: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3133 |             frame_variance += stdev_val*stdev_val;
+      |                               ^~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3137:37: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+ 3137 |         frame_median = frame_median / frame_nplanes ;
+      |                                     ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3138:37: warning: conversion from ‘int’ to ‘float’ may change value [-Wconversion]
+ 3138 |     frame_variance = frame_variance / frame_nplanes ;
+      |                                     ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3147:34: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3147 |         bb->dome_stdev[zIndex] = sqrt(frame_variance);
+      |                                  ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3152:33: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3152 |         bb->sky_stdev[zIndex] = sqrt(frame_variance);
+      |                                 ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_ff_combine’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3245:39: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3245 |     bb->combined_flat_stdev[zIndex] = image_getstdev(smoothed);
+      |                                       ^~~~~~~~~~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘strtrim_right’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3553:11: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+ 3553 |     len = strlen( p);
+      |           ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3561:15: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+ 3561 |         len = strlen( p);
+      |               ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘rtrim’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3567:13: warning: conversion from ‘size_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+ 3567 |     int l = strlen(s);
+      |             ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3572:23: warning: conversion to ‘size_t’ {aka ‘long unsigned int’} from ‘int’ may change the sign of the result [-Wsign-conversion]
+ 3572 |     return strndup(s, l);
+      |                       ^
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_esophase3’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3692:15: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3692 |     exptime = atof(qfits_header_getstr(fh_ref, "EXPTIME"));
+      |               ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3693:14: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3693 |     mjdobs = atof(qfits_header_getstr(fh_ref, "MJD-OBS"));
+      |              ^~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3694:14: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3694 |     mjdend = mjdobs + exptime/86400.;
+      |              ^~~~~~
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c: In function ‘mef_header_eclipse’:
+/workspace/scratch/104db3d59fe9/large-image-io/mefpp2/ins/mef/common/mefp_lib.c:3973:35: warning: conversion from ‘double’ to ‘float’ may change value [-Wfloat-conversion]
+ 3973 |                         exptime = atof(exptime_str);
+      |                                   ^~~~
