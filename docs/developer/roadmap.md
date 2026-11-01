@@ -1,5 +1,21 @@
 # wenu-imaging roadmap
 
+1 November [installed large-file real-data receipt](large-file-installed-real-data-2026-11-01.md): PR #200 was
+owner-accepted/merged at a240829; #195/#201 closed and branch cleanup completed.
+New separate optimized C90 runtimes from a240829 are installed on actual Intel
+Mac and shared Chapman. CP Pup r_SDSS (Mac) and CN Ori NB_659/r_SDSS (Chapman4)
+pass all 32 detector pixels exactly and finite, with raw headers matching except
+primary ORIGFILE, against fresh pre-large-file native 5b251831 builds.
+The first Mac comparison used a reference predating accepted #121 and remains
+failed evidence; raw-scan calculations reproduce old/new scan medians 32/32.
+Normal engines/configurations, protected inputs/products and clean checkouts
+remain unchanged. This is native real-data equivalence with retained calibrations,
+not a full Pycavi/scientific/Phase 3 or new >4-GiB/performance claim.
+M5 remains paused for owner acceptance of the intervening install/comparison work.
+Do not replay unchanged matrices or automatically switch engines, merge/clean
+this receipt branch or implement M5. Earlier pending statements below are historical
+within their source/date/scope; preserve all original and corrected evidence.
+
 [Large image I/O paired target qualification](large-file-image-io-paired-results-2026-10-31.md) is complete at
 native c66b8158: actual Mac C90/C17 four contracts each4/4; representative Chapman
 each4/4; each host's single C90 >4-GiB processed MEF independently passes every
