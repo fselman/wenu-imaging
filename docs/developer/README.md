@@ -1,5 +1,16 @@
 # Developer documentation
 
+1 November owner requests discussion and a source-grounded architecture/roadmap
+review before M5 implementation. See [the current/target architecture review](mefpp-architecture-review-2026-11-01.md).
+It records dual individual/full-recipe invocation, configurable CMDP/SMDP creation
+identities, common calibration storage, explicit normalization/reload metadata,
+FITS keyword authority and later dark/linearity/fringe/process extensions.
+New source findings #204–#207 are recorded, not fixed or runtime-reproduced.
+This is a design proposal, not accepted new interfaces, numerical corrections,
+TOML production activation or parallel execution. No install/reduction/test replay,
+merge or cleanup follows from this audit. Earlier M5 sequencing notes retain
+historical scope; the current owner discussion precedes implementation.
+
 1 November [installed large-file real-data receipt](large-file-installed-real-data-2026-11-01.md): PR #200 was
 owner-accepted/merged at a240829; #195/#201 closed and branch cleanup completed.
 New separate optimized C90 runtimes from a240829 are installed on actual Intel

@@ -1,5 +1,30 @@
 # mefpp current architecture
 
+## Current snapshot — version 2, 1 November 2026
+
+Pinned source: `493e4f6e6674bbf30f09dd6bdfa6af24fc2a3cf7`.
+The [complete current/target review](mefpp-architecture-review-2026-11-01.md)
+and [source/keyword inventory](audits/mefpp-architecture-2026-11-01/source-and-keyword-inventory.json)
+update the historical version-1 description below.
+
+- Bundled qfits is under `mefpp2/qfits5`; the normal CMake engine links four MEF C
+  units, 79 Eclipse and 18 qfits library units.
+- Normal CLI selects PAF before constructing context; explicit input/output/work
+  paths permit execution from another cwd with absolute frame-list members.
+- Typed configuration, TOML composition/domains/migration, owned request/context,
+  bias service and detector layout APIs exist separately; ordinary engine still
+  uses the legacy PAF recipe, not those opt-in services automatically.
+- The serial detector loop reads/builds bias, BPM, dome, sky and master flat and
+  then preprocesses science; input FITS versus list determines reuse/construction.
+- Shared normalization and header publication remain coupled to legacy state.
+  Source findings #204–#207 and existing #23/#24/#125/#128 are scoped in the review.
+- Wide file positions and checked native output are accepted in bounded tests;
+  ordinary plane/count/addressability limits and dependency globals remain.
+- New architecture is a proposal: no new numerical/correction, header, naming,
+  TOML activation, process or installation behavior is implemented by this update.
+
+## Historical snapshot — version 1
+
 Version 1, 25 October 2026. Observed native source baseline: main
 2cd54c1206ccb7b68b2eb0a5f70d9b28f1188cde; unchanged at documentation head
 b2867c1da3ae4567cc7168c2f0ca13021aea2f33.

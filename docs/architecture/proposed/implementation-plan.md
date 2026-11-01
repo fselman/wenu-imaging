@@ -1,5 +1,34 @@
 # mefpp refactor implementation plan — proposal
 
+1 November owner-comment revision: architecture review version 3 incorporates
+standalone TOML use within an ASDF environment without a native ASDF dependency;
+immutable input files with no deletion/staging copies and disk writes only for
+outputs/logs; distinct clipping, flat-selection and linearity limits; explicit
+const_level and future robust ramp_up/ramp_down sky-flat methods; correct stack
+memory accounting; one processing TOML per recipe as a target capability; and
+a configurable filename instrument label using OCAM. Ramp fitting is a separate
+scientific increment after legacy sky-flat extraction, not an M5 numerical change.
+The commented Word original is retained; revised Word/source documents are for
+review in draft PR #208. No native execution/installation or merge/cleanup yet.
+
+
+1 November owner update for the current refactoring cycle: use actual Intel Mac
+C17 for native implementation and iterative affected checks. After the agreed
+candidate is ready, perform consolidated Mac C90 compatibility, then representative
+shared Chapman verification. Preserve C90-compatible core source and selected tools;
+do not repeat paired-language/Chapman matrices for every intermediate edit.
+Finish the first bias adapter with PAF, connect the existing TOML reader immediately
+next, and repeat bias with equivalent TOML settings before subsequent builders.
+The architecture review now includes proposed command/request examples and a Word
+review copy for owner comments. Examples are not implemented CLI/schema contracts.
+
+1 November 2026: the owner requests architecture/roadmap review before M5 code.
+The [source-grounded M5 refinement](../../developer/mefpp-architecture-review-2026-11-01.md#10-proposed-roadmap-refinement-within-m5m11-and-later-pg)
+proposes result/normalization/keyword contracts, production configuration connection,
+creation-time publication, then one calibration service per increment. It retains
+M5a, M6/M6a–M6d, M7–M11 and later P/G sequencing. Proposed refinements and source
+findings #204–#207 are not implementation or numerical-change acceptance.
+
 31 October owner accepted M4 interface/fixture review and instructed proceeding.
 First [native layout increment](../../developer/m4-native-layout-2026-10-31.md)
 implements opt-in C90 bounded header catalogues, independent detector maps,
