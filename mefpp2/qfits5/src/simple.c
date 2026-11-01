@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -118,9 +119,9 @@ char * qfits_query_ext(char * filename, const char * keyword, int xtnum)
     int         i ;
     int         len ;
     int         different ;
-    int         seg_start ;
-    int         seg_size ;
-    long        bufcount ;
+    off_t       seg_start ;
+    off_t       seg_size ;
+    off_t       bufcount ;
     size_t      size ;
 
     /* Bulletproof entries */
@@ -133,7 +134,7 @@ char * qfits_query_ext(char * filename, const char * keyword, int xtnum)
      * Find out offsets to the required extension
      * Record the xtension start and stop offsets
      */
-    if (qfits_get_hdrinfo(filename, xtnum, &seg_start, &seg_size)==-1) {
+    if (qfits_get_hdrinfo_wide(filename, xtnum, &seg_start, &seg_size)==-1) {
         return NULL ;
     }
 
@@ -141,7 +142,8 @@ char * qfits_query_ext(char * filename, const char * keyword, int xtnum)
      * Get a hand on requested buffer
      */
 
-    start = falloc(filename, seg_start, &size);
+    if (seg_start < 0 || seg_size < 80 || strlen(exp_key) > 78) return NULL;
+    start = falloc(filename, (size_t)seg_start, &size);
     if (start==NULL) return NULL ;
 
     /*
@@ -152,6 +154,9 @@ char * qfits_query_ext(char * filename, const char * keyword, int xtnum)
     where = start ;
     len = (int)strlen(exp_key);
     while (1) {
+        if (bufcount > seg_size - 80) {
+            fdealloc(start, (size_t)seg_start, size); return NULL;
+        }
         different=0 ;
         for (i=0 ; i<len ; i++) {
             if (where[i]!=exp_key[i]) {
@@ -479,26 +484,26 @@ int qfits_get_type(char * s)
   main header in the file.
  */
 /*----------------------------------------------------------------------------*/
-int qfits_get_hdrinfo(
-        char * filename,
-        int    xtnum,
-        int  * seg_start,
-        int  * seg_size)
+int qfits_get_hdrinfo_wide(char *filename, int xtnum,
+    off_t *seg_start, off_t *seg_size)
 {
-    if (filename==NULL || xtnum<0 || (seg_start==NULL && seg_size==NULL)) {
-        return -1 ;
-    }
-    if (seg_start!=NULL) {
-        *seg_start = qfits_query(filename, QFITS_QUERY_HDR_START | xtnum);
-        if (*seg_start<0)
-            return -1 ;
-    }
-    if (seg_size!=NULL) {
-        *seg_size = qfits_query(filename, QFITS_QUERY_HDR_SIZE | xtnum);
-        if (*seg_size<0)
-            return -1 ;
-    }
-    return 0 ;
+    off_t start, size;
+    if (filename == NULL || xtnum < 0 || (seg_start == NULL && seg_size == NULL)) return -1;
+    if ((seg_start && qfits_query_wide(filename, QFITS_QUERY_HDR_START | xtnum, &start)) ||
+        (seg_size && qfits_query_wide(filename, QFITS_QUERY_HDR_SIZE | xtnum, &size))) return -1;
+    if (seg_start) *seg_start = start;
+    if (seg_size) *seg_size = size;
+    return 0;
+}
+int qfits_get_hdrinfo(char *filename, int xtnum, int *seg_start, int *seg_size)
+{
+    off_t start, size;
+    if (qfits_get_hdrinfo_wide(filename, xtnum,
+        seg_start ? &start : NULL, seg_size ? &size : NULL) ||
+        (seg_start && start > INT_MAX) || (seg_size && size > INT_MAX)) return -1;
+    if (seg_start) *seg_start = (int)start;
+    if (seg_size) *seg_size = (int)size;
+    return 0;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -520,26 +525,26 @@ int qfits_get_hdrinfo(
   main header in the file.
  */
 /*----------------------------------------------------------------------------*/
-int qfits_get_datinfo(
-        char * filename,
-        int    xtnum,
-        int  * seg_start,
-        int  * seg_size)
+int qfits_get_datinfo_wide(char *filename, int xtnum,
+    off_t *seg_start, off_t *seg_size)
 {
-    if (filename==NULL || xtnum<0 || (seg_start==NULL && seg_size==NULL)) {
-        return -1 ;
-    }
-    if (seg_start!=NULL) {
-        *seg_start = qfits_query(filename, QFITS_QUERY_DAT_START | xtnum);
-        if (*seg_start<0)
-            return -1 ;
-    }
-    if (seg_size!=NULL) {
-        *seg_size = qfits_query(filename, QFITS_QUERY_DAT_SIZE | xtnum);
-        if (*seg_size<0)
-            return -1 ;
-    }
-    return 0 ;
+    off_t start, size;
+    if (filename == NULL || xtnum < 0 || (seg_start == NULL && seg_size == NULL)) return -1;
+    if ((seg_start && qfits_query_wide(filename, QFITS_QUERY_DAT_START | xtnum, &start)) ||
+        (seg_size && qfits_query_wide(filename, QFITS_QUERY_DAT_SIZE | xtnum, &size))) return -1;
+    if (seg_start) *seg_start = start;
+    if (seg_size) *seg_size = size;
+    return 0;
+}
+int qfits_get_datinfo(char *filename, int xtnum, int *seg_start, int *seg_size)
+{
+    off_t start, size;
+    if (qfits_get_datinfo_wide(filename, xtnum,
+        seg_start ? &start : NULL, seg_size ? &size : NULL) ||
+        (seg_start && start > INT_MAX) || (seg_size && size > INT_MAX)) return -1;
+    if (seg_start) *seg_start = (int)start;
+    if (seg_size) *seg_size = (int)size;
+    return 0;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -569,7 +574,7 @@ char * qfits_query_card(
     exp_key = qfits_expand_keyword(keyword) ;
 
     /* Memory-map the FITS header of the input file  */
-    qfits_get_hdrinfo(filename, 0, NULL, &hs) ;
+    if (qfits_get_hdrinfo(filename, 0, NULL, &hs) != 0) return NULL;
     if (hs < 1) {
         qfits_error("error getting FITS header size for %s", filename);
         return NULL ;
@@ -659,7 +664,7 @@ int qfits_replace_card(
      * Memory-map the FITS header of the input file 
      */
 
-    qfits_get_hdrinfo(filename, 0, NULL, &hs) ;
+    if (qfits_get_hdrinfo(filename, 0, NULL, &hs) != 0) return -1;
     if (hs < 1) {
         qfits_error("error getting FITS header size for %s", filename);
         return -1 ;

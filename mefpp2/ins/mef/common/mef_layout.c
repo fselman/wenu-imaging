@@ -226,7 +226,8 @@ mef_status mef_layout_read(const char *path, const mef_layout_options *options,
     mef_hdu_layout hdu, *grown;
     mef_status status;
     size_t payload, capacity;
-    int nextensions, index, header_start, header_size, data_start, data_size;
+    int nextensions, index;
+    off_t header_start, header_size, data_start, data_size;
     if (out == NULL || *out != NULL || (error != NULL && *error != NULL)) return MEF_ERR_INPUT;
     if (!allocator_for(allocator, &a)) return MEF_ERR_INPUT;
     if (path == NULL || path[0] != '/') return failure(MEF_ERR_INPUT, "Layout requires an absolute input path", &a, error);
@@ -243,7 +244,6 @@ mef_status mef_layout_read(const char *path, const mef_layout_options *options,
     /* #185: reject nonregular inputs before the dependency opens them. */
     if (stat(path, &layout->identity) != 0 || !S_ISREG(layout->identity.st_mode) ||
         layout->identity.st_size <= 0) goto failed;
-    if (layout->identity.st_size > INT_MAX) { status = MEF_ERR_UNSUPPORTED; goto failed; }
     /* Additive checked entry point shares the existing qfits cache walker.
      * It enforces HDU/header budgets before publishing an offset catalogue. */
     status = MEF_ERR_INPUT;
@@ -251,8 +251,8 @@ mef_status mef_layout_read(const char *path, const mef_layout_options *options,
     nextensions = qfits_query_n_ext(layout->path);
     if (nextensions < 0 || (size_t)nextensions >= options->max_hdus) goto failed;
     for (index = 0; index <= nextensions; ++index) {
-        if (qfits_get_hdrinfo(layout->path, index, &header_start, &header_size) != 0 ||
-            qfits_get_datinfo(layout->path, index, &data_start, &data_size) != 0 ||
+        if (qfits_get_hdrinfo_wide(layout->path, index, &header_start, &header_size) != 0 ||
+            qfits_get_datinfo_wide(layout->path, index, &data_start, &data_size) != 0 ||
             header_start < 0 || header_size < 2880 || data_start < 0 || data_size < 0) goto failed;
         header = qfits_header_readext(layout->path, index);
         if (header == NULL) { status = MEF_ERR_IO; goto failed; }

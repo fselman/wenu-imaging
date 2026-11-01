@@ -1,0 +1,3 @@
+PLAN: two sparse ~4.063-GiB inputs; one <=4.063-GiB materialized output only in large phase; native planned <1 GiB RAM
+RETAINED RUN: /workspace/scratch/104db3d59fe9/io-evidence-c90/large-file-io-81lqlcr5
+PASS: IO-4 focused wide I/O controls; RETAINED: /workspace/scratch/104db3d59fe9/io-evidence-c90/large-file-io-81lqlcr5

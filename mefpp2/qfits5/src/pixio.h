@@ -23,6 +23,7 @@
  -----------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -105,8 +106,8 @@ int main(int argc, char * argv[])
 			"size Y       : %d\n"
 			"planes       : %d\n"
 			"bitpix       : %d\n"
-			"datastart    : %d\n"
-            "datasize     : %d\n"
+			"datastart    : %ld\n"
+            "datasize     : %ld\n"
 			"bscale       : %g\n"
 			"bzero        : %g\n",
 			ql.filename,
@@ -117,8 +118,8 @@ int main(int argc, char * argv[])
 			ql.ly,
 			ql.np,
 			ql.bitpix,
-			ql.seg_start,
-            ql.seg_size,
+			(long)ql.seg_start,
+            (long)ql.seg_size,
 			ql.bscale,
 			ql.bzero);
 	return 0 ;
@@ -153,9 +154,9 @@ typedef struct qfitsloader {
 	/** output: BITPIX for this extension */
 	int			bitpix ;
 	/** output: Start of the data segment (in bytes) for your request */
-	int			seg_start ;
+	off_t		seg_start ;
     /** output: Size of the data segment (in bytes) for your request */
-    int         seg_size ;
+    off_t       seg_size ;
 	/** output: BSCALE found for this extension */
 	double		bscale ;
 	/** output: BZERO found for this extension */

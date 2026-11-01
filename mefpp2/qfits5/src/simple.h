@@ -30,6 +30,7 @@ extern "C" {
  -----------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -235,6 +236,10 @@ int qfits_get_type(char * s) ;
   main header in the file.
  */
 /*----------------------------------------------------------------------------*/
+/* Wide disk spans; status 0 on success. Outputs unchanged on failure. */
+int qfits_get_hdrinfo_wide(char *, int, off_t *, off_t *);
+int qfits_get_datinfo_wide(char *, int, off_t *, off_t *);
+
 int qfits_get_hdrinfo(
         char * filename,
         int    xtnum,

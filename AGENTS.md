@@ -1,5 +1,20 @@
 # wenu-imaging
 
+Approved large image I/O roadmap v1.0: [IO-0 through IO-4 agent results](docs/developer/large-file-image-io-agent-results-2026-10-31.md).
+Fourteen production files and three focused test/runner files implement off_t
+positions, checked memory/transfer arithmetic, legacy wrappers and processed
+output; numerical types/routines unchanged. C90/C17 focused/ordinary gates and
+scoped ASan/UBSan pass. One 4,362,324,480-byte processed MEF has every pixel,
+header/scaling/order and padding independently verified. #201 copied-window
+count correction is agent-qualified within IO-2, actual-target pending.
+Next IO-5: actual Mac then representative Chapman, selected tools, private C90/C17
+builds/focused checks and one large C90 processed output per host. No original
+observations, installation, extra full matrices or benchmark campaign. Keep
+#195/#201 and IO-6 open until target acceptance; no merge/M5 advance yet.
+Retain approved gates and amendment control; earlier pending statements below
+are historical within their stated scope.
+
+
 Owner approved large image I/O roadmap v1.0 after reviewing 6f502658.
 Execute IO-0 through IO-6 strictly; frozen interfaces/fixtures/resources:
 docs/developer/large-file-image-io-io0-plan.md.

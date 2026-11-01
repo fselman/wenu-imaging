@@ -20,6 +20,7 @@
  ---------------------------------------------------------------------------*/
 
 #include <string.h>
+#include <limits.h>
 #include "cube_save.h"
 #include "qfits.h"
 
@@ -490,6 +491,7 @@ int cube_fits_appendimage(
 
     /* Error handling : check entries   */
     if (appended==NULL || filename==NULL) return -1 ;
+    if (appended->lx <= 0 || appended->ly <= 0 || appended->lx > INT_MAX / appended->ly) return -1;
 
 	/* Set parameters for qfits dumper */
 	qd.filename  = filename ;

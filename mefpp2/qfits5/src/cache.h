@@ -28,6 +28,7 @@
  -----------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <sys/types.h>
 
 /*-----------------------------------------------------------------------------
    								Defines
@@ -58,7 +59,7 @@
 /*----------------------------------------------------------------------------*/
 void qfits_cache_purge(void);
 /* Checked discovery using the existing cache walker. Counts include primary.
- * Byte offsets remain int-valued; oversized files are rejected, not truncated. */
+ * Wide disk spans use off_t; legacy int queries reject unrepresentable outputs. */
 int qfits_cache_prime_bounded(char *, size_t max_hdus, size_t max_header_bytes);
 /* </dox> */
 
@@ -120,6 +121,7 @@ int qfits_cache_prime_bounded(char *, size_t max_hdus, size_t max_header_bytes);
  */
 /*----------------------------------------------------------------------------*/
 int qfits_query(char * filename, int what);
+int qfits_query_wide(char *, int, off_t *);
 
 #endif
 /* vim: set ts=4 et sw=4 tw=75 */
