@@ -1,5 +1,10 @@
 # wenu-imaging
 
+Owner approved large image I/O roadmap v1.0 after reviewing 6f502658.
+Execute IO-0 through IO-6 strictly; frozen interfaces/fixtures/resources:
+docs/developer/large-file-image-io-io0-plan.md.
+No merge/install authorization. Subsequent proposal-pending language is historical.
+
 1 November [large image I/O roadmap v1.0](docs/developer/large-file-image-io-roadmap-v1.md) is PROPOSED,
 awaiting owner approval. Owner requires large FITS/MEF reading AND processed
 output, without general numerical-type widening. This supersedes the prior

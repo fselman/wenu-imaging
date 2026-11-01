@@ -1,6 +1,6 @@
 # Large FITS/MEF image I/O roadmap — version 1.0
 
-Date: 1 November 2026. Status: **PROPOSED — awaiting owner approval**.
+Date: 1 November 2026. Status: **APPROVED by owner after review of commit 6f5026583edf3ee7e82a13aa896b2fb4bceda99c**.
 Baseline: main `38b27f8da943acfdd83b9f1cc9a243405e346a96`.
 Tracking: #195; proposal PR #200. This roadmap precedes M5.
 
@@ -13,8 +13,7 @@ conversion of mefpp/Eclipse to 64-bit numerical types.
 
 The owner's complete I/O clarification supersedes the earlier read-only scope.
 The original broad audit and subsequent read-only inventory remain historical
-evidence. This version is a proposal, not already approved implementation.
-After explicit owner approval, execute its stages and gates in order. Do not add
+evidence. Owner approval is recorded in the IO-0 frozen plan. Execute its stages and gates in order. Do not add
 capabilities, omit gates, relax limits or expand a test campaign silently.
 
 Every implementation commit references #195 and the approved roadmap version.
