@@ -1,5 +1,16 @@
 # wenu-imaging
 
+1 November [large image I/O roadmap v1.0](docs/developer/large-file-image-io-roadmap-v1.md) is PROPOSED,
+awaiting owner approval. Owner requires large FITS/MEF reading AND processed
+output, without general numerical-type widening. This supersedes the prior
+read-only offset proposal. Fourteen production/header/build files, off_t disk
+positions, checked size_t memory/transfer lengths, unchanged numerical types
+and original-data immutability; stages IO-0 through IO-6 and explicit amendment
+control. No implementation/test/install/merge authorization follows merely
+from preparing this roadmap. M5 waits for this selected I/O increment.
+M4/PR #186 was accepted and merged at 38b27f8; Mac and Chapman returned clean
+synchronized main and branch cleanup. Older M4-pending notes are historical.
+
 31 October [bounded M4 closure review](docs/developer/m4-bounded-closure-review-2026-10-31.md)
 recommends owner acceptance of the detector/layout foundation, then M5 calibration
 decomposition after explicit integration. Native source 5b251831 passes paired

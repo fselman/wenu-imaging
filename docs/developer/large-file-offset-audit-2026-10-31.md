@@ -1,3 +1,13 @@
+# Current proposal: complete large image I/O
+
+The owner's later clarification requires both large input and processed output,
+without numerical-type widening. The [version 1.0 I/O roadmap](large-file-image-io-roadmap-v1.md)
+is the current proposal awaiting approval. Its fourteen-file inventory and ordered
+gates supersede the read-only implementation proposal below. Both earlier scopes
+remain historical audit evidence; neither authorizes code or broad utility work.
+
+---
+
 # Current scope: reading large FITS/MEF files only
 
 **Owner clarification supersedes the broader proposal below.** Enable reading
