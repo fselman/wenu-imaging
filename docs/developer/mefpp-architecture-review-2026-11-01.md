@@ -1,12 +1,14 @@
 # mefpp architecture review and proposed delivery roadmap
 
-Date: 1 November 2026, America/Santiago. Review version 2. Word review edition.
+Date: 1 November 2026, America/Santiago. Review version 3. Revised after owner comments. Word review edition.
 
 Owner update: add target command/TOML examples; complete the first bias stage with
 PAF, then connect TOML immediately and repeat bias with equivalent TOML settings.
 For this refactoring cycle, iterate on Intel Mac using C17 only, followed by a
 consolidated Mac C90 check and then Chapman verification. No native execution is
-started by this document revision.
+started by this document revision. This edition incorporates the nine comments
+and added standalone-use wording in the returned Word review. The proposed
+implementation interfaces remain subject to review.
 
 **Status: source audit and design proposal for owner review, not implementation acceptance.**
 Source is pinned to `493e4f6e6674bbf30f09dd6bdfa6af24fc2a3cf7`, the merged
@@ -23,6 +25,12 @@ detector operations; scientific metadata and FITS keyword policy; ordered public
 The full recipe and individual commands must call the same numerical services.
 Serial equivalence precedes process parallelism. New numerical capabilities have
 their own stages and cannot be smuggled into an extraction.
+
+The updated mefpp will live within an ASDF environment but should be agnostic
+about it. It should be usable standalone from the command line given the
+appropriate TOML configuration files. Project software may read ASDF, prepare
+explicit native requests and record returned products; no ASDF dependency is
+introduced into the native numerical services or ordinary command line.
 
 The [source and keyword inventory](audits/mefpp-architecture-2026-11-01/source-and-keyword-inventory.json)
 covers 464 tracked source/header/build/configuration/test files, 145,949 lines,
@@ -98,8 +106,8 @@ semantics still require a declared base; never silently redefine them as list-re
 
 ```mermaid
 flowchart TD
-    A["CLI, selected PAF, inputs and explicit paths"] --> SP{"Split-only request?"}
-    SP -->|Yes| SPLIT["Split selected files and return"]
+    A["CLI, selected PAF, inputs and explicit paths"] --> SP{"Extract extensions only?"}
+    SP -->|Yes| SPLIT["Extract extensions to separate FITS files and return"]
     SP -->|No| V["Validate subsets, paths and output destinations"]
     V --> DET["Next selected extension"]
     DET --> B["Bias: read FITS or build from supplied list, if selected"]
@@ -135,6 +143,11 @@ its own header and disk publication. A newly combined master flat is saved.
 Science output is per exposure, assembled extension by extension. Completed
 earlier output can remain after a later failure; current ordinary publication
 does not provide a whole-run transaction.
+
+The existing `--split` branch is an extraction utility: it writes each MEF
+image extension to a separate FITS output and returns without the reduction
+recipe. It does not split the implementation into subroutines or schedule
+parallel workers. The input MEF remains unchanged.
 
 ## 4. Actual algorithms and normalization
 
@@ -247,13 +260,20 @@ path; success transfers ownership once. Keep operation-specific payloads. Do not
 turn `mef_bb` into another larger generic context, add a registry/vtable framework
 without a real need, or expose Eclipse structs as a permanent Python ABI.
 
-The numerical result should own what must survive context destruction, but this
-does not mandate copying every calibration frame. Reuse the existing bias owner
-as the reference contract; document and measure its copies. For flat combination,
-choose explicit exclusive ownership transfer or copy-on-entry when reuse requires
-it. Preserve a borrowed read-only caller contract where promised. Do not hide an
-expensive unconditional copy behind an accessor. Small arithmetic helpers need
-direct typed arguments, not separately allocated contexts per pixel or row.
+All supplied raw frames and existing calibration products are read-only. Mefpp
+must not modify, delete or create staging copies of those input files. Its disk
+writes are outputs and logs, including declared result records. Temporary files
+used to assemble an output safely belong to that output-writing process; they
+are not staged input copies. The split utility creates explicitly requested
+extracted outputs and also preserves its input MEF.
+
+Array ownership describes memory, not permission to change source files. A
+result owns the arrays that must survive destruction of the processing context.
+The loader may allocate a private working array; flat combination can modify
+that array once exclusive ownership is transferred. Borrowed read-only arrays
+remain unchanged. Avoid extra RAM copies by reusing private working arrays where
+safe; document and measure any necessary duplication. Small arithmetic helpers
+need direct typed arguments, not separately allocated contexts per pixel or row.
 
 ### Existing and later operations
 
@@ -273,6 +293,48 @@ code; their presence is not a complete accepted service. The order of later
 linearity/dark operations depends on the model's signal convention and must not
 be frozen as a universal diagram sequence now. All affected calibration inputs
 must share compatible correction state, units and applicability.
+
+### Sky flat construction methods
+
+Support two explicitly selected methods in the sky-flat service. `const_level`
+preserves the existing construction for exposures whose integration times are
+adjusted to obtain similar illumination levels. The new `ramp_up` and
+`ramp_down` modes describe fixed-exposure twilight sequences with increasing
+and decreasing illumination, respectively. The telescope is parked near the
+zenith while stars move across the detector.
+
+For the proposed ramp method, measure a robust detector illumination level for
+each exposure and fit each pixel's counts against those measured levels. The
+fitted slope is the relative response and the intercept represents a constant
+additive component. Robust outlier rejection handles transient contamination,
+including passing stars. Do not assume illumination is linear in elapsed time.
+This is a sequence of exposures, not nondestructive reads within one exposure.
+
+The ramp method is a new scientific algorithm, not part of preserving the
+legacy flat calculation. Give it a separate implementation/acceptance increment
+after the existing sky-flat service is established. Define the fit, reference
+normalization, usable illumination span, minimum samples and failure policy
+before implementation. Retain detector-level illumination/reference information
+for gain harmonization, accepted/rejected samples, fit quality, units and
+correction state in the result and its FITS metadata. Different acquisition
+methods must not be combined without an explicit recipe.
+
+### Saturation and linearity limits
+
+Keep three meanings separate: the detector saturation/clipping threshold;
+the illumination range accepted for flat construction; and the valid signal
+range of a linearity-correction model. Configure these per applicable instrument,
+detector and readout mode. An upper flat-selection limit around 55,000 ADU may
+be selected for a particular configuration. The unsigned 16-bit maximum 65,535
+is a storage limit and does not establish a detector's physical saturation.
+
+State the units, statistic and correction stage for each limit. A frame-level
+illumination cut and a per-pixel clipping mask are different checks. Define
+whether flat-selection limits apply before or after linearity correction;
+clipped pixels remain invalid after correction. Preserve the current legacy
+settings/behavior during extraction, then introduce the distinct target fields
+and their migration explicitly. The linearity model's applicability must be
+coordinated with both flat methods.
 
 ## 7. FITS keyword architecture: explicit scientific authority
 
@@ -436,18 +498,25 @@ from output, its required statistics remain available. If unavailable, fail or
 use a separately reviewed reference policy; do not substitute another detector.
 
 No worker appends to a shared MEF or changes global cwd/configuration. Worker
-scratch, logs and failure state are private; calibrations are read-only unless
-ownership is transferred explicitly. Do not fork and casually reuse inherited
+scratch, logs and failure state are private; input files always remain read-only. Exclusive ownership transfer applies
+only to private working arrays in memory. Do not fork and casually reuse inherited
 live qfits mappings/file owners; choose a clean worker lifecycle. The parent is
 responsible for cancellation, failure propagation, reaping and truthful state.
 
 Bound the number of workers by actual allocation and measured per-task peak
-memory/I/O. One detector can still require a cube of all its calibration/science
-frames: do not describe memory as just one plane. Avoid serializing image arrays
-through JSON or copying an entire mosaic. Bound completed-result queues so a
-slow early detector cannot retain every later detector's arrays. Private spill
-files are an option with measured I/O cost, not a free performance assumption.
-Do not change median stacking into an approximate streaming algorithm to save RAM.
+memory/I/O. Processing one detector at a time does not mean loading one exposure
+only: a median bias made from 20 frames may hold 20 planes of that detector,
+plus working arrays. Four such workers can require roughly four times that
+working memory. Measure the actual loader/algorithm rather than assuming every
+operation, including science application, needs the same stack.
+
+Avoid serializing image arrays through JSON or copying an entire mosaic. Bound
+completed-result queues so a slow early detector cannot retain every later
+detector's arrays. Use memory bounds and backpressure initially; do not introduce
+separate scratch spill files under the outputs-and-logs-only policy. Exact
+region-by-region processing can be evaluated if needed, preserving every sample,
+rejection rule and exact median result. Do not substitute an approximate
+streaming estimator to reduce RAM.
 
 ## 10. Proposed roadmap refinement within M5–M11 and later P/G
 
@@ -469,6 +538,7 @@ runtime changes. No implementation starts merely because this report is publishe
 | M5a — QC contracts | Retain old measures with explicit meaning/availability; define any new mean/RON/scan estimators separately | Review estimator definitions before code, no automatic scientific cuts or replacement of configured gain/RON |
 | M6 — science service and complete serial native chain | Extract inline science; same service for standalone and full cascade; required calibrations may be built from supplied lists | Exact stage-boundary arrays, mapping, headers and correction-state comparisons; #23/#24 reviewed separately; Python e-/s boundary remains exactly once |
 | M6a — variance | Qualified initialization and propagation through science and calibration operations | Analytic and estimator controls, masks, squared units and shared-calibration/reference uncertainty limits; no normal variance-off mode in the new chain |
+| M6-sky — ramp sky flats | New robust illumination-response fit for `ramp_up`/`ramp_down`; retain `const_level` | Known relative responses, intercepts, nonuniform illumination steps, passing-star/outlier contamination, clipping/linearity bounds, shared-reference metadata and uncertainty controls |
 | M6b — linearity | Model builder and separate application kernel with declared applicability/order | Known response curves, identity/invalid-domain/model-uncertainty controls; do not assume an existing Eclipse helper is a qualified model |
 | M6c — dark | Native dark builder and explicitly selected subtraction | Matched exposure/rate convention, temperature/readout applicability, no double subtraction, propagated uncertainty; no inferred scaling |
 | M6d — fringes | Native template builder; explicit handoff for later Python subtraction | Source masking/normalization/coverage, membership and shared-template uncertainty; no automatic subtraction in mefpp |
@@ -482,6 +552,11 @@ The native on-the-fly cascade requested now is a manually initiated finite recip
 over explicit inputs. It is distinct from future monitoring/new-arrival-driven
 reprocessing. Do not bring automatic G-stage behaviour forward merely to allow
 one native invocation to construct all its prerequisites.
+
+The ramp-flat increment follows establishment of the legacy sky-flat service.
+Its execution order relative to variance and linearity work is settled when the
+scientific model and acceptance fixtures are reviewed; its name is not permission
+to bring the new calculation into M5 extraction.
 
 ### First implementation recommendation
 
@@ -656,6 +731,17 @@ not be introduced through a forbidden override. The proposed request-file
 schema is separate: it cannot be pasted into an existing schema-3 native file,
 whose unknown-key rejection remains valuable.
 
+The target is one reusable processing TOML per recipe, for example
+`bias-processing.toml`, `sky-const-processing.toml` or `sky-ramp-processing.toml`.
+An instrument TOML can be shared. A recipe's processing document defines its
+algorithm/settings; the run request identifies the actual input lists, supplied
+calibrations and output locations. The entry file composes the chosen documents.
+
+The existing schema-3 reader still requires the complete retained native
+configuration after composition. Recipe-specific partial processing documents
+are a target capability requiring explicit applicability/validation rules; they
+are not accepted by merely renaming or truncating the existing complete file.
+
 ### 15.2 First construct the bias with PAF then repeat with TOML
 
 The first end-to-end bias adapter remains PAF-driven. Its illustrative invocation
@@ -737,15 +823,15 @@ flat_bias_subtraction = true
 
 [calibrations.bias]
 source = "product"
-path = "/reduction/calibrations/CMDP.OMEGACAM.2026-11-01T10:00:00.000.fits"
+path = "/reduction/calibrations/CMDP.OCAM.2026-11-01T10:00:00.000.fits"
 
 [calibrations.domeff]
 source = "product"
-path = "/reduction/calibrations/CMDP.OMEGACAM.2026-11-01T10:01:00.000.fits"
+path = "/reduction/calibrations/CMDP.OCAM.2026-11-01T10:01:00.000.fits"
 
 [calibrations.skyff]
 source = "product"
-path = "/reduction/calibrations/CMDP.OMEGACAM.2026-11-01T10:02:00.000.fits"
+path = "/reduction/calibrations/CMDP.OCAM.2026-11-01T10:02:00.000.fits"
 
 [output]
 calibration_dir = "/reduction/calibrations"
@@ -844,7 +930,9 @@ parallel workers: serial service equivalence still comes first.
 
 The configuration must eventually expose separate calibration and science
 identity prefixes, initially CMDP and SMDP, and retain the existing category and
-legacy-root mappings. Their precise TOML key names and supported domain-version
+legacy-root mappings. The instrument label used in filenames is also configurable; use `OCAM` in
+these examples while retaining the appropriate original FITS instrument identity.
+The filename label must not silently rewrite `INSTRUME`. Their precise TOML key names and supported domain-version
 change are still to be reviewed. Do not add an invented `product.naming` table
 to a schema-3 document and imply that the current strict reader accepts it.
 The physical final basename follows the reviewed creation-time naming policy;
@@ -875,3 +963,19 @@ The Word review copy retains editable paragraphs, code examples and tables.
 Figures have numbered captions so comments can identify a diagram precisely.
 Word comments and tracked suggestions can be returned in the same file; they
 will be read with their anchored text before any subsequent revision.
+
+## 16. Disposition of owner comments
+
+| Word comment | Revision incorporated |
+|---|---|
+| 1 and inserted wording | Standalone TOML operation within an ASDF environment; native engine remains independent of ASDF |
+| 4 | Explain the existing extension-extraction utility and clarify Figure 2a |
+| 5 | Separate detector clipping, flat illumination selection and linearity-model applicability |
+| 9 and 10 | Input files always read-only; no deletion/staging copies; distinguish RAM ownership from disk writes; outputs and logs only |
+| 11 | Add constant-level and ramp sky-flat methods, robust response fitting, shared-reference metadata and a separate scientific increment |
+| 12 | Explain per-detector multi-exposure stack memory with a 20-frame example; bounded workers/results and no scratch spill files |
+| 13 | Target one processing TOML per recipe, with shared instrument settings and explicit migration from the current complete schema |
+| 14 | Configurable filename instrument label, examples use OCAM; preserve FITS instrument identity |
+
+These are documentation revisions. No new numerical method, production TOML
+activation, native build/test, installation, merge or cleanup has been performed.

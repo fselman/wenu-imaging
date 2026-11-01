@@ -1,5 +1,17 @@
 # mefpp refactor implementation plan — proposal
 
+1 November owner-comment revision: architecture review version 3 incorporates
+standalone TOML use within an ASDF environment without a native ASDF dependency;
+immutable input files with no deletion/staging copies and disk writes only for
+outputs/logs; distinct clipping, flat-selection and linearity limits; explicit
+const_level and future robust ramp_up/ramp_down sky-flat methods; correct stack
+memory accounting; one processing TOML per recipe as a target capability; and
+a configurable filename instrument label using OCAM. Ramp fitting is a separate
+scientific increment after legacy sky-flat extraction, not an M5 numerical change.
+The commented Word original is retained; revised Word/source documents are for
+review in draft PR #208. No native execution/installation or merge/cleanup yet.
+
+
 1 November owner update for the current refactoring cycle: use actual Intel Mac
 C17 for native implementation and iterative affected checks. After the agreed
 candidate is ready, perform consolidated Mac C90 compatibility, then representative

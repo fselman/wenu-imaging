@@ -24,10 +24,19 @@
     "docs/developer/audits/mefpp-architecture-2026-11-01/source-and-keyword-inventory.json",
     "docs/developer/mefpp-architecture-review-2026-11-01.md"
   ],
-  "review_version": 2,
+  "review_version": 3,
   "toml_examples_syntax_checked": 5,
   "toml_examples_native_schema_qualification": false,
   "word_review": {
+    "filename": "mefpp_architecture_review_v3.docx",
+    "sha256": "745bdbbed72002af5684ea7759c8a11b4c30ba114e26fa763ade07ead62660e7",
+    "pages_rendered_and_visually_inspected": 23,
+    "diagrams": 5,
+    "figure_panels": 6,
+    "editing_protection": false
+  },
+  "equivalent_word_diagrams_rendered": true,
+  "previous_word_review": {
     "filename": "mefpp_architecture_review_v2.docx",
     "sha256": "2a1af03a0fadc5d7fed8e90c2f8e05e7d0e3a506241b339c0b37b35ef6144d05",
     "pages_rendered_and_visually_inspected": 21,
@@ -35,5 +44,16 @@
     "figure_panels": 6,
     "editing_protection": false
   },
-  "equivalent_word_diagrams_rendered": true
+  "owner_comments_addressed": [
+    1,
+    4,
+    5,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "tracked_standalone_wording_incorporated": true
 }
