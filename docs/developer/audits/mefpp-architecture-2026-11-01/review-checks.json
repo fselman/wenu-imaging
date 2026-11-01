@@ -1,0 +1,27 @@
+{
+  "source_commit": "493e4f6e6674bbf30f09dd6bdfa6af24fc2a3cf7",
+  "purpose": "Documentation/source-inventory verification only",
+  "status": "passed",
+  "source_files_unchanged": 464,
+  "core_keyword_call_sites": 349,
+  "paf_declarations": 1470,
+  "mermaid_blocks_structurally_checked": 5,
+  "pinned_source_links_checked": 16,
+  "local_links_checked": true,
+  "native_builds_tests_reductions_run": false,
+  "visual_mermaid_rendering_performed": false,
+  "changed_tracked_files": [
+    "AGENTS.md",
+    "docs/architecture/README.md",
+    "docs/architecture/proposed/implementation-plan.md",
+    "docs/developer/README.md",
+    "docs/developer/agent-instructions.md",
+    "docs/developer/architecture.md",
+    "docs/developer/mefpp-current-architecture.md",
+    "docs/developer/roadmap.md"
+  ],
+  "new_review_files": [
+    "docs/developer/audits/mefpp-architecture-2026-11-01/source-and-keyword-inventory.json",
+    "docs/developer/mefpp-architecture-review-2026-11-01.md"
+  ]
+}

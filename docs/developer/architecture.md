@@ -1,5 +1,11 @@
 # wenu-imaging architecture
 
+Current 1 November source review: [mefpp as-is and target architecture with proposed roadmap](mefpp-architecture-review-2026-11-01.md).
+Pinned source 493e4f6; normal PAF recipe and opt-in TOML/service boundaries are
+separate. FITS keyword authority, normalization persistence, creation identities
+and future process barriers are explicit. Documentation proposal only; earlier
+architecture statements below retain their dated baselines.
+
 30 October paired native M3 receipt: selected-tool Intel Mac and representative
 shared Chapman4 private C90 builds and both focused CTests passed 2/2 at
 113156b94fe68f7bf2848c93ecd7451551db2984. Installed reduction module, configured

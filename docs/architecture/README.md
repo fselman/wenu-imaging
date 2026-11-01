@@ -1,5 +1,9 @@
 # Architecture documents
 
+1 November source-grounded [mefpp current/target architecture and roadmap review](../developer/mefpp-architecture-review-2026-11-01.md)
+includes five Mermaid diagrams, FITS keyword authority, complete source inventory,
+new source findings and staged delivery. Proposal only; no implementation acceptance.
+
 - [M1 cumulative closure review](../developer/m1-closure-review-2026-10-29.md): foundation gate checklist, native/WAD crosswalk and unchanged M2 sequence; owner closure decision pending.
 
 - [Grouped native command/service mapping](proposed/command-line-services.md): owner-selected `mefpp cal bias` syntax; command adapters remain subsequent work.

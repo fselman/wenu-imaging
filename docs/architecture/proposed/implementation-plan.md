@@ -1,5 +1,12 @@
 # mefpp refactor implementation plan — proposal
 
+1 November 2026: the owner requests architecture/roadmap review before M5 code.
+The [source-grounded M5 refinement](../../developer/mefpp-architecture-review-2026-11-01.md#10-proposed-roadmap-refinement-within-m5m11-and-later-pg)
+proposes result/normalization/keyword contracts, production configuration connection,
+creation-time publication, then one calibration service per increment. It retains
+M5a, M6/M6a–M6d, M7–M11 and later P/G sequencing. Proposed refinements and source
+findings #204–#207 are not implementation or numerical-change acceptance.
+
 31 October owner accepted M4 interface/fixture review and instructed proceeding.
 First [native layout increment](../../developer/m4-native-layout-2026-10-31.md)
 implements opt-in C90 bounded header catalogues, independent detector maps,
