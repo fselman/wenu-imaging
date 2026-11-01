@@ -66,3 +66,9 @@ Provide an old-fashioned, readable **Practical Guide**, organized around complet
 - [WAD and processing projects](wad-processing-project.md)
 - [Proposed Pycavi/mefpp architecture](pycavi-mefpp.md)
 - [Current mefpp architecture review](../../developer/mefpp-architecture-review-2026-11-01.md)
+
+## Adopted principle — expert-operator tool equivalence (2026-11-01)
+
+If an AI assistant is implemented, it **shall use the same operational tools and authoritative services provided to a knowledgeable human operator** for **preparation, execution, and review**. It must not receive a parallel scientific implementation, privileged internal APIs, arbitrary shell execution, or shortcuts around validation. The common operator tools should provide comprehensive read-only scientific evidence and structured, auditable operations; the AI's *authority* to take consequential actions remains separately constrained by explicit permissions and required human approvals. Explanations may adapt to the user's expertise without changing scientific facts or criteria.
+
+Specialized future MCP adapters may expose these existing operator tools; they are not new scientific services. During current development, identify lightweight, technology-independent integration points opportunistically, without empty MCP servers, added runtime dependencies, performance penalties, or new roadmap gates. **This is an adopted architectural policy, not authorization to implement MCP now.**
