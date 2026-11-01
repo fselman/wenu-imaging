@@ -1,5 +1,17 @@
 # wenu-imaging roadmap
 
+[Large image I/O paired target qualification](large-file-image-io-paired-results-2026-10-31.md) is complete at
+native c66b8158: actual Mac C90/C17 four contracts each4/4; representative Chapman
+each4/4; each host's single C90 >4-GiB processed MEF independently passes every
+pixel/relevant header/scaling/order/padding check. Installed files, clean main
+38b27f8 and exported source preserved. Approved IO-0–IO-5 gates have evidence;
+IO-6 owner acceptance and explicit merge/cleanup remain next. No new unchanged-
+source tests, install, full-size benchmark campaign or M5 code by default.
+#195 stays open for acceptance; #201 bounded window correction is target-qualified.
+Keep ordinary-plane/count/addressability limits and theoretical-vs-tested size
+distinction. Earlier IO-5-pending notes below are historical at their source/date.
+
+
 Approved large image I/O roadmap v1.0: [IO-0 through IO-4 agent results](large-file-image-io-agent-results-2026-10-31.md).
 Fourteen production files and three focused test/runner files implement off_t
 positions, checked memory/transfer arithmetic, legacy wrappers and processed
