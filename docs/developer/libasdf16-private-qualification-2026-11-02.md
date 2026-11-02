@@ -1,9 +1,9 @@
 # Private libasdf / ASDF 1.6 qualification — 2 November 2026
 
-Status: ten Mac shared QC controls passed. External libasdf 0.3.0 installation
-succeeded; C compilation stopped because pkgconf omitted include/library paths.
-Explicit-path correction and retained-prefix retry prepared; Mac interchange
-and Chapman compatibility remain pending. Refs #213/#214/#215/#216/#217.
+Status: ten Mac shared QC controls passed. External libasdf 0.3.0 installed;
+explicit compiler paths now compile, link and launch successfully. First C write
+fails on the second nested metadata field. Target diagnostic pending (#219);
+no completed interchange control. Refs #213/#214/#215/#216/#217/#219.
 Fernando authorized trying the C library and upgrading the file/core standard
 to 1.6.0. This supersedes the earlier no-native-dependency-trial boundary only
 for this private qualification. Existing installations and evidence remain.
@@ -171,3 +171,24 @@ Chapman remains explicitly pending; this Mac runner refuses Linux execution.
 After both gates, review whether to adopt a shared native ASDF writer for the
 recipe template. Numerical bias QC definitions and native-to-project handoff
 remain separate unfinished work. No merge/cleanup is authorized by qualification.
+
+## Fourth Mac attempt: runtime boundary
+
+2 November external ASDF runtime receipt (#219): at 33f16555, actual Mac
+mac-asdf16-external-dFpUmHsz compiled/linked/started the C17 probe successfully.
+The first write stopped adding measurement/value after measurement/unit succeeded;
+all ten unchanged QC controls were reused and outer preservation passed.
+Do not call native interchange qualified. Pinned upstream source suggests a
+nested-parent insertion defect, not yet isolated on target. Run the bounded
+flat/nested/direct-mapping diagnostic before choosing a workaround or library
+change. Keep external libasdf, all evidence and installed engines unchanged.
+The diagnostic's Python syntax is checked; its C/API execution is target-pending.
+
+Use `Pycavi2/tests/diagnose_libasdf_nested_mac.py` in a fresh private directory,
+with installed guard Python and niceness >=10. It verifies the retained helper
+against pinned 33f16555, the previous prefix preservation and exact prefix digest,
+reuses the successful compiler command and runs each flat/nested/mapping case
+in a separate process. It prints exact setter/getter status codes and readbacks,
+retains stdout/stderr and checks library-prefix/checkout preservation. It creates
+no ASDF output and performs no installation or scientific processing. Diagnostic
+completion is not functional acceptance: inspect every case's numeric results.

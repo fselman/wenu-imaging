@@ -1,5 +1,15 @@
 # wenu-imaging roadmap
 
+2 November external ASDF runtime receipt (#219): at 33f16555, actual Mac
+mac-asdf16-external-dFpUmHsz compiled/linked/started the C17 probe successfully.
+The first write stopped adding measurement/value after measurement/unit succeeded;
+all ten unchanged QC controls were reused and outer preservation passed.
+Do not call native interchange qualified. Pinned upstream source suggests a
+nested-parent insertion defect, not yet isolated on target. Run the bounded
+flat/nested/direct-mapping diagnostic before choosing a workaround or library
+change. Keep external libasdf, all evidence and installed engines unchanged.
+The diagnostic's Python syntax is checked; its C/API execution is target-pending.
+
 2 November owner decision: use external libasdf for now; defer bundling into
 mefpp (#218). This supersedes the intervening bundling proposal. External native
 libasdf and Python asdf remain distinct dependencies. Retry #217 uses explicit
