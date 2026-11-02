@@ -1,5 +1,25 @@
 # wenu-imaging agent instructions
 
+## Actual Mac BPM completion passed; Chapman changed-code gate next - 2 November 2026
+
+Fernando returned actual 022cf3683fe47d4de6a7acac1e3799cb49201d40 Mac success:
+native_bias_files/native_bpm_completion 2/2 in18.63s, retained
+/Users/fselman/Software/build/wenu-imaging/mac-bpm-complete-Ia5qliwa.
+All four preservation checks passed; main clean. He authorizes proceeding to
+Chapman validation before actual WFI/OmegaCAM data.
+
+qualify_bpm_chapman.py exports exact fetched BPM source while preserving known
+clean Chapman bias checkout07d27330555712ef6bf59a068a578b450e89b4a3. It verifies
+native/build/QC tree identity against the Mac-qualified022cf368 source, uses the
+selected GCC10/C17/tools and retained ASDF Python, then runs eleven changed-code
+measurement/bias/BPM/layout/publication/completion contracts. Reuse prior passed
+Chapman dependency/QC evidence; no Conda, shared10/C-interchange replay, tool
+rediscovery, source change, install/activation, merge or real data yet. Protect
+checkout/installed files/packages/private Python/external prefix/export/old receipt.
+Only runner/docs change, so no unchanged Mac replay. Actual Chapman gate pending.
+See [Chapman BPM gate](bpm-chapman-qualification-2026-11-02.md).
+
+
 ## Actual Mac publication passed; complete BPM command candidate - 2 November 2026
 
 Fernando returned 00ee1491930ec8d77968cb4b137c48ac60ce0502 Mac C17 success:

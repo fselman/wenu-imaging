@@ -1,5 +1,11 @@
 # BPM command and whole-operation completion
 
+Actual Mac completion returned at 022cf3683fe47d4de6a7acac1e3799cb49201d40:
+2/2 contracts passed in18.63s, retained mac-bpm-complete-Ia5qliwa, all four
+preservation checks true and main clean. This supersedes pending-Mac statements
+below for that exact revision. Continue the [Chapman changed-code gate](bpm-chapman-qualification-2026-11-02.md)
+before actual calibration data tests.
+
 ## Qualified basis
 
 Actual Mac revision 00ee1491930ec8d77968cb4b137c48ac60ce0502 passed
