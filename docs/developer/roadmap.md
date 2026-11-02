@@ -1,5 +1,27 @@
 # wenu-imaging roadmap
 
+## Current BPM file/ASDF handoff and scan correction, 2 November 2026
+
+Owner correction: a detector BPM applies only to active physical pixels.
+Prescan/overscan are electronic empty reads: detector BPM is NOT APPLICABLE,
+never unavailable or applied there. Bias correction keeps its existing scan
+sample rejection, independent of every detector BPM, including raw-sized maps.
+This supersedes scan masking in a20d776. That source passed actual Mac4/4 C17
+(13.43s), retained mac-bpm-mad-LNMslJOz; preserve the historical evidence.
+
+Explicit FITS BPM binding and native-to-common-ASDF handoff are implemented.
+Reuse M4 selected-HDU loading and Eclipse conversion, strict declared binary
+polarity/raw-or-active geometry, the operation template and common QC writer.
+Saved product references freeze raw participation and selected BPM binding.
+Six focused agent C17/native+ASDF contracts pass; actual Mac --file-qc remains
+pending. Reuse the retained ASDF interpreter, with no new installation or
+unchanged library interchange/Chapman replay. See [the handoff record](bias-bpm-asdf-handoff-2026-11-02.md).
+Other recipes/two-path BPM work remain next; no production activation or merge.
+#144 wider allocation qualification and #222 legacy pixelmap_loadext selected
+BITPIX source finding remain open. Eclipse-first review/announcement rules below
+continue to apply to every genuinely new numerical routine.
+
+
 2 November owner QC decisions and reuse policy: RON must use two RAW bias
 frames, with NO overscan correction before subtraction, to avoid correction-
 induced correlations. Keep ADU units and explicit origins/stage/region. Approved
@@ -2046,4 +2068,3 @@ This housekeeping request does not authorize Git branch deletion or removal of
 working Pycavi/native installations. Preserve original evidence paths in records
 and map any relocation explicitly. Existing home runs remain unchanged until
 inspected; the just-qualified native retry still needs its install/regression gate.
-

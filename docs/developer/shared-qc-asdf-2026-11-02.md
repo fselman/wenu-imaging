@@ -1,5 +1,12 @@
 # Shared QC records and recipe creation path — 2 November 2026
 
+Current implementation update: native bias numerical measurements, explicit BPM
+file binding and the shared-ASDF handoff are now implemented; see
+[bias-bpm-asdf-handoff-2026-11-02.md](bias-bpm-asdf-handoff-2026-11-02.md).
+Detector BPM is not applicable to electronic prescan/overscan reads. The
+historical definition-pending statements below describe the earlier metadata
+increment. Actual Mac acceptance of this new file/handoff source is pending.
+
 Status: bounded shared QC/ASDF1.6 metadata/interchange gates passed on Mac and
 Chapman, with native bias/private-runtime Chapman gate passed at4417d7d.
 See the final Chapman receipt and libasdf qualification notes. This does not
@@ -204,3 +211,4 @@ retained. No native bias C17/C90 tests or completed dependency trials are repeat
 The owner subsequently authorized `--with-libasdf` for one additional isolated
 libasdf 0.3.0 C17/Python interchange gate at file standard 1.6.0:
 `docs/developer/libasdf16-private-qualification-2026-11-02.md`.
+

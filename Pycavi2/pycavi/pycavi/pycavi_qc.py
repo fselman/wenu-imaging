@@ -195,6 +195,13 @@ class QcRecipe:
         matches[0]['measurements'].append(deepcopy(dict(name=name, value=value, unit=unit, definition=definition,
                                                       sources=sources, status=status, reason=reason)))
 
+    def add_extension(self, name, value):
+        """Attach explicitly named recipe metadata through the common owner."""
+        self._open()
+        require(text(name) and name not in self._tree['extensions'], 'Duplicate/invalid extension name')
+        encoded(value)
+        self._tree['extensions'][name] = deepcopy(value)
+
     def add_input(self, record, *, qc_path, participation, reason=None):
         self._open()
         require(isinstance(record, QcRecord), 'Require a sealed input QC record')
@@ -249,6 +256,16 @@ class BiasQcRecipe(QcRecipe):
         'pixels.invalid': 'count', 'pixels.clipped': 'count',
     }
 
+    # Native bias-stage measurements use the same common descriptors/schema.
+    for _stage in ('raw_active', 'corrected_active', 'prescan', 'overscan',
+                   'master', 'master_unmasked'):
+        for _name in ('mean', 'median', 'stdev', 'scaled_mad'):
+            METRICS[_stage+'.'+_name] = 'ADU'
+        for _name in ('region_pixels', 'bpm_excluded', 'nonfinite_excluded', 'valid_pixels'):
+            METRICS[_stage+'.'+_name] = 'count'
+    METRICS.update({'read_noise.mad': 'ADU', 'pixels.hot.threshold': 'ADU',
+                    'scan_correction.median': 'ADU', 'scan_correction.stdev': 'ADU'})
+
     def __init__(self, **kwargs):
         require(kwargs['operation'] == 'cal.bias', 'Bias adapter operation mismatch')
         super().__init__(**kwargs)
@@ -257,7 +274,7 @@ class BiasQcRecipe(QcRecipe):
         name = measurement['name']
         require(name in self.METRICS and measurement['unit'] == self.METRICS[name],
                 'Unknown bias QC quantity or unit; no electron/gain conversion')
-        if name == 'read_noise' and measurement.get('status', 'measured') == 'measured':
+        if name in ('read_noise', 'read_noise.mad') and measurement.get('status', 'measured') == 'measured':
             require(len(measurement['sources']) == 2 and
                     len({s['file_id'] for s in measurement['sources']}) == 2,
                     'Pair-difference RON must identify two distinct input files')
@@ -381,3 +398,4 @@ def traverse_records(product_path, *, qc_root, max_records=10000):
         active.remove(path)
 
     yield from visit(Path(product_path))
+

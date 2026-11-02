@@ -122,5 +122,12 @@ mef_status mef_layout_compatible(const mef_layout_map *science,
  */
 mef_status mef_layout_load(const mef_layout_map *map, const char *detector_id,
     image_t **out, mef_error **error);
+/* Load a strictly binary selected BPM through the existing plane loader.
+ * good_value is explicitly 0 or 1; both encodings are normalized to Eclipse
+ * 1=good. The selected HDU must be integer BITPIX 8/16/32. Exact physical pixel
+ * values 0/1 only: other values/nonfinite values are errors, not guessed bits.
+ * Caller establishes detector/readout/geometry compatibility before applying.
+ * Output starts NULL, unchanged on error; owns Eclipse pixelmap_del storage. */
+mef_status mef_layout_load_bpm(const mef_layout_map *, const char *, int,
+    pixelmap **, mef_error **);
 #endif
-

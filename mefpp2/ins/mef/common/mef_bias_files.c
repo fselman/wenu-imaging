@@ -23,6 +23,7 @@ typedef struct {
     const image_t **borrowed;
     size_t configuration_detector;
     mef_bias_result *pending;
+    const mef_bias_measurement_options *measurements;
 } bias_state;
 static mef_status bias_validate(void *opaque, mef_error **error)
 {
@@ -38,9 +39,14 @@ static mef_status bias_validate(void *opaque, mef_error **error)
     request = mef_request_resolved_view(mef_context_request(s->context));
     if (request == NULL || request->request.input_count != s->count ||
         request->request.operation != MEF_OP_CAL_BIAS ||
-        request->request.calibration_count != 0 || request->bpm_selection_count != 1 ||
-        request->bpm_selections[0].state != MEF_BPM_OMITTED)
-        return failed(MEF_ERR_UNSUPPORTED, "Bias adapter requires explicit BPM omission", error);
+        request->bpm_selection_count != 1)
+        return failed(MEF_ERR_UNSUPPORTED, "Bias adapter requires resolved BPM selection", error);
+    if (s->measurements == NULL || s->measurements->bpm == NULL) {
+        if (request->request.calibration_count != 0 || request->bpm_selections[0].state != MEF_BPM_OMITTED)
+            return failed(MEF_ERR_UNSUPPORTED, "BPM map and request selection disagree", error);
+    } else if (request->request.calibration_count != 1 ||
+        request->calibration_roles[0] != MEF_CAL_BPM || request->bpm_selections[0].state != MEF_BPM_SELECTED)
+        return failed(MEF_ERR_UNSUPPORTED, "BPM map and request selection disagree", error);
     first = mef_layout_find(s->maps[0], s->detector);
     if (first == NULL) return failed(MEF_ERR_INPUT, "Missing bias detector", error);
     s->configuration_detector = first->configuration_detector;
@@ -84,7 +90,7 @@ static mef_status bias_calculate(void *opaque, mef_error **error)
     s = opaque;
     input.frames = s->borrowed; input.count = s->count;
     input.configuration_detector = s->configuration_detector;
-    return mef_cal_bias(s->context, &input, &s->pending, error);
+    return mef_cal_bias_measurements(s->context, &input, s->measurements, &s->pending, error);
 }
 static mef_status bias_publish_step(void *opaque, mef_error **error)
 {
@@ -104,13 +110,15 @@ static void bias_cleanup(void *opaque)
 }
 static mef_status bias_run(mef_context *context,
     const mef_layout_map *const *maps, size_t count, const char *detector,
-    const char *final_path, mef_bias_result **out, mef_error **error)
+    const char *final_path, const mef_bias_measurement_options *measurements,
+    mef_bias_result **out, mef_error **error)
 {
     bias_state state;
     mef_operation_steps steps;
     mef_status status;
     if (out == NULL || *out != NULL || (error != NULL && *error != NULL)) return MEF_ERR_INPUT;
     memset(&state, 0, sizeof(state)); state.context = context; state.maps = maps;
+    state.measurements = measurements;
     state.count = count; state.detector = detector; state.final_path = final_path;
     steps.validate = bias_validate; steps.load = bias_load;
     steps.calculate = bias_calculate; steps.publish = final_path ? bias_publish_step : NULL;
@@ -124,14 +132,23 @@ mef_status mef_bias_from_files(mef_context *context,
     const mef_layout_map *const *maps, size_t count, const char *detector,
     mef_bias_result **out, mef_error **error)
 {
-    return bias_run(context, maps, count, detector, NULL, out, error);
+    return bias_run(context, maps, count, detector, NULL, NULL, out, error);
 }
 mef_status mef_bias_files_execute(mef_context *context,
     const mef_layout_map *const *maps, size_t count, const char *detector,
     const char *final_path, mef_bias_result **out, mef_error **error)
 {
     if (final_path == NULL) return MEF_ERR_INPUT;
-    return bias_run(context, maps, count, detector, final_path, out, error);
+    return bias_run(context, maps, count, detector, final_path, NULL, out, error);
+}
+
+mef_status mef_bias_files_execute_measurements(mef_context *context,
+    const mef_layout_map *const *maps, size_t count, const char *detector,
+    const char *final_path, const mef_bias_measurement_options *measurements,
+    mef_bias_result **out, mef_error **error)
+{
+    if (final_path == NULL || measurements == NULL) return MEF_ERR_INPUT;
+    return bias_run(context, maps, count, detector, final_path, measurements, out, error);
 }
 
 /* #211/#212: qfits_header_del leaves n stale. qfits_header_copy traverses

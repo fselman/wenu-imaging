@@ -25,6 +25,12 @@ mef_status mef_bias_from_files(mef_context *, const mef_layout_map *const *,
 mef_status mef_bias_files_execute(mef_context *, const mef_layout_map *const *,
     size_t, const char *, const char *, mef_bias_result **, mef_error **);
 
+/* Opt-in numerical QC, using the same operation-template load/publish path.
+ * Options/BPM are borrowed during call only; result owns its measurements. */
+mef_status mef_bias_files_execute_measurements(mef_context *, const mef_layout_map *const *,
+    size_t, const char *, const char *, const mef_bias_measurement_options *,
+    mef_bias_result **, mef_error **);
+
 /* Publish a one-extension MEF from an existing owned result. Reuses legacy
  * header policy/QC formatting and checked qfits pixel output, with explicit
  * input HDU, configuration detector and output ordinal. One creation identity

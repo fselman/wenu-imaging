@@ -177,7 +177,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     target_compile_options(mefpp_bias_files PRIVATE -Wall -Wextra -pedantic-errors)
     add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c)
     target_link_libraries(mefpp_m5 PRIVATE mefpp_bias_files mefpp_config_toml)
-    target_compile_definitions(mefpp_m5 PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+    target_compile_definitions(mefpp_m5 PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
     target_compile_options(mefpp_m5 PRIVATE -Wall -Wextra -pedantic-errors)
     add_executable(operation_template_probe tests/operation_template_probe.c)
     target_link_libraries(operation_template_probe PRIVATE mefpp_bias_files)
@@ -382,6 +383,22 @@ if(BUILD_TESTING)
         --probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_cli_capture PROPERTIES TIMEOUT 300 LABELS "native;configuration;cli;ownership")
+    # These tests are opt-in; normal native builds need no ASDF installation.
+    set(MEFPP_QC_PYTHON "" CACHE FILEPATH "Qualified ASDF QC interpreter (enables handoff tests)")
+    if(MEFPP_QC_PYTHON)
+      if(MEFPP_BUILD_BIAS_ADAPTER)
+        add_test(NAME native_bias_qc_asdf
+          COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_qc_asdf_contract.py"
+            --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.." --adapter "$<TARGET_FILE:mefpp_m5>"
+            --asdf-python "${MEFPP_QC_PYTHON}"
+            --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+        set_tests_properties(native_bias_qc_asdf PROPERTIES TIMEOUT 300 LABELS "native;bias;asdf;mask")
+      endif()
+      add_test(NAME shared_qc_asdf
+        COMMAND "${MEFPP_QC_PYTHON}" -B "${CMAKE_CURRENT_SOURCE_DIR}/../Pycavi2/tests/test_shared_qc.py"
+          --work "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(shared_qc_asdf PROPERTIES TIMEOUT 120 LABELS "asdf;qc")
+    endif()
     add_test(NAME native_measurement_stats COMMAND measurement_stats_probe)
     set_tests_properties(native_measurement_stats PROPERTIES TIMEOUT 30 LABELS "native;statistics;bias")
     add_test(NAME native_bias_service

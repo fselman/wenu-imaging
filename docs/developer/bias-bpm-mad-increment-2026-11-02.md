@@ -1,5 +1,11 @@
 # Bias BPM and MAD numerical increment — 2 November 2026
 
+Historical implementation receipt: a20d776 passed actual Mac4/4 C17 (13.43s)
+in mac-bpm-mad-LNMslJOz, with all three preservation checks. The owner then
+corrected detector BPM applicability: it must not affect electronic prescan/
+overscan reads. Scan-masking statements below describe the superseded code;
+see [the corrected file/ASDF increment](bias-bpm-asdf-handoff-2026-11-02.md).
+
 This increment implements the announced Eclipse checked statistics and opt-in
 bias numerical service. It follows the source/semantics audit in
 [bias-qc-eclipse-reuse-review-2026-11-02.md](bias-qc-eclipse-reuse-review-2026-11-02.md).

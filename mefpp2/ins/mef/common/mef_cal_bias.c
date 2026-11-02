@@ -80,9 +80,13 @@ static mef_status validate(mef_context *context, const mef_bias_input *input,
     }
     if (options != NULL && ((options->with_mad != 0 && options->with_mad != 1) ||
         (options->ron_pair_set != 0 && options->ron_pair_set != 1) ||
+        (options->bpm_active_only != 0 && options->bpm_active_only != 1) ||
+        (options->bpm_active_only && options->bpm == NULL) ||
         !finite_value(options->high_sigma) || options->high_sigma <= 0.0 ||
         (options->ron_pair_set && (options->ron_first >= input->count ||
-        options->ron_second >= input->count || options->ron_first == options->ron_second))))
+        options->ron_second >= input->count || options->ron_first == options->ron_second ||
+        !strcmp(request->inputs[options->ron_first].resolved_path,
+                request->inputs[options->ron_second].resolved_path)))))
         return MEF_ERR_INPUT;
     if (mef_config_bias_settings(mef_context_config(context),
             input->configuration_detector, settings) != MEF_OK)
@@ -261,16 +265,17 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
             zone[2] = settings.trim[2]; zone[3] = settings.trim[3];
             if (settings.use_prescan) {
                 zone[0] = settings.prescan[0]; zone[1] = settings.prescan[1];
-                if (image_getstats_masked_checked(input->frames[i], raw_map, zone,
+                if (image_getstats_masked_checked(input->frames[i], NULL, zone,
                     options->with_mad, &frame_qc->prescan) != 0) goto cleanup;
             }
             if (settings.use_overscan) {
                 zone[0] = settings.overscan[0]; zone[1] = settings.overscan[1];
-                if (image_getstats_masked_checked(input->frames[i], raw_map, zone,
+                if (image_getstats_masked_checked(input->frames[i], NULL, zone,
                     options->with_mad, &frame_qc->overscan) != 0) goto cleanup;
             }
         }
-        cropped = mef_overscan_correction_masked(cube->plane[i], &work, (int)i, "bias", raw_map);
+        /* Detector BPM does not apply to empty electronic scan reads. */
+        cropped = mef_overscan_correction(cube->plane[i], &work, (int)i, "bias");
         if (cropped == NULL) goto cleanup;
         image_del(cube->plane[i]);
         cube->plane[i] = cropped;

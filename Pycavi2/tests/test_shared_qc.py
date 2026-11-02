@@ -83,6 +83,15 @@ class SharedQcTests(unittest.TestCase):
         self.assertFalse(list(self.records.glob('.qc-*')))
 
     def test_immutable_record_and_original_participation(self):
+        # Named recipe extensions obey the same owned/immutable lifecycle.
+        builder = self.builder('extension.fits')
+        extension = {'locations': [[3, 2]]}
+        builder.add_extension('bias', extension)
+        extension['locations'][0][0] = 99
+        with self.assertRaises(qc.QcError): builder.add_extension('bias', {})
+        record = builder.seal()
+        self.assertEqual(record.as_dict()['extensions']['bias']['locations'], [[3, 2]])
+        with self.assertRaises(qc.QcError): builder.add_extension('late', {})
         first, second = self.leaf('raw1.fits'), self.leaf('raw2.fits')
         digest = second.digest
         parent = self.parent(first, second)
@@ -218,3 +227,4 @@ if __name__ == '__main__':
         successful=result.wasSuccessful(), network_attempts=attempts,
         scope='shared metadata/ASDF only; no numerical QC estimator or native recipe'), indent=2)+'\n')
     raise SystemExit(0 if result.wasSuccessful() and not attempts else 1)
+

@@ -23,6 +23,7 @@ typedef struct {
 typedef struct {
     const pixelmap *bpm;
     int with_mad, ron_pair_set;
+    int bpm_active_only; /* File provenance: mask was embedded from active coordinates. */
     size_t ron_first, ron_second;
     double high_sigma;
 } mef_bias_measurement_options;

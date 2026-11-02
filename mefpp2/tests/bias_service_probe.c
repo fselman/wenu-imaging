@@ -334,8 +334,8 @@ static void measurements(mef_bb *legacy, int detector_index)
     mef_allocator allocator;
     size_t base, calls, failure;
     /* Deliberate row-dependent raw pedestal: correction removes it, whereas
-     * the required raw-pair difference must retain it. Add known scan/active
-     * defects to prove BPM use in correction, measurements and rejection. */
+     * the required raw-pair difference must retain it. Add scan outliers and active
+     * defects: detector BPM affects active measurements/rejection only. */
     legacy->bias_minframe=3; legacy->bias_kappa1=1.5;
     legacy->use_prescan=legacy->use_overscan=1;
     legacy->scanrej[0]=legacy->scanrej[1]=0;
@@ -361,7 +361,8 @@ static void measurements(mef_bb *legacy, int detector_index)
     assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_OK);
     qc=mef_bias_result_measurements(result); assert(qc && qc->count==5);
     assert(qc->frames[0].active_raw.valid_pixels==20 && qc->frames[0].active_raw.bpm_excluded==4);
-    assert(qc->frames[0].prescan.bpm_excluded==4 && qc->frames[0].overscan.bpm_excluded==0);
+    assert(qc->frames[0].prescan.bpm_excluded==0 && !qc->frames[0].prescan.bpm_supplied);
+    assert(qc->frames[0].prescan.valid_pixels==8 && !qc->frames[0].overscan.bpm_supplied);
     /* Raw differences per active row are -3,-4,-5,-6 (five good columns each).
      * Independent sample variance: sum= -90, squares=430, N=20. */
     sum=-90; squares=430; expected=sqrt((squares-sum*sum/20)/19)/sqrt(2.0);
@@ -372,7 +373,7 @@ static void measurements(mef_bb *legacy, int detector_index)
     assert(mef_bias_result_qc(result)->accepted_frames==5);
     assert(qc->high_offset_available && qc->high_offset_count==4 && qc->high_offset_flags->data[0]==1);
     corrected_mean=qc->frames[4].active_corrected.mean;
-    assert(fabs(corrected_mean-24)<1e-10);
+    assert(fabs(corrected_mean-(24-2500))<1e-10);
     assert(qc->frames[4].active_raw.mean>corrected_mean+100);
     mef_context_destroy(context); context=NULL; /* Result owns QC, not borrowed data. */
     assert(qc->frames[4].active_corrected.mean==corrected_mean);
@@ -401,7 +402,7 @@ static void measurements(mef_bb *legacy, int detector_index)
     assert(fabs(qc->frames[4].active_corrected.mean-(23.5+11000.0/6-2500))<1e-4);
     assert(mef_bias_result_qc(result)->accepted_frames==4 && !mef_bias_result_qc(result)->accepted[4]);
     mef_bias_result_destroy(result); mef_context_destroy(context);
-    /* Reject contradictory metadata, malformed geometry, exhausted scan rows,
+    /* Reject contradictory metadata, malformed geometry, exhausted active samples,
      * and aliased/out-of-range raw-pair selections without transferring output. */
     options.bpm=map; options.with_mad=1; options.ron_pair_set=1;
     for(mode=0;mode<5;++mode) {
@@ -409,7 +410,7 @@ static void measurements(mef_bb *legacy, int detector_index)
         if(mode==1) options.ron_second=0;
         if(mode==2) options.ron_second=5;
         if(mode==3) { options.ron_second=1; map->lx=9; }
-        if(mode==4) { map->lx=10; for(x=0;x<10;++x) map->data[x]=0; }
+        if(mode==4) { map->lx=10; for(x=0;x<60;++x) map->data[x]=0; }
         assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)!=MEF_OK && !result);
         mef_context_destroy(context);
     }
@@ -417,7 +418,7 @@ static void measurements(mef_bb *legacy, int detector_index)
         assert(!memcmp(saved[i],frames[i]->data,sizeof(saved[i]))); image_del(frames[i]);
     }
     pixelmap_del(map);
-    puts("PASS: opt-in bias BPM scan/rejection/stage QC, raw RON, MAD, lifetimes, metadata and failure controls");
+    puts("PASS: opt-in bias active-only BPM/rejection/stage QC, raw RON, MAD, lifetimes, metadata and failure controls");
 }
 int main(int argc, char **argv)
 {

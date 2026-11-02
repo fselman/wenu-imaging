@@ -174,6 +174,7 @@ pixelmap * image_threshold2pixelmap(
 
 	if (in==NULL) return NULL ;
     p = pixelmap_new(in->lx, in->ly) ;
+    if (p == NULL) return NULL;
     /* Loop on all pixels   */
     for (i=0 ; i<(p->lx * p->ly) ; i++) {
         if ((in->data[i]>lo_cut) && (in->data[i]<hi_cut)) {
