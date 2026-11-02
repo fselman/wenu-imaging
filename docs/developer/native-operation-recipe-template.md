@@ -1,5 +1,14 @@
 # Template for the next native operation recipes
 
+2 November QC decision: ASDF is adopted for the common saved QC records. The
+[shared QC schema and creation path](shared-qc-asdf-2026-11-02.md) now supplies
+`QcRecipe`/`BiasQcRecipe`, one validator/ASDF writer and local reference traversal.
+Use that shared assembly path at the project integration boundary; do not add
+recipe-specific serializers. Bias quantities stay ADU/counts. Estimator/region,
+hot-pixel and frame-pair definitions, numerical extraction and standalone CLI
+handoff remain open. Earlier persistence-pending language below records the
+pre-decision scope; it does not undo this now-adopted representation.
+
 This is the companion to `mef_operation_run` in
 `mefpp2/ins/mef/common/mef_operation_template.h/.c`. It incorporates the first
 bias recipe's actual Mac C17 lessons, including #210, #211 and unresolved #212.

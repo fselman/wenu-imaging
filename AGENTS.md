@@ -1,5 +1,29 @@
 # wenu-imaging
 
+2 November owner-authorized ASDF 1.6 increment: target file/core standard 1.6.0
+using retained Python asdf 6.0.0 / asdf-standard package 1.5.0. Qualify pinned
+libasdf 0.3.0 in a fresh private prefix with one C17 consumer and bounded C/Python
+metadata/array/shared-QC interchange, Mac first; Chapman compatibility remains a
+separate pending gate. See docs/developer/libasdf16-private-qualification-2026-11-02.md
+and #214. This supersedes earlier no-dependency-trial wording only for this
+private qualification. No production environment/engine changes, observation
+processing, C90 duplicate, bias replay, merge or cleanup. Do not claim target
+success before inspecting actual evidence; retain failed attempts and manifests.
+
+
+2 November shared QC decision/implementation: ASDF is the adopted common saved
+QC representation, with a per-input record and a separate product record whose
+file identity/characterization precedes ordered frozen input references. Replace
+`.fits` by `.asdf`; do not append `.fits.asdf`, overwrite conflicts or infer
+compressed-file identity. All recipes share QcRecipe/schema/validation/ASDF writer
+and local traversal; BiasQcRecipe restricts quantities to ADU/counts. See
+`docs/developer/shared-qc-asdf-2026-11-02.md`. This opt-in Python integration layer
+is prepared, target-pending, with no native arithmetic/normal activation changes.
+Do not silently choose level/RMS methods/regions, hot-pixel thresholds or RON pairs;
+actual numerical extraction and standalone CLI handoff remain to be reviewed.
+Use retained qualified private Mac ASDF 6.0.0 environment for the new metadata-only
+checks; no installation, dependency/native trial replay or Chapman duplicate.
+
 2 November template lessons: before the next native recipe, read
 `docs/developer/native-operation-recipe-template.md` and follow the annotated
 `mef_operation_steps` contract. Preserve explicit detector/HDU/config/output
