@@ -14,6 +14,44 @@ import subprocess
 import sys
 
 
+def run_logged(label, argv, *, work, env, commands, capture=False, timeout=1800):
+    """Keep machine-readable stdout separate from retained diagnostics.
+
+    Conda 24.11 can emit entry-point warnings even with --no-plugins. A zero
+    exit status does not imply empty stderr; never mix it into JSON/link flags.
+    """
+    argv = list(map(str, argv))
+    stdout_path = work / (label + '.log')
+    stderr_path = work / (label + '.stderr.log')
+    record = dict(label=label, argv=argv, stdout=str(stdout_path), stderr=str(stderr_path))
+    commands.append(record)
+    print('Running:', label, '| stdout:', stdout_path, '| stderr:', stderr_path, flush=True)
+    with stdout_path.open('x') as stdout, stderr_path.open('x') as stderr:
+        process = subprocess.Popen(argv, cwd=work, env=env, stdout=stdout, stderr=stderr)
+        elapsed = 0
+        while True:
+            try:
+                code = process.wait(timeout=30)
+                break
+            except subprocess.TimeoutExpired:
+                elapsed += 30
+                print('Still running:', label, '| elapsed:', elapsed, 's', flush=True)
+                if elapsed >= timeout:
+                    process.kill(); process.wait()
+                    record['exit_status'] = process.returncode
+                    raise RuntimeError('Timed out: ' + label)
+    record['exit_status'] = code
+    output = stdout_path.read_text()
+    diagnostics = stderr_path.read_text()
+    if diagnostics:
+        print('Diagnostics retained:', stderr_path, flush=True)
+    if code:
+        print(output[-12000:], flush=True)
+        print(diagnostics[-12000:], flush=True)
+        raise RuntimeError('Failed: ' + label + '; retain this run')
+    return output if capture else None
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--work', type=Path, required=True)
@@ -53,32 +91,13 @@ def main():
     conda_command = [conda, '--no-plugins']
     commands = []
     def command(label, argv, *, capture=False, timeout=1800, command_env=None):
-        argv = list(map(str, argv)); commands.append(dict(label=label, argv=argv))
-        print('Running:', label, '| log:', work / (label + '.log'), flush=True)
-        with (work / (label + '.log')).open('x') as stream:
-            process = subprocess.Popen(argv, cwd=work, env=command_env or env,
-                                       stdout=stream, stderr=subprocess.STDOUT)
-            elapsed = 0
-            while True:
-                try:
-                    code = process.wait(timeout=30)
-                    break
-                except subprocess.TimeoutExpired:
-                    elapsed += 30
-                    print('Still running:', label, '| elapsed:', elapsed, 's', flush=True)
-                    if elapsed >= timeout:
-                        process.kill(); process.wait()
-                        raise RuntimeError('Timed out: ' + label)
-        output = (work / (label + '.log')).read_text()
-        if code:
-            print(output[-12000:], flush=True)
-            raise RuntimeError('Failed: ' + label + '; retain this run')
-        return output if capture else None
+        return run_logged(label, argv, work=work, env=command_env or env,
+                          commands=commands, capture=capture, timeout=timeout)
     report = dict(status='failed', libasdf='0.3.0', standard='1.6.0',
                   prefix=str(prefix), python=sys.executable, compiler=str(compiler),
                   host=platform.platform(), commands=commands,
                   actual_macos=actual_os, conda_osx_correction=actual_os,
-                  solver='classic', external_plugins=False,
+                  solver='classic', external_plugins_disabled_requested=True,
                   scope='synthetic C17/Python interchange, not full ASDF conformance')
     try:
         command('conda-platform', [*conda_command, 'info', '--json'])

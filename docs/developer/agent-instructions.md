@@ -1,5 +1,15 @@
 # wenu-imaging agent instructions
 
+2 November ASDF logging correction #216: retry mac-asdf16-retry-9NFYFeVP
+confirmed real __osx=13.7.8/classic solver and reused passed QC sources/evidence,
+but Conda 24.11.3 still emits a libmamba startup warning. Mixed stderr/stdout
+broke JSON parsing before solve/install/compile. Separate retained stdout/stderr
+logs and parse stdout only; never discard warnings or ignore nonzero exits.
+Two agent stdlib subprocess logging regressions pass; actual native Mac retry
+and Chapman remain pending. Preserve both attempts and reuse the original ten
+passed QC contracts; no installed Conda repair, production activation or merge.
+
+
 2 November Mac ASDF receipt/correction: shared QC standard-1.6 contracts passed
 10/10 in 1.607 s at 0840f031, retained mac-asdf16-qTH3ZFNB. Native trial failed at
 Conda dry-run solve, before installation/compilation/interchange; all preservation

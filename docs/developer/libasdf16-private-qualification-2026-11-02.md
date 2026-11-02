@@ -106,6 +106,24 @@ the original report digests. It does not repeat the ten unchanged QC tests.
 Only the three blocked C-library interchange controls remain to execute.
 Correction #215 remains target-pending; the base Conda installation is not repaired.
 
+Second retained attempt at c83c91df:
+`/Users/fselman/Software/build/wenu-imaging/mac-asdf16-retry-9NFYFeVP`.
+Original QC result/source identity was successfully reused. Conda 24.11.3's
+returned platform data confirms actual `__osx=13.7.8` and classic solver, but
+it still emits the libmamba startup entry-point diagnostic despite the requested
+no-plugins setting. The runner incorrectly combined this stderr warning with
+stdout JSON and failed parsing, before solve/install/compile/interchange.
+All preservation checks passed. This is runner defect #216, not an ASDF failure.
+
+The correction captures stdout and stderr in separate exclusive `.log` and
+`.stderr.log` files, records each command's exit status and parses only stdout.
+It retains warnings and still rejects nonzero process exits; it does not strip
+arbitrary text until a JSON object is found. Two agent stdlib subprocess controls
+pass: exact stdout JSON survives a stderr plugin warning, and a failing command
+preserves both streams and remains a failure. No Conda/native execution was
+needed for this logging regression. Corrected actual Mac native trial remains
+pending. Keep both failed attempts and reuse only the original passed QC sub-gate.
+
 ## Chapman gate
 
 Mac success does not prove CentOS 7/glibc 2.17 compatibility. Next obtain fresh
