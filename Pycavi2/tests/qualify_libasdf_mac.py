@@ -37,11 +37,20 @@ def main():
     env = dict(os.environ, CONDA_PKGS_DIRS=str(work / 'package-cache'),
                CONDA_ENVS_PATH=str(work / 'conda-envs'), CONDA_SUBDIR='osx-64',
                CONDA_REGISTER_ENVS='false', XDG_CACHE_HOME=str(work / 'cache'),
+               CONDA_NO_PLUGINS='true', CONDA_SOLVER='classic', SYSTEM_VERSION_COMPAT='0',
                PYTHONDONTWRITEBYTECODE='1', PYTHONNOUSERSITE='1',
                OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1')
     for key in ('PYTHONPATH', 'DYLD_LIBRARY_PATH', 'LD_LIBRARY_PATH',
                 'CONDA_OVERRIDE_GLIBC', 'CONDA_OVERRIDE_OSX', 'CONDA_OVERRIDE_ARCHSPEC'):
         env.pop(key, None)
+    # Old Conda/Python may report 10.16 on Ventura. Correct the virtual package
+    # only to the independently measured real version, never to a newer OS.
+    actual_os = subprocess.check_output(['/usr/bin/sw_vers', '-productVersion'],
+                                        env=env, text=True).strip()
+    if actual_os != '13.7.8':
+        raise RuntimeError('Unexpected actual macOS version: ' + actual_os)
+    env['CONDA_OVERRIDE_OSX'] = actual_os
+    conda_command = [conda, '--no-plugins']
     commands = []
     def command(label, argv, *, capture=False, timeout=1800, command_env=None):
         argv = list(map(str, argv)); commands.append(dict(label=label, argv=argv))
@@ -68,24 +77,30 @@ def main():
     report = dict(status='failed', libasdf='0.3.0', standard='1.6.0',
                   prefix=str(prefix), python=sys.executable, compiler=str(compiler),
                   host=platform.platform(), commands=commands,
+                  actual_macos=actual_os, conda_osx_correction=actual_os,
+                  solver='classic', external_plugins=False,
                   scope='synthetic C17/Python interchange, not full ASDF conformance')
     try:
-        # Solver checks the real macOS virtual package; never override OS/glibc.
-        command('conda-platform', [conda, 'info', '--json'])
-        create = [conda, 'create', '--yes', '--prefix', prefix, '--override-channels',
+        command('conda-platform', [*conda_command, 'info', '--json'])
+        info = json.loads((work / 'conda-platform.log').read_text())
+        virtual = {p[0]: p[1] for p in info['virtual_pkgs']}
+        if virtual.get('__osx') != actual_os:
+            raise RuntimeError('Conda does not report the verified real macOS version')
+        create = [*conda_command, 'create', '--yes', '--prefix', prefix, '--override-channels',
                   '--channel', 'conda-forge', '--strict-channel-priority',
-                  'libasdf=0.3.0', 'pkg-config']
+                  '--solver', 'classic', '--repodata-fn', 'repodata.json',
+                  'libasdf=0.3.0', 'pkgconf>=2']
         command('libasdf-plan', [*create, '--dry-run', '--json'])
         command('libasdf-create', create)
-        command('libasdf-packages', [conda, 'list', '--prefix', prefix, '--json'])
-        command('libasdf-explicit', [conda, 'list', '--prefix', prefix, '--explicit'])
+        command('libasdf-packages', [*conda_command, 'list', '--prefix', prefix, '--json'])
+        command('libasdf-explicit', [*conda_command, 'list', '--prefix', prefix, '--explicit'])
         packages = json.loads((work / 'libasdf-packages.log').read_text())
         if [p['version'] for p in packages if p['name'] == 'libasdf'] != ['0.3.0']:
             raise RuntimeError('Unexpected libasdf version')
         pc_env = dict(env, PKG_CONFIG_LIBDIR=str(prefix / 'lib/pkgconfig'),
                       PKG_CONFIG_PATH='', PKG_CONFIG_SYSROOT_DIR='')
         flags = shlex.split(command('libasdf-link-flags',
-            [prefix / 'bin/pkg-config', '--cflags', '--libs', 'libasdf'],
+            [prefix / 'bin/pkgconf', '--cflags', '--libs', 'libasdf'],
             capture=True, command_env=pc_env).strip())
         probe = work / 'asdf16-interop'
         command('compile-c17', [compiler, '-std=c17', '-Wall', '-Wextra', '-O1',

@@ -1,6 +1,8 @@
 # Private libasdf / ASDF 1.6 qualification — 2 November 2026
 
-Status: prepared; actual Mac and Chapman results pending. Refs #213/#214.
+Status: Mac shared QC passed 10/10 in 1.607 s at 0840f031; private native
+provisioning failed before installation. Corrected retry prepared, not yet run.
+Chapman remains pending. Refs #213/#214/#215.
 Fernando authorized trying the C library and upgrading the file/core standard
 to 1.6.0. This supersedes the earlier no-native-dependency-trial boundary only
 for this private qualification. Existing installations and evidence remain.
@@ -50,11 +52,17 @@ input/product records, immutable membership, naming conflicts and bounded links.
 They do not select or validate numerical estimators.
 
 Then `qualify_libasdf_mac.py` creates a fresh `libasdf-environment` under this
-run using `libasdf=0.3.0` from conda-forge, plus pkg-config and dependencies.
+run using `libasdf=0.3.0` from conda-forge, plus pkgconf and dependencies.
 It records solver plan, platform virtual packages, installed package list and
 explicit package URLs. It uses a private package cache and never activates the
-environment. OS/glibc compatibility overrides are removed; an incompatible
-package solve/load is a failure, with no automatic fallback or system changes.
+environment. Old Mac Conda's erroneous 10.16 detection is corrected only to the
+actual 13.7.8 version independently measured with `sw_vers` under
+`SYSTEM_VERSION_COMPAT=0`, using documented `CONDA_OVERRIDE_OSX`. The runner
+verifies the resulting `__osx` before solving; it never claims a newer OS or
+overrides glibc. An incompatible package solve/load is a failure, with no
+automatic fallback or system changes. External plugins are disabled only for
+these calls and the built-in classic solver is explicit. Modern `pkgconf`
+provides linker metadata without the old pkg-config/zlib constraint.
 
 One synthetic fixture is compiled with selected Xcode Clang, **C17 only**, and
 explicit private library paths. Three interchange controls must pass:
@@ -78,6 +86,25 @@ Retain `qc-qualification.json`, `qc-contract-results.json`,
 `libasdf-qualification.json`, `interchange-results.json`, logs, sources, package
 manifest/cache, prefix, executable and synthetic ASDF files. Failure preserves
 all files and cannot be reported as qualification passed.
+
+## First Mac result and scoped retry
+
+Owner-returned evidence at 0840f031:
+`/Users/fselman/Software/build/wenu-imaging/mac-asdf16-qTH3ZFNB`.
+All ten shared QC tests passed in 1.607 s. Native provisioning stopped at the
+dry-run solve: missing base libarchive.19.dylib for the libmamba plugin,
+incorrect `__osx=10.16`, and old pkg-config/zlib constraints. No libasdf install,
+C compilation or interchange ran. Overall qualification failed; checkout,
+installed files and exported source preservation all passed. Retain everything.
+
+The corrected runner changes provisioning only. Use a fresh run with
+`--reuse-qc-run /Users/fselman/Software/build/wenu-imaging/mac-asdf16-qTH3ZFNB`
+and `--with-libasdf`. It checks the original report/revision/preservation and
+all ten passed controls, then verifies the retained and new module, schema and
+test sources are byte-identical to the pinned qualified versions. It records
+the original report digests. It does not repeat the ten unchanged QC tests.
+Only the three blocked C-library interchange controls remain to execute.
+Correction #215 remains target-pending; the base Conda installation is not repaired.
 
 ## Chapman gate
 

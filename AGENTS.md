@@ -1,5 +1,18 @@
 # wenu-imaging
 
+2 November Mac ASDF receipt/correction: shared QC standard-1.6 contracts passed
+10/10 in 1.607 s at 0840f031, retained mac-asdf16-qTH3ZFNB. Native trial failed at
+Conda dry-run solve, before installation/compilation/interchange; all preservation
+checks passed. #215 corrects only private provisioning: classic solver, external
+plugins disabled, pkgconf, and CONDA_OVERRIDE_OSX set solely to real sw_vers
+13.7.8 (verified before solve), never an invented/newer OS or glibc override.
+This narrowly supersedes prior no-OS-override wording. Retry with fresh run and
+--reuse-qc-run only after pinned module/schema/test identity and original passed
+sub-gate/preservation checks; do not repeat unchanged QC tests. Keep the failed
+attempt, base Conda, installed engines, checkout and all evidence untouched.
+Native/Chapman qualification remains pending; no production adoption/merge.
+
+
 2 November owner-authorized ASDF 1.6 increment: target file/core standard 1.6.0
 using retained Python asdf 6.0.0 / asdf-standard package 1.5.0. Qualify pinned
 libasdf 0.3.0 in a fresh private prefix with one C17 consumer and bounded C/Python

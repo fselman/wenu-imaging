@@ -37,6 +37,8 @@ def main():
     parser.add_argument('--run', type=Path, required=True)
     parser.add_argument('--with-libasdf', action='store_true',
                         help='Also provision isolated libasdf 0.3.0 and run one C17 interchange probe')
+    parser.add_argument('--reuse-qc-run', type=Path,
+                        help='Reuse verified passed QC contracts with identical module/schema/test sources')
     args = parser.parse_args()
     require(platform.system() == 'Darwin' and platform.machine() == 'x86_64' and
             platform.node().split('.')[0] == 'MC02VV0HPHTDG', 'Wrong host')
@@ -84,13 +86,35 @@ def main():
     env.pop('PYTHONPATH', None)
     finished = False
     try:
-        with (run / 'qc-contract.log').open('x') as stream:
-            result = subprocess.run(argv, cwd=run, env=env, stdout=stream,
-                                    stderr=subprocess.STDOUT, timeout=300)
-        report['exit_status'] = result.returncode
-        print((run / 'qc-contract.log').read_text(), flush=True)
-        require(result.returncode == 0, 'Shared QC contract failed; retain this run')
-        contract = json.loads((run / 'qc-contract-results.json').read_text())
+        if args.reuse_qc_run:
+            old = args.reuse_qc_run.resolve(strict=True)
+            require(not args.reuse_qc_run.is_symlink() and old != run and old.parent == run.parent,
+                    'Invalid retained QC run path')
+            old_report = json.loads((old / 'qc-qualification.json').read_text())
+            require(old_report['revision'] == '0840f03187e56ac8113cc76d75edbf7aeaf5edfe' and
+                    old_report['exit_status'] == 0 and old_report['preservation'] == dict(
+                        checkout=True, installed_files=True, exported_source=True),
+                    'Retained QC evidence does not match the accepted passed sub-gate')
+            for name in ('Pycavi2/pycavi/pycavi/pycavi_qc.py',
+                         'Pycavi2/pycavi/config/qc-schema-1.0.0.json',
+                         'Pycavi2/tests/test_shared_qc.py'):
+                original = git('show', old_report['revision'] + ':' + name)
+                require(original == (old / 'source' / name).read_bytes() == (source / name).read_bytes(),
+                        'QC sources changed; cannot reuse tests: ' + name)
+            contract = json.loads((old / 'qc-contract-results.json').read_text())
+            report['reused_qc'] = dict(run=str(old), revision=old_report['revision'],
+                report_sha256=sha(old / 'qc-qualification.json'),
+                contract_sha256=sha(old / 'qc-contract-results.json'))
+            report['argv'] = None
+            print('REUSED QC: 10 passed contracts from', old, '| sources byte-identical', flush=True)
+        else:
+            with (run / 'qc-contract.log').open('x') as stream:
+                result = subprocess.run(argv, cwd=run, env=env, stdout=stream,
+                                        stderr=subprocess.STDOUT, timeout=300)
+            report['exit_status'] = result.returncode
+            print((run / 'qc-contract.log').read_text(), flush=True)
+            require(result.returncode == 0, 'Shared QC contract failed; retain this run')
+            contract = json.loads((run / 'qc-contract-results.json').read_text())
         require(contract['successful'] and contract['tests'] == 10 and not contract['network_attempts'],
                 'Unexpected contract inventory or network attempt')
         if args.with_libasdf:

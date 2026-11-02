@@ -1,6 +1,7 @@
 # Shared QC records and recipe creation path — 2 November 2026
 
-Status: first opt-in implementation candidate, actual Mac checks pending. #213.
+Status: Mac shared QC metadata contracts passed 10/10 in 1.607 s at 0840f031.
+Native libasdf provisioning/interchange and Chapman remain pending. #213/#214/#215.
 The native bias calculation/publication qualified at 2803786 is unchanged.
 No new numerical estimator, normal activation, native bias test replay, merge
 or cleanup accompanies this candidate. The owner-authorized private libasdf
@@ -60,7 +61,7 @@ a new flat calculation.
 The shared schema is `Pycavi2/pycavi/config/qc-schema-1.0.0.json`, a local custom
 schema used with Python ASDF 6.0.0 and target ASDF standard 1.6.0. The retained
 `asdf-standard` package 1.5.0 supplies the 1.6.0 core schemas; package and file
-versions are different. Standard 1.6.0 target checks remain pending. Common
+versions are different. Mac standard 1.6.0 shared QC target checks passed. Common
 descriptors use primitive values/lists and explicit units, without new ASDF
 extensions, asdf-astropy or another JSON Schema dependency. The optional `qc`
 dependency group and schema package resources are declared; no package is

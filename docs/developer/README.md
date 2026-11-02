@@ -1,10 +1,10 @@
 # Developer documentation
 
 - [Private libasdf / ASDF 1.6 qualification](libasdf16-private-qualification-2026-11-02.md):
-  pinned 0.3.0 C17/Python interoperability candidate; Mac and Chapman pending.
+  shared QC Mac 10/10 passed; corrected native provisioning retry and Chapman pending.
 
 [Shared QC/ASDF records and recipe creation path](shared-qc-asdf-2026-11-02.md):
-opt-in common schema/builder/writer, bias adapter and monitor traversal; target checks pending.
+opt-in common schema/builder/writer, bias adapter and monitor traversal; Mac metadata checks 10/10 passed.
 
 [Reusable native operation recipe template](native-operation-recipe-template.md):
 bias lessons on mapping, header construction, QC review and applicable acceptance cases.
