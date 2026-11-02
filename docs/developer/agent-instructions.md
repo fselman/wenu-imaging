@@ -1,5 +1,20 @@
 # wenu-imaging agent instructions
 
+2 November requested Chapman gate COMPLETE at
+4417d7d159d08afcff2fbb8518fc90c3f4c84e29. Owner-reviewed
+chapman-m5-asdf16-resume-U4vTGDyf reports all three ASDF1.6.0 C/Python
+interchange controls passed; ten QC controls and installed libasdf0.3.0 reused
+from verified449220c evidence. C17 native_operation_template/native_bias_files/
+native_layout/native_bias_service/native_explicit_paths all5/5 pass (40.20s).
+Complete private normal runtime install has9 manifest payload files, all
+hash/installed-engine/CLI checks passed. Six outer and three native preservation
+checks passed; production engine/packages/config and retained prefixes unchanged.
+Keep mefpp_m5 as opt-in build executable. #219 nested insertion and #221 optional
+Float16 header limitations remain open; qualified consumer workarounds are
+required, not upstream repairs. No unchanged test replay, new host/C90 matrix,
+scientific QC acceptance, merge/cleanup or production activation follows.
+Next review remains numerical QC definitions/native-to-ASDF handoff.
+
 2 November Chapman progress/correction #221: at449220c, retained
 chapman-m5-asdf16-retry-ZES69RYi, actual Conda/platform/solve/install/package
 inventory and all ten shared QC controls passed under real glibc2.17.

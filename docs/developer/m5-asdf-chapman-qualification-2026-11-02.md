@@ -1,8 +1,11 @@
 # Chapman4 bias and ASDF 1.6 qualification — 2 November 2026
 
-Status: second target attempt passed dependency provisioning and all ten shared
-QC controls; GCC10 consumer compilation blocked by optional Float16 declaration.
-Consumer shim/resume prepared; actual interchange/native/install still pending. PR #209 / #214. The owner explicitly
+Status: PASSED on actual Chapman4 at
+4417d7d159d08afcff2fbb8518fc90c3f4c84e29. Owner-returned JSON, CTest log and ldd
+output were reviewed. Three interchange controls, ten reused QC controls,
+five C17 native contracts and complete private normal-runtime installation
+passed, with all preservation checks. Earlier pending statements below are
+historical at their stated source. No production activation or merge. PR #209 / #214. The owner explicitly
 requests bringing Chapman to the current branch and testing the new bias routine
 and ASDF installation because subsequent development depends on them. This
 authorizes one representative Chapman4 C17 gate, superseding earlier Mac-only
@@ -152,3 +155,71 @@ prefix and passed QC: no Conda solve/install/list or QC replay. Fingerprint the
 reused prefix before/after, then compile/execute only the previously blocked
 interchange and native bias/private-install gates. #221 remains open because this
 is a scoped consumer workaround, not an upstream header repair.
+
+## Final Chapman receipt — 2 November 2026
+
+Qualified source: `4417d7d159d08afcff2fbb8518fc90c3f4c84e29`.
+Retained run: `/home1/fselman/Software/build/wenu-imaging/chapman-m5-asdf16-resume-U4vTGDyf`.
+Evidence attribution: owner-returned retained JSON, native CTest log and linked
+library listing inspected in Work chat; no direct on-host access or independent
+archive transfer is claimed. Outer and native reports both say passed.
+
+| Native C17 contract | Actual result | Time (s) |
+|---|---|---:|
+| native_operation_template | passed | 0.00 |
+| native_bias_files | passed | 6.69 |
+| native_layout | passed | 2.74 |
+| native_bias_service | passed | 2.35 |
+| native_explicit_paths | passed | 28.37 |
+
+CTest reports 5/5, zero failures, 40.20 s total real time. These retain the
+existing synthetic native lifecycle/detector/HDU/PAF/TOML/pixel/header/error
+contracts. They do not constitute scientific validation of real observations.
+
+| ASDF surface | Actual result |
+|---|---|
+| C to Python | metadata/null/float64 shape and every value exact |
+| Python to C | uncompressed/zlib float64 shape and every value exact |
+| Shared QC through C | schema/content and frozen input links preserved |
+| File/core standard | 1.6.0 |
+| Python serializer/schema packages | asdf 6.0.0 / asdf-standard 1.5.0 |
+| NumPy | 1.26.4 |
+| C package | external libasdf 0.3.0 |
+| Interchange network attempts | none |
+| Platform | actual CentOS7/glibc2.17, selected GCC10.2.1 |
+
+The resume reuses completed provisioning and ten QC controls from
+`chapman-m5-asdf16-retry-ZES69RYi`, revision
+`449220c3351a0e95649dfcbdb66873ed66422fc1`, after exact report/preservation,
+package-build and QC source identity checks. No Conda or unchanged QC replay.
+Recorded reused evidence SHA256s:
+
+- Parent report: `1b12c699231e5e78dbeaa36b51ece5998c5a2e6f1c125f94d479dcad8c9cdc4d`
+- QC contracts: `68ba89ad2e7ef40cc9ea3fd55e36229336b9c00cd2ab0fcccd5d52051ade50ae`
+- Package list: `a61d41baf3d130c23cad5cd9dd11c27dd12271c95da02367a1e801c2deabaf2f`
+- Explicit packages: `ee8e23c73347d5d7f5dae953cefc42df2f323a7f96717225e0d6258a8f62bc5b`
+
+ldd resolves libasdf, libfyaml, zlib, bzip2, lz4, libstatgrab and libmd under the
+retained external prefix in `chapman-m5-asdf16-retry-ZES69RYi/libasdf-environment`.
+libc, libm, pthread and the loader are system /lib64. No missing library is listed.
+The selected GCC10 consumer omits only the unused optional direct Float16 API;
+that API is not qualified. Installed headers and library binary remain unchanged.
+
+Private normal-runtime installation:
+`/home1/fselman/Software/build/wenu-imaging/chapman-m5-asdf16-resume-U4vTGDyf/native/install`.
+All nine manifest payload hashes, installed-vs-built engine bytes and installed
+CLI control passed. This is not a change to the normal production selection.
+The new bias adapter remains an opt-in private build executable at:
+`native/build-c17/mefpp2/mefpp_m5` beneath that run. It is not added to the
+normal installed payload or connected to a new scientific ASDF QC extractor.
+
+Preservation: checkout, configured installed files, production package metadata,
+retained Python environment, exported source and external prefix after install
+all true. Child native installed-file/checkout/export preservation all true.
+All earlier failed attempts and their diagnostic evidence remain retained.
+
+The requested one-host C17 Chapman gate is complete. Keep #219 and #221 open for
+underlying external-library limitations; the consumer workarounds are qualified,
+not repairs. No further unchanged tests, C90/other-host matrices, source-library
+builds, compiler/glibc upgrades or production activation follow this receipt.
+Review numerical QC definitions/handoff separately; no merge/cleanup implied.

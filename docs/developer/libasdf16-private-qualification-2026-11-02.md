@@ -1,13 +1,13 @@
 # Private libasdf / ASDF 1.6 qualification — 2 November 2026
 
-Status: Mac bounded qualification PASSED at
-6395745dd3e55f90c63ae90f28238eae436c6468. All three C17/Python interchange
-controls passed; ten unchanged shared QC controls reused. Retained prefix,
-checkout, installed files and exported source preserved. External libasdf
-selected; upstream nested-insertion limitation #219 remains open. Chapman
-compatibility and production integration are not qualified. No merge/activation.
-Earlier pending statements below are historical at their stated source.
-Refs #213/#214/#215/#216/#217/#219.
+Status: bounded Mac and Chapman ASDF1.6 qualification PASSED. Mac qualified
+source6395745dd3e55f90c63ae90f28238eae436c6468; Chapman qualified source
+4417d7d159d08afcff2fbb8518fc90c3f4c84e29. Exact C/Python metadata/arrays/shared-QC
+links and preservation passed. External libasdf remains selected; #219 nested
+insertion and #221 optional Float16 header limitations remain open with scoped
+consumer workarounds. Production integration/scientific acceptance/merge remain
+separate. Earlier pending statements below are historical at their source.
+Refs #213/#214/#215/#216/#217/#219/#221.
 Fernando authorized trying the C library and upgrading the file/core standard
 to 1.6.0. This supersedes the earlier no-native-dependency-trial boundary only
 for this private qualification. Existing installations and evidence remain.
@@ -282,3 +282,13 @@ insertion behavior was avoided, not repaired. This does not qualify arbitrary
 ASDF features, numerical QC estimators, observational processing, production
 installation, or CentOS 7 compatibility. Native QC definitions and handoff remain
 separate pending review. Owner acceptance/merge is separate; nothing is activated.
+
+## Chapman completion
+
+See [the final Chapman receipt](m5-asdf-chapman-qualification-2026-11-02.md#final-chapman-receipt--2-november-2026).
+Actual glibc2.17/GCC10.2.1 passed three interchange controls and reused ten verified
+QC controls at4417d7d. Native C17 five-contract bias gate and complete private
+normal-runtime install also passed, with all preservation checks. No direct
+Float16 API support or native scientific ASDF serializer adoption is implied.
+The requested private target compatibility gate is complete; no test replay,
+production activation or merge is automatic.
