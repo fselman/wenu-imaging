@@ -1,5 +1,16 @@
 # wenu-imaging agent instructions
 
+2 November template lessons: before the next native recipe, read
+`docs/developer/native-operation-recipe-template.md` and follow the annotated
+`mef_operation_steps` contract. Preserve explicit detector/HDU/config/output
+mapping and coverage-aware metadata comparisons; reuse qualified header paths
+without indexing deleted qfits headers (#212). Define diagnostics, scientific QC,
+decisions and saved representation separately with Fernando. Bias's provisional
+JSON is not a default for later recipes. Template updates are comments/scaffold
+only; tested execution order and bias arithmetic are unchanged. Current target
+bias qualification passed at native 2803786dc2358f1cfdf641c262db6fe95a46bb05;
+QC/persistence design acceptance and PR #209 merge remain pending.
+
 2 November owner clarification and first M5 candidate: current tests use C17 only
 on the Intel Mac, without duplicate C90 or Chapman runs. Consider Chapman only
 for individual workloads exceeding Mac memory. Preserve C90-compatible source;

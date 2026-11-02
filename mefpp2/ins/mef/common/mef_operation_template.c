@@ -1,4 +1,7 @@
 #include "mef_operation_template.h"
+/* Keep orchestration independent of recipe arithmetic, FITS mutation and the
+ * chosen result representation. Do not add a format/QC default here: each new
+ * recipe follows the reviewed header's contract and companion scaffold. */
 mef_status mef_operation_run(const mef_operation_steps *steps, void *state,
     mef_error **error)
 {

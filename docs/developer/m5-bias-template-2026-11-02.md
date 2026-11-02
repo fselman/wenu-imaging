@@ -1,5 +1,20 @@
 # M5 first bias operation template — 2 November 2026
 
+Current result: owner-returned Mac C17 qualification at native
+`2803786dc2358f1cfdf641c262db6fe95a46bb05` passed `native_bias_files` 1/1 in
+5.89 seconds. Retained run:
+`/Users/fselman/Software/build/wenu-imaging/mac-m5-primary-fix-FbkOrsIE`.
+Installed files, checkout and exported source preservation all passed. Four
+unaffected earlier checks are inherited, not repeated. #210/#211 are closed;
+underlying qfits #212 remains open. QC content/handling and JSON/ASDF design
+remain pending; PR #209 remains a draft with no install/merge authorization.
+Earlier failure/pending entries below retain their original evidence scope.
+
+At Fernando's request, the [next-recipe template](native-operation-recipe-template.md)
+and source contract now incorporate the bias lessons. This follow-up changes
+comments and documentation only; runtime orchestration and the qualified bias
+implementation are unchanged, so no new native test replay is required.
+
 Latest actual-target update (#211/#212): the #210 corrected OCAM PAF/TOML
 comparisons passed, then primary-image processing exited SIGSEGV. Retry evidence:
 `/Users/fselman/Software/build/wenu-imaging/mac-m5-bias-header-n8UYaw1x`,

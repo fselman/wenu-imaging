@@ -1,5 +1,8 @@
 # Developer documentation
 
+[Reusable native operation recipe template](native-operation-recipe-template.md):
+bias lessons on mapping, header construction, QC review and applicable acceptance cases.
+
 2 November: [M5 reusable operation template and first bias adapter](m5-bias-template-2026-11-02.md).
 Opt-in one-detector PAF/TOML candidate; Mac C17 checks pending, no install/activation.
 
