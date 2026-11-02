@@ -287,6 +287,7 @@ const mef_hdu_layout *mef_layout_hdus(const mef_layout *layout, size_t *count)
     return layout ? layout->hdus : NULL;
 }
 const char *mef_layout_path(const mef_layout *layout) { return layout ? layout->path : NULL; }
+const char *mef_layout_map_path(const mef_layout_map *map) { return map ? map->path : NULL; }
 
 void mef_layout_map_destroy(mef_layout_map *map)
 {
@@ -422,3 +423,4 @@ mef_status mef_layout_load(const mef_layout_map *map, const char *detector_id,
     }
     *out = image; return MEF_OK;
 }
+

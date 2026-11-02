@@ -3345,7 +3345,7 @@ qfits_header *mef_header_primary(char *filename)
 /* 
  * reads an extension header
  */
-qfits_header *mef_header_ext(char *filename, mef_bb *bb)
+static qfits_header *mef_header_ext_hdu(char *filename, mef_bb *bb, int source_hdu)
 {
 	char            *first_name = NULL ; /* Borrowed static buffer. */
 	qfits_header    *fh, *f0 ;
@@ -3357,10 +3357,10 @@ qfits_header *mef_header_ext(char *filename, mef_bb *bb)
         qfits_header *resolved_header;
         first_name = mef_paths_first(bb->paths, filename);
         if (first_name == NULL) return NULL;
-        resolved_header = mef_header_ext(first_name, bb);
+        resolved_header = mef_header_ext_hdu(first_name, bb, source_hdu);
         free(first_name); return resolved_header;
     }
-	xtnum = bb->xtnum ;
+	xtnum = source_hdu ;
 
 	if (is_fits_file(filename)) {
 		fh = qfits_header_readext(filename,xtnum);
@@ -3456,6 +3456,10 @@ qfits_header *mef_header_ext(char *filename, mef_bb *bb)
 	e_comment(1,"mef_header_ext: extension header BITPIX keyword modified to default %s OK.", cval);
     qfits_header_destroy(f0);
 	return fh;
+}
+qfits_header *mef_header_ext(char *filename, mef_bb *bb)
+{
+    return mef_header_ext_hdu(filename, bb, bb->xtnum);
 }
 /*
  * build a subsets of a primary header, modifying on
@@ -3805,7 +3809,9 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 	if (!strcmp(what,"bias")) {
 	    /* Add REC.BIASi */
 
-	    if ( (fnames = mef_paths_frames(bb->paths, bb->name_bias)) == NULL) {
+	    if (bb->bias_header_inputs != NULL) {
+            fnames = (framelist *)bb->bias_header_inputs;
+        } else if ( (fnames = mef_paths_frames(bb->paths, bb->name_bias)) == NULL) {
 		    if (is_fits_file(bb->name_bias)) {
 		       fnames = framelist_new(1);
 		       fnames->name[0] = strdup(bb->name_bias);
@@ -3820,7 +3826,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 		    sprintf(cval, "%s%03d", bb->bias_frame_i_key, i+1);
 		    qfits_header_add(fh_eclipse, cval, get_basename(fnames->name[i]), bb->bias_frame_i_comment, NULL);
 		}
-		framelist_del(fnames);
+		if (bb->bias_header_inputs == NULL) framelist_del(fnames);
 	    }
 	}
 
@@ -4204,7 +4210,7 @@ char *mef_get_output_filename(mef_bb *bb, char *what)
 }
 
 
-qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
+qfits_header *mef_get_headers_for_hdu(char *what, mef_bb *bb, image_t *zImage, int source_hdu)
 {
 	char		*name_o = NULL ;
 	char		*name_i = NULL ;
@@ -4288,7 +4294,7 @@ qfits_header *mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage)
 	 * *************************** EXTENSION HEADERS FROM FRAME ********************
 	 */
 	e_comment(1,"reading extension headers of %s",name_i);
-	if ( (fh_extension = mef_header_ext(name_i,bb)) == NULL) {
+	if ( (fh_extension = mef_header_ext_hdu(name_i,bb,source_hdu)) == NULL) {
 		e_error("mef_get_headers_for: can not read headers from %d extension of %s",bb->xtnum, bb->name_sky);
 		goto header_fail;
 	}
@@ -4633,6 +4639,11 @@ header_fail:
 
 }
 
+qfits_header *mef_get_headers_for(char *what, mef_bb *bb, image_t *image)
+{
+    return mef_get_headers_for_hdu(what, bb, image, bb ? bb->xtnum : 0);
+}
+
 /* Publication returns 0 only after checked writes and close (#127). */
 int mef_save(mef_bb *bb, image_t *zImage, char *what)
 {
@@ -4724,3 +4735,4 @@ failed:
     e_error("cannot publish FITS output [%s]", filename);
     return -1;
 }
+

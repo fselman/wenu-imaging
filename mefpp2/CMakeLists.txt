@@ -134,6 +134,10 @@ endif()
 # M1 inspection is opt-in. The legacy executable and installed payload do not
 # depend on the snapshot library, which is not yet a supported public ABI.
 option(MEFPP_BUILD_CONFIG_PROBES "Build isolated M1 configuration probes" OFF)
+option(MEFPP_BUILD_BIAS_ADAPTER "Build uninstalled M5 one-detector bias command" OFF)
+if(MEFPP_BUILD_BIAS_ADAPTER)
+  set(MEFPP_BUILD_CONFIG_PROBES ON)
+endif()
 if(MEFPP_BUILD_CONFIG_PROBES)
   add_library(mefpp_config_snapshot STATIC ins/mef/common/mef_config.c
     ins/mef/common/mef_runtime.c ins/mef/common/mef_cli_request.c
@@ -165,6 +169,20 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     ins/mef/common/mef_toml_bundle.c)
   target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
   target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
+  if(MEFPP_BUILD_BIAS_ADAPTER)
+    add_library(mefpp_bias_files STATIC ins/mef/common/mef_bias_files.c
+      ins/mef/common/mef_operation_template.c)
+    target_link_libraries(mefpp_bias_files PUBLIC mefpp_config_snapshot)
+    target_compile_definitions(mefpp_bias_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+    target_compile_options(mefpp_bias_files PRIVATE -Wall -Wextra -pedantic-errors)
+    add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c)
+    target_link_libraries(mefpp_m5 PRIVATE mefpp_bias_files mefpp_config_toml)
+    target_compile_definitions(mefpp_m5 PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+    target_compile_options(mefpp_m5 PRIVATE -Wall -Wextra -pedantic-errors)
+    add_executable(operation_template_probe tests/operation_template_probe.c)
+    target_link_libraries(operation_template_probe PRIVATE mefpp_bias_files)
+    target_compile_options(operation_template_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  endif()
   target_compile_definitions(mefpp_config_toml PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(mefpp_config_toml PRIVATE -Wall -Wextra -pedantic-errors)
@@ -274,6 +292,15 @@ if(BUILD_TESTING)
       --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
   set_tests_properties(native_qfits_swap PROPERTIES TIMEOUT 120 LABELS "native;swap;ownership;failure")
   if(MEFPP_BUILD_CONFIG_PROBES)
+    if(MEFPP_BUILD_BIAS_ADAPTER)
+      add_test(NAME native_operation_template COMMAND operation_template_probe)
+      add_test(NAME native_bias_files
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_files_contract.py"
+          --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+          --adapter "$<TARGET_FILE:mefpp_m5>" --legacy "$<TARGET_FILE:mefpp>"
+          --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(native_bias_files PROPERTIES TIMEOUT 600 LABELS "native;bias;template;publication")
+    endif()
     set(config_probe_sdk_args "")
     if(APPLE AND CMAKE_OSX_SYSROOT)
       list(APPEND config_probe_sdk_args --sysroot "${CMAKE_OSX_SYSROOT}")
@@ -454,3 +481,4 @@ file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/mefpp-path-$<CONFIG>.cmake" CO
 configure_file(cmake/install_runtime.cmake.in install_runtime.cmake @ONLY)
 install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/install_runtime.cmake")
 message(STATUS "Candidate mefpp: C${MEFPP_C_STANDARD}; ${CMAKE_C_COMPILER}; resources=${MEFPP_BUILD_RESOURCES}")
+
