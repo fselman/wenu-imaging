@@ -1,8 +1,9 @@
 # Private libasdf / ASDF 1.6 qualification — 2 November 2026
 
-Status: Mac shared QC passed 10/10 in 1.607 s at 0840f031; private native
-provisioning failed before installation. Corrected retry prepared, not yet run.
-Chapman remains pending. Refs #213/#214/#215.
+Status: ten Mac shared QC controls passed. External libasdf 0.3.0 installation
+succeeded; C compilation stopped because pkgconf omitted include/library paths.
+Explicit-path correction and retained-prefix retry prepared; Mac interchange
+and Chapman compatibility remain pending. Refs #213/#214/#215/#216/#217.
 Fernando authorized trying the C library and upgrading the file/core standard
 to 1.6.0. This supersedes the earlier no-native-dependency-trial boundary only
 for this private qualification. Existing installations and evidence remain.
@@ -123,6 +124,40 @@ pass: exact stdout JSON survives a stderr plugin warning, and a failing command
 preserves both streams and remains a failure. No Conda/native execution was
 needed for this logging regression. Corrected actual Mac native trial remains
 pending. Keep both failed attempts and reuse only the original passed QC sub-gate.
+
+## External library decision and third retained attempt
+
+Fernando's latest decision is to rely on external libasdf for now. Bundling
+libasdf into mefpp (#218) is deferred; no upstream C sources or CMake integration
+are added. Python asdf remains a distinct required Python dependency; this trial
+does not update an installed production environment.
+
+Third retained attempt at ad42ef7a:
+`/Users/fselman/Software/build/wenu-imaging/mac-asdf16-streams-o8KPDcUm`.
+Dependency solve, creation and package inventory passed. C compilation failed
+with asdf.h not found. Owner inspection proves both headers exist and libasdf.pc
+has correct paths; returned compiler argv omitted -I and -L. All preservation
+checks passed. This is runner defect #217, not evidence of an ASDF API failure.
+
+The corrected runner explicitly passes prefix/include, prefix/lib and runtime
+rpath, and requests pkgconf retain system paths for transitive dependencies.
+Use a fresh run with both:
+- `--reuse-qc-run /Users/fselman/Software/build/wenu-imaging/mac-asdf16-qTH3ZFNB`
+- `--reuse-libasdf-run /Users/fselman/Software/build/wenu-imaging/mac-asdf16-streams-o8KPDcUm`
+
+The second option implies the native trial without provisioning. It checks the
+old exact revision, passed preservation and successful provisioning command
+statuses, package version/build and required files. It fingerprints regular files
+and symlinks in the retained prefix before/after, records a manifest digest and
+rejects changes. It never repeats Conda solve/create/list calls in reuse mode.
+All new logs, executable and synthetic ASDF outputs go to the new run directory.
+The original ten QC tests are reused only under their existing identity guards.
+
+Three agent stdlib regression controls passed in 0.005 s: explicit compiler paths
+with the actual omitted-path flags, accepted complete versus rejected incomplete
+or mismatched retained metadata, and prefix mutation/symlink detection. These
+checks do not compile or execute ASDF. Actual Mac C17/Python interchange remains
+pending; no C90/bias replay, production activation, merge or cleanup.
 
 ## Chapman gate
 

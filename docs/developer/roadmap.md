@@ -1,5 +1,16 @@
 # wenu-imaging roadmap
 
+2 November owner decision: use external libasdf for now; defer bundling into
+mefpp (#218). This supersedes the intervening bundling proposal. External native
+libasdf and Python asdf remain distinct dependencies. Retry #217 uses explicit
+prefix include/library/rpath and requests pkgconf system paths, reusing the
+installed 0.3.0 trial in mac-asdf16-streams-o8KPDcUm after checking its revision,
+passed preservation/provisioning and package metadata. Fingerprint the retained
+prefix before/after; no repeated Conda solve/install or ten unchanged QC tests.
+Three synthetic prefix regression tests pass; actual Mac C17/Python interchange
+remains pending. Preserve all attempts, working engines and checkout; no merge,
+cleanup, production activation or Chapman run in this increment.
+
 2 November owner clarification and first M5 candidate: current tests use C17 only
 on the Intel Mac, without duplicate C90 or Chapman runs. Consider Chapman only
 for individual workloads exceeding Mac memory. Preserve C90-compatible source;

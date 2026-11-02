@@ -1,5 +1,16 @@
 # wenu-imaging agent instructions
 
+2 November owner decision: use external libasdf for now; defer bundling into
+mefpp (#218). This supersedes the intervening bundling proposal. External native
+libasdf and Python asdf remain distinct dependencies. Retry #217 uses explicit
+prefix include/library/rpath and requests pkgconf system paths, reusing the
+installed 0.3.0 trial in mac-asdf16-streams-o8KPDcUm after checking its revision,
+passed preservation/provisioning and package metadata. Fingerprint the retained
+prefix before/after; no repeated Conda solve/install or ten unchanged QC tests.
+Three synthetic prefix regression tests pass; actual Mac C17/Python interchange
+remains pending. Preserve all attempts, working engines and checkout; no merge,
+cleanup, production activation or Chapman run in this increment.
+
 2 November ASDF logging correction #216: retry mac-asdf16-retry-9NFYFeVP
 confirmed real __osx=13.7.8/classic solver and reused passed QC sources/evidence,
 but Conda 24.11.3 still emits a libmamba startup warning. Mixed stderr/stdout

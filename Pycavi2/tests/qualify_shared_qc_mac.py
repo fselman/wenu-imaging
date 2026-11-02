@@ -39,6 +39,8 @@ def main():
                         help='Also provision isolated libasdf 0.3.0 and run one C17 interchange probe')
     parser.add_argument('--reuse-qc-run', type=Path,
                         help='Reuse verified passed QC contracts with identical module/schema/test sources')
+    parser.add_argument('--reuse-libasdf-run', type=Path,
+                        help='Reuse inspected external libasdf prefix; implies native interchange')
     args = parser.parse_args()
     require(platform.system() == 'Darwin' and platform.machine() == 'x86_64' and
             platform.node().split('.')[0] == 'MC02VV0HPHTDG', 'Wrong host')
@@ -117,12 +119,14 @@ def main():
             contract = json.loads((run / 'qc-contract-results.json').read_text())
         require(contract['successful'] and contract['tests'] == 10 and not contract['network_attempts'],
                 'Unexpected contract inventory or network attempt')
-        if args.with_libasdf:
+        if args.with_libasdf or args.reuse_libasdf_run:
             native_argv = [str(PRIVATE / 'bin/python'), '-B',
                            str(source / 'Pycavi2/tests/qualify_libasdf_mac.py'), '--work', str(run)]
             report['native_argv'] = native_argv
             report['native_execution'] = True
-            report['private_dependency_provisioning'] = True
+            report['private_dependency_provisioning'] = not bool(args.reuse_libasdf_run)
+            if args.reuse_libasdf_run:
+                native_argv += ['--reuse-libasdf-run', str(args.reuse_libasdf_run)]
             subprocess.run(native_argv, cwd=run, env=env, check=True)
         finished = True
     finally:
