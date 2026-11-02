@@ -1,5 +1,34 @@
 # wenu-imaging
 
+## Eclipse reuse and reviewed extensions
+
+Owner instruction, 2 November 2026: use the existing Eclipse resources whenever
+suitable, across all recipes and processing measurements/checks.
+
+1. Before implementing functionality, inspect the relevant Eclipse modules,
+   public headers, documentation and existing callers/tests. Check actual
+   semantics, including estimator, BPM polarity, region coordinates, units,
+   numeric types, mutation and ownership; a similar name is not sufficient.
+2. Reuse a suitable routine, or compose existing primitives, before adding code.
+   Do not duplicate library functionality inside recipes, Python helpers or
+   serializers merely for convenience.
+3. If functionality is genuinely missing, describe the gap, existing alternatives,
+   proposed interface, callers and edge/error behavior to Fernando for review
+   BEFORE implementation. Announce every proposed new routine beforehand;
+   extend Eclipse only within the reviewed scope.
+4. Put general-purpose extensions in the appropriate Eclipse module so other
+   recipes can reuse them. Inspect the maths modules and reuse their scaffolding.
+   Follow the current library's data structures, signatures, allocation/free
+   conventions, error reporting, documentation and build organization.
+5. Preserve existing APIs and behavior unless a change has been explicitly
+   reviewed. Update matching public headers, documentation and build lists as
+   applicable. Add independent known-answer/error checks for new behavior and
+   affected callers using the current selected tools/test policy.
+6. Keep measurement algorithms separate from recipe orchestration and ASDF
+   serialization. Reuse BPM-aware routines when available; a new estimator must
+   support the reviewed sample/region/mask contract rather than introduce a
+   competing recipe-specific implementation.
+
 2 November owner QC decisions and reuse policy: RON must use two RAW bias
 frames, with NO overscan correction before subtraction, to avoid correction-
 induced correlations. Keep ADU units and explicit origins/stage/region. Approved
