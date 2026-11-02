@@ -81,6 +81,48 @@ def conda_cli(conda, command):
         note='CONDA_NO_PLUGINS/CONDA_SOLVER requested in child environment; no installed configuration changes')
 
 
+def reuse_completed_gates(old, run, source, git):
+    """Reuse only the inspected successful provisioning/QC sub-gates."""
+    require(not old.is_symlink(), 'Retained run must not be a symlink')
+    old = old.resolve(strict=True)
+    require(old != run and old.parent == run.parent, 'Unexpected retained Chapman run')
+    previous = json.loads((old / 'chapman-qualification.json').read_text())
+    require(previous['revision'] == '449220c3351a0e95649dfcbdb66873ed66422fc1' and
+            previous['status'] == 'failed' and previous['actual_glibc'] == '2.17' and
+            previous['preservation'] == dict(checkout=True, installed_files=True,
+                production_packages=True, retained_python_environment=True,
+                exported_source=True, external_prefix_after_install=True),
+            'Retained revision/platform/preservation mismatch')
+    commands = {c['label']: c for c in previous['commands']}
+    for label in ('conda-platform', 'libasdf-plan', 'libasdf-create', 'libasdf-packages',
+                  'libasdf-explicit', 'shared-qc', 'libasdf-link-flags'):
+        require(commands.get(label, {}).get('exit_status') == 0, 'Incomplete retained gate: ' + label)
+    prefix = old / 'libasdf-environment'
+    require(not prefix.is_symlink() and previous['external_prefix'] == str(prefix), 'Retained prefix mismatch')
+    packages = json.loads((old / 'libasdf-packages.log').read_text())
+    listed = [p for p in packages if p['name'] == 'libasdf']
+    records = [json.loads(p.read_text()) for p in (prefix / 'conda-meta').glob('*.json')]
+    actual = [p for p in records if p['name'] == 'libasdf']
+    require(len(listed) == len(actual) == 1 and listed[0]['version'] == actual[0]['version'] == '0.3.0'
+            and actual[0]['build'] == listed[0]['build_string'], 'Retained libasdf package/build mismatch')
+    for name in ('include/asdf.h', 'include/asdf/config.h', 'lib/pkgconfig/libasdf.pc', 'bin/pkgconf'):
+        require((prefix / name).is_file(), 'Missing retained dependency: ' + name)
+    for name in ('Pycavi2/pycavi/pycavi/pycavi_qc.py', 'Pycavi2/pycavi/config/qc-schema-1.0.0.json',
+                 'Pycavi2/tests/test_shared_qc.py'):
+        require(git('show', previous['revision'] + ':' + name) ==
+                (old / 'source' / name).read_bytes() == (source / name).read_bytes(),
+                'Changed QC source; cannot reuse: ' + name)
+    qc_path = old / 'qc/qc-contract-results.json'
+    qc = json.loads(qc_path.read_text())
+    require(qc == previous['shared_qc'] and qc['successful'] and qc['tests'] == 10
+            and not qc['network_attempts'], 'Retained QC result mismatch')
+    evidence = dict(run=str(old), revision=previous['revision'],
+        report_sha256=sha(old / 'chapman-qualification.json'), qc_sha256=sha(qc_path),
+        package_list_sha256=sha(old / 'libasdf-packages.log'),
+        package_explicit_sha256=sha(old / 'libasdf-explicit.log'))
+    return prefix, qc, evidence
+
+
 def recorded_funpack():
     # Reuse the selected executable from the accepted installed-runtime build.
     old = Path('/home1/fselman/Software/build/wenu-imaging/chapman-large-file-install-SLEBL3NJ')
@@ -101,6 +143,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--revision', required=True)
     parser.add_argument('--run', type=Path, required=True)
+    parser.add_argument('--reuse-run', type=Path, help='Reuse verified successful Chapman provisioning/QC')
     args = parser.parse_args()
     require((platform.system(), platform.machine(), platform.node().split('.')[0]) ==
             ('Linux', 'x86_64', 'chapman4'), 'Chapman4 only')
@@ -164,36 +207,49 @@ def main():
     prefix = run / 'libasdf-environment'
     library_before = None
     try:
-        # Package gate first: respect real glibc before launching functional tests.
-        conda_base, solver_options, capabilities = conda_cli(conda, command)
-        report['conda_capabilities'] = capabilities
-        info = json.loads(command('conda-platform', [*conda_base, 'info', '--json'], capture=True))
-        check_virtual_platform(info, '2.17')
-        create = [*conda_base, 'create', '--yes', '--prefix', prefix,
-            '--override-channels', '--channel', 'conda-forge', '--strict-channel-priority',
-            *solver_options, '--repodata-fn', 'repodata.json', 'libasdf=0.3.0', 'pkgconf>=2']
-        command('libasdf-plan', [*create, '--dry-run', '--json'])
-        command('libasdf-create', create)
-        packages = json.loads(command('libasdf-packages',
-            [*conda_base, 'list', '--prefix', prefix, '--json'], capture=True))
-        require([p['version'] for p in packages if p['name'] == 'libasdf'] == ['0.3.0'], 'Unexpected libasdf')
-        command('libasdf-explicit', [*conda_base, 'list', '--prefix', prefix, '--explicit'])
-        library_before = private_identity(prefix)
-        report['external_prefix'] = str(prefix)
-        # Run the shared QC schema/sidecar/traversal contracts once on this platform.
-        qc_work = run / 'qc'; qc_work.mkdir()
-        command('shared-qc', [PRIVATE / 'bin/python', '-B', source / 'Pycavi2/tests/test_shared_qc.py',
-                              '--work', qc_work], timeout=300)
-        qc = json.loads((qc_work / 'qc-contract-results.json').read_text())
-        require(qc['successful'] and qc['tests'] == 10 and not qc['network_attempts'], 'Incomplete shared QC gate')
-        report['shared_qc'] = qc
+        if args.reuse_run:
+            prefix, qc, reuse = reuse_completed_gates(args.reuse_run, run, source, git)
+            library_before = private_identity(prefix)
+            report['external_prefix'] = str(prefix)
+            report['shared_qc'] = qc
+            report['reused_gates'] = reuse
+            report['dependency_provisioning'] = False
+            print('REUSED: installed libasdf and ten passed QC controls from', args.reuse_run, flush=True)
+        else:
+            report['dependency_provisioning'] = True
+            # Package gate first: respect real glibc before launching functional tests.
+            conda_base, solver_options, capabilities = conda_cli(conda, command)
+            report['conda_capabilities'] = capabilities
+            info = json.loads(command('conda-platform', [*conda_base, 'info', '--json'], capture=True))
+            check_virtual_platform(info, '2.17')
+            create = [*conda_base, 'create', '--yes', '--prefix', prefix,
+                '--override-channels', '--channel', 'conda-forge', '--strict-channel-priority',
+                *solver_options, '--repodata-fn', 'repodata.json', 'libasdf=0.3.0', 'pkgconf>=2']
+            command('libasdf-plan', [*create, '--dry-run', '--json'])
+            command('libasdf-create', create)
+            packages = json.loads(command('libasdf-packages',
+                [*conda_base, 'list', '--prefix', prefix, '--json'], capture=True))
+            require([p['version'] for p in packages if p['name'] == 'libasdf'] == ['0.3.0'], 'Unexpected libasdf')
+            command('libasdf-explicit', [*conda_base, 'list', '--prefix', prefix, '--explicit'])
+            library_before = private_identity(prefix)
+            report['external_prefix'] = str(prefix)
+            # Run the shared QC schema/sidecar/traversal contracts once on this platform.
+            qc_work = run / 'qc'; qc_work.mkdir()
+            command('shared-qc', [PRIVATE / 'bin/python', '-B', source / 'Pycavi2/tests/test_shared_qc.py',
+                                  '--work', qc_work], timeout=300)
+            qc = json.loads((qc_work / 'qc-contract-results.json').read_text())
+            require(qc['successful'] and qc['tests'] == 10 and not qc['network_attempts'], 'Incomplete shared QC gate')
+            report['shared_qc'] = qc
         # Build only the standalone C17 ASDF consumer; do not link ASDF into mefpp.
         pc_env = dict(env, PKG_CONFIG_LIBDIR=str(prefix / 'lib/pkgconfig'), PKG_CONFIG_PATH='',
             PKG_CONFIG_SYSROOT_DIR='', PKG_CONFIG_ALLOW_SYSTEM_CFLAGS='1', PKG_CONFIG_ALLOW_SYSTEM_LIBS='1')
         flags = shlex.split(command('libasdf-link-flags', [prefix / 'bin/pkgconf', '--cflags', '--libs', 'libasdf'],
                                     command_env=pc_env, capture=True))
         probe = run / 'asdf16-interop'
+        report['direct_float16_api_qualified'] = False
+        report['consumer_omits_optional_float16_declaration'] = True
         command('compile-asdf-c17', [TOOLS['compiler'], '-std=c17', '-Wall', '-Wextra', '-O1',
+            '-DWENU_ASDF_PROBE_OMIT_FLOAT16=1',
             '-I' + str(prefix / 'include'), source / 'Pycavi2/tests/asdf16_interop.c', '-o', probe,
             '-L' + str(prefix / 'lib'), *flags, '-Wl,-rpath,' + str(prefix / 'lib')])
         linked = command('linked-libraries', ['/usr/bin/ldd', probe], capture=True)

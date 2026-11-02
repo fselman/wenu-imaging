@@ -1,7 +1,8 @@
 # Chapman4 bias and ASDF 1.6 qualification — 2 November 2026
 
-Status: first target attempt failed at Conda CLI parsing; corrected retry prepared,
-not yet target-qualified. PR #209 / #214. The owner explicitly
+Status: second target attempt passed dependency provisioning and all ten shared
+QC controls; GCC10 consumer compilation blocked by optional Float16 declaration.
+Consumer shim/resume prepared; actual interchange/native/install still pending. PR #209 / #214. The owner explicitly
 requests bringing Chapman to the current branch and testing the new bias routine
 and ASDF installation because subsequent development depends on them. This
 authorizes one representative Chapman4 C17 gate, superseding earlier Mac-only
@@ -114,3 +115,40 @@ CLI handling. These use emulated help responses, not an installed target Conda;
 runner syntax also passes. Actual corrected Chapman execution remains pending.
 No previous functional gate passed on Chapman to reuse; retry starts in a fresh
 retained directory without repeating Mac gates or the qualified Python install.
+
+## Second attempt: provisioning/QC passed, optional Float16 header blocked
+
+Owner-returned run at 449220c3351a0e95649dfcbdb66873ed66422fc1:
+`/home1/fselman/Software/build/wenu-imaging/chapman-m5-asdf16-retry-ZES69RYi`.
+Local Conda version/help/platform checks, dry-run solve, external libasdf install,
+package inventory and explicit URLs passed. All ten shared QC controls passed.
+Selected GCC10.2.1 failed compiling ndarray.h's optional _Float16-returning API.
+All six preservation checks passed, including external prefix after installation.
+No interchange/native bias/normal-runtime-install control ran. Keep both attempts.
+
+Review of pinned 0.3.0 public headers shows ASDF_HAVE_FLOAT16 gates only an
+optional _Float16 accessor declaration and its C _Generic dispatch association;
+public structures and float64 APIs are unchanged. Test-only asdf_probe_compat.h
+loads installed config first, then undefines that macro only when the explicit
+WENU_ASDF_PROBE_OMIT_FLOAT16 flag is passed by the Chapman consumer build.
+The library binary and installed headers are never edited. No substitute typedef,
+array conversion, datatype size change or claim of direct Float16 ABI support.
+Mac/default consumer retains the installed header's normal feature selection.
+
+Agent GCC13 C17 -Wall/-Wextra/-Werror syntax checks against pinned public headers
+pass with a synthetic generated config enabling Float16, both with and without
+the shim flag. A standalone public-layout check in both modes agrees:
+sizeof ndarray=112, sizeof datatype=56, offsets ndim/shape/datatype/byteorder
+8/16/24/80 on this agent. This demonstrates unchanged public layout on the agent,
+not GCC10 target/runtime acceptance. A synthetic evidence-reuse guard passes
+in 0.004s and rejects changed QC source or failed prior preservation.
+
+Retry in a fresh run with --reuse-run pointing to the second attempt. It verifies
+exact original revision/status/platform/preservation, successful command statuses,
+libasdf package/version/build, required headers/tools, unchanged module/schema/QC
+test sources against Git and old export, and passed ten-control report identity.
+It records original report/QC/package-list/explicit-URL hashes. Reuse installed
+prefix and passed QC: no Conda solve/install/list or QC replay. Fingerprint the
+reused prefix before/after, then compile/execute only the previously blocked
+interchange and native bias/private-install gates. #221 remains open because this
+is a scoped consumer workaround, not an upstream header repair.

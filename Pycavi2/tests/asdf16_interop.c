@@ -1,6 +1,6 @@
 /* Bounded libasdf 0.3.0 interchange probe; no mefpp or FITS processing.
  * Values are synthetic fixtures, not scientific QC estimators. */
-#include <asdf.h>
+#include "asdf_probe_compat.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

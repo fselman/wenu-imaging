@@ -1,5 +1,19 @@
 # wenu-imaging
 
+2 November Chapman progress/correction #221: at449220c, retained
+chapman-m5-asdf16-retry-ZES69RYi, actual Conda/platform/solve/install/package
+inventory and all ten shared QC controls passed under real glibc2.17.
+GCC10.2.1 then rejected optional _Float16 declaration in packaged libasdf0.3
+headers. All six preservation checks passed; no interchange/native install ran.
+Test-only asdf_probe_compat.h loads config then omits the unused optional
+Float16 declaration only with an explicit Chapman consumer flag. No installed
+header/library/compiler change or public structure/numeric conversion is made.
+GCC13 C17 probe syntax both modes and ndarray layout comparison pass; synthetic
+reuse guard passes. GCC10 runtime remains pending. Retry --reuse-run verifies
+old reports/package build/QC source identity and resumes without Conda or QC
+replay. Keep upstream header limitation #221 and nested insertion #219 open.
+No production activation, merge, cleanup, C90 or second-host matrix.
+
 2 November Chapman runner correction #220: first attempt at59cb940,
 chapman-m5-asdf16-wEY4w9AQ, failed on unsupported --no-plugins before dependency
 solve/install or functional tests. All five preservation checks passed.
