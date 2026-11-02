@@ -134,6 +134,61 @@ mef_status mef_bias_files_execute(mef_context *context,
     return bias_run(context, maps, count, detector, final_path, out, error);
 }
 
+/* #211/#212: qfits_header_del leaves n stale. qfits_header_copy traverses
+ * forward links and rebuilds n via append. Never index the deleted source or
+ * merge it as an update. Build the required structural prefix without deletion.
+ * Existing extension-input publication does not enter this conversion. */
+static int structural_key(const char *key)
+{
+    return !strcmp(key, "SIMPLE") || !strcmp(key, "XTENSION") ||
+        !strcmp(key, "BITPIX") || !strcmp(key, "NAXIS") ||
+        !strcmp(key, "NAXIS1") || !strcmp(key, "NAXIS2") || !strcmp(key, "NAXIS3") ||
+        !strcmp(key, "PCOUNT") || !strcmp(key, "GCOUNT") ||
+        !strcmp(key, "EXTEND") || !strcmp(key, "BSCALE") ||
+        !strcmp(key, "BZERO") || !strcmp(key, "END");
+}
+static qfits_header *primary_image_header(qfits_header *source,
+    const image_t *signal, int is_primary)
+{
+    qfits_header *copy, *out;
+    char value[32], key[FITS_LINESZ + 1], val[FITS_LINESZ + 1];
+    char comment[FITS_LINESZ + 1], line[FITS_LINESZ + 1];
+    int i;
+    copy = qfits_header_copy(source);
+    if (copy == NULL) return NULL;
+    out = qfits_header_new();
+    if (out == NULL) { qfits_header_destroy(copy); return NULL; }
+    qfits_header_append(out, is_primary ? "SIMPLE" : "XTENSION",
+        is_primary ? "T" : "IMAGE", NULL, NULL);
+    sprintf(value, "%d", is_primary ? 8 : BPP_DEFAULT);
+    qfits_header_append(out, "BITPIX", value, NULL, NULL);
+    qfits_header_append(out, "NAXIS", is_primary ? "0" : "2", NULL, NULL);
+    if (is_primary) {
+        qfits_header_append(out, "EXTEND", "T", NULL, NULL);
+    } else {
+        sprintf(value, "%d", signal->lx);
+        qfits_header_append(out, "NAXIS1", value, NULL, NULL);
+        sprintf(value, "%d", signal->ly);
+        qfits_header_append(out, "NAXIS2", value, NULL, NULL);
+        qfits_header_append(out, "PCOUNT", "0", NULL, NULL);
+        qfits_header_append(out, "GCOUNT", "1", NULL, NULL);
+        /* Loaded/calculated pixels are physical ADU, not stored raw integers. */
+        qfits_header_append(out, "BSCALE", "1.0", "pixel=FITS*BSCALE+BZERO", NULL);
+        qfits_header_append(out, "BZERO", "0.0", "pixel=FITS*BSCALE+BZERO", NULL);
+    }
+    for (i = 0; i < copy->n; ++i) {
+        if (qfits_header_getitem(copy, i, key, val, comment, line) != 0) {
+            qfits_header_destroy(copy); qfits_header_destroy(out); return NULL;
+        }
+        if (!structural_key(key))
+            qfits_header_append(out, key, *val ? val : NULL,
+                *comment ? comment : NULL, *line ? line : NULL);
+    }
+    qfits_header_append(out, "END", NULL, NULL, NULL);
+    qfits_header_destroy(copy);
+    return out;
+}
+
 mef_status mef_bias_publish(const mef_config *config,
     const mef_bias_result *result, size_t configuration_detector,
     const char *final_path, mef_error **error)
@@ -201,27 +256,15 @@ mef_status mef_bias_publish(const mef_config *config,
     /* A raw primary image is written as one extension with an empty primary.
      * Existing MEF inputs preserve the old header policy byte for byte. */
     if (source_hdu == 0) {
-        qfits_header_mod(primary, "NAXIS", "0", NULL);
-        qfits_header_mod(primary, "BITPIX", "8", NULL);
-        qfits_header_del(primary, "NAXIS1"); qfits_header_del(primary, "NAXIS2");
-        qfits_header_del(primary, "BSCALE"); qfits_header_del(primary, "BZERO");
-        qfits_header_del(extension, "PCOUNT"); qfits_header_del(extension, "GCOUNT");
-        qfits_header_add_after(extension, "NAXIS2", "PCOUNT", "0", NULL, NULL);
-        qfits_header_add_after(extension, "PCOUNT", "GCOUNT", "1", NULL, NULL);
-        /* SIMPLE was removed by the legacy extension helper; reconstruct a
-         * structural first card before BITPIX using a default header merge. */
-        {
-            qfits_header *base, *merged;
-            base = qfits_header_default();
-            qfits_header_mod(base, "SIMPLE", "T", NULL);
-            qfits_header_add_after(base, "SIMPLE", "XTENSION", "IMAGE", NULL, NULL);
-            qfits_header_del(base, "SIMPLE");
-            merged = fits_header_merge(base, extension);
-            qfits_header_destroy(base); qfits_header_destroy(extension);
-            extension = merged;
-            if (extension == NULL) { status = MEF_ERR_MEMORY; goto done; }
+        qfits_header *new_primary, *new_extension;
+        new_primary = primary_image_header(primary, signal, 1);
+        new_extension = primary_image_header(extension, signal, 0);
+        if (new_primary == NULL || new_extension == NULL) {
+            qfits_header_destroy(new_primary); qfits_header_destroy(new_extension);
+            status = MEF_ERR_MEMORY; goto done;
         }
-        qfits_header_del(extension, "EXTEND");
+        qfits_header_destroy(primary); qfits_header_destroy(extension);
+        primary = new_primary; extension = new_extension;
     }
     n = strlen(final_path);
     if (n > (size_t)-1 - 32) { status = MEF_ERR_INPUT; goto done; }

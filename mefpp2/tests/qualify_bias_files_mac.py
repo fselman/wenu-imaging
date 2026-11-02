@@ -39,6 +39,7 @@ def main():
     parser.add_argument("--host", choices=("mac",), required=True)
     parser.add_argument("--revision", required=True)
     parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--bias-only", action="store_true", help="Rebuild affected candidate and run only native_bias_files")
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--sdk", type=Path)
@@ -96,6 +97,8 @@ def main():
                "tool_sha256": {name: {"path": str(path), "resolved_path": str(path.resolve(strict=True)),
                                       "sha256": sha(path)} for name, path in tools.items()},
                "installation_performed": False, "observational_inputs": "none opened",
+               "selection": "native_bias_files only" if args.bias_only else "five focused contracts",
+               "inherited_four_passes": "native f20a9ab7a0758775d020480be1e1daa547716e3b actual Mac run; not rerun" if args.bias_only else None,
                "limits": ["synthetic operation-template/file-bias/layout/bias/native-path contracts only", "no observational/scientific/performance acceptance",
                           "no sanitizer or leak-tool claim on targets"]}
     print("RETAINED RUN:", run, flush=True)
@@ -156,16 +159,19 @@ def main():
             if args.host == "mac":
                 configure += ["-DCMAKE_OSX_ARCHITECTURES=x86_64", "-DCMAKE_OSX_SYSROOT=" + str(args.sdk)]
             command("configure-c" + standard, configure)
+            targets = ["mefpp_m5", "mefpp"] if args.bias_only else [
+                "operation_template_probe", "layout_probe", "bias_service_probe", "mefpp_m5", "mefpp"]
             command("build-c" + standard, [tools["cmake"], "--build", build, "--parallel", "2",
-                                           "--target", "operation_template_probe", "layout_probe", "bias_service_probe", "mefpp_m5", "mefpp"])
+                                           "--target", *targets])
             # Inventory five focused native contracts; all inputs are synthetic fixtures.
-            selection = "^(native_operation_template|native_bias_files|native_layout|native_bias_service|native_explicit_paths)$"
+            selection = "^native_bias_files$" if args.bias_only else "^(native_operation_template|native_bias_files|native_layout|native_bias_service|native_explicit_paths)$"
+            expected_tests = {"native_bias_files"} if args.bias_only else TESTS
             inventory = command("inventory-c" + standard,
                                 [tools["ctest"], "--test-dir", build, "--show-only=json-v1", "-R", selection])
-            require({t["name"] for t in json.loads(inventory.read_text())["tests"]} == TESTS,
+            require({t["name"] for t in json.loads(inventory.read_text())["tests"]} == expected_tests,
                     "Unexpected test inventory")
             log = command("tests-c" + standard, [tools["ctest"], "--test-dir", build, "-R", selection,
-                                                  "--output-on-failure", "--no-tests=error", "-j", "1"])
+                                                  "--output-on-failure", "--stop-on-failure", "--no-tests=error", "-j", "1"])
             print(log.read_text(), flush=True)
         finished = True
     finally:

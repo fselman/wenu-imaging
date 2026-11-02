@@ -1,5 +1,34 @@
 # M5 first bias operation template — 2 November 2026
 
+Latest actual-target update (#211/#212): the #210 corrected OCAM PAF/TOML
+comparisons passed, then primary-image processing exited SIGSEGV. Retry evidence:
+`/Users/fselman/Software/build/wenu-imaging/mac-m5-bias-header-n8UYaw1x`,
+fixture `m5-bias-sz5ah0hj`. Preservation of checkout, installations, original
+source/evidence and binaries passed. The actual crash stack is
+`qfits_header_getitem -> fits_header_merge -> mef_bias_publish` at NULL.
+Bundled `qfits_header_del` unlinks cards without decrementing `hdr->n`; the new
+primary conversion subsequently iterated the stale count during merge.
+
+The bounded caller correction rebuilds primary/extension structural prefixes
+with append operations and copies only nonstructural metadata from a fresh
+forward-traversal `qfits_header_copy`, whose count is reconstructed. It does not
+index the deleted source or merge it as an update. Empty primary and image
+extension structures are explicit, with processed pixels stored at scale 1/0.
+Only `mef_bias_files.c` changes in native code. Existing numerical services,
+extension-input publication, legacy header builders and qfits source remain
+unchanged. Underlying qfits issue #212 stays open; #211 is target-pending.
+
+The primary control now covers float and scaled unsigned-16 synthetic inputs,
+strict independent FITS verification, mandatory card order, exact known-answer
+pixels, metadata and input immutability. Rebuild the affected opt-in candidate
+in one fresh Mac C17 export and run only `native_bias_files` using
+`qualify_bias_files_mac.py --bias-only`. Its OCAM/WFI extension PAF/TOML checks
+remain relevant regressions around the changed publisher. Do not rerun the
+four already passed template/layout/bias-service/explicit-path contracts or
+duplicate C90/Chapman matrices. Keep both earlier failed runs. Source inspection
+and Python syntax review are complete; corrected native execution is pending.
+QC content/handling and JSON versus ASDF remain deferred.
+
 Status: source candidate, actual Mac C17 verification pending. Refs #203.
 Actual first-run update (#210): Intel Mac C17 configure/build succeeded at
 `f20a9ab7a0758775d020480be1e1daa547716e3b`. Operation-template, layout,

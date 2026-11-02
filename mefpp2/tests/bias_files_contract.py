@@ -143,20 +143,36 @@ def main():
             with fits.open(paf_run / 'bias.fits', memmap=False) as first, fits.open(toml_run / 'bias.fits', memmap=False) as second:
                 np.testing.assert_array_equal(first[1].data, second[1].data)
                 assert all(headers(a) == headers(b) for a, b in zip(first, second))
-            # Primary-image storage must reach the same template and arithmetic.
-            primary_members = []
-            for i, path in enumerate(members):
-                dest = group / f'primary-{i}.fits'
-                with fits.open(path, memmap=False) as hdus:
-                    fits.PrimaryHDU(data=hdus[2].data, header=hdus[0].header).writeto(dest)
-                primary_members.append(dest)
-            primary_list = group / 'primary.list'
-            primary_list.write_text('\n'.join(map(str, primary_members)) + '\n')
-            primary_run = group / 'primary'
-            run(instrument + '-primary', [adapter, *options(primary_run, '--config', toml, primary_list, 0)])
-            with fits.open(primary_run / 'bias.fits', memmap=False) as hdus, fits.open(toml_run / 'bias.fits', memmap=False) as expected:
-                hdus.verify('exception'); assert len(hdus) == 2 and hdus[0].data is None
-                np.testing.assert_array_equal(hdus[1].data, expected[1].data)
+            # #211 primary-image publication: exercise both physical floating
+            # pixels and unsigned-16 FITS scaling, with the same known answer.
+            for storage in ('float', 'unsigned16'):
+                primary_members = []
+                for i, path in enumerate(members):
+                    dest = group / f'primary-{storage}-{i}.fits'
+                    with fits.open(path, memmap=False) as hdus:
+                        data = hdus[2].data
+                        if storage == 'unsigned16':
+                            assert np.all((data >= 0) & (data <= 65535))
+                            np.testing.assert_array_equal(data, data.astype(np.uint16))
+                            data = data.astype(np.uint16)
+                        fits.PrimaryHDU(data=data, header=hdus[0].header).writeto(dest)
+                    primary_members.append(dest)
+                primary_list = group / f'primary-{storage}.list'
+                primary_list.write_text('\n'.join(map(str, primary_members)) + '\n')
+                locked = {str(p): digest(p) for p in [*primary_members, primary_list]}
+                primary_run = group / f'primary-{storage}'
+                run(instrument + '-primary-' + storage, [adapter, *options(primary_run, '--config', toml, primary_list, 0)])
+                with fits.open(primary_run / 'bias.fits', memmap=False) as hdus, fits.open(toml_run / 'bias.fits', memmap=False) as expected:
+                    hdus.verify('exception'); assert len(hdus) == 2 and hdus[0].data is None
+                    assert list(hdus[0].header)[:4] == ['SIMPLE', 'BITPIX', 'NAXIS', 'EXTEND']
+                    assert list(hdus[1].header)[:7] == ['XTENSION', 'BITPIX', 'NAXIS', 'NAXIS1', 'NAXIS2', 'PCOUNT', 'GCOUNT']
+                    assert hdus[0].header['NAXIS'] == 0
+                    assert 'BSCALE' not in hdus[0].header and 'BZERO' not in hdus[0].header
+                    assert hdus[1].header['BSCALE'] == 1 and hdus[1].header['BZERO'] == 0
+                    assert hdus[0].header['ORIGFILE'].startswith('CMDP.')
+                    assert hdus[0].header['OBJECT'] == expected[0].header['OBJECT']
+                    np.testing.assert_array_equal(hdus[1].data, expected[1].data)
+                assert locked == {str(p): digest(p) for p in [*primary_members, primary_list]}
             # Exclusive publication: an existing destination is preserved.
             negative = group / 'existing-output'
             argv = options(negative, '--config', toml, listing, 2)
