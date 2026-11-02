@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import statistics
 import tempfile
+from urllib.parse import quote
 
 SCHEMA_PATH = Path(__file__).resolve().parents[1] / 'config/qc-schema-1.0.0.json'
 SCHEMA_VERSION = '1.0.0'
@@ -56,7 +57,10 @@ def qc_filename(filename):
             'Require a basename, with full source location stored separately')
     require(filename.lower().endswith('.fits') and len(filename) > 5,
             'Current sidecar naming supports .fits only; compression policy is pending')
-    return filename[:-5] + '.asdf'
+    # References are local filesystem names, not URLs. Escape reserved characters
+    # (including literal percent) once so timestamped FITS basenames stay unique.
+    # Tilde escapes avoid ASDF treating percent escapes as URI decoding.
+    return quote(filename[:-5], safe='-._').replace('~', '%7E').replace('%', '~') + '.asdf'
 
 
 def _local_reference(value):
