@@ -1,9 +1,13 @@
 # Private libasdf / ASDF 1.6 qualification — 2 November 2026
 
-Status: ten Mac shared QC controls passed. External libasdf compiles/links/starts.
-Actual Mac diagnostic isolates nested sibling insertion failure; direct mapping
-construction/attachment/readback succeeds. Consumer workaround prepared; full
-three-control interchange remains pending. Refs #213/#214/#215/#216/#217/#219.
+Status: Mac bounded qualification PASSED at
+6395745dd3e55f90c63ae90f28238eae436c6468. All three C17/Python interchange
+controls passed; ten unchanged shared QC controls reused. Retained prefix,
+checkout, installed files and exported source preserved. External libasdf
+selected; upstream nested-insertion limitation #219 remains open. Chapman
+compatibility and production integration are not qualified. No merge/activation.
+Earlier pending statements below are historical at their stated source.
+Refs #213/#214/#215/#216/#217/#219.
 Fernando authorized trying the C library and upgrading the file/core standard
 to 1.6.0. This supersedes the earlier no-native-dependency-trial boundary only
 for this private qualification. Existing installations and evidence remain.
@@ -232,3 +236,49 @@ Agent GCC C17 -Wall/-Wextra/-Werror syntax-only check passes against the pinned
 feature macros. This checks declarations/usage, not compilation/linking of the
 library or Mac runtime behavior. Next retry uses the retained installed prefix
 and original passed ten QC controls; no package install or repeated diagnostic.
+
+## Final Mac qualification receipt — 2 November 2026
+
+Owner returned and reviewed the retained JSON reports and linked-library list.
+Qualified source: `6395745dd3e55f90c63ae90f28238eae436c6468`.
+Run: `/Users/fselman/Software/build/wenu-imaging/mac-asdf16-mapping-DmvnvXZJ`.
+
+| Control | Actual result |
+|---|---|
+| C to Python | Metadata, null, float64 shape and every array value exact |
+| Python to C | Uncompressed and zlib float64 shape and every value exact |
+| Shared QC through C | Schema/content digest and frozen links preserved |
+| File/core standard | 1.6.0 |
+| Python packages | asdf 6.0.0; asdf-standard 1.5.0; NumPy 1.26.4 |
+| C library | external libasdf 0.3.0 |
+| Retry dependency provisioning | false |
+| Network attempts | none recorded |
+| Retained external prefix | preserved |
+| Checkout / installed files / exported source | all preserved |
+
+The executable links `@rpath/libasdf.0.dylib`, `@rpath/libfyaml.0.dylib` and
+system libSystem. The libasdf dylib compatibility/current versions reported by
+otool are 2.0.0/2.1.0; these are Mach-O library version fields, not the package
+version. The selected package remains libasdf 0.3.0 under
+`mac-asdf16-streams-o8KPDcUm/libasdf-environment`.
+
+Retained prefix manifest SHA256:
+`7b35af3f85d0764a86650ad651b4068469628c6891a15393770514bb90faa251`.
+
+Reused QC source/evidence: original revision
+`0840f03187e56ac8113cc76d75edbf7aeaf5edfe`, run `mac-asdf16-qTH3ZFNB`.
+Report SHA256:
+`aaba6d900c90222582495be839f1268b9fcfdb15c63cbcec8bd59fe112bf9228`.
+Contract SHA256:
+`68ba89ad2e7ef40cc9ea3fd55e36229336b9c00cd2ab0fcccd5d52051ade50ae`.
+Ten passed contracts were reused after byte-identical source and prior
+preservation checks; no new full QC replay occurred.
+
+The bounded Mac dependency, logging, compiler-path and consumer workaround
+sequence is now qualified. Earlier failed runs and diagnostic remain retained.
+No further unchanged Mac test, native bias replay, C90 matrix or Chapman run is
+needed for this receipt. #219 remains open because the external library's nested
+insertion behavior was avoided, not repaired. This does not qualify arbitrary
+ASDF features, numerical QC estimators, observational processing, production
+installation, or CentOS 7 compatibility. Native QC definitions and handoff remain
+separate pending review. Owner acceptance/merge is separate; nothing is activated.

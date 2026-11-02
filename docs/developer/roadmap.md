@@ -1,5 +1,20 @@
 # wenu-imaging roadmap
 
+2 November external ASDF Mac qualification COMPLETE at
+6395745dd3e55f90c63ae90f28238eae436c6468. Retained
+mac-asdf16-mapping-DmvnvXZJ reports all three C17/Python interchange controls
+passed: metadata/null/float64, Python uncompressed/zlib arrays, shared-QC
+content/frozen links. Standard1.6.0; external libasdf0.3.0; Python asdf6.0.0,
+asdf-standard1.5.0, NumPy1.26.4. Ten earlier QC contracts reused after exact
+source/evidence checks. No network attempts or dependency provisioning in retry.
+Retained prefix, checkout, installed files and exported source preserved.
+This is bounded synthetic interchange, not general ASDF conformance, numerical
+QC/scientific validation or production integration. Keep upstream nested-path
+limitation #219 open; direct mapping workaround is qualified in this consumer.
+External library remains selected; bundling deferred. Do not replay unchanged
+Mac tests or start Chapman/C90/bias work automatically. Review native QC
+definitions/handoff and owner acceptance next; no merge/cleanup or activation.
+
 2 November #219 diagnostic receipt: actual Intel Mac mac-asdf-nested-Kll2GMfs
 isolates libasdf 0.3.0 nested-sibling insertion failure (code5, missing readback).
 Flat writes and direct mapping construction/attachment/get all return0 and
