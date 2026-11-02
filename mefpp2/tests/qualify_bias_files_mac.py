@@ -131,14 +131,14 @@ def main():
                "limits": ["synthetic operation-template/file-bias/layout/bias/native-path contracts only", "no observational/scientific/performance acceptance",
                           "no sanitizer or leak-tool claim on targets"]}
     print("RETAINED RUN:", run, flush=True)
-    env = dict(os.environ, TMPDIR=str(run), PYTHONDONTWRITEBYTECODE="1", OPENBLAS_NUM_THREADS="1",
+    env = dict(os.environ, TMPDIR=str(run), PYTHONDONTWRITEBYTECODE="1", PYTHONNOUSERSITE="1", OPENBLAS_NUM_THREADS="1",
                OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", NUMEXPR_NUM_THREADS="1",
                MEFPP_TEST_REVISION=args.revision)
     # Do not inherit compiler/linker selection or preload overrides.
     inherited = ("CC", "CXX", "CFLAGS", "CPPFLAGS", "LDFLAGS", "SDKROOT", "MACOSX_DEPLOYMENT_TARGET",
                  "CPATH", "C_INCLUDE_PATH", "LIBRARY_PATH", "LD_LIBRARY_PATH", "DYLD_LIBRARY_PATH",
                  "GCC_EXEC_PREFIX", "COMPILER_PATH", "CMAKE_GENERATOR", "CMAKE_TOOLCHAIN_FILE",
-                 "LD_PRELOAD", "DYLD_INSERT_LIBRARIES")
+                 "LD_PRELOAD", "DYLD_INSERT_LIBRARIES", "PYTHONPATH", "PYTHONHOME", "PYTHONSTARTUP")
     receipt["ignored_build_variables"] = {name: env[name] for name in inherited if name in env}
     for name in inherited:
         env.pop(name, None)
