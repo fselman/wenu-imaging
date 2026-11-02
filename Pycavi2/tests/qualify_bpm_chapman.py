@@ -32,7 +32,7 @@ TOOLS = dict(compiler=Path('/opt/rh/devtoolset-10/root/usr/bin/gcc'),
 TESTS = {'native_measurement_stats', 'native_bpm_response', 'native_bpm_service',
          'native_bpm_files', 'native_bpm_publication', 'native_bpm_completion',
          'native_bias_qc_asdf', 'native_bias_files', 'native_bias_service',
-         'native_eclipse_allocation', 'native_layout'}
+         'native_eclipse_allocation', 'native_layout', 'shared_qc_asdf'}
 TARGETS = ['measurement_stats_probe', 'bpm_response_probe', 'bpm_service_probe',
            'bpm_files_probe', 'bpm_publication_probe', 'mefpp_m5', 'mefpp',
            'bias_service_probe', 'eclipse_allocation_probe', 'layout_probe']
@@ -85,6 +85,14 @@ def prior_receipt(report):
             report.get('interchange', {}).get('status') == 'passed', 'Retained Chapman receipt mismatch')
 
 
+def qc_source_evidence(previous, current, exported):
+    # Historical qualification proves the historical source only. New QC code
+    # is tested explicitly; dependency reuse does not imply source reuse.
+    require(previous == exported, 'Retained shared QC source differs from its original revision')
+    return dict(previous_sha256=hashlib.sha256(previous).hexdigest(),
+                current_sha256=hashlib.sha256(current).hexdigest(), changed=previous != current)
+
+
 def main():
     validate_host()
     p = argparse.ArgumentParser(description=__doc__)
@@ -99,7 +107,7 @@ def main():
             'Runner differs from pinned source')
     # No native/build/QC component changes since the returned actual Mac gate.
     # Runner/docs can advance without asking for an unchanged Mac test replay.
-    for name in ('CMakeLists.txt', 'mefpp2', 'third_party', 'Pycavi2/pycavi'):
+    for name in ('CMakeLists.txt', 'mefpp2', 'third_party', 'Pycavi2/pycavi', 'Pycavi2/tests/test_shared_qc.py'):
         require(git('rev-parse', a.revision+':'+name) == git('rev-parse', MAC+':'+name),
                 'Mac-qualified native/build/QC tree changed: '+name)
     helper = REPO/'Pycavi2/tests/qualify_inspection_stages.py'
@@ -129,9 +137,10 @@ def main():
             external.is_dir() and not external.is_symlink(), 'Recorded external prefix missing')
     external_before = prefix_identity(external)
     proofs = {str(old_report_path): sha(old_report_path)}
+    qc_sources = {}
     for name in ('Pycavi2/pycavi/pycavi/pycavi_qc.py', 'Pycavi2/pycavi/config/qc-schema-1.0.0.json', 'Pycavi2/tests/test_shared_qc.py'):
-        require(git('show', PREVIOUS+':'+name) == git('show', a.revision+':'+name) == (OLD/'source'/name).read_bytes(),
-                'Shared QC changed; do not reuse its earlier receipt: '+name)
+        qc_sources[name] = qc_source_evidence(git('show', PREVIOUS+':'+name),
+            git('show', a.revision+':'+name), (OLD/'source'/name).read_bytes())
     archive = git('archive', '--format=tar', a.revision)
     source = run/'source'
     source.mkdir()
@@ -153,10 +162,11 @@ def main():
             ignored[key] = env.pop(key)
     report = dict(status='failed', revision=a.revision, mac_qualified_revision=MAC,
         checkout_revision=CHECKOUT, actual_glibc='2.17', commands=[],
-        scope='11 changed-code synthetic C17/native-ASDF contracts; no observations',
+        scope='12 changed-code synthetic C17/native-ASDF contracts; no observations',
         installation_performed=False, dependency_provisioning=False, production_activation=False,
         source_archive_sha256=hashlib.sha256(archive).hexdigest(), private_python=str(PRIVATE/'bin/python'),
         reused_receipt=dict(run=str(OLD), revision=PREVIOUS, report_sha256=proofs[str(old_report_path)]),
+        shared_qc_sources=qc_sources, shared_qc_retested=True,
         ignored_build_variables=ignored, tools={n:str(path) for n,path in TOOLS.items()})
     def command(label, argv, capture=False, timeout=1800):
         return helpers['run_logged'](label, argv, work=run, env=env,
@@ -180,9 +190,15 @@ def main():
         inventory = json.loads(command('inventory-c17',[TOOLS['ctest'],'--test-dir',build,'--show-only=json-v1','-R',selection], capture=True))
         test_inventory(inventory)
         report['tests'] = sorted(TESTS)
+        qc_work = build/'mefpp2/test-work'
+        qc_work.mkdir(parents=True, exist_ok=True)
         command('tests-c17',[TOOLS['ctest'],'--test-dir',build,'-R',selection,'--output-on-failure',
             '--stop-on-failure','--no-tests=error','-j','1'])
         print((run/'tests-c17.log').read_text(), flush=True)
+        current_qc = json.loads((qc_work/'qc-contract-results.json').read_text())
+        require(current_qc.get('successful') and current_qc.get('tests') == 10 and
+                current_qc.get('network_attempts') == [], 'Current shared QC gate incomplete')
+        report['shared_qc'] = current_qc
         report['status'] = 'passed'
     finally:
         checks = dict(checkout=before == guard['checkout'](REPO),

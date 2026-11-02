@@ -19,10 +19,20 @@ class Guards(unittest.TestCase):
     def test_exact_inventory(self):
         good={'tests':[{'name':n} for n in runner.TESTS]}
         runner.test_inventory(good)
-        for changed in ({'tests':good['tests'][:-1]}, {'tests':good['tests']+[{'name':'shared_qc_asdf'}]},
+        for changed in ({'tests':good['tests'][:-1]}, {'tests':good['tests']+[{'name':'native_explicit_paths'}]},
                         {'tests':good['tests']+[good['tests'][0]]}):
             with self.assertRaises(RuntimeError):
                 runner.test_inventory(changed)
+
+    def test_changed_qc_requires_current_test_not_historical_identity(self):
+        same=runner.qc_source_evidence(b'original',b'original',b'original')
+        changed=runner.qc_source_evidence(b'original',b'current',b'original')
+        self.assertFalse(same['changed'])
+        self.assertTrue(changed['changed'])
+        self.assertNotEqual(changed['previous_sha256'],changed['current_sha256'])
+        self.assertIn('shared_qc_asdf',runner.TESTS)
+        with self.assertRaisesRegex(RuntimeError,'Retained shared QC source'):
+            runner.qc_source_evidence(b'original',b'current',b'tampered')
 
     def test_reuse_needs_passed_protected_receipt(self):
         good=dict(status='passed',revision=runner.PREVIOUS,actual_glibc='2.17',

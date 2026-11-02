@@ -1,5 +1,25 @@
 # wenu-imaging
 
+## Chapman BPM preflight stopped on changed QC; corrected gate - 2 November 2026
+
+Owner returned b6b5fea early stop at Shared QC changed in
+/home1/fselman/Software/build/wenu-imaging/chapman-bpm-complete-h64m4l9x.
+No export/build/tests/install ran; no formal final preservation receipt exists.
+Retain the failed attempt. Review against actual prior4417d7d shows schema
+unchanged, but common QC gained owned extensions/bias-MAD metrics and tests gained
+extension lifecycle checks. Those sources are already Mac-qualified022cf368.
+The earlier runner incorrectly treated old QC acceptance as reusable unchanged.
+
+Corrected runner verifies old export against its own Git source, records old/new
+QC digests, and runs current shared_qc_asdf (ten checks) alongside the eleven
+changed-code native/BPM entries: expected12/12. Dependency environment/external
+library evidence stays reused; no Conda/install/C interchange replay. Four guard
+controls plus ten current agent QC checks pass; actual Chapman retry pending.
+Native/build/QC sources remain identical to Mac022cf368, so no new Mac replay.
+Same seven preservation controls and protected07d2733 checkout; fresh run only.
+See [corrected Chapman gate](docs/developer/bpm-chapman-qualification-2026-11-02.md).
+
+
 ## Actual Mac BPM completion passed; Chapman changed-code gate next - 2 November 2026
 
 Fernando returned actual 022cf3683fe47d4de6a7acac1e3799cb49201d40 Mac success:

@@ -34,8 +34,9 @@ Reuse the passed Chapman report at
 `/home1/fselman/Software/build/wenu-imaging/chapman-m5-asdf16-resume-U4vTGDyf/chapman-qualification.json`.
 The runner validates its exact prior revision/platform, passed status, six
 preservation flags, ten successful shared-QC controls and interchange result.
-It verifies unchanged shared QC writer/schema/test bytes against the old export
-and Git, and checks current retained ASDF6.0.0/asdf-standard1.5.0/NumPy1.26.4/
+It verifies historical QC bytes against their old export and Git, records old/current
+source digests, tests the current shared QC module, and checks retained
+ASDF6.0.0/asdf-standard1.5.0/NumPy1.26.4/
 Astropy6.1.7 identities. No Conda solve/install, interpreter activation, dependency
 upgrade, external C interchange replay or private normal-runtime installation.
 The new BPM recipe does not link the C ASDF library. The external prefix remains
@@ -45,7 +46,7 @@ preserved and its earlier bounded qualification remains retained.
 
 Purpose: exercise the code added since the previous Chapman bias/ASDF receipt
 under real CentOS7/glibc2.17/GCC10 limits. Inputs are generated tiny images only.
-Actions: fresh source export and optimized C17 build (two jobs), eleven selected
+Actions: fresh source export and optimized C17 build (two jobs), twelve selected
 contracts serially, using the retained ASDF interpreter for sidecars. Niceness
 >=10 and one OpenMP/BLAS thread. Pass requires exact test inventory, all tests
 successful and every preservation check true.
@@ -57,9 +58,11 @@ successful and every preservation check true.
 | native_layout | Active/raw mask loading and explicit selected-detector layout |
 | native_bpm_response, native_bpm_service, native_bpm_files | Reused Eclipse response fit, byte reasons, service ownership and bound admission |
 | native_bpm_publication, native_bpm_completion | Checked integer FITS, prior/coverage preservation, common ASDF and complete-command boundaries |
+| shared_qc_asdf | Current ten shared-QC checks, including added owned-extension lifecycle and bias/MAD quantities |
 
-The unchanged ten shared-QC tests, standalone C/Python interchange and previous
-normal installation gate are not repeated. Neither C90 nor a second Chapman host
+The current ten shared-QC checks run as one CTest entry because their module/test
+source changed since the previous Chapman receipt. Standalone C/Python interchange
+and the previous normal installation gate are not repeated. Neither C90 nor a second Chapman host
 is included. User-confirmed shared tools are selected directly, not rediscovered
 or requalified.
 
@@ -86,3 +89,27 @@ Full gain/RON/linearity and the shared signed shutter model remain pending.
 The formula PDF/LaTeX and initial CCD-style CMOS policy are unchanged. No real
 observational/scientific acceptance, installation, activation or merge follows
 from a synthetic pass alone.
+
+## First BPM attempt and corrected QC source boundary
+
+Owner-returned b6b5fea26b3e271e8bb25465732f4ab9d8f9aa2e attempt:
+`/home1/fselman/Software/build/wenu-imaging/chapman-bpm-complete-h64m4l9x`.
+The prior-source equality guard stopped before source export, build or tests.
+No installation was attempted. The early stop did not produce a formal final
+preservation report; retain this directory and traceback.
+
+Review against the actual previous4417d7d revision shows unchanged schema but
+changed pycavi_qc.py: owned recipe extensions, bias-stage metric names and MAD RON
+pair validation. test_shared_qc.py gained extension ownership/sealing checks.
+These are already in the Mac-qualified source; the runner incorrectly attempted
+to reuse older Chapman source acceptance. The correction preserves dependency
+reuse while recording source differences and selecting shared_qc_asdf explicitly.
+The old export must still match its own historical source; changed current source
+is not rejected or falsely called previously qualified.
+
+Corrected preparation passed four stdlib guard controls in0.001s and all ten
+current shared-QC checks on the agent in0.449s, with no network attempts. These
+are not Chapman acceptance. Native/build/QC sources remain identical to the
+Mac-qualified revision; only runner, guard tests and documentation change. Retry
+once in a fresh retained directory; expected12/12 CTest entries and all seven
+preservation checks. No Conda/dependency installation or C-library replay.
