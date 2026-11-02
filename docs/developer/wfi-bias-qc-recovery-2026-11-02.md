@@ -25,3 +25,20 @@ never invokes the native recipe. Earlier failed receipts remain unchanged;
 `qc-recovery.json` is a separate completion record. Native NULL-free diagnostic
 messages are retained for follow-up; they did not prevent native exit zero.
 Owner inspection of image HDU1 and QC remains required before other detectors.
+
+## Mac recovery preflight corrections
+
+Actual Mac common QC controls passed 11/11 in 1.666 seconds at
+`wfi-bias-qc-recovery-8qns8FIH`. Its first recovery invocation supplied a nested
+QC directory; the fresh-run guard requires a directory directly under the build
+root. A corrected invocation retained `wfi-bias-qc-only-Pc8fZ9P5`, then stopped
+before writing QC because installed-package discovery ran inside the private
+ASDF Python. These are recovery orchestration errors, not native failures.
+
+The corrected helper invokes installed-file discovery and identity checks with
+the selected `/Users/fselman/anaconda3/envs/wenu-imaging/bin/python` in a read-only
+subprocess. ASDF writing remains under the qualified private QC Python. Both
+snapshots use the same owning interpreter and guard, before and after recovery.
+Preparation checked interpreter identity and propagation of guard failures.
+Neither failed preflight wrote QC or changed the native product. Reuse passed
+Mac naming tests; no native replay, installation or dependency change needed.

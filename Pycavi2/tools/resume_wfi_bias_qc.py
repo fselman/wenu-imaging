@@ -26,6 +26,15 @@ def digest(path):
     return h.hexdigest()
 
 
+def installed_snapshot(python, guard_path):
+    """Run installed-package discovery under its owning Python, never QC Python."""
+    code = ("import json, runpy, sys; "
+            "g = runpy.run_path(sys.argv[1]); "
+            "print(json.dumps([g['identity'](p) for p in g['protected_paths']()]))")
+    return json.loads(subprocess.check_output(
+        [str(python), '-B', '-c', code, str(guard_path)], text=True))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run', type=Path, required=True)
@@ -46,8 +55,9 @@ def main():
             == '47123eedaaa31b4464238ffaaf1b690f7d2cde40' and
             not subprocess.check_output(['/usr/bin/git', '-C', str(repo), 'status', '--porcelain']),
             'Protected clean checkout changed')
-    protected = guard['protected_paths']()
-    installed = [guard['identity'](p) for p in protected]
+    installed_python = Path('/Users/fselman/anaconda3/envs/wenu-imaging/bin/python')
+    guard_path = old/'source/Pycavi2/tests/qualify_inspection_stages.py'
+    installed = installed_snapshot(installed_python, guard_path)
     environment = prefix_identity(python.parent.parent)
     receipt = json.loads((retained/'execution.json').read_text())
     previous = json.loads((retained/'inspection-run.json').read_text())
@@ -100,7 +110,7 @@ def main():
         raise
     finally:
         checks = dict(checkout=checkout == guard['checkout'](repo),
-            installed_files=installed == [guard['identity'](p) for p in protected],
+            installed_files=installed == installed_snapshot(installed_python, guard_path),
             retained_qc_environment=environment == prefix_identity(python.parent.parent),
             locked_inputs_and_artifacts=all(digest(p) == value for p, value in files.items()))
         report['preservation'] = checks
