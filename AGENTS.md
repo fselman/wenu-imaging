@@ -1,5 +1,23 @@
 # wenu-imaging
 
+2 November owner QC decisions and reuse policy: RON must use two RAW bias
+frames, with NO overscan correction before subtraction, to avoid correction-
+induced correlations. Keep ADU units and explicit origins/stage/region. Approved
+QC stages: active area before correction, after overscan/trimming, and master.
+Approved estimators: mean+median, sample stdev (N-1), 1.4826*MAD, valid/excluded
+counts and no implicit clipping. High-offset master pixels use configurable
+k=5 initially; save threshold/count/locations without automatic masking.
+Before any new numerical implementation, inspect existing Eclipse routines;
+reuse them, and announce any genuinely needed addition beforehand. New
+general-purpose routines belong in Eclipse and follow its existing API,
+allocation/error/docs/test conventions and maths-module scaffolding. Never
+duplicate a suitable existing routine. Audit at07d2733 reviewed49 math/iproc
+sources: raw difference/sample stdev/medians already exist; sampled-window RON
+also exists but differs from full-region stdev. image_median_stat computes MEAN
+absolute deviation, not MAD. Only a general checked MAD helper is proposed,
+not implemented; see the bias-QC Eclipse reuse review. No native/ASDF source or
+scientific processing changes accompany this decision/audit record.
+
 2 November requested Chapman gate COMPLETE at
 4417d7d159d08afcff2fbb8518fc90c3f4c84e29. Owner-reviewed
 chapman-m5-asdf16-resume-U4vTGDyf reports all three ASDF1.6.0 C/Python

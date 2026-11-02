@@ -1,8 +1,10 @@
 # Shared QC records and recipe creation path — 2 November 2026
 
-Status: Mac shared QC metadata contracts passed 10/10 in 1.607 s at 0840f031.
-Native libasdf provisioning/interchange and Chapman remain pending. #213/#214/#215.
-The native bias calculation/publication qualified at 2803786 is unchanged.
+Status: bounded shared QC/ASDF1.6 metadata/interchange gates passed on Mac and
+Chapman, with native bias/private-runtime Chapman gate passed at4417d7d.
+See the final Chapman receipt and libasdf qualification notes. This does not
+implement the newly reviewed numerical QC definitions. The qualified native
+bias arithmetic remains unchanged.
 No new numerical estimator, normal activation, native bias test replay, merge
 or cleanup accompanies this candidate. The owner-authorized private libasdf
 trial is separate from production installation; see the qualification note.
@@ -161,10 +163,22 @@ have its real region/method/count and origins; the writer supplies no estimator.
 
 ## Explicit remaining boundaries
 
-The agreed quantity names/ADU policy do not yet specify mean versus median
-for level, the precise RMS estimator, regions and correction stage, hot-pixel
-threshold/persistence, or how to select the RON pair. Those definitions remain
-for owner discussion. This candidate implements the common creation/persistence
+The owner has now approved active-area measurement before overscan correction,
+after overscan correction/trimming, and in the master; mean and median levels,
+sample standard deviation (N-1), scaled median absolute deviation (1.4826*MAD),
+valid/excluded counts and no implicit clipping; and master high-offset pixel
+threshold median+k*scaled-MAD with configurable k=5 initially, saving threshold,
+count and locations without automatic masking. RON uses a pair of RAW bias
+frames WITHOUT overscan correction before subtraction, superseding the earlier
+corrected-pair proposal. No master subtraction or gain conversion is implied.
+
+Exact regions, mask/invalid/degenerate-sample policy, pair selection and numerical
+handoff still need their bounded interface review. Existing scan diagnostics
+describe the row-correction profile, not raw overscan-pixel scatter. Preserve their
+actual estimator metadata. Review existing Eclipse routines first; announce new
+numerical additions before implementation, place genuinely needed generic helpers
+inside Eclipse and reuse its maths scaffolding. See
+[the source-grounded reuse review](bias-qc-eclipse-reuse-review-2026-11-02.md). This candidate implements the common creation/persistence
 path, not those unreviewed calculations. Test values are explicitly supplied
 metadata fixtures, not new scientific estimators or measurements of real frames.
 
