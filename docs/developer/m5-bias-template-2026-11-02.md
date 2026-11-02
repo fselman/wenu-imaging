@@ -1,6 +1,28 @@
 # M5 first bias operation template — 2 November 2026
 
 Status: source candidate, actual Mac C17 verification pending. Refs #203.
+Actual first-run update (#210): Intel Mac C17 configure/build succeeded at
+`f20a9ab7a0758775d020480be1e1daa547716e3b`. Operation-template, layout,
+existing bias-service and explicit-path checks passed. The new file-bias check
+passed selected-detector pixels and known answers, then failed because it
+compared the two-detector mosaic's detector-A primary RDNOISE (4.1) with the
+detector-B-only product (4.0). Owner read-only inspection confirms identical
+selected-detector extension headers and no other primary difference excluding
+generated ORIGFILE. This is a test expectation error; native source is unchanged.
+
+The corrected test projects only configured RON/gain cards from the legacy
+selected-detector extension into the expected primary, independently verifies
+both detectors' values against native configuration bits, and retains all
+other exact card comparisons. Projection is recorded in evidence, not silently
+ignored. Targeted resume uses the original C17 binaries with verified hashes,
+fresh outputs and the corrected test only; the failed export/evidence and four
+passed checks are preserved. Corrected target execution remains pending.
+
+Owner direction: finish debugging this first run, then return to the QC
+measurements/handling and JSON-versus-ASDF discussion. The current diagnostic
+record is provisional, not an adopted QC/persistence contract. Software tests
+do not accept its design. No merge or installation is implied.
+
 Base: `47123eedaaa31b4464238ffaaf1b690f7d2cde40`.
 No native compilation, functional test, installation, observation processing,
 merge or cleanup has been performed while preparing this candidate.
@@ -130,7 +152,7 @@ all logs/evidence. It neither installs nor activates a candidate.
 | Contract | Actual methods/tools and pass criterion |
 |---|---|
 | `native_operation_template` | C callbacks verify ordered stages, stop at each injected stage failure, exactly one cleanup and optional in-memory completion |
-| `native_bias_files` | Synthetic OCAM/WFI inputs through old `mefpp`, then `mefpp_m5` PAF, then TOML; exact selected-detector pixels, native configuration bits, raw headers except generated ORIGFILE, scan QC and rejected middle-frame indices; primary input, no-clobber output and missing-HDU controls |
+| `native_bias_files` | Synthetic OCAM/WFI inputs through old `mefpp`, then `mefpp_m5` PAF, then TOML; exact selected-detector pixels, native configuration bits, extension headers and primary headers with explicit selected-detector RON/gain projection (and separately generated ORIGFILE), scan QC and rejected middle-frame indices; primary input, no-clobber output and missing-HDU controls |
 | `native_bias_service` | Existing exact frozen-legacy numerical/ownership controls for the unchanged bias calculation |
 | `native_layout` | Existing primary/extension mapping, scaling, selectors and compatible loading controls for M4 plus bias |
 | `native_explicit_paths` | Existing synthetic full-recipe numerical/header and explicit-path controls to detect regression in the shared legacy header wrappers |

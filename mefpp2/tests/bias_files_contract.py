@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import re
+import struct
 import subprocess
 import tempfile
 
@@ -96,19 +97,44 @@ def main():
             products = list(reference.glob('*.fits')); assert len(products) == 1, products
             paf_run = group / 'paf'
             run(instrument + '-paf', [adapter, *options(paf_run, '--pafname', paf, listing, 2)])
+            snapshot = json.loads((paf_run / 'config.json').read_text())
             with fits.open(products[0], memmap=False) as old, fits.open(paf_run / 'bias.fits', memmap=False) as new:
                 assert len(new) == 2
                 np.testing.assert_array_equal(new[1].data, old[2].data)
                 np.testing.assert_array_equal(new[1].data, np.tile(np.arange(9, dtype=np.float32) + 7, (9, 1)))
-                assert headers(new[0]) == headers(old[0]), 'primary legacy header difference'
+                # #210: mosaic primary metadata came from detector A. This
+                # product contains B. Project exactly its configured RON/gain
+                # cards from the independently produced legacy B extension;
+                # every other primary card must still match exactly.
+                expected_primary = headers(old[0])
+                projection = []
+                for quantity in ('RON', 'GAIN'):
+                    key = snapshot[f'MEF.CCD.{quantity}.KEY']['value']
+                    def configured(chip):
+                        entry = snapshot[f'MEF.CCD.{quantity}.CHIP{chip}']
+                        assert entry['type'] == 'float32-bits'
+                        number, = struct.unpack('>f', bytes.fromhex(entry['value']))
+                        return float(f'{number:.6f}')  # Existing native %f card format.
+                    assert old[0].header[key] == configured(1), (key, 'mosaic primary')
+                    assert old[2].header[key] == configured(2), (key, 'legacy selected detector')
+                    assert new[0].header[key] == configured(2), (key, 'candidate selected detector')
+                    for hdu in (old[0], old[2], new[0]):
+                        assert sum(c.keyword == key for c in hdu.header.cards) == 1, key
+                    original = old[0].header.cards[key].image
+                    selected = old[2].header.cards[key].image
+                    assert expected_primary.count(original) == 1
+                    expected_primary[expected_primary.index(original)] = selected
+                    projection.append(dict(keyword=key, mosaic_value=configured(1),
+                                           selected_value=configured(2)))
+                assert headers(new[0]) == expected_primary, 'primary selected-detector header difference'
                 assert headers(new[1]) == headers(old[2]), 'extension legacy header difference'
+                report.setdefault('primary_detector_projection', {})[instrument] = projection
             qc = json.loads((paf_run / 'qc.json').read_text())
             assert qc['status'] == 'complete' and qc['accepted_frames'] == 3
             assert [f['index'] for f in qc['frames']] == [0, 1, 2, 3]
             assert [f['accepted'] for f in qc['frames']] == [1, 0, 1, 1]
             # TOML is emitted from the actual native PAF snapshot, never parsed
             # from decimal PAF values by a second decoder.
-            snapshot = json.loads((paf_run / 'config.json').read_text())
             toml = group / 'bias.toml'; toml.write_text(render_snapshot(snapshot))
             toml_run = group / 'toml'
             run(instrument + '-toml', [adapter, *options(toml_run, '--config', toml, listing, 2)])
