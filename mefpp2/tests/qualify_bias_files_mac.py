@@ -37,6 +37,55 @@ def selected_tool(declared):
     return declared
 
 
+QUALIFIED_BIAS = "eeacca38346a2d09d88e262513abda189d6b01e3"
+
+
+def reuse_bias_adapter(old, source, git, tool_hashes):
+    """Fail closed unless the accepted C17 binary and its native source match."""
+    old = old.resolve(strict=True)
+    report_path = old / "qualification.json"
+    report = json.loads(report_path.read_text())
+    require(report["revision"] == QUALIFIED_BIAS and report["status"] == "passed" and
+            report["preservation"] == dict(installed_files=True, checkout=True,
+                exported_source=True, retained_qc_controls=True), "Unqualified retained native run")
+    require(report["tool_sha256"] == tool_hashes, "Selected native tools changed")
+    configure = next(c for c in report["commands"] if c["label"] == "configure-c17")
+    tests = next(c for c in report["commands"] if c["label"] == "tests-c17")
+    require(configure["exit"] == tests["exit"] == 0 and "-DMEFPP_C_STANDARD=17" in configure["argv"],
+            "Retained native lane is not passed C17")
+    tests_log = Path(tests["log"]).resolve(strict=True)
+    require(tests_log.is_relative_to(old) and sha(tests_log) == tests["sha256"], "Retained test evidence changed")
+    archive = git("archive", "--format=tar", QUALIFIED_BIAS)
+    require(hashlib.sha256(archive).hexdigest() == report["archive_sha256"], "Retained source archive mismatch")
+    def native(name):
+        path = Path(name)
+        return path.suffix in (".c", ".h", ".def", ".cmake") or path.name == "CMakeLists.txt"
+    native_hashes = {}
+    with tarfile.open(fileobj=io.BytesIO(archive)) as bundle:
+        for member in bundle.getmembers():
+            if member.isfile() and native(member.name):
+                require(not Path(member.name).is_absolute() and '..' not in Path(member.name).parts, "Unsafe native source name")
+                native_hashes[member.name] = hashlib.sha256(bundle.extractfile(member).read()).hexdigest()
+    current = {str(p.relative_to(source)) for p in source.rglob('*') if p.is_file() and native(p.name)}
+    require(native_hashes and current == set(native_hashes), "Native source/build inventory changed")
+    for name, digest in native_hashes.items():
+        require(report["source_sha256"].get(name) == digest == sha(old/"source"/name) == sha(source/name),
+                "Native code/build input changed; cannot reuse: " + name)
+    adapter = old/"build-c17/mefpp2/mefpp_m5"
+    require(adapter.is_file() and not adapter.is_symlink(), "Missing retained adapter")
+    proofs = []
+    for path in (old/"build-c17/mefpp2/test-work").glob("m5-bias-*/qualification.json"):
+        proof = json.loads(path.read_text())
+        if proof.get("status") == "passed" and proof.get("source_revision") == QUALIFIED_BIAS and any(
+                c.get("argv", [None])[0] == str(adapter) and c.get("exit_status") == 0 for c in proof.get("commands", [])):
+            require(proof["adapter_sha256"] == sha(adapter), "Qualified adapter bytes changed")
+            proofs.append(path)
+    require(len(proofs) == 1, "Require one matching passed native binary proof")
+    controls = {str(p): sha(p) for p in (report_path, tests_log, adapter, proofs[0])}
+    return adapter, dict(run=str(old), revision=QUALIFIED_BIAS, controls=controls,
+                        native_source_files=len(native_hashes), adapter_sha256=sha(adapter))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", choices=("mac", "chapman"), required=True)
@@ -46,6 +95,8 @@ def main():
     parser.add_argument("--measurements", action="store_true", help="Run new numerical QC and affected bias/allocation contracts")
     parser.add_argument("--file-qc", action="store_true", help="Mac BPM file-to-ASDF handoff and affected contracts")
     parser.add_argument("--qc-python", type=Path)
+    parser.add_argument("--complete-bias", action="store_true", help="Only the one-command completion contract; reuse qualified C17 native code")
+    parser.add_argument("--reuse-native-run", type=Path)
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--sdk", type=Path)
@@ -55,10 +106,14 @@ def main():
                         help="Install full normal runtime in run/install after the five contracts")
     parser.add_argument("--funpack", type=Path)
     args = parser.parse_args()
+    require(not args.complete_bias or (args.host == "mac" and not args.file_qc and
+            not args.measurements and not args.bias_only and not args.private_install and
+            args.qc_python == QC_PYTHON and args.reuse_native_run is not None), "Completion gate requires qualified retained Mac/native runs")
+    require(args.complete_bias or args.reuse_native_run is None, "Native reuse is completion-only")
     require(not args.file_qc or (args.host == "mac" and not args.measurements and not args.bias_only and
             not args.private_install and args.qc_python == QC_PYTHON), "File/QC gate requires the retained Mac ASDF Python")
-    require(args.file_qc or args.qc_python is None, "QC Python applies only to --file-qc")
-    if args.file_qc:
+    require(args.file_qc or args.complete_bias or args.qc_python is None, "QC Python requires a QC/completion gate")
+    if args.file_qc or args.complete_bias:
         selected_tool(args.qc_python)
     require(not (args.measurements and (args.bias_only or args.private_install)), "Measurement gate is separate from legacy selections/install")
     require(not args.candidate_checkout or args.host == "chapman", "Candidate checkout is Chapman only")
@@ -126,7 +181,7 @@ def main():
                "tool_sha256": {name: {"path": str(path), "resolved_path": str(path.resolve(strict=True)),
                                       "sha256": sha(path)} for name, path in tools.items()},
                "installation_performed": False, "observational_inputs": "none opened",
-               "selection": "six file-to-ASDF/affected contracts" if args.file_qc else ("four measurement/bias/allocation contracts" if args.measurements else ("native_bias_files only" if args.bias_only else "five focused contracts")),
+               "selection": "one bias completion contract; qualified native binary reused" if args.complete_bias else "six file-to-ASDF/affected contracts" if args.file_qc else ("four measurement/bias/allocation contracts" if args.measurements else ("native_bias_files only" if args.bias_only else "five focused contracts")),
                "inherited_four_passes": "native f20a9ab7a0758775d020480be1e1daa547716e3b actual Mac run; not rerun" if args.bias_only else None,
                "limits": ["synthetic operation-template/file-bias/layout/bias/native-path contracts only", "no observational/scientific/performance acceptance",
                           "no sanitizer or leak-tool claim on targets"]}
@@ -175,7 +230,7 @@ print(json.dumps(dict(prefix=sys.prefix,versions=versions,controls=controls),sor
 """
     finished = False
     try:
-        if args.file_qc:
+        if args.file_qc or args.complete_bias:
             qc_initial = json.loads(command("qc-environment-before", [args.qc_python, "-B", "-c", qc_controls]).read_text())
             require(Path(qc_initial["prefix"]).resolve() == args.qc_python.parent.parent.resolve(), "Wrong retained ASDF prefix")
             receipt["qc_environment"] = qc_initial
@@ -192,7 +247,19 @@ print(json.dumps(dict(prefix=sys.prefix,versions=versions,controls=controls),sor
             bundle.extractall(source)
         receipt["source_sha256"] = {
             str(p.relative_to(source)): sha(p) for p in sorted(source.rglob("*")) if p.is_file()}
-        for standard in ("17",):
+        if args.complete_bias:
+            old = args.reuse_native_run.resolve(strict=True)
+            require(not args.reuse_native_run.is_symlink() and old.parent == run.parent and old != run,
+                    "Unexpected retained native run")
+            adapter, proof = reuse_bias_adapter(old, source, git, receipt["tool_sha256"])
+            receipt["reused_native"] = proof
+            print("REUSED QUALIFIED C17 ADAPTER:", adapter, flush=True)
+            log = command("completion-reuse-guards", [sys.executable, "-B", source / "mefpp2/tests/test_bias_completion_reuse.py"])
+            print(log.read_text(), flush=True)
+            log = command("bias-completion", [sys.executable, "-B", source / "mefpp2/tests/bias_completion_contract.py",
+                "--source-root", source, "--adapter", adapter, "--asdf-python", args.qc_python, "--work-parent", run])
+            print(log.read_text(), flush=True)
+        for standard in (() if args.complete_bias else ("17",)):
             # One optimized C17 build only, used by synthetic contracts.
             build = run / ("build-c" + standard)
             configure = [tools["cmake"], "-S", source, "-B", build, "-G", "Unix Makefiles",
@@ -210,14 +277,14 @@ print(json.dumps(dict(prefix=sys.prefix,versions=versions,controls=controls),sor
                               "-DCMAKE_INSTALL_PREFIX=" + str(install_prefix)]
             if args.host == "mac":
                 configure += ["-DCMAKE_OSX_ARCHITECTURES=x86_64", "-DCMAKE_OSX_SYSROOT=" + str(args.sdk)]
-            if args.file_qc:
+            if args.file_qc or args.complete_bias:
                 configure += ["-DMEFPP_QC_PYTHON=" + str(args.qc_python)]
             command("configure-c" + standard, configure)
             targets = ["mefpp_m5", "mefpp"] if args.bias_only else [
                 "operation_template_probe", "layout_probe", "bias_service_probe", "mefpp_m5", "mefpp"]
             if args.measurements:
                 targets = ["measurement_stats_probe", "bias_service_probe", "eclipse_allocation_probe", "mefpp_m5", "mefpp"]
-            if args.file_qc:
+            if args.file_qc or args.complete_bias:
                 targets = ["layout_probe", "bias_service_probe", "eclipse_allocation_probe", "mefpp_m5", "mefpp"]
             if args.private_install:
                 targets.append("mefpp_resources")
@@ -229,7 +296,7 @@ print(json.dumps(dict(prefix=sys.prefix,versions=versions,controls=controls),sor
             if args.measurements:
                 expected_tests = MEASUREMENT_TESTS
                 selection = "^(" + "|".join(sorted(expected_tests)) + ")$"
-            if args.file_qc:
+            if args.file_qc or args.complete_bias:
                 expected_tests = FILE_QC_TESTS
                 selection = "^(" + "|".join(sorted(expected_tests)) + ")$"
             inventory = command("inventory-c" + standard,
@@ -264,12 +331,15 @@ print(json.dumps(dict(prefix=sys.prefix,versions=versions,controls=controls),sor
         if "source_sha256" in receipt:
             checks["exported_source"] = receipt["source_sha256"] == {
                 str(p.relative_to(source)): sha(p) for p in sorted(source.rglob("*")) if p.is_file()}
-        if args.file_qc and qc_initial is not None:
+        if (args.file_qc or args.complete_bias) and qc_initial is not None:
             try:
                 after = json.loads(command("qc-environment-after", [args.qc_python, "-B", "-c", qc_controls]).read_text())
                 checks["retained_qc_controls"] = after == qc_initial
             except Exception:
                 checks["retained_qc_controls"] = False
+        if "reused_native" in receipt:
+            checks["reused_native_controls"] = all(Path(p).is_file() and sha(Path(p)) == digest
+                for p, digest in receipt["reused_native"]["controls"].items())
         receipt["preservation"] = checks
         receipt["status"] = "passed" if finished and all(checks.values()) else "failed"
         with (run / "qualification.json").open("x") as stream:

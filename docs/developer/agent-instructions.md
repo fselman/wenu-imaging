@@ -1,25 +1,25 @@
 # wenu-imaging agent instructions
 
-## Current BPM file/ASDF handoff and scan correction, 2 November 2026
+## Finish bias first, then create BPM — 2 November 2026
 
-Owner correction: a detector BPM applies only to active physical pixels.
-Prescan/overscan are electronic empty reads: detector BPM is NOT APPLICABLE,
-never unavailable or applied there. Bias correction keeps its existing scan
-sample rejection, independent of every detector BPM, including raw-sized maps.
-This supersedes scan masking in a20d776. That source passed actual Mac4/4 C17
-(13.43s), retained mac-bpm-mad-LNMslJOz; preserve the historical evidence.
+Owner clarification: bias is the only new recipe implemented. The new BPM recipe
+is still TBD; it must follow the template after bias completion. Do not treat
+other new recipes or a two-pass bias/BPM workflow as already implemented.
 
-Explicit FITS BPM binding and native-to-common-ASDF handoff are implemented.
-Reuse M4 selected-HDU loading and Eclipse conversion, strict declared binary
-polarity/raw-or-active geometry, the operation template and common QC writer.
-Saved product references freeze raw participation and selected BPM binding.
-Six focused agent C17/native+ASDF contracts pass; actual Mac --file-qc remains
-pending. Reuse the retained ASDF interpreter, with no new installation or
-unchanged library interchange/Chapman replay. See [the handoff record](bias-bpm-asdf-handoff-2026-11-02.md).
-Other recipes/two-path BPM work remain next; no production activation or merge.
-#144 wider allocation qualification and #222 legacy pixelmap_loadext selected
-BITPIX source finding remain open. Eclipse-first review/announcement rules below
-continue to apply to every genuinely new numerical routine.
+Actual Mac eeacca3 qualification passed6/6 C17/native-ASDF contracts in22.31s,
+retained mac-bpm-asdf-TGJPe5t1, with installed/checkout/source/QC controls preserved.
+Active-only detector BPM policy is qualified; electronic scan BPM is not
+applicable. Existing scan rejection remains independent of detector masks.
+
+The final bias completion command now chains the existing native operation and
+shared ASDF writer, verifies frozen references and reports success only for the
+whole operation. Native source and C17 binaries are unchanged. Six agent completion
+cases and seven reuse guards pass; the targeted Mac completion gate remains
+pending. Reuse verified eeacca3 native evidence/binary; do not rebuild or replay
+the six unchanged contracts. See [bias completion](bias-recipe-completion-2026-11-02.md).
+After that gate, continue the new BPM contract/source review following the same
+template. No unreviewed estimator/threshold, new BPM generation, two-pass workflow,
+production activation, merge or installation is part of current bias closure.
 
 ## Eclipse reuse and reviewed extensions
 

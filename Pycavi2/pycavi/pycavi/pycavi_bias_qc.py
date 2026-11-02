@@ -11,6 +11,9 @@ from copy import deepcopy
 import hashlib
 import json
 import math
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 try:
@@ -277,15 +280,122 @@ def publish_handoff(path, directory, *, assessment_id, created_at):
     return destination
 
 
+def run_bias_recipe(adapter, native_arguments, directory, *, assessment_id, created_at, receipt):
+    """Complete one bias invocation through the existing native and QC paths.
+
+    No numerical defaults, retries, input staging or deletion. Completion means
+    the native FITS operation, shared ASDF publication and link verification all
+    succeeded. An error retains complete products/records from earlier stages.
+    The exclusively created JSON receipt is execution evidence, not saved QC.
+    """
+    adapter = Path(adapter)
+    qc.require(adapter.is_absolute(), 'Explicit absolute native adapter required')
+    adapter = adapter.resolve(strict=True)
+    qc.require(adapter.is_file() and os.access(adapter, os.X_OK), 'Native adapter is not executable')
+    argv = list(native_arguments)
+    qc.require(argv[:2] == ['cal', 'bias'] and (len(argv)-2) % 2 == 0,
+               'Require explicit cal bias arguments as key/value pairs')
+    options = {}
+    for key, value in zip(argv[2::2], argv[3::2]):
+        qc.require(qc.text(key) and key.startswith('--') and qc.text(value) and key not in options,
+                   'Invalid/duplicate native argument')
+        options[key] = value
+    required = ('--output', '--qc-record', '--config-record', '--log-path', '--work-dir', '--detector-id')
+    qc.require(all(key in options for key in required) and options.get('--measurements') == 'yes' and
+               options.get('--mad') in ('yes', 'no'), 'Require explicit output paths and measurement/MAD choices')
+    for key in required[:-1]:
+        qc.require(Path(options[key]).is_absolute(), 'Require absolute native paths')
+    directory = Path(directory).resolve(strict=True)
+    qc.require(directory.is_dir() and qc.text(assessment_id), 'Explicit QC directory/assessment required')
+    qc.timestamp(created_at)
+    receipt = Path(receipt)
+    qc.require(receipt.is_absolute() and receipt.parent.is_dir(), 'Explicit receipt in an existing directory required')
+    targets = [Path(options[key]) for key in required[:4]] + [receipt]
+    qc.require(len({p.resolve() for p in targets}) == len(targets), 'Output/receipt paths collide')
+    evidence = dict(status='running', stage='preflight', operation='cal.bias',
+        adapter=str(adapter), adapter_sha256=hashlib.sha256(adapter.read_bytes()).hexdigest(),
+        completion_code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        argv=[str(adapter), *argv], native_exit_status=None, native_product=options['--output'],
+        qc_product=None, assessment_id=assessment_id, created_at=created_at)
+    # Exclusive creation protects an earlier receipt, including dangling links.
+    with receipt.open('x', encoding='utf-8') as stream:
+        def save():
+            stream.seek(0)
+            stream.truncate()
+            json.dump(evidence, stream, allow_nan=False, indent=2)
+            stream.write('\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        try:
+            save()
+            qc.require(all(not p.exists() and not p.is_symlink() for p in targets[:-1]),
+                       'Native output/log/handoff/configuration conflict; no overwrite')
+            qc.require(Path(options['--work-dir']).is_dir(), 'Native work directory must exist')
+            product_qc = directory / qc.qc_filename(Path(options['--output']).name)
+            qc.require(not product_qc.exists() and not product_qc.is_symlink(), 'Product QC conflict; no overwrite')
+            qc.require(qc.SCHEMA_PATH.is_file(), 'Shared QC schema resource is missing')
+            qc._asdf()  # Fail before native processing if the writer is unavailable.
+            evidence['stage'] = 'native'
+            save()
+            result = subprocess.run(evidence['argv'], cwd=options['--work-dir'], check=False)
+            evidence['native_exit_status'] = result.returncode
+            qc.require(result.returncode == 0, 'Native bias command failed; retain native log and execution receipt')
+            evidence['stage'] = 'qc'
+            save()
+            handoff = load_handoff(options['--qc-record'])
+            qc.require(handoff['output'] == options['--output'] and
+                       handoff['configuration_record'] == options['--config-record'] and
+                       handoff['detector_id'] == options['--detector-id'], 'Native handoff does not match this invocation')
+            qc.require(Path(options['--output']).is_file(), 'Native command did not publish its FITS product')
+            destination = publish_handoff(options['--qc-record'], directory,
+                assessment_id=assessment_id, created_at=created_at)
+            evidence['qc_product'] = str(destination)
+            evidence['stage'] = 'verify'
+            save()
+            records = list(qc.traverse_records(destination, qc_root=directory,
+                max_records=len(handoff['inputs']) + 1 + int(handoff['bpm']['selected'])))
+            parent = qc.read_record(destination)
+            tree = parent.as_dict()
+            qc.require(tree['file']['location'] == options['--output'] and
+                       tree['record']['assessment_id'] == assessment_id+':product' and
+                       tree['provenance']['producer'] == handoff['producer'], 'Saved product QC identity mismatch')
+            evidence.update(status='complete', stage='complete', qc_records_verified=len(records),
+                            qc_record_digest=parent.digest, producer=handoff['producer'])
+            save()
+            return destination
+        except BaseException as error:
+            evidence.update(status='failed', error=dict(type=type(error).__name__, message=str(error)))
+            save()
+            raise
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--handoff', type=Path, required=True)
+    parser.add_argument('--handoff', type=Path, help='Save QC for an already completed native attempt')
+    parser.add_argument('--native-adapter', type=Path, help='Run one complete bias recipe; native arguments follow --')
+    parser.add_argument('--receipt', type=Path, help='Fresh execution receipt for a complete invocation')
     parser.add_argument('--qc-directory', type=Path, required=True)
     parser.add_argument('--assessment-id', required=True)
     parser.add_argument('--created-at', required=True)
+    parser.add_argument('native_arguments', nargs=argparse.REMAINDER)
     args = parser.parse_args()
-    print('QC_PRODUCT', publish_handoff(args.handoff, args.qc_directory,
-          assessment_id=args.assessment_id, created_at=args.created_at))
+    try:
+        if args.native_adapter:
+            qc.require(args.handoff is None and args.receipt is not None,
+                       'Complete invocation requires --receipt, without --handoff')
+            native = args.native_arguments
+            if native[:1] == ['--']:
+                native = native[1:]
+            destination = run_bias_recipe(args.native_adapter, native, args.qc_directory,
+                assessment_id=args.assessment_id, created_at=args.created_at, receipt=args.receipt)
+            print('BIAS_RECIPE complete', destination)
+        else:
+            qc.require(args.handoff is not None and args.receipt is None and not args.native_arguments,
+                       'Writer-only invocation requires --handoff, without native arguments/receipt')
+            print('QC_PRODUCT', publish_handoff(args.handoff, args.qc_directory,
+                  assessment_id=args.assessment_id, created_at=args.created_at))
+    except (qc.QcError, OSError, subprocess.SubprocessError) as error:
+        parser.exit(1, 'Bias attempt failed: '+str(error)+'\nRetain its receipt, logs and any completed files.\n')
 
 
 if __name__ == '__main__':

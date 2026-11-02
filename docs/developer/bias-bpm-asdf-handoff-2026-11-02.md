@@ -1,5 +1,11 @@
 # Bias BPM files and shared ASDF QC handoff — 2 November 2026
 
+Current status: actual Mac eeacca3 native/BPM/ASDF gate passed6/6 in22.31s,
+with four preservation checks. The final complete-command path and template
+update are described in [bias completion](bias-recipe-completion-2026-11-02.md).
+Earlier pending entries below retain their historical scope. No new BPM recipe
+or two-pass workflow has been implemented.
+
 This increment connects the numerical bias service to explicitly selected FITS
 BPMs and the existing common ASDF writer. It is opt-in and does not install or
 activate a production recipe. Actual Mac acceptance is pending.

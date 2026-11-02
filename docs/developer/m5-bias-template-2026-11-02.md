@@ -1,5 +1,11 @@
 # M5 first bias operation template — 2 November 2026
 
+Current status: actual Mac eeacca3 native/BPM/ASDF gate passed6/6 in22.31s,
+with four preservation checks. The final complete-command path and template
+update are described in [bias completion](bias-recipe-completion-2026-11-02.md).
+Earlier pending entries below retain their historical scope. No new BPM recipe
+or two-pass workflow has been implemented.
+
 Current result: owner-returned Mac C17 qualification at native
 `2803786dc2358f1cfdf641c262db6fe95a46bb05` passed `native_bias_files` 1/1 in
 5.89 seconds. Retained run:
@@ -216,3 +222,4 @@ does not claim low-memory streaming or solve the legacy allocator's spill policy
 for large workloads. Review memory before choosing real data. Only after this
 boundary is qualified should multi-detector assembly and the remaining operation
 adapters build on the template. Keep #203 open.
+

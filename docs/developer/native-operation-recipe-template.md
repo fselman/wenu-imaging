@@ -1,5 +1,13 @@
 # Template for the next native operation recipes
 
+Current bias completion path: [bias-recipe-completion-2026-11-02.md](bias-recipe-completion-2026-11-02.md).
+Bias is the only new recipe implemented; BPM is the next recipe to create, not
+an existing caller. Numerical/QC definitions and the native-ASDF handoff below
+are now implemented and target-qualified at eeacca3; earlier definition-pending
+statements are historical. The final one-command completion entry is prepared
+for its targeted Mac gate. No new BPM or other recipe is implemented here.
+
+
 2 November QC decision: ASDF is adopted for the common saved QC records. The
 [shared QC schema and creation path](shared-qc-asdf-2026-11-02.md) now supplies
 `QcRecipe`/`BiasQcRecipe`, one validator/ASDF writer and local reference traversal.
@@ -38,10 +46,10 @@ Those contracts must be explicit in each concrete recipe.
 | Resources | Peak loaded/working/result/header/queue memory, execution host and selected tools; no claim based on one-plane memory alone |
 | Acceptance | Exact comparable references, independent known answers, expected identity/layout differences, failure controls and retained evidence |
 
-The QC and representation rows are deliberately unresolved for final bias design.
-The present bias JSON is a provisional debugging record. Software qualification
-does not adopt it for subsequent recipes. A native engine independent of ASDF
-does not decide which representation a project layer will save.
+For bias, these rows now use the reviewed numerical definitions and common
+ASDF creation path. The versioned native JSON is internal transport, not saved
+QC. A future BPM recipe must fill its own scientific quantities/definitions and
+reuse the common ASDF builder/writer rather than copying transport as QC.
 
 ## Concrete adapter scaffold
 
@@ -181,3 +189,21 @@ C90-compatible core source, selected absolute tools, low batch priority and
 bounded CPU/thread use. Explain each test before execution. Keep failed evidence,
 diagnose the actual mismatch/stack, and rerun only affected controls. Software
 verification, scientific QC acceptance, installation and merge remain distinct.
+
+
+## Finish the whole command, not only the native calculation
+
+Bias completion uses the same native operation template, then the common ASDF
+writer and frozen-reference verification. Native FITS success alone is not full
+recipe success. The completion entry records preflight/native/qc/verify stages
+and returns success only after all required outputs validate. Keep its native
+producer separate from the outer completion-module identity.
+
+For the next BPM recipe, retain this boundary: one callable C calculation path,
+one shared QC creation path, and truthful overall completion. Preserve existing
+files and completed earlier products on later failure; do not auto-retry or
+pretend there is a multi-file transaction. Explicitly test failure before native
+execution, native rejection, later QC conflict, and protected previous receipts,
+including exact inputs/no false success. Reuse qualified native binaries and
+source evidence when an increment changes only outer orchestration. Do not
+create or modify a new recipe merely because reusable library helpers exist.
