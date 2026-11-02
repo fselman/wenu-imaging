@@ -236,3 +236,140 @@ def publish_handoff(path, directory, *, configuration_record, assessment_id):
         pass
     qc.require(all(_digest(Path(p)) == h for p, h in fingerprints.items()), 'Files changed during QC assembly')
     return destination
+
+
+def run_bpm_recipe(adapter, native_arguments, directory, *, assessment_id, receipt):
+    """Complete native FITS + common ASDF + frozen-link verification.
+
+    Retain completed artifacts on failure. The exclusive JSON receipt is attempt
+    evidence, not a replacement QC format or a promise of multi-file atomicity.
+    """
+    import os
+    import subprocess
+
+    adapter = Path(adapter)
+    qc.require(adapter.is_absolute(), 'Absolute native adapter required')
+    adapter = adapter.resolve(strict=True)
+    qc.require(adapter.is_file() and os.access(adapter, os.X_OK), 'Adapter must be executable')
+    argv = list(native_arguments)
+    qc.require(argv[:2] == ['cal', 'bpm'] and (len(argv)-2) % 2 == 0,
+               'Require cal bpm with explicit key/value pairs')
+    options = {}
+    for key, value in zip(argv[2::2], argv[3::2]):
+        qc.require(qc.text(key) and key.startswith('--') and qc.text(value) and key not in options,
+                   'Invalid or duplicate native option')
+        options[key] = value
+    required = ('--output', '--qc-record', '--config-record', '--log-path', '--work-dir',
+                '--detector-id', '--created-at', '--flats', '--roi-file', '--master-bias', '--input-bpm')
+    qc.require(all(key in options for key in required) and
+               (('--config' in options) != ('--pafname' in options)), 'Missing explicit paths/configuration')
+    qc.timestamp(options['--created-at'])
+    receipt = Path(receipt)
+    qc.require(receipt.is_absolute() and receipt.parent.is_dir(), 'Fresh absolute receipt required')
+    directory = Path(directory).resolve(strict=True)
+    qc.require(directory.is_dir() and qc.text(assessment_id), 'QC directory/assessment required')
+    targets = [Path(options[k]) for k in required[:4]] + [receipt]
+    qc.require(all(p.is_absolute() and p.parent.is_dir() for p in targets) and
+               len({p.resolve() for p in targets}) == len(targets), 'Invalid/colliding destinations')
+    evidence = dict(status='running', stage='preflight', operation='cal.bpm',
+        adapter=str(adapter), adapter_sha256=_digest(adapter), completion_code_sha256=_digest(Path(__file__)),
+        argv=[str(adapter), *argv], assessment_id=assessment_id, created_at=options['--created-at'],
+        native_exit_status=None, native_product=options['--output'], qc_product=None)
+    with receipt.open('x', encoding='utf-8') as stream:
+        def save():
+            stream.seek(0)
+            stream.truncate()
+            json.dump(evidence, stream, allow_nan=False, indent=2)
+            stream.write('\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        try:
+            save()
+            qc.require(all(not p.exists() and not p.is_symlink() for p in targets[:-1]),
+                       'Existing native destination; no overwrite')
+            qc.require(Path(options['--work-dir']).is_absolute() and Path(options['--work-dir']).is_dir(),
+                       'Absolute existing work directory required')
+            config_key = '--config' if '--config' in options else '--pafname'
+            input_paths = [Path(options[k]) for k in ('--flats', '--roi-file', '--master-bias', config_key)]
+            if options['--input-bpm'] != 'omitted':
+                input_paths.append(Path(options['--input-bpm']))
+            qc.require(all(p.is_absolute() and p.is_file() for p in input_paths), 'Missing absolute inputs')
+            manifest = input_paths[0]
+            qc.require(manifest.stat().st_size <= 16*1024*1024, 'Oversized flat manifest')
+            for line in manifest.read_text().splitlines():
+                row = line.split('\t')
+                qc.require(len(row) == 3 and row[0].startswith('/'), 'Expected path TAB HDU TAB pair ID')
+                input_paths.append(Path(row[0]))
+            qc.require(all(p.is_file() for p in input_paths), 'Missing input file')
+            physical = {p.resolve(strict=True) for p in [*input_paths, adapter, Path(__file__)]}
+            qc.require(not physical.intersection(p.resolve() for p in targets), 'Input/destination collision')
+            fingerprints = {str(p): _digest(p) for p in physical}
+            evidence['input_sha256'] = fingerprints
+            names = [qc.qc_filename(Path(options['--output']).name)]
+            names += [qc.qc_filename(Path(row.split('\t')[0]).name) for row in manifest.read_text().splitlines()]
+            names += [qc.qc_filename(Path(options['--master-bias']).name)]
+            if options['--input-bpm'] != 'omitted':
+                names.append(qc.qc_filename(Path(options['--input-bpm']).name))
+            qc.require(len(names) == len(set(names)) and
+                       all(not (directory/n).exists() and not (directory/n).is_symlink() for n in names),
+                       'Colliding/existing QC names; no overwrite')
+            qc.require(qc.SCHEMA_PATH.is_file(), 'Shared QC schema missing')
+            qc._asdf()
+            evidence['stage'] = 'native'
+            save()
+            result = subprocess.run(evidence['argv'], cwd=options['--work-dir'], check=False)
+            evidence['native_exit_status'] = result.returncode
+            qc.require(result.returncode == 0, 'Native BPM command failed; retain attempt files')
+            qc.require(all(_digest(Path(p)) == h for p, h in fingerprints.items()), 'Inputs changed during native processing')
+            evidence['stage'] = 'qc'
+            save()
+            handoff = load_handoff(options['--qc-record'])
+            qc.require(handoff['output'] == options['--output'] and handoff['detector_id'] == options['--detector-id'] and
+                       handoff['created_at'] == options['--created-at'], 'Handoff/invocation mismatch')
+            destination = publish_handoff(options['--qc-record'], directory,
+                configuration_record=options['--config-record'], assessment_id=assessment_id)
+            evidence['qc_product'] = str(destination)
+            evidence['stage'] = 'verify'
+            save()
+            records = list(qc.traverse_records(destination, qc_root=directory,
+                max_records=len(handoff['inputs'])+len(handoff['calibrations'])+1))
+            parent = qc.read_record(destination)
+            tree = parent.as_dict()
+            qc.require(tree['file']['location'] == str(Path(options['--output']).resolve()) and
+                       tree['record']['assessment_id'] == f"{assessment_id}:{len(records)-1}" and
+                       tree['provenance']['producer']['source_revision'] == handoff['source_revision'],
+                       'Saved product identity mismatch')
+            qc.require(all(_digest(Path(p)) == h for p, h in fingerprints.items()), 'Inputs changed during completion')
+            evidence.update(status='complete', stage='complete', qc_records_verified=len(records),
+                            qc_record_digest=parent.digest, source_revision=handoff['source_revision'])
+            save()
+            return destination
+        except BaseException as error:
+            evidence.update(status='failed', error=dict(type=type(error).__name__, message=str(error)))
+            save()
+            raise
+
+
+def main():
+    import argparse
+    import subprocess
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--native-adapter', type=Path, required=True)
+    parser.add_argument('--receipt', type=Path, required=True)
+    parser.add_argument('--qc-directory', type=Path, required=True)
+    parser.add_argument('--assessment-id', required=True)
+    parser.add_argument('native_arguments', nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    native = args.native_arguments
+    if native[:1] == ['--']:
+        native = native[1:]
+    try:
+        destination = run_bpm_recipe(args.native_adapter, native, args.qc_directory,
+            assessment_id=args.assessment_id, receipt=args.receipt)
+        print('BPM_RECIPE complete', destination)
+    except (qc.QcError, OSError, ValueError, subprocess.SubprocessError) as error:
+        parser.exit(1, 'BPM attempt failed: '+str(error)+'\nRetain receipt, logs and completed files.\n')
+
+
+if __name__ == '__main__':
+    main()

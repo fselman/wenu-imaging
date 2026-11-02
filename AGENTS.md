@@ -1,5 +1,26 @@
 # wenu-imaging
 
+## Actual Mac publication passed; complete BPM command candidate - 2 November 2026
+
+Fernando returned 00ee1491930ec8d77968cb4b137c48ac60ce0502 Mac C17 success:
+service/files/publication 3/3 in 20.81 s, retained
+/Users/fselman/Software/build/wenu-imaging/mac-bpm-publication-Ev9dMXuD.
+All four preservation checks passed; protected main stayed clean.
+
+Next candidate connects cal bpm to the existing mefpp_m5 command entry and common
+ASDF completion wrapper. Explicit per-flat path/HDU/pair TSV, selected active
+master bias, optional encoded prior, active ROIs and caller thresholds; no new
+numerical algorithm/default. Zero success only after FITS, common ASDF and frozen
+links verify; failures retain truthful execution receipts/completed artifacts.
+Primary BPM remains unsigned 8-bit; binary priors require NEW mode and retain
+separate selection. --bpm-complete uses retained qualified QC Python, rebuilding
+mefpp_m5/mefpp and running only complete BPM plus affected bias command contracts.
+Earlier response/service/file/publication gates remain retained. Mac command gate
+pending, then changed-code Chapman qualification before actual WFI/OmegaCAM data.
+No install/activation/merge. Full gain/RON/linearity/shared signed shutter remains
+pending. See [command completion](docs/developer/bpm-command-completion-2026-11-02.md).
+
+
 ## Actual Mac file input passed; publication candidate next - 2 November 2026
 
 Fernando returned 328c50ef518c76a66791f0a398321848b84413aa Mac C17 success:

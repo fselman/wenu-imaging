@@ -192,8 +192,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     target_compile_options(bpm_publication_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
     target_compile_definitions(mefpp_bias_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(mefpp_bias_files PRIVATE -Wall -Wextra -pedantic-errors)
-    add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c)
-    target_link_libraries(mefpp_m5 PRIVATE mefpp_bias_files mefpp_config_toml)
+    add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c ins/mef/recipes/mefpp_bpm_adapter.c)
+    target_link_libraries(mefpp_m5 PRIVATE mefpp_bpm_service mefpp_config_toml)
     target_compile_definitions(mefpp_m5 PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
       MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
     target_compile_options(mefpp_m5 PRIVATE -Wall -Wextra -pedantic-errors)
@@ -419,6 +419,13 @@ if(BUILD_TESTING)
     set(MEFPP_QC_PYTHON "" CACHE FILEPATH "Qualified ASDF QC interpreter (enables handoff tests)")
     if(MEFPP_QC_PYTHON)
       if(MEFPP_BUILD_BIAS_ADAPTER)
+        add_test(NAME native_bpm_completion
+          COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_completion_contract.py"
+            --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+            --adapter "$<TARGET_FILE:mefpp_m5>"
+            --asdf-python "${MEFPP_QC_PYTHON}"
+            --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+        set_tests_properties(native_bpm_completion PROPERTIES TIMEOUT 600 LABELS "native;bpm;asdf;completion;cli")
         add_test(NAME native_bpm_publication
           COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_publication_contract.py"
             --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

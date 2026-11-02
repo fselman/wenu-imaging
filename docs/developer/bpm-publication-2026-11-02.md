@@ -1,5 +1,11 @@
 # BPM FITS and common ASDF publication
 
+Actual Mac publication acceptance returned: 00ee1491930ec8d77968cb4b137c48ac60ce0502,
+three contracts passed in 20.81 s, retained mac-bpm-publication-Ev9dMXuD. All four
+preservation checks passed and main stayed clean. This supersedes pending-Mac
+statements below for that exact revision. The next command/whole-operation
+candidate is recorded in [command completion](bpm-command-completion-2026-11-02.md).
+
 The bound-file increment at 328c50ef518c76a66791f0a398321848b84413aa passed
 actual Mac C17 service/file contracts in 8.07 s. Evidence remains at
 `/Users/fselman/Software/build/wenu-imaging/mac-bpm-files-sEzWKwiU`, with installed
