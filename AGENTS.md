@@ -14,12 +14,23 @@ applicable. Existing scan rejection remains independent of detector masks.
 The final bias completion command now chains the existing native operation and
 shared ASDF writer, verifies frozen references and reports success only for the
 whole operation. Native source and C17 binaries are unchanged. Six agent completion
-cases and seven reuse guards pass; the targeted Mac completion gate remains
-pending. Reuse verified eeacca3 native evidence/binary; do not rebuild or replay
+cases and seven reuse guards also passed the actual Mac completion gate at
+ce36197, retained mac-bias-complete-x0Z4JupT; all five protections passed. Reuse verified eeacca3 native evidence/binary; do not rebuild or replay
 the six unchanged contracts. See [bias completion](docs/developer/bias-recipe-completion-2026-11-02.md).
 After that gate, continue the new BPM contract/source review following the same
 template. No unreviewed estimator/threshold, new BPM generation, two-pass workflow,
 production activation, merge or installation is part of current bias closure.
+
+## HIERARCH dispatch boundary, 2 November 2026
+
+Use explicit full `HIERARCH ESO ...` names at the qfits boundary. Astropy's
+stripped `ESO ...` names are not interchangeable: bundled qfits can accept one
+in memory but silently truncate it on output (#223). Dotted shortFITS omits the
+ESO prefix (`DPR.CATG`, not `ESO.DPR.CATG`); prefix findmatch does not expand it.
+Keep PAF keys separate. See [the source/probe review](docs/developer/hierarch-keyword-review-2026-11-02.md).
+The fixture now requests HIERARCH explicitly; all17 FITS files are byte-identical
+with no conversion warnings. Native source is unchanged. #125 long-string safety
+remains separate; no native library fix or target replay is implied.
 
 ## Eclipse reuse and reviewed extensions
 

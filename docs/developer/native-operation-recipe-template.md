@@ -207,3 +207,13 @@ execution, native rejection, later QC conflict, and protected previous receipts,
 including exact inputs/no false success. Reuse qualified native binaries and
 source evidence when an increment changes only outer orchestration. Do not
 create or modify a new recipe merely because reusable library helpers exist.
+
+## Use the qfits keyword spelling, not a stripped Astropy key
+
+Use full `HIERARCH ESO ...` names when passing hierarchical keywords to qfits.
+Astropy may expose `ESO ...` names, but those do not acquire HIERARCH automatically
+in this library and can be truncated silently on output. Correct dotted shortFITS
+omits ESO; prefix searches require the full name. Verify disk round-trip, not
+only a lookup in the object just populated. See the
+[HIERARCH review](hierarch-keyword-review-2026-11-02.md) and #223. This does not
+repair or relax the separate long-value/CONTINUE restrictions in #125.
