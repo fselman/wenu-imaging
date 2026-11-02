@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include "local_types.h"
 #include "xmemory.h"
+#include "qfits.h"
 
 /*---------------------------------------------------------------------------
    								New types
@@ -128,6 +129,16 @@ intimage * intimage_load(char * filename) ;
 void intimage_save(
         intimage    *   img,
         char        *   filename) ;
+
+/* Checked integer HDU stream writer. Reuses qfits integer conversion; never
+ * passes through pixelvalue. BITPIX 8 or 16, exact representable values only.
+ * Header is borrowed read-only and must describe this unscaled 2D plane;
+ * SIMPLE primary at offset zero, IMAGE extension at a FITS block boundary.
+ * Return 0 only after checked header/data/padding/flush. Caller owns exclusive
+ * file creation, close and publication; partial stream is not a product.
+ * Existing intimage_save and its legacy behavior are unchanged. */
+int intimage_write_hdu_checked(FILE *, const int *, int, int, int,
+    const qfits_header *);
 
 
 /*-------------------------------------------------------------------------*/

@@ -1,5 +1,16 @@
 # BPM bound-file acquisition and signal coverage
 
+## Actual Mac qualification returned
+
+328c50ef518c76a66791f0a398321848b84413aa passed native_bpm_service and
+native_bpm_files on MC02VV0HPHTDG in 8.07 s. Retained evidence:
+`/Users/fselman/Software/build/wenu-imaging/mac-bpm-files-sEzWKwiU`.
+All three preservation checks passed; main remained clean. This supersedes the
+pending-Mac statements below for that exact revision. Publication adds immutable
+configuration ownership/metadata and requires a focused affected-files/service
+recheck; see [publication](bpm-publication-2026-11-02.md).
+
+
 ## Qualified basis and current scope
 
 Fernando returned actual Mac success for the typed service at

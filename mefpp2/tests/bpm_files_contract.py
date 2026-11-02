@@ -53,6 +53,8 @@ def fixture(path, count, kind, case='normal'):
         response[0, 0] = .25
         response[-1, -1] = 2
         data[1:5, 2:8] += bias+signal*response
+        if case == 'unavailable':
+            data[1, 5] = np.nan
         if i % 2:
             primary = fits.PrimaryHDU()
             other = fits.ImageHDU(np.full((6, 10), 20000, dtype=np.float32))
@@ -78,9 +80,11 @@ def fixture(path, count, kind, case='normal'):
             view[0, 0], view[-1, -1] = 1, 128
         elif kind == 3:
             view[0, 0] = view[-1, -1] = 1  # Explicit 0=good.
+            view[1, 1] = 1  # Previously bad but newly normal response.
         else:
             view[:] = 1  # Explicit 1=good; scan pixels deliberately zero.
             view[0, 0] = view[-1, -1] = 0
+            view[1, 1] = 0
         h = fits.PrimaryHDU(data)
         identity(h.header, mask=True)
         if kind <= 2:

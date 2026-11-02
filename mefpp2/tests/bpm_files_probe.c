@@ -2,6 +2,70 @@
 #include "mef_bpm_files.h"
 #include "mefp_lib.h"
 #include <assert.h>
+#ifdef BPM_PUBLICATION_CONTRACT
+#include "mef_bpm_publish.h"
+#include <unistd.h>
+#include <sys/stat.h>
+static void integer_outputs(const char *directory) {
+    qfits_header *h=qfits_header_default();
+    int values[256],i;
+    FILE *f;
+    char path[4096];
+    assert(h);
+    qfits_header_add(h,"BITPIX","16",NULL,NULL); qfits_header_add(h,"NAXIS","2",NULL,NULL);
+    qfits_header_add(h,"NAXIS1","4",NULL,NULL); qfits_header_add(h,"NAXIS2","1",NULL,NULL);
+    values[0]=-32768; values[1]=-1; values[2]=0; values[3]=32767;
+    snprintf(path,sizeof(path),"%s/integer-boundaries.fits",directory);
+    f=fopen(path,"wbx"); assert(f);
+    assert(intimage_write_hdu_checked(f,values,3,1,16,h)==-1 && ftell(f)==0);
+    assert(intimage_write_hdu_checked(f,values,4,1,16,h)==0);
+    assert(intimage_write_hdu_checked(f,values,4,1,16,h)==-1 && ftell(f)==5760);
+    assert(fclose(f)==0);
+    qfits_header_mod(h,"BITPIX","8",NULL); qfits_header_mod(h,"NAXIS1","256",NULL);
+    for(i=0;i<256;++i) values[i]=i;
+    snprintf(path,sizeof(path),"%s/integer-bytes.fits",directory);
+    f=fopen(path,"wbx"); assert(f);
+    values[0]=-1; assert(intimage_write_hdu_checked(f,values,256,1,8,h)==-1 && ftell(f)==0);
+    values[0]=256; assert(intimage_write_hdu_checked(f,values,256,1,8,h)==-1 && ftell(f)==0);
+    values[0]=0; assert(intimage_write_hdu_checked(f,values,256,1,8,h)==0); assert(fclose(f)==0);
+#ifdef __linux__
+    f=fopen("/dev/full","wb"); if(f) { assert(intimage_write_hdu_checked(f,values,256,1,8,h)==-1); fclose(f); }
+#endif
+    qfits_header_destroy(h);
+}
+static void publish_outputs(const mef_bpm_files_result *result,const char *directory,const char *raw,int kind) {
+    mef_bpm_publish_options o;
+    mef_error *error=NULL;
+    char path[4096],other[4096];
+    FILE *f;
+    o.mode=MEF_BPM_PUBLISH_COMBINED;
+    o.created_at="2026-11-02T19:00:00Z";
+    o.source_revision=getenv("MEFPP_TEST_REVISION");
+    if(!o.source_revision) o.source_revision="0000000000000000000000000000000000000000"; /* Synthetic identity only. */
+    snprintf(path,sizeof(path),"%s/product.fits",directory);
+    o.created_at="2026-02-30T19:00:00Z";
+    assert(mef_bpm_publish(result,path,&o,&error)==MEF_ERR_INPUT && access(path,F_OK)!=0);
+    mef_error_destroy(error); error=NULL; o.created_at="2026-11-02T19:00:00Z";
+    if(kind>=3) {
+        assert(mef_bpm_publish(result,path,&o,&error)==MEF_ERR_UNSUPPORTED && access(path,F_OK)!=0);
+        mef_error_destroy(error); error=NULL; o.mode=MEF_BPM_PUBLISH_NEW;
+    }
+    assert(mef_bpm_publish(result,path,&o,&error)==MEF_OK && !error);
+    assert(mef_bpm_publish(result,path,&o,&error)==MEF_ERR_IO);
+    mef_error_destroy(error); error=NULL;
+    snprintf(other,sizeof(other),"%s/protected-link.fits",directory); assert(symlink(raw,other)==0);
+    assert(mef_bpm_publish(result,other,&o,&error)==MEF_ERR_IO); mef_error_destroy(error); error=NULL;
+    snprintf(other,sizeof(other),"%s/protected-directory.fits",directory); assert(mkdir(other,0700)==0);
+    assert(mef_bpm_publish(result,other,&o,&error)==MEF_ERR_IO); mef_error_destroy(error); error=NULL;
+    snprintf(other,sizeof(other),"%s/missing-directory/product.fits",directory);
+    assert(mef_bpm_publish(result,other,&o,&error)==MEF_ERR_IO); mef_error_destroy(error); error=NULL;
+    snprintf(other,sizeof(other),"%s/handoff.json",directory); f=fopen(other,"wx"); assert(f);
+    assert(mef_bpm_write_handoff(f,result,path,&o,NULL)==MEF_OK); assert(fclose(f)==0);
+    snprintf(other,sizeof(other),"%s/configuration.json",directory); f=fopen(other,"wx"); assert(f);
+    assert(mef_config_dump(mef_bpm_result_configuration(mef_bpm_files_result_service(result)),f)==MEF_OK);
+    assert(fclose(f)==0); integer_outputs(directory);
+}
+#endif
 static mef_layout_map *bind_file(const char *path,int hdu,int active,int mask,int wrong_readout) {
     mef_layout_options o;
     mef_detector_binding b;
@@ -113,6 +177,9 @@ int main(int argc,char **argv) {
     for(i=0;i<count;++i) mef_layout_map_destroy(maps[i]);
     mef_layout_map_destroy(bias); mef_layout_map_destroy(prior);
     memset(pairs,0,sizeof(pairs)); memset(rois,0,sizeof(rois));
+#ifdef BPM_PUBLICATION_CONTRACT
+    if(result) publish_outputs(result,argv[2],paths[0],kind);
+#endif
     if(result) { assert(mef_bpm_files_result_qc(result)->rois[0][0]==1); mef_bpm_files_result_destroy(result); }
     puts("PASS: bound file acquisition, signal coverage, priors and detached ownership");
     return 0;

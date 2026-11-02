@@ -173,7 +173,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     add_library(mefpp_bias_files STATIC ins/mef/common/mef_bias_files.c
       ins/mef/common/mef_operation_template.c)
     target_link_libraries(mefpp_bias_files PUBLIC mefpp_config_snapshot)
-    add_library(mefpp_bpm_service STATIC ins/mef/common/mef_cal_bpm.c ins/mef/common/mef_bpm_files.c)
+    add_library(mefpp_bpm_service STATIC ins/mef/common/mef_cal_bpm.c ins/mef/common/mef_bpm_files.c
+      ins/mef/common/mef_bpm_publish.c)
     target_link_libraries(mefpp_bpm_service PUBLIC mefpp_bias_files)
     target_compile_definitions(mefpp_bpm_service PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(mefpp_bpm_service PRIVATE -Wall -Wextra -pedantic-errors)
@@ -185,6 +186,10 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     target_link_libraries(bpm_files_probe PRIVATE mefpp_bpm_service)
     target_compile_definitions(bpm_files_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(bpm_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    add_executable(bpm_publication_probe tests/bpm_files_probe.c)
+    target_link_libraries(bpm_publication_probe PRIVATE mefpp_bpm_service)
+    target_compile_definitions(bpm_publication_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS} BPM_PUBLICATION_CONTRACT=1)
+    target_compile_options(bpm_publication_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
     target_compile_definitions(mefpp_bias_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(mefpp_bias_files PRIVATE -Wall -Wextra -pedantic-errors)
     add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c)
@@ -413,6 +418,15 @@ if(BUILD_TESTING)
     # These tests are opt-in; normal native builds need no ASDF installation.
     set(MEFPP_QC_PYTHON "" CACHE FILEPATH "Qualified ASDF QC interpreter (enables handoff tests)")
     if(MEFPP_QC_PYTHON)
+      if(MEFPP_BUILD_BIAS_ADAPTER)
+        add_test(NAME native_bpm_publication
+          COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_publication_contract.py"
+            --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+            --probe "$<TARGET_FILE:bpm_publication_probe>"
+            --asdf-python "${MEFPP_QC_PYTHON}"
+            --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+        set_tests_properties(native_bpm_publication PROPERTIES TIMEOUT 300 LABELS "native;bpm;asdf;publication;mask")
+      endif()
       if(MEFPP_BUILD_BIAS_ADAPTER)
         add_test(NAME native_bias_qc_asdf
           COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_qc_asdf_contract.py"

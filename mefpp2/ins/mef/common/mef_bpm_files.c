@@ -98,7 +98,7 @@ static mef_status validate(void *opaque,mef_error **error) {
         (o->mask_encoding==MEF_BPM_MASK_OMITTED)!=(s->prior_map==NULL) ||
         (o->prior_active_only!=0 && o->prior_active_only!=1) ||
         (o->mask_encoding==MEF_BPM_MASK_BINARY && o->binary_good_value!=0 && o->binary_good_value!=1) ||
-        (o->mask_encoding==MEF_BPM_MASK_FLAGS8 && (!o->mask_registry || !*o->mask_registry))) return MEF_ERR_INPUT;
+        (o->mask_encoding==MEF_BPM_MASK_FLAGS8 && (!o->mask_registry || !*o->mask_registry || strlen(o->mask_registry)>32))) return MEF_ERR_INPUT;
     resolved=mef_request_resolved_view(mef_context_request(s->context));
     if(!resolved || resolved->request.operation!=MEF_OP_CAL_BPM || resolved->request.operation_version!=1 ||
         resolved->request.input_count!=s->count || resolved->bpm_selection_count!=1) return MEF_ERR_INPUT;
@@ -159,6 +159,11 @@ static mef_status validate(void *opaque,mef_error **error) {
     pairs=a->allocate(a->user,s->count*sizeof(*pairs)); r->qc.pair_ids=pairs;
     if(!times || !pairs) return MEF_ERR_MEMORY;
     r->qc.mode=o->mode; r->qc.input_count=s->count;
+    r->qc.configuration_detector=s->config_slot;
+    strcpy(r->qc.readout_id,first->readout_id); r->qc.bin_x=first->bin_x; r->qc.bin_y=first->bin_y;
+    r->qc.mask_encoding=o->mask_encoding; r->qc.prior_active_only=o->prior_active_only;
+    r->qc.binary_good_value=o->binary_good_value; r->qc.reject_bits=o->reject_bits;
+    if(o->mask_encoding==MEF_BPM_MASK_FLAGS8) strcpy(r->qc.mask_registry,o->mask_registry);
     r->qc.saturation_raw=o->saturation_raw; r->qc.upper_fraction=o->upper_fraction;
     r->qc.minimum_span_fraction=o->minimum_span_fraction; r->qc.maximum_pair_difference=o->maximum_pair_difference;
     r->qc.exposure_hdu=o->exposure_hdu; strcpy(r->qc.exposure_key,o->exposure_key);

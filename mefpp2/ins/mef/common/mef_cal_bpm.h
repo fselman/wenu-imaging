@@ -63,8 +63,10 @@ const detector_response_result *mef_bpm_result_response(const mef_bpm_result *);
 const unsigned char *mef_bpm_result_prior_flags(const mef_bpm_result *);
 const unsigned char *mef_bpm_result_combined_flags(const mef_bpm_result *);
 const pixelmap *mef_bpm_result_selection(const mef_bpm_result *);
+const pixelmap *mef_bpm_result_prior_selection(const mef_bpm_result *);
 const mef_bpm_qc *mef_bpm_result_qc(const mef_bpm_result *);
 const mef_request *mef_bpm_result_request(const mef_bpm_result *);
+const mef_config *mef_bpm_result_configuration(const mef_bpm_result *);
 /* One original zero-based flat index per response->reference_levels entry. */
 const size_t *mef_bpm_result_fit_indices(const mef_bpm_result *);
 #endif

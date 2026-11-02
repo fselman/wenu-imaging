@@ -8,6 +8,7 @@
 struct mef_bpm_result {
     mef_allocator allocator;
     mef_request *request;
+    mef_config *configuration;
     detector_response_result *response;
     unsigned char *prior_flags, *combined;
     size_t *fit_indices;
@@ -32,7 +33,7 @@ void mef_bpm_result_destroy(mef_bpm_result *r) {
     mef_allocator a;
     if (!r) return;
     a=r->allocator;
-    mef_request_destroy(r->request); detector_response_result_del(r->response);
+    mef_request_destroy(r->request); mef_config_destroy(r->configuration); detector_response_result_del(r->response);
     pixelmap_del(r->prior_selection); pixelmap_del(r->selection);
     release(&a,r->prior_flags); release(&a,r->combined); release(&a,r->qc.frames);
     release(&a,r->fit_indices);
@@ -42,8 +43,10 @@ const detector_response_result *mef_bpm_result_response(const mef_bpm_result *r)
 const unsigned char *mef_bpm_result_prior_flags(const mef_bpm_result *r) { return r?r->prior_flags:NULL; }
 const unsigned char *mef_bpm_result_combined_flags(const mef_bpm_result *r) { return r?r->combined:NULL; }
 const pixelmap *mef_bpm_result_selection(const mef_bpm_result *r) { return r?r->selection:NULL; }
+const pixelmap *mef_bpm_result_prior_selection(const mef_bpm_result *r) { return r?r->prior_selection:NULL; }
 const mef_bpm_qc *mef_bpm_result_qc(const mef_bpm_result *r) { return r?&r->qc:NULL; }
 const mef_request *mef_bpm_result_request(const mef_bpm_result *r) { return r?r->request:NULL; }
+const mef_config *mef_bpm_result_configuration(const mef_bpm_result *r) { return r?r->configuration:NULL; }
 const size_t *mef_bpm_result_fit_indices(const mef_bpm_result *r) { return r?r->fit_indices:NULL; }
 static int finite_number(double x) { return x==x && x>=-DBL_MAX && x<=DBL_MAX; }
 static int interval(const int *p, int maximum) { return p[0]>=1 && p[1]>=p[0] && p[1]<=maximum; }
@@ -138,6 +141,7 @@ static mef_status load(void *opaque, mef_error **error) {
     image_t *copy,*cropped;
     mef_bpm_frame_qc *q;
     mef_status status;
+    const char *diagnostic=NULL;
     size_t i,pixels=(size_t)in->master_bias->lx*(size_t)in->master_bias->ly;
     int zone[4];
     r=s->allocator->allocate(s->allocator->user,sizeof(*r));
@@ -145,6 +149,8 @@ static mef_status load(void *opaque, mef_error **error) {
     memset(r,0,sizeof(*r)); r->allocator=*s->allocator; s->pending=r;
     status=mef_request_create_resolved(s->resolved,s->allocator,&r->request,error);
     if (status!=MEF_OK) return status;
+    status=mef_config_clone(mef_context_config(s->context),s->allocator,&r->configuration,&diagnostic);
+    if(status!=MEF_OK) return status;
     q=s->allocator->allocate(s->allocator->user,in->count*sizeof(*q));
     if (!q) return MEF_ERR_MEMORY;
     memset(q,0,in->count*sizeof(*q)); r->qc.frames=q;

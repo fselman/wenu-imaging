@@ -1,5 +1,25 @@
 # wenu-imaging agent instructions
 
+## Actual Mac file input passed; publication candidate next - 2 November 2026
+
+Fernando returned 328c50ef518c76a66791f0a398321848b84413aa Mac C17 success:
+native_bpm_service/native_bpm_files, 8.07 s total. Retained
+/Users/fselman/Software/build/wenu-imaging/mac-bpm-files-sEzWKwiU.
+Installed files, checkout and exported source all preserved; main stayed clean.
+
+Next candidate adds checked integer-HDU output in Eclipse (existing qfits integer
+conversion), exclusive native BPM publication and pycavi_bpm_qc using the common
+unchanged QcRecipe/schema/ASDF writer. Primary reasons remain unsigned 8-bit;
+coverage, sample counts and prior information are distinct extensions. Explicit
+NEW/COMBINED modes: combined legacy binary reasons are unavailable, never
+invented. Full HIERARCH spellings; no Phase3 assertion. Result now owns its exact
+configuration snapshot for publication after context destruction. --bpm-publish
+requires the retained qualified ASDF Python and checks its preservation, running
+new publication plus affected file/service contracts only. CLI/whole-command
+completion and joint linearity/shutter/gain/RON remain later. Validate on Chapman
+before actual WFI/OmegaCAM data. No install/merge; see [publication record](bpm-publication-2026-11-02.md).
+
+
 ## Actual Mac service passed; bound BPM inputs next - 2 November 2026
 
 Fernando returned the pinned 970bdfb9ad232df353aab18c7a1cd2f0957c737e Mac

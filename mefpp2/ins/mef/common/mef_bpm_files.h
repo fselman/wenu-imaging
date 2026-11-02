@@ -20,7 +20,7 @@ typedef struct {
 } mef_bpm_files_options;
 typedef struct {
     mef_bpm_acquisition mode;
-    size_t input_count, usable_pairs, distinct_times, distinct_levels, paired_levels;
+    size_t input_count, usable_pairs, distinct_times, distinct_levels, paired_levels, configuration_detector;
     const double *integration_seconds;
     const size_t *pair_ids;
     /* Quick: complete-pair mean reference fractions. Provisional: per frame. */
@@ -30,6 +30,12 @@ typedef struct {
     int exposure_hdu;
     const int (*rois)[4];
     size_t roi_count;
+    mef_bpm_mask_encoding mask_encoding;
+    int prior_active_only, binary_good_value;
+    unsigned int reject_bits;
+    char mask_registry[33];
+    char readout_id[MEF_LAYOUT_TEXT];
+    int bin_x, bin_y;
 } mef_bpm_files_qc;
 /* Header-only preflight: every request path/HDU/detector/config slot, selected
  * bias/prior map, readout/binning/unit/active geometry and EXPTIME/pair metadata.
