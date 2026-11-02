@@ -58,8 +58,8 @@ def bpm_compatibility_copy(original, destination, expected_names):
 
     Astropy owns header parsing/serialization and HDU offsets. Compare every
     unrelated card image and each padded data span after writing the new file.
-    Existing checksum cards are rejected: changing their header requires separate
-    checksum regeneration, outside this narrowly scoped compatibility copy.
+    Existing checksum cards are validated on the original and recomputed on the
+    copy through Astropy. Checksum values/comments may change with the header.
     """
     from astropy.io import fits
     original, destination = Path(original), Path(destination)
@@ -74,8 +74,10 @@ def bpm_compatibility_copy(original, destination, expected_names):
                 info = hdu.fileinfo()
                 require(info['hdrLoc'] == cursor, 'Noncontiguous/unsupported FITS framing')
                 header = hdu.header.copy()
-                require('CHECKSUM' not in header and 'DATASUM' not in header,
-                        'Existing checksum cards need separate handling; original retained')
+                checksum_cards={k:header[k] for k in ('CHECKSUM','DATASUM') if k in header}
+                for key,verify in (('CHECKSUM',hdu.verify_checksum),('DATASUM',hdu.verify_datasum)):
+                    if key in checksum_cards:
+                        require(verify()==1,'Original BPM '+key+' verification failed; retain original')
                 if index == 0:
                     require(header.get('SIMPLE') is True and header.get('NAXIS') == 0, 'Expected empty primary')
                 else:
@@ -87,8 +89,8 @@ def bpm_compatibility_copy(original, destination, expected_names):
                     header.insert('NAXIS2', ('PCOUNT',0,'No additional image parameters'), after=True)
                     header.insert('PCOUNT', ('GCOUNT',1,'One image array'), after=True)
                 before_cards = [c.image for c in hdu.header.cards]
-                require([c.image for c in header.cards if c.keyword not in ('PCOUNT','GCOUNT')] ==
-                        [c.image for c in hdu.header.cards if c.keyword not in ('PCOUNT','GCOUNT')], 'Unrelated header changed')
+                require([c.image for c in header.cards if c.keyword not in ('PCOUNT','GCOUNT','CHECKSUM','DATASUM')] ==
+                        [c.image for c in hdu.header.cards if c.keyword not in ('PCOUNT','GCOUNT','CHECKSUM','DATASUM')], 'Unrelated header changed')
                 out.write(header.tostring(sep='',endcard=True,padding=True).encode('ascii'))
                 src.seek(info['datLoc'])
                 remaining = info['datSpan']
@@ -98,12 +100,20 @@ def bpm_compatibility_copy(original, destination, expected_names):
                     out.write(data)
                     remaining -= len(data)
                 spans.append(dict(hdu=index, original_offset=info['datLoc'],
-                    bytes=info['datSpan'], original_cards=before_cards,
+                    bytes=info['datSpan'], original_cards=before_cards, checksum_cards_before=checksum_cards,
                     payload_sha256=span_digest(original,info['datLoc'],info['datSpan'])))
                 cursor = info['datLoc']+info['datSpan']
             require(cursor == original.stat().st_size, 'Unexpected trailing FITS bytes')
             out.flush()
             os.fsync(out.fileno())
+    # Recompute checksums after the new structural cards are in place. The
+    # public Astropy implementation reads stored bytes without loading/scaling
+    # image arrays; the following independent payload hashes verify this.
+    with fits.open(destination, mode='update', memmap=False, do_not_scale_image_data=True) as hdus:
+        for row,hdu in zip(spans,hdus):
+            if row['checksum_cards_before']:
+                hdu.add_checksum(when='BPM header compatibility copy')
+        hdus.flush(output_verify='exception')
     with fits.open(destination, mode='readonly', memmap=False, do_not_scale_image_data=True) as hdus:
         hdus.verify('exception')
         require(len(hdus) == len(spans), 'Copied HDU count changed')
@@ -111,12 +121,15 @@ def bpm_compatibility_copy(original, destination, expected_names):
             info = hdu.fileinfo()
             require(info['datSpan'] == row['bytes'] and
                     span_digest(destination,info['datLoc'],info['datSpan']) == row['payload_sha256'], 'BPM payload bytes changed')
-            require([c.image for c in hdu.header.cards if c.keyword not in ('PCOUNT','GCOUNT')] ==
-                    [c for c in row.pop('original_cards') if c[:8].strip() not in ('PCOUNT','GCOUNT')], 'Copied unrelated cards changed')
+            require([c.image for c in hdu.header.cards if c.keyword not in ('PCOUNT','GCOUNT','CHECKSUM','DATASUM')] ==
+                    [c for c in row.pop('original_cards') if c[:8].strip() not in ('PCOUNT','GCOUNT','CHECKSUM','DATASUM')], 'Copied unrelated cards changed')
+            if row['checksum_cards_before']:
+                require(hdu.verify_checksum()==1 and hdu.verify_datasum()==1,'Copied BPM checksum verification failed')
+            row['checksum_cards_after']={k:hdu.header[k] for k in ('CHECKSUM','DATASUM') if k in hdu.header}
             row['copy_offset'] = info['datLoc']
     require(digest(original) == original_sha, 'Original BPM changed')
     return dict(original=str(original), original_sha256=original_sha, copy=str(destination),
-        copy_sha256=digest(destination), action='add PCOUNT=0 and GCOUNT=1 to eight IMAGE extensions only',
+        copy_sha256=digest(destination), action='add PCOUNT=0 and GCOUNT=1 to eight IMAGE extensions; recompute existing checksums',
         interpretation='legacy binary selection, 1=good, 0=bad; unchanged', payloads=spans)
 
 
@@ -172,14 +185,14 @@ def main():
     bpm=RAW/'WFI_BPM_1x1.fits'; historical=RAW/'WFI_MB_1x1.fits'
     fingerprints={}
     report=dict(status='running',stage='input_lock',purpose='first real WFI detector bias for owner inspection',
-        qualified_revision=QUALIFIED, inventory=str(INVENTORY), detector=DETECTORS[0], input_hdu=1,configuration_detector=0,
+        driver_sha256=digest(Path(__file__)), qualified_revision=QUALIFIED, inventory=str(INVENTORY), detector=DETECTORS[0], input_hdu=1,configuration_detector=0,
         mask_good_value=1, mask_coordinates='active', scientific_acceptance=False,inputs=[str(f) for f in members],
         historical_comparison=str(historical), historical_comparison_is_independent_truth=False)
     def save():
         (work/'inspection-run.json').write_text(json.dumps(report,indent=2)+'\n')
     save()
     try:
-        for index,f in enumerate([*members,bpm,historical,INVENTORY,adapter,*[source/n for n in relevant]],1):
+        for index,f in enumerate([*members,bpm,historical,INVENTORY,adapter,Path(__file__),*[source/n for n in relevant]],1):
             print('Locking input/code:',index,f.name,flush=True)
             fingerprints[str(f)]=digest(f)
         report['input_sha256']=fingerprints
