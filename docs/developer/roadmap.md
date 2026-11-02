@@ -1,5 +1,23 @@
 # wenu-imaging roadmap
 
+## Detector-characterization implementation authorized - 2 November 2026
+
+Fernando requests proceeding after reviewing the formula design. The current
+specification is [design PDF](detector-characterization-design-2026-11-02.pdf)
+and its matching [LaTeX source](detector-characterization-design-2026-11-02.tex).
+It supersedes the earlier BPM v1.0 proposal where they differ. Keep BPM unsigned
+8-bit (0=no detected reasons, nonzero bitwise reasons), separate coverage and
+legacy Eclipse 1=good selection. First develop the reusable quick-BPM core;
+full linearity uses one signed mosaic shutter duration offset, not free per-chip
+intercepts. CMOS initially uses the same mechanism; specialized CMOS timing waits
+for full characterization data. Development/quick C17 tests: Mac; validate changes
+on Chapman before full actual WFI/OmegaCAM data tests there. Agent synthetic checks
+are preparation evidence, not either target acceptance. No installation/merge.
+Announce checked Eclipse interface additions before implementing; preserve legacy
+fitters, diagnostic units, medians and mask semantics. Previous scope entries below
+are historical, including the earlier design-only hold and Mac-only test scope.
+
+
 ## BPM design review only — 2 November 2026
 
 Owner requests designing the new BPM recipe from existing mef_build_bpm, using

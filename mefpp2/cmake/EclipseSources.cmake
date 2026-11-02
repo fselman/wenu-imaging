@@ -11,6 +11,7 @@ set(ECLIPSE_SOURCES
   src/iproc/detect_ks.c
   src/iproc/detect_sq.c
   src/iproc/detector.c
+  src/iproc/detector_response.c
   src/iproc/extraction.c
   src/iproc/fourier.c
   src/iproc/framelist.c
@@ -30,6 +31,7 @@ set(ECLIPSE_SOURCES
   src/iproc/photometry.c
   src/iproc/pixel_handling.c
   src/iproc/pixelmaps.c
+  src/iproc/pixelmap_flags8.c
   src/iproc/resampling.c
   src/iproc/shift.c
   src/iproc/slitposition.c

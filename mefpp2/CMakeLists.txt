@@ -206,6 +206,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(qfits_discovery_probe tests/qfits_discovery_probe.c)
   target_link_libraries(qfits_discovery_probe PRIVATE qfits)
   add_executable(measurement_stats_probe tests/measurement_stats_probe.c)
+  add_executable(bpm_response_probe tests/bpm_response_probe.c)
+  target_link_libraries(bpm_response_probe PRIVATE eclipse)
+  target_compile_options(bpm_response_probe PRIVATE -UNDEBUG -Wall -Wextra)
   target_link_libraries(measurement_stats_probe PRIVATE eclipse)
   target_compile_options(measurement_stats_probe PRIVATE -UNDEBUG -Wall -Wextra)
   add_executable(bias_service_probe tests/bias_service_probe.c tests/bias_legacy_reference.c)
@@ -400,6 +403,11 @@ if(BUILD_TESTING)
       set_tests_properties(shared_qc_asdf PROPERTIES TIMEOUT 120 LABELS "asdf;qc")
     endif()
     add_test(NAME native_measurement_stats COMMAND measurement_stats_probe)
+    add_test(NAME native_bpm_response
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_response_contract.py"
+        --probe "$<TARGET_FILE:bpm_response_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_bpm_response PROPERTIES TIMEOUT 180 LABELS "native;bpm;statistics;mask")
     set_tests_properties(native_measurement_stats PROPERTIES TIMEOUT 30 LABELS "native;statistics;bias")
     add_test(NAME native_bias_service
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_service_contract.py"
