@@ -20,9 +20,14 @@ typedef struct {
     const int (*rois)[4];
     size_t roi_count;
     int with_mad;
+    int saturation_set;
+    double saturation_raw, upper_fraction; /* Raw physical ADU; explicit 0<f<=1. */
 } mef_bpm_options;
 typedef struct {
     image_sample_stats active_corrected, prescan, overscan;
+    size_t saturated, margin_excluded, sample_excluded, nonfinite, reference_samples;
+    int included_in_fit;
+    double reference_fraction_median; /* Relative to local usable saturation. */
 } mef_bpm_frame_qc;
 typedef enum { MEF_BPM_PRIOR_OMITTED=1, MEF_BPM_PRIOR_FLAGS8, MEF_BPM_PRIOR_BINARY } mef_bpm_prior;
 typedef struct {
@@ -31,6 +36,8 @@ typedef struct {
     mef_bpm_prior prior;
     unsigned int reject_bits;
     int bias_applied, provisional_numerical_only;
+    int saturation_set;
+    double saturation_raw, upper_fraction;
     /* This service does NOT certify acquisition pairs/exposure/saturation
      * coverage, characterize timing, calculate gain/RON or publish products.
      * File-level admission and shared ASDF completion follow separately. */
@@ -43,6 +50,9 @@ typedef struct {
  * Legacy binary prior has no invented reason: combined reasons unavailable,
  * while the combined selection preserves its rejected pixels. With byte prior,
  * combined reasons = prior OR new; new reasons remain separately accessible.
+ * Saturation options create usable-sample maps after scan/bias treatment using
+ * usable_limit = saturation_raw - (raw - corrected). Entire frames lacking
+ * reference samples are explicitly excluded, retaining original indices/QC.
  * Final selection ALSO rejects unavailable fits. NULL/occupied outputs fail
  * intact; status authoritative even when diagnostic allocation fails.
  * Uses operation template; no I/O, cwd change, discovery or reentrancy claim. */
@@ -55,4 +65,6 @@ const unsigned char *mef_bpm_result_combined_flags(const mef_bpm_result *);
 const pixelmap *mef_bpm_result_selection(const mef_bpm_result *);
 const mef_bpm_qc *mef_bpm_result_qc(const mef_bpm_result *);
 const mef_request *mef_bpm_result_request(const mef_bpm_result *);
+/* One original zero-based flat index per response->reference_levels entry. */
+const size_t *mef_bpm_result_fit_indices(const mef_bpm_result *);
 #endif

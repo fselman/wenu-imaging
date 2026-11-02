@@ -1,5 +1,16 @@
 # Typed BPM numerical service - 2 November 2026
 
+## Actual Mac qualification returned
+
+At 970bdfb9ad232df353aab18c7a1cd2f0957c737e, native_operation_template and
+native_bpm_service passed on MC02VV0HPHTDG in 1.72 s. Retained evidence:
+`/Users/fselman/Software/build/wenu-imaging/mac-bpm-service-AUUCnlyT`.
+All three preservation checks passed; main remained clean. This supersedes
+pending-Mac statements below for that exact service revision only.
+The [file-input increment](bpm-file-input-2026-11-02.md) extends saturation and
+explicit frame exclusion; its changed service requires a focused new gate.
+
+
 ## Qualified basis
 
 Fernando returned actual Mac success for the checked Eclipse core at

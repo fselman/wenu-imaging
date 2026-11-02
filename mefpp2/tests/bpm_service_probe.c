@@ -156,7 +156,10 @@ static void controls(mef_bb *bb, int proportional, int scan_mode) {
     memcpy(prior,prior_saved,sizeof(prior));
     options.samples=(const pixelmap *const *)samples;
     memset(samples[0]->data,0,24);
-    assert(mef_cal_bpm(context,&input,&options,&r,NULL)==MEF_ERR_COMPUTATION && !r);
+    assert(mef_cal_bpm(context,&input,&options,&r,NULL)==MEF_OK);
+    assert(!mef_bpm_result_qc(r)->frames[0].included_in_fit);
+    assert(mef_bpm_result_response(r)->plane_count==4 && mef_bpm_result_fit_indices(r)[0]==1);
+    mef_bpm_result_destroy(r); r=NULL;
     memset(samples[0]->data,1,24); options.samples=NULL;
     input.configuration_detector=(size_t)bb->nchips;
     assert(mef_cal_bpm(context,&input,&options,&r,NULL)==MEF_ERR_CONFIG && !r);

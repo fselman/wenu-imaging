@@ -173,7 +173,7 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     add_library(mefpp_bias_files STATIC ins/mef/common/mef_bias_files.c
       ins/mef/common/mef_operation_template.c)
     target_link_libraries(mefpp_bias_files PUBLIC mefpp_config_snapshot)
-    add_library(mefpp_bpm_service STATIC ins/mef/common/mef_cal_bpm.c)
+    add_library(mefpp_bpm_service STATIC ins/mef/common/mef_cal_bpm.c ins/mef/common/mef_bpm_files.c)
     target_link_libraries(mefpp_bpm_service PUBLIC mefpp_bias_files)
     target_compile_definitions(mefpp_bpm_service PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(mefpp_bpm_service PRIVATE -Wall -Wextra -pedantic-errors)
@@ -181,6 +181,10 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     target_link_libraries(bpm_service_probe PRIVATE mefpp_bpm_service)
     target_compile_definitions(bpm_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(bpm_service_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    add_executable(bpm_files_probe tests/bpm_files_probe.c)
+    target_link_libraries(bpm_files_probe PRIVATE mefpp_bpm_service)
+    target_compile_definitions(bpm_files_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+    target_compile_options(bpm_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
     target_compile_definitions(mefpp_bias_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(mefpp_bias_files PRIVATE -Wall -Wextra -pedantic-errors)
     add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c)
@@ -315,6 +319,12 @@ if(BUILD_TESTING)
           --probe "$<TARGET_FILE:bpm_service_probe>"
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_bpm_service PROPERTIES TIMEOUT 180 LABELS "native;bpm;ownership;mask")
+      add_test(NAME native_bpm_files
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_files_contract.py"
+          --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+          --probe "$<TARGET_FILE:bpm_files_probe>"
+          --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(native_bpm_files PROPERTIES TIMEOUT 300 LABELS "native;bpm;layout;coverage;mask")
       add_test(NAME native_bias_files
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_files_contract.py"
           --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

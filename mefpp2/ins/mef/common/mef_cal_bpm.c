@@ -10,6 +10,7 @@ struct mef_bpm_result {
     mef_request *request;
     detector_response_result *response;
     unsigned char *prior_flags, *combined;
+    size_t *fit_indices;
     pixelmap *prior_selection, *selection;
     mef_bpm_qc qc;
 };
@@ -22,6 +23,7 @@ typedef struct {
     mef_bpm_settings settings;
     mef_bpm_result *pending;
     cube_t *cube;
+    pixelmap **samples;
 } operation;
 static void release(const mef_allocator *a, const void *p) {
     if (p) a->release(a->user,(void *)p);
@@ -33,6 +35,7 @@ void mef_bpm_result_destroy(mef_bpm_result *r) {
     mef_request_destroy(r->request); detector_response_result_del(r->response);
     pixelmap_del(r->prior_selection); pixelmap_del(r->selection);
     release(&a,r->prior_flags); release(&a,r->combined); release(&a,r->qc.frames);
+    release(&a,r->fit_indices);
     release(&a,r);
 }
 const detector_response_result *mef_bpm_result_response(const mef_bpm_result *r) { return r?r->response:NULL; }
@@ -41,6 +44,7 @@ const unsigned char *mef_bpm_result_combined_flags(const mef_bpm_result *r) { re
 const pixelmap *mef_bpm_result_selection(const mef_bpm_result *r) { return r?r->selection:NULL; }
 const mef_bpm_qc *mef_bpm_result_qc(const mef_bpm_result *r) { return r?&r->qc:NULL; }
 const mef_request *mef_bpm_result_request(const mef_bpm_result *r) { return r?r->request:NULL; }
+const size_t *mef_bpm_result_fit_indices(const mef_bpm_result *r) { return r?r->fit_indices:NULL; }
 static int finite_number(double x) { return x==x && x>=-DBL_MAX && x<=DBL_MAX; }
 static int interval(const int *p, int maximum) { return p[0]>=1 && p[1]>=p[0] && p[1]<=maximum; }
 static int map_valid(const pixelmap *p, int width, int height) {
@@ -62,6 +66,9 @@ static mef_status validate(void *opaque, mef_error **error) {
     if (!s->context || !in || !o || !in->frames || in->count<2 || in->count>MAX_IMAGE_NUMBER ||
         !in->frames[0] || !in->master_bias || !in->master_bias->data ||
         o->reject_bits>255 || (o->with_mad!=0 && o->with_mad!=1) ||
+        (o->saturation_set!=0 && o->saturation_set!=1) ||
+        (o->saturation_set && (!finite_number(o->saturation_raw) || o->saturation_raw<=0 ||
+         !finite_number(o->upper_fraction) || o->upper_fraction<=0 || o->upper_fraction>1)) ||
         ((o->roi_count!=0)!=(o->rois!=NULL)) || (o->prior_flags && o->prior_binary) ||
         (!o->prior_flags && o->prior_count)) return MEF_ERR_INPUT;
     s->allocator=mef_context_allocator(s->context);
@@ -143,6 +150,9 @@ static mef_status load(void *opaque, mef_error **error) {
     memset(q,0,in->count*sizeof(*q)); r->qc.frames=q;
     r->qc.input_count=in->count; r->qc.reject_bits=o->reject_bits;
     r->qc.bias_applied=1; r->qc.provisional_numerical_only=1;
+    r->qc.saturation_set=o->saturation_set;
+    r->qc.saturation_raw=o->saturation_set?o->saturation_raw:0;
+    r->qc.upper_fraction=o->saturation_set?o->upper_fraction:0;
     r->qc.prior=o->prior_flags?MEF_BPM_PRIOR_FLAGS8:o->prior_binary?MEF_BPM_PRIOR_BINARY:MEF_BPM_PRIOR_OMITTED;
     if (o->prior_flags) {
         r->prior_flags=s->allocator->allocate(s->allocator->user,pixels);
@@ -194,13 +204,67 @@ static mef_status calculate(void *opaque, mef_error **error) {
     operation *s=opaque;
     mef_bpm_result *r=s->pending;
     detector_response_options o;
-    size_t i,n=(size_t)s->cube->lx*(size_t)s->cube->ly;
+    size_t i,j,k,n=(size_t)s->cube->lx*(size_t)s->cube->ly;
+    int used=0,x,y,eligible;
+    cube_t view;
+    image_t **planes=NULL;
+    const pixelmap **maps=NULL;
+    pixelvalue *fractions=NULL;
+    mef_bpm_frame_qc *q=(mef_bpm_frame_qc *)r->qc.frames;
+    const mef_bias_settings *g=&s->settings.scan;
+    mef_status status=MEF_ERR_MEMORY;
     (void)error;
     memset(&o,0,sizeof(o)); o.proportional=s->settings.proportional;
     o.low=s->settings.low; o.high=s->settings.high;
-    o.reference=r->prior_selection; o.samples=s->options->samples;
+    o.reference=r->prior_selection;
     o.rois=s->options->rois; o.roi_count=s->options->roi_count;
-    if (cube_response_checked(s->cube,&o,&r->response)!=0) return MEF_ERR_COMPUTATION;
+    r->fit_indices=s->allocator->allocate(s->allocator->user,s->input->count*sizeof(size_t));
+    planes=calloc(s->input->count,sizeof(*planes));
+    maps=calloc(s->input->count,sizeof(*maps));
+    fractions=malloc(n*sizeof(*fractions));
+    s->samples=calloc(s->input->count,sizeof(*s->samples));
+    if (!r->fit_indices || !planes || !maps || !fractions || !s->samples) goto done;
+    for (i=0;i<s->input->count;++i) {
+        s->samples[i]=pixelmap_new(s->cube->lx,s->cube->ly);
+        if (!s->samples[i]) goto done;
+        for (j=0;j<n;++j) {
+            double value=s->cube->plane[i]->data[j],fraction=0;
+            x=(int)(j%(size_t)s->cube->lx); y=(int)(j/(size_t)s->cube->lx);
+            eligible=1;
+            if (s->options->samples && s->options->samples[i] && !s->options->samples[i]->data[j]) {
+                eligible=0; ++q[i].sample_excluded;
+            } else if (!finite_number(value)) { eligible=0; ++q[i].nonfinite; }
+            else if (s->options->saturation_set) {
+                size_t raw=(size_t)(y+g->trim[2]-1)*(size_t)s->input->frames[i]->lx+(size_t)(x+g->trim[0]-1);
+                double original=s->input->frames[i]->data[raw];
+                double usable=s->options->saturation_raw-original+value;
+                if (original>=s->options->saturation_raw) { eligible=0; ++q[i].saturated; }
+                else if (!(usable>0) || !finite_number(usable) ||
+                    value>=s->options->upper_fraction*usable) { eligible=0; ++q[i].margin_excluded; }
+                else fraction=value/usable;
+            }
+            s->samples[i]->data[j]=(binpix)eligible;
+            if (!eligible || (r->prior_selection && !r->prior_selection->data[j])) continue;
+            eligible=o.roi_count==0;
+            for (k=0;k<o.roi_count && !eligible;++k) {
+                const int *z=o.rois[k];
+                eligible=x+1>=z[0] && x+1<=z[1] && y+1>=z[2] && y+1<=z[3];
+            }
+            if (eligible) fractions[q[i].reference_samples++]=(pixelvalue)fraction;
+        }
+        pixelmap_updatecount(s->samples[i]);
+        if (!q[i].reference_samples) continue;
+        if (s->options->saturation_set)
+            q[i].reference_fraction_median=median_pixelvalue(fractions,(int)q[i].reference_samples);
+        q[i].included_in_fit=1;
+        r->fit_indices[used]=i; planes[used]=s->cube->plane[i]; maps[used]=s->samples[i]; ++used;
+    }
+    status=MEF_ERR_COMPUTATION;
+    if (used<2) goto done;
+    memset(&view,0,sizeof(view)); view.lx=s->cube->lx; view.ly=s->cube->ly; view.np=used; view.plane=planes;
+    o.samples=maps;
+    if (cube_response_checked(&view,&o,&r->response)!=0) goto done;
+    free(planes); free(maps); free(fractions); planes=NULL; maps=NULL; fractions=NULL;
     if (r->qc.prior!=MEF_BPM_PRIOR_BINARY) {
         r->combined=s->allocator->allocate(s->allocator->user,n);
         if (!r->combined) return MEF_ERR_MEMORY;
@@ -213,8 +277,16 @@ static mef_status calculate(void *opaque, mef_error **error) {
         (r->prior_selection && !r->prior_selection->data[i])) r->selection->data[i]=0;
     pixelmap_updatecount(r->selection);
     return MEF_OK;
+done:
+    free(planes); free(maps); free(fractions); return status;
 }
-static void cleanup(void *opaque) { operation *s=opaque; cube_del(s->cube); s->cube=NULL; }
+static void cleanup(void *opaque) {
+    operation *s=opaque;
+    size_t i;
+    if (s->samples) for (i=0;i<s->input->count;++i) pixelmap_del(s->samples[i]);
+    free(s->samples); s->samples=NULL;
+    cube_del(s->cube); s->cube=NULL;
+}
 mef_status mef_cal_bpm(mef_context *context, const mef_bpm_input *input,
     const mef_bpm_options *options, mef_bpm_result **out, mef_error **error) {
     operation s;

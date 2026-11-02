@@ -1,5 +1,25 @@
 # wenu-imaging agent instructions
 
+## Actual Mac service passed; bound BPM inputs next - 2 November 2026
+
+Fernando returned the pinned 970bdfb9ad232df353aab18c7a1cd2f0957c737e Mac
+service gate: native_operation_template/native_bpm_service both passed (1.72 s).
+Retained /Users/fselman/Software/build/wenu-imaging/mac-bpm-service-AUUCnlyT;
+installed_files/checkout/exported_source all true; clean main unchanged.
+
+Next candidate adds mef_bpm_from_files: explicit bound paths/HDUs/configuration,
+header exposure key/HDU, pair IDs, prior encoding/coordinates, physical raw ADU
+saturation and caller-selected margin/span/pair thresholds. Saturated or otherwise
+reference-empty frames are now explicitly excluded with original-index mapping;
+per-pixel coverage stays separate from 8-bit reason flags. Quick admission needs
+five usable pairs at five times and five measured paired levels. No automatic
+threshold defaults, time normalization or changed fitter. The service changed
+for sample cuts: --bpm-files runs file admission and affected service only.
+Publication, CLI/common ASDF completion, gain/RON and joint linearity/shutter are
+still next. Mac preparation/quick gate, then changed-code Chapman validation and
+actual data tests; no install/merge. See [file record](bpm-file-input-2026-11-02.md).
+
+
 ## Typed BPM service candidate; Mac core accepted - 2 November 2026
 
 Fernando returned the pinned 14e9bb68ffe58f765576413063e0c99a6cfb311e
