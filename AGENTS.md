@@ -1,5 +1,16 @@
 # wenu-imaging
 
+## BPM design review only — 2 November 2026
+
+Owner requests designing the new BPM recipe from existing mef_build_bpm, using
+the completed bias template, then reviewing the final design before implementation.
+See [BPM design v1.0](docs/developer/bpm-recipe-design-2026-11-02.md). Proposed mask/
+bias/admission choices and checked Eclipse extensions are not yet accepted.
+No new BPM source, numerical routine, test run, install or activation in this
+increment. Bias qualification is retained. #224 records the robust/proportional
+fit-diagnostic documentation/units mismatch; do not silently change the fitter.
+
+
 ## Finish bias first, then create BPM — 2 November 2026
 
 Owner clarification: bias is the only new recipe implemented. The new BPM recipe
