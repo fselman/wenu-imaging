@@ -1,5 +1,18 @@
 # Quick BPM development: checked response and byte-mask core
 
+## Actual Mac qualification returned
+
+Revision 14e9bb68ffe58f765576413063e0c99a6cfb311e passed the private C17
+native_measurement_stats and native_bpm_response contracts on MC02VV0HPHTDG
+(2.11 s each, total 4.22 s). Retained evidence:
+`/Users/fselman/Software/build/wenu-imaging/mac-bpm-response-rMPj2sY4`.
+Installed files, checkout and exported source were preserved; clean main remained
+at its protected baseline. This supersedes the pending-Mac statements in the
+original preparation record below for that exact revision only. Full recipe,
+Chapman and scientific validation remain pending. The typed service is the next
+increment; see [its record](bpm-service-2026-11-02.md).
+
+
 Fernando authorized development after the formula review. The consolidated
 [PDF](detector-characterization-design-2026-11-02.pdf) and matching
 [LaTeX](detector-characterization-design-2026-11-02.tex) are retained in this folder.

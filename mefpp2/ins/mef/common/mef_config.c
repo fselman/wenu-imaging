@@ -352,3 +352,16 @@ mef_status mef_config_bias_settings(const mef_config *config, size_t detector,
     return MEF_OK;
 }
 
+#include "mef_bpm_settings.h"
+mef_status mef_config_bpm_settings(const mef_config *config, size_t detector,
+    mef_bpm_settings *out)
+{
+    mef_bpm_settings value;
+    if (out == NULL || mef_config_bias_settings(config, detector, &value.scan) != MEF_OK)
+        return MEF_ERR_CONFIG;
+    value.proportional = config->bpm_proportional_flag;
+    value.low = config->bpm_gainthr_lo;
+    value.high = config->bpm_gainthr_hi;
+    *out = value;
+    return MEF_OK;
+}

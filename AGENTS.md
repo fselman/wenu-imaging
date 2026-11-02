@@ -1,5 +1,25 @@
 # wenu-imaging
 
+## Typed BPM service candidate; Mac core accepted - 2 November 2026
+
+Fernando returned the pinned 14e9bb68ffe58f765576413063e0c99a6cfb311e
+Mac response gate: native_measurement_stats and native_bpm_response both passed
+(4.22 s). Retained /Users/fselman/Software/build/wenu-imaging/mac-bpm-response-rMPj2sY4;
+installed_files/checkout/exported_source all true; checkout remains clean main.
+This is actual Mac core evidence, not full BPM recipe/scientific acceptance.
+
+Next candidate adds the typed in-memory mef_cal_bpm service using the shared
+operation template, configured scan/crop, selected active master bias and the
+unchanged response core. Explicit binary/reason priors; byte reasons preserved;
+coverage separate. No detector BPM touches electronic scans. No scan mode uses
+existing crop only. Acquisition pairing/saturation admission, file CLI, ASDF
+publication, gain/RON and joint shutter/linearity remain later increments.
+Run only --bpm-service's new service and operation-template Mac contracts; do
+not replay unchanged response/measurement or old ASDF gates. Validate changed
+code on Chapman before full real WFI/OmegaCAM tests there. No install/merge.
+See [service record](docs/developer/bpm-service-2026-11-02.md).
+
+
 ## Detector-characterization implementation authorized - 2 November 2026
 
 Fernando requests proceeding after reviewing the formula design. The current

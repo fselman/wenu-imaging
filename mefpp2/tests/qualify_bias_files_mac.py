@@ -94,6 +94,7 @@ def main():
     parser.add_argument("--bias-only", action="store_true", help="Rebuild affected candidate and run only native_bias_files")
     parser.add_argument("--measurements", action="store_true", help="Run new numerical QC and affected bias/allocation contracts")
     parser.add_argument("--bpm-response", action="store_true", help="Mac: checked Eclipse response and exact 8-bit mask core only")
+    parser.add_argument("--bpm-service", action="store_true", help="Mac: typed BPM numerical composition and operation-template contracts")
     parser.add_argument("--file-qc", action="store_true", help="Mac BPM file-to-ASDF handoff and affected contracts")
     parser.add_argument("--qc-python", type=Path)
     parser.add_argument("--complete-bias", action="store_true", help="Only the one-command completion contract; reuse qualified C17 native code")
@@ -107,10 +108,11 @@ def main():
                         help="Install full normal runtime in run/install after the five contracts")
     parser.add_argument("--funpack", type=Path)
     args = parser.parse_args()
-    require(not args.bpm_response or (args.host == "mac" and not any((args.complete_bias,
+    require(not (args.bpm_response and args.bpm_service), "Choose one BPM increment")
+    require(not (args.bpm_response or args.bpm_service) or (args.host == "mac" and not any((args.complete_bias,
             args.file_qc, args.measurements, args.bias_only, args.private_install,
             args.candidate_checkout, args.qc_python, args.reuse_native_run))),
-            "BPM response core requires the separate private Mac C17 gate")
+            "BPM core/service requires the separate private Mac C17 gate")
     require(not args.complete_bias or (args.host == "mac" and not args.file_qc and
             not args.measurements and not args.bias_only and not args.private_install and
             args.qc_python == QC_PYTHON and args.reuse_native_run is not None), "Completion gate requires qualified retained Mac/native runs")
@@ -186,9 +188,9 @@ def main():
                "tool_sha256": {name: {"path": str(path), "resolved_path": str(path.resolve(strict=True)),
                                       "sha256": sha(path)} for name, path in tools.items()},
                "installation_performed": False, "observational_inputs": "none opened",
-               "selection": "checked response/8-bit mask and existing measurement contracts" if args.bpm_response else "one bias completion contract; qualified native binary reused" if args.complete_bias else "six file-to-ASDF/affected contracts" if args.file_qc else ("four measurement/bias/allocation contracts" if args.measurements else ("native_bias_files only" if args.bias_only else "five focused contracts")),
+               "selection": "typed BPM service and operation-template contracts" if args.bpm_service else "checked response/8-bit mask and existing measurement contracts" if args.bpm_response else "one bias completion contract; qualified native binary reused" if args.complete_bias else "six file-to-ASDF/affected contracts" if args.file_qc else ("four measurement/bias/allocation contracts" if args.measurements else ("native_bias_files only" if args.bias_only else "five focused contracts")),
                "inherited_four_passes": "native f20a9ab7a0758775d020480be1e1daa547716e3b actual Mac run; not rerun" if args.bias_only else None,
-               "limits": ["synthetic response/mask/measurement core only; no new recipe CLI" if args.bpm_response else "synthetic operation-template/file-bias/layout/bias/native-path contracts only", "no observational/scientific/performance acceptance",
+               "limits": ["synthetic BPM numerical service only; no acquisition admission or publication" if args.bpm_service else "synthetic response/mask/measurement core only; no new recipe CLI" if args.bpm_response else "synthetic operation-template/file-bias/layout/bias/native-path contracts only", "no observational/scientific/performance acceptance",
                           "no sanitizer or leak-tool claim on targets"]}
     print("RETAINED RUN:", run, flush=True)
     env = dict(os.environ, TMPDIR=str(run), PYTHONDONTWRITEBYTECODE="1", PYTHONNOUSERSITE="1", OPENBLAS_NUM_THREADS="1",
@@ -291,6 +293,8 @@ print(json.dumps(dict(prefix=sys.prefix,versions=versions,controls=controls),sor
                 targets = ["measurement_stats_probe", "bias_service_probe", "eclipse_allocation_probe", "mefpp_m5", "mefpp"]
             if args.bpm_response:
                 targets = ["bpm_response_probe", "measurement_stats_probe"]
+            if args.bpm_service:
+                targets = ["bpm_service_probe", "operation_template_probe"]
             if args.file_qc or args.complete_bias:
                 targets = ["layout_probe", "bias_service_probe", "eclipse_allocation_probe", "mefpp_m5", "mefpp"]
             if args.private_install:
@@ -305,6 +309,9 @@ print(json.dumps(dict(prefix=sys.prefix,versions=versions,controls=controls),sor
                 selection = "^(" + "|".join(sorted(expected_tests)) + ")$"
             if args.bpm_response:
                 expected_tests = {"native_bpm_response", "native_measurement_stats"}
+                selection = "^(" + "|".join(sorted(expected_tests)) + ")$"
+            if args.bpm_service:
+                expected_tests = {"native_bpm_service", "native_operation_template"}
                 selection = "^(" + "|".join(sorted(expected_tests)) + ")$"
             if args.file_qc or args.complete_bias:
                 expected_tests = FILE_QC_TESTS
