@@ -23,9 +23,17 @@ int main(int argc, char **argv)
             .byteorder = ASDF_BYTEORDER_LITTLE};
         file = asdf_open(NULL);
         CHECK(file != NULL);
-        CHECK(asdf_set_string0(file, "measurement/unit", "ADU") == ASDF_VALUE_OK);
-        CHECK(asdf_set_double(file, "measurement/value", 12.5) == ASDF_VALUE_OK);
-        CHECK(asdf_set_null(file, "measurement/unavailable") == ASDF_VALUE_OK);
+        /* libasdf 0.3.0 cannot add a second missing child through an
+         * existing parent path (#219). Build the mapping directly, using the
+         * API verified on the Intel Mac, then transfer it into the root once.
+         * Keep the same metadata and Python-side exact-content checks. */
+        asdf_mapping_t *measurement = asdf_mapping_create(file);
+        CHECK(measurement != NULL);
+        CHECK(asdf_mapping_set_string0(measurement, "unit", "ADU") == ASDF_VALUE_OK);
+        CHECK(asdf_mapping_set_double(measurement, "value", 12.5) == ASDF_VALUE_OK);
+        CHECK(asdf_mapping_set_null(measurement, "unavailable") == ASDF_VALUE_OK);
+        CHECK(asdf_set_mapping(file, "measurement", measurement) == ASDF_VALUE_OK);
+        /* asdf_set_mapping consumes the wrapper; do not destroy it here. */
         values = asdf_ndarray_data_alloc(&output);
         CHECK(values != NULL);
         for (int i = 0; i < 6; ++i) values[i] = (double)i - 2.5;

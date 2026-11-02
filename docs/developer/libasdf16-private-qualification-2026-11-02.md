@@ -1,9 +1,9 @@
 # Private libasdf / ASDF 1.6 qualification — 2 November 2026
 
-Status: ten Mac shared QC controls passed. External libasdf 0.3.0 installed;
-explicit compiler paths now compile, link and launch successfully. First C write
-fails on the second nested metadata field. Target diagnostic pending (#219);
-no completed interchange control. Refs #213/#214/#215/#216/#217/#219.
+Status: ten Mac shared QC controls passed. External libasdf compiles/links/starts.
+Actual Mac diagnostic isolates nested sibling insertion failure; direct mapping
+construction/attachment/readback succeeds. Consumer workaround prepared; full
+three-control interchange remains pending. Refs #213/#214/#215/#216/#217/#219.
 Fernando authorized trying the C library and upgrading the file/core standard
 to 1.6.0. This supersedes the earlier no-native-dependency-trial boundary only
 for this private qualification. Existing installations and evidence remain.
@@ -192,3 +192,43 @@ in a separate process. It prints exact setter/getter status codes and readbacks,
 retains stdout/stderr and checks library-prefix/checkout preservation. It creates
 no ASDF output and performs no installation or scientific processing. Diagnostic
 completion is not functional acceptance: inspect every case's numeric results.
+
+## Actual nested-path diagnostic and consumer workaround
+
+2 November #219 diagnostic receipt: actual Intel Mac mac-asdf-nested-Kll2GMfs
+isolates libasdf 0.3.0 nested-sibling insertion failure (code5, missing readback).
+Flat writes and direct mapping construction/attachment/get all return0 and
+read back12.5. Prefix/checkout preservation passed. Use the verified mapping
+API in the synthetic interchange consumer, preserving exact metadata/array/QC
+checks. External library is unchanged; its limitation remains open. Agent GCC
+C17 syntax check against pinned public headers passes (synthetic config only,
+no linking/runtime claim). Reuse ten QC controls and installed external prefix;
+full three-control Mac interchange remains pending. No production activation,
+upstream patch/upgrade, C90/bias/Chapman replay, merge or cleanup.
+
+At commit 6779f16b the separate diagnostic processes reported:
+
+| API path | Setter status | Getter status | Readback |
+|---|---|---|---|
+| Flat unit/value | both 0 | 0 | 12.5 |
+| Nested measurement/unit then measurement/value | 0 then 5 | -1 | unchanged sentinel -999 |
+| Direct mapping unit/value/null then attach | all 0 | 0 | 12.5 |
+
+All processes exit zero intentionally because they report each API result;
+that does not make the failing nested case pass. Error 5 is named OOM by the
+library, but these results do not establish actual system memory exhaustion.
+Pinned source review identifies an existing-parent reappend in materialization
+as the likely mechanism. The underlying upstream library is not repaired.
+
+Only the synthetic C writer now creates the measurement mapping through
+asdf_mapping_create/set_string0/set_double/set_null and attaches it once using
+asdf_set_mapping. The attachment consumes the wrapper, so no second destroy is
+performed. Metadata paths/values, ndarray and independent Python exact validation
+remain unchanged. Keep #219 open for the external API limitation even if the
+bounded workaround passes interchange.
+
+Agent GCC C17 -Wall/-Wextra/-Werror syntax-only check passes against the pinned
+0.3.0 public headers with a synthetic generated config header disabling optional
+feature macros. This checks declarations/usage, not compilation/linking of the
+library or Mac runtime behavior. Next retry uses the retained installed prefix
+and original passed ten QC controls; no package install or repeated diagnostic.

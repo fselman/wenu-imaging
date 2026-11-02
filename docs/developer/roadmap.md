@@ -1,5 +1,16 @@
 # wenu-imaging roadmap
 
+2 November #219 diagnostic receipt: actual Intel Mac mac-asdf-nested-Kll2GMfs
+isolates libasdf 0.3.0 nested-sibling insertion failure (code5, missing readback).
+Flat writes and direct mapping construction/attachment/get all return0 and
+read back12.5. Prefix/checkout preservation passed. Use the verified mapping
+API in the synthetic interchange consumer, preserving exact metadata/array/QC
+checks. External library is unchanged; its limitation remains open. Agent GCC
+C17 syntax check against pinned public headers passes (synthetic config only,
+no linking/runtime claim). Reuse ten QC controls and installed external prefix;
+full three-control Mac interchange remains pending. No production activation,
+upstream patch/upgrade, C90/bias/Chapman replay, merge or cleanup.
+
 2 November external ASDF runtime receipt (#219): at 33f16555, actual Mac
 mac-asdf16-external-dFpUmHsz compiled/linked/started the C17 probe successfully.
 The first write stopped adding measurement/value after measurement/unit succeeded;
