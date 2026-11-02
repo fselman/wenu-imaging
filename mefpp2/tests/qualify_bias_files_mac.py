@@ -1,4 +1,4 @@
-"""Private M5 bias-template qualification (Mac, C17 only); tool arguments must follow docs/developer/selected-tools.md."""
+"""Private M5 bias-template qualification (Mac or Chapman, C17 only); tool arguments must follow docs/developer/selected-tools.md."""
 import argparse
 import hashlib
 import io
@@ -36,14 +36,22 @@ def selected_tool(declared):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--host", choices=("mac",), required=True)
+    parser.add_argument("--host", choices=("mac", "chapman"), required=True)
     parser.add_argument("--revision", required=True)
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--bias-only", action="store_true", help="Rebuild affected candidate and run only native_bias_files")
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--sdk", type=Path)
+    parser.add_argument("--candidate-checkout", action="store_true",
+                        help="Chapman only: protect clean checked-out candidate instead of main")
+    parser.add_argument("--private-install", action="store_true",
+                        help="Install full normal runtime in run/install after the five contracts")
+    parser.add_argument("--funpack", type=Path)
     args = parser.parse_args()
+    require(not args.candidate_checkout or args.host == "chapman", "Candidate checkout is Chapman only")
+    require(not args.private_install or (args.host == "chapman" and not args.bias_only and args.funpack),
+            "Private install requires full Chapman gate and recorded funpack")
 
     # Host/environment guards: no checkout changes, upgrades or installation.
     settings = {
@@ -72,14 +80,23 @@ def main():
             "Protection helper changed")
     guard = runpy.run_path(str(guard_path))
     checkout_before = guard["checkout"](repo)
-    require(checkout_before["head"] == MAIN and checkout_before["branch"] == "main" and
-            checkout_before["upstream"] == "origin/main" and not checkout_before["status"], "Expected clean main")
+    expected_branch = "feat/m5-bias-template-20261102" if args.candidate_checkout else "main"
+    expected_head = args.revision if args.candidate_checkout else MAIN
+    require(checkout_before["head"] == expected_head and checkout_before["branch"] == expected_branch and
+            checkout_before["upstream"] == "origin/" + expected_branch and not checkout_before["status"],
+            "Expected exact clean protected checkout")
     origin = "git@github.com:fselman/wenu-imaging.git" if args.host == "mac" else "https://github.com/fselman/wenu-imaging.git"
     require(checkout_before["origin"] == origin and checkout_before["push"] == origin, "Unexpected origin")
     run = args.run.resolve(strict=True)
-    require(not args.run.is_symlink() and run.parent == (Path.home() / "Software/build/wenu-imaging").resolve(),
-            "Unexpected private run directory")
+    build_root = (Path.home() / "Software/build/wenu-imaging").resolve()
+    allowed_run = run.parent == build_root or (args.candidate_checkout and
+                  run.name == "native" and run.parent.parent == build_root)
+    require(not args.run.is_symlink() and allowed_run, "Unexpected private run directory")
     require(not any(run.iterdir()) or {p.name for p in run.iterdir()} == {"qualify.py"}, "Run directory is not fresh")
+    install_prefix = run / "install"
+    require(not install_prefix.exists(), "Private install prefix must be fresh")
+    if args.private_install:
+        selected_tool(args.funpack)
     tools = {}
     # Invocation paths come from selected-tools.md, never PATH/xcrun rediscovery.
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
@@ -149,18 +166,24 @@ def main():
             build = run / ("build-c" + standard)
             configure = [tools["cmake"], "-S", source, "-B", build, "-G", "Unix Makefiles",
                          "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_C_FLAGS_RELEASE=-O2 -DNDEBUG",
-                         "-DMEFPP_BUILD_RESOURCES=OFF", "-DMEFPP_BUILD_CONFIG_PROBES=ON",
+                         "-DMEFPP_BUILD_RESOURCES=" + ("ON" if args.private_install else "OFF"),
+                         "-DMEFPP_BUILD_CONFIG_PROBES=ON",
                          "-DMEFPP_BUILD_BIAS_ADAPTER=ON",
                          "-DMEFPP_SOURCE_REVISION=" + args.revision, "-DMEFPP_C_STANDARD=" + standard,
                          "-DCMAKE_C_COMPILER=" + str(tools["compiler"]),
                          "-DCMAKE_MAKE_PROGRAM=" + str(tools["make"]),
                          "-DCMAKE_AR=" + str(tools["ar"]), "-DCMAKE_RANLIB=" + str(tools["ranlib"]),
                          "-DPython3_EXECUTABLE=" + sys.executable]
+            if args.private_install:
+                configure += ["-DMEFPP_FUNPACK=" + str(args.funpack),
+                              "-DCMAKE_INSTALL_PREFIX=" + str(install_prefix)]
             if args.host == "mac":
                 configure += ["-DCMAKE_OSX_ARCHITECTURES=x86_64", "-DCMAKE_OSX_SYSROOT=" + str(args.sdk)]
             command("configure-c" + standard, configure)
             targets = ["mefpp_m5", "mefpp"] if args.bias_only else [
                 "operation_template_probe", "layout_probe", "bias_service_probe", "mefpp_m5", "mefpp"]
+            if args.private_install:
+                targets.append("mefpp_resources")
             command("build-c" + standard, [tools["cmake"], "--build", build, "--parallel", "2",
                                            "--target", *targets])
             # Inventory five focused native contracts; all inputs are synthetic fixtures.
@@ -173,6 +196,23 @@ def main():
             log = command("tests-c" + standard, [tools["ctest"], "--test-dir", build, "-R", selection,
                                                   "--output-on-failure", "--stop-on-failure", "--no-tests=error", "-j", "1"])
             print(log.read_text(), flush=True)
+        if args.private_install:
+            # Exercise the existing full runtime installer once, into a new prefix.
+            command("install-c17", [tools["cmake"], "--install", build, "--prefix", install_prefix])
+            receipt["installation_performed"] = True
+            manifest = json.loads((install_prefix / "share/mefpp/build-manifest.json").read_text())
+            require(manifest["installed_files"], "Empty installed manifest")
+            for relative, expected in manifest["installed_files"].items():
+                path = Path(relative)
+                require(not path.is_absolute() and ".." not in path.parts, "Invalid installed path")
+                require(sha(install_prefix / path) == expected, "Installed file hash mismatch: " + relative)
+            require(sha(install_prefix / "bin/mefpp") == sha(build / "mefpp2/mefpp"),
+                    "Installed/built engine mismatch")
+            command("installed-cli", [tools["cmake"], "-DEXECUTABLE=" + str(install_prefix / "bin/mefpp"),
+                                     "-P", source / "mefpp2/tests/cli_usage.cmake"])
+            receipt["private_install"] = dict(prefix=str(install_prefix), manifest=manifest,
+                normal_runtime_verified=True, bias_adapter_remains_opt_in=True,
+                adapter_path=str(build / "mefpp2/mefpp_m5"))
         finished = True
     finally:
         # Preserve installation, checkout and exported source on every exit.
@@ -194,4 +234,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

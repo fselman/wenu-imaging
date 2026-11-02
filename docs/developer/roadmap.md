@@ -1,5 +1,21 @@
 # wenu-imaging roadmap
 
+2 November owner explicitly authorizes Chapman qualification before further
+bias/QC work because subsequent work depends on ASDF standard/libraries. This
+supersedes the earlier no-Chapman-replay boundary for this one representative
+Chapman4 increment only; use C17, not a C90/host matrix. Actual target is clean
+candidate feat/m5-bias-template-20261102 after main fast-forward to47123eed.
+Retained Python ASDF6.0.0/asdf-standard1.5.0/NumPy1.26.4/Astropy6.1.7 is reused.
+Selected GCC10.2.1 and CMake/CTest3.29.6 stay unchanged. External libasdf0.3.0
+is planned/installed in a new private prefix under actual CentOS7/glibc2.17;
+never fake platform limits. Follow
+[the Chapman gate](m5-asdf-chapman-qualification-2026-11-02.md).
+The gate runs ten shared QC controls, three C/Python interchange controls,
+five native C17 contracts and complete private normal-runtime install/hash/CLI
+checks. Bias adapter remains opt-in in its build, not normal installed payload.
+Two agent guard controls and syntax pass; actual Chapman execution is pending.
+No production activation, observation processing, merge or cleanup.
+
 2 November external ASDF Mac qualification COMPLETE at
 6395745dd3e55f90c63ae90f28238eae436c6468. Retained
 mac-asdf16-mapping-DmvnvXZJ reports all three C17/Python interchange controls
