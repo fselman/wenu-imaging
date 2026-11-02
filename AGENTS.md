@@ -1,5 +1,15 @@
 # wenu-imaging
 
+2 November Chapman runner correction #220: first attempt at59cb940,
+chapman-m5-asdf16-wEY4w9AQ, failed on unsupported --no-plugins before dependency
+solve/install or functional tests. All five preservation checks passed.
+Do not upgrade Conda or infer ASDF/glibc incompatibility from this CLI error.
+Corrected runner records Conda version and global/create help, uses only
+advertised plugin/solver flags and permits classic-only legacy releases.
+Retain real linux-64/glibc2.17 checks and every failed attempt; use a fresh retry.
+Five agent guard/capability tests pass; actual target qualification remains
+pending. No production activation, engine change, merge or cleanup.
+
 2 November owner explicitly authorizes Chapman qualification before further
 bias/QC work because subsequent work depends on ASDF standard/libraries. This
 supersedes the earlier no-Chapman-replay boundary for this one representative

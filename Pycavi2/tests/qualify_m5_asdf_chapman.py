@@ -53,6 +53,34 @@ def check_virtual_platform(info, actual):
             'Conda must report actual linux-64/glibc limits; no override/fallback')
 
 
+def conda_cli(conda, command):
+    """Select only options advertised by this installed Conda, before solving."""
+    version = command('conda-version', [conda, '--version'], capture=True).strip()
+    match = re.fullmatch(r'conda (\d+)\.(\d+)(?:[^\s]*)', version)
+    require(match is not None, 'Unrecognized Conda version: ' + version)
+    release = tuple(map(int, match.groups()))
+    require(release >= (4, 7), 'Conda predates required repodata/platform support; inspect before proceeding')
+    global_help = command('conda-help', [conda, '--help'], capture=True)
+    global_options = set(re.findall(r'--[a-z][a-z-]*', global_help))
+    base = [conda]
+    if '--no-plugins' in global_options:
+        base += ['--no-plugins']
+    create_help = command('conda-create-help', [*base, 'create', '--help'], capture=True)
+    create_options = set(re.findall(r'--[a-z][a-z-]*', create_help))
+    for option in ('--repodata-fn', '--strict-channel-priority', '--dry-run', '--json', '--prefix'):
+        require(option in create_options, 'Required Conda create option absent: ' + option)
+    if '--solver' in create_options:
+        solver = ['--solver', 'classic']
+    elif '--experimental-solver' in create_options:
+        solver = ['--experimental-solver', 'classic']
+    else:
+        require(release < (22, 11), 'Modern Conda lacks expected solver selection; inspect before proceeding')
+        solver = []  # Legacy releases have only the classic solver.
+    return base, solver, dict(version=version, no_plugins_cli='--no-plugins' in global_options,
+        solver_arguments=solver, legacy_classic_default=not solver,
+        note='CONDA_NO_PLUGINS/CONDA_SOLVER requested in child environment; no installed configuration changes')
+
+
 def recorded_funpack():
     # Reuse the selected executable from the accepted installed-runtime build.
     old = Path('/home1/fselman/Software/build/wenu-imaging/chapman-large-file-install-SLEBL3NJ')
@@ -137,17 +165,19 @@ def main():
     library_before = None
     try:
         # Package gate first: respect real glibc before launching functional tests.
-        info = json.loads(command('conda-platform', [conda, '--no-plugins', 'info', '--json'], capture=True))
+        conda_base, solver_options, capabilities = conda_cli(conda, command)
+        report['conda_capabilities'] = capabilities
+        info = json.loads(command('conda-platform', [*conda_base, 'info', '--json'], capture=True))
         check_virtual_platform(info, '2.17')
-        create = [conda, '--no-plugins', 'create', '--yes', '--prefix', prefix,
+        create = [*conda_base, 'create', '--yes', '--prefix', prefix,
             '--override-channels', '--channel', 'conda-forge', '--strict-channel-priority',
-            '--solver', 'classic', '--repodata-fn', 'repodata.json', 'libasdf=0.3.0', 'pkgconf>=2']
+            *solver_options, '--repodata-fn', 'repodata.json', 'libasdf=0.3.0', 'pkgconf>=2']
         command('libasdf-plan', [*create, '--dry-run', '--json'])
         command('libasdf-create', create)
         packages = json.loads(command('libasdf-packages',
-            [conda, '--no-plugins', 'list', '--prefix', prefix, '--json'], capture=True))
+            [*conda_base, 'list', '--prefix', prefix, '--json'], capture=True))
         require([p['version'] for p in packages if p['name'] == 'libasdf'] == ['0.3.0'], 'Unexpected libasdf')
-        command('libasdf-explicit', [conda, '--no-plugins', 'list', '--prefix', prefix, '--explicit'])
+        command('libasdf-explicit', [*conda_base, 'list', '--prefix', prefix, '--explicit'])
         library_before = private_identity(prefix)
         report['external_prefix'] = str(prefix)
         # Run the shared QC schema/sidecar/traversal contracts once on this platform.

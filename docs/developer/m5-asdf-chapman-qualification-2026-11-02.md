@@ -1,6 +1,7 @@
 # Chapman4 bias and ASDF 1.6 qualification — 2 November 2026
 
-Status: PREPARED, target execution pending. PR #209 / #214. The owner explicitly
+Status: first target attempt failed at Conda CLI parsing; corrected retry prepared,
+not yet target-qualified. PR #209 / #214. The owner explicitly
 requests bringing Chapman to the current branch and testing the new bias routine
 and ASDF installation because subsequent development depends on them. This
 authorizes one representative Chapman4 C17 gate, superseding earlier Mac-only
@@ -88,3 +89,28 @@ conformance, numerical QC/scientific acceptance, production engine/package
 activation, observational processing, new adapter installation API, other
 hosts, C90, memory/leak or performance certification. Follow-up scientific QC
 definitions/native-to-ASDF handoff remain separate review work.
+
+## First attempt and Conda CLI compatibility correction (#220)
+
+Actual owner-returned run at 59cb940c62a7aadcf6fb04227126c6ac3458edc0:
+`/home1/fselman/Software/build/wenu-imaging/chapman-m5-asdf16-wEY4w9AQ`.
+The first conda-platform command returned an unrecognized --no-plugins error.
+No solve, dependency install, QC/interchange/native contract or runtime install
+ran. Checkout, installed files, production packages, retained Python environment
+and exported source preservation all passed. The selected funpack guard and
+source export had completed. Preserve this run in place.
+
+The runner now records conda --version and reads global/create help before
+selecting flags. --no-plugins is used only if advertised. --solver classic or
+--experimental-solver classic is used only if advertised; classic-only legacy
+Conda receives neither. Unknown modern CLI layouts and absent required create
+options stop before solving. Child environment requests remain local; base
+Conda, condarc and global environment are not repaired/upgraded. Real platform
+and glibc checks, separate streams and all later functional gates are unchanged.
+
+Five agent stdlib controls passed in 0.089 s: platform/glibc mismatch, wrong host
+before writes, legacy flags, modern flags, and transitional solver/unknown modern
+CLI handling. These use emulated help responses, not an installed target Conda;
+runner syntax also passes. Actual corrected Chapman execution remains pending.
+No previous functional gate passed on Chapman to reuse; retry starts in a fresh
+retained directory without repeating Mac gates or the qualified Python install.
