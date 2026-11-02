@@ -47,10 +47,12 @@ pixelmap * pixelmap_new(int lx, int ly)
         return NULL ;
     }
     p = malloc(sizeof(pixelmap)) ;
+    if (p == NULL) return NULL;
     p->lx = lx ;
     p->ly = ly ;
     p->ngoodpix = lx * ly ;
     p->data = malloc(lx * ly * sizeof(binpix));
+    if (p->data == NULL) { free(p); return NULL; }
     /* Set all pixel values to 1 */
     memset(p->data, PIXELMAP_1, p->lx * p->ly);
     return p ;
@@ -140,6 +142,7 @@ pixelmap * pixelmap_copy(pixelmap * in)
     if (in == NULL) return NULL ;
     /* allocate output pixel map        */
     out = pixelmap_new(in->lx, in->ly) ;
+    if (out == NULL) return NULL;
     out->ngoodpix = in->ngoodpix;
     pmsize = in->lx * in->ly * sizeof(binpix);
     memcpy(out->data, in->data, pmsize);
@@ -929,6 +932,7 @@ pixelmap * pixelmap_getvig(
     outlx = upright_x - loleft_x + 1 ;
     outly = upright_y - loleft_y + 1 ;
     extr_pixmap = pixelmap_new(outlx, outly) ;
+    if (extr_pixmap == NULL) return NULL;
 
     for (j=0 ; j<outly ; j++) {
         inpt = map_in->data+loleft_x-1 + (j+loleft_y-1)*map_in->lx ;

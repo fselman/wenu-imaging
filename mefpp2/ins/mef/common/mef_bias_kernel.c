@@ -5,6 +5,12 @@
 image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
     mef_bias_statistics *statistics, int *decisions)
 {
+    return mef_bias_stack_masked(cube, minimum, kappa, statistics, decisions, NULL);
+}
+image_t *mef_bias_stack_masked(cube_t *cube, int minimum, double kappa,
+    mef_bias_statistics *statistics, int *decisions, const pixelmap *map)
+{
+    image_sample_stats measured;
     double *means;
     int *valid;
     double average, sigma, low, high;
@@ -23,7 +29,12 @@ image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
     if (means == NULL || valid == NULL) goto cleanup;
     average = 0.00;
     for (i = 0; i < count; ++i) {
-        means[i] = image_getmean(cube->plane[i]);
+        if (map == NULL) means[i] = image_getmean(cube->plane[i]);
+        else {
+            if (image_getstats_masked_checked(cube->plane[i], map, NULL, 0, &measured) != 0 ||
+                !measured.level_available) goto cleanup;
+            means[i] = measured.mean;
+        }
         average += means[i];
     }
     average /= (double)count;
@@ -54,6 +65,12 @@ image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
     }
     statistics->median = median;
     statistics->stdev = image_getstdev(stacked);
+    if (map != NULL) {
+        if (image_getstats_masked_checked(stacked, map, NULL, 0, &measured) != 0 ||
+            !measured.stdev_available) { image_del(stacked); stacked = NULL; goto cleanup; }
+        statistics->median = measured.median;
+        statistics->stdev = measured.stdev;
+    }
     statistics->accepted = kept;
 cleanup:
     free(means);

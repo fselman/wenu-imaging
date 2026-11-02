@@ -1,5 +1,19 @@
 # wenu-imaging agent instructions
 
+## Current BPM/MAD increment, 2 November 2026
+
+The announced checked Eclipse statistics/MAD/raw-pair composition and opt-in
+`mef_cal_bias_measurements` service are implemented. BPM selects scan samples,
+frame-rejection measurements and stage QC; RON subtracts raw frames before any
+correction. Explicit raw-coordinate 1=good masks only; never infer FITS BPM
+polarity/HDU/geometry. Legacy entry/default stacking are preserved. Four focused
+agent C17 contracts pass; actual Mac `--measurements` gate remains pending.
+See [the increment record](bias-bpm-mad-increment-2026-11-02.md).
+File BPM binding, shared ASDF handoff and other-recipe/two-pass integration remain
+next work. Do not claim production activation or replay unchanged ASDF/Chapman
+gates. #144 wider dependency allocation qualification stays open.
+
+
 ## Eclipse reuse and reviewed extensions
 
 Owner instruction, 2 November 2026: use the existing Eclipse resources whenever
@@ -1961,4 +1975,3 @@ support for single-CCD and single-CMOS reductions as separate work items. Audit
 format assumptions and detector-specific calibration/noise behavior before
 claiming single-detector support. Neither future item may delay the urgent
 OmegaCAM production path without an explicit scope decision.
-

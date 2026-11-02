@@ -3,6 +3,7 @@
 #define MEF_CAL_BIAS_H
 #include "mef_runtime.h"
 #include "image_handling.h"
+#include "image_stats.h"
 
 typedef struct mef_bias_result mef_bias_result;
 typedef struct {
@@ -13,6 +14,36 @@ typedef struct {
     /* Explicit configuration mapping; never inferred from detector ID/HDU. */
     size_t configuration_detector;
 } mef_bias_input;
+/* Opt-in numerical QC. BPM is a borrowed raw-coordinate Eclipse map (1=good),
+ * corresponding to the selected MEF_CAL_BPM request. NULL requires explicit
+ * omission. No filename/HDU/polarity inference or silent geometry conversion.
+ * MAD is optional. RON pair indices are explicit, distinct, zero based; when
+ * enabled subtraction uses RAW frames before ANY overscan correction.
+ * high_sigma is finite, positive (initial owner choice 5). No clipping occurs. */
+typedef struct {
+    const pixelmap *bpm;
+    int with_mad, ron_pair_set;
+    size_t ron_first, ron_second;
+    double high_sigma;
+} mef_bias_measurement_options;
+typedef struct {
+    image_sample_stats active_raw, active_corrected, prescan, overscan;
+} mef_bias_frame_measurements;
+typedef struct {
+    size_t count;
+    const mef_bias_frame_measurements *frames;
+    image_sample_stats master, master_unmasked, raw_difference;
+    size_t ron_first, ron_second;
+    int ron_stdev_available, ron_mad_available;
+    double ron_stdev_adu, ron_mad_adu;
+    int high_offset_available, high_offset_degenerate;
+    double high_offset_threshold;
+    size_t high_offset_count;
+    /* 1=flagged high offset (NOT a good-pixel BPM), active coordinates. This
+     * diagnostic inspects every finite master pixel, including known defects. */
+    const pixelmap *high_offset_flags;
+} mef_bias_measurements;
+
 typedef enum { MEF_BIAS_VARIANCE_UNAVAILABLE_LEGACY = 1 } mef_bias_variance_state;
 typedef struct {
     mef_bias_variance_state variance_state;
@@ -39,6 +70,10 @@ typedef struct {
  */
 mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
     mef_bias_result **out, mef_error **error);
+mef_status mef_cal_bias_measurements(mef_context *, const mef_bias_input *,
+    const mef_bias_measurement_options *, mef_bias_result **, mef_error **);
+/* Borrowed QC outlives input/context, owned by result. NULL on legacy call. */
+const mef_bias_measurements *mef_bias_result_measurements(const mef_bias_result *);
 void mef_bias_result_destroy(mef_bias_result *result);
 /* Borrowed views valid until result destruction. */
 const image_t *mef_bias_result_signal(const mef_bias_result *result);

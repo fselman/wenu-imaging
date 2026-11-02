@@ -92,4 +92,12 @@ double double_avg(double * a, int n);
 void double_qsort(double * arr, int n);
 
 
+/* Checked median/MAD for a finite double array. Reuses double_kth_smallest;
+ * even samples use the average of the two central order statistics. Input is
+ * borrowed and unchanged. with_mad is 0/1; no Gaussian scaling is applied.
+ * Returns 0 on success, -1 on invalid input/allocation/nonfinite arithmetic;
+ * outputs remain unchanged on failure. mad may be NULL only with_mad==0. */
+int double_median_mad_checked(const double *values, int n, int with_mad,
+    double *median, double *mad);
+
 #endif

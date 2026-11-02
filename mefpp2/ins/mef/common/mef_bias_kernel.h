@@ -10,4 +10,7 @@ typedef struct {
  * entries. Statistics are stored with the legacy float conversions. */
 image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
     mef_bias_statistics *statistics, int *decisions);
+/* Same stack arithmetic; explicit active-area mask selects frame means and
+ * product statistics, not output pixels. Consumes cube on every return. */
+image_t *mef_bias_stack_masked(cube_t *, int, double, mef_bias_statistics *, int *, const pixelmap *);
 #endif

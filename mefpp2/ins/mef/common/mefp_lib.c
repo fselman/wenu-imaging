@@ -1974,7 +1974,12 @@ int mef_is_extension(char * filename)
 	return qfits_query_n_ext(filename) ;
 }
 
-image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane, char * what)
+image_t * mef_overscan_correction(image_t *frame, mef_bb *bb, int nplane, char *what)
+{
+    return mef_overscan_correction_masked(frame, bb, nplane, what, NULL);
+}
+image_t * mef_overscan_correction_masked(image_t *   mef_frame, mef_bb *bb,
+    int nplane, char * what, const pixelmap *map)
 {
     int *   prescan_x = ((bb->ccd)+(bb->xtnum-1))->prescan_x;
     int *   overscan_x = ((bb->ccd)+(bb->xtnum-1))->overscan_x;
@@ -1997,6 +2002,16 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 	pixelvalue	*	pix ;
 	int		prescan_factor, overscan_factor;
 
+    /* Eclipse map polarity is 1=good; reject malformed maps before mutation. */
+    if (map != NULL) {
+        size_t position, count;
+        if (map->data == NULL || map->lx != mef_frame->lx || map->ly != mef_frame->ly)
+            return NULL;
+        count = (size_t)map->lx * (size_t)map->ly;
+        for (position = 0; position < count; ++position)
+            if (map->data[position] != PIXELMAP_0 && map->data[position] != PIXELMAP_1)
+                return NULL;
+    }
 	/* Sanity tests with input parameters */
  	prescan_factor = 0;
 	overscan_factor = 0;
@@ -2036,15 +2051,17 @@ image_t * mef_overscan_correction(image_t *   mef_frame, mef_bb *bb, int nplane,
 		k=0 ;
 		if (use_prescan != 0) {
 		   for (i=prescan_x[0] ; i<=prescan_x[1] ; i++) {
-			bias_line[k++] = pix[i];
+			if (map == NULL || map->data[j*mef_frame->lx+i] == PIXELMAP_1)
+                bias_line[k++] = pix[i];
 		   }
 		}
 		if (use_overscan != 0) {
 		   for (i=overscan_x[0] ; i<=overscan_x[1] ; i++) {
-			bias_line[k++] = pix[i] ;
+			if (map == NULL || map->data[j*mef_frame->lx+i] == PIXELMAP_1)
+                bias_line[k++] = pix[i] ;
 		   }
 		}
-        if (function1d_average_reject_checked(bias_line, scan_width,
+        if (function1d_average_reject_checked(bias_line, k,
                 rej_int[0], rej_int[1], &filtered) != 0) goto overscan_done;
         /* e_comment(1,"Subtracting %f from each bias pixel", filtered); */
 		for (i=0 ; i<mef_frame->lx ; i++) {
@@ -4735,4 +4752,3 @@ failed:
     e_error("cannot publish FITS output [%s]", filename);
     return -1;
 }
-

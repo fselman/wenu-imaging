@@ -10,6 +10,7 @@ struct mef_bias_result {
     image_t *signal;
     mef_request *request;
     mef_bias_qc qc;
+    mef_bias_measurements measurements;
 };
 
 static void release(const mef_allocator *allocator, const void *pointer)
@@ -26,6 +27,8 @@ void mef_bias_result_destroy(mef_bias_result *result)
     release(&a, result->qc.scan_median);
     release(&a, result->qc.scan_stdev);
     release(&a, result->qc.accepted);
+    release(&a, result->measurements.frames);
+    pixelmap_del((pixelmap *)result->measurements.high_offset_flags);
     release(&a, result);
 }
 const image_t *mef_bias_result_signal(const mef_bias_result *result)
@@ -40,6 +43,10 @@ const mef_request *mef_bias_result_request(const mef_bias_result *result)
 {
     return result == NULL ? NULL : result->request;
 }
+const mef_bias_measurements *mef_bias_result_measurements(const mef_bias_result *result)
+{
+    return result == NULL || result->measurements.frames == NULL ? NULL : &result->measurements;
+}
 static int finite_value(double value)
 {
     return value == value && value >= -DBL_MAX && value <= DBL_MAX;
@@ -49,7 +56,7 @@ static int interval(const int *pair, int width)
     return pair[0] >= 1 && pair[1] >= pair[0] && pair[1] <= width;
 }
 static mef_status validate(mef_context *context, const mef_bias_input *input,
-    mef_bias_settings *settings)
+    mef_bias_settings *settings, const mef_bias_measurement_options *options)
 {
     const mef_request_spec *request;
     const mef_resolved_request_spec *resolved;
@@ -57,17 +64,26 @@ static mef_status validate(mef_context *context, const mef_bias_input *input,
     int width, height, scan_width;
     if (context == NULL || input == NULL || input->frames == NULL ||
         input->count == 0 || input->count > INT_MAX ||
-        input->count > (size_t)-1 / sizeof(double)) return MEF_ERR_INPUT;
+        input->count > (size_t)-1 / sizeof(mef_bias_frame_measurements)) return MEF_ERR_INPUT;
     resolved = mef_request_resolved_view(mef_context_request(context));
     if (resolved == NULL) return MEF_ERR_INPUT;
     request = &resolved->request;
     if (request->operation != MEF_OP_CAL_BIAS || request->operation_version != 1 ||
         request->input_count != input->count) return MEF_ERR_INPUT;
-    /* This first concrete service has no calibration application kernel. */
-    if (request->calibration_count != 0) return MEF_ERR_UNSUPPORTED;
     if (resolved->bpm_selection_count != 1) return MEF_ERR_UNSUPPORTED;
-    if (resolved->bpm_selections[0].state != MEF_BPM_OMITTED)
-        return MEF_ERR_UNSUPPORTED;
+    if (options == NULL || options->bpm == NULL) {
+        if (request->calibration_count != 0 ||
+            resolved->bpm_selections[0].state != MEF_BPM_OMITTED) return MEF_ERR_UNSUPPORTED;
+    } else {
+        if (request->calibration_count != 1 || resolved->calibration_roles[0] != MEF_CAL_BPM ||
+            resolved->bpm_selections[0].state != MEF_BPM_SELECTED) return MEF_ERR_UNSUPPORTED;
+    }
+    if (options != NULL && ((options->with_mad != 0 && options->with_mad != 1) ||
+        (options->ron_pair_set != 0 && options->ron_pair_set != 1) ||
+        !finite_value(options->high_sigma) || options->high_sigma <= 0.0 ||
+        (options->ron_pair_set && (options->ron_first >= input->count ||
+        options->ron_second >= input->count || options->ron_first == options->ron_second))))
+        return MEF_ERR_INPUT;
     if (mef_config_bias_settings(mef_context_config(context),
             input->configuration_detector, settings) != MEF_OK)
         return MEF_ERR_CONFIG;
@@ -109,12 +125,30 @@ static mef_status validate(mef_context *context, const mef_bias_input *input,
         for (j = 0; j < pixels; ++j)
             if (!finite_value(input->frames[i]->data[j])) return MEF_ERR_INPUT;
     }
+    if (options != NULL && options->bpm != NULL) {
+        const pixelmap *map;
+        map = options->bpm;
+        if (map->data == NULL || map->lx != width || map->ly != height) return MEF_ERR_INPUT;
+        for (j = 0; j < pixels; ++j)
+            if (map->data[j] != PIXELMAP_0 && map->data[j] != PIXELMAP_1) return MEF_ERR_INPUT;
+    }
     return MEF_OK;
 }
 
 mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
     mef_bias_result **out, mef_error **error)
 {
+    return mef_cal_bias_measurements(context, input, NULL, out, error);
+}
+mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input *input,
+    const mef_bias_measurement_options *options, mef_bias_result **out, mef_error **error)
+{
+    pixelmap *active_map;
+    const pixelmap *raw_map;
+    mef_bias_frame_measurements *frame_qc;
+    mef_bias_measurements *measurement;
+    int zone[4], x, y;
+    size_t position;
     const mef_allocator *a;
     const mef_resolved_request_spec *resolved;
     mef_bias_settings settings;
@@ -132,10 +166,13 @@ mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
     if (out == NULL || *out != NULL || (error != NULL && *error != NULL))
         return MEF_ERR_INPUT;
     pending = NULL;
+    frame_qc = NULL;
+    active_map = NULL;
+    raw_map = options == NULL ? NULL : options->bpm;
     cube = NULL;
     names = NULL;
     a = mef_context_allocator(context);
-    status = validate(context, input, &settings);
+    status = validate(context, input, &settings, options);
     if (status != MEF_OK) goto cleanup;
     resolved = mef_request_resolved_view(mef_context_request(context));
 
@@ -144,6 +181,7 @@ mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
     status = MEF_ERR_MEMORY;
     pending = a->allocate(a->user, sizeof(*pending));
     if (pending == NULL) goto cleanup;
+    memset(pending, 0, sizeof(*pending));
     pending->allocator = *a;
     pending->signal = NULL;
     pending->request = NULL;
@@ -163,6 +201,36 @@ mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
         pending->qc.accepted == NULL || names == NULL) goto cleanup;
     status = mef_request_create_resolved(resolved, a, &pending->request, error);
     if (status != MEF_OK) goto cleanup;
+
+    if (options != NULL) {
+        measurement = &pending->measurements;
+        measurement->count = input->count;
+        frame_qc = a->allocate(a->user, input->count * sizeof(*frame_qc));
+        if (frame_qc == NULL) { status = MEF_ERR_MEMORY; goto cleanup; }
+        memset(frame_qc, 0, input->count * sizeof(*frame_qc));
+        measurement->frames = frame_qc;
+        pending->qc.bpm_selection = resolved->bpm_selections[0].state;
+        pending->qc.bpm_applied = raw_map != NULL;
+        if (raw_map != NULL) {
+            active_map = pixelmap_getvig((pixelmap *)raw_map, settings.trim[0],
+                settings.trim[2], settings.trim[1], settings.trim[3]);
+            if (active_map == NULL) { status = MEF_ERR_COMPUTATION; goto cleanup; }
+        }
+        if (options->ron_pair_set) {
+            measurement->ron_first = options->ron_first;
+            measurement->ron_second = options->ron_second;
+            if (image_pair_stats_checked(input->frames[options->ron_first],
+                input->frames[options->ron_second], raw_map, raw_map, settings.trim,
+                options->with_mad, &measurement->raw_difference) != 0) {
+                status = MEF_ERR_COMPUTATION; goto cleanup;
+            }
+            measurement->ron_stdev_available = measurement->raw_difference.stdev_available;
+            measurement->ron_mad_available = measurement->raw_difference.mad_available;
+            measurement->ron_stdev_adu = measurement->raw_difference.stdev / sqrt(2.0);
+            measurement->ron_mad_adu = 1.4826 * measurement->raw_difference.mad / sqrt(2.0);
+            pending->qc.ron_estimate_available = measurement->ron_stdev_available;
+        }
+    }
 
     /* This local legacy bridge supplies only fields read by overscan. Its
      * geometry is a copy: the historical helper temporarily changes indices. */
@@ -186,16 +254,34 @@ mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
         names[i] = (char *)resolved->request.inputs[i].resolved_path;
         cube->plane[i] = image_copy((image_t *)input->frames[i]);
         if (cube->plane[i] == NULL) goto cleanup;
-        cropped = mef_overscan_correction(cube->plane[i], &work, (int)i, "bias");
+        if (options != NULL) {
+            frame_qc = (mef_bias_frame_measurements *)pending->measurements.frames + i;
+            if (image_getstats_masked_checked(input->frames[i], raw_map, settings.trim,
+                    options->with_mad, &frame_qc->active_raw) != 0) goto cleanup;
+            zone[2] = settings.trim[2]; zone[3] = settings.trim[3];
+            if (settings.use_prescan) {
+                zone[0] = settings.prescan[0]; zone[1] = settings.prescan[1];
+                if (image_getstats_masked_checked(input->frames[i], raw_map, zone,
+                    options->with_mad, &frame_qc->prescan) != 0) goto cleanup;
+            }
+            if (settings.use_overscan) {
+                zone[0] = settings.overscan[0]; zone[1] = settings.overscan[1];
+                if (image_getstats_masked_checked(input->frames[i], raw_map, zone,
+                    options->with_mad, &frame_qc->overscan) != 0) goto cleanup;
+            }
+        }
+        cropped = mef_overscan_correction_masked(cube->plane[i], &work, (int)i, "bias", raw_map);
         if (cropped == NULL) goto cleanup;
         image_del(cube->plane[i]);
         cube->plane[i] = cropped;
+        if (options != NULL && image_getstats_masked_checked(cropped, active_map, NULL,
+            options->with_mad, &frame_qc->active_corrected) != 0) goto cleanup;
     }
     cube->lx = cube->plane[0]->lx;
     cube->ly = cube->plane[0]->ly;
     detail = "Bias rejection or median stacking failed; no result transferred";
-    pending->signal = mef_bias_stack(cube, settings.minimum_frames,
-        settings.kappa, &stats, (int *)pending->qc.accepted);
+    pending->signal = mef_bias_stack_masked(cube, settings.minimum_frames,
+        settings.kappa, &stats, (int *)pending->qc.accepted, active_map);
     cube = NULL; /* Kernel always consumes the working cube. */
     if (pending->signal == NULL) goto cleanup;
 
@@ -211,11 +297,37 @@ mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
     pending->qc.product_median = stats.median;
     pending->qc.product_stdev = stats.stdev;
     pending->qc.accepted_frames = stats.accepted;
+    if (options != NULL) {
+        pixelmap *flags;
+        measurement = &pending->measurements;
+        if (image_getstats_masked_checked(pending->signal, active_map, NULL, options->with_mad,
+                &measurement->master) != 0 ||
+            image_getstats_masked_checked(pending->signal, NULL, NULL, options->with_mad,
+                &measurement->master_unmasked) != 0) goto cleanup;
+        if (measurement->master.mad_available) {
+            measurement->high_offset_threshold = measurement->master.median +
+                options->high_sigma * 1.4826 * measurement->master.mad;
+            if (!finite_value(measurement->high_offset_threshold)) goto cleanup;
+            flags = pixelmap_new(pending->signal->lx, pending->signal->ly);
+            if (flags == NULL) goto cleanup;
+            measurement->high_offset_flags = flags;
+            measurement->high_offset_available = 1;
+            measurement->high_offset_degenerate = measurement->master.mad == 0.0;
+            for (y = 0; y < flags->ly; ++y) for (x = 0; x < flags->lx; ++x) {
+                position = (size_t)y * (size_t)flags->lx + (size_t)x;
+                flags->data[position] = pending->signal->data[position] >
+                    measurement->high_offset_threshold ? PIXELMAP_1 : PIXELMAP_0;
+                measurement->high_offset_count += flags->data[position] == PIXELMAP_1;
+            }
+            pixelmap_updatecount(flags);
+        }
+    }
     *out = pending;
     pending = NULL;
     status = MEF_OK;
 cleanup:
     cube_del(cube);
+    pixelmap_del(active_map);
     if (a != NULL) release(a, names);
     mef_bias_result_destroy(pending);
     if (status != MEF_OK && error != NULL && *error == NULL)

@@ -204,6 +204,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_compile_definitions(cli_capture_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   add_executable(qfits_discovery_probe tests/qfits_discovery_probe.c)
   target_link_libraries(qfits_discovery_probe PRIVATE qfits)
+  add_executable(measurement_stats_probe tests/measurement_stats_probe.c)
+  target_link_libraries(measurement_stats_probe PRIVATE eclipse)
+  target_compile_options(measurement_stats_probe PRIVATE -UNDEBUG -Wall -Wextra)
   add_executable(bias_service_probe tests/bias_service_probe.c tests/bias_legacy_reference.c)
   target_link_libraries(bias_service_probe PRIVATE mefpp_config_snapshot)
   target_compile_definitions(bias_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -379,6 +382,8 @@ if(BUILD_TESTING)
         --probe "$<TARGET_FILE:cli_capture_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_cli_capture PROPERTIES TIMEOUT 300 LABELS "native;configuration;cli;ownership")
+    add_test(NAME native_measurement_stats COMMAND measurement_stats_probe)
+    set_tests_properties(native_measurement_stats PROPERTIES TIMEOUT 30 LABELS "native;statistics;bias")
     add_test(NAME native_bias_service
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_service_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
@@ -481,4 +486,3 @@ file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/mefpp-path-$<CONFIG>.cmake" CO
 configure_file(cmake/install_runtime.cmake.in install_runtime.cmake @ONLY)
 install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/install_runtime.cmake")
 message(STATUS "Candidate mefpp: C${MEFPP_C_STANDARD}; ${CMAKE_C_COMPILER}; resources=${MEFPP_BUILD_RESOURCES}")
-

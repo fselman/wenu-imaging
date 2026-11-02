@@ -644,4 +644,29 @@ int image_compute_strehl(
 /*----------------------------------------------------------------------------*/
 double image_compute_entropy(image_t * im) ;
 
+/* General checked finite-sample statistics, not recipe-specific QC. BPM has
+ * Eclipse polarity 1=good/0=excluded and must match the image exactly. zone is
+ * NULL or inclusive FITS {xmin,xmax,ymin,ymax}; out-of-bounds is an error, not
+ * silently clamped. No value-range cut/clipping, interpolation or correction.
+ * Counts partition the region: BPM-excluded first, then nonfinite among the
+ * remaining pixels, then valid. Absence of BPM is recorded, never inferred.
+ * Means/sample stdev reuse image_getstats_opts. Median/MAD use the checked
+ * averaged-middle math helper. N=0 has no level; N<2 has no stdev. Zero MAD is
+ * a valid measured value. Availability flags are authoritative, not zeros.
+ * Inputs unchanged; 0=success (including unavailable statistics), -1=error
+ * with *out unchanged. Array/image sizes must fit the existing int APIs. */
+typedef struct {
+    size_t region_pixels, bpm_excluded, nonfinite_excluded, valid_pixels;
+    int zone[4], bpm_supplied, level_available, stdev_available, mad_available;
+    double mean, median, stdev, mad;
+} image_sample_stats;
+int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
+    const int *zone, int with_mad, image_sample_stats *out);
+/* Raw difference with intersection of independently supplied good-pixel maps.
+ * Each NULL map explicitly means unavailable. No overscan/master subtraction
+ * or sqrt(2) scaling: those are caller policies. Inputs/maps remain unchanged. */
+int image_pair_stats_checked(const image_t *first, const image_t *second,
+    const pixelmap *first_map, const pixelmap *second_map, const int *zone,
+    int with_mad, image_sample_stats *out);
+
 #endif
