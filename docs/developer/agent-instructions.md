@@ -1,3 +1,30 @@
+## Branch closeout: build-directory review — owner instruction, 3 November 2026
+
+Whenever work is finished by merging and cleaning a branch that created build
+directories, review those directories with Fernando as part of that closeout.
+Do not leave the review for an unspecified later cleanup.
+
+- Identify each build directory created by the branch and its disk usage.
+- Propose whether it can be erased. For every directory that must be kept,
+  explain the specific reason: required runtime dependency, unfinished validation,
+  unique evidence or another concrete continuing need. State when that reason
+  will cease to apply and the directory can be erased.
+- Data needed for future comparison must first be placed in an appropriately
+  named subdirectory of ~/Pictures/OCAM/wenu-imaging or
+  ~/Pictures/WFI/wenu-imaging. Each dataset subdirectory must contain a README.md
+  explaining why the data is needed and when it can be erased. Update active
+  references and record the new locations.
+- Present the concrete retention/deletion proposal for review together, then
+  perform the agreed cleanup and record its outcome. Do not assume that branch
+  deletion also settles retention of its build directories.
+- State any remaining retained directories and reasons in the final handoff.
+  Never retain an entire large build tree solely because it once held comparison
+  data or because cleanup was not considered.
+
+This is a closeout/retention requirement, not a requirement to rerun tests.
+Existing required engines/environments must remain usable until their actual
+dependencies have been resolved.
+
 ## Mac optimizer accepted; direct-pixel joint candidate - 3 November 2026
 
 Actual Mac beee7c0d passed native_simplex/native_simplex_allocation 2/2 in 1.79 s
