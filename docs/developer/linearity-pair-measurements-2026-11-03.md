@@ -74,7 +74,7 @@ The corrected samples still have noise_state=MEF_LINEARITY_NOISE_UNAVAILABLE.
 Empirical raw variance must not be inserted blindly as independent corrected
 sample noise or double-counted with scan/master factors.
 
-Next: actual Mac qualification of this increment, then explicit real-sequence
+Next: explicit real-sequence
 measurement orchestration and inspection. Justified distribution/pooling choices,
 reproducible estimator propagation, covariance construction and full joint recipe
 integration remain pending. No real OCAM data were processed here. No installation,
@@ -97,7 +97,13 @@ control remains in that contract. Normal mefpp and the uninstalled adapter build
 The first added FITS oracle had an incorrect count/variance for its surviving
 population; only that expectation was corrected, with failed output retained.
 
-Actual Mac qualification is pending. The exact-source protected runner is
+Actual Intel Mac qualification passed at source 37e11f4f5ff3247ba912e2aa8f28240e17b44428:
+2/2 in 34.99 s. The owner returned native_linearity_files 34.03 s and
+native_linearity_pairs 0.94 s; all checkout/installed_files/exported_source
+preservation checks are true and main remains clean. Retained run:
+/Users/fselman/Software/build/wenu-imaging/mac-linearity-pairs-UI4rv05W.
+This qualifies synthetic behavior on the actual Mac, not real-data science.
+The exact-source protected runner is
 Pycavi2/tests/qualify_linearity_pairs_mac.py. It builds the new/affected probes,
 normal mefpp and the uninstalled adapter, inventories exactly native_linearity_pairs
 and native_linearity_files, then runs those two tests. It preserves clean main

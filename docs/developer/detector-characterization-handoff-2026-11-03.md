@@ -23,6 +23,7 @@ Completed actual Intel Mac C17 gates (all checkout/install/export protections tr
 | Raw-plane sample admission | 88e29306 | 1/1 | 1.05 total | mac-linearity-samples-fRlf0Hgk |
 | Explicit covariance assembly | c381168b | 4/4 | 3.69 | mac-detector-noise-z4pHBH0H |
 | FITS admission and affected callers | 10027f1e | 3/3 | 20.91 | mac-linearity-files-nF68I1UL |
+| Raw pair measurements and FITS composition | 37e11f4f | 2/2 | 34.99 | mac-linearity-pairs-UI4rv05W |
 
 The exact ROI operator/covariance propagation is Mac-qualified as above,
 including its two new controls and the affected joint validator control.
@@ -106,6 +107,9 @@ uncertainty. No default distribution or simulation parameters were approved.
 the qualified gain/RON kernel with optional FITS admission of two explicit raw
 biases. A separate bias-only RON population remains visible beside the common
 four-plane population used by each flat pair. Agent C17 focused preparation passes;
-actual Mac qualification is pending. No real data, noise-model fit, Monte Carlo,
+actual Mac qualification passed 2/2 in 34.99 s at 37e11f4f, retained
+mac-linearity-pairs-UI4rv05W. native_linearity_files passed in 34.03 s and
+native_linearity_pairs in 0.94 s. Checkout, installed files and exported source
+preservation are all true; the Mac remains clean main c73d9a9e. No real data, noise-model fit, Monte Carlo,
 installation, merge or scientific acceptance follows from this increment.
 

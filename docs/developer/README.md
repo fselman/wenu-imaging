@@ -17,7 +17,8 @@ C17 preparation and actual Mac 3/3 in 20.91 s. The
 fixed within each fit with outer uncertainty assessment. The
 [raw-pair measurement increment](linearity-pair-measurements-2026-11-03.md) adds
 raw bias/flat measurements by named ROI and optional explicit FITS bias bindings.
-Agent preparation passes; its focused actual Mac gate is pending. No simulation
+Agent preparation and actual Mac C17 qualification pass: 2/2 in 34.99 s,
+with checkout, installed files and exported source preserved. No simulation
 model or fit-range default is introduced. Complete recipe integration and science acceptance remain later work.
 
 # Developer documentation
