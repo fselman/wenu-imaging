@@ -4,7 +4,11 @@
 
 Read the [typeset PDF](joint-shutter-linearity-interface-2026-11-03.pdf).
 The matching [LaTeX source](joint-shutter-linearity-interface-2026-11-03.tex)
-is retained alongside it. All five rendered pages were visually checked.
+is retained alongside it. All six rendered pages were visually checked. Section 1 explicitly states that
+all detectors contribute accepted measurements to one covariance-weighted joint
+estimate of the common signed shutter offset, rather than averaging separate
+per-detector fits. A one-page teaching appendix explains Nelder–Mead simplex,
+Householder QR, column pivoting and their roles and limitations.
 
 ## Completed prerequisite
 
