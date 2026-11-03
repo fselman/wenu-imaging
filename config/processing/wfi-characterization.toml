@@ -1,0 +1,467 @@
+# Visualization/reference schema; not a replacement for the native reduction configuration.
+# Rectangles are FITS 1-based inclusive [xmin, xmax, ymin, ymax].
+processing_footprint_schema_version = 1
+instrument = "wfi"
+roi_schema_version = 1
+roi_coordinates = "retained-active"
+profile_status = "candidate regions for inspection; no numerical execution"
+source_paf = "mefpp2/ins/mef/config/wfi.paf"
+source_paf_sha256 = "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+use_prescan = 0
+use_overscan = 1
+scan_reject_low = 10
+scan_reject_high = 10
+
+[[trim]]
+detector = "WIN1.CHIP1.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP2.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP3.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP4.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP8.OUT1"
+retained = [49, 2092, 2, 4098]
+prescan_sample = [2100, 2142, 1, 4128]
+overscan_sample = [5, 48, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP7.OUT1"
+retained = [49, 2092, 2, 4098]
+prescan_sample = [2100, 2142, 1, 4128]
+overscan_sample = [5, 48, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP6.OUT1"
+retained = [49, 2092, 2, 4098]
+prescan_sample = [2100, 2142, 1, 4128]
+overscan_sample = [5, 48, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP5.OUT2"
+retained = [51, 2094, 2, 4098]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+[[roi]]
+id = "CHIP1.near_readout"
+detector = "WIN1.CHIP1.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP1.serial_far"
+detector = "WIN1.CHIP1.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP1.parallel_far"
+detector = "WIN1.CHIP1.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP1.far_corner"
+detector = "WIN1.CHIP1.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP1.center"
+detector = "WIN1.CHIP1.OUT1"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1794
+ymax = 2305
+
+
+[[roi]]
+id = "CHIP2.near_readout"
+detector = "WIN1.CHIP2.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP2.serial_far"
+detector = "WIN1.CHIP2.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP2.parallel_far"
+detector = "WIN1.CHIP2.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP2.far_corner"
+detector = "WIN1.CHIP2.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP2.center"
+detector = "WIN1.CHIP2.OUT1"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1794
+ymax = 2305
+
+
+[[roi]]
+id = "CHIP3.near_readout"
+detector = "WIN1.CHIP3.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP3.serial_far"
+detector = "WIN1.CHIP3.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP3.parallel_far"
+detector = "WIN1.CHIP3.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP3.far_corner"
+detector = "WIN1.CHIP3.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP3.center"
+detector = "WIN1.CHIP3.OUT1"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1794
+ymax = 2305
+
+
+[[roi]]
+id = "CHIP4.near_readout"
+detector = "WIN1.CHIP4.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP4.serial_far"
+detector = "WIN1.CHIP4.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP4.parallel_far"
+detector = "WIN1.CHIP4.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP4.far_corner"
+detector = "WIN1.CHIP4.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP4.center"
+detector = "WIN1.CHIP4.OUT1"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1794
+ymax = 2305
+
+
+[[roi]]
+id = "CHIP5.near_readout"
+detector = "WIN1.CHIP8.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP5.serial_far"
+detector = "WIN1.CHIP8.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP5.parallel_far"
+detector = "WIN1.CHIP8.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP5.far_corner"
+detector = "WIN1.CHIP8.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP5.center"
+detector = "WIN1.CHIP8.OUT1"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1793
+ymax = 2304
+
+
+[[roi]]
+id = "CHIP6.near_readout"
+detector = "WIN1.CHIP7.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP6.serial_far"
+detector = "WIN1.CHIP7.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP6.parallel_far"
+detector = "WIN1.CHIP7.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP6.far_corner"
+detector = "WIN1.CHIP7.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP6.center"
+detector = "WIN1.CHIP7.OUT1"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1793
+ymax = 2304
+
+
+[[roi]]
+id = "CHIP7.near_readout"
+detector = "WIN1.CHIP6.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP7.serial_far"
+detector = "WIN1.CHIP6.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP7.parallel_far"
+detector = "WIN1.CHIP6.OUT1"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP7.far_corner"
+detector = "WIN1.CHIP6.OUT1"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP7.center"
+detector = "WIN1.CHIP6.OUT1"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1793
+ymax = 2304
+
+
+[[roi]]
+id = "CHIP8.near_readout"
+detector = "WIN1.CHIP5.OUT2"
+amplifier = "R"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP8.serial_far"
+detector = "WIN1.CHIP5.OUT2"
+amplifier = "R"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+
+[[roi]]
+id = "CHIP8.parallel_far"
+detector = "WIN1.CHIP5.OUT2"
+amplifier = "R"
+xmin = 129
+xmax = 640
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP8.far_corner"
+detector = "WIN1.CHIP5.OUT2"
+amplifier = "R"
+xmin = 1405
+xmax = 1916
+ymin = 3458
+ymax = 3969
+
+
+[[roi]]
+id = "CHIP8.center"
+detector = "WIN1.CHIP5.OUT2"
+amplifier = "R"
+xmin = 767
+xmax = 1278
+ymin = 1793
+ymax = 2304
