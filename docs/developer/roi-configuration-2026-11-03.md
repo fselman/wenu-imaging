@@ -124,7 +124,9 @@ capacity, bounds, malformed schemas and all three snapshot allocation failures.
 Outputs/count remain unchanged on binding failures; source removal does not
 invalidate the snapshot; custom allocator live counts return to zero.
 The Mac qualifier's Python syntax is checked. These are software preparation
-results; actual Mac qualification of this new layer remains pending.
+results; actual Mac qualification of this new layer subsequently passed at 8e893008,
+1/1 in 1.21 s, retained mac-roi-config-PHwS5VBY with checkout/install/export
+preserved and clean main c73d9a9e.
 
 Run `Pycavi2/tests/qualify_roi_config_mac.py` from an exact exported revision in
 a fresh retained directory, using normal imaging Python and niceness 10. It

@@ -6,8 +6,10 @@ The [shutter-profile increment](shutter-profile-2026-11-03.md) passed actual Mac
 C17 qualification. The [exact ROI operator](roi-aggregation-2026-11-03.md) has
 passed actual Mac C17 3/3 in 3.01 s. The
 [named ROI PAF/TOML supplement](roi-configuration-2026-11-03.md) passed focused
-C17 preparation; its actual Mac configuration gate is pending. Raw extraction,
-noise construction, forward-model integration and science acceptance remain later work.
+C17 preparation and actual Mac 1/1 in 1.21 s. The
+[raw-plane sample service](linearity-samples-2026-11-03.md) passed focused C17
+preparation; its actual Mac gate is pending. Raw FITS binding, noise construction,
+forward-model integration and science acceptance remain later work.
 
 # Developer documentation
 
