@@ -19,7 +19,10 @@ fixed within each fit with outer uncertainty assessment. The
 raw bias/flat measurements by named ROI and optional explicit FITS bias bindings.
 Agent preparation and actual Mac C17 qualification pass: 2/2 in 34.99 s,
 with checkout, installed files and exported source preserved. No simulation
-model or fit-range default is introduced. Complete recipe integration and science acceptance remain later work.
+model or fit-range default is introduced. [Real OCAM header preparation](ocam-pair-preparation-2026-11-03.md) now records
+the selected 30-frame OBS.ID 574184 sequence and prepares saved detector/scan/
+calibration-candidate evidence for explicit measurement selections. Its actual
+Mac inventory is pending. Complete recipe integration and science acceptance remain later work.
 
 # Developer documentation
 
@@ -622,6 +625,7 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
 
 - [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
+
 
 
 

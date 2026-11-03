@@ -113,3 +113,17 @@ native_linearity_pairs in 0.94 s. Checkout, installed files and exported source
 preservation are all true; the Mac remains clean main c73d9a9e. No real data, noise-model fit, Monte Carlo,
 installation, merge or scientific acceptance follows from this increment.
 
+
+
+## Current real-sequence preparation
+
+Owner instructed proceeding after the pair gate and confirmed
+/Users/fselman/Pictures/OCAM/bpm. Owner-returned dfits/fitsort evidence confirms
+all selected 30 files have OBS.ID 574184, with the previously selected ten biases
+and twenty flats. The [header preparation helper](ocam-pair-preparation-2026-11-03.md)
+saves sequence/pair membership, independent HDU identities, configuration claims,
+scan geometry declarations, diagnostics and bounded unselected FITS candidates.
+Agent preparation-policy tests pass 3/3; actual Mac header inventory remains
+pending. BPM/ROI/saturation/bias-pair/amplifier-readout selections are recorded
+as unresolved, so no real pixel measurement or fit is launched yet.
+
