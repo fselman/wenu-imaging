@@ -1,5 +1,17 @@
 # Paired conversion gain and raw-pair RON: implementation candidate
 
+## Actual Mac acceptance - 3 November 2026
+
+Fernando returned actual e0b1647649515aa203932876887b6dff5983871f success:
+native_gain_pair and native_gain_pair_allocation passed2/2 in 2.58 s.
+Retained /Users/fselman/Software/build/wenu-imaging/mac-gain-pair-AdGQvwqZ.
+QUALIFICATION passed; checkout/installed_files/exported_source all true.
+Issue #228's corrected test-only oracle is accepted and closed. This qualifies
+the paired helper on the Mac, not full characterization or real-data science.
+The next [joint numerical interface review](joint-shutter-linearity-interface-2026-11-03.pdf)
+proposes checked Eclipse extensions before implementation. Earlier pending
+Mac statements below are historical preparation status; retain their evidence.
+
 3 November 2026. Owner authorized the reviewed Eclipse addition.
 Design: [typeset formula review](bpm-linearity-pair-increment-2026-11-03.pdf).
 PR #227; this is a software candidate, not real-detector characterization.

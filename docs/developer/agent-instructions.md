@@ -1,3 +1,17 @@
+## Mac paired gain/RON accepted; joint interface review - 3 November 2026
+
+Actual Mac e0b16476 passed2/2 C17 controls in 2.58 s at
+/Users/fselman/Software/build/wenu-imaging/mac-gain-pair-AdGQvwqZ,
+with checkout/installed_files/exported_source preserved. Test-only oracle#228
+is accepted/closed. No unchanged test replay or real-data claim.
+Owner requests the joint shutter/linearity numerical interface review next.
+The source-grounded PDF/LaTeX proposal extends Eclipse optimization/matrix
+modules for checked bounded simplex and rank-aware pivoted QR, then a detector
+wrapper using one signed mosaic offset and amplifier curves. These additions
+are proposed BEFORE implementation; no new numerical source in this increment.
+ROI aggregation and covariance inputs remain explicit prerequisites.
+See [review](joint-shutter-linearity-interface-2026-11-03.md).
+
 ## Paired gain/RON implementation candidate - 3 November 2026
 
 Owner reviewed the formula/PDF clarification and authorized implementation.

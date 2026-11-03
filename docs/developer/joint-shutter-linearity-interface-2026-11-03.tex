@@ -1,0 +1,287 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,tabularx,array,hyperref,fancyhdr,listings}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small Wenu-imaging}
+\fancyhead[R]{\small Numerical interface review / 3 November 2026}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{15pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{3em}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible}
+\begin{document}
+{\LARGE\bfseries Joint shutter and linearity fit}\\[5pt]
+{\large Proposed numerical interfaces for review}
+
+\textbf{Status.} The paired gain/RON helper at
+\texttt{e0b16476} passed the actual Intel Mac C17 gate: two tests, 2.58 seconds,
+all three preservation checks true. Evidence:
+\path{/Users/fselman/Software/build/wenu-imaging/mac-gain-pair-AdGQvwqZ}.
+Issue 228 (the corrected synthetic test expectation) is closed.
+This note proposes the next numerical interfaces; no joint fitter is implemented.
+
+The 2 November detector-characterization formula guide remains controlling.
+This review supplies the numerical contract and explicitly identifies the missing
+Eclipse functionality. Pixel nonlinearity thresholds, lamp-drift fitting and
+real-data execution are not selected here.
+
+\section*{1. Scientific model and symbols}
+For a directly modeled signal in region $r$, exposure $j$ and amplifier $a$:
+\begin{align}
+Q_a(s)&=s+c_{2,a}s^2+c_{3,a}s^3,\\
+Q_a(s_{rj})&=L_r(t_j+\delta),\qquad t_j+\delta>0 .
+\end{align}
+There is \textbf{one signed $\delta$ for the whole mosaic}, separate positive
+illumination rates $L_r$, and amplifier-specific $c_{2,a},c_{3,a}$.
+There is no free additive signal offset to absorb bias error.
+
+\begin{tabularx}{\linewidth}{@{}lXl@{}}\toprule
+Symbol&Meaning&Unit\\\midrule
+$s_{rj}$&Measured bias-subtracted signal; see aggregation rule below&ADU\\
+$Q_a(s)$&Linearized signal for amplifier $a$&ADU\\
+$c_{2,a},c_{3,a}$&Quadratic and cubic inverse-response coefficients&
+ADU$^{-1}$, ADU$^{-2}$\\
+$L_r$&Linearized illumination rate in region $r$&ADU/s\\
+$t_j$&Input duration in the explicitly established time convention&s\\
+$\delta$&Common duration offset; positive means longer exposure&s\\
+$\widehat s_i$&Predicted measured signal for observation $i$&ADU\\
+$e_i=s_i-\widehat s_i$&Signal-space residual&ADU\\
+$C$&Covariance of accepted signal measurements&ADU$^2$\\
+$\theta$&Ordered vector of fitted coefficients, rates and common offset&mixed\\\bottomrule
+\end{tabularx}
+
+\textbf{Pixel/ROI distinction.} A nonlinear transform of a mean does not equal
+the mean of transformed pixels. The evaluator must predict individual pixel
+signals before aggregating over an ROI's accepted population. An ROI-mean
+approximation is permitted only with an explicit validation bound over its
+signal distribution and fitted interval. A table of ROI means alone does not
+establish that bound; an unvalidated approximation must be refused.
+
+Known BPM pixels are excluded from reference populations according to configured
+bits. Saturation/nonfinite selection is per sample and independent of permanent
+defect classification. A saturated central ROI does not exclude unsaturated
+corner ROIs in that exposure. Original exposure order and pair identities remain.
+
+\clearpage
+\section*{2. Objective, validity and derivatives}
+The prediction is obtained on the validated monotonic branch:
+\begin{align}
+\widehat s_{rj}
+ &=Q_a^{-1}\!\left[L_r(t_j+\delta)\right],\\
+Q'_a(s)&=1+2c_{2,a}s+3c_{3,a}s^2>0,\\
+\chi^2(\theta)&=e(\theta)^{\mathsf T}C^{-1}e(\theta).
+\end{align}
+$C$ is explicitly supplied and held fixed for one optimization. Diagonal weights
+are permitted only when justified. Shared master-bias errors, shared reference
+measurements and overlapping ROIs must be represented or removed by using an
+independent nonduplicated population. Do not silently replace $C$ by its diagonal.
+
+For independent observations with known standard uncertainties $\sigma_i$:
+\[
+\chi^2=\sum_i\left(\frac{e_i}{\sigma_i}\right)^2 .
+\]
+A parameter-dependent noise model needs a separately reviewed likelihood and
+weight-update policy; it is not silently substituted for this fixed-$C$ objective.
+Unknown covariance cannot be relabeled as a measured uncertainty.
+
+For a directly modeled signal, let $u=\widehat s_{rj}$ and $D=Q'_a(u)$.
+Implicit differentiation gives:
+\[
+\frac{\partial u}{\partial\delta}=\frac{L_r}{D},
+\qquad
+\frac{\partial u}{\partial L_r}=\frac{t_j+\delta}{D},
+\qquad
+\frac{\partial u}{\partial c_{2,a}}=-\frac{u^2}{D},
+\qquad
+\frac{\partial u}{\partial c_{3,a}}=-\frac{u^3}{D}.
+\]
+The residual Jacobian is $J_{ik}=\partial e_i/\partial\theta_k$, the negative of
+the applicable prediction derivative. For pixel-before-ROI prediction, aggregate
+the prediction derivatives with exactly the same weights as the predicted
+signals. These equations do not authorize treating broad ROI means as single pixels.
+
+Candidate evaluation must reject nonpositive effective durations, nonpositive
+illumination rates, nonmonotonic response on the full declared signal interval,
+and targets outside that branch. No extrapolation or silent coefficient clipping.
+The minimum of $Q'_a$ on an interval can be checked at its endpoints and its
+interior quadratic vertex, when present. The numerical inversion must be
+bracketed within that same interval, with a reported convergence tolerance.
+
+\textbf{Identifiability.} Constrained bias subtraction is required: an unknown
+bias pedestal can mimic shutter delay. Arbitrary independent lamp factors would
+absorb exposure-time response and are not fitted. The ten-level OCAM sequence is
+assessed by its usable coverage/rank, not rejected solely for having fewer than
+the representative annual 22 pairs.
+
+\section*{3. Numerical scaling and uncertainty}
+Use positive caller-declared parameter scales $d_k$ and dimensionless coordinates
+$\theta_k=d_k x_k$. Scales are numerical units, not scientific priors.
+They must be recorded so that rank/conditioning decisions are reproducible.
+
+If $C=HH^{\mathsf T}$, with $H$ a nonsingular lower triangular covariance
+factor, define whitened residuals and Jacobian:
+\[
+\widetilde e=H^{-1}e,\qquad
+\widetilde J=H^{-1}J,\qquad
+A=\widetilde J\,\mathrm{diag}(d_k).
+\]
+The input contract supplies $H$ or an explicitly diagonal equivalent.
+The recipe must establish its provenance; the numerical service checks
+dimensions, finite entries and positive diagonal. No diagonal jitter is added
+to hide exact duplicate observations or singular covariance.
+
+\clearpage
+\section*{4. Eclipse reuse and the proposed additions}
+The reviewed source is the current gain/RON candidate, descended from accepted
+main. Existing public interfaces are preserved.
+
+\begin{tabularx}{\linewidth}{@{}p{36mm}XX@{}}\toprule
+Existing resource&What it supplies&What is missing\\\midrule
+\texttt{optimization.c: minimize}
+&Simplex reflection, expansion and contraction scaffolding
+&Checked context callback, parameter bounds/scales, finite/validity states and
+explicit parameter/objective convergence controls\\
+\texttt{matrix.c: matrix\_leastsq}
+&Matrix storage and normal-equation least squares
+&Pivoted QR, numerical rank and scaled condition reporting\\
+\texttt{fit\_curve.c}
+&Polynomial and simple response fits
+&Shared signed mosaic timing with constrained validity and covariance\\
+\texttt{detector.c}
+&Legacy time-as-signal-polynomial fit; cubic correction primitive
+&The accepted joint signal-space objective and complete result contract\\\bottomrule
+\end{tabularx}
+
+\textbf{Addition A: checked optimizer in the existing optimization module.}
+Proposed entry point:
+\begin{lstlisting}[language=C]
+int minimize_checked(
+    const optimization_problem *problem,
+    const optimization_options *options,
+    optimization_result **out);
+void optimization_result_del(optimization_result *result);
+\end{lstlisting}
+The borrowed problem contains parameter count, initial simplex, positive scales,
+finite bounds, a context pointer and a cost callback. The callback distinguishes
+a valid finite cost, an inadmissible model point and a hard evaluation failure.
+Options explicitly set evaluation limits, parameter-spread tolerance and
+objective-spread tolerance. An initial feasible simplex is required.
+
+Extend the existing simplex scaffolding; do not introduce another optimizer
+inside a recipe. Invalid trial points are rejected rather than clipped.
+Convergence requires feasible vertices and both declared spread checks.
+Return an explicit nonconvergence state with diagnostics when limits are reached.
+A converged simplex is a candidate minimum, not evidence of a unique or
+scientifically identified solution. Repeated starts/profile checks belong to
+the detector wrapper. Keep the old \texttt{minimize} behavior/API intact.
+
+\textbf{Addition B: checked least-squares/QR diagnostic in the matrix module.}
+\begin{lstlisting}[language=C]
+int matrix_leastsq_qr_checked(
+    const matrix *design, const matrix *rhs,
+    const double *column_scales, double rank_tolerance,
+    matrix_qr_result **out);
+void matrix_qr_result_del(matrix_qr_result *result);
+\end{lstlisting}
+Matrices follow existing row-major storage and dimensions. The design is $M$
+observations by $P$ parameters, with $M\ge P$; the first increment accepts one
+$M$-element right-hand side. Positive column scales and a relative rank tolerance
+are explicit. Use column-pivoted Householder QR on the scaled design,
+\[
+A\Pi=UR ,
+\]
+where $\Pi$ is the column permutation, $U$ has orthonormal columns and $R$ is
+upper triangular. Report pivot order, rank, residual norm and a clearly labeled
+scaled condition estimate; do not call a diagonal ratio an exact condition number.
+No normal-equation inversion, hidden ridge term or substituted zero solution.
+
+\clearpage
+\section*{5. Detector wrapper and fit acceptance}
+After the two numerical interfaces are reviewed, the detector-level entry point is:
+\begin{lstlisting}[language=C]
+int detector_joint_response_fit_checked(
+    const detector_joint_problem *problem,
+    const detector_joint_options *options,
+    detector_joint_result **out);
+void detector_joint_result_del(detector_joint_result *result);
+\end{lstlisting}
+
+The borrowed problem binds amplifier/ROI/exposure identities, signal units,
+accepted samples, prediction/aggregation evaluator, fixed covariance factor and
+parameter layout. Its evaluator must implement Section 1's pixel-before-ROI
+contract or supply the validated restricted approximation. Compact measurement
+blocks and bounded image access are permitted; do not retain all detector cubes
+simultaneously. The wrapper supplies the shared signed offset, cubic model,
+analytic derivatives and validity checks to the reusable numerical routines.
+
+Options explicitly set parameter scales/bounds, accepted signal intervals,
+initial simplexes, convergence/rank/conditioning limits and profile settings.
+No numerical scientific defaults or automatic polynomial-degree selection
+are introduced by this proposal.
+
+The result owns fitted parameters with units/identities, full parameter
+covariance when available, residuals, accepted/excluded measurement references,
+valid signal intervals, rank/condition diagnostics, evaluation counts,
+bound/convergence states and shutter-profile diagnostics.
+Inputs remain immutable; general allocation/invalid-input errors leave an
+occupied or caller-owned output unchanged. Dedicated destructors release every
+result allocation. Numerical/scientific unavailability is explicit and is
+not published as a valid zero shutter delay.
+
+For known absolute covariance and a locally identifiable interior solution:
+\[
+\mathrm{Cov}(\theta)\simeq
+\left(J^{\mathsf T}C^{-1}J\right)^{-1}.
+\]
+Compute this local linear approximation through QR/triangular solves, not by
+forming the normal equations. Transform back from the dimensionless parameter
+scales and label it as a local approximation. Do not multiply by reduced
+$\chi^2$ when $C$ already expresses absolute measurement variance.
+Relative-weight fitting, if requested later, needs its own scale/dof convention.
+
+An optimizer stop is insufficient. Require adequate signal coverage, full rank,
+acceptable scaled conditioning, valid monotonic branches and consistent
+feasible solutions from declared starts. Profile the shutter term by holding
+$\delta$ fixed and refitting the remaining parameters:
+\[
+\chi^2_{\rm profile}(\delta)=
+\min_{\theta\,:\,\theta_\delta=\delta}\chi^2(\theta).
+\]
+A flat/unbounded profile, boundary-truncated interval or incompatible minima
+means the shutter is undetermined. Store the profile grid and the declared
+likelihood convention; do not manufacture a symmetric error bar.
+
+\textbf{BPM classification remains separate.} A correctable amplifier curve does
+not flag every pixel. A later per-pixel residual test may set reason bit 16 only
+with adequate coverage and reviewed thresholds. Insufficient information is
+coverage-unavailable, not a permanent defect. Known BPM pixels can still undergo
+individual defect tests without joining the reference population.
+
+\section*{6. Proposed implementation and verification order}
+\begin{enumerate}
+\item Checked QR and ownership/rank controls in Eclipse; independent small
+matrix solutions, scaled/permuted columns, near-degeneracy, overflow and
+allocation failures.
+\item Checked extension of the existing optimizer; independently known minima,
+bounds/inadmissible callbacks, parameter scaling, convergence limits and
+ownership/failure checks. Preserve legacy callers with focused comparisons.
+\item Detector wrapper and analytic derivative comparisons; recover negative,
+zero and positive common shutter offsets and injected amplifier curvature.
+Exercise degeneracy, shared-bias covariance, overlapping ROI treatment,
+saturation, disconnected coverage and lamp-drift violations.
+\end{enumerate}
+Announce the purpose, synthetic inputs, numerical calls and pass criteria before
+execution. Mac C17 first; representative Chapman validation follows for changed
+code before full actual-data testing there. Reuse qualified gain/RON evidence;
+do not rerun unchanged tests. No installation, real-data processing, merge or
+branch cleanup follows from publishing this proposal.
+
+\textbf{Review requested.} Approve or amend the two reusable numerical interfaces
+and their contracts before implementation. The detector wrapper remains
+conditional on an explicit pixel/ROI evaluator and covariance preparation
+contract; this note does not claim those inputs already exist in the current BPM
+service. The earlier accepted scientific model is unchanged.
+\end{document}
+
