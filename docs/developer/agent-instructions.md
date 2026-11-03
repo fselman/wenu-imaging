@@ -1,3 +1,23 @@
+## Mac optimizer accepted; direct-pixel joint candidate - 3 November 2026
+
+Actual Mac beee7c0d passed native_simplex/native_simplex_allocation 2/2 in 1.79 s
+at /Users/fselman/Software/build/wenu-imaging/mac-simplex-ddM35GKJ. All three
+preservation checks passed; clean main c73d9a9e remains unchanged.
+Owner authorized the joint wrapper next. First increment fits compact DIRECT
+PIXEL samples only: one common signed all-detector delta, per-pixel illumination
+rates, amplifier cubics, supplied fixed covariance, analytic derivatives,
+multiple declared starts and qualified Eclipse optimizer/QR. Candidate status is
+NOT science acceptance. No unvalidated ROI-mean substitution, new lamp factor,
+BPM classification, fit-range default or production publication.
+Agent C17 two new controls pass 2/2 in 0.62 s; all 47 single/persistent allocation
+positions preserve qfits owners. Normal mefpp builds. #229 corrects only the
+rank-isolation test fixture; keep open until actual Mac gate. Actual Mac joint
+candidate gate pending: qualify_detector_joint_mac.py. Profiles, instrument
+coverage acceptance, validated aggregation/covariance preparation and scalable
+measurement/recipe integration remain next. No unchanged helper replay or
+observations/install/merge/cleanup.
+See [candidate record](detector-joint-candidate-2026-11-03.md).
+
 ## Mac QR accepted; checked optimizer candidate - 3 November 2026
 
 Actual Mac b382a93e passed native_matrix_qr/native_matrix_qr_allocation 2/2 in

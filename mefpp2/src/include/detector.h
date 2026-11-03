@@ -32,6 +32,7 @@
 #include "fit_curve.h"
 #include "image_arith.h"
 #include "image_stats.h"
+#include "detector_joint.h"
 
 /*-----------------------------------------------------------------------------
    						Function ANSI C prototypes	

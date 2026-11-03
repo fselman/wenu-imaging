@@ -6,6 +6,14 @@ native_matrix_qr and native_matrix_qr_allocation 2/2 in 1.69 s, retained at
 Checkout, installed files and exported source were preserved; clean main remains
 c73d9a9e. No unchanged QR or gain/RON tests are replayed in this increment.
 
+## Actual Mac acceptance
+
+The owner returned beee7c0d Mac C17 success: native_simplex and
+native_simplex_allocation 2/2 in 1.79 s. Evidence:
+`/Users/fselman/Software/build/wenu-imaging/mac-simplex-ddM35GKJ`.
+Checkout, installed files and exported source all preserved; main stayed clean
+at c73d9a9e. Earlier pending wording below is historical. No unchanged replay.
+
 ## Implemented contract
 
 `minimize_checked` extends the existing Eclipse optimization module using its
