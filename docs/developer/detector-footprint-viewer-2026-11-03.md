@@ -98,5 +98,14 @@ output/spatial-order landmarks, and refusal of cross-instrument or out-of-bounds
 ROI inputs. Both complete SVG mosaics were rasterized with librsvg and visually
 inspected. HTML JavaScript selection/zoom passed a mocked-DOM execution check.
 A real headless Chromium launch was blocked by this host's socket restrictions;
-interactive browser confirmation on the Mac remains pending. No native test replay,
+the owner subsequently opened both outputs on the Mac and confirmed both mosaics look OK. No native test replay,
 Mac reduction, calibration product or scientific fit was performed.
+
+## Detector footprint viewer maintenance — owner direction, 3 November 2026
+
+Fernando inspected both generated Mac mosaics from source 50e52a9055fb1a761119abf529433a32dc2816dc and reports that both look OK. Review outputs:
+- OCAM: /Users/fselman/Pictures/OCAM/wenu-imaging/detector-geometry-review-iE8SBsHq/footprints.html
+- WFI: /Users/fselman/Pictures/WFI/wenu-imaging/detector-geometry-review-5qloSBd2/footprints.html
+
+Maintain tools/detector-footprint.py and tools/view-detector-footprints.sh as the detector and processing TOMLs evolve. Any change to their schemas, geometry, detector/output identities, scan/crop/ROI coordinates or configuration composition must update the viewer and affected regression checks in the same change. Keep the diagrams driven by the configuration used for inspection; do not let separate hard-coded geometry or a stale visualization-only schema drift from future authoritative TOMLs. When production TOML schemas/readers replace these reference schemas, adapt or share their interpretation and retire duplicated profiles. Preserve explicit coordinate systems, nominal illuminated versus retained areas, scan bands versus selected samples, mosaic placement and schematic amplifier-marker semantics. Regenerate affected views and record visual review when geometry changes. This acceptance confirms the displayed layout; it does not authorize numerical reduction or scientifically validate candidate ROIs. See docs/developer/detector-footprint-viewer-2026-11-03.md.
+
