@@ -17,12 +17,14 @@ Completed actual Intel Mac C17 gates (all checkout/install/export protections tr
 | Pivoted QR | b382a93e | 2/2 | 1.69 | mac-matrix-qr-Ay1wSJZe |
 | Checked simplex | beee7c0d | 2/2 | 1.79 | mac-simplex-ddM35GKJ |
 | Direct-pixel joint candidate | dc762519 | 2/2 | 2.67 | mac-detector-joint-7iY8InK7 |
+| Shutter profile | 338180f6 | 2/2 | 6.09 | mac-shutter-profile-0mNWCIc5 |
 
-The shutter-profile increment has passed agent C17 preparation 2/2 in 2.91 s
-with all 97 single/persistent allocation positions checked. Its actual Mac gate
-is pending via Pycavi2/tests/qualify_shutter_profile_mac.py. See the
-[profile contract and retained limitations](shutter-profile-2026-11-03.md).
-No unchanged gate replay is needed for its host qualification.
+The exact ROI operator/covariance propagation increment has passed agent C17
+preparation 3/3 in 0.28 s, including all 41 single/persistent allocation positions.
+Its actual Mac gate is pending via Pycavi2/tests/qualify_roi_aggregation_mac.py.
+The selection includes two new ROI controls and the joint numerical control
+because its shared measurement validator was extracted; no unrelated replay.
+See the [ROI contract and scope](roi-aggregation-2026-11-03.md).
 
 One signed shutter duration offset is common to ALL detectors. Cubic inverse
 response coefficients are amplifier-specific; direct-pixel illumination rates
@@ -31,10 +33,11 @@ or per-frame lamp factor. Units: ADU and seconds, with absolute supplied covaria
 Profile points hold common delay fixed and refit every nuisance parameter; no
 symmetric error or science acceptance is implied by a numerical bracket.
 
-ROI means cannot be substituted for pixels without exact aggregation or a
-validated restricted approximation. Covariance preparation, scalable aggregation,
-recipe integration, conditional pixel nonlinearity classification and actual
-science acceptance remain pending. Owner defers QC visualization work. Full
+ROI means cannot be substituted for pixels without an integrated pixel-level
+forward model or a validated restricted approximation. Exact recorded ROI
+operators and supplied-covariance propagation are implemented. Raw extraction,
+noise-model construction, scalable forward-model/recipe integration, conditional
+pixel nonlinearity classification and actual science acceptance remain pending. Owner defers QC visualization work. Full
 correction later belongs in mefpp; eventual photometric comparisons will use the
 same frames with and without correction.
 

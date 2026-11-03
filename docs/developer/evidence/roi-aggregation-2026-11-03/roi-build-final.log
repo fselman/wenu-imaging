@@ -1,0 +1,28 @@
+-- GLOB mismatch!
+-- GLOB mismatch!
+-- Candidate mefpp: C17; /usr/bin/cc; resources=OFF
+-- Configuring done (0.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/9ccf7e35ace4/roi-build
+[ 17%] Built target qfits
+[ 19%] Building C object mefpp2/CMakeFiles/eclipse.dir/src/iproc/detector_roi.c.o
+[ 19%] Building C object mefpp2/CMakeFiles/eclipse.dir/src/iproc/detector_joint.c.o
+[ 19%] Linking C static library libeclipse.a
+[ 97%] Built target eclipse
+[100%] Linking C executable roi_aggregation_probe
+[100%] Built target roi_aggregation_probe
+[  2%] Building C object mefpp2/CMakeFiles/roi_aggregation_allocation_units.dir/src/iproc/detector_roi.c.o
+[ 19%] Built target qfits
+[ 97%] Built target eclipse
+[ 97%] Built target roi_aggregation_allocation_units
+[ 97%] Linking C executable roi_aggregation_allocation_probe
+[100%] Built target roi_aggregation_allocation_probe
+[ 17%] Built target qfits
+[ 97%] Built target eclipse
+[ 97%] Linking C executable detector_joint_probe
+[100%] Built target detector_joint_probe
+[ 17%] Built target qfits
+[ 95%] Built target eclipse
+[ 97%] Built target mefpp_common
+[100%] Linking C executable mefpp
+[100%] Built target mefpp

@@ -2,9 +2,10 @@
 
 [Current handoff](detector-characterization-handoff-2026-11-03.md) records the
 actual Mac gain/RON, QR, optimizer and direct-pixel candidate qualifications.
-The [common shutter-profile increment](shutter-profile-2026-11-03.md) has passed
-focused C17 preparation; its actual Mac gate is pending. ROI aggregation,
-measurement/covariance preparation and science acceptance remain later work.
+The [shutter-profile increment](shutter-profile-2026-11-03.md) passed actual Mac
+C17 qualification. The [exact ROI operator](roi-aggregation-2026-11-03.md) has
+passed focused C17 preparation; its actual Mac gate is pending. Raw extraction,
+noise construction, forward-model integration and science acceptance remain later work.
 
 # Developer documentation
 

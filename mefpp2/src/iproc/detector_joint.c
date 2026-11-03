@@ -6,6 +6,7 @@
 #include <limits.h>
 #include <string.h>
 #include "detector_joint.h"
+#include "detector_measurements_internal.h"
 
 typedef struct {
     const detector_joint_problem *p;
@@ -89,10 +90,11 @@ static optimization_evaluation joint_cost(const double *theta,int dim,void *data
     if(!isfinite(cost))return OPTIMIZATION_EVAL_ERROR;
     *value=cost;return OPTIMIZATION_EVAL_VALID;
 }
+
 static int joint_valid(const detector_joint_problem *p,const detector_joint_options *o,
     detector_joint_result **out)
 {
-    size_t m,n,a,j;int i;
+    size_t m,n,j;
     if(!p||!o||!out||*out||p->amplifiers<1||p->sites<1||p->observations<1||p->starts<1||
        !p->amplifier||!p->site||!p->observation||!p->scales||!p->lower||!p->upper||
        !p->initial_simplexes||!p->noise_factor||!p->noise_factor->m) return 0;
@@ -119,38 +121,10 @@ static int joint_valid(const detector_joint_problem *p,const detector_joint_opti
         !isfinite(p->lower[j])||!isfinite(p->upper[j])||p->lower[j]>=p->upper[j])return 0;
     for(j=0;j<(n+1)*n*(size_t)p->starts;++j)if(!isfinite(p->initial_simplexes[j])||
         p->initial_simplexes[j]<p->lower[j%n]||p->initial_simplexes[j]>p->upper[j%n])return 0;
-    for(a=0;a<(size_t)p->amplifiers;++a) {
-        const detector_joint_amplifier *amp=p->amplifier+a;
-        if(!memchr(amp->detector_id,0,64)||!memchr(amp->amplifier_id,0,64)||
-           !amp->detector_id[0]||!amp->amplifier_id[0]||
-           !isfinite(amp->signal_min)||!isfinite(amp->signal_max)||
-           amp->signal_min<0||amp->signal_min>=amp->signal_max)return 0;
-        for(j=0;j<a;++j) if(!strcmp(amp->detector_id,p->amplifier[j].detector_id)&&
-            !strcmp(amp->amplifier_id,p->amplifier[j].amplifier_id))return 0;
-    }
-    for(i=0;i<p->sites;++i) {
-        const detector_joint_site *s=p->site+i;
-        if(s->amplifier<0||s->amplifier>=p->amplifiers||s->x<1||s->y<1)return 0;
-        for(j=0;j<(size_t)i;++j)if(s->amplifier==p->site[j].amplifier&&
-            s->x==p->site[j].x&&s->y==p->site[j].y)return 0;
-    }
-    for(i=0;i<p->observations;++i) {
-        const detector_joint_observation *ob=p->observation+i;
-        if(ob->site<0||ob->site>=p->sites||ob->input_index<0||!isfinite(ob->seconds)||
-           ob->seconds<=0||!isfinite(ob->signal))return 0;
-        a=(size_t)p->site[ob->site].amplifier;
-        if(ob->signal<p->amplifier[a].signal_min||ob->signal>p->amplifier[a].signal_max)return 0;
-        for(j=0;j<(size_t)i;++j)if(ob->input_index==p->observation[j].input_index) {
-            if(ob->site==p->observation[j].site||ob->seconds!=p->observation[j].seconds)return 0;
-        }
-    }
-    for(a=0;a<m;++a) {
-        if(p->noise_factor->nc==1) {
-            if(!isfinite(p->noise_factor->m[a])||p->noise_factor->m[a]<=0)return 0;
-        }else for(j=0;j<m;++j) {
-            double v=p->noise_factor->m[a*m+j];
-            if(!isfinite(v)||(a==j&&v<=0)||(j>a&&v!=0))return 0;
-        }
+    {
+        detector_measurements data={p->amplifiers,p->sites,p->observations,
+            p->amplifier,p->site,p->observation,p->noise_factor};
+        if(!joint_measurements_valid(&data))return 0;
     }
     /* Full parameter/initial-simplex feasibility is delegated to minimize_checked. */
     return 1;
@@ -472,3 +446,5 @@ fail:
     if(c.joint.white)free(c.joint.white);
     detector_joint_profile_result_del(r);return -1;
 }
+
+

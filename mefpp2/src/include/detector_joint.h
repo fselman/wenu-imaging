@@ -19,6 +19,15 @@ typedef struct {
     int site, input_index;
     double seconds, signal;
 } detector_joint_observation;
+/* Borrowed, already admitted finite pixel measurements and absolute noise.
+ * This shared view has no optimizer/starting-point requirement. */
+typedef struct {
+    int amplifiers, sites, observations;
+    const detector_joint_amplifier *amplifier;
+    const detector_joint_site *site;
+    const detector_joint_observation *observation;
+    const matrix *noise_factor;
+} detector_measurements;
 typedef struct {
     int amplifiers, sites, observations, starts;
     const detector_joint_amplifier *amplifier;

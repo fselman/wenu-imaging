@@ -7,6 +7,15 @@ it does not introduce another optimizer or change the covariance/objective.
 The existing candidate API retains its behavior. Profile diagnostics still do
 not constitute an accepted detector calibration.
 
+## Actual Mac acceptance
+
+The owner returned 338180f6 Mac C17 success: native_shutter_profile and
+native_shutter_profile_allocation passed 2/2 in 6.09 s at
+`/Users/fselman/Software/build/wenu-imaging/mac-shutter-profile-0mNWCIc5`.
+Checkout, installed files and exported source all preserved; clean main c73d9a9e
+remained unchanged. Earlier pending statements below are historical.
+See the subsequent [ROI operator record](roi-aggregation-2026-11-03.md).
+
 ## Caller-controlled request
 
 The profile service first obtains the free common-delay candidate with
