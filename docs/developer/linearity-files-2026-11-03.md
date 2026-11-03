@@ -132,7 +132,10 @@ native_linearity_files, native_linearity_samples and native_bpm_files using the
 normal imaging Python with its already used FITS dependencies. It exports exact
 source, builds those probes plus mefpp_m5/mefpp, verifies the test inventory and
 protects checkout/installed/exported-source identity. Actual Mac FITS-admission
-qualification is pending. No unrelated numerical gate replay or installation.
+qualification subsequently passed at 10027f1e: 3/3 in 20.91 s, retained
+`/Users/fselman/Software/build/wenu-imaging/mac-linearity-files-nF68I1UL`.
+This includes the full affected BPM Python suite; checkout/install/export all
+passed and main stayed clean c73d9a9e. No unrelated numerical replay or installation.
 
 The preceding covariance assembly at c381168b7ca00b52b79d947addc483e0cc29e05b
 passed actual Mac 4/4 in 3.69 s, retained
@@ -144,3 +147,8 @@ those retained files.
 Next are justified uncertainty estimates/selection, forward-model and complete
 recipe/CLI integration, followed by reviewed actual-data tests. No real OCAM fit,
 science acceptance, product publication, activation or merge is implied.
+
+The next [uncertainty policy review](linearity-uncertainty-review-2026-11-03.md)
+identifies the actual median-master estimator and proposes measurement-first,
+conditional propagation with fixed covariance. No new statistical default or
+actual-data execution is selected by that proposal.

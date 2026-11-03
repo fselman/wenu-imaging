@@ -22,6 +22,7 @@ Completed actual Intel Mac C17 gates (all checkout/install/export protections tr
 | Named ROI configuration | 8e893008 | 1/1 | 1.21 | mac-roi-config-PHwS5VBY |
 | Raw-plane sample admission | 88e29306 | 1/1 | 1.05 total | mac-linearity-samples-fRlf0Hgk |
 | Explicit covariance assembly | c381168b | 4/4 | 3.69 | mac-detector-noise-z4pHBH0H |
+| FITS admission and affected callers | 10027f1e | 3/3 | 20.91 | mac-linearity-files-nF68I1UL |
 
 The exact ROI operator/covariance propagation is Mac-qualified as above,
 including its two new controls and the affected joint validator control.
@@ -48,8 +49,8 @@ M4 path/HDU/detector/calibration maps to sample preparation, reads exact header
 times, validates nonconsecutive declared pairs and preserves binary/reason BPM
 semantics. Agent C17 2/2 in 3.31 s passed, including 14 FITS cases, the existing
 BPM C caller and 132 adapter/sample/snapshot allocation failures. Full existing
-BPM Python suite awaits the actual Mac gate (agent lacks Astropy). That gate,
-qualify_linearity_files_mac.py, selects new files + affected sample/BPM tests.
+BPM Python suite subsequently passed on the actual Mac as above (agent lacks
+Astropy). The gate selected new files + affected sample/BPM tests.
 No uncertainties, actual OCAM fit or product publication yet.
 
 One signed shutter duration offset is common to ALL detectors. Cubic inverse
@@ -85,3 +86,16 @@ Validated WFI bias products and all earlier inventories/environments remain
 untouched. Full actual-data Chapman qualification/processing follows validation
 of the changed code there; no new real data, QC work or science reduction now.
 
+
+## Next scientific review
+
+[Uncertainty policy proposal](linearity-uncertainty-review-2026-11-03.md): first
+measure raw bias RON and flat-pair variance versus signal in explicit populations;
+then propagate a justified noise model through the actual trimmed-row correction
+and median master, conditional on reviewed selections and with covariance fixed
+within each fit. The median master is not assigned mean-stack variance RON^2/N.
+No distribution, fit range, simulation count or stochastic estimator is adopted
+without the owner's scientific review. ESO reports October 2016 intermittent
+RON increases in CCD_69/77, relevant checks for our March 2017 sequence, not proof
+that the selected exposures are affected. Hardware identities/readout/epoch must
+be matched. Proposal only: no native change, test replay, data launch or install.
