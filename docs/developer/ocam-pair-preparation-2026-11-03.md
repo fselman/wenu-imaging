@@ -30,9 +30,10 @@ The output directory must be new and outside the raw directory. It saves:
 Up to 128 other .fits files directly in the same directory are inspected as
 unselected candidates. Names do not choose a calibration or assert its role.
 No recursive search or calibration activation occurs. The .cfg supplies logical
-detector names and configuration-slot claims; each file's HDUs are matched by
+detector names and Python configuration entry order; each file's HDUs are matched by
 EXTNAME independently. This does not validate a native binding merely because
-its ordinal matches. Hardware/amp/readout/geometry evidence remains for review.
+its ordinal matches. The Python entry index is not the native PAF slot;
+configuration_detector is now null until explicitly resolved. Hardware/amp/readout/geometry evidence remains for review.
 CCD_69 and CCD_77 are tagged for the already-recorded instrument-history review,
 without declaring the selected frames affected by that historical event.
 
@@ -69,3 +70,27 @@ Python/C/config sources. Raw protection is stat identity only; no pixel checksum
 or payload validation is claimed by a header inventory. Full diagnostics remain
 in the saved JSON if metadata blocks preparation. Existing native gates need no
 replay for this Python header-preparation increment.
+
+
+## Actual Mac receipt and label correction
+
+Owner returned successful header preparation at a9bdb160, retained
+/Users/fselman/Software/build/wenu-imaging/mac-ocam-pair-preparation-XqbLTbCy.
+Thirty selected assets, ten biases, twenty flats, ten pairs and one unselected
+candidate were read. All configured identities occur in all 30 files with stable
+2144 x 4200 image layouts. #96 is HDU32; #65 through #95 follow the reported
+independent mapping. Candidate OCAM_BPM_1x1.fits has 33 HDUs, absent primary type/
+product category. Raw stat and checkout/installed/export preservation all pass.
+Complete logs/JSON remain on the owner Mac; only terminal output was supplied.
+
+Source review caught an overly strong field name in the preparation report:
+configuration_detector was filled from ext_N_name order in the Python .cfg.
+Native mef_bb_new sets ccd[i].extnum=i+1 and reads PAF CHIP(i+1), while scan/crop
+uses bb->ccd[bb->xtnum-1]. Thus these indices must not be conflated. The helper
+now records python_config_entry instead and leaves configuration_detector null.
+No native pixels were processed, and binding-validation flags were always false.
+The correction passes three small policy tests in 0.037 s, including an explicit
+null-native-slot assertion. The prior inventory stays retained without a header
+replay. Future binding must use reviewed detector-to-PAF geometry, independent
+of the current file's HDU ordinal. Raw/BPM geometry and mask encoding/polarity
+still need review before numerical measurement.

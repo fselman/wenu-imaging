@@ -73,7 +73,7 @@ def configuration(source):
         match = re.fullmatch(r'ext_(\d+)_name', key)
         if match:
             configured.append(dict(detector_id=value.strip().strip('"'),
-                                   configuration_detector=int(match[1])-1))
+                                   python_config_entry=int(match[1])-1))
     # Inventory exact PAF declarations only; native code remains parser authority.
     declarations = []
     for line in paf.read_text().splitlines():
@@ -177,7 +177,7 @@ def prepare(source, raw_root, output, inspector=None):
                                           chip_id=single(hdu, 'ESO DET CHIP ID'),
                                           amplifier_id=single(hdu, 'ESO DET OUT1 ID')))
             report['detector_bindings'].append(dict(**claim, observed=found,
-                         native_binding_validated=False,
+                         configuration_detector=None, native_binding_validated=False,
                          history_review=claim['detector_id'] in ('ESO_CCD_#69', 'ESO_CCD_#77')))
     except Exception as exc:
         report['errors'].append('Preparation interrupted: '+repr(exc))
@@ -210,11 +210,11 @@ def prepare(source, raw_root, output, inspector=None):
         print('UNSELECTED FITS CANDIDATES:', len(report['candidates']))
         print('STATUS:', report['status'])
         print('OBS.ID REQUIRED: 574184')
-        print('CONFIGURED DETECTOR CLAIMS (slot is zero-based, dimensions are FITS X,Y):')
+        print('PYTHON CONFIGURATION ENTRIES (zero-based; native configuration slot unresolved):')
         for binding in report['detector_bindings']:
             observed=binding['observed']
             layouts={(v['hdu'], tuple(v['dimensions'])) for v in observed}
-            print(binding['configuration_detector'], binding['detector_id'],
+            print(binding['python_config_entry'], binding['detector_id'],
                   'files='+str(len(observed)), 'layouts='+json.dumps(sorted(layouts)),
                   'history-review' if binding['history_review'] else '')
         for row in report['candidates']:

@@ -127,3 +127,20 @@ Agent preparation-policy tests pass 3/3; actual Mac header inventory remains
 pending. BPM/ROI/saturation/bias-pair/amplifier-readout selections are recorded
 as unresolved, so no real pixel measurement or fit is launched yet.
 
+
+
+Actual OCAM header preparation passed at a9bdb160 on the Mac, retained
+mac-ocam-pair-preparation-XqbLTbCy. All 30 selected files have 32 image detectors,
+2144 x 4200 raw pixels and stable identity/HDU layouts. The one unselected file
+is OCAM_BPM_1x1.fits, 33 HDUs, with no primary DPR.TYPE/ESO PRO CATG reported.
+Checkout/install/export and raw stat preservation passed. This is header evidence,
+not calibration compatibility or pixel acceptance.
+
+Important label correction: the preparation helper called .cfg entry order
+configuration_detector. The actual native PAF indexes CHIPn by original extension
+n (mefp_lib.c/mefpp.c), whereas the Python .cfg lists #96 first but it is in HDU32.
+The helper now calls that source field python_config_entry and leaves the native
+configuration_detector null. All native_binding_validated flags remain false;
+no real numerical run used these claims. Three policy checks pass after correction.
+Do not rerun the unchanged 31-header inventory merely to rename this field.
+Review the saved raw/amplifier/readout/scan cards and candidate BPM values next.
