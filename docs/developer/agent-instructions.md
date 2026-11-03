@@ -20,8 +20,11 @@ Historical overscan reconciliation is issue#226, linked to completed#121:
 all ten old medians match the erroneous22-sample sum divided by23. Keep the
 corrected23-sample mean and preserve old products. No more investigation required
 for this comparison now. DS9 helper is `tools/ds9-mosaic.sh FILE.fits`.
-Open draft PRs#209 (bias to main) and#225 (BPM stacked on bias) remain unmerged;
-software integration/branch cleanup is pending explicit closure disposition.
+Owner authorized merge/cleanup. PR#209 merged at8846bbae; PR#225 was retargeted
+to main and merged ate0a236cc. Verified final BPM head0441a792 is an ancestor of
+main, with no file differences. Branch deletion and host synchronization are
+being handed off through exact-tip guarded shell commands (connector has no
+branch-deletion capability). Preserve all retained products/environments.
 No installation/production activation or full science reduction is authorized.
 Full handoff: [2 November handoff](handoff-2026-11-02.md).
 
