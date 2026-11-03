@@ -302,3 +302,37 @@ BPM polarity and distinct bias-pair selection still precede real execution.
 Observational outputs follow the Pictures/instrument purpose-directory and
 README retention rule; build-directory disposition is reviewed with the owner
 at branch merge/cleanup. No test replay is needed for this receipt-only update.
+
+## One-detector command and orchestration candidate
+
+The actual-Mac raw-only adapter gate passed at 49399e0 (2/2 in 17.54 s), retained
+mac-raw-pair-files-uFtyet1s, with clean main and checkout/install/export preserved.
+The next candidate connects it to mefpp_pair_measure and tools/run-pair-measurements.py.
+The native command binds the existing ROI TOML, checks explicit plan/native crop
+and raw dimensions, invokes qualified measurement/export, creates files exclusively
+and emits a completion marker only after close checks.
+
+The Python runner reads the maintained detector/processing TOMLs plus explicit
+selection TOML, verifies the native PAF fingerprint, selects one detector's ROIs,
+writes the internal bounded plan, fingerprints all source files/code before/after,
+and records execution.json, README, logs and tables. Default is preparation only;
+--execute is explicit. Status becomes complete_for_owner_inspection only after
+native success, expected marker/table counts and source preservation. Failed
+attempts retain partial evidence with failed status; the overall receipt is
+authoritative even if a native marker exists. No original files are copied,
+modified, permission-changed or deleted.
+
+Agent C17 two end-to-end checks pass 2/2 in 0.65 s. Four successful mask modes,
+existing-output preservation, 11 refused plans, native child orchestration,
+prepare-only status, fingerprints and stale-config refusal are covered using
+tiny generated FITS only. Focused actual Mac qualifier builds only the command
+and runs native_pair_command plus pair_runner_orchestration. Actual Mac gate
+pending. See [command contract](pair-command-2026-11-03.md).
+
+No real OCAM selection has been generated or executed. Complete all selected
+output/primary readout-clock/classification admission, explicitly select raw
+saturation, two raw biases and binary BPM polarity, then prepare a first-detector
+real plan for review. No fitting or instrument-gain acceptance. Real outputs
+belong in Pictures/instrument/wenu-imaging with README; owner build-directory
+disposition review is required at merge/cleanup. A future batch should hash the
+common observation set once for the batch rather than repeat per detector.

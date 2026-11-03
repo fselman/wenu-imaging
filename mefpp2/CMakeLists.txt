@@ -209,6 +209,12 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_compile_definitions(mefpp_linearity_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   target_link_libraries(mefpp_linearity_files PUBLIC mefpp_linearity_samples mefpp_linearity_pairs)
   target_compile_options(mefpp_linearity_files PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(mefpp_pair_measure ins/mef/mefpp_pair_measure.c)
+  set_target_properties(mefpp_pair_measure PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_pair_measure PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_pair_measure PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_pair_measure PRIVATE mefpp_linearity_files mefpp_roi_config)
+  target_compile_options(mefpp_pair_measure PRIVATE -Wall -Wextra -pedantic-errors)
   add_executable(linearity_raw_files_probe tests/linearity_raw_files_probe.c)
   set_target_properties(linearity_raw_files_probe PROPERTIES C_STANDARD 17)
   target_link_libraries(linearity_raw_files_probe PRIVATE mefpp_linearity_files)
@@ -501,6 +507,19 @@ if(BUILD_TESTING)
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_bias_files PROPERTIES TIMEOUT 600 LABELS "native;bias;template;publication")
     endif()
+    add_test(NAME pair_runner_orchestration
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/pair_runner_contract.py"
+        --command "$<TARGET_FILE:mefpp_pair_measure>"
+        --runner "${CMAKE_CURRENT_SOURCE_DIR}/../tools/run-pair-measurements.py"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(pair_runner_orchestration PROPERTIES TIMEOUT 180 LABELS "linearity;command;provenance;configuration")
+    add_test(NAME native_pair_command
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/pair_command_contract.py"
+        --command "$<TARGET_FILE:mefpp_pair_measure>"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_pair_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;configuration")
     add_test(NAME native_linearity_raw_files
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_raw_files_contract.py"
         --probe "$<TARGET_FILE:linearity_raw_files_probe>"
