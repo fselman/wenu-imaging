@@ -281,3 +281,24 @@ pixel run or scientific fit has occurred. Full output-header binding, explicit
 raw saturation, binary BPM polarity and raw-bias-pair selection still precede
 actual OCAM execution. Pictures retention and owner build-disposition review
 remain in force.
+
+## Actual Mac raw-only admission qualification passed
+
+Fernando returned the exact-source 49399e09abaef53ccdae2cf86f9ab996c5469f16
+Mac C17 receipt on 3 November 2026. Retained run:
+/Users/fselman/Software/build/wenu-imaging/mac-raw-pair-files-uFtyet1s.
+
+native_linearity_raw_files passed in 16.35 s; native_linearity_pairs_export
+passed in 1.17 s. Overall 2/2 passed, total elapsed 17.54 s. QUALIFICATION passed,
+with checkout, installed_files and exported_source preservation all true.
+The user checkout remains clean main tracking origin/main.
+
+The raw-only adapter and its table-export integration are now actual-Mac
+qualified. Next is command/plan orchestration around these existing services,
+with one detector loaded and released at a time. No raw OCAM observations have
+been processed and no gain/linearity/shutter fit, installation or merge occurred.
+Full output/readout-header admission and explicit raw saturation, legacy binary
+BPM polarity and distinct bias-pair selection still precede real execution.
+Observational outputs follow the Pictures/instrument purpose-directory and
+README retention rule; build-directory disposition is reviewed with the owner
+at branch merge/cleanup. No test replay is needed for this receipt-only update.

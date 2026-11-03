@@ -57,7 +57,7 @@ OOM or reentrancy guarantee is claimed.
 `Pycavi2/tests/qualify_linearity_raw_files_mac.py` builds only raw-file and table
 export probes, inventories exactly native_linearity_raw_files and
 native_linearity_pairs_export, and preserves clean accepted main, installed files
-and exported source. Actual Mac qualification is pending. Existing general
+and exported source. Actual Mac qualification passed; see the owner-returned receipt below. Existing general
 linearity-file and BPM numerical code are unchanged; no full historical test
 matrix, installation or real dataset execution is requested.
 
@@ -69,3 +69,24 @@ raw-bias pair precede actual measurements. Future observational products go to a
 purpose-named ~/Pictures/OCAM/wenu-imaging directory with a README stating why
 needed and when erasable. Build directories remain temporary compilation/test
 locations and need an owner disposition review at branch merge/cleanup.
+
+## Actual Mac raw-only admission qualification passed
+
+Fernando returned the exact-source 49399e09abaef53ccdae2cf86f9ab996c5469f16
+Mac C17 receipt on 3 November 2026. Retained run:
+/Users/fselman/Software/build/wenu-imaging/mac-raw-pair-files-uFtyet1s.
+
+native_linearity_raw_files passed in 16.35 s; native_linearity_pairs_export
+passed in 1.17 s. Overall 2/2 passed, total elapsed 17.54 s. QUALIFICATION passed,
+with checkout, installed_files and exported_source preservation all true.
+The user checkout remains clean main tracking origin/main.
+
+The raw-only adapter and its table-export integration are now actual-Mac
+qualified. Next is command/plan orchestration around these existing services,
+with one detector loaded and released at a time. No raw OCAM observations have
+been processed and no gain/linearity/shutter fit, installation or merge occurred.
+Full output/readout-header admission and explicit raw saturation, legacy binary
+BPM polarity and distinct bias-pair selection still precede real execution.
+Observational outputs follow the Pictures/instrument purpose-directory and
+README retention rule; build-directory disposition is reviewed with the owner
+at branch merge/cleanup. No test replay is needed for this receipt-only update.
