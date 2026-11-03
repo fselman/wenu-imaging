@@ -257,3 +257,27 @@ outputs go under Pictures/OCAM/wenu-imaging with a purpose/deletion README.
 No unchanged export or earlier numerical test replay is needed for a
 documentation-only receipt update. Review branch-created build directories
 with the owner at merge/cleanup.
+
+## Raw-only file admission candidate
+
+The first diagnostic measurement pass now has its own typed file admission path,
+mef_linearity_raw_from_files, with no master-bias dependency or corrected dense
+fit-sample construction. Explicit M4 path/HDU/identity/readout/unit/binding and
+resource checks precede loads; the existing raw-pair service and qualified TSV
+writers supply the measurements and export. The owner returned the preceding
+table-export Mac gate passed 2/2 in 2.36 s at 7a47dc0; no changes to those numerical
+or exporter sources are needed here.
+
+Agent C17 raw-only admission passes 20 tiny FITS cases and 130 persistent
+file/service owner allocation failures, 1/1 in 4.76 s total. Each case deletes its
+generated master before the call; source hashes are preserved, pair order/times
+and detached bindings checked, and known raw signal/RON exported after input
+owners are gone. See [raw-only admission](linearity-raw-files-2026-11-03.md).
+
+Focused actual Mac qualifier builds only raw-file and table-export probes and
+runs native_linearity_raw_files plus native_linearity_pairs_export. Actual Mac
+gate pending. Command/plan orchestration is still to follow that gate; no real
+pixel run or scientific fit has occurred. Full output-header binding, explicit
+raw saturation, binary BPM polarity and raw-bias-pair selection still precede
+actual OCAM execution. Pictures retention and owner build-disposition review
+remain in force.
