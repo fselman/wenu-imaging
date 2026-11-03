@@ -190,6 +190,25 @@ class SharedQcTests(unittest.TestCase):
         builder.add_input(first, qc_path='../outside/raw1.asdf', participation='used')
         with self.assertRaises(qc.QcError): qc.write_record(builder.seal(), self.records)
 
+    def test_timestamped_sidecars_roundtrip_and_move(self):
+        name = 'WFI.2003-05-30T19:14:54.578.fits'
+        encoded = 'WFI.2003-05-30T19~3A14~3A54.578.asdf'
+        self.assertEqual(qc.qc_filename(name), encoded)
+        self.assertNotEqual(qc.qc_filename(name), qc.qc_filename(name.replace(':', '~3A')))
+        first, second = self.leaf(name), self.leaf('literal%3A?#.fits')
+        for record in (first, second):
+            qc.write_record(record, self.records)
+        parent = self.parent(first, second)
+        qc.write_record(parent, self.records)
+        moved = self.work / 'moved'; shutil.move(str(self.records), moved)
+        records = list(qc.traverse_records(moved / 'master.asdf', qc_root=moved))
+        self.assertEqual(len(records), 3)
+        self.assertEqual({r.as_dict()['file']['filename'] for r in records},
+                         {'master.fits', name, 'literal%3A?#.fits'})
+        for path in ('https://example.invalid/raw.asdf', '/raw.asdf', 'raw:bad.asdf',
+                     'raw?query.asdf', 'raw#fragment.asdf'):
+            with self.assertRaises(qc.QcError): qc._local_reference(path)
+
     def test_unknown_schema_rejected_and_offline_reference(self):
         import asdf
         raw = self.leaf('raw.fits')

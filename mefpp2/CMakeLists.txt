@@ -173,10 +173,27 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     add_library(mefpp_bias_files STATIC ins/mef/common/mef_bias_files.c
       ins/mef/common/mef_operation_template.c)
     target_link_libraries(mefpp_bias_files PUBLIC mefpp_config_snapshot)
+    add_library(mefpp_bpm_service STATIC ins/mef/common/mef_cal_bpm.c ins/mef/common/mef_bpm_files.c
+      ins/mef/common/mef_bpm_publish.c)
+    target_link_libraries(mefpp_bpm_service PUBLIC mefpp_bias_files)
+    target_compile_definitions(mefpp_bpm_service PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+    target_compile_options(mefpp_bpm_service PRIVATE -Wall -Wextra -pedantic-errors)
+    add_executable(bpm_service_probe tests/bpm_service_probe.c)
+    target_link_libraries(bpm_service_probe PRIVATE mefpp_bpm_service)
+    target_compile_definitions(bpm_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+    target_compile_options(bpm_service_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    add_executable(bpm_files_probe tests/bpm_files_probe.c)
+    target_link_libraries(bpm_files_probe PRIVATE mefpp_bpm_service)
+    target_compile_definitions(bpm_files_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+    target_compile_options(bpm_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    add_executable(bpm_publication_probe tests/bpm_files_probe.c)
+    target_link_libraries(bpm_publication_probe PRIVATE mefpp_bpm_service)
+    target_compile_definitions(bpm_publication_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS} BPM_PUBLICATION_CONTRACT=1)
+    target_compile_options(bpm_publication_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
     target_compile_definitions(mefpp_bias_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(mefpp_bias_files PRIVATE -Wall -Wextra -pedantic-errors)
-    add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c)
-    target_link_libraries(mefpp_m5 PRIVATE mefpp_bias_files mefpp_config_toml)
+    add_executable(mefpp_m5 ins/mef/recipes/mefpp_bias_adapter.c ins/mef/recipes/mefpp_bpm_adapter.c)
+    target_link_libraries(mefpp_m5 PRIVATE mefpp_bpm_service mefpp_config_toml)
     target_compile_definitions(mefpp_m5 PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
       MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
     target_compile_options(mefpp_m5 PRIVATE -Wall -Wextra -pedantic-errors)
@@ -206,6 +223,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(qfits_discovery_probe tests/qfits_discovery_probe.c)
   target_link_libraries(qfits_discovery_probe PRIVATE qfits)
   add_executable(measurement_stats_probe tests/measurement_stats_probe.c)
+  add_executable(bpm_response_probe tests/bpm_response_probe.c)
+  target_link_libraries(bpm_response_probe PRIVATE eclipse)
+  target_compile_options(bpm_response_probe PRIVATE -UNDEBUG -Wall -Wextra)
   target_link_libraries(measurement_stats_probe PRIVATE eclipse)
   target_compile_options(measurement_stats_probe PRIVATE -UNDEBUG -Wall -Wextra)
   add_executable(bias_service_probe tests/bias_service_probe.c tests/bias_legacy_reference.c)
@@ -298,6 +318,18 @@ if(BUILD_TESTING)
   if(MEFPP_BUILD_CONFIG_PROBES)
     if(MEFPP_BUILD_BIAS_ADAPTER)
       add_test(NAME native_operation_template COMMAND operation_template_probe)
+      add_test(NAME native_bpm_service
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_service_contract.py"
+          --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+          --probe "$<TARGET_FILE:bpm_service_probe>"
+          --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(native_bpm_service PROPERTIES TIMEOUT 180 LABELS "native;bpm;ownership;mask")
+      add_test(NAME native_bpm_files
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_files_contract.py"
+          --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+          --probe "$<TARGET_FILE:bpm_files_probe>"
+          --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(native_bpm_files PROPERTIES TIMEOUT 300 LABELS "native;bpm;layout;coverage;mask")
       add_test(NAME native_bias_files
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_files_contract.py"
           --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
@@ -387,6 +419,22 @@ if(BUILD_TESTING)
     set(MEFPP_QC_PYTHON "" CACHE FILEPATH "Qualified ASDF QC interpreter (enables handoff tests)")
     if(MEFPP_QC_PYTHON)
       if(MEFPP_BUILD_BIAS_ADAPTER)
+        add_test(NAME native_bpm_completion
+          COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_completion_contract.py"
+            --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+            --adapter "$<TARGET_FILE:mefpp_m5>"
+            --asdf-python "${MEFPP_QC_PYTHON}"
+            --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+        set_tests_properties(native_bpm_completion PROPERTIES TIMEOUT 600 LABELS "native;bpm;asdf;completion;cli")
+        add_test(NAME native_bpm_publication
+          COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_publication_contract.py"
+            --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+            --probe "$<TARGET_FILE:bpm_publication_probe>"
+            --asdf-python "${MEFPP_QC_PYTHON}"
+            --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+        set_tests_properties(native_bpm_publication PROPERTIES TIMEOUT 300 LABELS "native;bpm;asdf;publication;mask")
+      endif()
+      if(MEFPP_BUILD_BIAS_ADAPTER)
         add_test(NAME native_bias_qc_asdf
           COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_qc_asdf_contract.py"
             --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.." --adapter "$<TARGET_FILE:mefpp_m5>"
@@ -400,6 +448,11 @@ if(BUILD_TESTING)
       set_tests_properties(shared_qc_asdf PROPERTIES TIMEOUT 120 LABELS "asdf;qc")
     endif()
     add_test(NAME native_measurement_stats COMMAND measurement_stats_probe)
+    add_test(NAME native_bpm_response
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_response_contract.py"
+        --probe "$<TARGET_FILE:bpm_response_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_bpm_response PROPERTIES TIMEOUT 180 LABELS "native;bpm;statistics;mask")
     set_tests_properties(native_measurement_stats PROPERTIES TIMEOUT 30 LABELS "native;statistics;bias")
     add_test(NAME native_bias_service
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bias_service_contract.py"

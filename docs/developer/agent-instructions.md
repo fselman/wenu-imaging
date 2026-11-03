@@ -1,5 +1,181 @@
 # wenu-imaging agent instructions
 
+## End-of-day WFI bias handoff — 2 November 2026
+
+Owner visually reviewed the eight-detector WFI master as OK. Actual Mac mosaic
+run `/Users/fselman/Software/build/wenu-imaging/wfi-bias-mosaic-IkxQQ7Uz`
+completed seven new detector operations, reused inspected CHIP1, verified lossless
+assembly/common ASDF links and all four preservation controls. Main remains
+clean at47123ee. Chapman BPM e6f70e1 passed12/12 in72.12s (earlier pending notes
+below are historical). New BPM software is qualified, but real WFI BPM has not run.
+
+**Next session starts by reviewing the ESO WFI Manual and published detector
+behaviour**, using documentation appropriate to these2003 observations/readout.
+Do not start QC investigation, visualization or new processing before that review.
+CHIP7 RON30.1997 vs MAD3.1451 and large master dispersions, especially CHIP6,
+are retained observations, not diagnosed faults or accepted detector properties.
+QC work is deferred; follow the owner's sequencing.
+
+Historical overscan reconciliation is issue#226, linked to completed#121:
+all ten old medians match the erroneous22-sample sum divided by23. Keep the
+corrected23-sample mean and preserve old products. No more investigation required
+for this comparison now. DS9 helper is `tools/ds9-mosaic.sh FILE.fits`.
+Open draft PRs#209 (bias to main) and#225 (BPM stacked on bias) remain unmerged;
+software integration/branch cleanup is pending explicit closure disposition.
+No installation/production activation or full science reduction is authorized.
+Full handoff: [2 November handoff](handoff-2026-11-02.md).
+
+
+## Chapman BPM preflight stopped on changed QC; corrected gate - 2 November 2026
+
+Owner returned b6b5fea early stop at Shared QC changed in
+/home1/fselman/Software/build/wenu-imaging/chapman-bpm-complete-h64m4l9x.
+No export/build/tests/install ran; no formal final preservation receipt exists.
+Retain the failed attempt. Review against actual prior4417d7d shows schema
+unchanged, but common QC gained owned extensions/bias-MAD metrics and tests gained
+extension lifecycle checks. Those sources are already Mac-qualified022cf368.
+The earlier runner incorrectly treated old QC acceptance as reusable unchanged.
+
+Corrected runner verifies old export against its own Git source, records old/new
+QC digests, and runs current shared_qc_asdf (ten checks) alongside the eleven
+changed-code native/BPM entries: expected12/12. Dependency environment/external
+library evidence stays reused; no Conda/install/C interchange replay. Four guard
+controls plus ten current agent QC checks pass; actual Chapman retry pending.
+Native/build/QC sources remain identical to Mac022cf368, so no new Mac replay.
+Same seven preservation controls and protected07d2733 checkout; fresh run only.
+See [corrected Chapman gate](bpm-chapman-qualification-2026-11-02.md).
+
+
+## Actual Mac BPM completion passed; Chapman changed-code gate next - 2 November 2026
+
+Fernando returned actual 022cf3683fe47d4de6a7acac1e3799cb49201d40 Mac success:
+native_bias_files/native_bpm_completion 2/2 in18.63s, retained
+/Users/fselman/Software/build/wenu-imaging/mac-bpm-complete-Ia5qliwa.
+All four preservation checks passed; main clean. He authorizes proceeding to
+Chapman validation before actual WFI/OmegaCAM data.
+
+qualify_bpm_chapman.py exports exact fetched BPM source while preserving known
+clean Chapman bias checkout07d27330555712ef6bf59a068a578b450e89b4a3. It verifies
+native/build/QC tree identity against the Mac-qualified022cf368 source, uses the
+selected GCC10/C17/tools and retained ASDF Python, then runs eleven changed-code
+measurement/bias/BPM/layout/publication/completion contracts. Reuse prior passed
+Chapman dependency/QC evidence; no Conda, shared10/C-interchange replay, tool
+rediscovery, source change, install/activation, merge or real data yet. Protect
+checkout/installed files/packages/private Python/external prefix/export/old receipt.
+Only runner/docs change, so no unchanged Mac replay. Actual Chapman gate pending.
+See [Chapman BPM gate](bpm-chapman-qualification-2026-11-02.md).
+
+
+## Actual Mac publication passed; complete BPM command candidate - 2 November 2026
+
+Fernando returned 00ee1491930ec8d77968cb4b137c48ac60ce0502 Mac C17 success:
+service/files/publication 3/3 in 20.81 s, retained
+/Users/fselman/Software/build/wenu-imaging/mac-bpm-publication-Ev9dMXuD.
+All four preservation checks passed; protected main stayed clean.
+
+Next candidate connects cal bpm to the existing mefpp_m5 command entry and common
+ASDF completion wrapper. Explicit per-flat path/HDU/pair TSV, selected active
+master bias, optional encoded prior, active ROIs and caller thresholds; no new
+numerical algorithm/default. Zero success only after FITS, common ASDF and frozen
+links verify; failures retain truthful execution receipts/completed artifacts.
+Primary BPM remains unsigned 8-bit; binary priors require NEW mode and retain
+separate selection. --bpm-complete uses retained qualified QC Python, rebuilding
+mefpp_m5/mefpp and running only complete BPM plus affected bias command contracts.
+Earlier response/service/file/publication gates remain retained. Mac command gate
+pending, then changed-code Chapman qualification before actual WFI/OmegaCAM data.
+No install/activation/merge. Full gain/RON/linearity/shared signed shutter remains
+pending. See [command completion](bpm-command-completion-2026-11-02.md).
+
+
+## Actual Mac file input passed; publication candidate next - 2 November 2026
+
+Fernando returned 328c50ef518c76a66791f0a398321848b84413aa Mac C17 success:
+native_bpm_service/native_bpm_files, 8.07 s total. Retained
+/Users/fselman/Software/build/wenu-imaging/mac-bpm-files-sEzWKwiU.
+Installed files, checkout and exported source all preserved; main stayed clean.
+
+Next candidate adds checked integer-HDU output in Eclipse (existing qfits integer
+conversion), exclusive native BPM publication and pycavi_bpm_qc using the common
+unchanged QcRecipe/schema/ASDF writer. Primary reasons remain unsigned 8-bit;
+coverage, sample counts and prior information are distinct extensions. Explicit
+NEW/COMBINED modes: combined legacy binary reasons are unavailable, never
+invented. Full HIERARCH spellings; no Phase3 assertion. Result now owns its exact
+configuration snapshot for publication after context destruction. --bpm-publish
+requires the retained qualified ASDF Python and checks its preservation, running
+new publication plus affected file/service contracts only. CLI/whole-command
+completion and joint linearity/shutter/gain/RON remain later. Validate on Chapman
+before actual WFI/OmegaCAM data. No install/merge; see [publication record](bpm-publication-2026-11-02.md).
+
+
+## Actual Mac service passed; bound BPM inputs next - 2 November 2026
+
+Fernando returned the pinned 970bdfb9ad232df353aab18c7a1cd2f0957c737e Mac
+service gate: native_operation_template/native_bpm_service both passed (1.72 s).
+Retained /Users/fselman/Software/build/wenu-imaging/mac-bpm-service-AUUCnlyT;
+installed_files/checkout/exported_source all true; clean main unchanged.
+
+Next candidate adds mef_bpm_from_files: explicit bound paths/HDUs/configuration,
+header exposure key/HDU, pair IDs, prior encoding/coordinates, physical raw ADU
+saturation and caller-selected margin/span/pair thresholds. Saturated or otherwise
+reference-empty frames are now explicitly excluded with original-index mapping;
+per-pixel coverage stays separate from 8-bit reason flags. Quick admission needs
+five usable pairs at five times and five measured paired levels. No automatic
+threshold defaults, time normalization or changed fitter. The service changed
+for sample cuts: --bpm-files runs file admission and affected service only.
+Publication, CLI/common ASDF completion, gain/RON and joint linearity/shutter are
+still next. Mac preparation/quick gate, then changed-code Chapman validation and
+actual data tests; no install/merge. See [file record](bpm-file-input-2026-11-02.md).
+
+
+## Typed BPM service candidate; Mac core accepted - 2 November 2026
+
+Fernando returned the pinned 14e9bb68ffe58f765576413063e0c99a6cfb311e
+Mac response gate: native_measurement_stats and native_bpm_response both passed
+(4.22 s). Retained /Users/fselman/Software/build/wenu-imaging/mac-bpm-response-rMPj2sY4;
+installed_files/checkout/exported_source all true; checkout remains clean main.
+This is actual Mac core evidence, not full BPM recipe/scientific acceptance.
+
+Next candidate adds the typed in-memory mef_cal_bpm service using the shared
+operation template, configured scan/crop, selected active master bias and the
+unchanged response core. Explicit binary/reason priors; byte reasons preserved;
+coverage separate. No detector BPM touches electronic scans. No scan mode uses
+existing crop only. Acquisition pairing/saturation admission, file CLI, ASDF
+publication, gain/RON and joint shutter/linearity remain later increments.
+Run only --bpm-service's new service and operation-template Mac contracts; do
+not replay unchanged response/measurement or old ASDF gates. Validate changed
+code on Chapman before full real WFI/OmegaCAM tests there. No install/merge.
+See [service record](bpm-service-2026-11-02.md).
+
+
+## Detector-characterization implementation authorized - 2 November 2026
+
+Fernando requests proceeding after reviewing the formula design. The current
+specification is [design PDF](detector-characterization-design-2026-11-02.pdf)
+and its matching [LaTeX source](detector-characterization-design-2026-11-02.tex).
+It supersedes the earlier BPM v1.0 proposal where they differ. Keep BPM unsigned
+8-bit (0=no detected reasons, nonzero bitwise reasons), separate coverage and
+legacy Eclipse 1=good selection. First develop the reusable quick-BPM core;
+full linearity uses one signed mosaic shutter duration offset, not free per-chip
+intercepts. CMOS initially uses the same mechanism; specialized CMOS timing waits
+for full characterization data. Development/quick C17 tests: Mac; validate changes
+on Chapman before full actual WFI/OmegaCAM data tests there. Agent synthetic checks
+are preparation evidence, not either target acceptance. No installation/merge.
+Announce checked Eclipse interface additions before implementing; preserve legacy
+fitters, diagnostic units, medians and mask semantics. Previous scope entries below
+are historical, including the earlier design-only hold and Mac-only test scope.
+
+
+## BPM design review only — 2 November 2026
+
+Owner requests designing the new BPM recipe from existing mef_build_bpm, using
+the completed bias template, then reviewing the final design before implementation.
+See [BPM design v1.0](bpm-recipe-design-2026-11-02.md). Proposed mask/
+bias/admission choices and checked Eclipse extensions are not yet accepted.
+No new BPM source, numerical routine, test run, install or activation in this
+increment. Bias qualification is retained. #224 records the robust/proportional
+fit-diagnostic documentation/units mismatch; do not silently change the fitter.
+
+
 ## Finish bias first, then create BPM — 2 November 2026
 
 Owner clarification: bias is the only new recipe implemented. The new BPM recipe

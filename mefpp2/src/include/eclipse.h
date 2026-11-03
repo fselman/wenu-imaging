@@ -62,6 +62,8 @@
 #include "dead_pixels.h"
 #include "detect.h"
 #include "detector.h"
+#include "detector_response.h"
+#include "pixelmap_flags8.h"
 #include "extraction.h"
 #include "fourier.h"
 #include "framelist.h"

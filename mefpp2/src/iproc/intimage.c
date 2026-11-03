@@ -25,6 +25,47 @@
 #include "intimage.h"
 #include "image_handling.h"
 
+int intimage_write_hdu_checked(FILE *stream, const int *values, int lx, int ly,
+    int bitpix, const qfits_header *header)
+{
+    qfits_header *h=(qfits_header *)header;
+    byte *bytes;
+    unsigned char zeros[2880];
+    long offset;
+    size_t count,padding;
+    int i,n;
+    char *kind;
+    if(!stream || !values || !h || lx<1 || ly<1 || lx>MAX_COLUMN_NUMBER ||
+        ly>MAX_LINE_NUMBER || lx>INT_MAX/ly || (bitpix!=8 && bitpix!=16) ||
+        lx*ly>INT_MAX/(bitpix/8)) return -1;
+    offset=ftell(stream);
+    if(offset<0 || offset%2880 || qfits_header_getint(h,"BITPIX",0)!=bitpix ||
+        qfits_header_getint(h,"NAXIS",0)!=2 || qfits_header_getint(h,"NAXIS1",0)!=lx ||
+        qfits_header_getint(h,"NAXIS2",0)!=ly || qfits_header_getdouble(h,"BSCALE",1)!=1 ||
+        qfits_header_getdouble(h,"BZERO",0)!=0) return -1;
+    if(offset==0) {
+        kind=qfits_header_getstr(h,"SIMPLE");
+        if(!kind || strcmp(kind,"T")) return -1;
+    } else {
+        kind=qfits_header_getstr(h,"XTENSION");
+        if(!kind || strcmp(qfits_pretty_string(kind),"IMAGE") ||
+            qfits_header_getint(h,"PCOUNT",-1)!=0 || qfits_header_getint(h,"GCOUNT",0)!=1) return -1;
+    }
+    n=lx*ly;
+    for(i=0;i<n;++i) if(bitpix==8 ? (values[i]<0 || values[i]>255) :
+        (values[i]<-32768 || values[i]>32767)) return -1;
+    bytes=qfits_pixdump_int((int *)values,n,bitpix);
+    if(!bytes) return -1;
+    count=(size_t)n*(size_t)(bitpix/8); padding=(2880-count%2880)%2880;
+    memset(zeros,0,sizeof(zeros));
+    i=qfits_header_dump(h,stream);
+    if(i==0 && fwrite(bytes,1,count,stream)!=count) i=-1;
+    if(i==0 && padding && fwrite(zeros,1,padding,stream)!=padding) i=-1;
+    free(bytes);
+    if(fflush(stream)!=0 || ferror(stream)) i=-1;
+    return i==0?0:-1;
+}
+
 /*---------------------------------------------------------------------------
   							Function codes
  ---------------------------------------------------------------------------*/
@@ -326,7 +367,3 @@ intimage * intimage_labelize_pixelmap(
 		(*maxlabel)=label-1 ;
 	return lab ;
 }
-
-
-
-

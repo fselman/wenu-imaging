@@ -1,4 +1,4 @@
-/* Opt-in first M5 command: one explicitly configured detector per invocation.
+/* Opt-in M5 bias/BPM commands: one explicitly configured detector per invocation.
  * Not installed and never selected by the normal mefpp executable. */
 #include "mef_bias_files.h"
 #include "mef_bias_settings.h"
@@ -121,6 +121,8 @@ static int measurement_record(FILE *stream, const mef_bias_result *result,
     return !ferror(stream);
 }
 
+int mef_bpm_command(int argc, char **argv);
+
 int main(int argc, char **argv)
 {
     const char *keys[25], *values[25], *diagnostic;
@@ -156,6 +158,8 @@ int main(int argc, char **argv)
     FILE *stream;
     char message[512], output_directory[4096], *slash;
     const mef_bias_qc *qc;
+    if(argc>=3 && !strcmp(argv[1],"cal") && !strcmp(argv[2],"bpm"))
+        return mef_bpm_command(argc,argv);
     keys[0] = "--pafname"; keys[1] = "--config"; keys[2] = "--bias";
     keys[3] = "--detector-id"; keys[4] = "--hdu"; keys[5] = "--config-detector";
     keys[6] = "--readout-id"; keys[7] = "--bin-x"; keys[8] = "--bin-y";

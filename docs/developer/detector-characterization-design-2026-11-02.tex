@@ -1,0 +1,215 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,tabularx,xcolor,fancyhdr,hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\definecolor{ink}{HTML}{18354B}
+\hypersetup{colorlinks=true,urlcolor=ink,linkcolor=ink,pdftitle={Wenu-imaging detector characterization design},pdfauthor={Wenu-imaging}}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\textsc{Wenu-imaging}}\fancyhead[R]{\small Design for review / 2 November 2026}\fancyfoot[C]{\thepage}
+\setlength{\headheight}{15pt}\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{3em}
+\newcommand{\key}[1]{\textbf{\color{ink}#1}}
+\newcommand{\nextpage}{\clearpage}
+\begin{document}
+{\LARGE\bfseries\color{ink} Detector characterization\\[4pt] and BPM recipe design}
+
+{\large Formula specification for review}\hfill Version 2.0 / 2 November 2026
+
+\key{Status.} Consolidated design, pending scientific acceptance and implementation. This document supersedes the earlier design's 32-bit BPM proposal and CMOS-specific timing expansion. It does not claim that the new characterization recipe or joint shutter fit has been implemented or validated.
+
+\key{Current scope.} One shared native service, following the completed bias recipe template, with quick BPM and full characterization modes. Initially CMOS uses the same calibration mechanism as CCDs: selectable per-amplifier or per-pixel response models and a fixed signed duration offset. Specialized rolling-shutter modeling and detailed CMOS characterization are deferred until suitable full detector data are available.
+
+\section{Acquisition sequences and products}
+\begin{tabularx}{\linewidth}{@{}p{29mm}XX@{}}\toprule
+Mode & Inputs & Supported results\\\midrule
+Annual & Five initial biases and 22 flat pairs (44 flats) at different illumination levels & BPM, linearity model, common shutter error, conversion gain and RON\\
+Quick BPM & Two biases and five flat pairs at different integration times & Response BPM, gain and RON diagnostics\\
+Provisional & One bias and two flats at distinct illumination levels & Limited response BPM only\\
+Software tests & Small synthetic sequences & Verification only\\\bottomrule
+\end{tabularx}
+
+Pair identities, integration times, original order and detector identities are explicit. The sequence may be non-monotonic in integration time. The two members of a pair are retained separately for signal and residual checks; differences provide noise measurements.
+
+Three-frame synthetic cases do not define a scientific minimum for full characterization. Each requested product must pass its own data, rank and signal-coverage requirements. Missing measurements are reported as not measured.
+
+\key{Execution environments.} Development and quick C17 tests run on the Mac. Next validate the changed build and execution path on Chapman; full scientific tests then use actual WFI and OmegaCAM data on Chapman. No production installation, activation or merge is implied by this design.
+
+\nextpage
+\section{Signal, geometry and reference populations}
+For active pixel $p$ in exposure $j$, define the bias-subtracted signal in ADU:
+\begin{equation} s_{pj}=D_{pj}-B_p. \end{equation}
+$D$ is the measured image and $B$ is the master bias produced using the configured bias procedure. Appropriate dark correction is optional and explicitly recorded. Flat frames alone cannot establish dark current. Quantitative linearity fitting requires a constrained bias estimate; no arbitrary ROI intercept is allowed to absorb residual bias.
+
+The layout identifies detector, amplifier and active-pixel coordinates independently of FITS extension order. Multiple named analysis ROIs are allowed per chip. Detector BPMs apply to active physical pixels; electronic prescan/overscan reads are not detector-mask pixels.
+
+\key{Multiple ROIs.} Each exposure/ROI records signal, dispersion, accepted-pixel count, saturation count and exclusions. Saturation of a central-chip ROI does not reject unsaturated corner-chip ROIs in the same exposure. Shared pixels are not counted twice. Signal-range overlaps test consistency; disconnected coverage is reported and never silently licenses extrapolation.
+
+\key{Aggregation and model scope.} Relative response and defects are measured per pixel. Linearity coefficients may be shared by amplifier or fitted per pixel. Gain and RON have amplifier/ROI diagnostics. The shutter offset is shared over the mosaic. Amplifier curves do not replace individual-pixel residual checks.
+
+For nonlinear functions, aggregation order matters:
+\begin{equation}Q(\operatorname{mean}s)\ne\operatorname{mean}Q(s).\end{equation}
+The fitting implementation must evaluate the declared pixel model before aggregation, or explicitly validate a restricted ROI approximation. It must not silently apply a nonlinear transform to a broad-distribution ROI mean as if these operations commuted.
+
+\key{Mask selection.} If $M_p$ is the reason mask and $K$ the configurable set of rejected bits, a pixel is eligible for reference statistics when
+\begin{equation}(M_p\mathbin{\&}K)=0,\end{equation}
+and its sample is finite and otherwise valid. An existing BPM excludes known defects from reference illumination, normalization and noise statistics, but does not suppress evaluation of those pixels for new defects. Preserve prior, newly measured and combined classifications.
+
+\key{Illumination assumptions.} Absolute linearity against time requires stable illumination or independently constrained variations. Non-monotonic ordering exposes time trends but does not remove them. An unconstrained illumination parameter for every exposure would absorb the detector response and is not allowed.
+
+\nextpage
+\section{Fixed shutter error: signed deterministic term}
+Define one common offset $\delta$ in seconds:
+\begin{equation}\boxed{t_{\mathrm{eff},j}=t_j+\delta},\qquad t_j+\delta>0.\end{equation}
+Positive $\delta$ means longer than commanded exposure; negative $\delta$ means shorter exposure. The sign is not constrained to be positive. The input mapping must establish whether the recorded time already includes a timing correction, avoiding double correction.
+
+For a linear detector under constant illumination rate $L_r$ in ROI $r$,
+\begin{align}
+s_{rj}&=L_r(t_j+\delta),\\
+\boxed{\frac{s_{rj}}{t_j}}&=\boxed{L_r\left(1+\frac{\delta}{t_j}\right)},\\
+\epsilon_{\mathrm{shutter}}(t)&=\frac{\delta}{t},\qquad
+C_{\mathrm{shutter}}(t)=\frac{t}{t+\delta}.
+\end{align}
+The characteristic term is inverse exposure time, not an unrestricted polynomial. A $+0.02$ s offset produces a $+2\%$ apparent-rate error at 1 s and $+0.2\%$ at 10 s; negative offsets reverse the sign.
+
+\section{Joint shutter and linearity model}
+Use a normalized cubic inverse-response model:
+\begin{equation}\boxed{Q_a(s)=s+c_{2,a}s^2+c_{3,a}s^3},\qquad Q'_a(0)=1.\end{equation}
+Here $a$ identifies the amplifier (or pixel in per-pixel mode); $c_2$ has units ADU$^{-1}$ and $c_3$ ADU$^{-2}$. The model is
+\begin{equation}\boxed{Q_a(s_{rj})=L_r(t_j+\delta)}.\end{equation}
+Equivalently, for a representative modeled signal,
+\begin{equation}\frac{s_{rj}}{t_j}=
+\frac{L_r(1+\delta/t_j)}{1+c_{2,a}s_{rj}+c_{3,a}s_{rj}^2}.\end{equation}
+There is one shared $\delta$, separate illumination rates, and amplifier- or pixel-specific response coefficients. Residual bias uncertainty must be propagated or constrained: independent free offsets would be degenerate with timing. A cubic is the proposed initial choice; higher degrees are not selected automatically.
+
+\nextpage
+\section{Fitting, correction and validity}
+Predict signal on the accepted monotonic branch:
+\begin{equation}\widehat{s}_{rj}=Q_a^{-1}\!\left[L_r(t_j+\delta)\right],\qquad
+Q'_a(s)=1+2c_{2,a}s+3c_{3,a}s^2>0.
+\end{equation}
+With residual vector $e=s-\widehat{s}$ and measurement covariance $C$, the proposed objective is
+\begin{equation}\chi^2=e^{\mathsf T}C^{-1}e.
+\end{equation}
+For independent measurements this reduces to $\sum e_{rj}^2/\sigma_{rj}^2$. Shared master-bias uncertainty and overlapping samples must not be treated as independent duplicates. The numerical interface and uncertainty construction require review before coding.
+
+Fits must pass rank, conditioning, coverage, residual and monotonicity checks. Report parameter uncertainty and covariance, including shutter/linearity coupling. A flat likelihood or strong degeneracy is a failed determination, not a nominal zero shutter offset.
+
+The two corrections remain distinct:
+\begin{align}
+s_{\mathrm{linear}}&=Q_a(s),\\
+\mathrm{corrected\ rate}&=\frac{Q_a(s)}{t+\delta},\\
+\frac{Q_a(s)-s}{s}&=c_{2,a}s+c_{3,a}s^2\quad(s\ne0).
+\end{align}
+The last expression is the fractional change applied to measured signal, not a differently normalized definition of non-linearity. Preserve the commanded time and record the effective time separately. Do not extrapolate beyond the validated signal interval by default.
+
+\section{Saturation and signal coverage}
+For a supplied raw saturation threshold $S_{\mathrm{sat},p}$,
+\begin{equation}s_{\mathrm{sat},p}=S_{\mathrm{sat},p}-B_p.
+\end{equation}
+The proposed quick-BPM limit is $s_{pj}<0.85s_{\mathrm{sat},p}$: a configurable 15\% upper margin. It is not a minimum signal-span rule. Linearity characterization retains high, unsaturated samples to determine where correction remains valid.
+
+Report lowest/highest usable signal, number of distinct levels, gaps and the accepted interval for each model. Minimum span, fit range, usable maximum and defect thresholds are explicit parameters. Premature saturation needs adequate lower-level evidence; an isolated saturated sample is not a permanent defect.
+
+\nextpage
+\section{Response BPM: existing Eclipse calculation}
+For each exposure let $x_j$ be its reference illumination level from accepted pixels. Preserve the existing robust fit:
+\begin{equation}s_{pj}\simeq\alpha_p+\beta_px_j.
+\end{equation}
+Reuse Eclipse's actual robust fitter and median conventions, including its explicit fallback/failure handling. Its residual diagnostic is mean absolute residual, not MAD or squared error:
+\begin{equation}A_p=\frac{1}{N_p}\sum_j|s_{pj}-\alpha_p-\beta_px_j|.
+\end{equation}
+The existing proportional alternative is
+\begin{equation}\beta_p=\operatorname{median}_j\left(\frac{s_{pj}}{x_j}\right),\quad
+E_p=\frac{1}{N_p}\sum_j(s_{pj}-\beta_px_j)^2.
+\end{equation}
+Reject near-zero reference levels before fitting. Normalize using the declared reference population $G$:
+\begin{equation}R_p=\frac{\beta_p}{\operatorname{mean}_{q\in G}\beta_q},\qquad
+R_{\mathrm{low}}<R_p<R_{\mathrm{high}}.
+\end{equation}
+The strict inequalities preserve the current threshold convention. Response versus measured frame level is not absolute linearity versus time, and relative response is not conversion gain in electrons/ADU.
+
+\section{Unsigned 8-bit reason BPM}
+\begin{equation}\boxed{M_p=\bigvee_{k=0}^{7}2^k I_{pk}},\qquad M_p\in[0,255].\end{equation}
+\begin{tabularx}{\linewidth}{@{}rXrX@{}}\toprule
+Value & Reason & Value & Reason\\\midrule
+1 & Abnormal bias offset & 16 & Non-linear response\\
+2 & Excess dark current & 32 & Excess temporal noise\\
+4 & Low/dead response & 64 & Unstable/intermittent behavior\\
+8 & Excessive response & 128 & Premature saturation\\\bottomrule
+\end{tabularx}
+
+Zero means no detected defect. Coverage and failed tests are separate data, not extra BPM bits. Only supported tests set bits; the initial BPM path sets response bits, while other tests require their own reviewed criteria. Store the registry version and thresholds. Cosmic rays and per-exposure invalid/saturated samples do not automatically become persistent flags.
+
+The authoritative FITS BPM uses BITPIX=8. Selectable legacy binary output supports declared polarity; a separate Eclipse view preserves its established 1=good, 0=bad convention. No global redefinition of Eclipse constants is proposed.
+
+\nextpage
+\section{RON, MAD and conversion gain}
+For $N$ accepted pixels, sample variance is
+\begin{equation}v(z)=\frac{1}{N-1}\sum_p(z_p-\bar z)^2.
+\end{equation}
+Use two RAW biases before overscan correction:
+\begin{equation}\boxed{\mathrm{RON}_{\mathrm{ADU}}=\sqrt{\frac{v(B_1-B_2)}{2}}}.
+\end{equation}
+The optional robust diagnostic, for $\Delta B=B_1-B_2$, is
+\begin{equation}\mathrm{RON}_{\mathrm{MAD}}=
+\frac{1.4826}{\sqrt2}\operatorname{median}
+\left(|\Delta B-\operatorname{median}\Delta B|\right).
+\end{equation}
+Ordinary standard deviation over accepted pixels is the default. Record estimator, populations and exclusions. Estimates sharing bias frames are not independent.
+
+For matched flat and bias pairs over the same accepted population:
+\begin{equation}\boxed{g=\frac{\bar F_1+\bar F_2-\bar B_1-\bar B_2}
+{v(F_1-F_2)-v(B_1-B_2)}}\quad[\mathrm{electrons/ADU}].
+\end{equation}
+The denominator must be positive. Check illumination consistency within each pair; reject unsuitable pairs rather than silently rescale them. Across levels define
+\begin{align}
+\mu_j&=\frac{\bar F_{j1}+\bar F_{j2}-\bar B_1-\bar B_2}{2},\\
+V_j&=\frac{v(F_{j1}-F_{j2})}{2}.
+\end{align}
+In the accepted photon-transfer range,
+\begin{equation}V_j=\frac{\mu_j}{g}+\mathrm{RON}_{\mathrm{ADU}}^2.
+\end{equation}
+Report pair estimates and the fitted transfer relation as consistency diagnostics. Use ordinary variance, not MAD, for gain. Restrict the fit to a validated signal range; nonlinear correction of variance data requires noise propagation and is outside the initial path.
+
+\key{Initial CMOS treatment.} Apply this same regional mechanism, with camera settings recorded. These estimates must not be labeled measured per-pixel noise/gain maps. Detailed CMOS timing, pixel-noise distributions, special dark/bias handling and gain-switching models are deferred until full detector characterization data are available. No rolling-row term is added to exposure duration.
+
+\nextpage
+\section{Implementation boundaries and products}
+Reuse the completed bias template: configuration/preflight, native calculation, exclusive product publication, shared ASDF QC and verified completion. Inputs remain immutable and outputs are not overwritten.
+
+\key{Eclipse reuse.} Existing resources include robust/proportional response constructors, BPM-aware statistics, MAD, matrix/least-squares routines, \texttt{detector\_linearity\_fit} and \texttt{cube\_correct\_detlin}. The current linearity fitter models time as powers of signal without a constant term; its output diagnostic is mean squared time residual despite RMS wording. It lacks the shared signed shutter parameter and full ROI/mask/validity contract.
+
+General numerical extensions belong in Eclipse. Review the exact interfaces, ownership, error and edge behavior before coding; do not add a duplicate fitter in a recipe or serializer. Preserve existing APIs. The checked reason-mask I/O must preserve all eight bits exactly and produce an explicit binary Eclipse view.
+
+\key{Published products.} Eight-bit BPM; test coverage; amplifier coefficient tables or pixel coefficient maps; shared shutter result; gain/RON and ROI diagnostics; per-input and per-product ASDF QC. Record units, coordinate systems, camera settings, thresholds, accepted ranges, uncertainties, failure states and frozen input provenance. Use full \texttt{HIERARCH ESO ...} names at the qfits boundary.
+
+The mosaic fit first collects compact measurements; it need not hold all detector cubes simultaneously. Pixel-mode work uses bounded blocks and the shared timing solution, with its uncertainty retained. Complete success requires all requested products and reference checks to succeed.
+
+\section{Implementation and acceptance sequence}
+\begin{enumerate}
+\item Quick BPM: existing response algorithm, 8-bit reasons, multiple ROIs and template execution.
+\item Full characterization: paired-flat gain, joint signed shutter/linearity fit and amplifier products.
+\item Per-pixel linearity: coefficient maps, bounded memory and correction validation within the same initial timing mechanism.
+\end{enumerate}
+Before functional tests, document purpose, inputs, tools, actions and pass criteria. Mac C17 tests cover negative/zero/positive shutter offsets, injected curvature, degeneracy, lamp drift, ROI overlap, saturation/coverage, mask round trips, legacy numerical equivalence and publication failures. Validate the changed code on Chapman before full actual-data tests. Scientific acceptance requires representative annual WFI/OmegaCAM sequences, not synthetic recovery alone.
+
+\key{Deferred.} Specialized CMOS/rolling-shutter characterization, unrestricted lamp-drift fitting, automatic high-order models, correction outside measured ranges and production activation. Acceptance of this design does not settle numerical thresholds or authorize installation/merge.
+
+\nextpage
+\section{References and interpretation notes}
+\begin{enumerate}
+\item ESO MIDAS, \textit{TESTTA/CCD}. Paired flat sequences, transfer measurements, shutter adjustment and count-rate residuals.\\\url{https://www.eso.org/sci/software/esomidas/doc/user/98NOV/volb/node671.html}
+\item ESO, \textit{Detector Monitoring Plan}. Shutter-error determination, non-linearity and illumination stability limitations.\\\url{https://www.eso.org/~qc/docu/detmon/Detector_monitoring_plan_last.pdf}
+\item IRAF, \textit{findgain}. Paired flat/bias gain and read-noise relations.\\\url{https://iraf.readthedocs.io/en/latest/tasks/noao/obsutil/findgain.html}
+\item ESO, \textit{VIMOS detector linearity and gain QC}. Exposure-time fits and paired-flat gain measurements.\\\url{https://www.eso.org/observing/dfo/quality/VIMOS/qc/detlin_qc1.html}
+\end{enumerate}
+
+\key{Model provenance.} The joint normalized cubic model and single shared shutter parameter above are the proposed Wenu-imaging implementation design, informed by these methods; they are not a claim that an external reference supplies this exact implementation.
+
+\key{Source inspection.} Eclipse \texttt{src/iproc/detector.c}, \texttt{src/math/fit\_curve.c} and matching public headers; legacy \texttt{mef\_build\_bpm}. Existing fit semantics and output units must be preserved or explicitly versioned when extended.
+
+\key{Items to confirm at implementation review.} Actual instrument exposure-time keyword semantics; saturation values and conventions; illumination stability evidence; configured defect/coverage thresholds; fit weights/covariance; exact checked numerical interfaces; representative Chapman data selections. These are explicit calibration inputs or reviewed implementation details, not silent defaults.
+
+\vfill
+\textit{Prepared from the design discussion with Fernando Selman. The current CMOS scope follows his instruction to use the CCD mechanism initially and revisit CMOS-specific work when full characterization data become available.}
+\end{document}
