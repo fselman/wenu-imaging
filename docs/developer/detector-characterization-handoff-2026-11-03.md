@@ -20,6 +20,7 @@ Completed actual Intel Mac C17 gates (all checkout/install/export protections tr
 | Shutter profile | 338180f6 | 2/2 | 6.09 | mac-shutter-profile-0mNWCIc5 |
 | Exact ROI operator | 4d0bb462 | 3/3 | 3.01 | mac-roi-aggregation-2SOrKVed |
 | Named ROI configuration | 8e893008 | 1/1 | 1.21 | mac-roi-config-PHwS5VBY |
+| Raw-plane sample admission | 88e29306 | 1/1 | 1.05 total | mac-linearity-samples-fRlf0Hgk |
 
 The exact ROI operator/covariance propagation is Mac-qualified as above,
 including its two new controls and the affected joint validator control.
@@ -32,9 +33,16 @@ The [in-memory raw-plane sample service](linearity-samples-2026-11-03.md) now
 reuses row scan/crop and master subtraction, selecting a BPM/ROI union with
 explicit raw saturation and original frame identities. Agent C17 preparation
 passed 1/1 in 0.01 s, including 119 service/snapshot allocation-failure positions.
-Its actual Mac gate is pending via qualify_linearity_samples_mac.py. Noise remains
+Its actual Mac gate passed as above (1.04 s test, 1.05 s total). Noise remains
 explicitly unavailable; no fit should run on these samples yet. The full linearity
-CLI, raw FITS binding, covariance model and forward-model integration remain pending.
+CLI, raw FITS binding, justified noise estimates and forward-model integration
+remain pending. [Explicit covariance assembly](detector-noise-2026-11-03.md)
+now combines supplied independent pixel, shared master and named row-scan blocks
+using existing QR with a recorded observation permutation. Blocks must be
+caller-established independent; no gain/variance is estimated or defaulted.
+Agent C17 4/4 in 0.36 s passed, including all 33 single/persistent allocation
+positions and affected ROI/joint controls. Actual Mac covariance gate is pending
+via qualify_detector_noise_mac.py; no real-data fit or installation.
 
 One signed shutter duration offset is common to ALL detectors. Cubic inverse
 response coefficients are amplifier-specific; direct-pixel illumination rates

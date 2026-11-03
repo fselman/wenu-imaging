@@ -115,7 +115,9 @@ image/scan internals, whose existing controls remain separate.
 The prepared `Pycavi2/tests/qualify_linearity_samples_mac.py` exports exact source,
 builds the new probe and normal mefpp, runs only native_linearity_samples, and
 checks checkout, installed files and exported-source preservation. Its syntax is
-checked. Actual Mac sample-admission qualification is pending; no unchanged
+checked. Actual Mac sample-admission qualification subsequently passed at 88e29306:
+1/1, 1.04 s test / 1.05 s total, retained mac-linearity-samples-fRlf0Hgk,
+with all three preservation checks true and clean main c73d9a9e. No unchanged
 numerical/configuration gates are replayed. Raw FITS binding, noise construction,
 forward-model fitting, publication, actual OCAM results and science acceptance
 remain subsequent work. No installation, activation or merge.
@@ -124,3 +126,7 @@ The previous named ROI-configuration gate at
 8e8930086262e7406378519da4379a0cdb3a2d9b passed actual Mac C17 1/1 in 1.21 s,
 retained `/Users/fselman/Software/build/wenu-imaging/mac-roi-config-PHwS5VBY`.
 Checkout, installed files and exported source all preserved; clean main c73d9a9e.
+
+[Explicit covariance assembly](detector-noise-2026-11-03.md) now combines supplied
+components; it does not estimate them or automatically attach noise to these
+samples. Its actual Mac gate remains pending.

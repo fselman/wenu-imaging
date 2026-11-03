@@ -8,8 +8,10 @@ passed actual Mac C17 3/3 in 3.01 s. The
 [named ROI PAF/TOML supplement](roi-configuration-2026-11-03.md) passed focused
 C17 preparation and actual Mac 1/1 in 1.21 s. The
 [raw-plane sample service](linearity-samples-2026-11-03.md) passed focused C17
-preparation; its actual Mac gate is pending. Raw FITS binding, noise construction,
-forward-model integration and science acceptance remain later work.
+preparation and actual Mac 1/1 in 1.05 s total. The
+[explicit covariance assembler](detector-noise-2026-11-03.md) passed focused C17
+preparation; its actual Mac gate is pending. Raw FITS binding, justified uncertainty
+estimates, forward-model integration and science acceptance remain later work.
 
 # Developer documentation
 

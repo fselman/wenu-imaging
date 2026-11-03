@@ -12,6 +12,7 @@ set(ECLIPSE_SOURCES
   src/iproc/detect_sq.c
   src/iproc/detector.c
   src/iproc/detector_joint.c
+  src/iproc/detector_noise.c
   src/iproc/detector_roi.c
   src/iproc/detector_response.c
   src/iproc/extraction.c

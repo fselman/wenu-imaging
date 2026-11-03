@@ -6,17 +6,14 @@
 #include <math.h>
 #include <string.h>
 #include "detector_joint.h"
-static int joint_measurements_valid(const detector_measurements *p)
+static int joint_samples_valid(const detector_measurements *p)
 {
     size_t m,a,j;int i;
     if(!p||p->amplifiers<1||p->sites<1||p->observations<1||!p->amplifier||
-       !p->site||!p->observation||!p->noise_factor||!p->noise_factor->m)return 0;
+       !p->site||!p->observation)return 0;
     m=(size_t)p->observations;
     if((size_t)p->amplifiers>SIZE_MAX/sizeof(*p->amplifier)||
        (size_t)p->sites>SIZE_MAX/sizeof(*p->site)||m>SIZE_MAX/sizeof(*p->observation))return 0;
-    if(p->noise_factor->nr!=p->observations||
-       (p->noise_factor->nc!=1&&p->noise_factor->nc!=p->observations))return 0;
-    if(p->noise_factor->nc!=1&&(m>SIZE_MAX/m||m*m>SIZE_MAX/sizeof(double)))return 0;
     for(a=0;a<(size_t)p->amplifiers;++a) {
         const detector_joint_amplifier *amp=p->amplifier+a;
         if(!memchr(amp->detector_id,0,64)||!memchr(amp->amplifier_id,0,64)||
@@ -42,6 +39,16 @@ static int joint_measurements_valid(const detector_measurements *p)
             if(ob->site==p->observation[j].site||ob->seconds!=p->observation[j].seconds)return 0;
         }
     }
+    return 1;
+}
+static int joint_measurements_valid(const detector_measurements *p)
+{
+    size_t a,j,m;
+    if(!joint_samples_valid(p)||!p->noise_factor||!p->noise_factor->m)return 0;
+    m=(size_t)p->observations;
+    if(p->noise_factor->nr!=p->observations||
+       (p->noise_factor->nc!=1&&p->noise_factor->nc!=p->observations))return 0;
+    if(p->noise_factor->nc!=1&&(m>SIZE_MAX/m||m*m>SIZE_MAX/sizeof(double)))return 0;
     for(a=0;a<m;++a) {
         if(p->noise_factor->nc==1) {
             if(!isfinite(p->noise_factor->m[a])||p->noise_factor->m[a]<=0)return 0;
