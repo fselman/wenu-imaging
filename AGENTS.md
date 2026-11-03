@@ -1,5 +1,31 @@
 # wenu-imaging
 
+## End-of-day WFI bias handoff — 2 November 2026
+
+Owner visually reviewed the eight-detector WFI master as OK. Actual Mac mosaic
+run `/Users/fselman/Software/build/wenu-imaging/wfi-bias-mosaic-IkxQQ7Uz`
+completed seven new detector operations, reused inspected CHIP1, verified lossless
+assembly/common ASDF links and all four preservation controls. Main remains
+clean at47123ee. Chapman BPM e6f70e1 passed12/12 in72.12s (earlier pending notes
+below are historical). New BPM software is qualified, but real WFI BPM has not run.
+
+**Next session starts by reviewing the ESO WFI Manual and published detector
+behaviour**, using documentation appropriate to these2003 observations/readout.
+Do not start QC investigation, visualization or new processing before that review.
+CHIP7 RON30.1997 vs MAD3.1451 and large master dispersions, especially CHIP6,
+are retained observations, not diagnosed faults or accepted detector properties.
+QC work is deferred; follow the owner's sequencing.
+
+Historical overscan reconciliation is issue#226, linked to completed#121:
+all ten old medians match the erroneous22-sample sum divided by23. Keep the
+corrected23-sample mean and preserve old products. No more investigation required
+for this comparison now. DS9 helper is `tools/ds9-mosaic.sh FILE.fits`.
+Open draft PRs#209 (bias to main) and#225 (BPM stacked on bias) remain unmerged;
+software integration/branch cleanup is pending explicit closure disposition.
+No installation/production activation or full science reduction is authorized.
+Full handoff: [2 November handoff](docs/developer/handoff-2026-11-02.md).
+
+
 ## Chapman BPM preflight stopped on changed QC; corrected gate - 2 November 2026
 
 Owner returned b6b5fea early stop at Shared QC changed in
