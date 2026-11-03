@@ -211,3 +211,26 @@ This is configuration preparation, no actual-data measurement/fit acceptance.
 Complete output-header admission, saturation and raw-bias-pair choices remain
 before launch. Future comparison products follow the Pictures/instrument rule.
 
+
+## Reviewed footprints and native measurement-table export
+
+Owner inspected both 50e52a9 Mac footprint mosaics and reports both look OK.
+Viewer maintenance as TOMLs evolve is recorded in both agent instruction files at
+7191f14. Visual layout acceptance does not silently choose raw saturation or bias
+pair, or validate ROI scientific suitability.
+
+The next measurement-runner boundary adds allocation-free native TSV writers for
+qualified raw pair/ROI and separate bias-only RON results. Preserve all identities,
+pair order, original indices/HDUs/times, raw/active bounds, mask/exclusion counts,
+units, available zeros and explicitly unavailable fields. No numerical change,
+lamp normalization, centering, correction, fitted gain interval or uncertainty
+model. See [table contract](linearity-pair-tables-2026-11-03.md).
+
+Agent C17 export and affected pair service pass 2/2 in 0.07 s. A focused exact-source
+Mac qualifier builds only two probes and runs exactly these two tests, preserving
+checkout/install/export. Actual Mac gate remains pending. No real raw-pixel run
+has been launched. After that gate, continue bounded per-detector admission and
+measurement orchestration; output/readout headers, explicit raw saturation, binary
+BPM polarity and raw-bias pair precede launch. Future observational results go to
+Pictures/OCAM/wenu-imaging with purpose/deletion README. Branch-created build
+directories still need owner disposition review at merge/cleanup.

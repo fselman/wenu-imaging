@@ -187,7 +187,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   set_target_properties(linearity_samples_probe PROPERTIES C_STANDARD 17)
   target_link_libraries(linearity_samples_probe PRIVATE mefpp_linearity_samples)
   target_compile_options(linearity_samples_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
-  add_library(mefpp_linearity_pairs STATIC ins/mef/common/mef_linearity_pairs.c)
+  add_library(mefpp_linearity_pairs STATIC ins/mef/common/mef_linearity_pairs.c
+    ins/mef/common/mef_linearity_pairs_export.c)
   set_target_properties(mefpp_linearity_pairs PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_include_directories(mefpp_linearity_pairs PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_linearity_pairs PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -197,6 +198,10 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   set_target_properties(linearity_pairs_probe PROPERTIES C_STANDARD 17)
   target_link_libraries(linearity_pairs_probe PRIVATE mefpp_linearity_pairs)
   target_compile_options(linearity_pairs_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_pairs_export_probe tests/linearity_pairs_export_probe.c)
+  set_target_properties(linearity_pairs_export_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(linearity_pairs_export_probe PRIVATE mefpp_linearity_pairs)
+  target_compile_options(linearity_pairs_export_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   add_library(mefpp_linearity_files STATIC ins/mef/common/mef_linearity_files.c)
   set_target_properties(mefpp_linearity_files PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_include_directories(mefpp_linearity_files PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
@@ -491,6 +496,12 @@ if(BUILD_TESTING)
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_bias_files PROPERTIES TIMEOUT 600 LABELS "native;bias;template;publication")
     endif()
+    add_test(NAME native_linearity_pairs_export
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_pairs_export_contract.py"
+        --probe "$<TARGET_FILE:linearity_pairs_export_probe>"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_linearity_pairs_export PROPERTIES TIMEOUT 120 LABELS "native;linearity;export")
     add_test(NAME native_linearity_pairs COMMAND linearity_pairs_probe
       "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf")
     set_tests_properties(native_linearity_pairs PROPERTIES TIMEOUT 180 LABELS "native;linearity;gain;statistics;ownership")
