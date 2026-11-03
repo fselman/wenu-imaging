@@ -144,3 +144,22 @@ configuration_detector null. All native_binding_validated flags remain false;
 no real numerical run used these claims. Three policy checks pass after correction.
 Do not rerun the unchanged 31-header inventory merely to rename this field.
 Review the saved raw/amplifier/readout/scan cards and candidate BPM values next.
+
+
+## Comparison data storage and cleanup
+
+Owner instruction of 3 November: all data needed for future comparisons goes
+under an appropriately named subdirectory of ~/Pictures/OCAM/wenu-imaging or
+~/Pictures/WFI/wenu-imaging. Each subdirectory needs a README stating why it is
+needed and when it can be erased. See [retention rule](comparison-data-retention.md).
+Existing required comparison products still under build paths need relocation
+and reference updates; no move has yet been executed.
+
+Owner-returned Mac cleanup receipts: three generated large-file FITS fixtures
+removed (synthetic-cleanup-t3ltzrf1.json), then 320 OmegaCAM astrometry detector
+intermediates removed (pilot-intermediate-cleanup-wjzqseu2.json). The latter were
+removed without pixel comparison at the owner's direction. Full MEFs and small
+WCS/catalogue/log files were retained by the command. Last returned free space:
+59.65 GiB, roughly 14 GiB recovered across these two imaging cleanup steps.
+Raw observations, current WFI/OCAM calibrations and required runtimes remain
+outside the cleanup selection. Further bulk deletion is not implied.

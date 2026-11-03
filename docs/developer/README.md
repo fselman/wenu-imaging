@@ -1,3 +1,8 @@
+[Comparison-data retention](comparison-data-retention.md): future-comparison datasets belong
+under ~/Pictures/OCAM/wenu-imaging or ~/Pictures/WFI/wenu-imaging, in named
+subdirectories with a README explaining purpose and deletion conditions. Required
+comparison data must not remain in build directories.
+
 ## Detector characterization - 3 November 2026
 
 [Current handoff](detector-characterization-handoff-2026-11-03.md) records the
