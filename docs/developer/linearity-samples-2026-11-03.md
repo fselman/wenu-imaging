@@ -130,3 +130,9 @@ Checkout, installed files and exported source all preserved; clean main c73d9a9e
 [Explicit covariance assembly](detector-noise-2026-11-03.md) now combines supplied
 components; it does not estimate them or automatically attach noise to these
 samples. Its actual Mac gate remains pending.
+
+The [FITS admission increment](linearity-files-2026-11-03.md) adds an explicit
+legacy binary BPM alternative to the sample API. Both byte+binary together are
+rejected. Binary stays an Eclipse selection, with separate bpm_binary_supplied
+provenance and no invented reasons; original byte/admission arithmetic is retained.
+The affected sample control is rerun in that increment; its Mac gate is pending.

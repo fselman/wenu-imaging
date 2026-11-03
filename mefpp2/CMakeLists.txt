@@ -187,6 +187,16 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   set_target_properties(linearity_samples_probe PROPERTIES C_STANDARD 17)
   target_link_libraries(linearity_samples_probe PRIVATE mefpp_linearity_samples)
   target_compile_options(linearity_samples_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_library(mefpp_linearity_files STATIC ins/mef/common/mef_linearity_files.c)
+  set_target_properties(mefpp_linearity_files PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_linearity_files PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_linearity_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_linearity_files PUBLIC mefpp_linearity_samples)
+  target_compile_options(mefpp_linearity_files PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_files_probe tests/linearity_files_probe.c)
+  set_target_properties(linearity_files_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(linearity_files_probe PRIVATE mefpp_linearity_files)
+  target_compile_options(linearity_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c
     ins/mef/common/mef_toml_bundle.c)
   target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
@@ -452,6 +462,12 @@ if(BUILD_TESTING)
           --probe "$<TARGET_FILE:bpm_service_probe>"
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_bpm_service PROPERTIES TIMEOUT 180 LABELS "native;bpm;ownership;mask")
+      add_test(NAME native_linearity_files
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_files_contract.py"
+          --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+          --probe "$<TARGET_FILE:linearity_files_probe>" --bpm-probe "$<TARGET_FILE:bpm_files_probe>"
+          --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(native_linearity_files PROPERTIES TIMEOUT 300 LABELS "native;linearity;layout;ownership;mask")
       add_test(NAME native_bpm_files
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_files_contract.py"
           --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

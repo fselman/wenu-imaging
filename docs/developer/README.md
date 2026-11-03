@@ -10,8 +10,10 @@ C17 preparation and actual Mac 1/1 in 1.21 s. The
 [raw-plane sample service](linearity-samples-2026-11-03.md) passed focused C17
 preparation and actual Mac 1/1 in 1.05 s total. The
 [explicit covariance assembler](detector-noise-2026-11-03.md) passed focused C17
-preparation; its actual Mac gate is pending. Raw FITS binding, justified uncertainty
-estimates, forward-model integration and science acceptance remain later work.
+preparation and actual Mac 4/4 in 3.69 s. The
+[explicit FITS admission adapter](linearity-files-2026-11-03.md) passed focused
+C17 preparation; its actual Mac gate is pending. Justified uncertainty estimates,
+forward-model/complete recipe integration and science acceptance remain later work.
 
 # Developer documentation
 

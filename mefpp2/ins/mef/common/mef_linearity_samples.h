@@ -22,6 +22,7 @@ typedef struct {
     const image_t *master_bias; /* active, scan-corrected, ADU */
     const unsigned char *bpm_flags; /* active unsigned 8-bit, 0 good */
     size_t bpm_count;
+    const pixelmap *bpm_binary; /* alternative, explicitly converted Eclipse 1=good */
     unsigned int reject_bits; /* explicit; no polarity inference */
     const pixelmap *const *samples; /* optional active per-frame Eclipse 1=good */
     int rois;
@@ -46,7 +47,7 @@ typedef struct {
     detector_joint_observation *observation; /* frame order, then row-major */
     mef_linearity_noise_state noise_state; /* NO invented identity covariance */
     unsigned int reject_bits;
-    int bpm_supplied;
+    int bpm_supplied, bpm_binary_supplied;
     double saturation_raw;
 } mef_linearity_sample_result;
 /* Reuse existing mef_overscan_correction, image_getvig and image_sub_local on

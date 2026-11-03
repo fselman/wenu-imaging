@@ -21,6 +21,7 @@ Completed actual Intel Mac C17 gates (all checkout/install/export protections tr
 | Exact ROI operator | 4d0bb462 | 3/3 | 3.01 | mac-roi-aggregation-2SOrKVed |
 | Named ROI configuration | 8e893008 | 1/1 | 1.21 | mac-roi-config-PHwS5VBY |
 | Raw-plane sample admission | 88e29306 | 1/1 | 1.05 total | mac-linearity-samples-fRlf0Hgk |
+| Explicit covariance assembly | c381168b | 4/4 | 3.69 | mac-detector-noise-z4pHBH0H |
 
 The exact ROI operator/covariance propagation is Mac-qualified as above,
 including its two new controls and the affected joint validator control.
@@ -35,14 +36,21 @@ explicit raw saturation and original frame identities. Agent C17 preparation
 passed 1/1 in 0.01 s, including 119 service/snapshot allocation-failure positions.
 Its actual Mac gate passed as above (1.04 s test, 1.05 s total). Noise remains
 explicitly unavailable; no fit should run on these samples yet. The full linearity
-CLI, raw FITS binding, justified noise estimates and forward-model integration
+CLI, justified noise estimates and forward-model integration
 remain pending. [Explicit covariance assembly](detector-noise-2026-11-03.md)
 now combines supplied independent pixel, shared master and named row-scan blocks
 using existing QR with a recorded observation permutation. Blocks must be
 caller-established independent; no gain/variance is estimated or defaulted.
 Agent C17 4/4 in 0.36 s passed, including all 33 single/persistent allocation
-positions and affected ROI/joint controls. Actual Mac covariance gate is pending
-via qualify_detector_noise_mac.py; no real-data fit or installation.
+positions and affected ROI/joint controls. Actual Mac covariance gate passed as above; no real-data fit or installation.
+[Explicit FITS admission](linearity-files-2026-11-03.md) now connects supplied
+M4 path/HDU/detector/calibration maps to sample preparation, reads exact header
+times, validates nonconsecutive declared pairs and preserves binary/reason BPM
+semantics. Agent C17 2/2 in 3.31 s passed, including 14 FITS cases, the existing
+BPM C caller and 132 adapter/sample/snapshot allocation failures. Full existing
+BPM Python suite awaits the actual Mac gate (agent lacks Astropy). That gate,
+qualify_linearity_files_mac.py, selects new files + affected sample/BPM tests.
+No uncertainties, actual OCAM fit or product publication yet.
 
 One signed shutter duration offset is common to ALL detectors. Cubic inverse
 response coefficients are amplifier-specific; direct-pixel illumination rates
@@ -53,8 +61,9 @@ symmetric error or science acceptance is implied by a numerical bracket.
 
 ROI means cannot be substituted for pixels without an integrated pixel-level
 forward model or a validated restricted approximation. Exact recorded ROI
-operators and supplied-covariance propagation are implemented. Raw extraction,
-noise-model construction, scalable forward-model/recipe integration, conditional
+operators and supplied-covariance propagation are implemented. Raw extraction
+for explicit single-amplifier bindings is now implemented. Justified noise-model
+construction, scalable forward-model/recipe integration, conditional
 pixel nonlinearity classification and actual science acceptance remain pending. Owner defers QC visualization work. Full
 correction later belongs in mefpp; eventual photometric comparisons will use the
 same frames with and without correction.

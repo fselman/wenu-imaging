@@ -145,8 +145,9 @@ Agent GCC C17 Release preparation: 4/4 in 0.36 s (two new noise controls plus
 existing ROI and joint numerical controls for the factored shared validator).
 Normal mefpp builds. New noise source/probe have no new warnings; unchanged qfits
 allocator warnings remain in its test scaffold. The Mac qualifier's syntax is
-checked. Actual Mac covariance qualification is pending through
-Pycavi2/tests/qualify_detector_noise_mac.py; it builds only these four probes and
+checked. Actual Mac covariance qualification subsequently passed at c381168b,
+4/4 in 3.69 s, retained mac-detector-noise-z4pHBH0H with checkout/install/export
+preserved and clean main c73d9a9e. The qualifier builds only these four probes and
 normal mefpp, exports exact source and checks checkout/install/export preservation.
 
 Previous sample-admission source 88e29306d1ee1f1ec9b7b98522170709d10faa55 passed
@@ -159,3 +160,7 @@ Next are justified uncertainty estimation/selection and raw FITS/metadata bindin
 then forward-model/recipe integration. Actual OCAM processing and scientific
 validation remain pending. No new observation, QC visualization, installation,
 activation or merge is part of this increment.
+
+[Explicit FITS admission](linearity-files-2026-11-03.md) now binds supplied
+files to the sample service; its Mac gate is pending. No uncertainty estimates
+or actual observations have been added.

@@ -59,6 +59,14 @@ int main(int argc,char **argv)
     assert(mef_linearity_samples(&in,NULL,&r)==MEF_OK&&r->sites==0&&r->observations==0);
     mef_linearity_samples_destroy(r);r=NULL;
     for(int j=0;j<2;++j)assert(!memcmp(saved[j],raw[j]->data,sizeof saved[j]));
+    flags[0]=1;in.reject_bits=1;in.saturation_raw=500;
+    /* Legacy binary BPM remains a selection, with no invented byte reasons. */
+    pixelmap *binary=pixelmap_new(4,2);assert(binary);
+    for(int k=0;k<8;++k)binary->data[k]=(k!=0);
+    in.bpm_binary=binary;assert(mef_linearity_samples(&in,NULL,&r)==MEF_ERR_INPUT&&!r);
+    in.bpm_flags=NULL;in.bpm_count=0;
+    assert(mef_linearity_samples(&in,NULL,&r)==MEF_OK&&r->observations==7&&r->bpm_binary_supplied&&r->bpm_supplied);
+    mef_linearity_samples_destroy(r);r=NULL;in.bpm_binary=NULL;in.bpm_flags=flags;in.bpm_count=8;pixelmap_del(binary);
     /* Explicit no-scan branch still crops/subtracts; it is not a real-data policy. */
     flags[0]=1;in.reject_bits=1;in.saturation_raw=500;in.configuration=no_scan;
     assert(mef_linearity_samples(&in,NULL,&r)==MEF_OK&&r->observations==7);

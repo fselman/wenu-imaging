@@ -16,6 +16,11 @@ void mef_linearity_samples_destroy(mef_linearity_sample_result *r)
 }
 static int interval(const int *v,int n){return v[0]>=1&&v[1]>=v[0]&&v[1]<=n;}
 static int text(const char *s,size_t n){return memchr(s,0,n)&&s[0];}
+static int bpm_good(const mef_linearity_sample_input *p,size_t k)
+{
+    if(p->bpm_flags)return !(p->bpm_flags[k]&p->reject_bits);
+    return !p->bpm_binary||p->bpm_binary->data[k]==1;
+}
 static int selected(const mef_linearity_sample_input *p,int x,int y)
 {
     for(int i=0;i<p->rois;++i){const detector_roi *q=p->roi+i;
@@ -52,7 +57,12 @@ mef_status mef_linearity_samples(const mef_linearity_sample_input *p,
        (scan&&(g.rejection[0]>=scan||g.rejection[1]>=scan-g.rejection[0])))return MEF_ERR_CONFIG;
     aw=g.trim[1]-g.trim[0]+1;ah=g.trim[3]-g.trim[2]+1;pixels=(size_t)aw*(size_t)ah;
     if(p->master_bias->lx!=aw||p->master_bias->ly!=ah||
-       (p->bpm_flags?p->bpm_count!=pixels:p->bpm_count!=0))return MEF_ERR_INPUT;
+       (p->bpm_flags?p->bpm_count!=pixels:p->bpm_count!=0)||
+       (p->bpm_flags&&p->bpm_binary))return MEF_ERR_INPUT;
+    if(p->bpm_binary){const pixelmap *b=p->bpm_binary;
+        if(!b->data||b->lx!=aw||b->ly!=ah)return MEF_ERR_INPUT;
+        for(size_t k=0;k<pixels;++k)if(b->data[k]!=0&&b->data[k]!=1)return MEF_ERR_INPUT;
+    }
     for(size_t k=0;k<pixels;++k)if(!isfinite(p->master_bias->data[k]))return MEF_ERR_INPUT;
     for(int i=0;i<p->rois;++i){const detector_roi *q=p->roi+i;
         if(!text(q->roi_id,64)||q->amplifier<0||q->xmin<1||q->ymin<1||q->xmax<q->xmin||q->ymax<q->ymin)return MEF_ERR_INPUT;
@@ -72,7 +82,7 @@ mef_status mef_linearity_samples(const mef_linearity_sample_input *p,
                !isfinite(im->data[y*width+x-1]))return MEF_ERR_INPUT;
     }
     for(int y=1;y<=ah;++y)for(int x=1;x<=aw;++x)
-        if(selected(p,x,y)&&(!p->bpm_flags||!(p->bpm_flags[(y-1)*aw+x-1]&p->reject_bits)))++union_pixels;
+        if(selected(p,x,y)&&bpm_good(p,(size_t)(y-1)*aw+x-1))++union_pixels;
     if(union_pixels>p->max_sites||union_pixels>INT_MAX||pixels>SIZE_MAX/sizeof(int))return MEF_ERR_INPUT;
     if(union_pixels&&((size_t)p->frames>SIZE_MAX/union_pixels))return MEF_ERR_INPUT;
     capacity=union_pixels*(size_t)p->frames;if(capacity>p->max_observations)capacity=p->max_observations;
@@ -81,7 +91,7 @@ mef_status mef_linearity_samples(const mef_linearity_sample_input *p,
     status=MEF_ERR_MEMORY;r=a.allocate(a.user,sizeof *r);if(!r)goto done;
     memset(r,0,sizeof *r);r->allocator=a;r->scan=g;r->identity=p->identity;r->amplifier_index=p->amplifier_index;
     r->width=aw;r->height=ah;r->frames=p->frames;r->rois=nroi;r->noise_state=MEF_LINEARITY_NOISE_UNAVAILABLE;
-    r->bpm_supplied=p->bpm_flags!=NULL;r->reject_bits=p->reject_bits;r->saturation_raw=p->saturation_raw;
+    r->bpm_supplied=p->bpm_flags!=NULL||p->bpm_binary!=NULL;r->bpm_binary_supplied=p->bpm_binary!=NULL;r->reject_bits=p->reject_bits;r->saturation_raw=p->saturation_raw;
     if(mef_config_clone(p->configuration,&a,&r->configuration,&diagnostic)!=MEF_OK)goto done;
     r->frame=a.allocate(a.user,(size_t)p->frames*sizeof *r->frame);
     r->population=a.allocate(a.user,(size_t)p->frames*sizeof *r->population);
@@ -94,7 +104,7 @@ mef_status mef_linearity_samples(const mef_linearity_sample_input *p,
     nroi=0;for(int i=0;i<p->rois;++i)if(p->roi[i].amplifier==p->amplifier_index){r->roi[nroi]=p->roi[i];r->roi[nroi++].amplifier=0;}
     int sites=0;
     for(int y=1;y<=ah;++y)for(int x=1;x<=aw;++x){size_t k=(size_t)(y-1)*aw+x-1;site_map[k]=selected(p,x,y)?-1:-2;
-        if(site_map[k]==-1&&(!p->bpm_flags||!(p->bpm_flags[k]&p->reject_bits))){
+        if(site_map[k]==-1&&bpm_good(p,k)){
             r->site[sites].amplifier=0;r->site[sites].x=x;r->site[sites].y=y;remap[sites]=-1;site_map[k]=sites++;}}
     for(int f=0;f<p->frames;++f){
         mef_bb work;mef_ccd detector;memset(&work,0,sizeof work);memset(&detector,0,sizeof detector);
