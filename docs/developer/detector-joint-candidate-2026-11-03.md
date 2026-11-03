@@ -6,6 +6,16 @@ beee7c0d passed native_simplex/native_simplex_allocation 2/2 in 1.79 s. Evidence
 Checkout, installed files and exported source were preserved; main remains clean
 at c73d9a9e. Earlier gain/RON and QR qualifications remain retained and unreplayed.
 
+## Actual Mac acceptance
+
+The owner returned dc762519 Mac C17 success: native_detector_joint and
+native_detector_joint_allocation 2/2 in 2.67 s, retained at
+`/Users/fselman/Software/build/wenu-imaging/mac-detector-joint-7iY8InK7`.
+Checkout, installed files and exported source all preserved; clean main c73d9a9e
+remained unchanged. Issue #229 is accepted/closed. Earlier pending notes below
+are historical. The subsequent profile implementation is documented separately
+in [the shutter-profile record](shutter-profile-2026-11-03.md).
+
 ## Scope and scientific boundary
 
 This first implementation of `detector_joint_response_fit_checked` composes the

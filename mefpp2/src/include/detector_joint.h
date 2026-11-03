@@ -5,7 +5,8 @@
 #include "matrix.h"
 /* First joint-wrapper increment: DIRECT PIXEL samples only, ADU and seconds.
  * An ROI mean must not be passed as a pixel. Spatial aggregation, covariance
- * preparation, shutter profiles and scientific acceptance are later work.
+ * preparation and scientific acceptance are later work. Shutter profiles use
+ * the explicit separate request below.
  * Input populations are already selected with their BPM/coverage/saturation
  * policy; this numerical service does not silently change them.
  */
@@ -65,7 +66,7 @@ typedef struct {
     matrix *covariance; /* physical parameter covariance, local approximation */
 } detector_joint_result;
 /* No accepted-calibration status exists in this first increment. Multiple
- * starts/rank/conditioning are numerical checks; shutter profiles, adequate
+ * starts/rank/conditioning are numerical checks; a shutter profile, adequate
  * instrument coverage and validated aggregation remain required before science
  * publication. All input arrays borrowed/immutable; result owns copied identities
  * and each nested allocation. *out must be a separate empty owner. Return 0 for
@@ -75,4 +76,70 @@ typedef struct {
 int detector_joint_response_fit_checked(const detector_joint_problem *problem,
     const detector_joint_options *options, detector_joint_result **out);
 void detector_joint_result_del(detector_joint_result *result);
+
+/* Conditional shutter profile. At EACH fixed delta, refit all other parameters
+ * using caller-supplied nuisance simplexes. There is no covariance change,
+ * per-detector delay or implicit lamp-drift parameter. Routines above retain
+ * their candidate-only behavior and ABI fields.
+ */
+typedef struct {
+    int points, starts;
+    const double *delta; /* strictly increasing seconds, inside delta bounds */
+    /* points * starts blocks, each P rows by (P-1) nuisance physical values.
+     * Full parameter order with delta removed. Independent declared starts;
+     * no hidden warm start, coefficient clipping or interpolation. */
+    const double *initial_simplexes;
+    optimization_options optimizer;
+    double delta_chi2; /* explicit positive cost-rise threshold, no confidence default */
+    double cost_tolerance; /* absolute chi-square comparison with free-fit minimum */
+    double boundary_tolerance; /* seconds for detecting a bound-limited minimum */
+} detector_joint_profile_request;
+typedef enum {
+    DETECTOR_JOINT_PROFILE_NOT_RUN=0,
+    DETECTOR_JOINT_PROFILE_POINT_OK=1,
+    DETECTOR_JOINT_PROFILE_POINT_INADMISSIBLE=2,
+    DETECTOR_JOINT_PROFILE_POINT_UNCONVERGED=3,
+    DETECTOR_JOINT_PROFILE_POINT_INCONSISTENT=4
+} detector_joint_profile_point_status;
+typedef enum {
+    DETECTOR_JOINT_PROFILE_BRACKETED=0, /* on declared grid only, NOT science acceptance */
+    DETECTOR_JOINT_PROFILE_BASE_UNAVAILABLE=1,
+    DETECTOR_JOINT_PROFILE_INCOMPLETE=2,
+    DETECTOR_JOINT_PROFILE_GRID_UNBRACKETED=3,
+    DETECTOR_JOINT_PROFILE_BOUNDARY_LIMITED=4,
+    DETECTOR_JOINT_PROFILE_INCONSISTENT_MINIMUM=5,
+    DETECTOR_JOINT_PROFILE_DISCONNECTED=6,
+    DETECTOR_JOINT_PROFILE_FLAT_ON_GRID=7
+} detector_joint_profile_status;
+typedef struct {
+    detector_joint_profile_status status;
+    detector_joint_result *base; /* owned free-delta fit and input provenance */
+    int points, starts;
+    double *delta, *initial_simplexes, *cost, *delta_cost, *reference_cost;
+    detector_joint_profile_point_status *point_status;
+    int *best_start;
+    optimization_result **fit; /* point-major, then start; nuisance parameters */
+    optimization_options optimizer;
+    double delta_chi2, cost_tolerance, boundary_tolerance;
+    double minimum_delta, minimum_cost;
+    /* Grid indices bracketing threshold crossings. An inside index -1 means
+     * the free minimum (minimum_delta, minimum_cost) is the inside anchor.
+     * No crossing is interpolated and no symmetric uncertainty is invented. */
+    int left_outside, left_inside, right_inside, right_outside;
+    size_t evaluations, callback_calls; /* total base + profile optimizer counts */
+    size_t preflight_calls; /* extra model checks outside optimizer budgets */
+    int flat_on_grid; /* range including the free minimum <= cost_tolerance */
+} detector_joint_profile_result;
+/* Return 0 publishes an owned diagnostic even if the profile is unavailable.
+ * -1 is invalid input, allocation or hard numerical failure; *out unchanged.
+ * A point with infeasible declared initial vertices is explicitly unavailable,
+ * never replaced with an infinite/zero invented cost. All starts must converge
+ * and agree; a fitted conditional cost below the free minimum beyond the stated
+ * tolerance is inconsistent. Bracketing applies only to the supplied finite grid
+ * and threshold convention, not unsearched delays or frequentist coverage.
+ */
+int detector_joint_shutter_profile_checked(const detector_joint_problem *problem,
+    const detector_joint_options *options, const detector_joint_profile_request *request,
+    detector_joint_profile_result **out);
+void detector_joint_profile_result_del(detector_joint_profile_result *result);
 #endif

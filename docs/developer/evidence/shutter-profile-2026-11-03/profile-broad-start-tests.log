@@ -1,0 +1,40 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/profile-build
+Test project /workspace/scratch/9ccf7e35ace4/profile-build
+    Start 20: native_shutter_profile
+1/2 Test #20: native_shutter_profile ..............Subprocess aborted***Exception:   0.13 sec
+profile status 2 base 0
+point 0 delta -0.152 status 1 cost 14.2296 ref 123.585
+  start 0 status 0 cost 14.2295906155 parameters 800.242644441 500.134648197 2.01364433562e-06 9.84782593521e-12 5.16722200135e-07 2.71693476121e-12
+  start 1 status 0 cost 14.2295905809 parameters 800.242649255 500.134642118 2.01364458567e-06 9.84782324273e-12 5.16721060015e-07 2.71695930881e-12
+point 1 delta -0.151 status 4 cost nan ref nan
+  start 0 status 0 cost 4961.69236234 parameters 801.904715358 502.282187184 2.15267121353e-06 7.92813916635e-12 9.02420530518e-07 -4.99999999919e-12
+  start 1 status 0 cost 3.5567390371 parameters 800.121305156 500.067311638 2.00682120997e-06 9.92392317357e-12 5.08359337089e-07 2.85850020039e-12
+point 2 delta -0.15 status 1 cost 4.39188e-13 ref 3.24958e-13
+  start 0 status 0 cost 4.39188219108e-13 parameters 799.99999998 500.000000012 1.99999999824e-06 1.00000000251e-11 5.00000002239e-07 2.99999995703e-12
+  start 1 status 0 cost 1.88750146694e-12 parameters 800.000000015 499.999999994 2.0000000018e-06 9.999999972e-12 4.9999999699e-07 3.00000008788e-12
+point 3 delta -0.149 status 1 cost 3.55542 ref 30.8961
+  start 0 status 0 cost 3.55542261486 parameters 799.87873533 499.932704426 1.99318111866e-06 1.00760501317e-11 4.91642358281e-07 3.1414749444e-12
+  start 1 status 0 cost 3.55542261313 parameters 799.87873266 499.932706038 1.99318092453e-06 1.00760527469e-11 4.91642707567e-07 3.14146772508e-12
+point 4 delta -0.148 status 1 cost 14.2191 ref 123.584
+  start 0 status 0 cost 14.2190593279 parameters 799.75750649 499.865428386 1.98636420889e-06 1.0152079182e-11 4.8328736859e-07 3.28290409303e-12
+  start 1 status 0 cost 14.2190593244 parameters 799.757505098 499.865431415 1.98636406401e-06 1.01520814934e-11 4.83287903676e-07 3.28289289674e-12
+shutter_profile_probe: /workspace/scratch/9ccf7e35ace4/profile-implementation/mefpp2/tests/shutter_profile_probe.c:49: main: Assertion `out->status==DETECTOR_JOINT_PROFILE_BRACKETED' failed.
+
+    Start 21: native_shutter_profile_allocation
+2/2 Test #21: native_shutter_profile_allocation ...   Passed    2.11 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+allocation    =   2.11 sec*proc (1 test)
+detector      =   2.24 sec*proc (2 tests)
+linearity     =   0.13 sec*proc (1 test)
+native        =   2.24 sec*proc (2 tests)
+ownership     =   2.11 sec*proc (1 test)
+profile       =   2.24 sec*proc (2 tests)
+
+Total Test time (real) =   2.25 sec
+
+The following tests FAILED:
+	 20 - native_shutter_profile (Subprocess aborted)
+Errors while running CTest

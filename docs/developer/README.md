@@ -1,3 +1,11 @@
+## Detector characterization - 3 November 2026
+
+[Current handoff](detector-characterization-handoff-2026-11-03.md) records the
+actual Mac gain/RON, QR, optimizer and direct-pixel candidate qualifications.
+The [common shutter-profile increment](shutter-profile-2026-11-03.md) has passed
+focused C17 preparation; its actual Mac gate is pending. ROI aggregation,
+measurement/covariance preparation and science acceptance remain later work.
+
 # Developer documentation
 
 - [Private libasdf / ASDF 1.6 qualification](libasdf16-private-qualification-2026-11-02.md):

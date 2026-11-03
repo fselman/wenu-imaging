@@ -280,3 +280,195 @@ fail:
     if(inverse)free(inverse);
     detector_joint_result_del(r);return -1;
 }
+
+
+/* The nuisance optimizer is the qualified Eclipse implementation; this adapter
+ * only restores the fixed common delta before using the same joint objective. */
+typedef struct {
+    joint_context joint;
+    double *theta;
+    int dimensions;
+    double delta;
+} joint_profile_context;
+static optimization_evaluation joint_profile_cost(const double *nuisance,int dim,
+    void *data,double *value)
+{
+    joint_profile_context *c=data;int j;
+    if(dim!=c->dimensions-1)return OPTIMIZATION_EVAL_ERROR;
+    c->theta[0]=c->delta;
+    for(j=0;j<dim;++j)c->theta[j+1]=nuisance[j];
+    return joint_cost(c->theta,c->dimensions,&c->joint,value);
+}
+void detector_joint_profile_result_del(detector_joint_profile_result *r)
+{
+    size_t i,count;
+    if(!r)return;
+    count=(size_t)r->points*(size_t)r->starts;
+    if(r->fit) {for(i=0;i<count;++i)optimization_result_del(r->fit[i]);free(r->fit);}
+    detector_joint_result_del(r->base);
+    if(r->delta)free(r->delta);
+    if(r->initial_simplexes)free(r->initial_simplexes);
+    if(r->cost)free(r->cost);
+    if(r->delta_cost)free(r->delta_cost);
+    if(r->reference_cost)free(r->reference_cost);
+    if(r->point_status)free(r->point_status);
+    if(r->best_start)free(r->best_start);
+    free(r);
+}
+static int joint_profile_counts(detector_joint_profile_result *r,const optimization_result *fit)
+{
+    if(SIZE_MAX-r->evaluations<fit->evaluations||SIZE_MAX-r->callback_calls<fit->callback_calls)return -1;
+    r->evaluations+=fit->evaluations;r->callback_calls+=fit->callback_calls;return 0;
+}
+int detector_joint_shutter_profile_checked(const detector_joint_problem *p,
+    const detector_joint_options *o,const detector_joint_profile_request *req,
+    detector_joint_profile_result **out)
+{
+    detector_joint_profile_result *r=NULL;detector_joint_result *empty=NULL;
+    joint_profile_context c;optimization_problem op;
+    size_t n,d,block,count,values,i,j,k,start,index;int rc,best,all_ok=1;
+    double q,best_cost,anchor,threshold,profile_low,profile_high;
+    if(!out||*out||!req||!joint_valid(p,o,&empty)||req->points<2||req->starts<1||
+       !req->delta||!req->initial_simplexes||
+       !isfinite(req->delta_chi2)||req->delta_chi2<=0||
+       !isfinite(req->cost_tolerance)||req->cost_tolerance<=0||
+       !isfinite(req->boundary_tolerance)||req->boundary_tolerance<0)return -1;
+    n=1+(size_t)p->sites+2*(size_t)p->amplifiers;d=n-1;block=n*d;
+    if((size_t)req->points>SIZE_MAX/(size_t)req->starts)return -1;
+    count=(size_t)req->points*(size_t)req->starts;
+    if(count>SIZE_MAX/block||count*block>SIZE_MAX/sizeof(double)||
+       count>SIZE_MAX/sizeof(optimization_result *))return -1;
+    values=count*block;
+    if(req->optimizer.max_evaluations<n||
+       !isfinite(req->optimizer.parameter_tolerance)||req->optimizer.parameter_tolerance<=0||
+       !isfinite(req->optimizer.objective_tolerance)||req->optimizer.objective_tolerance<=0||
+       !isfinite(req->optimizer.initial_rank_tolerance)||req->optimizer.initial_rank_tolerance<=0||
+       req->optimizer.initial_rank_tolerance>=1)return -1;
+    for(i=0;i<(size_t)req->points;++i)if(!isfinite(req->delta[i])||req->delta[i]<p->lower[0]||
+       req->delta[i]>p->upper[0]||(i&&req->delta[i]<=req->delta[i-1]))return -1;
+    for(i=0;i<values;++i)if(!isfinite(req->initial_simplexes[i])||
+       req->initial_simplexes[i]<p->lower[1+i%d]||req->initial_simplexes[i]>p->upper[1+i%d])return -1;
+    memset(&c,0,sizeof(c));c.joint.p=p;c.joint.o=o;c.dimensions=(int)n;
+    r=calloc(1,sizeof(*r));if(!r)goto fail;
+    r->points=req->points;r->starts=req->starts;r->optimizer=req->optimizer;
+    r->delta_chi2=req->delta_chi2;r->cost_tolerance=req->cost_tolerance;
+    r->boundary_tolerance=req->boundary_tolerance;r->minimum_delta=r->minimum_cost=NAN;
+    r->left_outside=r->left_inside=r->right_inside=r->right_outside=-1;
+    r->delta=malloc((size_t)req->points*sizeof(double));r->initial_simplexes=malloc(values*sizeof(double));
+    r->cost=malloc((size_t)req->points*sizeof(double));r->delta_cost=malloc((size_t)req->points*sizeof(double));
+    r->reference_cost=malloc((size_t)req->points*sizeof(double));
+    r->point_status=calloc((size_t)req->points,sizeof(*r->point_status));
+    r->best_start=malloc((size_t)req->points*sizeof(int));r->fit=calloc(count,sizeof(*r->fit));
+    c.theta=malloc(n*sizeof(double));
+    c.joint.residual=malloc((size_t)p->observations*sizeof(double));
+    c.joint.white=malloc((size_t)p->observations*sizeof(double));
+    if(!r->delta||!r->initial_simplexes||!r->cost||!r->delta_cost||!r->reference_cost||!r->point_status||
+       !r->best_start||!r->fit||!c.theta||!c.joint.residual||!c.joint.white)goto fail;
+    memcpy(r->delta,req->delta,(size_t)req->points*sizeof(double));
+    memcpy(r->initial_simplexes,req->initial_simplexes,values*sizeof(double));
+    for(i=0;i<(size_t)req->points;++i){r->cost[i]=r->delta_cost[i]=r->reference_cost[i]=NAN;r->best_start[i]=-1;}
+    if(detector_joint_response_fit_checked(p,o,&r->base))goto fail;
+    for(start=0;start<(size_t)p->starts;++start)if(r->base->start[start]&&
+       joint_profile_counts(r,r->base->start[start]))goto fail;
+    r->status=DETECTOR_JOINT_PROFILE_BASE_UNAVAILABLE;
+    if(r->base->status!=DETECTOR_JOINT_CANDIDATE)goto done;
+    r->minimum_delta=r->base->start[r->base->best_start]->parameters[0];
+    r->minimum_cost=r->base->start[r->base->best_start]->cost;
+    memset(&op,0,sizeof(op));op.dimensions=(int)d;op.scales=p->scales+1;
+    op.lower=p->lower+1;op.upper=p->upper+1;op.cost=joint_profile_cost;op.context=&c;
+    for(i=0;i<(size_t)req->points;++i) {
+        c.delta=req->delta[i];best=-1;best_cost=HUGE_VAL;
+        r->point_status[i]=DETECTOR_JOINT_PROFILE_POINT_OK;
+        for(start=0;start<(size_t)req->starts;++start) {
+            index=i*(size_t)req->starts+start;
+            op.initial_simplex=req->initial_simplexes+index*block;
+            /* Physical infeasibility is distinguishable from a hard optimizer
+             * failure. Preflight does not consume the optimizer's own budget. */
+            for(j=0;j<n;++j) {
+                ++r->preflight_calls;
+                rc=joint_profile_cost(op.initial_simplex+j*d,(int)d,&c,&q);
+                if(rc==OPTIMIZATION_EVAL_ERROR)goto fail;
+                if(rc==OPTIMIZATION_EVAL_INADMISSIBLE) {
+                    r->point_status[i]=DETECTOR_JOINT_PROFILE_POINT_INADMISSIBLE;break;
+                }
+            }
+            if(r->point_status[i]==DETECTOR_JOINT_PROFILE_POINT_INADMISSIBLE)break;
+            if(minimize_checked(&op,&req->optimizer,r->fit+index))goto fail;
+            if(joint_profile_counts(r,r->fit[index]))goto fail;
+            if(r->fit[index]->cost<best_cost){best_cost=r->fit[index]->cost;best=(int)start;}
+            if(r->fit[index]->status!=OPTIMIZATION_CONVERGED)
+                r->point_status[i]=DETECTOR_JOINT_PROFILE_POINT_UNCONVERGED;
+        }
+        r->best_start[i]=best;
+        if(r->point_status[i]!=DETECTOR_JOINT_PROFILE_POINT_OK){all_ok=0;continue;}
+        for(start=0;start<(size_t)req->starts;++start) {
+            const optimization_result *fit=r->fit[i*(size_t)req->starts+start];
+            const optimization_result *chosen=r->fit[i*(size_t)req->starts+(size_t)best];
+            double scale=fmax(1,fmax(fabs(best_cost),fabs(fit->cost)));
+            if(fabs(fit->cost/scale-best_cost/scale)>o->start_cost_tolerance)
+                r->point_status[i]=DETECTOR_JOINT_PROFILE_POINT_INCONSISTENT;
+            for(k=0;k<d;++k)if(fabs(fit->parameters[k]/p->scales[k+1]-
+                chosen->parameters[k]/p->scales[k+1])>o->start_parameter_tolerance)
+                r->point_status[i]=DETECTOR_JOINT_PROFILE_POINT_INCONSISTENT;
+        }
+        if(r->point_status[i]!=DETECTOR_JOINT_PROFILE_POINT_OK){all_ok=0;continue;}
+        /* A feasible free-fit nuisance vector is an independent upper bound
+         * at this fixed delta, not an implicitly added optimizer start. */
+        ++r->preflight_calls;
+        rc=joint_profile_cost(r->base->start[r->base->best_start]->parameters+1,(int)d,&c,&q);
+        if(rc==OPTIMIZATION_EVAL_ERROR)goto fail;
+        if(rc==OPTIMIZATION_EVAL_VALID) {
+            r->reference_cost[i]=q;
+            if(best_cost-q>req->cost_tolerance) {
+                r->point_status[i]=DETECTOR_JOINT_PROFILE_POINT_INCONSISTENT;
+                all_ok=0;continue;
+            }
+        }
+        r->cost[i]=best_cost;r->delta_cost[i]=best_cost-r->minimum_cost;
+        if(!isfinite(r->delta_cost[i]))goto fail;
+    }
+    r->status=DETECTOR_JOINT_PROFILE_INCOMPLETE;if(!all_ok)goto done;
+    r->status=DETECTOR_JOINT_PROFILE_INCONSISTENT_MINIMUM;
+    for(i=0;i<(size_t)req->points;++i)if(r->delta_cost[i]<-req->cost_tolerance)goto done;
+    profile_low=profile_high=r->minimum_cost;
+    for(i=0;i<(size_t)req->points;++i) {
+        if(r->cost[i]<profile_low)profile_low=r->cost[i];
+        if(r->cost[i]>profile_high)profile_high=r->cost[i];
+    }
+    r->flat_on_grid=(profile_high-profile_low<=req->cost_tolerance);
+    anchor=r->minimum_delta;threshold=req->delta_chi2;
+    r->status=DETECTOR_JOINT_PROFILE_BOUNDARY_LIMITED;
+    if(anchor-p->lower[0]<=req->boundary_tolerance||p->upper[0]-anchor<=req->boundary_tolerance)goto done;
+    /* Traverse from the free minimum outward. Preserve actual crossing
+     * brackets; never infer symmetry, interpolate or expand the supplied grid. */
+    for(i=(size_t)req->points;i-- >0;)if(req->delta[i]<anchor) {
+        if(r->delta_cost[i]>=threshold){r->left_outside=(int)i;break;}
+        r->left_inside=(int)i;
+    }
+    for(i=0;i<(size_t)req->points;++i)if(req->delta[i]>anchor) {
+        if(r->delta_cost[i]>=threshold){r->right_outside=(int)i;break;}
+        r->right_inside=(int)i;
+    }
+    r->status=DETECTOR_JOINT_PROFILE_DISCONNECTED;
+    if(r->left_outside>=0)for(i=0;i<(size_t)r->left_outside;++i)if(r->delta_cost[i]<threshold)goto done;
+    if(r->right_outside>=0)for(i=(size_t)r->right_outside+1;i<(size_t)req->points;++i)
+        if(r->delta_cost[i]<threshold)goto done;
+    if(r->left_outside<0||r->right_outside<0) {
+        r->status=r->flat_on_grid?DETECTOR_JOINT_PROFILE_FLAT_ON_GRID:DETECTOR_JOINT_PROFILE_GRID_UNBRACKETED;
+        if((r->left_outside<0&&req->delta[0]-p->lower[0]<=req->boundary_tolerance)||
+           (r->right_outside<0&&p->upper[0]-req->delta[req->points-1]<=req->boundary_tolerance))
+            r->status=DETECTOR_JOINT_PROFILE_BOUNDARY_LIMITED;
+        goto done;
+    }
+    r->status=DETECTOR_JOINT_PROFILE_BRACKETED;
+done:
+    if(c.theta)free(c.theta);
+    if(c.joint.residual)free(c.joint.residual);
+    if(c.joint.white)free(c.joint.white);
+    *out=r;return 0;
+fail:
+    if(c.theta)free(c.theta);
+    if(c.joint.residual)free(c.joint.residual);
+    if(c.joint.white)free(c.joint.white);
+    detector_joint_profile_result_del(r);return -1;
+}

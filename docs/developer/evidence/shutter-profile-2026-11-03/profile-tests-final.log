@@ -1,0 +1,18 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/profile-build
+Test project /workspace/scratch/9ccf7e35ace4/profile-build
+    Start 20: native_shutter_profile
+1/2 Test #20: native_shutter_profile ..............   Passed    0.85 sec
+    Start 21: native_shutter_profile_allocation
+2/2 Test #21: native_shutter_profile_allocation ...   Passed    2.06 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+allocation    =   2.06 sec*proc (1 test)
+detector      =   2.91 sec*proc (2 tests)
+linearity     =   0.85 sec*proc (1 test)
+native        =   2.91 sec*proc (2 tests)
+ownership     =   2.06 sec*proc (1 test)
+profile       =   2.91 sec*proc (2 tests)
+
+Total Test time (real) =   2.91 sec

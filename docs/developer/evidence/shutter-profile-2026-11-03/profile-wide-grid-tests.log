@@ -1,0 +1,30 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/profile-build
+Test project /workspace/scratch/9ccf7e35ace4/profile-build
+    Start 20: native_shutter_profile
+1/2 Test #20: native_shutter_profile ..............Subprocess aborted***Exception:   0.13 sec
+profile status 2 base 0
+point 0 delta -0.35 status 4 cost nan ref nan
+point 1 delta -0.25 status 4 cost nan ref nan
+point 2 delta -0.15 status 1 cost 4.39188e-13 ref 3.24958e-13
+point 3 delta -0.05 status 1 cost 34915.7 ref 308883
+point 4 delta 0.05 status 1 cost 137183 ref 1.23522e+06
+shutter_profile_probe: /workspace/scratch/9ccf7e35ace4/profile-implementation/mefpp2/tests/shutter_profile_probe.c:40: main: Assertion `out->status==DETECTOR_JOINT_PROFILE_BRACKETED' failed.
+
+    Start 21: native_shutter_profile_allocation
+2/2 Test #21: native_shutter_profile_allocation ...   Passed    2.02 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+allocation    =   2.02 sec*proc (1 test)
+detector      =   2.15 sec*proc (2 tests)
+linearity     =   0.13 sec*proc (1 test)
+native        =   2.15 sec*proc (2 tests)
+ownership     =   2.02 sec*proc (1 test)
+profile       =   2.15 sec*proc (2 tests)
+
+Total Test time (real) =   2.15 sec
+
+The following tests FAILED:
+	 20 - native_shutter_profile (Subprocess aborted)
+Errors while running CTest
