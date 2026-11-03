@@ -63,7 +63,7 @@ valid zero bias difference versus unavailable variance, and stream failure.
 `Pycavi2/tests/qualify_linearity_pairs_export_mac.py` exports exact fetched source
 and builds only the two probes. It inventories and runs exactly these two tests,
 with clean accepted main, installed files and exported source preserved. Actual
-Mac qualification is pending. No repeated FITS-admission test matrix is needed
+Mac qualification passed; see the owner-returned receipt below. No repeated FITS-admission test matrix is needed
 for this stream-only addition; the raw file loader has not changed.
 
 After that gate, implement the bounded per-detector real-data admission/runner and
@@ -73,3 +73,26 @@ raw saturation, binary BPM polarity and a distinct raw bias pair. Do not quietly
 choose them. Actual observational results belong under a purpose-named directory
 in ~/Pictures/OCAM/wenu-imaging with a README explaining retention/deletion, not in
 build directories. No real-data execution or fit is claimed by this step.
+
+## Actual Mac export qualification passed
+
+Fernando returned the exact-source 7a47dc0fc7d6bb197223e3abc1be811bf3313fd8
+Mac C17 receipt on 3 November 2026. Retained run:
+/Users/fselman/Software/build/wenu-imaging/mac-pair-export-hDj5WASm.
+
+native_linearity_pairs_export passed in 1.35 s and native_linearity_pairs in
+1.00 s: 2/2 passed, total elapsed 2.36 s. QUALIFICATION passed; checkout,
+installed_files and exported_source preservation all true. The user checkout
+remains on clean main tracking origin/main. This qualifies synthetic native
+table export and the affected pair service; no actual OCAM measurement, fitted
+gain/linearity/shutter solution, installation or merge is claimed.
+
+Next: bounded per-detector real-file admission and measurement orchestration,
+using the already qualified native measurement/export services and reviewed
+geometry. Complete all per-output header/readout bindings and explicit raw
+saturation, legacy binary BPM polarity and distinct raw bias pair before launch.
+Preserve acquisition order and the existing nonconsecutive pairs. Observational
+outputs go under Pictures/OCAM/wenu-imaging with a purpose/deletion README.
+No unchanged export or earlier numerical test replay is needed for a
+documentation-only receipt update. Review branch-created build directories
+with the owner at merge/cleanup.

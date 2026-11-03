@@ -234,3 +234,26 @@ measurement orchestration; output/readout headers, explicit raw saturation, bina
 BPM polarity and raw-bias pair precede launch. Future observational results go to
 Pictures/OCAM/wenu-imaging with purpose/deletion README. Branch-created build
 directories still need owner disposition review at merge/cleanup.
+
+## Actual Mac export qualification passed
+
+Fernando returned the exact-source 7a47dc0fc7d6bb197223e3abc1be811bf3313fd8
+Mac C17 receipt on 3 November 2026. Retained run:
+/Users/fselman/Software/build/wenu-imaging/mac-pair-export-hDj5WASm.
+
+native_linearity_pairs_export passed in 1.35 s and native_linearity_pairs in
+1.00 s: 2/2 passed, total elapsed 2.36 s. QUALIFICATION passed; checkout,
+installed_files and exported_source preservation all true. The user checkout
+remains on clean main tracking origin/main. This qualifies synthetic native
+table export and the affected pair service; no actual OCAM measurement, fitted
+gain/linearity/shutter solution, installation or merge is claimed.
+
+Next: bounded per-detector real-file admission and measurement orchestration,
+using the already qualified native measurement/export services and reviewed
+geometry. Complete all per-output header/readout bindings and explicit raw
+saturation, legacy binary BPM polarity and distinct raw bias pair before launch.
+Preserve acquisition order and the existing nonconsecutive pairs. Observational
+outputs go under Pictures/OCAM/wenu-imaging with a purpose/deletion README.
+No unchanged export or earlier numerical test replay is needed for a
+documentation-only receipt update. Review branch-created build directories
+with the owner at merge/cleanup.
