@@ -1,3 +1,16 @@
+## Checked QR candidate - 3 November 2026
+
+Owner authorized proceeding after all-detector shared shutter and teaching review
+at 1b1823bf. First implementation is matrix_leastsq_qr_checked in Eclipse matrix:
+pivoted Householder QR, explicit scaling/rank/condition, immutable inputs and
+owned diagnostic result. Legacy least-squares/API/allocation paths preserved.
+Agent C17 two focused controls pass 2/2 in 0.04 s; ten single/persistent allocation
+failure positions preserve qfits owners. Normal mefpp builds. Actual Mac QR gate
+is pending; use qualify_matrix_qr_mac.py, protecting clean main/install/export.
+No unchanged gain/RON replay. Checked optimizer and joint detector wrapper remain
+later reviewed increments; no real-data processing/install/merge/cleanup.
+See [QR implementation](docs/developer/matrix-qr-implementation-2026-11-03.md).
+
 ## Mac paired gain/RON accepted; joint interface review - 3 November 2026
 
 Actual Mac e0b16476 passed2/2 C17 controls in 2.58 s at

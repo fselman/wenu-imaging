@@ -1,0 +1,47 @@
+Start testing: Nov 03 10:07 -03
+----------------------------------------------------------
+20/36 Testing: native_matrix_qr
+20/36 Test: native_matrix_qr
+Command: "/workspace/scratch/9ccf7e35ace4/qr-build/mefpp2/matrix_qr_probe"
+Directory: /workspace/scratch/9ccf7e35ace4/qr-build/mefpp2
+"native_matrix_qr" start time: Nov 03 10:07 -03
+Output:
+----------------------------------------------------------
+PASS: QR known answers, pivot reconstruction, scaling, rank, limits and legacy fit
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"native_matrix_qr" end time: Nov 03 10:07 -03
+"native_matrix_qr" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/36 Testing: native_matrix_qr_allocation
+21/36 Test: native_matrix_qr_allocation
+Command: "/workspace/scratch/9ccf7e35ace4/qr-build/mefpp2/matrix_qr_allocation_probe"
+Directory: /workspace/scratch/9ccf7e35ace4/qr-build/mefpp2
+"native_matrix_qr_allocation" start time: Nov 03 10:07 -03
+Output:
+----------------------------------------------------------
+PASS: QR known answers, pivot reconstruction, scaling, rank, limits and legacy fit
+PASS: 10 QR single and persistent failure positions; owners and inputs preserved
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"native_matrix_qr_allocation" end time: Nov 03 10:07 -03
+"native_matrix_qr_allocation" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 03 10:07 -03
+
+allocation =   0.04 sec*proc
+
+matrix =   0.04 sec*proc
+
+native =   0.04 sec*proc
+
+ownership =   0.04 sec*proc
+
+statistics =   0.00 sec*proc
+
