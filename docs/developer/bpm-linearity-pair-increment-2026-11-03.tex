@@ -1,0 +1,778 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  10pt,
+  a4paper,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=22mm]{geometry}
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+\lstset{defaultdialect=[5.3]Lua}
+\lstset{defaultdialect=[x86masm]Assembler}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\lstset{breaklines=true,basicstyle=\ttfamily\small}\setlength{\emergencystretch}{3em}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\hypertarget{bpmlinearity-development-paired-conversion-gain-increment}{%
+\section{BPM/linearity development: paired conversion gain
+increment}\label{bpmlinearity-development-paired-conversion-gain-increment}}
+
+Date: 3 November 2026. Status: exact numerical interface proposed for
+owner review. Base: c73d9a9e3a631fbbb2346beaa3c150c110a60343. This
+advances the accepted 2 November formula design; no new numerical source
+is implemented by this review. Existing qualified bias/BPM execution
+remains available.
+
+\hypertarget{current-owner-decisions}{%
+\subsection{Current owner decisions}\label{current-owner-decisions}}
+
+\begin{itemize}
+\tightlist
+\item
+  Continue BPM/linearity recipe development. QC investigation and
+  visualization remain deferred.
+\item
+  The eventual linearity correction is applied in mefpp. Later
+  validation reduces the SAME science frames with and without that
+  correction and compares them in the photometric calibration notebook.
+  That experiment is not this increment.
+\item
+  Use the selected Mac OmegaCAM sequence below. Nonconsecutive members
+  are paired explicitly; chronological order and acquisition times
+  remain unchanged.
+\item
+  Controlled lamps support testing small pair mismatches; do not infer
+  perfectly constant illumination or introduce unrestricted per-exposure
+  lamp parameters.
+\item
+  Keep the unsigned 8-bit reason BPM, independent coverage, reusable
+  Eclipse numerical services, and the completed bias recipe
+  orchestration template.
+\end{itemize}
+
+\hypertarget{source-reuse-review}{%
+\subsection{Source reuse review}\label{source-reuse-review}}
+
+Reviewed main's Eclipse sources and the existing BPM service:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Existing resource
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Actual role
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Reuse decision
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+src/iproc/image\_stats.c: image\_getstats\_masked\_checked & Finite,
+BPM-selected ROI mean, median, sample standard deviation and optional
+MAD & Reuse for four-frame means and counts \\
+src/iproc/image\_stats.c: image\_pair\_stats\_checked & Pair difference,
+intersected maps, checked regional statistics & Reuse for flat and
+RAW-bias differences \\
+src/iproc/detector.c: cube\_create\_gainmap\_robust / proportional &
+Relative pixel response against measured frame level & Retain for
+response BPM; not conversion gain in electrons/ADU \\
+src/iproc/detector.c: detector\_linearity\_fit & Per-pixel time
+polynomial in signal, no constant term; diagnostic is mean squared time
+residual & Preserve legacy API; insufficient for the shared signed
+shutter model \\
+src/iproc/detector.c: cube\_correct\_detlin & In-place cubic using b/a
+and c/a & Potential later correction primitive; explicit coefficient
+conversion and validity checks required \\
+src/math/fit\_curve.c and matrix.c & Polynomial/linear fits and
+normal-equation least squares & Retain scaffolding; no joint constrained
+covariance fit is supplied \\
+\end{longtable}
+
+The current BPM service already handles active ROIs and explicit sample
+maps. File admission already carries pair identifiers. No replacement
+FITS reader, statistics implementation, BPM response fitter or
+acquisition-order sorting is needed.
+
+\hypertarget{measurements-and-notation}{%
+\subsection{Measurements and notation}\label{measurements-and-notation}}
+
+The calculation uses \textbf{two flat-field exposures and two bias
+exposures} from the same detector and readout configuration. A pair
+means two exposures at the same integration time; they need not be
+consecutive in the acquisition sequence.
+
+An ROI (region of interest) is the rectangular detector area being
+measured. The \textbf{same accepted pixels} must be used for every mean
+and difference below. A pixel is accepted only when selected by the BPM
+and finite in all four images. The recipe also excludes samples outside
+the explicitly selected saturation and signal limits. There is no
+automatic clipping.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Unit
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(p\) & Position of a pixel within the ROI & Pixel coordinate \\
+\(G\) & Set of accepted pixel positions, common to all four images &
+--- \\
+\(N\) & Number of pixels in \(G\); at least two are needed for a
+variance & Pixels \\
+\(F_{1,p}\), \(F_{2,p}\) & Raw values at pixel \(p\) in the first and
+second flat exposures & ADU \\
+\(B_{1,p}\), \(B_{2,p}\) & Raw values at pixel \(p\) in the first and
+second bias exposures & ADU \\
+\(z_p\) & Any image or difference value at pixel \(p\) & ADU \\
+\(\bar z\) & Arithmetic mean of \(z_p\) over \(G\) & ADU \\
+\(v(z)\) & Sample variance of \(z_p\) over \(G\), with denominator
+\(N-1\) & \(\mathrm{ADU}^{2}\) \\
+\(\Delta F_p\) & Flat-pair difference, \(F_{1,p}-F_{2,p}\) & ADU \\
+\(\Delta B_p\) & Bias-pair difference, \(B_{1,p}-B_{2,p}\) & ADU \\
+\(g\) & Conversion gain: number of electrons corresponding to one ADU &
+\(\mathrm{electrons}/\mathrm{ADU}\) \\
+\(\mathrm{RON}_{\mathrm{ADU}}\) & Readout noise of one exposure,
+expressed in ADU & ADU \\
+\(\mathrm{MAD}(z)\) & Median absolute deviation from the median of
+\(z_p\), over \(G\) & ADU \\
+\end{longtable}
+
+The subscript in \(\mathrm{RON}_{\mathrm{ADU}}\) is the complete unit
+label ``ADU''; it is not a product of variables. Bars above image names,
+such as \(\bar F_1\), mean averages over the common set \(G\).
+
+\hypertarget{formulas-to-implement}{%
+\subsection{Formulas to implement}\label{formulas-to-implement}}
+
+\hypertarget{mean-and-sample-variance}{%
+\subsubsection{Mean and sample
+variance}\label{mean-and-sample-variance}}
+
+For any image or difference \(z\):
+
+\[
+\bar z = \frac{1}{N}\sum_{p\in G} z_p ,
+\qquad
+v(z) = \frac{1}{N-1}\sum_{p\in G}(z_p-\bar z)^2 .
+\]
+
+The variance measures the scatter after removing the arithmetic mean.
+All means and variances below use this same definition and pixel
+population.
+
+\hypertarget{readout-noise-from-the-raw-bias-pair}{%
+\subsubsection{Readout noise from the raw bias
+pair}\label{readout-noise-from-the-raw-bias-pair}}
+
+Form the difference of the two raw biases:
+
+\[
+\Delta B_p = B_{1,p}-B_{2,p}.
+\]
+
+For independent exposures with equal readout-noise variance, the
+difference contains twice the variance of one exposure. Therefore:
+
+\[
+\boxed{\mathrm{RON}_{\mathrm{ADU}}
+       = \sqrt{\frac{v(\Delta B)}{2}} } .
+\]
+
+\textbf{No overscan correction is applied before this subtraction},
+preserving the previously agreed raw-pair measurement without
+scan-correction correlations.
+
+The optional robust diagnostic is:
+
+\[
+\mathrm{MAD}(z)
+ = \mathrm{median}_{p\in G}
+   \left|z_p-\mathrm{median}_{q\in G}(z_q)\right| ,
+\]
+
+\[
+\mathrm{RON}_{\mathrm{MAD}}
+ = \frac{1.4826}{\sqrt{2}}\,\mathrm{MAD}(\Delta B).
+\]
+
+Here \(q\) is just a second pixel index used to express the inner
+median. The factor 1.4826 puts MAD on the standard-deviation scale for a
+Gaussian distribution. The MAD estimate is reported separately; it does
+not replace ordinary variance in the conversion-gain calculation.
+
+\hypertarget{conversion-gain-from-flat-and-bias-pairs}{%
+\subsubsection{Conversion gain from flat and bias
+pairs}\label{conversion-gain-from-flat-and-bias-pairs}}
+
+Form the raw flat-pair difference:
+
+\[
+\Delta F_p=F_{1,p}-F_{2,p}.
+\]
+
+The conversion gain is:
+
+\[
+\boxed{
+g =
+\frac{\bar F_1+\bar F_2-\bar B_1-\bar B_2}
+     {v(\Delta F)-v(\Delta B)}
+}
+\quad [\mathrm{electrons}/\mathrm{ADU}] .
+\]
+
+The numerator is the sum of the two flat signals after removing the
+estimated bias levels. The denominator removes the readout-noise
+contribution from the flat-difference variance. The relation assumes
+photon shot noise, compatible flat illumination patterns and operation
+within the accepted linear signal range. Both numerator and denominator
+must be positive for a reported gain.
+
+Use raw flat differences over the same accepted pixels, without scan
+correction, for this first photon-transfer estimator. Bias removal in
+the numerator uses the four image means. Changes in electronic structure
+between exposures remain an admission concern; this routine does not
+model or correct arbitrary drift.
+
+\hypertarget{variance-versus-signal-which-value-represents-the-instrument}{%
+\subsubsection{Variance versus signal: which value represents the
+instrument?}\label{variance-versus-signal-which-value-represents-the-instrument}}
+
+There is no single instrument variance that applies at every signal
+level. Distinguish \textbf{readout variance at zero signal} from the
+\textbf{total variance at a specified signal}, and distinguish both from
+conversion gain.
+
+For flat pair \(j\), define the bias-subtracted average signal and half
+the difference variance:
+
+\[
+\mu_j =
+\frac{\bar F_{j1}+\bar F_{j2}-\bar B_1-\bar B_2}{2},
+\qquad
+V_j=\frac{v(F_{j1}-F_{j2})}{2}.
+\]
+
+Here \(j\) labels an integration-time pair, and subscripts \(j1\) and
+\(j2\) identify its two flat exposures. \(\mu_j\) is in ADU and \(V_j\)
+is in squared ADU. The factor of two converts the difference variance to
+the variance of ONE exposure, assuming independent exposures with
+comparable noise statistics. For modest illumination mismatch it
+represents the average of their variances.
+
+Define the independently measured raw-bias readout variance:
+
+\[
+V_0=\frac{v(\Delta B)}{2}
+   =\mathrm{RON}_{\mathrm{ADU}}^{\,2}.
+\]
+
+In the constant-gain, independent-pixel, photon-noise regime:
+
+\[
+\boxed{ V(\mu)=V_0+\frac{\mu}{g_0} } .
+\]
+
+The new symbol \(g_0\) denotes a reference conversion gain in
+electrons/ADU, measured over an explicitly selected approximately linear
+signal interval. \(V(\mu)\) denotes the single-exposure variance at
+bias-subtracted signal \(\mu\); \(V_0\) is its zero-signal readout
+component.
+
+If plotting the FULL difference variance instead, as in the owner's
+question:
+
+\[
+v(\Delta F)=2V_0+\frac{2\mu}{g_0}.
+\]
+
+Thus the slope of half-difference variance versus average signal is
+\(1/g_0\); the slope of full-difference variance versus average signal
+is \(2/g_0\). The ordinate is NOT the spatial variance of the average
+flat image.
+
+\textbf{Proposed reporting policy, for review:}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \(V_0\) from the raw bias pair for readout variance. Zero signal
+  is the reference; no illuminated flat point is selected to define
+  readout noise.
+\item
+  Estimate \(g_0\) over a declared, verified approximately linear signal
+  interval, above the region where read noise dominates and below
+  significant curvature or saturation. Use a range of accepted pairs,
+  not one arbitrarily chosen point. Record the interval, pair
+  membership, fitting method and uncertainty; no numerical interval or
+  tolerance is selected in this proposal.
+\item
+  Keep the individual pair estimates versus signal:
+\end{itemize}
+
+\[
+  g_{\mathrm{pair},j}=\frac{\mu_j}{V_j-V_0}.
+\]
+
+In a curved relation this is a signal-dependent effective estimate. It
+need not equal a gain inferred from the local tangent. A local-slope
+diagnostic, if later implemented with a reviewed curve model, would be
+
+\[
+  g_{\mathrm{slope}}(\mu)
+  =\left(\frac{dV}{d\mu}\right)^{-1}.
+\]
+
+Both quantities agree with \(g_0\) for a straight photon-transfer
+relation; they generally differ for a curved one. Neither alone proves
+an intrinsic electronics gain change.
+
+\begin{itemize}
+\item
+  For the variance needed at a particular science signal, evaluate the
+  validated variance-versus-signal model at that signal. Do not assign
+  \(V_0\) or the variance at a calibration flat level to every science
+  pixel.
+\item
+  If no sufficiently constrained approximately linear interval exists,
+  report the reference gain as undetermined and retain the measured
+  curve and pair estimates. Do not force a constant gain or extrapolate
+  from saturation.
+\end{itemize}
+
+The intended first helper still returns each pair's measured quantities.
+A fitted reference gain/curve belongs to subsequent sequence-level
+analysis; this reporting proposal does not silently add a new curve
+fitter to that helper.
+
+Curvature can reflect nonlinear response, changing pixel
+correlations/charge redistribution, illumination mismatch or other
+signal-dependent effects. Consequently, a straight-line fit across the
+whole curve cannot establish a universal gain, and a per-pixel variance
+alone does not describe covariance. The later application of a linearity
+correction must propagate the noise through that correction, as required
+by the controlling design.
+
+As a methodological reference,
+\href{https://www.eso.org/observing/dfo/quality/VIMOS/qc/detlin_qc1.html}{ESO's
+VIMOS gain documentation} describes paired estimates and photon-transfer
+fitting, and records a later restriction to low-signal flats. That
+instrument-specific threshold is not adopted for OmegaCAM.
+
+\hypertarget{median-centering-and-controlled-lamps}{%
+\subsubsection{Median centering and controlled
+lamps}\label{median-centering-and-controlled-lamps}}
+
+Let \(D_p=\Delta F_p\) and let \(m\) be its median over \(G\):
+
+\[
+m=\mathrm{median}_{p\in G}(D_p),
+\qquad D'_p=D_p-m.
+\]
+
+Subtracting this one constant makes the median of the difference zero,
+but:
+
+\[
+v(D')=v(D),
+\qquad
+\mathrm{MAD}(D')=\mathrm{MAD}(D).
+\]
+
+Thus your proposed centering changes the displayed zero point, not the
+measured variance or MAD. No extra centering estimator or input mutation
+is needed. Retain the original difference median and the two
+bias-subtracted flat levels as pair-consistency diagnostics. A
+multiplicative lamp change can leave a spatial response pattern after
+median centering; no automatic rescaling is added. The original
+uncentered levels remain available for the later linearity fit.
+
+\hypertarget{proposed-eclipse-interface}{%
+\subsection{Proposed Eclipse
+interface}\label{proposed-eclipse-interface}}
+
+This is the C entry point for the measurements defined above:
+
+\begin{lstlisting}[language=C]
+int detector_gain_pair_checked(
+    const image_t *flat_first, const image_t *flat_second,
+    const image_t *bias_first, const image_t *bias_second,
+    const pixelmap *selection, const int *zone,
+    int with_mad, detector_gain_pair_result *out);
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  The four image arguments supply the flat pair and the raw bias pair.
+\item
+  \passthrough{\lstinline!selection!} is the optional common good-pixel
+  map in Eclipse's existing convention: 1 means accepted, 0 means
+  excluded.
+\item
+  \passthrough{\lstinline!zone!} supplies the ROI boundaries, inclusive
+  and counted from 1.
+\item
+  \passthrough{\lstinline!with\_mad!} requests the additional robust
+  diagnostic.
+\item
+  \passthrough{\lstinline!out!} receives the measurements, counts and
+  availability/reason fields.
+\end{itemize}
+
+All four inputs have the same detector/readout, binning, dimensions and
+raw-to-active mapping. The recipe uses the existing crop operation to
+provide active-pixel images without scan subtraction. The selection is
+an explicit binary Eclipse view, not the eight-bit reason array.
+
+The result retains the four image-level statistics, both difference
+statistics, the common valid/excluded counts, bias-subtracted pair
+signals, pair-mismatch diagnostics, conversion gain and raw-pair RON.
+
+\hypertarget{errors-ownership-and-callers}{%
+\subsubsection{Errors, ownership and
+callers}\label{errors-ownership-and-callers}}
+
+Inputs/maps/ROI are borrowed and immutable; output is caller-owned and
+has no owned image allocations. Temporary images/maps use existing
+Eclipse allocation, cleanup and error conventions. Invalid
+dimensions/maps/ROI, invalid options, allocation failure or nonfinite
+arithmetic return an error without changing *out. Fewer than two common
+samples or nonpositive gain numerator/denominator produce an explicit
+unavailable measurement, never a nominal zero gain. RON can remain
+available when gain is unavailable. Reject aliasing/invalid output
+arguments as specified in the matching header documentation.
+
+The numerical routine reports measurements, not scientific acceptance.
+The recipe applies explicit illumination-mismatch/range thresholds and
+records the decision. It calls the helper once per configured
+amplifier/ROI/pair and records detector identity, sample population, raw
+origin and estimator. Overlapping ROI estimates share pixels and are not
+independent observations.
+
+No new global model fitter, default mismatch tolerance, defect criterion
+or uncertainty approximation is approved by this interface review.
+
+\hypertarget{a-small-synthetic-example-for-checking-the-arithmetic}{%
+\subsection{A small synthetic example for checking the
+arithmetic}\label{a-small-synthetic-example-for-checking-the-arithmetic}}
+
+``Four-pixel fixture'' meant \textbf{four artificial images, each
+containing only four pixels}. It did not mean four real OCAM exposures
+or a recommended measurement area. The four pixel positions are the same
+in every artificial image. All sixteen values below are invented for a
+simple software test.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1579}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Pixel position \(p\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+First flat \(F_{1,p}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Second flat \(F_{2,p}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+First bias \(B_{1,p}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Second bias \(B_{2,p}\)
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & 101 & 99 & 11 & 10 \\
+2 & 99 & 101 & 9 & 10 \\
+3 & 100 & 100 & 10 & 10 \\
+4 & 100 & 100 & 10 & 10 \\
+\end{longtable}
+
+All entries are in ADU. All four positions are accepted, so \(N=4\). The
+four image means are:
+
+\[
+\bar F_1=\bar F_2=100\ \mathrm{ADU},
+\qquad
+\bar B_1=\bar B_2=10\ \mathrm{ADU}.
+\]
+
+The pair differences, in pixel order, are:
+
+\[
+\Delta F=(2,-2,0,0)\ \mathrm{ADU},
+\qquad
+\Delta B=(1,-1,0,0)\ \mathrm{ADU}.
+\]
+
+Both difference means are zero. With the sample-variance denominator
+\(N-1=3\):
+
+\[
+v(\Delta F)=\frac{2^2+(-2)^2+0^2+0^2}{3}
+           =\frac{8}{3}\ \mathrm{ADU}^{2},
+\]
+
+\[
+v(\Delta B)=\frac{1^2+(-1)^2+0^2+0^2}{3}
+           =\frac{2}{3}\ \mathrm{ADU}^{2}.
+\]
+
+The expected software-test results are therefore:
+
+\[
+g=\frac{100+100-10-10}{8/3-2/3}
+  =90\ \mathrm{electrons}/\mathrm{ADU},
+\]
+
+\[
+\mathrm{RON}_{\mathrm{ADU}}
+ =\sqrt{\frac{2/3}{2}}
+ =\sqrt{\frac{1}{3}}\ \mathrm{ADU}
+ \simeq0.57735\ \mathrm{ADU}.
+\]
+
+These deliberately simple numbers make errors in subtraction, the
+\(N-1\) denominator or the factor of two easy to detect. \textbf{They
+are not expected OCAM gain/noise values and do not validate the physical
+method on real observations.}
+
+\hypertarget{focused-acceptance-to-prepare-after-interface-review}{%
+\subsection{Focused acceptance to prepare after interface
+review}\label{focused-acceptance-to-prepare-after-interface-review}}
+
+Before execution, announce the inputs, functions, actions and pass
+criteria.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Recover the independently calculated results in the synthetic example
+  above.
+\item
+  Verify that BPM exclusions and nonfinite samples select exactly the
+  same population for all means and both variances. Check ROI
+  coordinates and counts.
+\item
+  Swap the members of either pair: gain and RON must be unchanged, while
+  the corresponding difference median changes sign. Verify separately
+  that subtracting a constant leaves variance and MAD unchanged.
+\item
+  Check constant images, too few accepted pixels, nonpositive gain
+  denominators and invalid maps. Report unavailable values or errors as
+  appropriate; preserve caller output on error and never modify the
+  inputs.
+\item
+  Exercise the new call through the existing operation template using
+  synthetic pairs whose members are not consecutive. Check failure
+  handling and cleanup.
+\item
+  Verify the factor-of-two convention with a synthetic constant-gain
+  relation. Curved examples must retain signal-dependent pair results
+  rather than being silently presented as one constant gain.
+  Sequence-level fitting remains later.
+\item
+  Run focused Mac C17 checks first and validate the changed path on
+  Chapman afterward. Do not repeat unchanged qualification matrices or
+  alter production installations or original data.
+\end{enumerate}
+
+\hypertarget{connection-to-the-full-linearity-design}{%
+\subsection{Connection to the full linearity
+design}\label{connection-to-the-full-linearity-design}}
+
+The earlier
+\href{detector-characterization-design-2026-11-02.pdf}{formula guide
+(PDF)} and \href{detector-characterization-design-2026-11-02.tex}{LaTeX
+source} remain the controlling design. This increment implements only
+its paired gain/RON part.
+
+The later shared shutter and linearity fit retains:
+
+\[
+Q_a(s)=s+c_{2,a}s^2+c_{3,a}s^3,
+\qquad
+Q_a(s_{rj})=L_r(t_j+\delta).
+\]
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Unit
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(a\) & Amplifier, or pixel in the later per-pixel mode & Identifier \\
+\(r\) & Analysis region & Identifier \\
+\(j\) & Exposure & Index \\
+\(s\) & Bias-subtracted measured signal & ADU \\
+\(s_{rj}\) & Signal for region \(r\) and exposure \(j\), subject to the
+guide's pixel-model/aggregation rule & ADU \\
+\(Q_a(s)\) & Linearized signal for model \(a\) & ADU \\
+\(c_{2,a}\) & Quadratic coefficient of the inverse response &
+\(\mathrm{ADU}^{-1}\) \\
+\(c_{3,a}\) & Cubic coefficient of the inverse response &
+\(\mathrm{ADU}^{-2}\) \\
+\(L_r\) & Constant linearized illumination rate in region \(r\) &
+ADU/s \\
+\(t_j\) & Exposure duration established from the declared input-time
+convention & s \\
+\(\delta\) & One signed duration offset shared by the mosaic; positive
+means longer exposure & s \\
+\end{longtable}
+
+The effective duration is \(t_j+\delta>0\). Keep the guide's
+monotonicity, validated signal bounds, rank, conditioning, covariance
+and aggregation requirements. No independent per-chip shutter offsets or
+unrestricted lamp-drift parameters are introduced. The exact joint
+numerical interface is a later review.
+
+\hypertarget{selected-mac-omegacam-inputs}{%
+\subsection{Selected Mac OmegaCAM
+inputs}\label{selected-mac-omegacam-inputs}}
+
+Root: \path{/Users/fselman/Pictures/OCAM/bpm}. Owner-provided listing;
+files/pixels have NOT yet been independently inspected on the Mac. Ten
+BIAS/r\_SDSS exposures precede twenty FLAT,DOME,DETGAIN/v\_STRM
+exposures on 2017-03-13. Different bias/flat filters are recorded;
+detector/readout compatibility still needs header confirmation.
+
+Bias file timestamps
+(\passthrough{\lstinline!OMEGA.2017-03-13T<timestamp>.fits!}):
+09:50:05.624, 09:50:48.373, 09:51:31.403, 09:52:14.404, 09:52:57.394,
+09:53:40.384, 09:54:23.384, 09:55:06.394, 09:55:49.384, 09:56:31.804.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1875}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1875}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1875}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1875}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Pair
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Time (s)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+First flat timestamp
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Second flat timestamp
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Chronological flat indices
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+P02 & 2 & 11:34:43.759 & 11:58:45.683 & 1,20 \\
+P70 & 70 & 11:35:30.570 & 11:56:50.383 & 2,19 \\
+P40 & 40 & 11:37:25.420 & 11:55:25.563 & 3,18 \\
+P05 & 5 & 11:38:50.390 & 11:54:35.393 & 4,17 \\
+P10 & 10 & 11:39:40.380 & 11:53:40.483 & 5,16 \\
+P30 & 30 & 11:40:35.390 & 11:52:25.393 & 6,15 \\
+P20 & 20 & 11:41:50.391 & 11:51:20.392 & 7,14 \\
+P50 & 50 & 11:42:55.391 & 11:49:45.392 & 8,13 \\
+P60 & 60 & 11:44:30.391 & 11:48:00.392 & 9,12 \\
+P07 & 7 & 11:46:16.391 & 11:47:08.392 & 10,11 \\
+\end{longtable}
+
+This sequence has ten levels, not the design's representative 22-pair
+annual sequence. Do not reject it solely on that count or promise all
+products: admit each requested model using its actual rank, usable
+signal span, saturation and illumination evidence. Preserve header
+times; do not assume they are commanded times or already
+shutter-corrected.
+
+\end{document}

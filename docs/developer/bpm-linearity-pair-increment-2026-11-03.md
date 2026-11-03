@@ -5,6 +5,8 @@ Base: c73d9a9e3a631fbbb2346beaa3c150c110a60343.
 This advances the accepted 2 November formula design; no new numerical source
 is implemented by this review. Existing qualified bias/BPM execution remains available.
 
+For a reliably typeset reading copy, use the [PDF](bpm-linearity-pair-increment-2026-11-03.pdf); its [LaTeX source](bpm-linearity-pair-increment-2026-11-03.tex) is included alongside it.
+
 ## Current owner decisions
 
 - Continue BPM/linearity recipe development. QC investigation and visualization
@@ -159,12 +161,12 @@ specified signal**, and distinguish both from conversion gain.
 For flat pair $j$, define the bias-subtracted average signal and half the
 difference variance:
 
-$
+$$
 \mu_j =
 \frac{\bar F_{j1}+\bar F_{j2}-\bar B_1-\bar B_2}{2},
 \qquad
 V_j=\frac{v(F_{j1}-F_{j2})}{2}.
-$
+$$
 
 Here $j$ labels an integration-time pair, and subscripts $j1$ and $j2$ identify
 its two flat exposures. $\mu_j$ is in ADU and $V_j$ is in squared ADU.
@@ -174,16 +176,16 @@ For modest illumination mismatch it represents the average of their variances.
 
 Define the independently measured raw-bias readout variance:
 
-$
+$$
 V_0=\frac{v(\Delta B)}{2}
    =\mathrm{RON}_{\mathrm{ADU}}^{\,2}.
-$
+$$
 
 In the constant-gain, independent-pixel, photon-noise regime:
 
-$
+$$
 \boxed{ V(\mu)=V_0+\frac{\mu}{g_0} } .
-$
+$$
 
 The new symbol $g_0$ denotes a reference conversion gain in
 electrons/ADU, measured over an explicitly selected approximately linear signal
@@ -192,9 +194,9 @@ signal $\mu$; $V_0$ is its zero-signal readout component.
 
 If plotting the FULL difference variance instead, as in the owner's question:
 
-$
+$$
 v(\Delta F)=2V_0+\frac{2\mu}{g_0}.
-$
+$$
 
 Thus the slope of half-difference variance versus average signal is $1/g_0$;
 the slope of full-difference variance versus average signal is $2/g_0$.
@@ -211,25 +213,27 @@ The ordinate is NOT the spatial variance of the average flat image.
   no numerical interval or tolerance is selected in this proposal.
 - Keep the individual pair estimates versus signal:
   
-  $
+$$
   g_{\mathrm{pair},j}=\frac{\mu_j}{V_j-V_0}.
-  $
+$$
   
   In a curved relation this is a signal-dependent effective estimate. It need
   not equal a gain inferred from the local tangent. A local-slope diagnostic,
   if later implemented with a reviewed curve model, would be
   
-  $
+$$
   g_{\mathrm{slope}}(\mu)
   =\left(\frac{dV}{d\mu}\right)^{-1}.
-  $
+$$
   
   Both quantities agree with $g_0$ for a straight photon-transfer relation;
   they generally differ for a curved one. Neither alone proves an intrinsic
   electronics gain change.
+
 - For the variance needed at a particular science signal, evaluate the
   validated variance-versus-signal model at that signal. Do not assign $V_0$
   or the variance at a calibration flat level to every science pixel.
+
 - If no sufficiently constrained approximately linear interval exists, report
   the reference gain as undetermined and retain the measured curve and pair
   estimates. Do not force a constant gain or extrapolate from saturation.
@@ -446,7 +450,7 @@ on the Mac. Ten BIAS/r_SDSS exposures precede twenty
 FLAT,DOME,DETGAIN/v_STRM exposures on 2017-03-13. Different bias/flat filters
 are recorded; detector/readout compatibility still needs header confirmation.
 
-Bias file timestamps (OMEGA.2017-03-13T<timestamp>.fits):
+Bias file timestamps (`OMEGA.2017-03-13T<timestamp>.fits`):
 09:50:05.624, 09:50:48.373, 09:51:31.403, 09:52:14.404, 09:52:57.394,
 09:53:40.384, 09:54:23.384, 09:55:06.394, 09:55:49.384, 09:56:31.804.
 
