@@ -1,6 +1,7 @@
 [ESO detector identity compatibility](roi-eso-identity-2026-11-03.md): named ROI
 configuration now preserves quoted # identities. Agent focused C17 passes 1/1;
-actual Mac qualification of #230 is pending before real OCAM ROI binding.
+actual Mac qualification passes 1/1 in 1.27 s total. #230 is closed; real OCAM
+measurement selections remain pending.
 
 [Comparison-data retention](comparison-data-retention.md): future-comparison datasets belong
 under ~/Pictures/OCAM/wenu-imaging or ~/Pictures/WFI/wenu-imaging, in named

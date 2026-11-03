@@ -181,3 +181,13 @@ Complete per-detector identity/readout binding, reviewed ROIs, raw saturation an
 bias pair still precede real measurement. Retained observational comparison data
 must follow the new Pictures/instrument retention rule and per-dataset README.
 
+
+
+## Actual Mac exact-identity qualification
+
+Owner returned f02eb695 native_roi_config pass 1/1 in 1.26 s, total 1.27 s,
+retained mac-roi-identity-8xg2xMCO. All checkout/installed_files/exported_source
+preservation checks true; clean main remains unchanged. #230 closed with the
+correction and actual-host receipt. Earlier pending #230 notes above are historical.
+ROI/bias-pair/saturation selections and full instrument bindings remain the next
+scientific preparation, with actual measurement/fit still pending.

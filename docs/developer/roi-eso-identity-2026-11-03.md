@@ -20,11 +20,16 @@ synthetic dimensions; it is an identity contract, not real-detector geometry pro
 [corrected build](evidence/roi-eso-identity-2026-11-03/agent-after-build.log),
 [corrected checks](evidence/roi-eso-identity-2026-11-03/agent-after-tests.log).
 
-Actual Mac gate remains pending. Pycavi2/tests/qualify_roi_identity_mac.py exports
+Actual Intel Mac gate passed at f02eb695aa91c34a30dc1651fa8bc78b5ca597c4:
+native_roi_config 1/1 in 1.26 s, 1.27 s total; retained
+/Users/fselman/Software/build/wenu-imaging/mac-roi-identity-8xg2xMCO.
+Checkout, installed_files and exported_source preservation all passed; main remains
+clean. This is the owner's returned terminal receipt; full logs remain on the Mac. Pycavi2/tests/qualify_roi_identity_mac.py exports
 the exact commit, builds roi_config_probe and runs only native_roi_config after
 checking its inventory. It protects the clean main checkout, installed files and
 exported source. No unrelated numerical matrix replay, actual pixels or install.
-Keep #230 open until the actual Mac acceptance result is returned.
+Issue #230 is closed after this scoped actual Mac acceptance. PR #227 remains draft;
+no merge, install or actual-data numerical acceptance is implied.
 
 ## Current real OCAM preparation evidence
 
