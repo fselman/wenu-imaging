@@ -1,5 +1,11 @@
 # Developer guide: native mefpp build, installation and qualification
 
+2 November development-only option: `MEFPP_BUILD_BIAS_ADAPTER=ON` builds
+uninstalled `mefpp_m5` and its configuration/probe dependencies. Normal install
+targets and configured engine selection stay unchanged. See the [bias-template
+candidate](m5-bias-template-2026-11-02.md). Current verification uses C17 on Mac
+only; actual-target execution is pending. No C90/Chapman duplicate run is planned.
+
 1 November [installed large-file real-data receipt](large-file-installed-real-data-2026-11-01.md): PR #200 was
 owner-accepted/merged at a240829; #195/#201 closed and branch cleanup completed.
 New separate optimized C90 runtimes from a240829 are installed on actual Intel
@@ -809,3 +815,4 @@ This housekeeping request does not authorize Git branch deletion or removal of
 working Pycavi/native installations. Preserve original evidence paths in records
 and map any relocation explicitly. Existing home runs remain unchanged until
 inspected; the just-qualified native retry still needs its install/regression gate.
+

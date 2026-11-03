@@ -316,6 +316,110 @@ static void controls(mef_bb *legacy, int detector_index)
     for (i = 0; i < 3; ++i) image_del(frames[i]);
     printf("PASS: input/selection/geometry controls; %lu allocation positions x 2; 20 cycles; zero new owners\n", (unsigned long)calls);
 }
+
+static void measurements(mef_bb *legacy, int detector_index)
+{
+    image_t *frames[5];
+    const image_t *borrowed[5];
+    mef_bias_input input;
+    mef_bias_result *result;
+    const mef_bias_measurements *qc;
+    mef_bias_measurement_options options;
+    mef_context *context;
+    pixelmap *map;
+    pixelvalue saved[5][60];
+    double sum, squares, expected, corrected_mean;
+    int i, x, y, mode;
+    allocation_state state;
+    mef_allocator allocator;
+    size_t base, calls, failure;
+    /* Deliberate row-dependent raw pedestal: correction removes it, whereas
+     * the required raw-pair difference must retain it. Add scan outliers and active
+     * defects: detector BPM affects active measurements/rejection only. */
+    legacy->bias_minframe=3; legacy->bias_kappa1=1.5;
+    legacy->use_prescan=legacy->use_overscan=1;
+    legacy->scanrej[0]=legacy->scanrej[1]=0;
+    map=pixelmap_new(10,6); assert(map);
+    for(y=0;y<6;++y) { map->data[10*y]=0; map->data[10*y+2]=0; }
+    for(i=0;i<5;++i) {
+        frames[i]=image_new(10,6); assert(frames[i]); borrowed[i]=frames[i];
+        for(y=0;y<6;++y) for(x=0;x<10;++x) {
+            frames[i]->data[10*y+x]=(pixelvalue)(100+i*(y+1));
+            if(x>=2 && x<=7) frames[i]->data[10*y+x]+=(pixelvalue)(10+i+x+2*y);
+        }
+        for(y=0;y<6;++y) {
+            frames[i]->data[10*y]+=10000;
+            frames[i]->data[10*y+2]+=1000;
+            if(i==4) frames[i]->data[10*y+2]+=10000;
+        }
+        memcpy(saved[i],frames[i]->data,sizeof(saved[i]));
+    }
+    input.frames=borrowed; input.count=5; input.configuration_detector=(size_t)detector_index;
+    memset(&options,0,sizeof(options)); options.bpm=map; options.with_mad=1;
+    options.ron_pair_set=1; options.ron_first=0; options.ron_second=1; options.high_sigma=5;
+    context=context_for(legacy,5,1,NULL); result=NULL;
+    assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_OK);
+    qc=mef_bias_result_measurements(result); assert(qc && qc->count==5);
+    assert(qc->frames[0].active_raw.valid_pixels==20 && qc->frames[0].active_raw.bpm_excluded==4);
+    assert(qc->frames[0].prescan.bpm_excluded==0 && !qc->frames[0].prescan.bpm_supplied);
+    assert(qc->frames[0].prescan.valid_pixels==8 && !qc->frames[0].overscan.bpm_supplied);
+    /* Raw differences per active row are -3,-4,-5,-6 (five good columns each).
+     * Independent sample variance: sum= -90, squares=430, N=20. */
+    sum=-90; squares=430; expected=sqrt((squares-sum*sum/20)/19)/sqrt(2.0);
+    assert(fabs(qc->ron_stdev_adu-expected)<1e-10);
+    assert(fabs(qc->ron_mad_adu-1.4826/sqrt(2.0))<1e-10);
+    assert(qc->raw_difference.bpm_excluded==4 && qc->ron_stdev_available);
+    assert(qc->master.valid_pixels==20 && qc->master_unmasked.valid_pixels==24);
+    assert(mef_bias_result_qc(result)->accepted_frames==5);
+    assert(qc->high_offset_available && qc->high_offset_count==4 && qc->high_offset_flags->data[0]==1);
+    corrected_mean=qc->frames[4].active_corrected.mean;
+    assert(fabs(corrected_mean-(24-2500))<1e-10);
+    assert(qc->frames[4].active_raw.mean>corrected_mean+100);
+    mef_context_destroy(context); context=NULL; /* Result owns QC, not borrowed data. */
+    assert(qc->frames[4].active_corrected.mean==corrected_mean);
+    mef_bias_result_destroy(result);
+    /* Result allocator failure at every observed new-service allocation: no
+     * partial owner and no leak, including the owned per-frame QC allocation. */
+    memset(&state,0,sizeof(state));
+    allocator.user=&state; allocator.allocate=allocate; allocator.release=release;
+    context=context_for(legacy,5,1,&allocator); base=state.owners;
+    state.calls=0; result=NULL;
+    assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_OK);
+    calls=state.calls; mef_bias_result_destroy(result); assert(state.owners==base);
+    for(failure=1;failure<=calls;++failure) {
+        state.calls=0; state.fail_at=failure; result=NULL;
+        assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_ERR_MEMORY);
+        assert(result==NULL && state.owners==base);
+    }
+    state.fail_at=0; mef_context_destroy(context); assert(state.owners==0);
+    /* Omitted BPM path still works, and the unmasked scan outlier remains
+     * observable; optional MAD/pair are explicitly unavailable. */
+    options.bpm=NULL; options.with_mad=0; options.ron_pair_set=0;
+    context=context_for(legacy,5,0,NULL); result=NULL;
+    assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_OK);
+    qc=mef_bias_result_measurements(result);
+    assert(!qc->ron_stdev_available && !qc->master.mad_available && !qc->high_offset_available);
+    assert(fabs(qc->frames[4].active_corrected.mean-(23.5+11000.0/6-2500))<1e-4);
+    assert(mef_bias_result_qc(result)->accepted_frames==4 && !mef_bias_result_qc(result)->accepted[4]);
+    mef_bias_result_destroy(result); mef_context_destroy(context);
+    /* Reject contradictory metadata, malformed geometry, exhausted active samples,
+     * and aliased/out-of-range raw-pair selections without transferring output. */
+    options.bpm=map; options.with_mad=1; options.ron_pair_set=1;
+    for(mode=0;mode<5;++mode) {
+        context=context_for(legacy,5,mode==0?0:1,NULL); result=NULL;
+        if(mode==1) options.ron_second=0;
+        if(mode==2) options.ron_second=5;
+        if(mode==3) { options.ron_second=1; map->lx=9; }
+        if(mode==4) { map->lx=10; for(x=0;x<60;++x) map->data[x]=0; }
+        assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)!=MEF_OK && !result);
+        mef_context_destroy(context);
+    }
+    for(i=0;i<5;++i) {
+        assert(!memcmp(saved[i],frames[i]->data,sizeof(saved[i]))); image_del(frames[i]);
+    }
+    pixelmap_del(map);
+    puts("PASS: opt-in bias active-only BPM/rejection/stage QC, raw RON, MAD, lifetimes, metadata and failure controls");
+}
 int main(int argc, char **argv)
 {
     mef_bb *legacy;
@@ -326,6 +430,7 @@ int main(int argc, char **argv)
     detector_index = legacy->nchips - 1; /* Deliberately differs from physical HDU 2. */
     for (profile = 0; profile < 8; ++profile) equivalence(legacy, detector_index, profile);
     controls(legacy, detector_index);
+    measurements(legacy, detector_index);
     mef_bias_result_destroy(NULL); mef_bb_del(legacy);
     puts("PASS: bias service contract; legacy-compatible ADU signal, variance unavailable");
     return 0;

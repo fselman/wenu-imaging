@@ -20,6 +20,8 @@
  -----------------------------------------------------------------------------*/
 
 #include <math.h>
+#include <limits.h>
+#include <string.h>
 #include "image_stats.h"
 #include "photometry.h"
 #include "dstats.h"
@@ -229,6 +231,7 @@ image_stats * image_getstats_opts(
 	 */
 
 	ret_stats = calloc(1, sizeof(image_stats));
+    if (ret_stats == NULL) return NULL;
 
     min_flag=0 ;
 	max_flag=0 ;
@@ -307,6 +310,7 @@ image_stats * image_getstats_opts(
 	/* Now compute median */
 	/* Allocate a new array of pixels with only valid pixels */
 	pixbuf = malloc(bufsz * sizeof(pixelvalue));
+    if (pixbuf == NULL) { free(ret_stats); return NULL; }
 
 	/* Store valid pixels in pixbuf array */
 	npix=0 ;
@@ -1591,4 +1595,116 @@ double image_compute_entropy(image_t * im)
 	}
 	histogram_del(hist);
 	return -entropy ;
+}
+
+/* Checked composition around the existing masked Eclipse estimator. */
+static int sample_map_valid(const image_t *image, const pixelmap *map)
+{
+    size_t i, n;
+    if (map == NULL) return 1;
+    if (map->data == NULL || map->lx != image->lx || map->ly != image->ly) return 0;
+    n = (size_t)image->lx * (size_t)image->ly;
+    for (i = 0; i < n; ++i)
+        if (map->data[i] != PIXELMAP_0 && map->data[i] != PIXELMAP_1) return 0;
+    return 1;
+}
+int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
+    const int *zone, int with_mad, image_sample_stats *out)
+{
+    image_sample_stats pending;
+    pixelmap *selected;
+    image_stats *stats;
+    double *values, center, mad;
+    size_t pos, index;
+    int x, y;
+    if (image == NULL || image->data == NULL || out == NULL || image->lx < 1 || image->ly < 1 ||
+        image->lx > INT_MAX / image->ly ||
+        (size_t)image->lx * (size_t)image->ly > (size_t)-1 / sizeof(double) || (with_mad != 0 && with_mad != 1) ||
+        !sample_map_valid(image, map)) return -1;
+    memset(&pending, 0, sizeof(pending));
+    pending.zone[0] = pending.zone[2] = 1;
+    pending.zone[1] = image->lx; pending.zone[3] = image->ly;
+    if (zone != NULL) memcpy(pending.zone, zone, sizeof(pending.zone));
+    if (pending.zone[0] < 1 || pending.zone[2] < 1 || pending.zone[1] > image->lx ||
+        pending.zone[3] > image->ly || pending.zone[0] > pending.zone[1] ||
+        pending.zone[2] > pending.zone[3]) return -1;
+    pending.bpm_supplied = map != NULL;
+    selected = pixelmap_new(image->lx, image->ly);
+    if (selected == NULL) return -1;
+    for (y = pending.zone[2]-1; y < pending.zone[3]; ++y) {
+        for (x = pending.zone[0]-1; x < pending.zone[1]; ++x) {
+            pos = (size_t)y * (size_t)image->lx + (size_t)x;
+            ++pending.region_pixels;
+            if (map != NULL && map->data[pos] == PIXELMAP_0) {
+                selected->data[pos] = PIXELMAP_0; ++pending.bpm_excluded;
+            } else if (!isfinite(image->data[pos])) {
+                selected->data[pos] = PIXELMAP_0; ++pending.nonfinite_excluded;
+            } else ++pending.valid_pixels;
+        }
+    }
+    if (pending.valid_pixels == 0) {
+        pixelmap_del(selected); *out = pending; return 0;
+    }
+    pixelmap_updatecount(selected);
+    stats = image_getstats_opts((image_t *)image, selected, NULL, pending.zone);
+    if (stats == NULL) { pixelmap_del(selected); return -1; }
+    pending.mean = stats->avg_pix;
+    pending.stdev_available = pending.valid_pixels > 1;
+    pending.stdev = pending.stdev_available ? stats->stdev : 0.0;
+    free(stats);
+    values = malloc(pending.valid_pixels * sizeof(double));
+    if (values == NULL) { pixelmap_del(selected); return -1; }
+    index = 0;
+    for (y = pending.zone[2]-1; y < pending.zone[3]; ++y)
+        for (x = pending.zone[0]-1; x < pending.zone[1]; ++x) {
+            pos = (size_t)y * (size_t)image->lx + (size_t)x;
+            if (selected->data[pos] == PIXELMAP_1) values[index++] = image->data[pos];
+        }
+    pixelmap_del(selected);
+    if (double_median_mad_checked(values, (int)index, with_mad, &center, &mad) != 0) {
+        free(values); return -1;
+    }
+    free(values);
+    if (!isfinite(pending.mean) || !isfinite(pending.stdev)) return -1;
+    pending.median = center; pending.level_available = 1;
+    pending.mad_available = with_mad;
+    pending.mad = with_mad ? mad : 0.0;
+    *out = pending;
+    return 0;
+}
+int image_pair_stats_checked(const image_t *first, const image_t *second,
+    const pixelmap *first_map, const pixelmap *second_map, const int *zone,
+    int with_mad, image_sample_stats *out)
+{
+    image_sample_stats pending;
+    image_t *difference;
+    pixelmap *combined;
+    size_t i, n;
+    int status;
+    if (first == NULL || second == NULL || first->data == NULL || second->data == NULL ||
+        first->lx < 1 || first->ly < 1 || first->lx > INT_MAX / first->ly ||
+        first->lx != second->lx || first->ly != second->ly || out == NULL ||
+        !sample_map_valid(first, first_map) || !sample_map_valid(second, second_map)) return -1;
+    combined = NULL;
+    if (first_map != NULL || second_map != NULL) {
+        combined = first_map != NULL ? pixelmap_copy((pixelmap *)first_map) :
+            pixelmap_copy((pixelmap *)second_map);
+        if (combined == NULL) return -1;
+        if (first_map != NULL && second_map != NULL &&
+            pixelmap_binary_AND(combined, (pixelmap *)second_map) != 0) {
+            pixelmap_del(combined); return -1;
+        }
+    }
+    if (combined != NULL) pixelmap_updatecount(combined);
+    difference = image_sub((image_t *)first, (image_t *)second);
+    if (difference == NULL) { pixelmap_del(combined); return -1; }
+    /* A nonfinite operand is never made valid by arithmetic (including inf-inf).
+     * This check also keeps count semantics independent of nonfinite sign. */
+    n = (size_t)first->lx * (size_t)first->ly;
+    for (i = 0; i < n; ++i)
+        if (!isfinite(first->data[i]) || !isfinite(second->data[i])) difference->data[i] = NAN;
+    status = image_getstats_masked_checked(difference, combined, zone, with_mad, &pending);
+    image_del(difference); pixelmap_del(combined);
+    if (status == 0) *out = pending;
+    return status;
 }

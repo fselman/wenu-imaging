@@ -82,7 +82,8 @@ def main():
                   ('ASAN_OPTIONS', 'UBSAN_OPTIONS', 'LSAN_OPTIONS')},
               'scope': 'synthetic ADU bias service and legacy file/list/FITS bridge; no astronomical-data reduction, recipe launch or installation; variance unavailable'}
     try:
-        # Compare exact frozen legacy arithmetic/QC, then failure/ownership controls.
+        # Compare frozen legacy arithmetic/QC, then BPM/MAD/raw-RON known answers
+        # and metadata/geometry/allocation/ownership failure controls.
         for instrument in ('omegacam', 'wfi'):
             paf = root / 'mefpp2/ins/mef/config' / (instrument + '.paf')
             argv = [str(probe), str(paf), str(fixture_directory)]

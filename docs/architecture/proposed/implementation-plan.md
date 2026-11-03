@@ -1,5 +1,16 @@
 # mefpp refactor implementation plan — proposal
 
+2 November owner clarification and first M5 candidate: current tests use C17 only
+on the Intel Mac, without duplicate C90 or Chapman runs. Consider Chapman only
+for individual workloads exceeding Mac memory. Preserve C90-compatible source;
+source preparation/GitHub delivery remain allowed. Fernando explicitly requires
+a reusable template subroutine: `mef_operation_run` now supplies shared validate,
+load, calculate, publish and cleanup orchestration, with bias as its first concrete
+adapter. The opt-in one-detector PAF/TOML file-to-product candidate is prepared;
+actual Mac C17 checks remain pending. No installation, observation processing,
+merge or cleanup. Earlier paired-language/host statements are historical where
+superseded. See the current M5 bias-template record for scope and limits.
+
 1 November owner-comment revision: architecture review version 3 incorporates
 standalone TOML use within an ASDF environment without a native ASDF dependency;
 immutable input files with no deletion/staging copies and disk writes only for
@@ -919,3 +930,4 @@ Represent successive calibration/product versions with stopping criteria, maximu
 - Keep required C90/C17 compatibility checks appropriate to changed code. Do not add language/library upgrades by implication.
 - Batch work respects actual CPU/memory allocation and niceness policy. Interactive notebooks remain normal priority.
 - No dates or speedup claims are assigned before implementation scope and representative measurements exist.
+

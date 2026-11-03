@@ -1,5 +1,47 @@
 # Selected project tools — Mac and shared Chapman installations
 
+2 November requested Chapman gate COMPLETE at
+4417d7d159d08afcff2fbb8518fc90c3f4c84e29. Owner-reviewed
+chapman-m5-asdf16-resume-U4vTGDyf reports all three ASDF1.6.0 C/Python
+interchange controls passed; ten QC controls and installed libasdf0.3.0 reused
+from verified449220c evidence. C17 native_operation_template/native_bias_files/
+native_layout/native_bias_service/native_explicit_paths all5/5 pass (40.20s).
+Complete private normal runtime install has9 manifest payload files, all
+hash/installed-engine/CLI checks passed. Six outer and three native preservation
+checks passed; production engine/packages/config and retained prefixes unchanged.
+Keep mefpp_m5 as opt-in build executable. #219 nested insertion and #221 optional
+Float16 header limitations remain open; qualified consumer workarounds are
+required, not upstream repairs. No unchanged test replay, new host/C90 matrix,
+scientific QC acceptance, merge/cleanup or production activation follows.
+Next review remains numerical QC definitions/native-to-ASDF handoff.
+
+2 November owner explicitly authorizes Chapman qualification before further
+bias/QC work because subsequent work depends on ASDF standard/libraries. This
+supersedes the earlier no-Chapman-replay boundary for this one representative
+Chapman4 increment only; use C17, not a C90/host matrix. Actual target is clean
+candidate feat/m5-bias-template-20261102 after main fast-forward to47123eed.
+Retained Python ASDF6.0.0/asdf-standard1.5.0/NumPy1.26.4/Astropy6.1.7 is reused.
+Selected GCC10.2.1 and CMake/CTest3.29.6 stay unchanged. External libasdf0.3.0
+is planned/installed in a new private prefix under actual CentOS7/glibc2.17;
+never fake platform limits. Follow
+[the Chapman gate](m5-asdf-chapman-qualification-2026-11-02.md).
+The gate runs ten shared QC controls, three C/Python interchange controls,
+five native C17 contracts and complete private normal-runtime install/hash/CLI
+checks. Bias adapter remains opt-in in its build, not normal installed payload.
+Two agent guard controls and syntax pass; actual Chapman execution is pending.
+No production activation, observation processing, merge or cleanup.
+
+2 November owner clarification and first M5 candidate: current tests use C17 only
+on the Intel Mac, without duplicate C90 or Chapman runs. Consider Chapman only
+for individual workloads exceeding Mac memory. Preserve C90-compatible source;
+source preparation/GitHub delivery remain allowed. Fernando explicitly requires
+a reusable template subroutine: `mef_operation_run` now supplies shared validate,
+load, calculate, publish and cleanup orchestration, with bias as its first concrete
+adapter. The opt-in one-detector PAF/TOML file-to-product candidate is prepared;
+actual Mac C17 checks remain pending. No installation, observation processing,
+merge or cleanup. Earlier paired-language/host statements are historical where
+superseded. See the current M5 bias-template record for scope and limits.
+
 Owner instruction, 29 October 2026: always select the tools already chosen for
 wenu-imaging. This file is the canonical selection record. Read it before
 preparing host commands, native builds, tests, installation or dependency work.
@@ -183,3 +225,4 @@ upgrading external astronomy programs.
   passed at e5c3aba6e6b35530f528eb4942e54bd8e3b47884; see the
   [paired M1 receipt](m1-config-paired-results-2026-10-29.md). No recheck of
   the shared tools or duplicate Chapman3 execution is needed.
+

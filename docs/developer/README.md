@@ -1,5 +1,17 @@
 # Developer documentation
 
+- [Private libasdf / ASDF 1.6 qualification](libasdf16-private-qualification-2026-11-02.md):
+  shared QC Mac 10/10 passed; corrected native provisioning retry and Chapman pending.
+
+[Shared QC/ASDF records and recipe creation path](shared-qc-asdf-2026-11-02.md):
+opt-in common schema/builder/writer, bias adapter and monitor traversal; Mac metadata checks 10/10 passed.
+
+[Reusable native operation recipe template](native-operation-recipe-template.md):
+bias lessons on mapping, header construction, QC review and applicable acceptance cases.
+
+2 November: [M5 reusable operation template and first bias adapter](m5-bias-template-2026-11-02.md).
+Opt-in one-detector PAF/TOML candidate; Mac C17 checks pending, no install/activation.
+
 1 November owner requests discussion and a source-grounded architecture/roadmap
 review before M5 implementation. See [the current/target architecture review](mefpp-architecture-review-2026-11-01.md).
 It records dual individual/full-recipe invocation, configurable CMDP/SMDP creation
@@ -587,3 +599,4 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
 
 - [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
+

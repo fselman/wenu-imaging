@@ -39,6 +39,7 @@ pycavi_setup = "pycavi.pycavi_setup:main"
 pycavi_setastro = "pycavi.pycavi_setastro:main"
 [project.optional-dependencies]
 notebooks = ["notebook>=6,<8", "ipykernel>=6,<7"]
+qc = ["asdf==6.0.0", "asdf-standard==1.5.0"]
 
 [tool.setuptools]
 package-dir = {"" = "Pycavi2"}
@@ -46,4 +47,5 @@ packages = ["pycavi", "pycavi.pycavi", "pycavi.papi", "pycavi.config", "pycavi.d
 include-package-data = true
 
 [tool.setuptools.package-data]
-pycavi = ["config/*.cfg", "config/*.paf", "data/*.csv", "data/0readme", "notebooks/*.ipynb"]
+pycavi = ["config/*.cfg", "config/*.paf", "config/qc-schema-*.json", "data/*.csv", "data/0readme", "notebooks/*.ipynb"]
+

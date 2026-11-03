@@ -102,6 +102,7 @@ image_t * image_sub(
  
     /* Allocations  */
     image_out = image_new(image1->lx, image1->ly) ;
+    if (image_out == NULL) return NULL;
  
     /* Subtract two images */
 	p1 = image1->data ;
@@ -1454,4 +1455,3 @@ image_t * image_collapse_median(
 	}
 	return collapsed ;
 }
-

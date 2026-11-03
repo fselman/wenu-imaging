@@ -48,7 +48,9 @@ def prepare(work, repo):
                 'PI-COI':'F1','RA':0.,'DEC':0.,'UTC':0.,'RADECSYS':'ICRS',
                 'ESO DPR CATG':'SCIENCE' if kind=='science' else 'CALIB','ESO DPR TYPE':kind.upper(),
                 'ESO DPR TECH':'IMAGE','ESO OBS PROG ID':'F1','ESO OBS ID':1,
-                'ESO INS FILT1 NAME':'S2','ESO DET WIN1 BINX':1,'ESO DET WIN1 BINY':1}.items():header[k]=v
+                'ESO INS FILT1 NAME':'S2','ESO DET WIN1 BINX':1,'ESO DET WIN1 BINY':1}.items():
+                # Explicit ESO hierarchy: identical card bytes, without implicit-conversion warnings.
+                header["HIERARCH "+k if k.startswith("ESO ") else k]=v
             hdus=[fits.PrimaryHDU(header=header)]
             for xt,response in ((1,1.),(2,2.)):
                 data=np.full((9,18),10.,np.float32)

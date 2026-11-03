@@ -1,5 +1,157 @@
 # wenu-imaging roadmap
 
+## Finish bias first, then create BPM — 2 November 2026
+
+Owner clarification: bias is the only new recipe implemented. The new BPM recipe
+is still TBD; it must follow the template after bias completion. Do not treat
+other new recipes or a two-pass bias/BPM workflow as already implemented.
+
+Actual Mac eeacca3 qualification passed6/6 C17/native-ASDF contracts in22.31s,
+retained mac-bpm-asdf-TGJPe5t1, with installed/checkout/source/QC controls preserved.
+Active-only detector BPM policy is qualified; electronic scan BPM is not
+applicable. Existing scan rejection remains independent of detector masks.
+
+The final bias completion command now chains the existing native operation and
+shared ASDF writer, verifies frozen references and reports success only for the
+whole operation. Native source and C17 binaries are unchanged. Six agent completion
+cases and seven reuse guards pass; the targeted Mac completion gate remains
+pending. Reuse verified eeacca3 native evidence/binary; do not rebuild or replay
+the six unchanged contracts. See [bias completion](bias-recipe-completion-2026-11-02.md).
+After that gate, continue the new BPM contract/source review following the same
+template. No unreviewed estimator/threshold, new BPM generation, two-pass workflow,
+production activation, merge or installation is part of current bias closure.
+
+2 November owner QC decisions and reuse policy: RON must use two RAW bias
+frames, with NO overscan correction before subtraction, to avoid correction-
+induced correlations. Keep ADU units and explicit origins/stage/region. Approved
+QC stages: active area before correction, after overscan/trimming, and master.
+Approved estimators: mean+median, sample stdev (N-1), 1.4826*MAD, valid/excluded
+counts and no implicit clipping. High-offset master pixels use configurable
+k=5 initially; save threshold/count/locations without automatic masking.
+Before any new numerical implementation, inspect existing Eclipse routines;
+reuse them, and announce any genuinely needed addition beforehand. New
+general-purpose routines belong in Eclipse and follow its existing API,
+allocation/error/docs/test conventions and maths-module scaffolding. Never
+duplicate a suitable existing routine. Audit at07d2733 reviewed49 math/iproc
+sources: raw difference/sample stdev/medians already exist; sampled-window RON
+also exists but differs from full-region stdev. image_median_stat computes MEAN
+absolute deviation, not MAD. Only a general checked MAD helper is proposed,
+not implemented; see the bias-QC Eclipse reuse review. No native/ASDF source or
+scientific processing changes accompany this decision/audit record.
+
+2 November requested Chapman gate COMPLETE at
+4417d7d159d08afcff2fbb8518fc90c3f4c84e29. Owner-reviewed
+chapman-m5-asdf16-resume-U4vTGDyf reports all three ASDF1.6.0 C/Python
+interchange controls passed; ten QC controls and installed libasdf0.3.0 reused
+from verified449220c evidence. C17 native_operation_template/native_bias_files/
+native_layout/native_bias_service/native_explicit_paths all5/5 pass (40.20s).
+Complete private normal runtime install has9 manifest payload files, all
+hash/installed-engine/CLI checks passed. Six outer and three native preservation
+checks passed; production engine/packages/config and retained prefixes unchanged.
+Keep mefpp_m5 as opt-in build executable. #219 nested insertion and #221 optional
+Float16 header limitations remain open; qualified consumer workarounds are
+required, not upstream repairs. No unchanged test replay, new host/C90 matrix,
+scientific QC acceptance, merge/cleanup or production activation follows.
+Next review remains numerical QC definitions/native-to-ASDF handoff.
+
+2 November Chapman progress/correction #221: at449220c, retained
+chapman-m5-asdf16-retry-ZES69RYi, actual Conda/platform/solve/install/package
+inventory and all ten shared QC controls passed under real glibc2.17.
+GCC10.2.1 then rejected optional _Float16 declaration in packaged libasdf0.3
+headers. All six preservation checks passed; no interchange/native install ran.
+Test-only asdf_probe_compat.h loads config then omits the unused optional
+Float16 declaration only with an explicit Chapman consumer flag. No installed
+header/library/compiler change or public structure/numeric conversion is made.
+GCC13 C17 probe syntax both modes and ndarray layout comparison pass; synthetic
+reuse guard passes. GCC10 runtime remains pending. Retry --reuse-run verifies
+old reports/package build/QC source identity and resumes without Conda or QC
+replay. Keep upstream header limitation #221 and nested insertion #219 open.
+No production activation, merge, cleanup, C90 or second-host matrix.
+
+2 November Chapman runner correction #220: first attempt at59cb940,
+chapman-m5-asdf16-wEY4w9AQ, failed on unsupported --no-plugins before dependency
+solve/install or functional tests. All five preservation checks passed.
+Do not upgrade Conda or infer ASDF/glibc incompatibility from this CLI error.
+Corrected runner records Conda version and global/create help, uses only
+advertised plugin/solver flags and permits classic-only legacy releases.
+Retain real linux-64/glibc2.17 checks and every failed attempt; use a fresh retry.
+Five agent guard/capability tests pass; actual target qualification remains
+pending. No production activation, engine change, merge or cleanup.
+
+2 November owner explicitly authorizes Chapman qualification before further
+bias/QC work because subsequent work depends on ASDF standard/libraries. This
+supersedes the earlier no-Chapman-replay boundary for this one representative
+Chapman4 increment only; use C17, not a C90/host matrix. Actual target is clean
+candidate feat/m5-bias-template-20261102 after main fast-forward to47123eed.
+Retained Python ASDF6.0.0/asdf-standard1.5.0/NumPy1.26.4/Astropy6.1.7 is reused.
+Selected GCC10.2.1 and CMake/CTest3.29.6 stay unchanged. External libasdf0.3.0
+is planned/installed in a new private prefix under actual CentOS7/glibc2.17;
+never fake platform limits. Follow
+[the Chapman gate](m5-asdf-chapman-qualification-2026-11-02.md).
+The gate runs ten shared QC controls, three C/Python interchange controls,
+five native C17 contracts and complete private normal-runtime install/hash/CLI
+checks. Bias adapter remains opt-in in its build, not normal installed payload.
+Two agent guard controls and syntax pass; actual Chapman execution is pending.
+No production activation, observation processing, merge or cleanup.
+
+2 November external ASDF Mac qualification COMPLETE at
+6395745dd3e55f90c63ae90f28238eae436c6468. Retained
+mac-asdf16-mapping-DmvnvXZJ reports all three C17/Python interchange controls
+passed: metadata/null/float64, Python uncompressed/zlib arrays, shared-QC
+content/frozen links. Standard1.6.0; external libasdf0.3.0; Python asdf6.0.0,
+asdf-standard1.5.0, NumPy1.26.4. Ten earlier QC contracts reused after exact
+source/evidence checks. No network attempts or dependency provisioning in retry.
+Retained prefix, checkout, installed files and exported source preserved.
+This is bounded synthetic interchange, not general ASDF conformance, numerical
+QC/scientific validation or production integration. Keep upstream nested-path
+limitation #219 open; direct mapping workaround is qualified in this consumer.
+External library remains selected; bundling deferred. Do not replay unchanged
+Mac tests or start Chapman/C90/bias work automatically. Review native QC
+definitions/handoff and owner acceptance next; no merge/cleanup or activation.
+
+2 November #219 diagnostic receipt: actual Intel Mac mac-asdf-nested-Kll2GMfs
+isolates libasdf 0.3.0 nested-sibling insertion failure (code5, missing readback).
+Flat writes and direct mapping construction/attachment/get all return0 and
+read back12.5. Prefix/checkout preservation passed. Use the verified mapping
+API in the synthetic interchange consumer, preserving exact metadata/array/QC
+checks. External library is unchanged; its limitation remains open. Agent GCC
+C17 syntax check against pinned public headers passes (synthetic config only,
+no linking/runtime claim). Reuse ten QC controls and installed external prefix;
+full three-control Mac interchange remains pending. No production activation,
+upstream patch/upgrade, C90/bias/Chapman replay, merge or cleanup.
+
+2 November external ASDF runtime receipt (#219): at 33f16555, actual Mac
+mac-asdf16-external-dFpUmHsz compiled/linked/started the C17 probe successfully.
+The first write stopped adding measurement/value after measurement/unit succeeded;
+all ten unchanged QC controls were reused and outer preservation passed.
+Do not call native interchange qualified. Pinned upstream source suggests a
+nested-parent insertion defect, not yet isolated on target. Run the bounded
+flat/nested/direct-mapping diagnostic before choosing a workaround or library
+change. Keep external libasdf, all evidence and installed engines unchanged.
+The diagnostic's Python syntax is checked; its C/API execution is target-pending.
+
+2 November owner decision: use external libasdf for now; defer bundling into
+mefpp (#218). This supersedes the intervening bundling proposal. External native
+libasdf and Python asdf remain distinct dependencies. Retry #217 uses explicit
+prefix include/library/rpath and requests pkgconf system paths, reusing the
+installed 0.3.0 trial in mac-asdf16-streams-o8KPDcUm after checking its revision,
+passed preservation/provisioning and package metadata. Fingerprint the retained
+prefix before/after; no repeated Conda solve/install or ten unchanged QC tests.
+Three synthetic prefix regression tests pass; actual Mac C17/Python interchange
+remains pending. Preserve all attempts, working engines and checkout; no merge,
+cleanup, production activation or Chapman run in this increment.
+
+2 November owner clarification and first M5 candidate: current tests use C17 only
+on the Intel Mac, without duplicate C90 or Chapman runs. Consider Chapman only
+for individual workloads exceeding Mac memory. Preserve C90-compatible source;
+source preparation/GitHub delivery remain allowed. Fernando explicitly requires
+a reusable template subroutine: `mef_operation_run` now supplies shared validate,
+load, calculate, publish and cleanup orchestration, with bias as its first concrete
+adapter. The opt-in one-detector PAF/TOML file-to-product candidate is prepared;
+actual Mac C17 checks remain pending. No installation, observation processing,
+merge or cleanup. Earlier paired-language/host statements are historical where
+superseded. See the current M5 bias-template record for scope and limits.
+
 1 November owner-comment revision: architecture review version 3 incorporates
 standalone TOML use within an ASDF environment without a native ASDF dependency;
 immutable input files with no deletion/staging copies and disk writes only for

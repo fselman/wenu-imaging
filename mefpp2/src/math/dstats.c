@@ -259,5 +259,42 @@ double_qsort(double * arr, int n)
 #undef DBL_SWAP
 }
 
-
-
+/* Averaged-middle convention for the new checked path only. Historical
+ * double_median and median_pixelvalue keep their existing conventions. */
+static double checked_middle(double *values, int n)
+{
+    double high, low;
+    high = double_kth_smallest(values, n, n / 2);
+    if (n & 1) return high;
+    low = double_kth_smallest(values, n, n / 2 - 1);
+    return 0.5 * low + 0.5 * high;
+}
+int double_median_mad_checked(const double *values, int n, int with_mad,
+    double *median, double *mad)
+{
+    double *copy, center, deviation;
+    int i;
+    if (values == NULL || median == NULL || n < 1 ||
+        (with_mad != 0 && with_mad != 1) || (with_mad && mad == NULL) ||
+        (with_mad && median == mad) || (size_t)n > (size_t)-1 / sizeof(double)) return -1;
+    copy = malloc((size_t)n * sizeof(double));
+    if (copy == NULL) return -1;
+    for (i = 0; i < n; ++i) {
+        if (!isfinite(values[i])) { free(copy); return -1; }
+        copy[i] = values[i];
+    }
+    center = checked_middle(copy, n);
+    deviation = 0.0;
+    if (with_mad) {
+        for (i = 0; i < n; ++i) {
+            copy[i] = fabs(values[i] - center);
+            if (!isfinite(copy[i])) { free(copy); return -1; }
+        }
+        deviation = checked_middle(copy, n);
+    }
+    free(copy);
+    if (!isfinite(center) || !isfinite(deviation)) return -1;
+    *median = center;
+    if (with_mad) *mad = deviation;
+    return 0;
+}

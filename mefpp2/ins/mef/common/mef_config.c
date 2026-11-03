@@ -293,6 +293,46 @@ mef_status mef_config_dump(const mef_config *config, FILE *stream)
 }
 
 /* Copy only the settings required by the bias operation. */
+/* Selected-detector owned bridge for existing bias header helpers. Do not
+ * construct a PAF or reload settings when the source is a TOML snapshot. */
+#include "mef_bias_files.h"
+mef_status mef_config_bias_header_context(const mef_config *config,
+    size_t detector, mef_bb **out)
+{
+    mef_bb *bb;
+    const mef_detector_config *d;
+    if (config == NULL || out == NULL || *out != NULL ||
+        detector >= (size_t)config->nchips) return MEF_ERR_CONFIG;
+    bb = calloc(1, sizeof(*bb));
+    if (bb == NULL) return MEF_ERR_MEMORY;
+#define MEF_STRING(member, key) \
+    bb->member = strdup(config->member); \
+    if (bb->member == NULL) goto fail;
+#define MEF_INT(member, key) bb->member = config->member;
+#define MEF_FLOAT(member, key) bb->member = config->member;
+#define MEF_DOUBLE(member, key) bb->member = config->member;
+#include "mef_config_fields.def"
+#undef MEF_STRING
+#undef MEF_INT
+#undef MEF_FLOAT
+#undef MEF_DOUBLE
+    bb->nchips = bb->nxts = bb->xtnum = 1;
+    bb->ccd = calloc(1, sizeof(*bb->ccd));
+    if (bb->ccd == NULL) goto fail;
+    d = config->detectors + detector;
+    memcpy(bb->ccd->prescan_x, d->prescan_x, sizeof(d->prescan_x));
+    memcpy(bb->ccd->overscan_x, d->overscan_x, sizeof(d->overscan_x));
+    memcpy(bb->ccd->trimreg, d->trimreg, sizeof(d->trimreg));
+    bb->ccd->ron = d->ron; bb->ccd->gain = d->gain;
+    bb->ccd->crval1 = d->crval1; bb->ccd->crval2 = d->crval2;
+    bb->ccd->crpix1 = d->crpix1; bb->ccd->crpix2 = d->crpix2;
+    *out = bb;
+    return MEF_OK;
+fail:
+    mef_bb_del(bb);
+    return MEF_ERR_MEMORY;
+}
+
 #include "mef_bias_settings.h"
 mef_status mef_config_bias_settings(const mef_config *config, size_t detector,
     mef_bias_settings *out)
@@ -311,3 +351,4 @@ mef_status mef_config_bias_settings(const mef_config *config, size_t detector,
     out->kappa = config->bias_kappa1;
     return MEF_OK;
 }
+

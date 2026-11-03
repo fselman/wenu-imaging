@@ -54,6 +54,9 @@ typedef struct _mef_ccd_ {
 } mef_ccd ;
 
 typedef struct _mef_bb_ {
+    /* Optional borrowed original input list for the M5 header adapter only.
+     * Never freed here; the ordinary recipe leaves this NULL. */
+    const framelist *bias_header_inputs;
 
 	/* origing of data */
 	char		*origin ;
@@ -370,6 +373,9 @@ image_t * mef_overscan_correction(
 		) ;
 */
 image_t * mef_overscan_correction(image_t * mef_frame, mef_bb *, int nplane, char * what);
+/* Same correction with explicit raw-coordinate 1=good mask. No fallback if
+ * a scan row has too few valid samples for the configured rejection. */
+image_t * mef_overscan_correction_masked(image_t *, mef_bb *, int, char *, const pixelmap *);
 int     mef_cube_overscan_correction(cube_t *,mef_bb *, char * what);
 
 int mef_saturation_check(cube_t *, mef_bb *);
@@ -388,6 +394,8 @@ char 		*mef_get_input_filename(mef_bb *bb, char *what);
 char 		*mef_get_output_filename(mef_bb *bb, char *what);
 void        *mef_create_orig_filename(mef_bb *bb, char *what);
 qfits_header	*mef_get_headers_for( char *what, mef_bb * bb, image_t * zImage);
+/* Explicit source HDU; bb->xtnum remains the header/statistics config slot. */
+qfits_header *mef_get_headers_for_hdu(char *, mef_bb *, image_t *, int);
 /* Publication status: 0 complete, -1 failure; caller retains input ownership. */
 int	 	mef_save(mef_bb *bb, image_t *zImage, char *what);
 int	 	mef_hdrpix_dump(image_t *,char *,qfits_header *,int);

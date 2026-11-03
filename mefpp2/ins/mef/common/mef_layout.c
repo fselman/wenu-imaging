@@ -1,6 +1,7 @@
 /* M4 bounded file-layout discovery/binding, reusing qfits/Eclipse (#182). */
 #include "mef_layout.h"
 #include "image_io.h"
+#include "pixelmaps.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -287,6 +288,7 @@ const mef_hdu_layout *mef_layout_hdus(const mef_layout *layout, size_t *count)
     return layout ? layout->hdus : NULL;
 }
 const char *mef_layout_path(const mef_layout *layout) { return layout ? layout->path : NULL; }
+const char *mef_layout_map_path(const mef_layout_map *map) { return map ? map->path : NULL; }
 
 void mef_layout_map_destroy(mef_layout_map *map)
 {
@@ -421,4 +423,33 @@ mef_status mef_layout_load(const mef_layout_map *map, const char *detector_id,
         image_del(image); return failure(MEF_ERR_IO, "Loaded plane/source disagrees with layout", &map->allocator, error);
     }
     *out = image; return MEF_OK;
+}
+
+mef_status mef_layout_load_bpm(const mef_layout_map *map, const char *detector,
+    int good_value, pixelmap **out, mef_error **error)
+{
+    const mef_bound_detector *bound;
+    image_t *image;
+    pixelmap *converted;
+    mef_status status;
+    size_t i, count;
+    if (out == NULL || *out != NULL || (error != NULL && *error != NULL) ||
+        (good_value != 0 && good_value != 1)) return MEF_ERR_INPUT;
+    bound = mef_layout_find(map, detector);
+    if (bound == NULL || (bound->image.bitpix != 8 && bound->image.bitpix != 16 &&
+        bound->image.bitpix != 32))
+        return failure(MEF_ERR_INPUT, "BPM needs an explicitly selected integer image", NULL, error);
+    image = NULL;
+    status = mef_layout_load(map, detector, &image, error);
+    if (status != MEF_OK) return status;
+    count = (size_t)image->lx * (size_t)image->ly;
+    for (i = 0; i < count; ++i) if (image->data[i] != 0 && image->data[i] != 1) {
+        image_del(image);
+        return failure(MEF_ERR_INPUT, "BPM contains nonbinary physical pixels", NULL, error);
+    }
+    converted = image_threshold2pixelmap(image, good_value - 0.5, good_value + 0.5);
+    image_del(image);
+    if (converted == NULL) return failure(MEF_ERR_MEMORY, "Cannot allocate BPM", NULL, error);
+    *out = converted;
+    return MEF_OK;
 }
