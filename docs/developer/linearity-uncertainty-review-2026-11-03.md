@@ -1,8 +1,8 @@
-# Linearity uncertainties: proposed measurement policy — 3 November 2026
+# Linearity uncertainties: agreed measurement policy — 3 November 2026
 
-**For scientific review.** The covariance assembler and FITS adapter are software
+**Owner agreed to all three policy points on 3 November 2026.** The covariance assembler and FITS adapter are software
 qualified on the Mac. A numerical factor is not a measured instrument noise model.
-This note proposes the next measurement/estimation policy; no estimator, noise
+This note records the agreed measurement/propagation policy; no default noise
 distribution, fit range, simulation count or scientific threshold is selected in
 code by publishing it. No real frames have been processed by the new fitter.
 
@@ -61,7 +61,7 @@ reviewed photon-transfer interval. Neither one arbitrary point nor the entire
 possibly nonlinear range is silently selected. Empirical raw variance is not
 automatically the independent component of corrected-signal covariance.
 
-## Proposed propagation after that pass
+## Agreed propagation after that pass
 
 1. Establish a detector/amplifier noise model supported by the measurements.
    Record any pooling, distribution and spatial/row-correlation assumptions.
@@ -117,12 +117,15 @@ acceptance of every pair or a constant-gain assumption over all levels.
 
 ## Review decision and implementation boundary
 
-Recommended policy: **measurement first, empirical signal dependence retained,
+Owner-approved policy: **measurement first, empirical signal dependence retained,
 then conditional model propagation through the real correction/median operations,
-with fixed covariance during the fit**. Agree or amend this policy before adding
-a statistical estimator or default distribution. The measurement pass can reuse
-qualified numerical resources; simulation support requires its own interface and
-known-answer review. No whole-mosaic dense fit, actual-data launch, new correction,
+with fixed covariance during each fit and outer repeated fits to assess weight
+uncertainty**. The owner first approved measurement and estimator propagation,
+then approved the fixed-covariance point after clarification. A specific noise
+distribution, pooling rule, simulation count/seed or threshold is still not chosen.
+The [raw-pair measurement increment](linearity-pair-measurements-2026-11-03.md)
+reuses qualified numerical resources; simulation support still requires its own
+interface and known-answer review. No whole-mosaic dense fit, actual-data launch, new correction,
 product publication, package installation, merge or cleanup follows from this note.
 
 ## Source references
@@ -135,5 +138,6 @@ product publication, package installation, merge or cleanup follows from this no
 - [JCGM 101:2008, BIPM](https://www.bipm.org/en/doi/10.59161/jcgm101-2008): propagation of input probability distributions through a measurement model using Monte Carlo. This is methodological support, not detector-specific validation.
 - [SciPy bootstrap documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.bootstrap.html): resampling a statistic with common indices for paired arrays. This reference does not add a dependency or validate the proposed bias bootstrap.
 
-Sources checked 3 November 2026. The statistical policy above is our proposal,
+Sources checked 3 November 2026. The statistical policy above is Wenu's agreed policy,
 not a claim that ESO/IRAF/BIPM prescribe this particular Wenu implementation.
+

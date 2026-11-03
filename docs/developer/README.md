@@ -13,9 +13,12 @@ preparation and actual Mac 1/1 in 1.05 s total. The
 preparation and actual Mac 4/4 in 3.69 s. The
 [explicit FITS admission adapter](linearity-files-2026-11-03.md) passed focused
 C17 preparation and actual Mac 3/3 in 20.91 s. The
-[uncertainty-estimation policy](linearity-uncertainty-review-2026-11-03.md) is now
-proposed for scientific review. Its measurement and simulation choices are not
-implemented defaults. Complete recipe integration and science acceptance remain later work.
+[uncertainty-estimation policy](linearity-uncertainty-review-2026-11-03.md) is owner-agreed: measurement first, actual-estimator propagation and covariance
+fixed within each fit with outer uncertainty assessment. The
+[raw-pair measurement increment](linearity-pair-measurements-2026-11-03.md) adds
+raw bias/flat measurements by named ROI and optional explicit FITS bias bindings.
+Agent preparation passes; its focused actual Mac gate is pending. No simulation
+model or fit-range default is introduced. Complete recipe integration and science acceptance remain later work.
 
 # Developer documentation
 
@@ -618,5 +621,6 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
 
 - [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
+
 
 

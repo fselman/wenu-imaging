@@ -48,6 +48,15 @@ def fixture(work, kind, case):
         else:
             content = plane(data, 6, 4, extra=extra, amplifier=amp)
         (work/f'flat-{f}.fits').write_bytes(content)
+    if case.startswith('measure'):
+        for f in range(2):
+            data=[]
+            for y in range(4):
+                for x in range(6):
+                    k=(y-1)*4+x-1
+                    pattern=1 if k%4==0 else -1 if k%4==1 else 0
+                    data.append(10+(pattern if f==0 else 0) if 1<=y<=2 and 1<=x<=4 else 500*f+30*y)
+            (work/f'raw-bias-{f}.fits').write_bytes(plane(data, 6, 4, extra=[('EXPTIME','0')]))
     if kind:
         flags = [1, 0, 0, 0, 0, 0, 128, 0]
         values = flags if kind == 1 else [int(v != 0) if kind == 2 else int(v == 0) for v in flags]
@@ -90,6 +99,7 @@ def main():
     print('RETAINED LINEARITY FILE TEST:', work, flush=True)
     cases = [(kind, 'normal') for kind in range(4)] + [(1, case) for case in
              ('missing', 'duplicate', 'amplifier', 'pair_time', 'tolerant', 'hdu', 'readout', 'pair_id', 'registry', 'limit')]
+    cases += [(kind, 'measure') for kind in range(4)] + [(1, case) for case in ('measure_readout', 'measure_limit', 'measure_rows', 'measure_alias')]
     for kind, case in cases:
         directory=work/f'{kind}-{case}'
         fixture(directory, kind, case)
@@ -107,7 +117,7 @@ def main():
         raise RuntimeError('Affected BPM control: '+completed.stdout[-2000:]+completed.stderr[-4000:])
     assert before == {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.glob('*.fits')}
     (directory/'probe.log').write_text(completed.stdout+completed.stderr)
-    print('PASS: 14 FITS cases, source pixel/header preservation and existing BPM metadata/control')
+    print('PASS: 22 FITS cases, source pixel/header preservation and existing BPM metadata/control')
 
 
 if __name__ == '__main__':

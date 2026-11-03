@@ -1,6 +1,6 @@
 #ifndef MEF_LINEARITY_FILES_H
 #define MEF_LINEARITY_FILES_H
-#include "mef_linearity_samples.h"
+#include "mef_linearity_pairs.h"
 #include "mef_layout.h"
 typedef struct {
     const mef_layout_map *map;
@@ -24,11 +24,18 @@ typedef struct {
     const char *exposure_key; /* full qfits keyword spelling */
     int exposure_hdu;
     double pair_time_tolerance; /* seconds, >=0, never exposure rounding */
+    int measure_pairs, pair_with_mad; /* optional RAW measurement table */
+    const mef_layout_map *raw_bias_map[2];
+    const mef_image_ref *raw_bias_reference[2]; /* caller-selected raw biases */
+    size_t max_pair_rows; /* required when measure_pairs; zero otherwise */
     size_t max_loaded_pixels; /* sum of all raw/calibration plane pixels */
 } mef_linearity_files_input;
 typedef struct {
     mef_allocator allocator;
     mef_linearity_sample_result *samples;
+    mef_linearity_pairs_result *pairs; /* NULL when not requested */
+    char *raw_bias_path[2];
+    mef_bound_detector raw_bias_binding[2];
     char **input_paths, *bias_path, *bpm_path;
     char *bias_asset_id, *bpm_asset_id;
     mef_bound_detector *input_binding, bias_binding, bpm_binding;
@@ -48,7 +55,12 @@ typedef struct {
  * frozen by caller; existing M4 source identity/load guards remain in force.
  * Reuse selected M4 loads, then the existing typed sample service. Result owns
  * source path/binding snapshots and samples, outliving input maps/configuration.
- * No uncertainty estimation, fit, product/ASDF publication or installation.
+ * Optional pair measurements require two additional bound RAW bias references,
+ * same readout/geometry, and an explicit row limit. They reuse raw loads before
+ * correction; pair asset/HDU and raw-bias path/binding snapshots are retained.
+ * With measure_pairs=0, new pair options must be zero/NULL. Raw-bias exposure
+ * classification is the caller's responsibility; no positive flat-time rule is
+ * imposed on biases. No uncertainty estimation, fit, publication or installation.
  * Return status; *out starts NULL and failures preserve it. No new reentrancy
  * or dependency-OOM claim. Allocator covers adapter and sample/snapshot owners. */
 mef_status mef_linearity_from_files(const mef_linearity_files_input *,

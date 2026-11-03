@@ -12,6 +12,8 @@ void mef_linearity_files_destroy(mef_linearity_files_result *r)
     if(!r)return;
     mef_allocator a=r->allocator;
     mef_linearity_samples_destroy(r->samples);
+    mef_linearity_pairs_destroy(r->pairs);
+    for(int j=0;j<2;++j)release(&a,r->raw_bias_path[j]);
     if(r->input_paths)for(int i=0;i<r->frames;++i)release(&a,r->input_paths[i]);
     release(&a,r->input_paths);release(&a,r->input_binding);release(&a,r->bias_path);release(&a,r->bpm_path);
     release(&a,r->bias_asset_id);release(&a,r->bpm_asset_id);release(&a,r);
@@ -40,11 +42,15 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
     const mef_allocator *allocator,mef_linearity_files_result **out)
 {
     mef_allocator a={NULL,allocate_default,release_default};mef_status status=MEF_ERR_INPUT;
-    mef_linearity_files_result *r=NULL;image_t **raw=NULL,*bias=NULL;pixelmap *binary=NULL;
+    mef_linearity_files_result *r=NULL;image_t **raw=NULL,*bias=NULL,*raw_bias[2]={NULL,NULL};pixelmap *binary=NULL;
     unsigned char *flags=NULL;mef_linearity_frame *frames=NULL;mef_bias_settings g;
     const mef_bound_detector *first,*cal,*d;size_t total=0;int count,width,height;
     if(!p||!out||*out||(allocator&&(!allocator->allocate||!allocator->release)))return status;
     if(allocator)a=*allocator;
+    if((p->measure_pairs!=0&&p->measure_pairs!=1)||(p->pair_with_mad!=0&&p->pair_with_mad!=1))return status;
+    for(int j=0;j<2;++j)if(p->measure_pairs?
+        (!p->max_pair_rows||!p->raw_bias_map[j]||!ref_valid(p->raw_bias_reference[j])):
+        (p->max_pair_rows||p->pair_with_mad||p->raw_bias_map[j]||p->raw_bias_reference[j]))return status;
     const mef_linearity_sample_input *s=&p->sample;
     if(s->frames<2||s->frames>MAX_IMAGE_NUMBER||s->frames%2||s->raw||s->frame||s->master_bias||s->bpm_flags||
        s->bpm_binary||s->bpm_count||s->samples||!s->configuration||!p->input||!p->bias_map||!ref_valid(p->bias_reference)||
@@ -98,6 +104,21 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
     }
     if(p->bpm_map&&(!strcmp(p->bias_reference->asset_record_id,p->bpm_reference->asset_record_id)||
        (!strcmp(p->bias_reference->resolved_path,p->bpm_reference->resolved_path)&&p->bias_reference->hdu_index==p->bpm_reference->hdu_index)))return status;
+    if(p->measure_pairs)for(int i=0;i<2;++i){
+        const mef_image_ref *ref=p->raw_bias_reference[i];
+        if(!binding_matches(p->raw_bias_map[i],detector,ref,"ADU",s->configuration_detector)||
+           mef_layout_compatible(p->input[0].map,p->raw_bias_map[i],"ADU","ADU",NULL,NULL)!=MEF_OK)return status;
+        d=mef_layout_find(p->raw_bias_map[i],detector);
+        if(d->image.axes[0]!=first->image.axes[0]||d->image.axes[1]!=first->image.axes[1]||
+           d->active_x!=g.trim[0]||d->active_y!=g.trim[2]||d->active_width!=width||d->active_height!=height||
+           (d->image.amplifier[0]&&strcmp(d->image.amplifier,s->identity.amplifier_id))||
+           !add_pixels(d,&total,p->max_loaded_pixels))return status;
+        for(int j=0;j<count;++j)if(!strcmp(ref->asset_record_id,p->input[j].reference.asset_record_id)||
+           (!strcmp(ref->resolved_path,p->input[j].reference.resolved_path)&&ref->hdu_index==p->input[j].reference.hdu_index))return status;
+        const mef_image_ref *other[3]={p->bias_reference,p->bpm_reference,i?p->raw_bias_reference[0]:NULL};
+        for(int j=0;j<3;++j)if(other[j]&&(!strcmp(ref->asset_record_id,other[j]->asset_record_id)||
+           (!strcmp(ref->resolved_path,other[j]->resolved_path)&&ref->hdu_index==other[j]->hdu_index)))return status;
+    }
     status=MEF_ERR_MEMORY;r=a.allocate(a.user,sizeof *r);if(!r)goto done;
     memset(r,0,sizeof *r);r->allocator=a;r->frames=count;r->bpm_supplied=p->bpm_map!=NULL;r->mask_encoding=p->mask_encoding;
     r->exposure_hdu=p->exposure_hdu;r->pair_time_tolerance=p->pair_time_tolerance;r->max_loaded_pixels=p->max_loaded_pixels;
@@ -126,16 +147,34 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
     if(!r->bias_path||!r->bias_asset_id)goto done;
     if(p->bpm_map){r->bpm_path=copy_text(&a,p->bpm_reference->resolved_path);r->bpm_asset_id=copy_text(&a,p->bpm_reference->asset_record_id);
         r->bpm_binding=*mef_layout_find(p->bpm_map,detector);if(!r->bpm_path||!r->bpm_asset_id)goto done;}
+    if(p->measure_pairs)for(int j=0;j<2;++j){
+        r->raw_bias_path[j]=copy_text(&a,p->raw_bias_reference[j]->resolved_path);
+        if(!r->raw_bias_path[j])goto done;
+        r->raw_bias_binding[j]=*mef_layout_find(p->raw_bias_map[j],detector);
+    }
     for(int i=0;i<count;++i){status=mef_layout_load(p->input[i].map,detector,raw+i,NULL);if(status!=MEF_OK)goto done;}
     status=mef_layout_load(p->bias_map,detector,&bias,NULL);if(status!=MEF_OK)goto done;
     if(p->mask_encoding==MEF_LINEARITY_MASK_BINARY){status=mef_layout_load_bpm(p->bpm_map,detector,p->binary_good_value,&binary,NULL);if(status!=MEF_OK)goto done;}
     if(p->mask_encoding==MEF_LINEARITY_MASK_REASON8){int w,h;
         if(pixelmap_flags8_load_checked(r->bpm_path,r->bpm_binding.image.hdu_index,p->mask_registry,&flags,&w,&h)||w!=width||h!=height){status=MEF_ERR_INPUT;goto done;}}
+    if(p->measure_pairs){
+        for(int j=0;j<2;++j){status=mef_layout_load(p->raw_bias_map[j],detector,raw_bias+j,NULL);if(status!=MEF_OK)goto done;}
+        mef_linearity_pairs_input m;memset(&m,0,sizeof m);
+        m.configuration=s->configuration;m.configuration_detector=s->configuration_detector;m.identity=s->identity;
+        m.amplifier_index=s->amplifier_index;m.frames=count;m.rois=s->rois;m.roi=s->roi;
+        m.raw=(const image_t *const *)raw;m.frame=frames;m.with_mad=p->pair_with_mad;
+        m.bpm_flags=flags;m.bpm_count=flags?(size_t)width*(size_t)height:0;m.bpm_binary=binary;
+        m.reject_bits=s->reject_bits;m.saturation_raw=s->saturation_raw;m.pair_time_tolerance=p->pair_time_tolerance;m.max_rows=p->max_pair_rows;
+        for(int j=0;j<2;++j){m.raw_bias[j]=raw_bias[j];m.raw_bias_asset[j]=p->raw_bias_reference[j]->asset_record_id;
+            m.raw_bias_hdu[j]=p->raw_bias_reference[j]->hdu_index;}
+        status=mef_linearity_measure_pairs(&m,&a,&r->pairs);if(status!=MEF_OK)goto done;
+    }
     mef_linearity_sample_input input=*s;input.raw=(const image_t *const *)raw;input.frame=frames;input.master_bias=bias;
     input.bpm_flags=flags;input.bpm_count=flags?(size_t)width*(size_t)height:0;input.bpm_binary=binary;
     status=mef_linearity_samples(&input,&a,&r->samples);if(status!=MEF_OK)goto done;
     *out=r;r=NULL;
 done:
     if(raw){for(int i=0;i<count;++i)image_del(raw[i]);release(&a,raw);}
+    for(int j=0;j<2;++j)image_del(raw_bias[j]);
     image_del(bias);pixelmap_del(binary);if(flags)free(flags);release(&a,frames);mef_linearity_files_destroy(r);return status;
 }

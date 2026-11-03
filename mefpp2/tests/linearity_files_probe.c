@@ -36,6 +36,12 @@ int main(int argc,char **argv)
     mef_image_ref bpm_ref={"bpm:selected","D",bpm_path,0,NULL,0};
     detector_roi rois[2];memset(rois,0,sizeof rois);for(int i=0;i<2;++i){snprintf(rois[i].roi_id,64,"R%d",i);
         rois[i].amplifier=4;rois[i].xmin=i?2:1;rois[i].xmax=i?3:2;rois[i].ymin=1;rois[i].ymax=2;}
+    char rbpath[2][4096];mef_layout_map *rbmap[2]={NULL,NULL};mef_image_ref rbref[2];memset(rbref,0,sizeof rbref);
+    int measuring=!strncmp(mode,"measure",7);
+    if(measuring)for(int j=0;j<2;++j){snprintf(rbpath[j],4096,"%s/raw-bias-%d.fits",argv[2],j);
+        rbmap[j]=bind_file(rbpath[j],0,0,0,!strcmp(mode,"measure_readout")&&j==1);
+        rbref[j].asset_record_id=j?"raw-bias:1":"raw-bias:0";rbref[j].detector_id="D";
+        rbref[j].resolved_path=rbpath[j];}
     mef_linearity_files_input in;memset(&in,0,sizeof in);in.sample.configuration=config;in.sample.frames=4;
     strcpy(in.sample.identity.detector_id,"D");strcpy(in.sample.identity.amplifier_id,"OUT1");in.sample.identity.signal_max=2000;
     in.sample.amplifier_index=4;in.sample.rois=2;in.sample.roi=rois;in.sample.saturation_raw=1000;
@@ -43,6 +49,11 @@ int main(int argc,char **argv)
     in.input=frames;in.bias_map=bias;in.bias_reference=&bias_ref;in.bpm_map=bpm;in.bpm_reference=kind?&bpm_ref:NULL;
     in.mask_encoding=!kind?MEF_LINEARITY_MASK_OMITTED:kind==1?MEF_LINEARITY_MASK_REASON8:MEF_LINEARITY_MASK_BINARY;
     in.binary_good_value=kind==3?1:0;in.mask_registry="WENU_BPM_V1";in.exposure_key="EXPTIME";in.max_loaded_pixels=1000;
+    if(measuring){in.measure_pairs=1;in.pair_with_mad=1;in.max_pair_rows=4;
+        for(int j=0;j<2;++j){in.raw_bias_map[j]=rbmap[j];in.raw_bias_reference[j]=rbref+j;}}
+    if(!strcmp(mode,"measure_limit"))in.max_loaded_pixels=120;
+    if(!strcmp(mode,"measure_rows"))in.max_pair_rows=3;
+    if(!strcmp(mode,"measure_alias"))rbref[1].asset_record_id=rbref[0].asset_record_id;
     if(!strcmp(mode,"hdu"))frames[0].reference.hdu_index=1;
     if(!strcmp(mode,"pair_id"))frames[0].pair_id="missing";
     if(!strcmp(mode,"registry"))in.mask_registry="OTHER";
@@ -50,8 +61,17 @@ int main(int argc,char **argv)
     if(!strcmp(mode,"tolerant"))in.pair_time_tolerance=.02;
     mef_linearity_files_result *r=NULL,*occupied;fault f={0,0,0};mef_allocator a={&f,alloc,drop};
     mef_status status=mef_linearity_from_files(&in,&a,&r);
-    if(strcmp(mode,"normal")&&strcmp(mode,"tolerant")){assert(status!=MEF_OK&&!r&&!f.live);goto cleanup;}
+    if(strcmp(mode,"normal")&&strcmp(mode,"tolerant")&&strcmp(mode,"measure")){assert(status!=MEF_OK&&!r&&!f.live);goto cleanup;}
     assert(status==MEF_OK&&r);size_t allocations=f.calls;printf("Adapter/sample snapshot allocations: %zu\n",allocations);
+    if(measuring){assert(r->pairs&&r->pairs->rows==4&&r->pairs->rois==2&&r->pairs->pairs==2);
+        assert(!strcmp(r->pairs->raw_bias_asset[0],"raw-bias:0")&&r->pairs->row[0].first==0&&r->pairs->row[0].second==3);
+        assert(r->pairs->row[0].measurement.valid_pixels==(kind?3:4));
+        assert(r->pairs->bias[0].ron_available&&r->pairs->bias[0].ron_adu>0);
+        assert(fabs(r->pairs->bias[0].ron_adu-sqrt(2./3))<1e-9);
+        /* Scan values are deliberately different between the two raw biases. */
+        assert(fabs(r->pairs->bias[0].difference.mean-(kind?-1./3:0))<1e-9&&r->pairs->bias[0].raw_zone[0]==2);
+        assert(strstr(r->raw_bias_path[0],"raw-bias-0.fits"));
+    }else assert(!r->pairs);
     assert(r->samples->observations==(kind?14:22)&&r->samples->sites==(kind?4:6));
     assert(r->samples->frame[0].input_index==8&&r->samples->frame[1].input_index==3&&r->samples->frame[3].hdu==2);
     assert(!strcmp(r->samples->frame[2].pair_id,"P1")&&r->samples->frame[0].seconds==2);
@@ -64,12 +84,14 @@ int main(int argc,char **argv)
     assert(r->samples->bpm_binary_supplied==(kind>=2)&&r->samples->noise_state==MEF_LINEARITY_NOISE_UNAVAILABLE);
     occupied=r;assert(mef_linearity_from_files(&in,NULL,&r)!=MEF_OK&&r==occupied);
     mef_linearity_files_destroy(r);r=NULL;assert(!f.live);
-    if(kind==1&&!strcmp(mode,"normal"))for(size_t i=1;i<=allocations;++i){f.calls=0;f.fail=i;
+    if(kind==1&&(!strcmp(mode,"normal")||!strcmp(mode,"measure")))for(size_t i=1;i<=allocations;++i){f.calls=0;f.fail=i;
         assert(mef_linearity_from_files(&in,&a,&r)==MEF_ERR_MEMORY&&!r&&!f.live);}
     f.fail=0;assert(mef_linearity_from_files(&in,NULL,&r)==MEF_OK);
 cleanup:
     for(int i=0;i<4;++i)mef_layout_map_destroy((mef_layout_map *)frames[i].map);
+    for(int j=0;j<2;++j)mef_layout_map_destroy(rbmap[j]);
     mef_layout_map_destroy(bias);mef_layout_map_destroy(bpm);mef_config_destroy(config);memset(frames,0,sizeof frames);memset(rois,0,sizeof rois);
+    if(r&&measuring)assert(r->pairs->row[0].measurement.valid_pixels==(kind?3:4)&&strstr(r->raw_bias_path[1],"raw-bias-1.fits"));
     if(r){assert(r->samples->frame[0].seconds==2&&strstr(r->input_paths[0],"flat-0.fits"));mef_linearity_files_destroy(r);}
     assert(!f.live);puts("PASS: explicit FITS admission, times/pairs, mask polarity, source ownership and atomic failures");return 0;
 }

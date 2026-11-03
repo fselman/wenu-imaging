@@ -87,9 +87,9 @@ untouched. Full actual-data Chapman qualification/processing follows validation
 of the changed code there; no new real data, QC work or science reduction now.
 
 
-## Next scientific review
+## Agreed uncertainty policy and current increment
 
-[Uncertainty policy proposal](linearity-uncertainty-review-2026-11-03.md): first
+[Agreed uncertainty policy](linearity-uncertainty-review-2026-11-03.md): first
 measure raw bias RON and flat-pair variance versus signal in explicit populations;
 then propagate a justified noise model through the actual trimmed-row correction
 and median master, conditional on reviewed selections and with covariance fixed
@@ -98,4 +98,14 @@ No distribution, fit range, simulation count or stochastic estimator is adopted
 without the owner's scientific review. ESO reports October 2016 intermittent
 RON increases in CCD_69/77, relevant checks for our March 2017 sequence, not proof
 that the selected exposures are affected. Hardware identities/readout/epoch must
-be matched. Proposal only: no native change, test replay, data launch or install.
+be matched. The owner approved measurement first and propagation through the actual estimators,
+then approved covariance fixed within each fit with outer repeated fits for its
+uncertainty. No default distribution or simulation parameters were approved.
+
+[Raw pair/ROI measurements](linearity-pair-measurements-2026-11-03.md) now compose
+the qualified gain/RON kernel with optional FITS admission of two explicit raw
+biases. A separate bias-only RON population remains visible beside the common
+four-plane population used by each flat pair. Agent C17 focused preparation passes;
+actual Mac qualification is pending. No real data, noise-model fit, Monte Carlo,
+installation, merge or scientific acceptance follows from this increment.
+
