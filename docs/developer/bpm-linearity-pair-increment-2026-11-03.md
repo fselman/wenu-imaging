@@ -62,7 +62,7 @@ signal limits. There is no automatic clipping.
 | $\Delta B_p$ | Bias-pair difference, $B_{1,p}-B_{2,p}$ | ADU |
 | $g$ | Conversion gain: number of electrons corresponding to one ADU | $\mathrm{electrons}/\mathrm{ADU}$ |
 | $\mathrm{RON}_{\mathrm{ADU}}$ | Readout noise of one exposure, expressed in ADU | ADU |
-| $\operatorname{MAD}(z)$ | Median absolute deviation from the median of $z_p$, over $G$ | ADU |
+| $\mathrm{MAD}(z)$ | Median absolute deviation from the median of $z_p$, over $G$ | ADU |
 
 The subscript in $\mathrm{RON}_{\mathrm{ADU}}$ is the complete unit label
 “ADU”; it is not a product of variables. Bars above image names, such as
@@ -105,14 +105,14 @@ previously agreed raw-pair measurement without scan-correction correlations.
 The optional robust diagnostic is:
 
 $$
-\operatorname{MAD}(z)
- = \operatorname{median}_{p\in G}
-   \left|z_p-\operatorname{median}_{q\in G}(z_q)\right| ,
+\mathrm{MAD}(z)
+ = \mathrm{median}_{p\in G}
+   \left|z_p-\mathrm{median}_{q\in G}(z_q)\right| ,
 $$
 
 $$
 \mathrm{RON}_{\mathrm{MAD}}
- = \frac{1.4826}{\sqrt{2}}\,\operatorname{MAD}(\Delta B).
+ = \frac{1.4826}{\sqrt{2}}\,\mathrm{MAD}(\Delta B).
 $$
 
 Here $q$ is just a second pixel index used to express the inner median.
@@ -150,12 +150,112 @@ for this first photon-transfer estimator. Bias removal in the numerator uses
 the four image means. Changes in electronic structure between exposures remain
 an admission concern; this routine does not model or correct arbitrary drift.
 
+### Variance versus signal: which value represents the instrument?
+
+There is no single instrument variance that applies at every signal level.
+Distinguish **readout variance at zero signal** from the **total variance at a
+specified signal**, and distinguish both from conversion gain.
+
+For flat pair $j$, define the bias-subtracted average signal and half the
+difference variance:
+
+$
+\mu_j =
+\frac{\bar F_{j1}+\bar F_{j2}-\bar B_1-\bar B_2}{2},
+\qquad
+V_j=\frac{v(F_{j1}-F_{j2})}{2}.
+$
+
+Here $j$ labels an integration-time pair, and subscripts $j1$ and $j2$ identify
+its two flat exposures. $\mu_j$ is in ADU and $V_j$ is in squared ADU.
+The factor of two converts the difference variance to the variance of ONE
+exposure, assuming independent exposures with comparable noise statistics.
+For modest illumination mismatch it represents the average of their variances.
+
+Define the independently measured raw-bias readout variance:
+
+$
+V_0=\frac{v(\Delta B)}{2}
+   =\mathrm{RON}_{\mathrm{ADU}}^{\,2}.
+$
+
+In the constant-gain, independent-pixel, photon-noise regime:
+
+$
+\boxed{ V(\mu)=V_0+\frac{\mu}{g_0} } .
+$
+
+The new symbol $g_0$ denotes a reference conversion gain in
+electrons/ADU, measured over an explicitly selected approximately linear signal
+interval. $V(\mu)$ denotes the single-exposure variance at bias-subtracted
+signal $\mu$; $V_0$ is its zero-signal readout component.
+
+If plotting the FULL difference variance instead, as in the owner's question:
+
+$
+v(\Delta F)=2V_0+\frac{2\mu}{g_0}.
+$
+
+Thus the slope of half-difference variance versus average signal is $1/g_0$;
+the slope of full-difference variance versus average signal is $2/g_0$.
+The ordinate is NOT the spatial variance of the average flat image.
+
+**Proposed reporting policy, for review:**
+
+- Use $V_0$ from the raw bias pair for readout variance. Zero signal is the
+  reference; no illuminated flat point is selected to define readout noise.
+- Estimate $g_0$ over a declared, verified approximately linear signal interval,
+  above the region where read noise dominates and below significant curvature
+  or saturation. Use a range of accepted pairs, not one arbitrarily chosen
+  point. Record the interval, pair membership, fitting method and uncertainty;
+  no numerical interval or tolerance is selected in this proposal.
+- Keep the individual pair estimates versus signal:
+  
+  $
+  g_{\mathrm{pair},j}=\frac{\mu_j}{V_j-V_0}.
+  $
+  
+  In a curved relation this is a signal-dependent effective estimate. It need
+  not equal a gain inferred from the local tangent. A local-slope diagnostic,
+  if later implemented with a reviewed curve model, would be
+  
+  $
+  g_{\mathrm{slope}}(\mu)
+  =\left(\frac{dV}{d\mu}\right)^{-1}.
+  $
+  
+  Both quantities agree with $g_0$ for a straight photon-transfer relation;
+  they generally differ for a curved one. Neither alone proves an intrinsic
+  electronics gain change.
+- For the variance needed at a particular science signal, evaluate the
+  validated variance-versus-signal model at that signal. Do not assign $V_0$
+  or the variance at a calibration flat level to every science pixel.
+- If no sufficiently constrained approximately linear interval exists, report
+  the reference gain as undetermined and retain the measured curve and pair
+  estimates. Do not force a constant gain or extrapolate from saturation.
+
+The intended first helper still returns each pair's measured quantities.
+A fitted reference gain/curve belongs to subsequent sequence-level analysis;
+this reporting proposal does not silently add a new curve fitter to that helper.
+
+Curvature can reflect nonlinear response, changing pixel correlations/charge
+redistribution, illumination mismatch or other signal-dependent effects.
+Consequently, a straight-line fit across the whole curve cannot establish a
+universal gain, and a per-pixel variance alone does not describe covariance.
+The later application of a linearity correction must propagate the noise
+through that correction, as required by the controlling design.
+
+As a methodological reference, [ESO's VIMOS gain documentation](https://www.eso.org/observing/dfo/quality/VIMOS/qc/detlin_qc1.html)
+describes paired estimates and photon-transfer fitting, and records a later
+restriction to low-signal flats. That instrument-specific threshold is not
+adopted for OmegaCAM.
+
 ### Median centering and controlled lamps
 
 Let $D_p=\Delta F_p$ and let $m$ be its median over $G$:
 
 $$
-m=\operatorname{median}_{p\in G}(D_p),
+m=\mathrm{median}_{p\in G}(D_p),
 \qquad D'_p=D_p-m.
 $$
 
@@ -164,7 +264,7 @@ Subtracting this one constant makes the median of the difference zero, but:
 $$
 v(D')=v(D),
 \qquad
-\operatorname{MAD}(D')=\operatorname{MAD}(D).
+\mathrm{MAD}(D')=\mathrm{MAD}(D).
 $$
 
 Thus your proposed centering changes the displayed zero point, not the measured
@@ -298,7 +398,10 @@ Before execution, announce the inputs, functions, actions and pass criteria.
    caller output on error and never modify the inputs.
 5. Exercise the new call through the existing operation template using synthetic
    pairs whose members are not consecutive. Check failure handling and cleanup.
-6. Run focused Mac C17 checks first and validate the changed path on Chapman
+6. Verify the factor-of-two convention with a synthetic constant-gain relation.
+   Curved examples must retain signal-dependent pair results rather than being
+   silently presented as one constant gain. Sequence-level fitting remains later.
+7. Run focused Mac C17 checks first and validate the changed path on Chapman
    afterward. Do not repeat unchanged qualification matrices or alter production
    installations or original data.
 
