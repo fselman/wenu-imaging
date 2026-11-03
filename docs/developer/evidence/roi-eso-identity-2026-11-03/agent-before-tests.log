@@ -1,0 +1,34 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/roi-build
+Test project /workspace/scratch/9ccf7e35ace4/roi-build
+    Start 11: native_roi_config
+1/1 Test #11: native_roi_config ................***Failed    0.04 sec
+RETAINED ROI CONFIG TEST: /workspace/scratch/9ccf7e35ace4/roi-build/mefpp2/test-work/roi-config-3st6n20s
+roi_config_probe: /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/tests/roi_config_probe.c:18: main: Assertion `status==MEF_OK&&c&&mef_roi_config_count(c)==3' failed.
+Traceback (most recent call last):
+  File "/workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/tests/roi_config_contract.py", line 35, in <module>
+    assert run(fmt, 'eso-identities', render(fmt, eso_rows), 'eso').strip() == 'ESO # identities preserved and bound'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/tests/roi_config_contract.py", line 27, in run
+    return subprocess.check_output([a.probe, fmt, str(path), mode], text=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/workspace/scratch/9ccf7e35ace4/roi-build/mefpp2/roi_config_probe', 'paf', '/workspace/scratch/9ccf7e35ace4/roi-build/mefpp2/test-work/roi-config-3st6n20s/eso-identities.paf', 'eso']' died with <Signals.SIGABRT: 6>.
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+configuration    =   0.04 sec*proc (1 test)
+native           =   0.04 sec*proc (1 test)
+ownership        =   0.04 sec*proc (1 test)
+roi              =   0.04 sec*proc (1 test)
+
+Total Test time (real) =   0.04 sec
+
+The following tests FAILED:
+	 11 - native_roi_config (Failed)
+Errors while running CTest

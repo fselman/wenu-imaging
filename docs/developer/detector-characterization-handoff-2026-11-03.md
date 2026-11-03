@@ -163,3 +163,21 @@ WCS/catalogue/log files were retained by the command. Last returned free space:
 59.65 GiB, roughly 14 GiB recovered across these two imaging cleanup steps.
 Raw observations, current WFI/OCAM calibrations and required runtimes remain
 outside the cleanup selection. Further bulk deletion is not implied.
+
+
+## Resumed OCAM preparation: exact ROI identities
+
+Resumption exposed #230: the named ROI reader/binder rejected # in actual
+ESO_CCD_# detector identities. The bounded grammar correction and PAF/TOML
+exact-identity regression now pass agent C17 native_roi_config 1/1 in 0.08 s;
+actual Mac gate is pending via qualify_roi_identity_mac.py. No numerical changes
+or actual-data measurement. See [compatibility/evidence](roi-eso-identity-2026-11-03.md).
+
+The owner-returned BPM check shows all 32 active 2044 x 4091 planes are unsigned
+8-bit binary 0/1, without registry/encoding cards or nonfinite pixels. First
+raw bias/flat primary cards agree on normal readout/speed, ordered mosaic, 1x1,
+32 outputs; the first two printed chip headers report manufacturer output L.
+Complete per-detector identity/readout binding, reviewed ROIs, raw saturation and
+bias pair still precede real measurement. Retained observational comparison data
+must follow the new Pictures/instrument retention rule and per-dataset README.
+

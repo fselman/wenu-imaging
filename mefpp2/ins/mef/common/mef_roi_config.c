@@ -38,7 +38,7 @@ static int id_valid(const char *s)
     size_t n=0;
     if(!s||!s[0])return 0;
     for(;s[n];++n)if(n>=63||!((s[n]>='a'&&s[n]<='z')||
-        (s[n]>='A'&&s[n]<='Z')||(s[n]>='0'&&s[n]<='9')||strchr("._:-",s[n])))return 0;
+        (s[n]>='A'&&s[n]<='Z')||(s[n]>='0'&&s[n]<='9')||strchr("._:-#",s[n])))return 0;
     return 1;
 }
 static const char *fields[]={"id","detector","amplifier","xmin","xmax","ymin","ymax"};

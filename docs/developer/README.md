@@ -1,3 +1,7 @@
+[ESO detector identity compatibility](roi-eso-identity-2026-11-03.md): named ROI
+configuration now preserves quoted # identities. Agent focused C17 passes 1/1;
+actual Mac qualification of #230 is pending before real OCAM ROI binding.
+
 [Comparison-data retention](comparison-data-retention.md): future-comparison datasets belong
 under ~/Pictures/OCAM/wenu-imaging or ~/Pictures/WFI/wenu-imaging, in named
 subdirectories with a README explaining purpose and deletion conditions. Required
@@ -630,6 +634,7 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
 
 - [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
+
 
 
 

@@ -30,9 +30,13 @@ for fmt in ('paf', 'toml'):
     # Equivalent explicit configurations, ownership faults and atomic binding.
     text=render(fmt, entries)
     outputs.append(run(fmt, 'valid', text, 'accept'))
+    eso_rows=[dict(e, detector='ESO_CCD_#96' if i==2 else 'ESO_CCD_#65',
+                   amplifier='R' if i==2 else 'L') for i,e in enumerate(entries)]
+    assert run(fmt, 'eso-identities', render(fmt, eso_rows), 'eso').strip() == 'ESO # identities preserved and bound'
     changes = [('duplicate_id', 1, 'id', 'CHIP1.center'), ('reverse_bounds', 0, 'xmax', 0),
                ('zero_origin', 0, 'xmin', 0), ('fractional', 0, 'xmin', 1.5),
-               ('empty_id', 0, 'id', ''), ('long_id', 0, 'id', 'x'*64)]
+               ('empty_id', 0, 'id', ''), ('long_id', 0, 'id', 'x'*64),
+               ('detector_space', 0, 'detector', 'ESO CCD'), ('detector_path', 0, 'detector', '../CCD/65')]
     for label, index, field, value in changes:
         rows = [dict(e) for e in entries]; rows[index][field] = value
         run(fmt, label, render(fmt, rows), 'reject')

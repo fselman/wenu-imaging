@@ -14,6 +14,17 @@ int main(int argc,char **argv)
     assert(argc==4);mef_config_toml_initialize();
     mef_status status=mef_roi_config_read(argv[2],argv[1],NULL,&c,diagnostic,sizeof diagnostic);
     if(!strcmp(argv[3],"reject")){assert(status!=MEF_OK&&!c);return 0;}
+    if(!strcmp(argv[3],"eso")){
+        assert(status==MEF_OK&&c&&mef_roi_config_count(c)==3);
+        memset(amp,0,sizeof amp);strcpy(amp[0].detector_id,"ESO_CCD_#96");strcpy(amp[0].amplifier_id,"R");
+        strcpy(amp[1].detector_id,"ESO_CCD_#65");strcpy(amp[1].amplifier_id,"L");
+        strcpy(amp[2].detector_id,"ESO_CCD_#65");strcpy(amp[2].amplifier_id,"R");
+        assert(mef_roi_config_bind(c,3,amp,(const int (*)[2])dim,out,3,&count,NULL,0)==MEF_OK);
+        assert(count==3&&out[0].amplifier==1&&out[1].amplifier==1&&out[2].amplifier==0);
+        assert(!strcmp(amp[out[0].amplifier].detector_id,"ESO_CCD_#65"));
+        assert(!strcmp(amp[out[2].amplifier].detector_id,"ESO_CCD_#96"));
+        assert(remove(argv[2])==0);mef_roi_config_destroy(c);puts("ESO # identities preserved and bound");return 0;
+    }
     assert(status==MEF_OK&&c&&mef_roi_config_count(c)==3);
     assert(strstr(mef_roi_config_source(c),"center"));
     /* Guard occupied owners and custom allocator cleanup at every allocation. */

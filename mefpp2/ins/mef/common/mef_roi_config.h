@@ -8,7 +8,7 @@ typedef struct mef_roi_config mef_roi_config;
  * TOML uses the existing parser and requires its serial initialization first.
  * Snapshot owns exact source bytes and named entries. Allocator covers these
  * owners, not the dependency parser. Limits: 1 MiB text, 4096 named regions.
- * IDs: 1..63 ASCII letters/digits/._:-. Globally unique ROI IDs.
+ * IDs: 1..63 ASCII letters/digits/._:-# (quoted values). Globally unique ROI IDs.
  * *out must be NULL; failures leave it untouched. Diagnostic is optional. */
 mef_status mef_roi_config_read(const char *path, const char *format,
     const mef_allocator *allocator, mef_roi_config **out,
