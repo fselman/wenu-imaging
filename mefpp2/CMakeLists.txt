@@ -223,6 +223,25 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(qfits_discovery_probe tests/qfits_discovery_probe.c)
   target_link_libraries(qfits_discovery_probe PRIVATE qfits)
   add_executable(measurement_stats_probe tests/measurement_stats_probe.c)
+  if(MEFPP_BUILD_BIAS_ADAPTER)
+    add_executable(gain_pair_probe tests/gain_pair_probe.c)
+    target_link_libraries(gain_pair_probe PRIVATE mefpp_bias_files)
+    target_compile_options(gain_pair_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    # Reuse accepted test-only NULL-return seams and qfits owner accounting.
+    add_library(gain_pair_allocation_units OBJECT src/iproc/detector.c
+      src/iproc/image_stats.c src/iproc/image_handling.c src/iproc/pixelmaps.c
+      src/math/dstats.c)
+    target_include_directories(gain_pair_allocation_units PRIVATE src/include
+      qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(gain_pair_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(gain_pair_allocation_probe tests/gain_pair_allocation_probe.c
+      $<TARGET_OBJECTS:gain_pair_allocation_units>)
+    target_compile_definitions(gain_pair_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(gain_pair_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(gain_pair_allocation_probe PRIVATE mefpp_bias_files)
+  endif()
   add_executable(bpm_response_probe tests/bpm_response_probe.c)
   target_link_libraries(bpm_response_probe PRIVATE eclipse)
   target_compile_options(bpm_response_probe PRIVATE -UNDEBUG -Wall -Wextra)
@@ -448,6 +467,12 @@ if(BUILD_TESTING)
       set_tests_properties(shared_qc_asdf PROPERTIES TIMEOUT 120 LABELS "asdf;qc")
     endif()
     add_test(NAME native_measurement_stats COMMAND measurement_stats_probe)
+    if(MEFPP_BUILD_BIAS_ADAPTER)
+      add_test(NAME native_gain_pair COMMAND gain_pair_probe)
+      set_tests_properties(native_gain_pair PROPERTIES TIMEOUT 30 LABELS "native;gain;statistics;mask")
+      add_test(NAME native_gain_pair_allocation COMMAND gain_pair_allocation_probe)
+      set_tests_properties(native_gain_pair_allocation PROPERTIES TIMEOUT 120 LABELS "native;gain;allocation;ownership")
+    endif()
     add_test(NAME native_bpm_response
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_response_contract.py"
         --probe "$<TARGET_FILE:bpm_response_probe>"

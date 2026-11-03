@@ -1,0 +1,18 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/gain-pair-build
+Test project /workspace/scratch/9ccf7e35ace4/gain-pair-build
+    Start 24: native_gain_pair
+1/2 Test #24: native_gain_pair .................   Passed    0.00 sec
+    Start 25: native_gain_pair_allocation
+2/2 Test #25: native_gain_pair_allocation ......   Passed    0.10 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+allocation    =   0.10 sec*proc (1 test)
+gain          =   0.11 sec*proc (2 tests)
+mask          =   0.00 sec*proc (1 test)
+native        =   0.11 sec*proc (2 tests)
+ownership     =   0.10 sec*proc (1 test)
+statistics    =   0.00 sec*proc (1 test)
+
+Total Test time (real) =   0.11 sec

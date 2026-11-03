@@ -241,4 +241,49 @@ int cube_correct_detlin(
         image_t *   coeff_b,
         image_t *   coeff_c) ;
 
+/* Paired photon-transfer measurement. Existing relative-response constructors
+ * and detector-linearity APIs above retain their established meanings. */
+typedef enum {
+    DETECTOR_GAIN_PAIR_AVAILABLE = 0,
+    DETECTOR_GAIN_PAIR_TOO_FEW_PIXELS,
+    DETECTOR_GAIN_PAIR_NONPOSITIVE_SIGNAL,
+    DETECTOR_GAIN_PAIR_NONPOSITIVE_VARIANCE
+} detector_gain_pair_state;
+
+typedef struct {
+    /* Common ROI counts. BPM exclusion takes precedence over nonfinite data. */
+    size_t region_pixels, bpm_excluded, nonfinite_excluded, valid_pixels;
+    int zone[4], bpm_supplied;
+    /* Order: F1, F2, B1, B2. These and differences use the SAME finite map.
+     * Their bpm_excluded counts include exclusions by the derived common map;
+     * use the top-level counts for the original BPM/nonfinite partition. */
+    image_sample_stats levels[4], flat_difference, bias_difference;
+    double signal_first, signal_second; /* ADU, each minus mean(B1,B2). */
+    int signals_available, mismatch_available;
+    double fractional_mismatch; /* 2*abs(signal_first-signal_second)/sum;
+                                 * available only if both signals > 0. */
+    double flat_variance, bias_variance, photon_variance; /* ADU squared. */
+    int ron_available, ron_mad_available;
+    double ron_adu, ron_mad_adu;
+    detector_gain_pair_state gain_state;
+    double gain_e_per_adu; /* Read ONLY when gain_state == AVAILABLE. */
+} detector_gain_pair_result;
+
+/* Immutable raw physical-ADU ACTIVE crops, with no overscan correction.
+ * Caller establishes detector/readout identity, saturation/range admission and
+ * independence/equal-noise assumptions. selection is NULL or binary 1=good;
+ * zone is NULL (whole image) or 1-based inclusive xmin,xmax,ymin,ymax.
+ * with_mad is 0 or 1. Reuses masked Eclipse statistics and pair differences;
+ * does not rescale/clip/center images or fit a signal-dependent gain curve.
+ * Returns 0 for measured OR explicitly unavailable results (inspect state).
+ * Invalid arguments, allocation/arithmetic failure return -1, leaving *out
+ * unchanged. N<2 is unavailable, not error. No output-owned allocations.
+ * Output must not overlap any borrowed image/map structure or pixel buffer.
+ * Temporary allocation/free follows Eclipse; not a reentrancy claim. */
+int detector_gain_pair_checked(
+    const image_t *flat_first, const image_t *flat_second,
+    const image_t *bias_first, const image_t *bias_second,
+    const pixelmap *selection, const int *zone,
+    int with_mad, detector_gain_pair_result *out);
+
 #endif

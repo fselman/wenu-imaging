@@ -23,6 +23,8 @@
 #include "doubles.h"
 #include "dstats.h"
 #include "random.h"
+#include <stdint.h>
+#include <string.h>
 
 /*-----------------------------------------------------------------------------
    							Function codes	
@@ -359,6 +361,142 @@ int image_rect_readout_noise(
     free(rms_list);
     return 0 ;
 }
+
+
+/* Output alias guards compare address distances without adding to pointers. */
+static int gain_pair_overlaps(const void *a, size_t na, const void *b, size_t nb)
+{
+    uintptr_t x = (uintptr_t)a, y = (uintptr_t)b;
+    if (a == NULL || b == NULL || na == 0 || nb == 0) return 0;
+    return x <= y ? y-x < na : x-y < nb;
+}
+
+/* Checked composition of the existing Eclipse sample/pair estimators. */
+int detector_gain_pair_checked(
+    const image_t *flat_first, const image_t *flat_second,
+    const image_t *bias_first, const image_t *bias_second,
+    const pixelmap *selection, const int *zone,
+    int with_mad, detector_gain_pair_result *out)
+{
+    const image_t *images[4];
+    detector_gain_pair_result result;
+    pixelmap *common;
+    size_t n, i, p;
+    int k, x, y, finite;
+    double bias_mean, numerator, denominator;
+    images[0] = flat_first; images[1] = flat_second;
+    images[2] = bias_first; images[3] = bias_second;
+    if (out == NULL || (with_mad != 0 && with_mad != 1)) return -1;
+    for (k = 0; k < 4; ++k) {
+        if (images[k] == NULL || images[k]->data == NULL ||
+            images[k]->lx < 1 || images[k]->ly < 1 ||
+            images[k]->lx > INT_MAX / images[k]->ly) return -1;
+        if (images[k]->lx != images[0]->lx || images[k]->ly != images[0]->ly)
+            return -1;
+    }
+    n = (size_t)images[0]->lx * (size_t)images[0]->ly;
+    if (n > (size_t)-1 / sizeof(pixelvalue)) return -1;
+    for (k = 0; k < 4; ++k)
+        if (gain_pair_overlaps(out, sizeof(*out), images[k], sizeof(*images[k])) ||
+            gain_pair_overlaps(out, sizeof(*out), images[k]->data,
+                               n * sizeof(pixelvalue))) return -1;
+    if (selection != NULL) {
+        if (selection->data == NULL || selection->lx != images[0]->lx ||
+            selection->ly != images[0]->ly ||
+            gain_pair_overlaps(out, sizeof(*out), selection, sizeof(*selection)) ||
+            gain_pair_overlaps(out, sizeof(*out), selection->data,
+                               n * sizeof(*selection->data))) return -1;
+        for (i = 0; i < n; ++i)
+            if (selection->data[i] != PIXELMAP_0 &&
+                selection->data[i] != PIXELMAP_1) return -1;
+    }
+    if (zone != NULL && gain_pair_overlaps(out, sizeof(*out), zone,
+                                          4 * sizeof(*zone))) return -1;
+    memset(&result, 0, sizeof(result));
+    result.zone[0] = result.zone[2] = 1;
+    result.zone[1] = images[0]->lx; result.zone[3] = images[0]->ly;
+    if (zone != NULL) memcpy(result.zone, zone, sizeof(result.zone));
+    if (result.zone[0] < 1 || result.zone[2] < 1 ||
+        result.zone[1] > images[0]->lx || result.zone[3] > images[0]->ly ||
+        result.zone[0] > result.zone[1] || result.zone[2] > result.zone[3])
+        return -1;
+    result.bpm_supplied = selection != NULL;
+    result.gain_state = DETECTOR_GAIN_PAIR_TOO_FEW_PIXELS;
+    common = pixelmap_new(images[0]->lx, images[0]->ly);
+    if (common == NULL) return -1;
+    memset(common->data, PIXELMAP_0, n * sizeof(*common->data));
+    for (y = result.zone[2]-1; y < result.zone[3]; ++y) {
+        for (x = result.zone[0]-1; x < result.zone[1]; ++x) {
+            p = (size_t)y * (size_t)images[0]->lx + (size_t)x;
+            ++result.region_pixels;
+            if (selection != NULL && selection->data[p] == PIXELMAP_0) {
+                ++result.bpm_excluded; continue;
+            }
+            finite = 1;
+            for (k = 0; k < 4; ++k)
+                if (!isfinite(images[k]->data[p])) finite = 0;
+            if (!finite) { ++result.nonfinite_excluded; continue; }
+            common->data[p] = PIXELMAP_1; ++result.valid_pixels;
+        }
+    }
+    pixelmap_updatecount(common);
+    for (k = 0; k < 4; ++k) {
+        if (image_getstats_masked_checked(images[k], common, result.zone,
+                with_mad, &result.levels[k]) != 0) goto fail;
+    }
+    if (image_pair_stats_checked(images[0], images[1], common, common,
+            result.zone, with_mad, &result.flat_difference) != 0 ||
+        image_pair_stats_checked(images[2], images[3], common, common,
+            result.zone, with_mad, &result.bias_difference) != 0) goto fail;
+    /* Arithmetic overflow must not silently change the common population. */
+    if (result.flat_difference.valid_pixels != result.valid_pixels ||
+        result.bias_difference.valid_pixels != result.valid_pixels) goto fail;
+    if (result.valid_pixels > 0) {
+        bias_mean = .5 * result.levels[2].mean + .5 * result.levels[3].mean;
+        result.signal_first = result.levels[0].mean - bias_mean;
+        result.signal_second = result.levels[1].mean - bias_mean;
+        result.signals_available = 1;
+        numerator = result.signal_first + result.signal_second;
+        if (!isfinite(result.signal_first) || !isfinite(result.signal_second) ||
+            !isfinite(numerator)) goto fail;
+        if (result.signal_first > 0 && result.signal_second > 0) {
+            result.fractional_mismatch =
+                2.0 * fabs(result.signal_first/numerator - result.signal_second/numerator);
+            result.mismatch_available = 1;
+        }
+        if (result.valid_pixels > 1) {
+            result.flat_variance = result.flat_difference.stdev * result.flat_difference.stdev;
+            result.bias_variance = result.bias_difference.stdev * result.bias_difference.stdev;
+            denominator = result.flat_variance - result.bias_variance;
+            result.photon_variance = denominator;
+            result.ron_adu = result.bias_difference.stdev / sqrt(2.0);
+            result.ron_available = 1;
+            if (with_mad) {
+                result.ron_mad_adu = (1.4826 / sqrt(2.0)) * result.bias_difference.mad;
+                result.ron_mad_available = 1;
+            }
+            if (!isfinite(result.flat_variance) || !isfinite(result.bias_variance) ||
+                !isfinite(denominator) || !isfinite(result.ron_adu) ||
+                !isfinite(result.ron_mad_adu)) goto fail;
+            if (numerator <= 0)
+                result.gain_state = DETECTOR_GAIN_PAIR_NONPOSITIVE_SIGNAL;
+            else if (denominator <= 0)
+                result.gain_state = DETECTOR_GAIN_PAIR_NONPOSITIVE_VARIANCE;
+            else {
+                result.gain_e_per_adu = numerator / denominator;
+                if (!isfinite(result.gain_e_per_adu) || result.gain_e_per_adu <= 0) goto fail;
+                result.gain_state = DETECTOR_GAIN_PAIR_AVAILABLE;
+            }
+        }
+    }
+    pixelmap_del(common);
+    *out = result;
+    return 0;
+fail:
+    pixelmap_del(common);
+    return -1;
+}
+
 #undef RECT_RON_HS
 #undef RECT_RON_SAMPLES
 

@@ -1,3 +1,17 @@
+## Paired gain/RON implementation candidate - 3 November 2026
+
+Owner reviewed the formula/PDF clarification and authorized implementation.
+Eclipse detector_gain_pair_checked composes existing masked/pair statistics over
+one common finite population. Raw active crops, no scan correction; explicit
+unavailability/error/alias guards, immutable inputs and no silent gain interval.
+Agent C17 two new controls pass2/2 in0.11s, including40 single/persistent allocation
+failure positions and existing operation-template pairing. Test oracle#228 was
+corrected; actual Mac C17 gate is next and pending. Use normal imaging Python
+with qualify_gain_pair_mac.py, protecting clean accepted main/install/export;
+no unchanged replay, real data, production activation or merge. Joint linearity/
+shared shutter and per-pixel flagging remain subsequent work. See
+[implementation record](gain-pair-implementation-2026-11-03.md).
+
 # wenu-imaging agent instructions
 
 ## End-of-day WFI bias handoff — 2 November 2026
