@@ -28,6 +28,14 @@ covariance or choose scientific rank/conditioning thresholds. Overflow and
 nonfinite arithmetic fail explicitly; the method is not claimed to support every
 representable extreme-scale system.
 
+## Actual Mac acceptance
+
+The owner returned b382a93e Mac C17 success: native_matrix_qr and
+native_matrix_qr_allocation 2/2 in 1.69 s. Retained evidence:
+`/Users/fselman/Software/build/wenu-imaging/mac-matrix-qr-Ay1wSJZe`.
+Checkout, installed files and exported source all preserved; clean main remained
+at c73d9a9e. Earlier pending wording below is historical. No unchanged replay.
+
 ## Preparation verification
 
 Isolated Linux GCC C17 Release build of QR controls and normal mefpp passed.

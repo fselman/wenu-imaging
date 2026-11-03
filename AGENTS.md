@@ -1,3 +1,18 @@
+## Mac QR accepted; checked optimizer candidate - 3 November 2026
+
+Actual Mac b382a93e passed native_matrix_qr/native_matrix_qr_allocation 2/2 in
+1.69 s at /Users/fselman/Software/build/wenu-imaging/mac-matrix-qr-Ay1wSJZe.
+All three preservation checks passed and main remains clean at c73d9a9e.
+Owner authorized the reviewed checked optimizer next. minimize_checked extends
+Eclipse optimization with context/validity/bounds/scaling, exact attempt budget,
+both spread tests and owned results; qualified QR checks initial simplex rank.
+Legacy minimize/min_test unchanged. Agent C17 two focused checks pass 2/2 in
+0.14 s, all 19 single/persistent allocation positions and hard callback cleanup;
+normal mefpp builds. Actual Mac optimizer gate pending: qualify_simplex_mac.py.
+No unchanged QR/gain replay or observations/install/merge/cleanup. Joint detector
+wrapper/common signed all-detector shutter/covariance inputs remain later work.
+See [optimizer record](docs/developer/simplex-implementation-2026-11-03.md).
+
 ## Checked QR candidate - 3 November 2026
 
 Owner authorized proceeding after all-detector shared shutter and teaching review
