@@ -109,7 +109,10 @@ All 41 allocation positions passed single and persistent NULL-return tests with
 nested qfits owners/resources and inputs preserved. Singular and empty successful
 results also release every owner. Normal mefpp builds; the final new sources/probes
 have no new warnings. The Mac runner's Python syntax is checked. Actual Mac ROI
-qualification is pending; these are preparation results.
+qualification subsequently passed at 4d0bb462: 3/3 in 3.01 s, retained at
+`/Users/fselman/Software/build/wenu-imaging/mac-roi-aggregation-2SOrKVed`.
+Checkout, installed files and exported source were all preserved; main stayed
+clean c73d9a9e. These are software checks, not science acceptance.
 
 ## Ownership, resource scope and remaining integration
 
@@ -136,3 +139,8 @@ retained at
 `/Users/fselman/Software/build/wenu-imaging/mac-shutter-profile-0mNWCIc5`.
 Checkout, installed files and exported source were preserved; main stayed clean
 at c73d9a9e. Earlier qualified components and #228/#229 closure remain unchanged.
+
+
+Named per-detector/amplifier configuration is now implemented as a separate
+[PAF/TOML supplement](roi-configuration-2026-11-03.md); its actual Mac gate
+is pending. Raw extraction and forward-model integration remain separate.

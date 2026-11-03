@@ -18,13 +18,17 @@ Completed actual Intel Mac C17 gates (all checkout/install/export protections tr
 | Checked simplex | beee7c0d | 2/2 | 1.79 | mac-simplex-ddM35GKJ |
 | Direct-pixel joint candidate | dc762519 | 2/2 | 2.67 | mac-detector-joint-7iY8InK7 |
 | Shutter profile | 338180f6 | 2/2 | 6.09 | mac-shutter-profile-0mNWCIc5 |
+| Exact ROI operator | 4d0bb462 | 3/3 | 3.01 | mac-roi-aggregation-2SOrKVed |
 
-The exact ROI operator/covariance propagation increment has passed agent C17
-preparation 3/3 in 0.28 s, including all 41 single/persistent allocation positions.
-Its actual Mac gate is pending via Pycavi2/tests/qualify_roi_aggregation_mac.py.
-The selection includes two new ROI controls and the joint numerical control
-because its shared measurement validator was extracted; no unrelated replay.
-See the [ROI contract and scope](roi-aggregation-2026-11-03.md).
+The exact ROI operator/covariance propagation is Mac-qualified as above,
+including its two new controls and the affected joint validator control.
+[Named ROI configuration](roi-configuration-2026-11-03.md) now provides an
+explicit PAF/TOML supplement and atomic binding by detector + amplifier identity.
+Per-detector counts/geometry may differ; active amplifier bounds are checked;
+overlap remains allowed. Agent C17 config preparation passed 1/1 in 0.07 s.
+Its focused actual Mac gate is pending via
+Pycavi2/tests/qualify_roi_config_mac.py; numerical sources remain unchanged.
+The full linearity CLI and raw extraction are still pending.
 
 One signed shutter duration offset is common to ALL detectors. Cubic inverse
 response coefficients are amplifier-specific; direct-pixel illumination rates
@@ -57,3 +61,4 @@ actual Mac gates. Failed/corrected preparation logs are retained, not discarded.
 Validated WFI bias products and all earlier inventories/environments remain
 untouched. Full actual-data Chapman qualification/processing follows validation
 of the changed code there; no new real data, QC work or science reduction now.
+

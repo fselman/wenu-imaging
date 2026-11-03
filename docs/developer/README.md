@@ -4,7 +4,9 @@
 actual Mac gain/RON, QR, optimizer and direct-pixel candidate qualifications.
 The [shutter-profile increment](shutter-profile-2026-11-03.md) passed actual Mac
 C17 qualification. The [exact ROI operator](roi-aggregation-2026-11-03.md) has
-passed focused C17 preparation; its actual Mac gate is pending. Raw extraction,
+passed actual Mac C17 3/3 in 3.01 s. The
+[named ROI PAF/TOML supplement](roi-configuration-2026-11-03.md) passed focused
+C17 preparation; its actual Mac configuration gate is pending. Raw extraction,
 noise construction, forward-model integration and science acceptance remain later work.
 
 # Developer documentation
@@ -608,4 +610,5 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
 
 - [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
+
 

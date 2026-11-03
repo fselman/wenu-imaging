@@ -165,6 +165,17 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(mefpp_tomlc17 PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
+  # Named ROI supplement: explicit C17, isolated from legacy settings/schema.
+  add_library(mefpp_roi_config STATIC ins/mef/common/mef_roi_config.c)
+  set_target_properties(mefpp_roi_config PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_roi_config PUBLIC ins/mef/common src/include
+    PRIVATE ../third_party/tomlc17 qfits5/include)
+  target_link_libraries(mefpp_roi_config PUBLIC mefpp_tomlc17 mefpp_common)
+  target_compile_options(mefpp_roi_config PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(roi_config_probe tests/roi_config_probe.c)
+  set_target_properties(roi_config_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(roi_config_probe PRIVATE mefpp_roi_config)
+  target_compile_options(roi_config_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c
     ins/mef/common/mef_toml_bundle.c)
   target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
@@ -429,6 +440,11 @@ if(BUILD_TESTING)
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_bias_files PROPERTIES TIMEOUT 600 LABELS "native;bias;template;publication")
     endif()
+    add_test(NAME native_roi_config
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/roi_config_contract.py"
+        --probe "$<TARGET_FILE:roi_config_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_roi_config PROPERTIES TIMEOUT 120 LABELS "native;configuration;roi;ownership")
     set(config_probe_sdk_args "")
     if(APPLE AND CMAKE_OSX_SYSROOT)
       list(APPEND config_probe_sdk_args --sysroot "${CMAKE_OSX_SYSROOT}")
