@@ -1,3 +1,8 @@
+[OCAM geometry and analogous ROIs](ocam-readout-rois-2026-11-03.md): the owner's
+mosaic plus native PAF/manual establish the detector-slot map and mirrored readout
+coordinates. Saved PAF/TOML candidate defines five configurable 512x512 regions
+per detector; all 160 bounds/identities are checked. No actual pixels processed.
+
 [ESO detector identity compatibility](roi-eso-identity-2026-11-03.md): named ROI
 configuration now preserves quoted # identities. Agent focused C17 passes 1/1;
 actual Mac qualification passes 1/1 in 1.27 s total. #230 is closed; real OCAM
@@ -635,6 +640,7 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
 
 - [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
+
 
 
 

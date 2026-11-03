@@ -1,0 +1,1444 @@
+# Dataset-specific candidate: five 512x512 ROIs per detector, 128-pixel edge margin.
+# Bounds are FITS 1-based inclusive ACTIVE coordinates; upper-half boxes are reflected.
+# See docs/developer/ocam-readout-rois-2026-11-03.md before applying to observations.
+roi_schema_version = 1
+
+[[roi]]
+id = "CCD65.near_readout"
+detector = "ESO_CCD_#65"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD65.serial_far"
+detector = "ESO_CCD_#65"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD65.parallel_far"
+detector = "ESO_CCD_#65"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD65.far_corner"
+detector = "ESO_CCD_#65"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD65.center"
+detector = "ESO_CCD_#65"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD66.near_readout"
+detector = "ESO_CCD_#66"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD66.serial_far"
+detector = "ESO_CCD_#66"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD66.parallel_far"
+detector = "ESO_CCD_#66"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD66.far_corner"
+detector = "ESO_CCD_#66"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD66.center"
+detector = "ESO_CCD_#66"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD67.near_readout"
+detector = "ESO_CCD_#67"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD67.serial_far"
+detector = "ESO_CCD_#67"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD67.parallel_far"
+detector = "ESO_CCD_#67"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD67.far_corner"
+detector = "ESO_CCD_#67"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD67.center"
+detector = "ESO_CCD_#67"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD68.near_readout"
+detector = "ESO_CCD_#68"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD68.serial_far"
+detector = "ESO_CCD_#68"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD68.parallel_far"
+detector = "ESO_CCD_#68"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD68.far_corner"
+detector = "ESO_CCD_#68"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD68.center"
+detector = "ESO_CCD_#68"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD73.near_readout"
+detector = "ESO_CCD_#73"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD73.serial_far"
+detector = "ESO_CCD_#73"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD73.parallel_far"
+detector = "ESO_CCD_#73"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD73.far_corner"
+detector = "ESO_CCD_#73"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD73.center"
+detector = "ESO_CCD_#73"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD74.near_readout"
+detector = "ESO_CCD_#74"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD74.serial_far"
+detector = "ESO_CCD_#74"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD74.parallel_far"
+detector = "ESO_CCD_#74"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD74.far_corner"
+detector = "ESO_CCD_#74"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD74.center"
+detector = "ESO_CCD_#74"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD75.near_readout"
+detector = "ESO_CCD_#75"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD75.serial_far"
+detector = "ESO_CCD_#75"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD75.parallel_far"
+detector = "ESO_CCD_#75"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD75.far_corner"
+detector = "ESO_CCD_#75"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD75.center"
+detector = "ESO_CCD_#75"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD76.near_readout"
+detector = "ESO_CCD_#76"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD76.serial_far"
+detector = "ESO_CCD_#76"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD76.parallel_far"
+detector = "ESO_CCD_#76"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD76.far_corner"
+detector = "ESO_CCD_#76"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD76.center"
+detector = "ESO_CCD_#76"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD81.near_readout"
+detector = "ESO_CCD_#81"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD81.serial_far"
+detector = "ESO_CCD_#81"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD81.parallel_far"
+detector = "ESO_CCD_#81"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD81.far_corner"
+detector = "ESO_CCD_#81"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD81.center"
+detector = "ESO_CCD_#81"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD82.near_readout"
+detector = "ESO_CCD_#82"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD82.serial_far"
+detector = "ESO_CCD_#82"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD82.parallel_far"
+detector = "ESO_CCD_#82"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD82.far_corner"
+detector = "ESO_CCD_#82"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD82.center"
+detector = "ESO_CCD_#82"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD83.near_readout"
+detector = "ESO_CCD_#83"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD83.serial_far"
+detector = "ESO_CCD_#83"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD83.parallel_far"
+detector = "ESO_CCD_#83"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD83.far_corner"
+detector = "ESO_CCD_#83"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD83.center"
+detector = "ESO_CCD_#83"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD84.near_readout"
+detector = "ESO_CCD_#84"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD84.serial_far"
+detector = "ESO_CCD_#84"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD84.parallel_far"
+detector = "ESO_CCD_#84"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD84.far_corner"
+detector = "ESO_CCD_#84"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD84.center"
+detector = "ESO_CCD_#84"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD89.near_readout"
+detector = "ESO_CCD_#89"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD89.serial_far"
+detector = "ESO_CCD_#89"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD89.parallel_far"
+detector = "ESO_CCD_#89"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD89.far_corner"
+detector = "ESO_CCD_#89"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD89.center"
+detector = "ESO_CCD_#89"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD90.near_readout"
+detector = "ESO_CCD_#90"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD90.serial_far"
+detector = "ESO_CCD_#90"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD90.parallel_far"
+detector = "ESO_CCD_#90"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD90.far_corner"
+detector = "ESO_CCD_#90"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD90.center"
+detector = "ESO_CCD_#90"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD91.near_readout"
+detector = "ESO_CCD_#91"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD91.serial_far"
+detector = "ESO_CCD_#91"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD91.parallel_far"
+detector = "ESO_CCD_#91"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD91.far_corner"
+detector = "ESO_CCD_#91"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD91.center"
+detector = "ESO_CCD_#91"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD92.near_readout"
+detector = "ESO_CCD_#92"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD92.serial_far"
+detector = "ESO_CCD_#92"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD92.parallel_far"
+detector = "ESO_CCD_#92"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD92.far_corner"
+detector = "ESO_CCD_#92"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD92.center"
+detector = "ESO_CCD_#92"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD69.near_readout"
+detector = "ESO_CCD_#69"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD69.serial_far"
+detector = "ESO_CCD_#69"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD69.parallel_far"
+detector = "ESO_CCD_#69"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD69.far_corner"
+detector = "ESO_CCD_#69"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD69.center"
+detector = "ESO_CCD_#69"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD70.near_readout"
+detector = "ESO_CCD_#70"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD70.serial_far"
+detector = "ESO_CCD_#70"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD70.parallel_far"
+detector = "ESO_CCD_#70"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD70.far_corner"
+detector = "ESO_CCD_#70"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD70.center"
+detector = "ESO_CCD_#70"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD71.near_readout"
+detector = "ESO_CCD_#71"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD71.serial_far"
+detector = "ESO_CCD_#71"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD71.parallel_far"
+detector = "ESO_CCD_#71"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD71.far_corner"
+detector = "ESO_CCD_#71"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD71.center"
+detector = "ESO_CCD_#71"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD72.near_readout"
+detector = "ESO_CCD_#72"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD72.serial_far"
+detector = "ESO_CCD_#72"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD72.parallel_far"
+detector = "ESO_CCD_#72"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD72.far_corner"
+detector = "ESO_CCD_#72"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD72.center"
+detector = "ESO_CCD_#72"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD77.near_readout"
+detector = "ESO_CCD_#77"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD77.serial_far"
+detector = "ESO_CCD_#77"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD77.parallel_far"
+detector = "ESO_CCD_#77"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD77.far_corner"
+detector = "ESO_CCD_#77"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD77.center"
+detector = "ESO_CCD_#77"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD78.near_readout"
+detector = "ESO_CCD_#78"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD78.serial_far"
+detector = "ESO_CCD_#78"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD78.parallel_far"
+detector = "ESO_CCD_#78"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD78.far_corner"
+detector = "ESO_CCD_#78"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD78.center"
+detector = "ESO_CCD_#78"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD79.near_readout"
+detector = "ESO_CCD_#79"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD79.serial_far"
+detector = "ESO_CCD_#79"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD79.parallel_far"
+detector = "ESO_CCD_#79"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD79.far_corner"
+detector = "ESO_CCD_#79"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD79.center"
+detector = "ESO_CCD_#79"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD80.near_readout"
+detector = "ESO_CCD_#80"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD80.serial_far"
+detector = "ESO_CCD_#80"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD80.parallel_far"
+detector = "ESO_CCD_#80"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD80.far_corner"
+detector = "ESO_CCD_#80"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD80.center"
+detector = "ESO_CCD_#80"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1790
+ymax = 2301
+
+[[roi]]
+id = "CCD85.near_readout"
+detector = "ESO_CCD_#85"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD85.serial_far"
+detector = "ESO_CCD_#85"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD85.parallel_far"
+detector = "ESO_CCD_#85"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD85.far_corner"
+detector = "ESO_CCD_#85"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD85.center"
+detector = "ESO_CCD_#85"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD86.near_readout"
+detector = "ESO_CCD_#86"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD86.serial_far"
+detector = "ESO_CCD_#86"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD86.parallel_far"
+detector = "ESO_CCD_#86"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD86.far_corner"
+detector = "ESO_CCD_#86"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD86.center"
+detector = "ESO_CCD_#86"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD87.near_readout"
+detector = "ESO_CCD_#87"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD87.serial_far"
+detector = "ESO_CCD_#87"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD87.parallel_far"
+detector = "ESO_CCD_#87"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD87.far_corner"
+detector = "ESO_CCD_#87"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD87.center"
+detector = "ESO_CCD_#87"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD88.near_readout"
+detector = "ESO_CCD_#88"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD88.serial_far"
+detector = "ESO_CCD_#88"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD88.parallel_far"
+detector = "ESO_CCD_#88"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD88.far_corner"
+detector = "ESO_CCD_#88"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD88.center"
+detector = "ESO_CCD_#88"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD93.near_readout"
+detector = "ESO_CCD_#93"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD93.serial_far"
+detector = "ESO_CCD_#93"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD93.parallel_far"
+detector = "ESO_CCD_#93"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD93.far_corner"
+detector = "ESO_CCD_#93"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD93.center"
+detector = "ESO_CCD_#93"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD94.near_readout"
+detector = "ESO_CCD_#94"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD94.serial_far"
+detector = "ESO_CCD_#94"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD94.parallel_far"
+detector = "ESO_CCD_#94"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD94.far_corner"
+detector = "ESO_CCD_#94"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD94.center"
+detector = "ESO_CCD_#94"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD95.near_readout"
+detector = "ESO_CCD_#95"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD95.serial_far"
+detector = "ESO_CCD_#95"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD95.parallel_far"
+detector = "ESO_CCD_#95"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD95.far_corner"
+detector = "ESO_CCD_#95"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD95.center"
+detector = "ESO_CCD_#95"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302
+
+[[roi]]
+id = "CCD96.near_readout"
+detector = "ESO_CCD_#96"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD96.serial_far"
+detector = "ESO_CCD_#96"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 3452
+ymax = 3963
+
+[[roi]]
+id = "CCD96.parallel_far"
+detector = "ESO_CCD_#96"
+amplifier = "L"
+xmin = 1405
+xmax = 1916
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD96.far_corner"
+detector = "ESO_CCD_#96"
+amplifier = "L"
+xmin = 129
+xmax = 640
+ymin = 129
+ymax = 640
+
+[[roi]]
+id = "CCD96.center"
+detector = "ESO_CCD_#96"
+amplifier = "L"
+xmin = 767
+xmax = 1278
+ymin = 1791
+ymax = 2302

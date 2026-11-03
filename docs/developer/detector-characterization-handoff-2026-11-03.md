@@ -191,3 +191,23 @@ preservation checks true; clean main remains unchanged. #230 closed with the
 correction and actual-host receipt. Earlier pending #230 notes above are historical.
 ROI/bias-pair/saturation selections and full instrument bindings remain the next
 scientific preparation, with actual measurement/fit still pending.
+
+
+## Owner-supplied mosaic: readout-oriented ROI configuration
+
+Owner supplied ocam_field_geometry_for_HC.png and instructed defining analogous
+ROIs using the mosaic and PAF illuminated/scan regions. The explicit blue CHIP
+numbers resolve the selected sequence's logical-detector/native-PAF association,
+independent of Python .cfg order. The period-96 ESO manual confirms lower-half
+bottom/left output geometry and 180-degree upper-half rotation, manufacturer L
+output throughout. Actual image arrays/BPM remain unrotated; only ROI bounds are
+reflected. [Geometry and profile](ocam-readout-rois-2026-11-03.md) records formulas,
+32 identity/slot/mosaic positions and five 512x512 ROI proposals per detector.
+The four corner boxes are inset 128 pixels, plus a central box; all are editable
+per detector. The common readout-relative pattern yields 160 unique bounded,
+nonoverlapping rectangles, validated with TOML roundtrip and two named mirror
+examples. PAF/TOML supplements and geometry JSON are under config/characterization.
+This is configuration preparation, no actual-data measurement/fit acceptance.
+Complete output-header admission, saturation and raw-bias-pair choices remain
+before launch. Future comparison products follow the Pictures/instrument rule.
+

@@ -1,0 +1,1253 @@
+{
+  "version": 1,
+  "status": "dataset-specific geometry and ROI candidate; no pixel execution",
+  "sources": [
+    {
+      "path": "mefpp2/ins/mef/config/omegacam.paf",
+      "sha256": "700d77a49113a52da42d986fe2215ae998fd547c439db825d1a551791c48b3db"
+    },
+    {
+      "name": "ocam_field_geometry_for_HC.png",
+      "authority": "owner supplied",
+      "sha256": "e2a0d89c6b7acdb07b11c0d4d173e1114ffbcb3984259574169adaf8150cbb2b"
+    },
+    {
+      "url": "https://www.eso.org/sci/facilities/paranal/instruments/omegacam/doc/VST-MAN-OCM-23100-3110_p96.pdf",
+      "section": "2.2.1"
+    }
+  ],
+  "coordinate_definition": "u,v are 1-based retained-active pixel coordinates increasing away from readout-nearest active corner; not full-device transfer counts",
+  "rois_in_readout_coordinates": [
+    {
+      "name": "near_readout",
+      "bounds": [
+        129,
+        640,
+        129,
+        640
+      ]
+    },
+    {
+      "name": "serial_far",
+      "bounds": [
+        1405,
+        1916,
+        129,
+        640
+      ]
+    },
+    {
+      "name": "parallel_far",
+      "bounds": [
+        129,
+        640,
+        3452,
+        3963
+      ]
+    },
+    {
+      "name": "far_corner",
+      "bounds": [
+        1405,
+        1916,
+        3452,
+        3963
+      ]
+    },
+    {
+      "name": "center",
+      "bounds": [
+        767,
+        1278,
+        1790,
+        2301
+      ]
+    }
+  ],
+  "detectors": [
+    {
+      "detector_id": "ESO_CCD_#65",
+      "amplifier_id": "L",
+      "configuration_detector": 0,
+      "native_paf_chip": 1,
+      "reference_original_hdu": 1,
+      "mosaic_column": 1,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#66",
+      "amplifier_id": "L",
+      "configuration_detector": 1,
+      "native_paf_chip": 2,
+      "reference_original_hdu": 2,
+      "mosaic_column": 2,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#67",
+      "amplifier_id": "L",
+      "configuration_detector": 2,
+      "native_paf_chip": 3,
+      "reference_original_hdu": 3,
+      "mosaic_column": 3,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#68",
+      "amplifier_id": "L",
+      "configuration_detector": 3,
+      "native_paf_chip": 4,
+      "reference_original_hdu": 4,
+      "mosaic_column": 4,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#73",
+      "amplifier_id": "L",
+      "configuration_detector": 4,
+      "native_paf_chip": 5,
+      "reference_original_hdu": 5,
+      "mosaic_column": 1,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#74",
+      "amplifier_id": "L",
+      "configuration_detector": 5,
+      "native_paf_chip": 6,
+      "reference_original_hdu": 6,
+      "mosaic_column": 2,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#75",
+      "amplifier_id": "L",
+      "configuration_detector": 6,
+      "native_paf_chip": 7,
+      "reference_original_hdu": 7,
+      "mosaic_column": 3,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#76",
+      "amplifier_id": "L",
+      "configuration_detector": 7,
+      "native_paf_chip": 8,
+      "reference_original_hdu": 8,
+      "mosaic_column": 4,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#81",
+      "amplifier_id": "L",
+      "configuration_detector": 8,
+      "native_paf_chip": 9,
+      "reference_original_hdu": 9,
+      "mosaic_column": 1,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#82",
+      "amplifier_id": "L",
+      "configuration_detector": 9,
+      "native_paf_chip": 10,
+      "reference_original_hdu": 10,
+      "mosaic_column": 2,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#83",
+      "amplifier_id": "L",
+      "configuration_detector": 10,
+      "native_paf_chip": 11,
+      "reference_original_hdu": 11,
+      "mosaic_column": 3,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#84",
+      "amplifier_id": "L",
+      "configuration_detector": 11,
+      "native_paf_chip": 12,
+      "reference_original_hdu": 12,
+      "mosaic_column": 4,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#89",
+      "amplifier_id": "L",
+      "configuration_detector": 12,
+      "native_paf_chip": 13,
+      "reference_original_hdu": 13,
+      "mosaic_column": 1,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#90",
+      "amplifier_id": "L",
+      "configuration_detector": 13,
+      "native_paf_chip": 14,
+      "reference_original_hdu": 14,
+      "mosaic_column": 2,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#91",
+      "amplifier_id": "L",
+      "configuration_detector": 14,
+      "native_paf_chip": 15,
+      "reference_original_hdu": 15,
+      "mosaic_column": 3,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#92",
+      "amplifier_id": "L",
+      "configuration_detector": 15,
+      "native_paf_chip": 16,
+      "reference_original_hdu": 16,
+      "mosaic_column": 4,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#69",
+      "amplifier_id": "L",
+      "configuration_detector": 16,
+      "native_paf_chip": 17,
+      "reference_original_hdu": 17,
+      "mosaic_column": 5,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#70",
+      "amplifier_id": "L",
+      "configuration_detector": 17,
+      "native_paf_chip": 18,
+      "reference_original_hdu": 18,
+      "mosaic_column": 6,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#71",
+      "amplifier_id": "L",
+      "configuration_detector": 18,
+      "native_paf_chip": 19,
+      "reference_original_hdu": 19,
+      "mosaic_column": 7,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#72",
+      "amplifier_id": "L",
+      "configuration_detector": 19,
+      "native_paf_chip": 20,
+      "reference_original_hdu": 20,
+      "mosaic_column": 8,
+      "mosaic_row_from_bottom": 1,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#77",
+      "amplifier_id": "L",
+      "configuration_detector": 20,
+      "native_paf_chip": 21,
+      "reference_original_hdu": 21,
+      "mosaic_column": 5,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#78",
+      "amplifier_id": "L",
+      "configuration_detector": 21,
+      "native_paf_chip": 22,
+      "reference_original_hdu": 22,
+      "mosaic_column": 6,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#79",
+      "amplifier_id": "L",
+      "configuration_detector": 22,
+      "native_paf_chip": 23,
+      "reference_original_hdu": 23,
+      "mosaic_column": 7,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#80",
+      "amplifier_id": "L",
+      "configuration_detector": 23,
+      "native_paf_chip": 24,
+      "reference_original_hdu": 24,
+      "mosaic_column": 8,
+      "mosaic_row_from_bottom": 2,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        5,
+        4095
+      ],
+      "prescan_x": [
+        5,
+        48
+      ],
+      "overscan_x": [
+        2100,
+        2142
+      ],
+      "readout_nearest_active_corner": [
+        1,
+        1
+      ],
+      "readout_coordinate_sign": [
+        1,
+        1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "lower-left",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#85",
+      "amplifier_id": "L",
+      "configuration_detector": 24,
+      "native_paf_chip": 25,
+      "reference_original_hdu": 25,
+      "mosaic_column": 5,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#86",
+      "amplifier_id": "L",
+      "configuration_detector": 25,
+      "native_paf_chip": 26,
+      "reference_original_hdu": 26,
+      "mosaic_column": 6,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#87",
+      "amplifier_id": "L",
+      "configuration_detector": 26,
+      "native_paf_chip": 27,
+      "reference_original_hdu": 27,
+      "mosaic_column": 7,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#88",
+      "amplifier_id": "L",
+      "configuration_detector": 27,
+      "native_paf_chip": 28,
+      "reference_original_hdu": 28,
+      "mosaic_column": 8,
+      "mosaic_row_from_bottom": 3,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#93",
+      "amplifier_id": "L",
+      "configuration_detector": 28,
+      "native_paf_chip": 29,
+      "reference_original_hdu": 29,
+      "mosaic_column": 5,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#94",
+      "amplifier_id": "L",
+      "configuration_detector": 29,
+      "native_paf_chip": 30,
+      "reference_original_hdu": 30,
+      "mosaic_column": 6,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#95",
+      "amplifier_id": "L",
+      "configuration_detector": 30,
+      "native_paf_chip": 31,
+      "reference_original_hdu": 31,
+      "mosaic_column": 7,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    },
+    {
+      "detector_id": "ESO_CCD_#96",
+      "amplifier_id": "L",
+      "configuration_detector": 31,
+      "native_paf_chip": 32,
+      "reference_original_hdu": 32,
+      "mosaic_column": 8,
+      "mosaic_row_from_bottom": 4,
+      "active_dimensions": [
+        2044,
+        4091
+      ],
+      "raw_crop": [
+        51,
+        2094,
+        105,
+        4195
+      ],
+      "prescan_x": [
+        2100,
+        2142
+      ],
+      "overscan_x": [
+        5,
+        48
+      ],
+      "readout_nearest_active_corner": [
+        2044,
+        4091
+      ],
+      "readout_coordinate_sign": [
+        -1,
+        -1
+      ],
+      "amplifier_corner_in_supplied_mosaic": "upper-right",
+      "reference_hdu_is_not_a_future_binding_rule": true
+    }
+  ]
+}
