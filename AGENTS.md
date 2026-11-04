@@ -1,3 +1,22 @@
+## Project-local QC and independent presentation — owner decision, 4 November 2026
+
+Owner says the HTML viewer looks good. Actual Mac viewer metadata gate aecce5c
+passed7 checks in11.064s at mac-pair-qc-viewer-n3dsjk5f; all four protection guards
+true. Real viewer visual feedback is positive; final generation receipt/guards
+have not yet been pasted, so do not invent their status or close#235 on that basis.
+
+Finish the linearity script before the next HTML navigation change. Then add a
+left-edge recipe selector: bias, BPM, linearity, dark, dome flats, sky flats,
+master flats, science, WCS, zero points, illumination; grow it as recipes develop.
+Keep plotting/HTML generation an independent stage from recipe execution, reading
+persisted shared ASDF QC. Regenerating a presentation must not rerun recipes or
+pixel measurements. QC is per project initially; later add a reference QC database
+through the data-source layer, retaining assessment identities/configuration/units/
+stage/provenance. No database technology, reference-selection/threshold policy,
+implementation of all recipes, file relocation or scientific defaults chosen.
+See qc-mosaic-viewer-requirements-2026-11-04.md. This is a documentation-only decision;
+no repeat qualification, install, merge, cleanup or source sync on Mac is needed.
+
 ## All32 OCAM complete; offline QC mosaic candidate — 4 November 2026
 
 Actual Mac batch ef4d1e2d at Pictures/OCAM/wenu-imaging/ocam-raw-pairs-serial-nx_j6g1j/batch

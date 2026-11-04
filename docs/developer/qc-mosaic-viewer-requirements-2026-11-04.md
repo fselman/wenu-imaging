@@ -31,3 +31,44 @@ no display should imply measured coverage to the65534ADU exclusion boundary.
 Existing geometry viewer maintenance requirements continue: schema/geometry/ROI/
 identity changes update its interpretation and checks in the same change, and
 future authoritative schemas must replace duplicate visualization-only profiles.
+
+
+## Project QC architecture — owner decision, 4 November 2026
+
+Owner reports that the first HTML viewer looks good. Complete the linearity script
+before modifying the HTML navigation. This direction records the next increment;
+it does not request implementation of every recipe now.
+
+Add a recipe selector at the left edge of the HTML page. Initial navigation scope:
+bias, BPM, linearity, dark, dome flats, sky flats, master flats, science, WCS,
+zero points and illumination. Extend the system as each recipe is developed.
+Unavailable or not-yet-implemented recipe assessments must remain explicit; a
+navigation entry must not imply that a recipe ran or has valid QC.
+
+Recipe execution and QC presentation are separate stages:
+
+1. A recipe produces its scientific products and persisted QC measurements with
+   the shared ASDF structure, units, availability and provenance.
+2. Independent plot/HTML generation reads those saved records and project context
+   to create reproducible inspection products. It must be possible to regenerate
+   presentation without executing a recipe or repeating pixel measurements.
+
+Keep plot generation and HTML creation as separate tools/modules from recipe
+runners. Shared QC readers and presentation helpers may be reused. Navigation is
+for inspecting saved recipe assessments; it does not launch recipe execution.
+The existing detector mosaic and enlarged plots remain useful within each recipe
+view. Recipe-specific panels grow incrementally under the common QC contract.
+
+For now, QC is organized per project. A project-local QC context/index should
+identify the recipe assessments, products, input provenance and derived plots/HTML
+belonging to that project. Projects remain independently inspectable; no central
+QC database or service is required. This decision does not move current retained
+instrument data or choose new physical project directories.
+
+Later, augment project QC with a QC database that supplies reference assessments
+for comparison. Preserve source assessment/product identities, configuration,
+detector/readout/binning, correction stage, units and provenance so comparisons
+can be matched appropriately. Database access should extend the QC data-source
+layer rather than couple recipe execution to HTML or require rewriting existing
+measurements. Reference selection, acceptance thresholds and database technology
+remain future decisions; no automatic scientific acceptance is introduced here.
