@@ -1,5 +1,31 @@
 # Approved OCAM singleton extraction batch — 4 November 2026
 
+## Actual real-data completion receipt
+
+Controller efebadf42bf6de6f03638ddb69af68254810ae97 completed on the actual Intel
+Mac at /Users/fselman/Pictures/OCAM/wenu-imaging/ocam-linearity-samples-28h0jxnr.
+Status complete_for_owner_inspection,32 detectors,3200 retained site/frame rows.
+All eight preservation checks passed: shared_images, frozen_metadata, products,
+checkout, installed_files, native_source, qc_source and private_qc_runtime.
+All53 selected input images were checked before and after the serial extraction.
+New metadata controls passed4/4 in0.016s; the ASDF admission fixture passed1/1 in
+2.902s. Actual all32 master ASDF chains verified. CCD69/74/77/84/85 retain9/10
+accepted bias inputs, all other masters10/10. No master/pair/RON recipe rerun.
+
+This count includes explicit unavailable rows; it does not prove3200 admitted
+observations or160 usable sites. The next review reads saved samples.tsv files
+and checks their completed-run output hashes before reporting availability and
+corrected signal ranges. No raw FITS read, hashing, extraction or old qualification
+needs repeating for that review. Its results are not yet available. Native
+transports remain intermediate; final shared ASDF sample publication and the
+justified noise/covariance model, fit interval and actual correction fit remain.
+The original65 historical-byte provenance limit below remains explicit; this
+completed batch establishes and preserves its new byte baseline. No historical
+FITS hash is invented. Keep all products/receipts and prior evidence.
+
+The pending-extraction statements below describe the prepared increment before
+this actual completion receipt; they are superseded by this section.
+
 ## Actual Mac command qualification
 
 Source f560d67a23a6ede62ff6b8fccd755349456c10f6 passed on Intel Mac at

@@ -1,3 +1,8 @@
+Actual Mac corrected-sample batch complete: all32 detectors,3200 retained rows,
+all8preservation checks true at ocam-linearity-samples-28h0jxnr. Next inspect saved
+TSV availability/coverage without FITS reread or remeasurement. See the
+[batch receipt](ocam-linearity-sample-batch-2026-11-04.md). Noise and fit pending.
+
 Current increment: actual Mac singleton command gate passed2/2 with all guards;
 [serial all32 approved-pixel extraction](ocam-linearity-sample-batch-2026-11-04.md)
 is ready for the retained data. Four new metadata controls and one ASDF admission

@@ -1,3 +1,23 @@
+## Actual all32 corrected singleton extraction complete — 4 November 2026
+
+Actual Mac controller efebadf42bf6de6f03638ddb69af68254810ae97 completed at
+Pictures/OCAM/wenu-imaging/ocam-linearity-samples-28h0jxnr. All32 detectors,
+3200 site/frame rows, complete_for_owner_inspection. All8guards true: shared_images,
+frozen_metadata, products, checkout, installed_files, native_source, qc_source,
+private_qc_runtime. All53 selected image files verified before/after. New4metadata
+controls passed0.016s,1ASDF admission fixture2.902s; all32 real master QC chains
+verified with9/10 memberships retained for69/74/77/84/85 and10/10 for others.
+
+Do not repeat extraction/qualification or raw FITS hashing without a new reason.
+3200 is the retained row count, not a claim all observations were admitted. Next
+read only saved native TSVs after checking their retained output hashes; summarize
+admitted/missing sites and corrected signal coverage. Availability/coverage not
+yet returned. Source/FITS arrays need not be reopened for that review. Native
+transports still need final shared ASDF candidate publication. No noise/MC/fit
+interval, weighting, fitted correction or calibration acceptance chosen. Preserve
+all runs/builds/runtime; no install/merge/cleanup. #236 stays open. See
+ocam-linearity-sample-batch-2026-11-04.md for receipt and provenance limits.
+
 ## Actual Mac singleton command passed; serial extraction ready — 4 November 2026
 
 Actual f560d67 Mac C17 gate passed2/2 in8.28s at mac-sample-command-1iwkve9e:
