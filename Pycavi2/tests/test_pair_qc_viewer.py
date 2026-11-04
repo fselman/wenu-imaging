@@ -41,8 +41,8 @@ class ViewerTests(unittest.TestCase):
         self.detectors.write_text(text(self.geometry));self.processing.write_text(text(self.policy))
     def publish(self):
         return viewer.bridge.publish(self.run,self.records,assessment_id='viewer-test',created_at='2026-11-04T00:00:00Z',serializer_revision='2'*40)
-    def build(self,products=None):
-        return viewer.build(self.detectors,self.processing,products or [self.records/'pairs.asdf'])
+    def build(self,products=None,diagnostics=None):
+        return viewer.build(self.detectors,self.processing,products or [self.records/'pairs.asdf'],diagnostics=diagnostics)
     def test_full_precision_missing_and_geometry(self):
         self.publish();payload,frozen=self.build()
         self.assertEqual(payload['panels'][0]['pairs'],self.pairs)
@@ -60,10 +60,24 @@ class ViewerTests(unittest.TestCase):
         viewer.unchanged(frozen)
         # Retain an explicit incomplete-data fixture for browser interaction checks.
         html=viewer.render(payload)
-        self.assertIn('QcResiduals.analyze',html)
+        self.assertNotIn('QcResiduals.analyze',html)
         self.assertIn('id="residual-x"',html)
         self.assertNotIn('__QC_RESIDUAL_SCRIPT__',html)
         (WORK/'viewer-test.html').write_text(html)
+        saved=self.work/'computed';saved.mkdir()
+        product=saved/'CCD65';product.mkdir()
+        result=viewer.residual_qc.publish(self.records/'pairs.asdf',product,assessment_id='residual',created_at='2026-11-04T00:00:00Z',source_revision='3'*40)
+        result['path']='CCD65/line-residuals.asdf'
+        index=saved/'index.json';index.write_text(json.dumps(dict(status='complete',source_preservation=True,products=[result])))
+        original=viewer.residual_qc.analyze
+        try:
+            viewer.residual_qc.analyze=lambda *a,**k:(_ for _ in ()).throw(RuntimeError('display must not refit'))
+            rendered,_=self.build(diagnostics=index)
+        finally:viewer.residual_qc.analyze=original
+        diagnostic=rendered['panels'][0]['diagnostics']
+        self.assertEqual(len(diagnostic['rows']),8)
+        self.assertAlmostEqual(diagnostic['rows'][0]['residual_adu'],-1.)
+        (WORK/'viewer-saved-diagnostic.html').write_text(viewer.render(rendered))
     def test_exposure_projection_preserves_members_nulls_and_signed_values(self):
         original=copy.deepcopy(self.pairs)
         rows=copy.deepcopy(self.pairs)
@@ -87,6 +101,15 @@ class ViewerTests(unittest.TestCase):
         self.assertEqual(self.pairs,original)
         self.assertEqual(rows[0]['first_asset'],'F0.fits')
 
+    def test_saved_diagnostic_digest_mismatch_refused(self):
+        self.publish()
+        saved=self.work/'computed';saved.mkdir()
+        directory=saved/'CCD65';directory.mkdir()
+        result=viewer.residual_qc.publish(self.records/'pairs.asdf',directory,
+            assessment_id='diag',created_at='2026-11-04T00:00:00Z',source_revision='3'*40)
+        result.update(path='CCD65/line-residuals.asdf',digest='0'*64)
+        index=saved/'index.json';index.write_text(json.dumps(dict(status='complete',source_preservation=True,products=[result])))
+        with self.assertRaises(ValueError):self.build(diagnostics=index)
     def test_unavailable_stays_null(self):
         row=self.pairs[0];row['point_gain_e_per_adu']=None;row['gain_state']='nonpositive_variance'
         path=self.run/'native/pairs.tsv';path.write_text('\t'.join(fixtures.bridge.PAIR_COLUMNS)+'\n'+'\n'.join(fixtures.row_text(fixtures.bridge.PAIR_COLUMNS,r) for r in self.pairs)+'\n')

@@ -16,6 +16,20 @@ correction modelling remains subject to a later owner instruction. Mathematical
 implementation guide: [PDF](linearity-residual-display-guide-v1.pdf) and
 [LaTeX](linearity-residual-display-guide-v1.tex).
 
+Current owner correction: [separate computation and plotting](design/linearity-residual-asdf-v2.md).
+Compute diagnostic curves once and save per-detector ASDF, then render from saved
+results. Browser-side fitting in the interim viewer is superseded. Fit intervals
+belong to computation configurations, not plot controls; new settings create new
+immutable diagnostic products. The interim viewer is retained, not overwritten.
+
+Current separation requirement: [residual ASDF v2](design/linearity-residual-asdf-v2.md).
+Run diagnostic computation separately and save per-detector ASDF with all curve
+values/settings/source links; then generate HTML from those saved products only.
+Fit-limit changes are new compute runs, never browser refits. The interim viewer
+is complete, but its browser calculations are superseded. Agent storage9/viewer9
+checks passed; Mac separation qualification, real32-detector diagnostic ASDF
+publication and saved-curve HTML generation remain pending. No physical fit.
+
 ## Current position
 
 All 32 detectors have raw flat-pair diagnostics in ASDF, covering 10 pairs and

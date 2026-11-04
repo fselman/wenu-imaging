@@ -1,3 +1,49 @@
+## Computations and curves must be saved in ASDF before plotting — 4 November 2026
+
+Owner explicitly requires computational/plotting separation. Controlling final
+design: docs/developer/design/linearity-residual-asdf-v2.md. This supersedes
+browser-side OLS in v1. Pure Python service computes the already approved
+unweighted/free-intercept diagnostic; a separate command writes per-detector
+ASDF with settings, coefficients, all predictions/residuals/rates, units and
+frozen source links through the unchanged common QC factory/writer/reader.
+Original measurement ASDF stays immutable. Changing limits needs a fresh compute
+run; HTML only reads saved diagnostics, with read-only saved fit limits and
+interactive presentation controls. No fitting/prediction/residual/rate math in
+HTML. No physical shutter/amplifier correction is authorized.
+
+Actual interim residual viewer completed at ocam-residual-viewer-fes7vt_w with
+all5preservation checks. Retain it. Sourcef2a15c7 Mac qualifier passed2runner+
+8viewer tests, all4guards, mac-residual-viewer-tmpq60uq; retain the earlier failed
+run too. These old gates need no repetition. New storage9 and reader/viewer9
+checks pass here, including analytical cases, separate command, exact ASDF
+round-trip/relocation, source digests, no overwrite and fitter-disabled reads.
+Actual HTML JS shows stored residual values verbatim. Mac separation qualifier
+and real32-detector computation/ASDF publication remain pending. No old native/
+ASDF matrix replay, image reads, measurement rerun, install/merge/cleanup.
+Mathematical guide maintained as LaTeX and compiled PDF v2. Earlier entries are
+historical where superseded. See docs/developer/linearity-residual-asdf-2026-11-04.md.
+
+## Residual computation saved to ASDF before plotting — 4 November 2026
+
+Owner explicitly requires computations separate from plotting and diagnostic
+curves stored in ASDF. Controlling final design: design/linearity-residual-asdf-v2.md.
+This supersedes browser-side OLS in v1. Keep ordinary unweighted free-intercept
+fits and all sample/interval/null definitions. Python pure computation service;
+common QC factory/writer for immutable per-detector ASDF: settings, fit summaries,
+all predictions/residuals/rates, units and frozen source pair graph. Completion
+index carries product digests and source preservation. New interval -> new run.
+HTML only reads saved diagnostic curves, never refits/recomputes; fit settings
+read-only. Existing raw pair and corrected sample archives stay immutable.
+Computation command compute-pair-residuals.py is distinct from view-pair-qc.py
+with --diagnostics. No common writer/schema change or raw FITS read. Guide v2 is
+LaTeX plus compiled PDF. Actual Mac separated-computation gate/persistence pending.
+
+Interim f2a15c7 actual Mac gate passed2runner+8viewer checks (0.031s/12.199s),
+all4guards. Interim residual viewer ocam-residual-viewer-fes7vt_w completed with
+all5guards. Preserve it as history; it is not the final separated-ASDF product.
+No physical shutter/amplifier correction, flat-field adoption, merge/install or
+cleanup. Earlier browser-computation instructions are superseded by this entry.
+
 ## Owner-approved straight-line residual diagnostic — 4 November 2026
 
 Owner inspected the real signal/time viewer and approved per-detector/ROI

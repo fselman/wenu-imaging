@@ -17,7 +17,6 @@ function element(id) {
 }
 const context = vm.createContext({document: {getElementById: element, querySelectorAll: () => []}, window: {print() {}}});
 const run = code => vm.runInContext(code, context);
-run(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
 run(script);
 assert.equal(element('name').textContent, 'ESO_CCD_#65');
 assert.equal((element('mosaic').innerHTML.match(/class="tile"/g) || []).length, 32);
@@ -54,24 +53,19 @@ run('showPoint(0)');
 let diagnostic=JSON.parse(element('point').textContent);
 assert.ok(Math.abs(diagnostic.residual_adu+1)<1e-10);
 assert.equal(diagnostic.fit_included,true);
-element('fit-min').value='1001';element('fit-min').onchange();
-run('showPoint(0)');diagnostic=JSON.parse(element('point').textContent);
-assert.equal(diagnostic.fit_included,false);
-assert.ok(Math.abs(diagnostic.residual_adu+2)<1e-10);
-assert.equal((element('plot').innerHTML.match(/<circle /g)||[]).length,8);
+assert.equal(element('fit-min').onchange,undefined);
 element('residual-x').value='exposure_seconds';element('residual-x').onchange();
 element('residual-y').value='residual_adu';element('residual-y').onchange();
 assert.match(element('plot').innerHTML,/Exposure time/);
 assert.match(element('plot').innerHTML,/Observed − line \(ADU\)/);
-element('fit-max').value='1000';element('fit-max').onchange();
-assert.match(element('plot').innerHTML,/No available values/);
-assert.match(element('fits').innerHTML,/invalid_fit_interval/);
-element('fit-min').value='';element('fit-max').value='';element('fit-min').onchange();
+// Plot the stored value verbatim; no fit/prediction is evaluated in the viewer.
+run('diagnostics[0].rows[0].residual_adu=123.25; detail(); showPoint(0)');
+assert.equal(JSON.parse(element('point').textContent).residual_adu,123.25);
 element('metric').value='count_rate';element('metric').onchange();
 assert.match(element('plot').innerHTML,/Count rate S\/t/);
 element('metric').value='signal_time';element('metric').onchange();
 // Null points stay in the exact table; negative signals stay in the curve.
-run("panels[0].signals[0].signal_adu=null; panels[0].signals[1].signal_adu=-3.25; recalculate(); detail()");
+run("panels[0].signals[0].signal_adu=null; panels[0].signals[1].signal_adu=-3.25; detail()");
 assert.equal((element('plot').innerHTML.match(/<circle /g) || []).length, 7);
 assert.match(element('points').innerHTML, /unavailable/);
 assert.match(element('points').innerHTML, /-3.25/);

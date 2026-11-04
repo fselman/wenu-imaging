@@ -1,0 +1,111 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=22mm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,hyperref}
+\title{Straight-line residual inspection\\Mathematical and implementation guide, v2}
+\author{wenu-imaging}
+\date{4 November 2026}
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\maketitle
+\noindent This guide describes the completed computation, ASDF and display workflow derived from the
+owner-approved design \path{docs/developer/design/linearity-residual-asdf-v2.md}.
+It operates on saved ROI means, not individual image pixels. It produces
+exploratory diagnostics, not physical shutter or amplifier calibrations.
+
+\section{Inputs and selected population}
+For one detector and ROI, each individual flat exposure supplies exposure time
+$t_i$ in seconds and saved bias-subtracted mean signal $S_i$ in ADU. Both members
+of each pair remain separate. Their common accepted pixel population, source
+asset/HDU, acquisition index and original table row remain attached.
+There is no overscan correction or additional flat-fielding in this display.
+The reference-line population $I$ contains finite $(t_i,S_i)$ and satisfies the
+user's inclusive original-signal interval. Blank limits mean all available data.
+No weighting, outlier rejection or hidden exposure cut is applied. Points outside
+$I$ remain visible and receive predictions if a line is available.
+
+\section{Centered ordinary least squares}
+With $n=|I|$, define
+\[
+ \bar t=\frac1n\sum_{i\in I}t_i,\qquad
+ \bar S=\frac1n\sum_{i\in I}S_i,
+\]
+\[
+ b=\frac{\sum_{i\in I}(t_i-\bar t)(S_i-\bar S)}
+          {\sum_{i\in I}(t_i-\bar t)^2},\qquad
+ a=\bar S-b\bar t.
+\]
+The slope $b$ has units ADU/s and $a$ has units ADU. A line requires at least two
+points and nonzero exposure-time spread. Invalid intervals, insufficient points,
+zero time spread and numerical overflow give explicit unavailable states.
+The computation service uses Python math.fsum for accurate summation. Means use the first sample as an
+origin, summing scaled differences; predictions use
+\[
+ \widehat S_i=\bar S+b(t_i-\bar t)
+\]
+rather than directly evaluating $a+bt_i$, reducing cancellation for large time
+origins. No coefficient uncertainties are inferred from these descriptive fits.
+
+\section{Residuals, rates and display}
+For each available original measurement, including outside-interval points,
+\[
+ r_i=S_i-\widehat S_i,\qquad
+ r_{\%,i}=100\frac{r_i}{\widehat S_i}\quad(\widehat S_i>0),\qquad
+ R_i=\frac{S_i}{t_i}\quad(t_i>0).
+\]
+Residuals in ADU remain available at nonpositive predictions, but percentage
+residuals do not. Zero-time count rates and unavailable signals remain null;
+negative measured signals are retained. Nonfinite derived values are null.
+Residual plots use original signal or exposure time on the horizontal axis, and
+percentage or ADU on the vertical axis, with a zero reference. Curves connect
+measurements for inspection; fitting limits affect the line, not displayed data.
+The per-ROI summary reports $a,b,n$, the actual selected time/signal ranges and
+status. All fits, predictions, residuals, rates, settings and units are saved in ASDF before plotting. The HTML reads these values without recalculating them. Fit limits are read-only: a different interval requires a new computation run and a new immutable diagnostic product. The JSON download exports saved values and source references only. Original ASDF measurements are never rewritten.
+
+\section{What a shutter error can show}
+For an otherwise linear, correctly bias-subtracted response under stable light,
+\[
+ S_i=A(t_i+\delta)\quad\Longrightarrow\quad a=A\delta,\quad b=A,
+ \quad R_i=A\left(1+\frac{\delta}{t_i}\right).
+\]
+A free-intercept line absorbs the constant shutter offset: residuals alone do not
+recover it. Its fractional count-rate effect grows as $1/t_i$, motivating the
+separate rate view. An additive residual bias also produces a $1/t_i$ term;
+lamp variation and detector nonlinearity can contribute structure. No physical
+shutter estimate is extracted here. Different signal intervals can yield different
+residual baselines even for the same underlying response.
+
+\section{Separate computation, persistence and plotting}
+\begin{description}
+\item[Arithmetic:] \path{pycavi_residuals.py}, function \texttt{analyze}, implements
+centered OLS and derived per-row values as a pure Python service. It does not
+read files, plot or change input samples.
+\item[Persistence:] \path{pycavi_residual_qc.py} wraps the common QC factory,
+writer and reader. Each detector has an actual derived
+\path{line-residuals.tsv} transport and \path{line-residuals.asdf} sidecar.
+The named \texttt{line\_residual\_diagnostic} extension stores configuration,
+per-ROI fits, all samples/derived values, explicit units and the source pair digest.
+Original QC input graphs are copied locally with frozen semantic links; raw
+images are not copied or read. No common schema/writer modification is needed.
+\item[Computation command:] \path{tools/compute-pair-residuals.py} takes a completed
+pair-ASDF batch (or one pair product), explicit fit limits and a fresh output
+directory. It writes one diagnostic ASDF per detector and a completion index.
+Exact round-trips and input-preservation checks must pass. A failed run remains
+incomplete and is never automatically overwritten or resumed.
+\item[Plotting command:] \path{tools/view-pair-qc.py} accepts the original batch
+plus a completed diagnostic index via \texttt{--diagnostics}. The reader validates
+source and output record digests without repeating the fit. The HTML embeds only
+saved data. Axis, detector, ROI and unit changes are presentation operations;
+there is no regression, prediction, residual or rate arithmetic in the browser.
+Without diagnostic products, original measurement plots still work and missing
+diagnostics are explicit.
+\item[Validation:] \path{test_residual_qc.py} checks analytical solutions,
+restricted intervals, null/signed/zero cases, independent ROIs, rank failure,
+large time origins, ASDF round-trip/relocation, frozen lineage and computation
+without plotting. Reader and viewer tests disable the fitter to prove that
+plotting cannot refit. Viewer JavaScript checks plot supplied stored values
+verbatim. Separate Mac and browser acceptance remain necessary.
+\end{description}
+\noindent The former browser-side computation and v1 guide are historical.
+ASDF is the numerical result; TSV, JSON and HTML are supporting transport or
+inspection products. No physical correction is adopted by this diagnostic.
+\end{document}
