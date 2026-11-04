@@ -32,7 +32,7 @@ the pair-common accepted pixel population. They are not the separately archived
 corrected individual pixels. Nulls remain unavailable and stay in inspection
 rows. No signal range, noise model, weighting, fit or shutter estimate is added.
 
-## Agent validation and pending Mac gate
+## Agent validation and actual Mac display qualification
 
 Nine pair-ASDF/plot checks passed (6.872 s); eight viewer/projection checks passed
 (8.233 s). They use synthetic transports/ASDF with network and FITS access forbidden.
@@ -47,12 +47,17 @@ Chromium launch failed because this environment forbids its socket creation;
 no browser interaction/layout success is claimed. The expanded Playwright test
 is retained for an environment that permits Chromium.
 
-`qualify_signal_time_mac.py` prepares the focused 9+8 metadata/display check on
-the Mac, reusing the now-qualified common writer and private ASDF runtime. Actual
-Mac acceptance of the display extension and real-data viewer generation remain
-pending. After that, generate a fresh viewer from the existing all32 pair-ASDF
-batch, preserve all source archives and show the owner all 3,200 exposure/ROI
-entries, together with pair variance/gain data. Do not rerun pixel extraction.
+`qualify_signal_time_mac.py` passed on the actual Intel Mac at source
+`56b7f489f8b1a0359aa9d5ac312711bd3a27111e`: nine pair/plot tests in 14.710 s
+and eight viewer/projection tests in 10.050 s. Qualification passed; all four
+preservation guards true: checkout, installed_files, exported_source and
+private_qc_runtime. Retained run:
+`/Users/fselman/Software/build/wenu-imaging/mac-signal-time-j4ke56uy`.
+Do not repeat that qualification without a relevant change. Use its qualified
+source/runtime to generate a fresh real-data viewer from the existing all32
+pair-ASDF batch, preserving all source archives. Expected: 32 detectors,
+1,600 pair rows, 3,200 exposure/ROI entries and 160 bias rows. Real-data generation
+and owner browser inspection are pending. Do not rerun pixel extraction.
 
 No modelling until the owner inspects the complete data and instructs that it
 begin. No merge, installation or cleanup. Refs #227, #235, #236.
