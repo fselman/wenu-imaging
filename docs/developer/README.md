@@ -1,3 +1,8 @@
+All160 physical sites have data:3200 admitted samples,0missing. The
+[corrected-sample ASDF adapter](corrected-sample-asdf-2026-11-04.md) passes five
+new checks here; actualMac qualification and persistence follow. No raw reread,
+C rebuild or fit/noise policy change. Plot/HTML remain separate.
+
 Actual Mac corrected-sample batch complete: all32 detectors,3200 retained rows,
 all8preservation checks true at ocam-linearity-samples-28h0jxnr. Next inspect saved
 TSV availability/coverage without FITS reread or remeasurement. See the

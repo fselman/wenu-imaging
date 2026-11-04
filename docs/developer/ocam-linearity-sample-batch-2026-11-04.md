@@ -1,3 +1,8 @@
+Returned availability review:3200/3200 admitted,0missing,160/160 sites. All32
+native tables matched retained output hashes. Rounded individual corrected-pixel
+coverage934.2–53381.5ADU; maxCCD86. No FITS reread or measurement rerun. See
+[ASDF persistence candidate](corrected-sample-asdf-2026-11-04.md).
+
 # Approved OCAM singleton extraction batch — 4 November 2026
 
 ## Actual real-data completion receipt

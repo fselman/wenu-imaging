@@ -1,3 +1,24 @@
+## All160 sites admitted; corrected-sample ASDF candidate — 4 November 2026
+
+Owner's saved-table hash review confirms3200 admitted,0missing,160/160 sites,
+100 samples perCCD. Rounded corrected-pixel coverage934.2..53381.5ADU (maxCCD86).
+No fit/nonlinearity interval inferred. Do not repeat extraction/image hashes/Cgate.
+
+New pycavi_sample_qc +persist-linearity-samples.py reuse unchanged common ASDF
+factory/reader/traversal, freezing native text+typed rows+units/availability and
+frame population, physical site/frame sources, sampling/configuration/provenance.
+Import master QC graph semantically unchanged with accepted/rejected memberships.
+34 records perCCD (expected1088total); originals not reopened or changed. Missing
+None, negative signals preserved. Noise unavailable, covariance/fit interval/
+coefficientsNone, fit not performed. No scientific weighting/model choices.
+
+Agent5new ASDF metadata checks pass5.250s, FITS/network forbidden, including exact
+roundtrip/relocation/master memberships and typed/unit/origin/noise/counter/cohort/
+conflict/frozen-link refusals. ActualMac five-check gate pending via
+qualify_sample_qc_mac.py; no old suite/native build/install. Actual ASDF sample
+persistence pending after target gate; no plots/HTML/fit/correction/merge/cleanup.
+See corrected-sample-asdf-2026-11-04.md. #236 open; approval to proceed persists.
+
 ## Actual all32 corrected singleton extraction complete — 4 November 2026
 
 Actual Mac controller efebadf42bf6de6f03638ddb69af68254810ae97 completed at
