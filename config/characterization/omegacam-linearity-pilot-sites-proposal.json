@@ -1,0 +1,2266 @@
+{
+  "proposal_schema_version": 1,
+  "status": "proposal_not_admitted",
+  "purpose": "compact direct-pixel engineering pilot for correction fit",
+  "source_profiles": {
+    "config/detectors/omegacam-1x1.toml": "09269d7f1e5a69b56f1f32ed7a08653886ff88be57250dda3f185bcc2615de99",
+    "config/processing/omegacam-characterization.toml": "dfc74c0bef8ed6d765876bf2ce0df5da552597c92199a1e80489fdae78247c08"
+  },
+  "source_paf_sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f",
+  "coordinates": "FITS-1-based active and raw pixels; arrays unrotated",
+  "policy": "one central physical pixel per reviewed ROI; half-integer ties choose toward readout in each axis",
+  "frames_per_site": 20,
+  "expected_sites_before_admission": 160,
+  "max_observations_before_admission": 3200,
+  "joint_parameters_if_all_sites_admitted": 225,
+  "amplifiers": 32,
+  "common_shutter_parameters": 1,
+  "full_noise_factor_bytes_if_all_observations_admitted": 81920000,
+  "covariance_model": "not_selected",
+  "fit_interval": "not_selected",
+  "observations_processed": false,
+  "source_master_catalog": "/Users/fselman/Pictures/OCAM/wenu-imaging/linearity-bias-batch-05ijf_sx/masters.json",
+  "invalid_pixel_policy": "record existing BPM/nonfinite/saturation admission; no automatic replacement pixel",
+  "sites": [
+    {
+      "detector": "ESO_CCD_#65",
+      "amplifier": "L",
+      "configuration_detector": 0,
+      "source_roi": "CCD65.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#65",
+      "amplifier": "L",
+      "configuration_detector": 0,
+      "source_roi": "CCD65.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#65",
+      "amplifier": "L",
+      "configuration_detector": 0,
+      "source_roi": "CCD65.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#65",
+      "amplifier": "L",
+      "configuration_detector": 0,
+      "source_roi": "CCD65.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#65",
+      "amplifier": "L",
+      "configuration_detector": 0,
+      "source_roi": "CCD65.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#66",
+      "amplifier": "L",
+      "configuration_detector": 1,
+      "source_roi": "CCD66.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#66",
+      "amplifier": "L",
+      "configuration_detector": 1,
+      "source_roi": "CCD66.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#66",
+      "amplifier": "L",
+      "configuration_detector": 1,
+      "source_roi": "CCD66.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#66",
+      "amplifier": "L",
+      "configuration_detector": 1,
+      "source_roi": "CCD66.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#66",
+      "amplifier": "L",
+      "configuration_detector": 1,
+      "source_roi": "CCD66.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#67",
+      "amplifier": "L",
+      "configuration_detector": 2,
+      "source_roi": "CCD67.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#67",
+      "amplifier": "L",
+      "configuration_detector": 2,
+      "source_roi": "CCD67.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#67",
+      "amplifier": "L",
+      "configuration_detector": 2,
+      "source_roi": "CCD67.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#67",
+      "amplifier": "L",
+      "configuration_detector": 2,
+      "source_roi": "CCD67.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#67",
+      "amplifier": "L",
+      "configuration_detector": 2,
+      "source_roi": "CCD67.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#68",
+      "amplifier": "L",
+      "configuration_detector": 3,
+      "source_roi": "CCD68.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#68",
+      "amplifier": "L",
+      "configuration_detector": 3,
+      "source_roi": "CCD68.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#68",
+      "amplifier": "L",
+      "configuration_detector": 3,
+      "source_roi": "CCD68.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#68",
+      "amplifier": "L",
+      "configuration_detector": 3,
+      "source_roi": "CCD68.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#68",
+      "amplifier": "L",
+      "configuration_detector": 3,
+      "source_roi": "CCD68.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#73",
+      "amplifier": "L",
+      "configuration_detector": 4,
+      "source_roi": "CCD73.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#73",
+      "amplifier": "L",
+      "configuration_detector": 4,
+      "source_roi": "CCD73.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#73",
+      "amplifier": "L",
+      "configuration_detector": 4,
+      "source_roi": "CCD73.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#73",
+      "amplifier": "L",
+      "configuration_detector": 4,
+      "source_roi": "CCD73.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#73",
+      "amplifier": "L",
+      "configuration_detector": 4,
+      "source_roi": "CCD73.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#74",
+      "amplifier": "L",
+      "configuration_detector": 5,
+      "source_roi": "CCD74.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#74",
+      "amplifier": "L",
+      "configuration_detector": 5,
+      "source_roi": "CCD74.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#74",
+      "amplifier": "L",
+      "configuration_detector": 5,
+      "source_roi": "CCD74.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#74",
+      "amplifier": "L",
+      "configuration_detector": 5,
+      "source_roi": "CCD74.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#74",
+      "amplifier": "L",
+      "configuration_detector": 5,
+      "source_roi": "CCD74.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#75",
+      "amplifier": "L",
+      "configuration_detector": 6,
+      "source_roi": "CCD75.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#75",
+      "amplifier": "L",
+      "configuration_detector": 6,
+      "source_roi": "CCD75.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#75",
+      "amplifier": "L",
+      "configuration_detector": 6,
+      "source_roi": "CCD75.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#75",
+      "amplifier": "L",
+      "configuration_detector": 6,
+      "source_roi": "CCD75.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#75",
+      "amplifier": "L",
+      "configuration_detector": 6,
+      "source_roi": "CCD75.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#76",
+      "amplifier": "L",
+      "configuration_detector": 7,
+      "source_roi": "CCD76.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#76",
+      "amplifier": "L",
+      "configuration_detector": 7,
+      "source_roi": "CCD76.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#76",
+      "amplifier": "L",
+      "configuration_detector": 7,
+      "source_roi": "CCD76.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#76",
+      "amplifier": "L",
+      "configuration_detector": 7,
+      "source_roi": "CCD76.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#76",
+      "amplifier": "L",
+      "configuration_detector": 7,
+      "source_roi": "CCD76.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#81",
+      "amplifier": "L",
+      "configuration_detector": 8,
+      "source_roi": "CCD81.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#81",
+      "amplifier": "L",
+      "configuration_detector": 8,
+      "source_roi": "CCD81.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#81",
+      "amplifier": "L",
+      "configuration_detector": 8,
+      "source_roi": "CCD81.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#81",
+      "amplifier": "L",
+      "configuration_detector": 8,
+      "source_roi": "CCD81.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#81",
+      "amplifier": "L",
+      "configuration_detector": 8,
+      "source_roi": "CCD81.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#82",
+      "amplifier": "L",
+      "configuration_detector": 9,
+      "source_roi": "CCD82.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#82",
+      "amplifier": "L",
+      "configuration_detector": 9,
+      "source_roi": "CCD82.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#82",
+      "amplifier": "L",
+      "configuration_detector": 9,
+      "source_roi": "CCD82.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#82",
+      "amplifier": "L",
+      "configuration_detector": 9,
+      "source_roi": "CCD82.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#82",
+      "amplifier": "L",
+      "configuration_detector": 9,
+      "source_roi": "CCD82.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#83",
+      "amplifier": "L",
+      "configuration_detector": 10,
+      "source_roi": "CCD83.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#83",
+      "amplifier": "L",
+      "configuration_detector": 10,
+      "source_roi": "CCD83.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#83",
+      "amplifier": "L",
+      "configuration_detector": 10,
+      "source_roi": "CCD83.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#83",
+      "amplifier": "L",
+      "configuration_detector": 10,
+      "source_roi": "CCD83.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#83",
+      "amplifier": "L",
+      "configuration_detector": 10,
+      "source_roi": "CCD83.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#84",
+      "amplifier": "L",
+      "configuration_detector": 11,
+      "source_roi": "CCD84.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#84",
+      "amplifier": "L",
+      "configuration_detector": 11,
+      "source_roi": "CCD84.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#84",
+      "amplifier": "L",
+      "configuration_detector": 11,
+      "source_roi": "CCD84.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#84",
+      "amplifier": "L",
+      "configuration_detector": 11,
+      "source_roi": "CCD84.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#84",
+      "amplifier": "L",
+      "configuration_detector": 11,
+      "source_roi": "CCD84.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#89",
+      "amplifier": "L",
+      "configuration_detector": 12,
+      "source_roi": "CCD89.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#89",
+      "amplifier": "L",
+      "configuration_detector": 12,
+      "source_roi": "CCD89.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#89",
+      "amplifier": "L",
+      "configuration_detector": 12,
+      "source_roi": "CCD89.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#89",
+      "amplifier": "L",
+      "configuration_detector": 12,
+      "source_roi": "CCD89.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#89",
+      "amplifier": "L",
+      "configuration_detector": 12,
+      "source_roi": "CCD89.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#90",
+      "amplifier": "L",
+      "configuration_detector": 13,
+      "source_roi": "CCD90.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#90",
+      "amplifier": "L",
+      "configuration_detector": 13,
+      "source_roi": "CCD90.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#90",
+      "amplifier": "L",
+      "configuration_detector": 13,
+      "source_roi": "CCD90.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#90",
+      "amplifier": "L",
+      "configuration_detector": 13,
+      "source_roi": "CCD90.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#90",
+      "amplifier": "L",
+      "configuration_detector": 13,
+      "source_roi": "CCD90.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#91",
+      "amplifier": "L",
+      "configuration_detector": 14,
+      "source_roi": "CCD91.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#91",
+      "amplifier": "L",
+      "configuration_detector": 14,
+      "source_roi": "CCD91.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#91",
+      "amplifier": "L",
+      "configuration_detector": 14,
+      "source_roi": "CCD91.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#91",
+      "amplifier": "L",
+      "configuration_detector": 14,
+      "source_roi": "CCD91.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#91",
+      "amplifier": "L",
+      "configuration_detector": 14,
+      "source_roi": "CCD91.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#92",
+      "amplifier": "L",
+      "configuration_detector": 15,
+      "source_roi": "CCD92.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#92",
+      "amplifier": "L",
+      "configuration_detector": 15,
+      "source_roi": "CCD92.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#92",
+      "amplifier": "L",
+      "configuration_detector": 15,
+      "source_roi": "CCD92.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#92",
+      "amplifier": "L",
+      "configuration_detector": 15,
+      "source_roi": "CCD92.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#92",
+      "amplifier": "L",
+      "configuration_detector": 15,
+      "source_roi": "CCD92.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#69",
+      "amplifier": "L",
+      "configuration_detector": 16,
+      "source_roi": "CCD69.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#69",
+      "amplifier": "L",
+      "configuration_detector": 16,
+      "source_roi": "CCD69.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#69",
+      "amplifier": "L",
+      "configuration_detector": 16,
+      "source_roi": "CCD69.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#69",
+      "amplifier": "L",
+      "configuration_detector": 16,
+      "source_roi": "CCD69.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#69",
+      "amplifier": "L",
+      "configuration_detector": 16,
+      "source_roi": "CCD69.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#70",
+      "amplifier": "L",
+      "configuration_detector": 17,
+      "source_roi": "CCD70.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#70",
+      "amplifier": "L",
+      "configuration_detector": 17,
+      "source_roi": "CCD70.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#70",
+      "amplifier": "L",
+      "configuration_detector": 17,
+      "source_roi": "CCD70.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#70",
+      "amplifier": "L",
+      "configuration_detector": 17,
+      "source_roi": "CCD70.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#70",
+      "amplifier": "L",
+      "configuration_detector": 17,
+      "source_roi": "CCD70.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#71",
+      "amplifier": "L",
+      "configuration_detector": 18,
+      "source_roi": "CCD71.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#71",
+      "amplifier": "L",
+      "configuration_detector": 18,
+      "source_roi": "CCD71.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#71",
+      "amplifier": "L",
+      "configuration_detector": 18,
+      "source_roi": "CCD71.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#71",
+      "amplifier": "L",
+      "configuration_detector": 18,
+      "source_roi": "CCD71.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#71",
+      "amplifier": "L",
+      "configuration_detector": 18,
+      "source_roi": "CCD71.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#72",
+      "amplifier": "L",
+      "configuration_detector": 19,
+      "source_roi": "CCD72.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#72",
+      "amplifier": "L",
+      "configuration_detector": 19,
+      "source_roi": "CCD72.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#72",
+      "amplifier": "L",
+      "configuration_detector": 19,
+      "source_roi": "CCD72.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#72",
+      "amplifier": "L",
+      "configuration_detector": 19,
+      "source_roi": "CCD72.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#72",
+      "amplifier": "L",
+      "configuration_detector": 19,
+      "source_roi": "CCD72.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#77",
+      "amplifier": "L",
+      "configuration_detector": 20,
+      "source_roi": "CCD77.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#77",
+      "amplifier": "L",
+      "configuration_detector": 20,
+      "source_roi": "CCD77.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#77",
+      "amplifier": "L",
+      "configuration_detector": 20,
+      "source_roi": "CCD77.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#77",
+      "amplifier": "L",
+      "configuration_detector": 20,
+      "source_roi": "CCD77.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#77",
+      "amplifier": "L",
+      "configuration_detector": 20,
+      "source_roi": "CCD77.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#78",
+      "amplifier": "L",
+      "configuration_detector": 21,
+      "source_roi": "CCD78.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#78",
+      "amplifier": "L",
+      "configuration_detector": 21,
+      "source_roi": "CCD78.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#78",
+      "amplifier": "L",
+      "configuration_detector": 21,
+      "source_roi": "CCD78.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#78",
+      "amplifier": "L",
+      "configuration_detector": 21,
+      "source_roi": "CCD78.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#78",
+      "amplifier": "L",
+      "configuration_detector": 21,
+      "source_roi": "CCD78.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#79",
+      "amplifier": "L",
+      "configuration_detector": 22,
+      "source_roi": "CCD79.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#79",
+      "amplifier": "L",
+      "configuration_detector": 22,
+      "source_roi": "CCD79.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#79",
+      "amplifier": "L",
+      "configuration_detector": 22,
+      "source_roi": "CCD79.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#79",
+      "amplifier": "L",
+      "configuration_detector": 22,
+      "source_roi": "CCD79.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#79",
+      "amplifier": "L",
+      "configuration_detector": 22,
+      "source_roi": "CCD79.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#80",
+      "amplifier": "L",
+      "configuration_detector": 23,
+      "source_roi": "CCD80.near_readout",
+      "active_pixel": [
+        384,
+        384
+      ],
+      "raw_pixel": [
+        434,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#80",
+      "amplifier": "L",
+      "configuration_detector": 23,
+      "source_roi": "CCD80.serial_far",
+      "active_pixel": [
+        1660,
+        384
+      ],
+      "raw_pixel": [
+        1710,
+        388
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#80",
+      "amplifier": "L",
+      "configuration_detector": 23,
+      "source_roi": "CCD80.parallel_far",
+      "active_pixel": [
+        384,
+        3707
+      ],
+      "raw_pixel": [
+        434,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#80",
+      "amplifier": "L",
+      "configuration_detector": 23,
+      "source_roi": "CCD80.far_corner",
+      "active_pixel": [
+        1660,
+        3707
+      ],
+      "raw_pixel": [
+        1710,
+        3711
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#80",
+      "amplifier": "L",
+      "configuration_detector": 23,
+      "source_roi": "CCD80.center",
+      "active_pixel": [
+        1022,
+        2045
+      ],
+      "raw_pixel": [
+        1072,
+        2049
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#85",
+      "amplifier": "L",
+      "configuration_detector": 24,
+      "source_roi": "CCD85.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#85",
+      "amplifier": "L",
+      "configuration_detector": 24,
+      "source_roi": "CCD85.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#85",
+      "amplifier": "L",
+      "configuration_detector": 24,
+      "source_roi": "CCD85.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#85",
+      "amplifier": "L",
+      "configuration_detector": 24,
+      "source_roi": "CCD85.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#85",
+      "amplifier": "L",
+      "configuration_detector": 24,
+      "source_roi": "CCD85.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#86",
+      "amplifier": "L",
+      "configuration_detector": 25,
+      "source_roi": "CCD86.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#86",
+      "amplifier": "L",
+      "configuration_detector": 25,
+      "source_roi": "CCD86.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#86",
+      "amplifier": "L",
+      "configuration_detector": 25,
+      "source_roi": "CCD86.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#86",
+      "amplifier": "L",
+      "configuration_detector": 25,
+      "source_roi": "CCD86.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#86",
+      "amplifier": "L",
+      "configuration_detector": 25,
+      "source_roi": "CCD86.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#87",
+      "amplifier": "L",
+      "configuration_detector": 26,
+      "source_roi": "CCD87.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#87",
+      "amplifier": "L",
+      "configuration_detector": 26,
+      "source_roi": "CCD87.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#87",
+      "amplifier": "L",
+      "configuration_detector": 26,
+      "source_roi": "CCD87.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#87",
+      "amplifier": "L",
+      "configuration_detector": 26,
+      "source_roi": "CCD87.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#87",
+      "amplifier": "L",
+      "configuration_detector": 26,
+      "source_roi": "CCD87.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#88",
+      "amplifier": "L",
+      "configuration_detector": 27,
+      "source_roi": "CCD88.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#88",
+      "amplifier": "L",
+      "configuration_detector": 27,
+      "source_roi": "CCD88.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#88",
+      "amplifier": "L",
+      "configuration_detector": 27,
+      "source_roi": "CCD88.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#88",
+      "amplifier": "L",
+      "configuration_detector": 27,
+      "source_roi": "CCD88.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#88",
+      "amplifier": "L",
+      "configuration_detector": 27,
+      "source_roi": "CCD88.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#93",
+      "amplifier": "L",
+      "configuration_detector": 28,
+      "source_roi": "CCD93.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#93",
+      "amplifier": "L",
+      "configuration_detector": 28,
+      "source_roi": "CCD93.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#93",
+      "amplifier": "L",
+      "configuration_detector": 28,
+      "source_roi": "CCD93.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#93",
+      "amplifier": "L",
+      "configuration_detector": 28,
+      "source_roi": "CCD93.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#93",
+      "amplifier": "L",
+      "configuration_detector": 28,
+      "source_roi": "CCD93.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#94",
+      "amplifier": "L",
+      "configuration_detector": 29,
+      "source_roi": "CCD94.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#94",
+      "amplifier": "L",
+      "configuration_detector": 29,
+      "source_roi": "CCD94.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#94",
+      "amplifier": "L",
+      "configuration_detector": 29,
+      "source_roi": "CCD94.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#94",
+      "amplifier": "L",
+      "configuration_detector": 29,
+      "source_roi": "CCD94.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#94",
+      "amplifier": "L",
+      "configuration_detector": 29,
+      "source_roi": "CCD94.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#95",
+      "amplifier": "L",
+      "configuration_detector": 30,
+      "source_roi": "CCD95.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#95",
+      "amplifier": "L",
+      "configuration_detector": 30,
+      "source_roi": "CCD95.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#95",
+      "amplifier": "L",
+      "configuration_detector": 30,
+      "source_roi": "CCD95.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#95",
+      "amplifier": "L",
+      "configuration_detector": 30,
+      "source_roi": "CCD95.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#95",
+      "amplifier": "L",
+      "configuration_detector": 30,
+      "source_roi": "CCD95.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#96",
+      "amplifier": "L",
+      "configuration_detector": 31,
+      "source_roi": "CCD96.near_readout",
+      "active_pixel": [
+        1661,
+        3708
+      ],
+      "raw_pixel": [
+        1711,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#96",
+      "amplifier": "L",
+      "configuration_detector": 31,
+      "source_roi": "CCD96.serial_far",
+      "active_pixel": [
+        385,
+        3708
+      ],
+      "raw_pixel": [
+        435,
+        3812
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#96",
+      "amplifier": "L",
+      "configuration_detector": 31,
+      "source_roi": "CCD96.parallel_far",
+      "active_pixel": [
+        1661,
+        385
+      ],
+      "raw_pixel": [
+        1711,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#96",
+      "amplifier": "L",
+      "configuration_detector": 31,
+      "source_roi": "CCD96.far_corner",
+      "active_pixel": [
+        385,
+        385
+      ],
+      "raw_pixel": [
+        435,
+        489
+      ]
+    },
+    {
+      "detector": "ESO_CCD_#96",
+      "amplifier": "L",
+      "configuration_detector": 31,
+      "source_roi": "CCD96.center",
+      "active_pixel": [
+        1023,
+        2047
+      ],
+      "raw_pixel": [
+        1073,
+        2151
+      ]
+    }
+  ]
+}

@@ -1,3 +1,23 @@
+## All32 master signals complete; fit population choice pending — 4 November 2026
+
+Actual remaining31 bias batch d84568b completed at
+Pictures/OCAM/wenu-imaging/linearity-bias-batch-05ijf_sx; masters.json indexes32
+signal candidates incl original65. Five controls pass; all8preservation guards true.
+69/74/77/84/85 accepted9/10, others10/10 under unchanged legacy rule. Preserve each
+accepted membership for conditional uncertainty; master variance still unavailable.
+Do not rerun masters or qualifiers without relevant changes.
+
+Next obstacle is the dense direct-pixel fitter's population size (~41.9M sites in
+full5ROIs*32CCD). A review-only160-site proposal is prepared: one central physical
+pixel per ROI,32detectors, at most3200 flat observations and225joint parameters
+with ONE global shutter offset. Raw/active coordinates and reflection tie-break
+are explicit and metadata-checked. NOT adopted or executed. Owner sampling choice
+needed before extraction; never substitute ROI means or silently choose quiet
+replacement pixels. See linearity-fit-sampling-proposal-2026-11-04.md and config/
+characterization/omegacam-linearity-pilot-sites-proposal.json. Noise/distribution/
+MC/fit interval options remain unselected; no identity weights to force a fit.
+#236 open. Keep all existing data/runtime; no install/merge/cleanup.
+
 ## CCD65 bias pilot complete; remaining31 batch ready — 4 November 2026
 
 Actual pilot c93dcd9 at linearity-bias-CCD65-epw82wy3 completed native FITS+ASDF,
