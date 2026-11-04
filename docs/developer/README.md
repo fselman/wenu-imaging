@@ -1,3 +1,5 @@
+- [OCAM linearity bias dependency pilot (4 November 2026)](ocam-linearity-bias-pilot-2026-11-04.md): existing qualified bias recipe, CCD65/ten frames, variance unavailable; real pilot pending (#236).
+
 - [Linearity correction-curve composition (4 November 2026)](linearity-correction-composition-2026-11-04.md): supplied covariance to global shutter/amplifier candidates; focused Mac gate pending (#236).
 
 - [Offline ASDF QC mosaic candidate (4 November 2026)](qc-mosaic-viewer-2026-11-04.md): all32 measurements completed; viewer metadata gate/browser inspection pending (#235).

@@ -1,3 +1,23 @@
+## ROI review complete; real bias dependency pilot next — 4 November 2026
+
+ASDF-only32 detector review completed at linearity-noise-review-ru0k1h1j, all5
+guards true. Coverage extends to52529.9ADU (CCD85), not onlyCCD65's38574.9.
+Targeted ROI review linearity-roi-review-nnvscgpb completed, all6guards true.
+High ordinary RON is localized in75/82/86/96; MAD-RON2.09671 everywhere is a
+quantized2ADU difference MAD, not proof of equal noise. No RON replacement,
+auto-rejection, temporal-noise diagnosis or lamp normalization. Largest69/87/88
+mismatches are2s;88 has5 saturated exclusions only in parallel_far/30s.
+
+Next bounded dependency is a real CCD65 scan-corrected median-bias pilot from the
+10 inventoried biases using the existing qualified022cf368 native bias adapter,
+canonical PAF and explicit structural BPM1=good. Keep first2 RAW RON pair. Existing
+scan/stack/rejection and high-sigma5 diagnostic settings unchanged. Controller
+run_ocam_linearity_bias.py prepares new outputs/whole-file preservation guards;
+current qualified shared ASDF backend, no plotting/HTML, rebuild or new test suite.
+Pilot pending, master variance explicitly unavailable; no Gaussian/MC/fit interval
+or coefficients selected. Inspect actual pilot before corrected-sample use. See
+ocam-linearity-bias-pilot-2026-11-04.md. #236 open; no install/merge/cleanup.
+
 ## Actual Mac correction composition accepted — 4 November 2026
 
 Source aa5427c actual Intel Mac C17 gate passed native_linearity_fit2.16s and
