@@ -98,8 +98,10 @@ def main():
                 'Qualified numerical/ASDF/plot modules changed; prior gates cannot be reused')
         report['reused_gate']=dict(path=str(prior),sha256=hashlib.sha256(prior.read_bytes()).hexdigest(),
                                   unchanged_files=reused)
+        log=command('qualifier-dispatch',[PYTHON,'-B',source/'Pycavi2/tests/test_residual_qualifier_dispatch.py'])
+        print(log.read_text(),flush=True)
         for name,script,filename,count in (
-            ('signal-time-viewer','test_pair_qc_viewer.py','pair-viewer-results.json',8)):
+            ('signal-time-viewer','test_pair_qc_viewer.py','pair-viewer-results.json',8),):
             target=work/name;target.mkdir()
             log=command(name,[PRIVATE/'bin/python','-B',source/'Pycavi2/tests'/script,'--work',target])
             print(log.read_text(),flush=True)
