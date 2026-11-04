@@ -1,3 +1,22 @@
+## All32 OCAM complete; offline QC mosaic candidate — 4 November 2026
+
+Actual Mac batch ef4d1e2d at Pictures/OCAM/wenu-imaging/ocam-raw-pairs-serial-nx_j6g1j/batch
+completed31 native/ASDF/plot detectors; CCD65 reused. Status complete_for_owner_inspection,
+source_preservation true, two shared hash passes/image, error null. Outer checkout,
+installed/exported/private-runtime/reference protections all true. #234 closed.
+No rerun needed. Keep batch, reference65, BPMs, builds and private QC environment.
+
+#235 implements offline geometry-driven ASDF QC HTML: gain/variance mosaic tiles,
+click/keyboard detector selection, enlarged plot/ROI toggles, full point values,
+counts/availability/raw RON/provenance and maintained footprint SVG. Reads validated
+ASDF and small receipts/TOMLs only; no raw FITS/native TSV open, estimator or fit.
+Seven new agent metadata controls pass8.661s; JS syntax passes. Agent Chromium launch
+blocked by local socket permission, so browser interaction/rendering is pending,
+not passed. Actual Mac focused metadata gate via qualify_pair_viewer_mac.py then
+real HTML generation/visual inspection pending. Reuse unchanged ASDF/native gates;
+no installation, rebuild, scientific default, merge or cleanup. See
+qc-mosaic-viewer-2026-11-04.md; PR227 remains draft.
+
 ## Remaining OCAM serial batch candidate — 4 November 2026
 
 Owner says proceed after completed CCD65 ASDF/plots. Issue#234 tracks remaining31.

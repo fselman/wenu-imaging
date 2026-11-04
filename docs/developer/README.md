@@ -1,3 +1,5 @@
+- [Offline ASDF QC mosaic candidate (4 November 2026)](qc-mosaic-viewer-2026-11-04.md): all32 measurements completed; viewer metadata gate/browser inspection pending (#235).
+
 - [Remaining OCAM serial pair batch (4 November 2026)](ocam-serial-pair-batch-2026-11-04.md): shared input verification, pending/completed receipts, per-detector ASDF and focused Mac gate (#234).
 
 [OCAM geometry and analogous ROIs](ocam-readout-rois-2026-11-03.md): the owner's

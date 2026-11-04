@@ -1,0 +1,36 @@
+// Browser interaction controls on supplied ASDF fixture, not real detector acceptance (#235).
+const assert = require('node:assert/strict');
+const {pathToFileURL} = require('node:url');
+const {chromium} = require('playwright');
+(async()=>{
+  const browser = await chromium.launch({executablePath:process.env.QC_CHROMIUM || '/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+  const page = await browser.newPage({viewport:{width:1440,height:1080}});
+  const errors=[],requests=[];
+  page.on('pageerror',e=>errors.push(String(e)));
+  page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
+  await page.goto(pathToFileURL(process.argv[2]).href);
+  assert.equal(await page.locator('.tile').count(),32);
+  assert.equal(await page.locator('.tile').first().evaluate(el=>el.style.gridRow),'8');
+  assert.equal(await page.locator('#name').textContent(),'ESO_CCD_#65');
+  await page.selectOption('#metric','gain');
+  assert.match(await page.locator('#plot').textContent(),/Diagnostic point gain/);
+  await page.locator('#rois input').first().uncheck();
+  assert.equal(await page.locator('#plot circle').count(),2);
+  await page.locator('#plot circle').first().click();
+  assert.equal(JSON.parse(await page.locator('#point').textContent()).roi,'CCD65.R1');
+  await page.locator('#rois input').nth(1).uncheck();
+  await page.locator('#common').uncheck();
+  assert.match(await page.locator('#plot').textContent(),/No available values/);
+  await page.selectOption('#choose','1');
+  assert.match(await page.locator('#plot').textContent(),/No saved QC/);
+  await page.locator('.tile').first().click();
+  assert.equal(await page.locator('#rois input:checked').count(),2);
+  await page.selectOption('#metric','variance');
+  await page.locator('#common').check();
+  await page.screenshot({path:process.argv[3],fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+  assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
+  console.log(JSON.stringify({status:'passed',tiles:32,network_requests:requests,browser_errors:errors,checks:['geometry','metric','roi','point_identity','all_hidden','missing','selection','mobile_width']},null,2));
+  await browser.close();
+})().catch(error=>{console.error(error);process.exit(1);});
