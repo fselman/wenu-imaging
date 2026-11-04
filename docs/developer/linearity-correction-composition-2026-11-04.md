@@ -96,3 +96,15 @@ photometric comparison and higher-signal coverage are separate later validation.
 Keep existing32-detector measurements/ASDF/HTML and all required runtimes unchanged.
 No install, merge, cleanup, pixel correction or forced real-data fit is authorized
 by this numerical qualification.
+
+## Actual Intel Mac qualification receipt
+
+Source aa5427c21ffe85c851a79649cb9cdbca50c35973 passed on the owner's Mac:
+native_linearity_fit2.16s, native_linearity_fit_allocation1.36s,2/2 in3.54s.
+Retained run: /Users/fselman/Software/build/wenu-imaging/mac-linearity-fit-psb7nup5.
+Checkout/installed_files/exported_source preservation all true. This supersedes
+the pending actual Mac gate above, for this bounded composition only. Earlier
+noise/joint/QR/optimizer modules were byte-matched and their gates not replayed.
+No real-data coefficients fitted; no installation/activation. Keep#236 open for
+the remaining corrected-sample/noise/recipe/publication work. Receipt-only update
+requires no repeated tests or user-host source synchronization.

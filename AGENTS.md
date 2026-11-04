@@ -1,3 +1,21 @@
+## Actual Mac correction composition accepted — 4 November 2026
+
+Source aa5427c actual Intel Mac C17 gate passed native_linearity_fit2.16s and
+native_linearity_fit_allocation1.36s:2/2 in3.54s. Retain
+/Users/fselman/Software/build/wenu-imaging/mac-linearity-fit-psb7nup5.
+Checkout/installed_files/exported_source all preserved. Qualified unchanged
+noise/joint/QR/optimizer kernels reused; normal mefpp built without installation.
+Do not repeat this gate without relevant changes. This qualifies synthetic
+correction-candidate composition only, not real fitted coefficients.
+
+#236 stays open: connect bounded corrected physical samples, establish the real
+noise model/scan-estimator/median-master covariance, and add recipe/ASDF candidate
+publication. The supplied ASDF-only32-detector noise review has not yet returned;
+request that evidence before silently choosing gain/fit range/distribution/pooling
+or simulation parameters. No real fit, correction activation, accepted calibration,
+installation, merge or cleanup. Keep plotting/HTML separate from recipe execution.
+See linearity-correction-composition-2026-11-04.md and #236 receipt.
+
 ## Correction-producing linearity composition candidate — 4 November 2026
 
 Owner says proceed with the pixel-response correction curve. #236 now adds an
