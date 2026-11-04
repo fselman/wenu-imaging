@@ -1,3 +1,23 @@
+## CCD65 bias pilot complete; remaining31 batch ready — 4 November 2026
+
+Actual pilot c93dcd9 at linearity-bias-CCD65-epw82wy3 completed native FITS+ASDF,
+10/10 accepted, all5preservation guards true. Raw mean274.0559..278.0642ADU becomes
+corrected mean0.031444..0.084165ADU. This is not scan-estimator uncertainty or known
+master variance. Preserve pilot and qualified022cf368 adapter/current shared QC.
+Attachment155309 shows output pasted into Bash (command-not-found), not a second
+bias recipe run; new guards check the actual retained state before processing.
+
+Remaining31 serial controller reuses pilot recipe choices, independent header/HDU
+maps and native geometry slots. Shared10bias+BPM full hashes once before/after
+whole batch; original65 reused. Per-detector native/ASDF completions remain
+provisional until outer batch source/product/preservation guards pass. Source
+image hashes live in outer receipt; existing ASDF mapper fields remain unchanged.
+Five new focused stdlib control checks pass and run onMac before processing;
+no old numerical/ASDF matrix, build, install, plotting or HTML. Actual batch pending.
+Successful masters.json indexes32 signal candidates and required outer receipt;
+variance remains unavailable. Real noise model/corrected samples/curve fit still
+pending. See ocam-linearity-bias-batch-2026-11-04.md. #236 open; no merge/cleanup.
+
 ## ROI review complete; real bias dependency pilot next — 4 November 2026
 
 ASDF-only32 detector review completed at linearity-noise-review-ru0k1h1j, all5

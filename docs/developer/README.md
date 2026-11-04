@@ -1,3 +1,5 @@
+- [OCAM remaining bias dependencies (4 November 2026)](ocam-linearity-bias-batch-2026-11-04.md): CCD65 pilot passed; shared-input serial31-detector batch pending (#236).
+
 - [OCAM linearity bias dependency pilot (4 November 2026)](ocam-linearity-bias-pilot-2026-11-04.md): existing qualified bias recipe, CCD65/ten frames, variance unavailable; real pilot pending (#236).
 
 - [Linearity correction-curve composition (4 November 2026)](linearity-correction-composition-2026-11-04.md): supplied covariance to global shutter/amplifier candidates; focused Mac gate pending (#236).
