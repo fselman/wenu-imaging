@@ -5,7 +5,16 @@ This replaces v2's proposed broad collection redesign. Existing extraction,
 pair statistics, ASDF products and gain/variance displays already provide most
 of the required machinery. Extend them; do not restart the recipe.
 
-Latest [display increment and actual Mac header receipt](linearity-signal-time-display-2026-11-04.md): signal/time plots and viewer implemented; Mac display qualification and real-data generation pending. Header Mac gate passed27/27 with all5preservation guards.
+Latest: actual Mac signal/time qualification17/17 and full real-data viewer
+completed (32detectors,1600pair rows,3200exposure/ROI entries,160bias rows), all
+preservation checks true. Owner has inspected it and explicitly approved the
+[diagnostic residual display](design/linearity-residual-display-v1.md): unweighted
+free-intercept lines per detector/ROI, residuals versus original signal/time,
+explicit fitting limits, and S/t inspection. This narrowly supersedes the earlier
+no-fitting boundary for diagnostic detrending only. Physical shutter/amplifier
+correction modelling remains subject to a later owner instruction. Mathematical
+implementation guide: [PDF](linearity-residual-display-guide-v1.pdf) and
+[LaTeX](linearity-residual-display-guide-v1.tex).
 
 ## Current position
 

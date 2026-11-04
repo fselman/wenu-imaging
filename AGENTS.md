@@ -1,3 +1,26 @@
+## Owner-approved straight-line residual diagnostic — 4 November 2026
+
+Owner inspected the real signal/time viewer and approved per-detector/ROI
+straight-line detrending as an exploratory display. Final approved design:
+design/linearity-residual-display-v1.md (under docs/developer). Fit unweighted
+S=a+b*t with a free intercept; retain all individual exposures, exact sources,
+nulls and outside-fit-range points. Explicit ADU fit limits; residual x=original
+signal or time, y=percent (positive prediction only) or ADU. Add S/t versus time;
+a constant shutter offset is absorbed by the line and gives a fractional delta/t
+rate effect. No physical shutter estimate or amplifier correction is authorized.
+
+Actual32-detector signal/time viewer complete at Pictures/OCAM/wenu-imaging/
+ocam-signal-time-viewer-wrwn42uk:1600pair rows,3200exposure/ROI rows,160bias rows,
+all5preservation checks true. Actual56b7f48 Mac display gate17/17 passed with
+all4guards (mac-signal-time-j4ke56uy). Do not repeat old gates or extraction.
+New residual module is display-only JS embedded into existing HTML; derived JSON
+export saves settings/OLS summaries/rows/source refs; authoritative ASDF untouched.
+Agent8analytical groups,8Python viewer controls and actual-script JS checks pass;
+browser rendering not claimed (known socket restriction). Mac residual gate and
+fresh real-data residual viewer pending. Guide is LaTeX plus compiled PDF.
+No physical model, flat-field change, merge/install/cleanup. Earlier entries are
+historical where superseded. This permission is limited to diagnostic line fits.
+
 ## Signal/time display candidate; ASDF header Mac gate passed — 4 November 2026
 
 Actual source1a422b99 Mac ASDF comments passed27/27 (shared13 2.308s, pair9

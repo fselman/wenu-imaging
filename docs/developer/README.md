@@ -1,3 +1,5 @@
+Current [approved residual-display design](design/linearity-residual-display-v1.md) and [mathematical guide](linearity-residual-display-guide-v1.pdf) ([LaTeX](linearity-residual-display-guide-v1.tex)): diagnostic free-intercept OLS residuals and count rates, explicit fit intervals, preserved measurements. Mac residual qualification and real-data generation pending. Signal/time viewer complete and owner inspected. No physical correction fit authorized.
+
 Current [signal/time display increment](linearity-signal-time-display-2026-11-04.md): ASDF header Mac gate passed 27/27; third plot and mosaic metric implemented, agent checks passed, Mac display qualification and real-data generation pending. Data inspection precedes modelling.
 
 Owner's [linearity roadmap v3](linearity-roadmap-v3-2026-11-04.md) is controlling:

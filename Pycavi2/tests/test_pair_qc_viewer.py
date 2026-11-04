@@ -59,7 +59,11 @@ class ViewerTests(unittest.TestCase):
         self.assertIn('pairs.asdf',payload['panels'][0]['sources']['pairs']['path'])
         viewer.unchanged(frozen)
         # Retain an explicit incomplete-data fixture for browser interaction checks.
-        (WORK/'viewer-test.html').write_text(viewer.render(payload))
+        html=viewer.render(payload)
+        self.assertIn('QcResiduals.analyze',html)
+        self.assertIn('id="residual-x"',html)
+        self.assertNotIn('__QC_RESIDUAL_SCRIPT__',html)
+        (WORK/'viewer-test.html').write_text(html)
     def test_exposure_projection_preserves_members_nulls_and_signed_values(self):
         original=copy.deepcopy(self.pairs)
         rows=copy.deepcopy(self.pairs)

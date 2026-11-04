@@ -10,13 +10,14 @@ const elements = new Map();
 function element(id) {
   if (!elements.has(id)) elements.set(id, {
     textContent: id === 'qc-data' ? payload : '', innerHTML: '', style: {},
-    value: id === 'metric' ? 'variance' : '', checked: id === 'common',
+    value: id === 'metric' ? 'variance' : id === 'residual-x' ? 'signal_adu' : id === 'residual-y' ? 'residual_percent' : '', checked: id === 'common',
     querySelectorAll: () => [], replaceChildren() { this.innerHTML = ''; this.textContent = ''; }
   });
   return elements.get(id);
 }
 const context = vm.createContext({document: {getElementById: element, querySelectorAll: () => []}, window: {print() {}}});
 const run = code => vm.runInContext(code, context);
+run(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
 run(script);
 assert.equal(element('name').textContent, 'ESO_CCD_#65');
 assert.equal((element('mosaic').innerHTML.match(/class="tile"/g) || []).length, 32);
@@ -43,8 +44,34 @@ for (const metric of ['gain', 'variance', 'signal_time']) {
   element('metric').value = metric; element('metric').onchange();
   assert.match(element('point').textContent, /Select a measured point/);
 }
+// Residual UI uses actual calculated means, limits, axes and exact fit membership.
+element('metric').value='residual';element('metric').onchange();
+assert.match(element('plot').innerHTML,/Observed − line/);
+assert.match(element('plot').innerHTML,/Mean bias-subtracted signal/);
+assert.equal((element('plot').innerHTML.match(/<circle /g)||[]).length,8);
+assert.match(element('fits').innerHTML,/Intercept ADU/);
+run('showPoint(0)');
+let diagnostic=JSON.parse(element('point').textContent);
+assert.ok(Math.abs(diagnostic.residual_adu+1)<1e-10);
+assert.equal(diagnostic.fit_included,true);
+element('fit-min').value='1001';element('fit-min').onchange();
+run('showPoint(0)');diagnostic=JSON.parse(element('point').textContent);
+assert.equal(diagnostic.fit_included,false);
+assert.ok(Math.abs(diagnostic.residual_adu+2)<1e-10);
+assert.equal((element('plot').innerHTML.match(/<circle /g)||[]).length,8);
+element('residual-x').value='exposure_seconds';element('residual-x').onchange();
+element('residual-y').value='residual_adu';element('residual-y').onchange();
+assert.match(element('plot').innerHTML,/Exposure time/);
+assert.match(element('plot').innerHTML,/Observed − line \(ADU\)/);
+element('fit-max').value='1000';element('fit-max').onchange();
+assert.match(element('plot').innerHTML,/No available values/);
+assert.match(element('fits').innerHTML,/invalid_fit_interval/);
+element('fit-min').value='';element('fit-max').value='';element('fit-min').onchange();
+element('metric').value='count_rate';element('metric').onchange();
+assert.match(element('plot').innerHTML,/Count rate S\/t/);
+element('metric').value='signal_time';element('metric').onchange();
 // Null points stay in the exact table; negative signals stay in the curve.
-run("panels[0].signals[0].signal_adu=null; panels[0].signals[1].signal_adu=-3.25; detail()");
+run("panels[0].signals[0].signal_adu=null; panels[0].signals[1].signal_adu=-3.25; recalculate(); detail()");
 assert.equal((element('plot').innerHTML.match(/<circle /g) || []).length, 7);
 assert.match(element('points').innerHTML, /unavailable/);
 assert.match(element('points').innerHTML, /-3.25/);

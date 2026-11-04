@@ -26,7 +26,7 @@ def unchanged(frozen):
 def build(detectors,processing,products):
     """Products are explicit pairs.asdf paths; omitted detectors remain visibly missing."""
     geometry,policy,trims=footprint.load(detectors,processing)
-    before=freeze([detectors,processing,Path(__file__),Path(__file__).with_name('pair-qc-viewer.html')])
+    before=freeze([detectors,processing,Path(__file__),Path(__file__).with_name('pair-qc-viewer.html'),Path(__file__).with_name('pair-qc-residuals.js')])
     by_id={d['id']:d for d in geometry['detector']};data={}
     for product in products:
         product=Path(product).resolve(strict=True)
@@ -75,7 +75,10 @@ def render(payload):
     encoded=json.dumps(payload,ensure_ascii=True,allow_nan=False).replace('<','\\u003c')
     template=Path(__file__).with_name('pair-qc-viewer.html').read_text()
     require(template.count('__QC_PAYLOAD__')==1,'Invalid QC template')
-    return template.replace('__QC_PAYLOAD__',encoded)
+    require(template.count('__QC_RESIDUAL_SCRIPT__')==1,'Invalid residual module placeholder')
+    script=Path(__file__).with_name('pair-qc-residuals.js').read_text()
+    require('</script' not in script.lower(),'Unsafe embedded diagnostic module')
+    return template.replace('__QC_PAYLOAD__',encoded).replace('__QC_RESIDUAL_SCRIPT__',script)
 
 
 def batch_products(batch):
@@ -113,7 +116,7 @@ def main():
     p.add_argument('--run',type=Path,required=True,help='Fresh empty derived viewer directory')
     a=p.parse_args();work=a.run.resolve(strict=True)
     require(not any(work.iterdir()),'Fresh empty viewer directory required')
-    report=dict(status='failed',raw_FITS_opened=False,native_TSV_opened=False,fitted=False)
+    report=dict(status='failed',raw_FITS_opened=False,native_TSV_opened=False,fitted=False,diagnostic_line_fit_available=True,physical_correction_fitted=False)
     def offline(event,args):
         if event in ('socket.connect','socket.connect_ex','socket.getaddrinfo','socket.sendto'):
             raise RuntimeError('Offline viewer generation')
