@@ -1,3 +1,27 @@
+## Owner-approved 160-site pilot; extraction command candidate — 4 November 2026
+
+Owner accepted the sampling proposal with “Yes, proceed.” Approved160 physical
+sites are in omegacam-linearity-pilot-sites.json; review-only proposal stays as
+history. Sampling only: no noise/MC/interval/fit/calibration choice inferred.
+Metadata preparer validates profiles/identities/slot/readout-centre/raw crops and
+writes32 five-singleton transports. Agent all32 preparation and4 changed-input
+refusals passed; no FITS opened. Keep master accepted memberships9/10 or10/10.
+
+New mefpp_sample_extract reuses unchanged bound-file/sample/scan/master kernels,
+shared raw-selection parser, singleton ROIs and explicit active master/HDU. It
+exports original-frame/site rows, missing as blank with not_admitted, frame
+population diagnostics and noise unavailable. No raw-bias remeasurement, means,
+pair averaging, hidden lamp/fit/noise policy. Full-finite API transport bounds
+are not a science interval. Native transport completion is not an overall receipt.
+
+Agent C17 command checks2/2 in1.03s; changed extension-master case recheck0.63s;
+normal mefpp builds. ActualMac focused2-command gate pending via
+qualify_sample_command_mac.py; compare unchanged kernels to passed aa5427c gate.
+Do not rerun old noise/numerical matrices. Actual extraction controller, source/
+master-lineage guards, final ASDF publication and real noise/correction fit still
+pending; approval does not require another sampling question after qualification.
+See linearity-singleton-extraction-2026-11-04.md. No install/merge/cleanup.
+
 ## All32 master signals complete; fit population choice pending — 4 November 2026
 
 Actual remaining31 bias batch d84568b completed at

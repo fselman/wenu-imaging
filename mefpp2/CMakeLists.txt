@@ -215,6 +215,12 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_compile_definitions(mefpp_pair_measure PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   target_link_libraries(mefpp_pair_measure PRIVATE mefpp_linearity_files mefpp_roi_config)
   target_compile_options(mefpp_pair_measure PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(mefpp_sample_extract ins/mef/mefpp_sample_extract.c)
+  set_target_properties(mefpp_sample_extract PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_sample_extract PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_sample_extract PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_sample_extract PRIVATE mefpp_linearity_files mefpp_roi_config)
+  target_compile_options(mefpp_sample_extract PRIVATE -Wall -Wextra -pedantic-errors)
   add_executable(linearity_raw_files_probe tests/linearity_raw_files_probe.c)
   set_target_properties(linearity_raw_files_probe PROPERTIES C_STANDARD 17)
   target_link_libraries(linearity_raw_files_probe PRIVATE mefpp_linearity_files)
@@ -528,6 +534,12 @@ if(BUILD_TESTING)
         --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(pair_runner_orchestration PROPERTIES TIMEOUT 180 LABELS "linearity;command;provenance;configuration")
+    add_test(NAME native_sample_command
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sample_command_contract.py"
+        --command "$<TARGET_FILE:mefpp_sample_extract>"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_sample_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;configuration")
     add_test(NAME native_pair_command
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/pair_command_contract.py"
         --command "$<TARGET_FILE:mefpp_pair_measure>"

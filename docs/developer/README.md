@@ -1,3 +1,9 @@
+Current increment (4 November): owner-approved [160-site sampling and corrected
+singleton extraction](linearity-singleton-extraction-2026-11-04.md). Agent focused
+command checks pass; actual Mac gate and guarded real extraction remain pending.
+Noise model and fit interval remain unselected. All32 master signal candidates
+are retained; do not rerun bias recipes.
+
 - [First real-data linearity sampling proposal (4 November 2026)](linearity-fit-sampling-proposal-2026-11-04.md): all32 master signals complete;160-site direct-pixel engineering pilot proposed, not adopted (#236).
 
 - [OCAM remaining bias dependencies (4 November 2026)](ocam-linearity-bias-batch-2026-11-04.md): CCD65 pilot passed; shared-input serial31-detector batch pending (#236).
