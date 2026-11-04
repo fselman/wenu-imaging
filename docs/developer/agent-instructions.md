@@ -1,3 +1,27 @@
+## Actual corrected-sample ASDF archive complete — 4 November 2026
+
+Qualified0ce05fcd source persisted all32 detector products,3200 rows and1088
+shared ASDF records at Pictures/OCAM/wenu-imaging/ocam-corrected-sample-asdf-xm1ngkg_/
+persistence. Inner statuscomplete; outer complete_for_owner_inspection. All5
+preservation checks true: checkout, installed_files, exported_source,
+private_qc_runtime, native_evidence. Native source tables, master QC graph and
+runtime preserved; no observation reread, image hash or measurement rerun.
+Data preparation/archive stage is complete.3200 admitted,0missing,160/160 sites.
+Do not repeat source exports, qualification, extraction or ASDF conversion.
+
+Next substantive gate is empirical noise/covariance and the real joint correction
+fit. Reuse the agreed uncertainty policy in linearity-uncertainty-review-2026-11-03.md:
+measurement first, actual trimmed scan and median master estimator propagation,
+fixed covariance within a fit, outer sensitivity for estimated weights. Current
+raw pair variance is not automatically corrected independent variance; same-master
+cancellation prevents estimating shared master uncertainty from pair differences.
+No distribution/pooling/MC settings, interval or identity weights selected.
+Review needed same-site bias/scan evidence before choosing a model; retain within-
+block correlations and require justified independence across the3noise blocks.
+One common shutter parameter remains global; amplifier response coefficients
+remain separate. No coefficients fitted/applied, plots/HTML, install/merge/cleanup.
+#236 stays open. See corrected-sample-asdf-2026-11-04.md for actual archive receipt.
+
 ## Actual Mac corrected-sample ASDF gate passed — 4 November 2026
 
 Actual0ce05fcd2c10519cf0a6726df2083cda55a4bf5a passed5/5 in8.938s at

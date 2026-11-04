@@ -1,5 +1,35 @@
 # Corrected singleton samples in shared ASDF — 4 November 2026
 
+## Actual persistence completion receipt
+
+Qualified source0ce05fcd2c10519cf0a6726df2083cda55a4bf5a completed real conversion at
+/Users/fselman/Pictures/OCAM/wenu-imaging/ocam-corrected-sample-asdf-xm1ngkg_.
+The child persistence directory is `persistence/`, with detector products under
+`persistence/asdf/CCD65/samples.asdf` through the32 independently named CCDs.
+Inner statuscomplete:32 detector products,3200 rows,1088 shared ASDF records.
+Outer statuscomplete_for_owner_inspection; checkout, installed_files,
+exported_source, private_qc_runtime and native_evidence all preserved. Source
+native/master evidence and runtime remained unchanged. No FITS reread, source
+image hashing, pixel measurement, fit, plotting or HTML generation occurred.
+
+The corrected-sample archive now contains the3200 admitted observations at160
+physical sites already verified in the native table review. Signal precision,
+units, exact native text, frame counters and source/ROI provenance retain their
+original representations; master QC semantic identities and accepted/rejected
+memberships remain frozen. Keep the complete directory, both receipts, source
+native runs, all originals and qualified runtimes. No replay is needed.
+
+Data preparation is complete. The next substantive stage is the empirical noise/
+covariance model and actual joint shutter/response fit under the already-agreed
+uncertainty policy. Existing raw-pair statistics do not determine the shared
+median-master uncertainty or the error of the applied trimmed scan estimator.
+Do not silently call their total variance the corrected independent component.
+A focused same-site bias/scan characterization is the recommended next scientific
+measurement before choosing distribution/pooling/MC settings and a fit interval.
+No such noise model, simulation configuration, weights, fitted coefficients or
+accepted calibration is selected by this completion receipt. #236 remains open.
+Earlier pending-persistence statements below describe their historical increments.
+
 ## Actual Mac qualification receipt
 
 Source0ce05fcd2c10519cf0a6726df2083cda55a4bf5a passed on the actual Intel Mac at

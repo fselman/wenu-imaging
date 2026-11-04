@@ -1,3 +1,8 @@
+Actual corrected-sample ASDF archive complete:32 products,3200 rows,1088 records,
+all5outer preservation checks true at ocam-corrected-sample-asdf-xm1ngkg_. Data
+preparation is complete; next is the substantive noise/covariance decision before
+joint correction fitting. No repeated conversion/tests/native measurements.
+
 ActualMac corrected-sample ASDF qualification passed5/5 in8.938s, all4guards true
 at mac-sample-asdf-2bqdfrlp. Next persist the retained3200 samples from that exact
 qualified copy/private runtime. No new fetch, tests, native build or measurements.
