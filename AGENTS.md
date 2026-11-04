@@ -1,3 +1,19 @@
+## Actual Mac corrected-sample ASDF gate passed — 4 November 2026
+
+Actual0ce05fcd2c10519cf0a6726df2083cda55a4bf5a passed5/5 in8.938s at
+/Users/fselman/Software/build/wenu-imaging/mac-sample-asdf-2bqdfrlp.
+All4preservation guards true (checkout/install/exported source/private runtime).
+Use that exact qualified source/privateASDF6 runtime for actual persistence of
+ocam-linearity-samples-28h0jxnr into a fresh Pictures directory. Expected32products,
+3200rows,1088records; actual persistence pending. Native/table evidence remains
+frozen; no observations opened or image hashes/measurements/qualification repeated.
+
+This receipt changes metadata only; no Mac fetch, rebuild or installation needed.
+The conversion can run from the existing qualified copy, with normal checkout,
+installed/source/runtime/native-evidence protections and a retained outer receipt.
+No noise/covariance/interval/fit/correction choices. Preserve all evidence/runtime;
+#236 stays open. See corrected-sample-asdf-2026-11-04.md. No merge/cleanup.
+
 ## All160 sites admitted; corrected-sample ASDF candidate — 4 November 2026
 
 Owner's saved-table hash review confirms3200 admitted,0missing,160/160 sites,

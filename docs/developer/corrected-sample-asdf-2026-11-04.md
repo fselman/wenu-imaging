@@ -1,5 +1,22 @@
 # Corrected singleton samples in shared ASDF — 4 November 2026
 
+## Actual Mac qualification receipt
+
+Source0ce05fcd2c10519cf0a6726df2083cda55a4bf5a passed on the actual Intel Mac at
+/Users/fselman/Software/build/wenu-imaging/mac-sample-asdf-2bqdfrlp. Five new
+checks passed5/5 in8.938s; checkout, installed_files, exported_source and
+private_qc_runtime all preserved. Retained versions and extraction-admission
+code matched. No real observations/sample tables, C build, measurements or fit
+were processed by this qualification.
+
+Actual sample ASDF persistence is next, using that exact qualified copy and
+private runtime in a new Pictures directory. Expected32 products,3200 rows and
+1088 records. Protect the unchanged checkout/installed files/qualified source/
+private runtime and saved native/master evidence. Do not repeat tests or fetch
+new source for this metadata receipt. Existing approval authorizes the conversion;
+noise/covariance/fit policy remains unselected. Actual persistence not yet run.
+Earlier pending-qualification statements below describe the prepared increment.
+
 ## Returned availability review
 
 The owner returned a hash-verified review of the completed

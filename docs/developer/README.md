@@ -1,3 +1,7 @@
+ActualMac corrected-sample ASDF qualification passed5/5 in8.938s, all4guards true
+at mac-sample-asdf-2bqdfrlp. Next persist the retained3200 samples from that exact
+qualified copy/private runtime. No new fetch, tests, native build or measurements.
+
 All160 physical sites have data:3200 admitted samples,0missing. The
 [corrected-sample ASDF adapter](corrected-sample-asdf-2026-11-04.md) passes five
 new checks here; actualMac qualification and persistence follow. No raw reread,
