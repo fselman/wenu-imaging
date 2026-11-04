@@ -114,3 +114,34 @@ interval/noise/covariance policy and near-saturation sequence search stay deferr
 The owner's [HTML mosaic viewer requirements](qc-mosaic-viewer-requirements-2026-11-04.md)
 are recorded now for implementation after detector-wide data. No fit, production
 activation, merge or cleanup accompanies this increment.
+
+## Actual Intel Mac qualification and real persistence completed
+
+Owner returned source9f5a35fd qualification:12 shared controls pass in1.648s and
+9 pair/ASDF-only plot controls pass in18.061s. Retained qualification:
+/Users/fselman/Software/build/wenu-imaging/mac-pair-asdf-i7rw5asm.
+All checkout/installed/exported source/private-QC-runtime protections pass.
+
+Real attempt:
+/Users/fselman/Pictures/OCAM/wenu-imaging/ccd65-pair-qc-2bz8baok.
+ASDF persistence complete with25 records,50 pair rows and5 bias-RON rows;
+roundtrip_exact=true and metadata_preservation=true. Input data arrays were not
+opened or remeasured. Saved semantic QC digests:
+
+- pairs.asdf:b69f0a0eaacccb4680de74c207e215c413c313e76a28fd423ec792248c786bb2
+- bias-ron.asdf:6a4e5320b5439626241353918cd949be0a4c0a96286c0173ae8d1d1a4cfe73de
+
+These identify QcRecord content, not raw ASDF byte-file hashes. Both gain and
+variance PNGs are regenerated from saved ASDF only under plots/. The wrapper
+verifies plot source record digest against persisted pairs, and reports overall
+complete_for_owner_inspection. Outer checkout,installed_files,exported_source,
+private_qc_runtime and native_evidence are all preserved. Native revision512092fa
+and serializer9f5a35fd remain separately recorded. #233 is closed for this bounded
+target-qualified persistence/roundtrip/plot scope. No gain/fit scientific acceptance
+or visual approval beyond the returned execution receipts is inferred.
+
+Keep this ASDF/plot directory, original completed native run, structural BPM copy,
+original BPM, failed attempts and runtimes through the branch-closeout retention
+review. Future remaining-detector orchestration is next; none has run. No native
+rebuild, installation, merge or deletion. This receipt-only update needs no host
+source sync or repeated checks. Previous pending-target notes above are historical.

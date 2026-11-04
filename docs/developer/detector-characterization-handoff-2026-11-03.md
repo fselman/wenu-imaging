@@ -549,3 +549,34 @@ characterization and gain/shutter fitting remain deferred. Existing five CCD65
 windows reach only~39kADU mean signal. No all31-detector run, fit, merge or cleanup
 is launched by this persistence increment. See raw-pair-asdf-2026-11-04.md and
 qc-mosaic-viewer-requirements-2026-11-04.md in docs/developer.
+
+## Actual Mac ASDF persistence and plots completed — 4 November 2026
+
+Actual source9f5a35fd qualification passed12 shared-QC checks in1.648s and9 pair/
+plot checks in18.061s. Retain /Users/fselman/Software/build/wenu-imaging/mac-pair-asdf-i7rw5asm;
+checkout/installed/exported source/private QC runtime all preserved. No rerun needed.
+
+Real postprocessing retained at
+/Users/fselman/Pictures/OCAM/wenu-imaging/ccd65-pair-qc-2bz8baok:
+complete_for_owner_inspection,25 ASDF records, exact roundtrip, metadata preserved,
+50 pairs rows and5 bias-RON rows. Both plots regenerated from saved full-precision
+ASDF only. No raw FITS opened/pixels remeasured. Final outer guards all true:
+checkout,installed_files,exported_source,private_qc_runtime,native_evidence.
+Serializer9f5a35fd/native512092fa remain distinct. Canonical saved measurements:
+asdf/records/pairs.asdf digest
+b69f0a0eaacccb4680de74c207e215c413c313e76a28fd423ec792248c786bb2;
+asdf/records/bias-ron.asdf digest
+6a4e5320b5439626241353918cd949be0a4c0a96286c0173ae8d1d1a4cfe73de.
+These are semantic QC digests, not whole-file hashes. Retain both ASDF/plot trees
+and original native transport/evidence; common QC1.1/file ASDF1.6 is qualified.
+#233 closed for bounded persistence/roundtrip/plot acceptance. PR227 stays draft.
+
+Next prepare remaining31-detector serial orchestration, reusing inspected CCD65
+and qualified512092fa native command, hashing shared input set once per batch
+(before/after, not32 full passes). Persist each detector through qualified shared
+ASDF and derive plots from saved records. The planned geometry-driven HTML mosaic
+comes after detector-wide data. No batch has run yet; no scientific fit/gain
+interval/noise/covariance policy is selected. Higher-signal sequence search is
+deferred. Keep original BPM, structural copy, failed runs and needed runtimes.
+No installation, merge or cleanup. Receipt-only documentation needs no user-host
+source sync or repeated tests. See raw-pair-asdf-2026-11-04.md.
