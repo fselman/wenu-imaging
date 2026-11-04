@@ -1,3 +1,25 @@
+## Legacy OCAM BPM structural-copy preparation — 4 November 2026
+
+Actual Mac #231 repair qualification at512092fa passed native_pair_command/native_layout
+2/2 in5.56s, retained mac-extname-binding-it2gdv4q; checkout/install/export all preserved.
+Real retry retained Pictures/OCAM/wenu-imaging/ccd65-raw-pairs-extname-w5wjs5pr:
+all flat/bias bindings pass, BPM discovery fails before pixel loads. All three
+outer preservation checks pass; final runner source checking was not reached.
+Owner supplied read-only33-HDU BPM header receipt: empty primary,32 BITPIX8
+2044x4091 IMAGE extensions with exact identities but missing PCOUNT/GCOUNT.
+Strict rejection is correct; track legacy malformed input separately as #232.
+
+Prepare an explicit derivative with missing PCOUNT=0/GCOUNT=1 only, using
+prepare-legacy-bpm-copy.py. Keep global native validation unchanged and source
+BPM untouched. It streams original stored data/padding, verifies every existing
+header card and data byte, source hash against the failed run's frozen fingerprint,
+and full source preservation. Seven agent synthetic checks pass in0.166s; actual
+Mac preparation remains pending. No native rebuild or old numerical gate replay.
+Then inspect preparation receipt before deriving a selection referencing the copy
+and retrying CCD65. Approved biases,65534 ADU boundary and BPM1=good remain settled.
+Keep both failed real attempts and original BPM; no fit/install/merge/cleanup.
+See docs/developer/ocam-legacy-bpm-copy-2026-11-04.md.
+
 ## CCD65 first real attempt and EXTNAME repair — 4 November 2026
 
 Owner explicitly approved both proposed raw biases, exclusion >=65534 ADU and
