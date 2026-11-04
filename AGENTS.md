@@ -1,3 +1,34 @@
+## CCD65 real measurements completed — 4 November 2026
+
+First actual raw-pair run succeeded with qualified native512092fa and the explicit
+verified structural BPM copy. Retain
+/Users/fselman/Pictures/OCAM/wenu-imaging/ccd65-raw-pairs-bpmfixed-zfs377ok.
+execution.json: complete_for_owner_inspection, native exit0,1 detector,5 ROIs,
+50 pair rows,5 bias-RON rows; final30 source fingerprints unchanged. Outer
+checkout/installed/exported source all preserved. Owner verified full pair-table
+output hash in a subsequent read-only report. No rerun required.
+
+All50 rows have arithmetic_available gain, no nonfinite/saturation exclusions,
+and constant per-ROI populations:262144 except parallel_far262141/far_corner262143.
+Raw bias RON ADU: near1.974218,serial_far1.971490,parallel_far2.028334,
+far_corner2.228890,center2.147637. Raw bias differences have median-4ADU;
+MAD-based RON2.096713ADU throughout. These are diagnostics, not accepted gain.
+Point gains trend upward with signal: five-ROI ranges5s2.298-2.312,20s2.317-2.335,
+40s2.348-2.376,70s2.410-2.425e/ADU. Near-readout gain increases4.90% from5s to70s;
+S/t increases1.14% from2s to70s. These do not identify a unique response/shutter/
+illumination cause. No fitting interval/noise/covariance policy is selected.
+
+Actual Mac structural-copy helper passed7 tests in0.382s;64 cards added across32
+CCDs, all existing cards and stored payload preserved. Retain
+Pictures/OCAM/wenu-imaging/legacy-bpm-structure-b1h9egzp while measurements reference
+it. Original SHA d7aeb7d6041fd2e03d48785298b338ba61860e145a08a4aeb29e0fc9b5a13532;
+copy a22a6b8f478feb43f541f972a1567de962652c916d823eef68be1354e472de7a.
+#231/#232 are target-verified and closed; PR227 remains draft/unmerged. Keep original
+BPM,both failed attempts and retained qualification builds. Approved bias/saturation/
+polarity choices remain settled. Next discuss detector-wide measurements and the
+response-dependent gain before choosing fit policies. No automatic31-detector run,
+fit, installation, merge or cleanup. See ocam-ccd65-first-measurements-2026-11-04.md.
+
 ## Legacy OCAM BPM structural-copy preparation — 4 November 2026
 
 Actual Mac #231 repair qualification at512092fa passed native_pair_command/native_layout
