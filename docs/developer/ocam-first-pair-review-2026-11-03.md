@@ -60,3 +60,30 @@ of amplifier/clock/duplicate-card/coverage, sequence/time and BPM-shape conflict
 No synthetic FITS parser substitute or numerical estimator is introduced. Actual
 Mac review against the retained real inventory is pending; no native rebuild or
 replay of already passed command/numerical tests is needed for this helper.
+
+## Exact-byte PAF fingerprint correction
+
+The owner-returned 11cd074 review stopped before observational header admission:
+Processing/native PAF mismatch. Retained failed review:
+Pictures/OCAM/wenu-imaging/first-pair-review-1GBHmayW; source export:
+Software/build/wenu-imaging/mac-ocam-review-source-8deRhkcZ.
+No observational measurement or selection execution occurred.
+
+The recorded source hash was calculated from a local copy without three trailing
+spaces after the final PAF comment (#_oOo_). Canonical Git bytes retain those
+spaces. Exact comparison finds no directive/parameter difference, only that final
+comment whitespace. Correct canonical PAF SHA256:
+709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f.
+Update the OCAM processing TOML and geometry JSON metadata to this exact-byte hash.
+The WFI hash is already correct. The source PAF, native services/runner and strict
+hash guard are unchanged; no whitespace normalization bypass is introduced.
+
+Regression coverage now checks both processing-profile SHA256 values against
+actual PAF bytes. A complete helper test uses injected saved headers/current file
+stats and the canonical configuration graph, then confirms a changed source
+still causes refusal. Five footprint/configuration checks and four saved-header
+review checks pass. These are metadata-policy checks, not a numerical or real-data
+qualification. Reuse passed 6e75a7b native gates; no native rebuild/test replay.
+Retry only the real saved-header review from a fresh exported source/review
+directory. Preserve the failed attempt. Bias/saturation/BPM proposals remain
+unapproved and unchanged; no real numerical run yet.

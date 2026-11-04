@@ -4,7 +4,7 @@
   "sources": [
     {
       "path": "mefpp2/ins/mef/config/omegacam.paf",
-      "sha256": "700d77a49113a52da42d986fe2215ae998fd547c439db825d1a551791c48b3db"
+      "sha256": "709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f"
     },
     {
       "name": "ocam_field_geometry_for_HC.png",

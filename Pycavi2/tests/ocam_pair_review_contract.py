@@ -1,5 +1,10 @@
 """Saved-header policy and explicit proposal tests; no FITS parser/numerical substitute."""
 import copy
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
 from pathlib import Path
 import runpy
 import tomllib
@@ -46,6 +51,34 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(selection['raw_saturation_adu'],65534)
         self.assertEqual(proposal['status'],'proposal_not_executed')
         self.assertEqual(report['history_review'],['ESO_CCD_#69','ESO_CCD_#77'])
+
+    def test_complete_helper_against_canonical_configuration(self):
+        inventory,_,_=self.fixture()
+        with tempfile.TemporaryDirectory(prefix='ocam-review-policy-') as temporary:
+            parent=Path(temporary);raw=parent/'raw';raw.mkdir()
+            inventory['raw_root']=str(raw)
+            for row in inventory['selected']+inventory['candidates']:
+                path=raw/Path(row['path']).name;path.write_bytes(b'Injected header evidence fixture, not a FITS payload')
+                row['path']=str(path);row['stat_before']=API['stat_identity'](path)
+            source=parent/'inventory.json';source.write_text(json.dumps(inventory))
+            prior=parent/'prior.json';prior.write_text('{}')
+            before={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in raw.iterdir()}
+            out=parent/'review';out.mkdir()
+            command=[sys.executable,'-B',str(ROOT/'tools/prepare-ocam-pair-review.py'),
+                     '--inventory',str(source),'--bpm-review',str(prior),'--output',str(out)]
+            result=subprocess.run(command,capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            receipt=json.loads((out/'review.json').read_text())
+            self.assertEqual(receipt['status'],'prepared_for_owner_choices')
+            self.assertFalse(receipt['measurement_executed'])
+            self.assertTrue((out/'README.md').is_file())
+            self.assertEqual(before,{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in raw.iterdir()})
+            with (raw/Path(inventory['selected'][0]['path']).name).open('ab') as stream:stream.write(b'changed')
+            failed=parent/'failed';failed.mkdir();command[-1]=str(failed)
+            result=subprocess.run(command,capture_output=True,text=True)
+            self.assertNotEqual(result.returncode,0)
+            self.assertEqual(json.loads((failed/'review.json').read_text())['status'],'failed')
+            self.assertFalse((failed/'selection-proposed.toml').exists())
 
     def test_refuse_changed_output_amplifier_clock_or_duplicate_card(self):
         for case in ('amplifier','clock','duplicate','coverage'):

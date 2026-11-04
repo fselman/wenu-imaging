@@ -1,5 +1,6 @@
 """Geometry regression tests: independent landmarks, PAF agreement and refusals."""
 import copy
+import hashlib
 import importlib.util
 from pathlib import Path
 import re
@@ -15,6 +16,13 @@ class Footprints(unittest.TestCase):
     def read(self,instrument):
         return viewer.load(ROOT/f'config/detectors/{instrument}-1x1.toml',
                            ROOT/f'config/processing/{instrument}-characterization.toml')
+
+    def test_exact_native_paf_source_fingerprints(self):
+        for instrument in ('omegacam','wfi'):
+            _,processing,_=self.read(instrument)
+            native=ROOT/processing['source_paf']
+            self.assertEqual(processing['source_paf_sha256'],
+                             hashlib.sha256(native.read_bytes()).hexdigest())
 
     def test_ocam_identity_reflection_and_raw_coordinates(self):
         g,p,t=self.read('omegacam')
