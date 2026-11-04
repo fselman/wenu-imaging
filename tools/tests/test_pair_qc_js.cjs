@@ -10,7 +10,7 @@ const elements = new Map();
 function element(id) {
   if (!elements.has(id)) elements.set(id, {
     textContent: id === 'qc-data' ? payload : '', innerHTML: '', style: {},
-    value: id === 'metric' ? 'variance' : id === 'residual-x' ? 'signal_adu' : id === 'residual-y' ? 'residual_percent' : '', checked: id === 'common',
+    value: id === 'metric' ? 'variance' : id === 'residual-x' ? 'signal_adu' : id === 'residual-y' ? 'residual_percent' : id === 'ratio-y' ? 'normalized_ratio' : '', checked: id === 'common',
     querySelectorAll: () => [], replaceChildren() { this.innerHTML = ''; this.textContent = ''; }
   });
   return elements.get(id);
@@ -77,3 +77,26 @@ assert.match(element('points').innerHTML, /unavailable/);
 assert.match(element('points').innerHTML, /-3.25/);
 assert.doesNotMatch(element('plot').innerHTML, /NaN|Infinity|undefined/);
 console.log('PASS: actual viewer JavaScript values, metric switching, member/source identity, ROI filtering, missing/null/negative data; browser layout not exercised.');
+
+// Saved same-exposure ratios use the shared axes/cursor and no browser division.
+if (JSON.parse(payload).panels[0].ratio) {
+  element('residual-x').value='signal_adu';
+  element('metric').value='ratio';element('metric').onchange();
+  assert.equal((element('plot').innerHTML.match(/<circle /g)||[]).length,4);
+  assert.match(element('plot').innerHTML,/65,535/);
+  assert.match(element('plot').innerHTML,/data-inspection/);
+  assert.match(element('points').innerHTML,/F3.fits/);
+  run('showPoint(0)');
+  let ratio=JSON.parse(element('point').textContent);
+  assert.equal(ratio.asset,'F0.fits');assert.equal(ratio.pair_member,1);
+  assert.ok(ratio.raw_ratio>0);assert.ok(ratio.normalized_ratio>0);
+  element('ratio-y').value='ratio_departure_percent';element('ratio-y').onchange();
+  assert.match(element('plot').innerHTML,/ROI ratio departure/);
+  element('residual-x').value='exposure_seconds';element('residual-x').onchange();
+  assert.match(element('plot').innerHTML,/Exposure time/);
+  run('panels[0].ratio.rows[0].ratio_departure_percent=17.125;detail();showPoint(0)');
+  assert.equal(JSON.parse(element('point').textContent).ratio_departure_percent,17.125);
+  element('metric').value='variance';element('metric').onchange();
+  assert.equal(run('enabled.size'),2);
+  console.log('PASS: saved ROI ratios, normalization/departure views, exact values, shared signal/time axes and cursor hooks.');
+}

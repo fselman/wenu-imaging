@@ -13,6 +13,7 @@ import pycavi_pair_qc as bridge
 from pycavi_pair_display import exposure_rows
 from pycavi_pair_products import batch_products
 import pycavi_residual_qc as residual_qc
+import pycavi_roi_ratio_qc as ratio_qc
 spec=importlib.util.spec_from_file_location('footprints',ROOT/'tools/detector-footprint.py')
 footprint=importlib.util.module_from_spec(spec);spec.loader.exec_module(footprint)
 require=bridge.qc.require
@@ -26,7 +27,7 @@ def unchanged(frozen):
     require(freeze(frozen)==frozen,'QC viewer input changed during generation')
 
 
-def build(detectors,processing,products,diagnostics=None):
+def build(detectors,processing,products,diagnostics=None,ratios=None):
     """Products are explicit pairs.asdf paths; omitted detectors remain visibly missing."""
     geometry,policy,trims=footprint.load(detectors,processing)
     before=freeze([detectors,processing,Path(__file__),Path(__file__).with_name('pair-qc-viewer.html'),Path(__file__).with_name('qc-plot-inspection.js'),ROOT/'config/plotting/signal-axis-v1.json'])
@@ -91,6 +92,24 @@ def build(detectors,processing,products,diagnostics=None):
         for panel in panels:
             if panel['status']=='available':
                 panel['diagnostics']=data[panel['geometry']['id']]['diagnostics']
+    if ratios is not None:
+        ratio_index=Path(ratios).resolve(strict=True);before.update(freeze([ratio_index]))
+        saved=json.loads(bridge.small(ratio_index))
+        require(saved['status']=='complete' and saved['source_preservation'],'Incomplete ratio run')
+        seen=set()
+        for item in saved['products']:
+            identity=item['detector'];require(identity in data and identity not in seen,'Unknown/duplicate ratio detector');seen.add(identity)
+            path=(ratio_index.parent/item['path']).resolve(strict=True)
+            require(path.is_relative_to(ratio_index.parent),'Ratio path escapes run')
+            before.update(residual_qc.source_graph(path))
+            value=ratio_qc.read_product(path,expected_digest=item['digest'],
+                expected_residual_digest=data[identity].get('sources',{}).get('diagnostics',{}).get('record_digest'))
+            require(value['source_pair_digest']==data[identity]['sources']['pairs']['record_digest'],'Ratio/measurement source differs')
+            data[identity]['ratio']=value
+            data[identity]['sources']['ratio']=dict(path=str(path),record_digest=item['digest'])
+        require(seen==set(data),'Ratio detector coverage differs')
+        for panel in panels:
+            if panel['status']=='available':panel['ratio']=data[panel['geometry']['id']]['ratio']
     unchanged(before)
     return payload,before
 
@@ -113,6 +132,7 @@ def render(payload):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--batch',type=Path,required=True)
+    p.add_argument('--ratios',type=Path,help='Completed compute-roi-ratios index.json')
     p.add_argument('--diagnostics',type=Path,help='Completed compute-pair-residuals index.json')
     p.add_argument('--run',type=Path,required=True,help='Fresh empty derived viewer directory')
     a=p.parse_args();work=a.run.resolve(strict=True)
@@ -124,7 +144,7 @@ def main():
     sys.addaudithook(offline)
     try:
         products,frozen=batch_products(a.batch)
-        payload,inputs=build(ROOT/'config/detectors/omegacam-1x1.toml',ROOT/'config/processing/omegacam-characterization.toml',products,diagnostics=a.diagnostics)
+        payload,inputs=build(ROOT/'config/detectors/omegacam-1x1.toml',ROOT/'config/processing/omegacam-characterization.toml',products,diagnostics=a.diagnostics,ratios=a.ratios)
         frozen.update(inputs)
         require(len(payload['panels'])==32 and all(d['status']=='available' for d in payload['panels']),
                 'Completed OCAM batch requires all32 detectors')
@@ -133,6 +153,7 @@ def main():
         unchanged(frozen)
         report.update(status='complete_for_owner_inspection',detectors=32,
             signal_time_rows=sum(len(d['signals']) for d in payload['panels']),
+            ratio_rows=sum(len(d.get('ratio',{}).get('rows',[])) for d in payload['panels']),
             data_output=dict(path=str(data_path),sha256=bridge.sha(data_path.read_bytes())),
             pair_rows=sum(len(d['pairs']) for d in payload['panels']),bias_rows=sum(len(d['bias']) for d in payload['panels']),
             inputs_sha256=frozen,output=dict(path=str(output),sha256=bridge.sha(output.read_bytes())),source_preservation=True)

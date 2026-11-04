@@ -41,8 +41,8 @@ class ViewerTests(unittest.TestCase):
         self.detectors.write_text(text(self.geometry));self.processing.write_text(text(self.policy))
     def publish(self):
         return viewer.bridge.publish(self.run,self.records,assessment_id='viewer-test',created_at='2026-11-04T00:00:00Z',serializer_revision='2'*40)
-    def build(self,products=None,diagnostics=None):
-        return viewer.build(self.detectors,self.processing,products or [self.records/'pairs.asdf'],diagnostics=diagnostics)
+    def build(self,products=None,diagnostics=None,ratios=None):
+        return viewer.build(self.detectors,self.processing,products or [self.records/'pairs.asdf'],diagnostics=diagnostics,ratios=ratios)
     def test_full_precision_missing_and_geometry(self):
         self.publish();payload,frozen=self.build()
         self.assertEqual(payload['panels'][0]['pairs'],self.pairs)
@@ -78,6 +78,28 @@ class ViewerTests(unittest.TestCase):
         self.assertEqual(len(diagnostic['rows']),8)
         self.assertAlmostEqual(diagnostic['rows'][0]['residual_adu'],-1.)
         (WORK/'viewer-saved-diagnostic.html').write_text(viewer.render(rendered))
+        ratios=self.work/'ratios';ratios.mkdir()
+        output=ratios/'CCD65';output.mkdir()
+        ratio=viewer.ratio_qc.publish(product/'line-residuals.asdf',output,
+            assessment_id='ratio',created_at='2026-11-04T00:00:00Z',source_revision='4'*40,
+            numerator_suffix='R0',denominator_suffix='R1',minimum=900.,maximum=1100.)
+        ratio['path']='CCD65/roi-ratio.asdf'
+        ratio_index=ratios/'index.json'
+        ratio_index.write_text(json.dumps(dict(status='complete',source_preservation=True,products=[ratio])))
+        original_ratio=viewer.ratio_qc.compute
+        try:
+            viewer.ratio_qc.compute=lambda *a,**k:(_ for _ in ()).throw(RuntimeError('display must not divide/normalize'))
+            viewer.residual_qc.analyze=lambda *a,**k:(_ for _ in ()).throw(RuntimeError('display must not refit'))
+            rendered,frozen=self.build(diagnostics=index,ratios=ratio_index)
+        finally:
+            viewer.ratio_qc.compute=original_ratio;viewer.residual_qc.analyze=original
+        self.assertEqual(len(rendered['panels'][0]['ratio']['rows']),4)
+        viewer.unchanged(frozen)
+        (WORK/'viewer-ratio-test.html').write_text(viewer.render(rendered))
+        bad=json.loads(ratio_index.read_text());bad['products'][0]['digest']='0'*64
+        ratio_index.write_text(json.dumps(bad))
+        with self.assertRaises(ValueError):self.build(diagnostics=index,ratios=ratio_index)
+
     def test_exposure_projection_preserves_members_nulls_and_signed_values(self):
         original=copy.deepcopy(self.pairs)
         rows=copy.deepcopy(self.pairs)

@@ -1,3 +1,36 @@
+## Same-exposure ROI ratio and overscan requirement — 4 November 2026
+
+Owner requires overscan subtraction in ALL bias/flat frames: observed row ramp
+near the output settles after a few hundred rows. Preserve the row dependence;
+a single global level must not be substituted without evidence. Use consistent
+overscan treatment of master-bias inputs and flats, avoiding double subtraction.
+The spatial pattern is evidence to inspect, not proof of a physical shutter term.
+Final ratio design: docs/developer/design/roi-ratio-asdf-v1.md. Compute
+near_readout/parallel_far for each exact exposure/member from existing stored
+original ROI signals. Save raw ratio, arithmetic reference mean (BOTH signals
+15000..35000ADU inclusive), normalized ratio, percentage departure, membership,
+units, stage and frozen lineage in NEW ASDF. No scientific math in plotting.
+Plot saved ratio vs numerator signal or time using shared axes/cursor.
+
+Current archive is raw_pair_bias_subtracted_without_overscan; ratio HTML must
+say so. This increment does not perform an image remeasurement or claim an
+overscan-corrected ROI archive. Next perform the consistent all-frame overscan
+ROI measurement pass, with its own explicit reviewed estimator/edge handling,
+then recompute these diagnostics and compare before any physical modelling.
+Do not mix the corrected singleton pilot with full ROI means. Preserve all inputs.
+
+Actual b8dfd40 Mac gate passed30/30, all4guards, retained mac-shared-plot-w2slb5vp.
+Actual separate15000..35000ADU line-ASDF computation complete at
+ocam-residual-asdf-15000-35000-hwolegq7:32products,160ROI summaries,3200rows,
+all5outerguards. Repeated pasted logs are one run; do not repeat these gates.
+New agent ratio8, viewer9 and dispatch3 pass; JavaScript ratio controls pass.
+Actual Mac ratio gate and640-row real ratio publication remain pending.
+Use qualify_roi_ratio_mac.py: reuse unchanged qualified common/numerical modules,
+run only changed ratio8+viewer9 and3dispatch checks. Then compute ratio ASDF;
+render independently. No dependency provisioning, installation, merge or cleanup.
+Mathematical implementation guide: roi-ratio-guide-v1.tex and compiled PDF.
+Earlier entries below are historical where superseded.
+
 ## Shared plot axes/cursor; proposed middle reference interval — 4 November 2026
 
 Owner requests modular reusable plotting. Use tools/qc-plot-inspection.js for

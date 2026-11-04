@@ -1,5 +1,21 @@
 # Linearity roadmap v3 — display the measurements before modelling
 
+Current sequence after owner inspection, 4 November 2026:
+1. Preserve the complete raw-pair data and completed15000..35000ADU diagnostic
+   ASDF (32detectors/160ROI summaries/3200rows; all5guards true).
+2. Add exact same-exposure near_readout/parallel_far ratio: compute/save new
+   ASDF first, then add HTML metric using shared axes/cursor. Raw, normalized,
+   and percent departure; BOTH ROI signals select the reference interval.
+   Candidate implemented and fixture checked; Mac gate then640-row run pending.
+3. Subtract row-dependent overscan consistently from ALL bias and flat inputs,
+   retaining ramp/settling diagnostics and master-bias consistency. Review exact
+   estimator/edge handling before the separate full ROI measurement pass.
+   Existing raw archive remains the explicit no-overscan comparison. Corrected
+   singleton samples are not full ROI means.
+4. Inspect all corrected signals, ratios and residuals in ASDF/HTML before
+   deciding on a robust common shutter term and detector linearity treatment.
+   No physical shutter/response modelling in the ratio increment.
+
 4 November 2026. Owner-approved sequence, refs #236 and #235.
 This replaces v2's proposed broad collection redesign. Existing extraction,
 pair statistics, ASDF products and gain/variance displays already provide most

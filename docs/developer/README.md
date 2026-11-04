@@ -1,3 +1,9 @@
+Current [same-exposure ratio diagnostic](roi-ratio-diagnostic-2026-11-04.md):
+compute and save new ASDF, then plot near_readout/parallel_far with shared cursor.
+Current inputs have no overscan correction. Owner requires consistent all-frame
+overscan subtraction next, before physical modelling. [Final design](design/roi-ratio-asdf-v1.md),
+[mathematical guide LaTeX](roi-ratio-guide-v1.tex) / [PDF](roi-ratio-guide-v1.pdf).
+
 Current [shared plotting component](shared-plot-inspection-2026-11-04.md): one signal-axis spec for HTML/static plots, generic crosshair and continuous x/y readout; saved scientific values remain separate. Proposed next reference fit15000–35000ADU is recorded explicitly for computation/ASDF. Mac gate and real ASDF run pending.
 
 Current [computation → ASDF → plotting contract](design/linearity-residual-asdf-v2.md): numerical results/curves are saved before plotting; HTML only reads them. [Implementation and status](linearity-residual-asdf-2026-11-04.md), [guide PDF](linearity-residual-asdf-guide-v2.pdf), [LaTeX](linearity-residual-asdf-guide-v2.tex). This supersedes browser-side residual fitting. Agent18/18 storage/viewer checks pass; Mac qualification and actual ASDF run pending.

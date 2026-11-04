@@ -50,6 +50,17 @@ const {chromium} = require('playwright');
   const downloading=page.waitForEvent('download');
   await page.locator('#save-diagnostic').click();
   assert.equal((await downloading).suggestedFilename(),'linearity-line-residual-diagnostic.json');
+  if (await page.evaluate(()=>!!JSON.parse(document.getElementById('qc-data').textContent).panels[0].ratio)) {
+    await page.selectOption('#metric','ratio');
+    assert.equal(await page.locator('#plot circle').count(),4);
+    assert.match(await page.locator('#plot').textContent(),/ROI ratio/);
+    await page.selectOption('#ratio-y','ratio_departure_percent');
+    await page.locator('#points tbody tr').first().click();
+    const ratio=JSON.parse(await page.locator('#point').textContent());
+    assert.equal(ratio.asset,'F0.fits');assert.equal(ratio.pair_member,1);
+    assert.ok(ratio.raw_ratio>0);
+    await page.screenshot({path:process.argv[3].replace(/\.png$/, '-roi-ratio.png'),fullPage:true});
+  }
   await page.selectOption('#metric','count_rate');
   assert.match(await page.locator('#plot').textContent(),/Count rate/);
   await page.selectOption('#metric','variance');
