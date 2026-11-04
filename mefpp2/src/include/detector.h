@@ -35,6 +35,7 @@
 #include "detector_joint.h"
 #include "detector_roi.h"
 #include "detector_noise.h"
+#include "detector_linearity_fit.h"
 
 /*-----------------------------------------------------------------------------
    						Function ANSI C prototypes	

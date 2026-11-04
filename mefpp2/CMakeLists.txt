@@ -282,6 +282,20 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_link_libraries(qfits_discovery_probe PRIVATE qfits)
   add_executable(measurement_stats_probe tests/measurement_stats_probe.c)
   if(MEFPP_BUILD_BIAS_ADAPTER)
+    add_executable(linearity_fit_probe tests/linearity_fit_probe.c)
+    target_link_libraries(linearity_fit_probe PRIVATE eclipse)
+    target_compile_options(linearity_fit_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    add_library(linearity_fit_allocation_units OBJECT src/iproc/detector_linearity_fit.c)
+    target_include_directories(linearity_fit_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(linearity_fit_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(linearity_fit_allocation_probe tests/linearity_fit_allocation_probe.c
+      $<TARGET_OBJECTS:linearity_fit_allocation_units>)
+    target_compile_definitions(linearity_fit_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(linearity_fit_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    target_link_libraries(linearity_fit_allocation_probe PRIVATE eclipse)
     add_executable(detector_noise_probe tests/detector_noise_probe.c)
     target_link_libraries(detector_noise_probe PRIVATE eclipse)
     target_compile_options(detector_noise_probe PRIVATE -UNDEBUG -Wall -Wextra)
@@ -655,6 +669,10 @@ if(BUILD_TESTING)
     endif()
     add_test(NAME native_measurement_stats COMMAND measurement_stats_probe)
     if(MEFPP_BUILD_BIAS_ADAPTER)
+      add_test(NAME native_linearity_fit COMMAND linearity_fit_probe)
+      add_test(NAME native_linearity_fit_allocation COMMAND linearity_fit_allocation_probe)
+      set_tests_properties(native_linearity_fit native_linearity_fit_allocation PROPERTIES
+        TIMEOUT 180 LABELS "native;detector;linearity;composition;ownership")
       add_test(NAME native_detector_noise COMMAND detector_noise_probe)
       add_test(NAME native_detector_noise_allocation COMMAND detector_noise_allocation_probe)
       set_tests_properties(native_detector_noise native_detector_noise_allocation

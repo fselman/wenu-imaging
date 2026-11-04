@@ -1,3 +1,24 @@
+## Correction-producing linearity composition candidate — 4 November 2026
+
+Owner says proceed with the pixel-response correction curve. #236 now adds an
+in-memory C17 composition: explicit corrected direct pixels + justified supplied
+noise -> QR-ordered measurements/factor -> joint global shutter profile -> owned
+amplifier cubic inverse-response curves and conditional covariance. Preserve ONE
+common delta, physical site/frame identities, actual coverage versus declared
+interval, full cross-amplifier covariance and provenance. No ROI-as-pixel shortcut.
+Missing noise/provenance/profile inputs fail; unavailable numerical gates expose
+no curves. No noise distribution/gain/interval/MC defaults or science acceptance.
+
+Agent two new C17 checks pass2/2 in0.78s; normal mefpp builds. They test known signed
+offsets, distinct amplifier cubics, correlated noise/nonidentity QR order, owned
+curve extraction, unavailability and both new allocation positions. Existing
+qualified kernels unchanged and not retested. Actual Mac gate pending via
+qualify_linearity_fit_mac.py, matching kernel bytes to passed c381168b noise gate.
+No actual32-detector coefficients fitted, FITS recipe/publication or correction
+activation yet; bounded/scalable corrected samples and established noise model
+remain before real run. Plot/HTML stages remain separate; recipe navigation later.
+See linearity-correction-composition-2026-11-04.md. No install/merge/cleanup.
+
 ## Project-local QC and independent presentation — owner decision, 4 November 2026
 
 Owner says the HTML viewer looks good. Actual Mac viewer metadata gate aecce5c
