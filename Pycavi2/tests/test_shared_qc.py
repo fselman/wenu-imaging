@@ -82,6 +82,25 @@ class SharedQcTests(unittest.TestCase):
         self.assertEqual(path.read_bytes(), before)
         self.assertFalse(list(self.records.glob('.qc-*')))
 
+    def test_table_product_selectors_and_legacy_reading(self):
+        builder = self.builder('pairs.tsv', 'product', adapter=qc.QcRecipe, operation='measure.raw_pairs')
+        builder._tree['file']['selectors'] = [dict(detector_id=d, table_name='pairs') for d in ('A','B')]
+        record = builder.seal()
+        path = qc.write_record(record, self.records)
+        self.assertEqual(path.name, 'pairs.asdf')
+        self.assertEqual(qc.read_record(path).as_dict(), record.as_dict())
+        self.assertNotIn('hdu_index', record.as_dict()['file']['selectors'][0])
+        with self.assertRaises(qc.QcError): self.builder('raw.tsv').seal()
+        bad = record.as_dict(); bad['file']['selectors'][0]['hdu_index'] = 0
+        with self.assertRaises(qc.QcError): qc.QcRecord(qc.encoded(bad))
+        legacy = self.leaf('old.fits').as_dict(); legacy['record']['schema_version'] = '1.0.0'
+        old = qc.QcRecord(qc.encoded(legacy)); destination = self.records/'old.asdf'
+        import asdf
+        old_schema = SOURCE/'Pycavi2/pycavi/config/qc-schema-1.0.0.json'
+        with asdf.AsdfFile({'qc':old.as_dict()},version='1.6.0',custom_schema=old_schema.as_uri()) as af:
+            af.validate();af.write_to(destination)
+        self.assertEqual(qc.read_record(destination).as_dict(), legacy)
+
     def test_immutable_record_and_original_participation(self):
         # Named recipe extensions obey the same owned/immutable lifecycle.
         builder = self.builder('extension.fits')

@@ -1,0 +1,8 @@
+{
+  "tests": 12,
+  "failures": 0,
+  "errors": 0,
+  "successful": true,
+  "network_attempts": [],
+  "scope": "shared metadata/ASDF only; no numerical QC estimator or native recipe"
+}

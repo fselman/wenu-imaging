@@ -141,3 +141,12 @@ these remaining scientific choices or silently execute the prepared plan.
 Real run directories belong under Pictures/OCAM/wenu-imaging with purpose/deletion
 README. Review branch-created build directories with the owner at merge/cleanup.
 This receipt-only update needs no test replay.
+
+## Shared ASDF persistence — 4 November 2026
+
+The native command/qualified512092fa runner remains a raw measurement transport.
+For completed runs, tools/persist-pair-qc.py now saves exact native tables using
+shared QC1.1 ASDF; tools/plot-pair-qc.py reads ASDF only. No raw FITS access or
+native rerun. This opt-in postprocessing path distinguishes native success from
+ASDF persistence success. Future batch completion must call/verify this stage.
+See [contract and pending Mac gate](raw-pair-asdf-2026-11-04.md).

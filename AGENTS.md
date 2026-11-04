@@ -1,3 +1,34 @@
+## Raw-pair ASDF persistence and future mosaic viewer — 4 November 2026
+
+Owner instructed proceeding with ASDF persistence of the already-completed CCD65
+run before expanding to remaining detectors. Preserve full native precision; do not
+repeat pixel measurements. Shared QC1.1 extends only tabular product identity:
+explicit table_name selectors for TSV products, real hdu_index for FITS; no fictitious
+HDU. Existing QC1.0 FITS records remain readable; the1.0 schema resource stays intact.
+Use common QcRecipe/write_record/read_record/traverse_records for all records.
+New raw-pair adapter freezes native tables/units/availability/origins/settings,
+receipt/configuration and explicit structural-BPM lineage, publishes per-input
+binding records plus pairs.asdf/bias-ron.asdf, and verifies exact roundtrip.
+No per-frame statistics or accepted gain is invented from pair measurements.
+
+Agent metadata checks pass12 shared+9 pair/plot controls; existing tiny native TSV
+outputs also parse without rerunning native code. Actual Mac gate pending via
+qualify_pair_qc_mac.py, using retained private ASDF6 runtime and protected normal
+imaging Python. No installation, upgrade, native build or old numerical matrix.
+After inspected Mac gate, persist existing ccd65-raw-pairs-bpmfixed-zfs377ok tables
+and regenerate both plots from ASDF only in a fresh Pictures purpose directory.
+Do not use rounded chat values for authoritative plots. No raw FITS reread.
+
+Owner requests eventual HTML QC mosaic based on the maintained geometry viewer:
+choose gain/variance on mosaic tiles, click detector for enlarged selectable-ROI
+plots, read full-precision ASDF and show availability/exclusions/provenance. Record
+requirements now; implement after detector-wide data. HTML is the initial format;
+revisit only as needs develop. Higher-illumination sequence search/near-saturation
+characterization and gain/shutter fitting remain deferred. Existing five CCD65
+windows reach only~39kADU mean signal. No all31-detector run, fit, merge or cleanup
+is launched by this persistence increment. See raw-pair-asdf-2026-11-04.md and
+qc-mosaic-viewer-requirements-2026-11-04.md in docs/developer.
+
 ## CCD65 real measurements completed — 4 November 2026
 
 First actual raw-pair run succeeded with qualified native512092fa and the explicit
