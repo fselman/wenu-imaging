@@ -1,5 +1,48 @@
 ## Branch closeout: build-directory review — owner instruction, 3 November 2026
 
+
+## Resume checkpoint — end of 3 November 2026
+
+Owner stops for tonight and asks for cross-chat continuity. Resume wenu-imaging
+from this checkpoint and docs/developer/detector-characterization-handoff-2026-11-03.md.
+The companion resume artifact is wenu-imaging-resume-2026-11-03.txt. Do not mix
+this work with fselman/wenu charts/catalogues or the Raspberry Pi chat.
+
+Actual Mac C17 command/runner gate passed at 6e75a7bf322583e0aeaca50e1ff786b70cd259f3:
+pair_runner_orchestration/native_pair_command 2/2 in 3.04 s, retained
+/Users/fselman/Software/build/wenu-imaging/mac-pair-command-mv3iAx5L.
+All checkout/installed_files/exported_source preservation checks true.
+Protected Mac checkout remains clean main c73d9a9e3a631fbbb2346beaa3c150c110a60343.
+
+Corrected exact-byte PAF fingerprint at 8736e16: canonical OCAM PAF SHA256 is
+709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f.
+An earlier local copy omitted three final-comment trailing spaces; no parameter
+difference. Strict hash checking remains. Use corrected processing TOML with
+unchanged qualified native code; do not rebuild/replay passed gates just for this.
+
+Owner-returned real saved-header review passed: 30 files x 32 outputs, unchanged
+source stat identities, BITPIX16/BSCALE1/BZERO32768/BUNIT absent. Retained
+/Users/fselman/Pictures/OCAM/wenu-imaging/first-pair-review-So47zUsK.
+Its selection-proposed.toml targets ESO_CCD_#65/L, five ROIs, 50 pair rows,
+206467604 loaded pixels. No real pixel measurement or fit has run.
+
+Three scientific choices were explicitly requested but remain unanswered:
+first two biases (2017-03-13 09:50:05.624 and 09:50:48.373), raw exclusion
+at/above65534 ADU, legacy binary BPM 1=good. Resolve that pending choice once;
+do not infer approval from the successful metadata receipt or tonight's save.
+After agreement, reuse the qualified retained command and current corrected
+configuration to prepare/execute the first detector under Pictures/OCAM/wenu-imaging,
+preserving original files and all ten nonconsecutive flat pairs in acquisition
+order. No lamp normalization, median-zeroing, fitting, gain interval selection
+or estimated covariance is part of this first raw measurement.
+
+Maintain footprint viewer with TOML changes. Real comparison products belong in
+purpose-named Pictures/OCAM/wenu-imaging or Pictures/WFI/wenu-imaging directories
+with purpose/deletion README. At branch merge/cleanup, review build directories
+and reasons/disposition with owner; protect needed runtimes and comparison data.
+Do not merge or delete branches/builds merely to save this checkpoint. Existing
+draft PR #227 and branch docs/bpm-linearity-pairs-20261103 remain open.
+
 ## Detector footprint viewer maintenance — owner direction, 3 November 2026
 
 Fernando inspected both generated Mac mosaics from source 50e52a9055fb1a761119abf529433a32dc2816dc and reports that both look OK. Review outputs:
