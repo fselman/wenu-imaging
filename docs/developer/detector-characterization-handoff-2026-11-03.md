@@ -336,3 +336,29 @@ real plan for review. No fitting or instrument-gain acceptance. Real outputs
 belong in Pictures/instrument/wenu-imaging with README; owner build-directory
 disposition review is required at merge/cleanup. A future batch should hash the
 common observation set once for the batch rather than repeat per detector.
+
+## Actual Mac command qualification passed
+
+Fernando returned the exact-source 6e75a7bf322583e0aeaca50e1ff786b70cd259f3
+Mac C17 receipt. Retained run:
+/Users/fselman/Software/build/wenu-imaging/mac-pair-command-mv3iAx5L.
+
+pair_runner_orchestration passed in 2.08 s; native_pair_command passed in 0.95 s.
+Overall 2/2 passed, total elapsed 3.04 s. QUALIFICATION passed and checkout,
+installed_files and exported_source preservation are all true. The user checkout
+remains clean main tracking origin/main.
+
+The one-detector native command and Python prepare/execute orchestration are now
+actual-Mac qualified on synthetic FITS. No real OCAM measurement, fitted gain/
+linearity/shutter calibration, installation, merge or cleanup is implied.
+
+Next: complete the selected sequence's full primary/output-header admission,
+explicitly select raw saturation, the distinct raw bias pair and legacy binary
+BPM polarity, then prepare the first detector's real selection/plan for review.
+Use the reviewed detector/processing TOMLs and existing source sequence/pair
+inventory, preserving acquisition order and nonconsecutive pairs. Do not invent
+these remaining scientific choices or silently execute the prepared plan.
+
+Real run directories belong under Pictures/OCAM/wenu-imaging with purpose/deletion
+README. Review branch-created build directories with the owner at merge/cleanup.
+This receipt-only update needs no test replay.

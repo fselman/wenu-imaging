@@ -114,5 +114,30 @@ generated fixtures; no real source dataset is processed.
 
 Pycavi2/tests/qualify_pair_command_mac.py builds only mefpp_pair_measure, inventories
 exactly those two tests, and runs them under the established actual-Mac C17,
-clean-main and installed/exported-source preservation guards. Actual Mac gate is
-pending. No installation or activation of this development command is requested.
+clean-main and installed/exported-source preservation guards. Actual Mac gate passed; see the owner-returned receipt below. No installation or activation of this development command is requested.
+
+## Actual Mac command qualification passed
+
+Fernando returned the exact-source 6e75a7bf322583e0aeaca50e1ff786b70cd259f3
+Mac C17 receipt. Retained run:
+/Users/fselman/Software/build/wenu-imaging/mac-pair-command-mv3iAx5L.
+
+pair_runner_orchestration passed in 2.08 s; native_pair_command passed in 0.95 s.
+Overall 2/2 passed, total elapsed 3.04 s. QUALIFICATION passed and checkout,
+installed_files and exported_source preservation are all true. The user checkout
+remains clean main tracking origin/main.
+
+The one-detector native command and Python prepare/execute orchestration are now
+actual-Mac qualified on synthetic FITS. No real OCAM measurement, fitted gain/
+linearity/shutter calibration, installation, merge or cleanup is implied.
+
+Next: complete the selected sequence's full primary/output-header admission,
+explicitly select raw saturation, the distinct raw bias pair and legacy binary
+BPM polarity, then prepare the first detector's real selection/plan for review.
+Use the reviewed detector/processing TOMLs and existing source sequence/pair
+inventory, preserving acquisition order and nonconsecutive pairs. Do not invent
+these remaining scientific choices or silently execute the prepared plan.
+
+Real run directories belong under Pictures/OCAM/wenu-imaging with purpose/deletion
+README. Review branch-created build directories with the owner at merge/cleanup.
+This receipt-only update needs no test replay.
