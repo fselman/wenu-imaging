@@ -1,3 +1,25 @@
+## Remaining OCAM serial batch candidate — 4 November 2026
+
+Owner says proceed after completed CCD65 ASDF/plots. Issue#234 tracks remaining31.
+New one-use batch prepares identity-mapped selections/geometry ROIs, reuses CCD65,
+and runs qualified native512092fa serially. Hash23 common image files once before
+and once after the whole native interval, matching frozen CCD65 hashes. Pending
+native receipts cannot publish ASDF before shared verification. Then unchanged
+common ASDF bridge/plotter preserve full precision per detector. Stop first failure;
+retain truthful failed/pending evidence, never auto-resume or overwrite.
+
+Twelve agent orchestration controls pass in5.262s, including all31 metadata-only
+preparation, independent mappings, shared hash counts, failures/source changes,
+one-use execution and genuine ASDF publication from supplied transports. These
+are not numerical/actual Mac acceptance. Actual Mac focused qualification pending
+via qualify_ocam_pair_batch_mac.py; reuse prior21 ASDF/plot gates only after exact
+module identity/package-version comparison with passed mac-pair-asdf-i7rw5asm.
+No native rebuild, observation access, dependency installation or old matrix.
+After Mac gate inspect real prepare-only31 manifest, then execute same approved
+science choices without repeat approval. Real batch not run. PR227 stays draft;
+no fit/merge/install/cleanup. Keep prior runs/BPMs/private runtime. Geometry HTML
+mosaic follows detector-wide data. See ocam-serial-pair-batch-2026-11-04.md.
+
 ## Actual Mac ASDF persistence and plots completed — 4 November 2026
 
 Actual source9f5a35fd qualification passed12 shared-QC checks in1.648s and9 pair/
