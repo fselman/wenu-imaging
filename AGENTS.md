@@ -1,3 +1,27 @@
+## Owner revises roadmap: full exposure statistics first — 4 November 2026
+
+Owner explicitly directs collecting mean signal and variances from all exposures,
+ordered by detector, saving ASDF, THEN exploring models/parameters. New roadmap:
+linearity-roadmap-v2-2026-11-04.md. It supersedes the narrow unaccepted Stage8v1
+site-only next-step scope; preserve that earlier design as history. This is a
+roadmap revision, not implementation or approved statistical model selection.
+
+For current32detectors,30frames (20flat+10bias),5existing fullROIs:4800exposure/ROI
+records with raw/corrected stages, mean/sample variance and pixel/exclusion counts;
+1600flat-pair/ROI records with exact common populations and stage-specific variance.
+Keep raw biasRON, master membership, scan evidence and existing160-site samples.
+Retain cubic signal moments so Q(mean) is never used as mean(Q). Individual-image
+spatial variance and pair-difference variance are distinct, not automatic weights.
+All valid levels stored; later model cuts/settings do not alter collection.
+
+One integrated collection+ASDF job after a reviewed complete contract and focused
+qualification; fit experiments read immutable ASDF and save separate model/results.
+Do not add repeated extraction/saving stages around parameter changes. New guide
+policy also requires LaTeX.tex plus matching compiledPDF maintained in parallel,
+after completed scientific implementation based on previously reviewed design.
+No C/Python service change, new tests/observations/fit/installation/merge/cleanup
+in this roadmap-only increment. #236 open; original archive remains preserved.
+
 ## Stage8 noise-evidence design ready for human review — 4 November 2026
 
 Owner said Proceed with the roadmap. Under the new owner documentation policy,
