@@ -362,3 +362,32 @@ these remaining scientific choices or silently execute the prepared plan.
 Real run directories belong under Pictures/OCAM/wenu-imaging with purpose/deletion
 README. Review branch-created build directories with the owner at merge/cleanup.
 This receipt-only update needs no test replay.
+
+## First real OCAM selection/header review preparation
+
+The exact-source 6e75a7b command/runner actual Mac gate passed 2/2 in 3.04 s,
+retained mac-pair-command-mv3iAx5L, with all preservation checks true and main clean.
+No native change is needed to prepare the first real selection.
+
+tools/prepare-ocam-pair-review.py reviews the saved 30-file inventory across all
+32 outputs: primary readout/clock/binning/OBS/type/filter/time/template and exact
+per-output identity/manufacturer/geometry. It binds HDUs independently, checks
+current source stats against the saved inventory, preserves header and prior BPM
+review evidence under Pictures, and writes selection-proposed.toml plus review
+receipt/README. It does not inspect arrays or invoke any native measurement.
+Three injected-header policy checks pass; actual retained Mac header review pending.
+
+Concrete first-detector proposal: ESO_CCD_#65/L, five reviewed regions, first two
+chronological biases (09:50:05.624 and 09:50:48.373), raw exclusion at/above 65534
+ADU from existing native PAF, explicit legacy binary BPM 1=good, all ten pairs
+in acquisition order with zero time tolerance. Pixel budget 206467604; 50 pair rows.
+Bias/saturation/polarity are proposals requiring owner agreement before execution;
+65534 is not an analog full-well or nonlinearity-onset claim. Binary counts alone
+do not prove polarity. Source encoding evidence is retained/printed for review.
+
+Use a fresh purpose-named Pictures/OCAM/wenu-imaging review directory; originals
+and build-held inventory are preserved. Required evidence is copied out of build.
+See [review/proposals](ocam-first-pair-review-2026-11-03.md). First actual numerical
+run remains pending successful header review and agreed settings. Keep qualified
+6e75a7b command build available; review other branch build directories with the
+owner at merge/cleanup.
