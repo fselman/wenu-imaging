@@ -1,3 +1,9 @@
+Stage8 [noise-evidence design candidate v1](linearity-noise-evidence-design-v1-2026-11-04.md)
+is ready for owner review before implementation. It records exact43/44-read scan
+and9/10-input lower-median conventions, bounded observations/resources, proposed
+checks and the required post-implementation mathematical guide. No new code or
+measurements yet; the corrected-sample archive is complete and preserved.
+
 Actual corrected-sample ASDF archive complete:32 products,3200 rows,1088 records,
 all5outer preservation checks true at ocam-corrected-sample-asdf-xm1ngkg_. Data
 preparation is complete; next is the substantive noise/covariance decision before

@@ -1,3 +1,26 @@
+## Stage8 noise-evidence design ready for human review — 4 November 2026
+
+Owner said Proceed with the roadmap. Under the new owner documentation policy,
+scientific subroutines need a finalized human-reviewed design before implementation
+and a mathematical guide tied to final code after completion (references where
+appropriate). This Stage8 design candidate is prepared, not yet reviewed/accepted:
+linearity-noise-evidence-design-v1-2026-11-04.md. No new scientific code/tests or
+observational reads run in this step; do not call the proposed checks passing.
+
+Concrete source findings: approved160 sites occupy96 distinct raw rows. Enabled
+overscan widths are43 for16detectors and44 for16; low10/high10 rejection leaves
+23/24 reads. Current10-frame master uses lower-middle fifth order statistic;
+9-frame master also fifth. Preserve exact native estimator/rounding, not a generic
+mean-of-middle median. Design captures10bias+20flat site values and scan reads,
+scalar160-master and3200-flat replay, original memberships and physical source keys.
+Expected4800site rows,2880scan estimates,125280scan reads,160master rows;63 image
+inputs guarded before/after. No old recipe rerun, model/MC/weights/range/fit chosen.
+
+Review complete design before implementing the new service/file adapter/ASDF.
+Final mathematical guide follows completed implementation, not a substitute for
+that earlier review. Existing archives and qualified software stay intact;
+#236 open. No install, merge, cleanup or new user-host processing for this review.
+
 ## Actual corrected-sample ASDF archive complete — 4 November 2026
 
 Qualified0ce05fcd source persisted all32 detector products,3200 rows and1088
