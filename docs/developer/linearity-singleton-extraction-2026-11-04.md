@@ -1,3 +1,7 @@
+Actual Mac update: f560d67 passed2/2 in8.28s at mac-sample-command-1iwkve9e,
+all3preservation checks true. See [serial extraction handoff](ocam-linearity-sample-batch-2026-11-04.md).
+The earlier pending statements below describe the pre-qualification increment.
+
 # Approved engineering sampling and corrected-pixel extraction — 4 November 2026
 
 Owner accepted the linked 160-site proposal with “Yes, proceed.” The proposal

@@ -1,3 +1,8 @@
+Current increment: actual Mac singleton command gate passed2/2 with all guards;
+[serial all32 approved-pixel extraction](ocam-linearity-sample-batch-2026-11-04.md)
+is ready for the retained data. Four new metadata controls and one ASDF admission
+fixture pass here. No native rebuild or old test matrix; actual extraction pending.
+
 Current increment (4 November): owner-approved [160-site sampling and corrected
 singleton extraction](linearity-singleton-extraction-2026-11-04.md). Agent focused
 command checks pass; actual Mac gate and guarded real extraction remain pending.

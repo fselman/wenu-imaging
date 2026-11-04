@@ -1,3 +1,26 @@
+## Actual Mac singleton command passed; serial extraction ready — 4 November 2026
+
+Actual f560d67 Mac C17 gate passed2/2 in8.28s at mac-sample-command-1iwkve9e:
+new extraction6.67s, affected pair command1.60s. All3preservation guards true;
+metadata singleton preparation succeeded. Do not repeat this native gate or rebuild.
+
+New run_ocam_linearity_samples.py admits completed all32 masters/actual memberships,
+shared ASDF frozen links/configuration/identity and original per-file flat/BPM maps.
+Uses approved160 sites,20 original frames,32 serial qualified native commands.
+Hashes53 selected images (20flats+BPM+32masters) once before/after the whole batch;
+current full stat/hash equality and8outer preservation guards required. Original65
+has no saved historical whole-FITS digest: verify approved path/HDU/semantic QC,
+then establish a new explicit whole-file baseline; never claim historical bytes
+verified from QC alone. Other31 masters compare saved full-byte hashes.
+
+Agent4metadata controls0.006s plus1real-ASDF fixture1.662s pass; only these new
+controls run onMac before extraction. Existing qualified C/QC modules unchanged.
+Native100rows per detector preserve missing sites, exact physical coordinates and
+original frame order. Native TSVs are intermediate, not final ASDF products.
+Actual all32 extraction pending. No noise/MC/fit interval, coefficient acceptance,
+weights, correction, plotting/HTML, install/merge/cleanup. See
+ocam-linearity-sample-batch-2026-11-04.md. #236 open; sampling approval persists.
+
 ## Owner-approved 160-site pilot; extraction command candidate — 4 November 2026
 
 Owner accepted the sampling proposal with “Yes, proceed.” Approved160 physical
