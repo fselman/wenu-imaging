@@ -5,6 +5,8 @@ This replaces v2's proposed broad collection redesign. Existing extraction,
 pair statistics, ASDF products and gain/variance displays already provide most
 of the required machinery. Extend them; do not restart the recipe.
 
+Latest [display increment and actual Mac header receipt](linearity-signal-time-display-2026-11-04.md): signal/time plots and viewer implemented; Mac display qualification and real-data generation pending. Header Mac gate passed27/27 with all5preservation guards.
+
 ## Current position
 
 All 32 detectors have raw flat-pair diagnostics in ASDF, covering 10 pairs and

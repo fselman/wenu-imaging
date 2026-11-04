@@ -46,6 +46,12 @@ class ViewerTests(unittest.TestCase):
     def test_full_precision_missing_and_geometry(self):
         self.publish();payload,frozen=self.build()
         self.assertEqual(payload['panels'][0]['pairs'],self.pairs)
+        signals=payload['panels'][0]['signals']
+        self.assertEqual(len(signals),8)
+        self.assertEqual([r['input_index'] for r in signals],[10,10,11,11,12,12,13,13])
+        self.assertEqual([r['asset'] for r in signals[::2]],['F0.fits','F1.fits','F2.fits','F3.fits'])
+        self.assertEqual(signals[0]['signal_adu'],999.1234567890124)
+        self.assertEqual(signals[-1]['signal_adu'],1001.1234567890124)
         self.assertEqual(len(payload['panels']),32)
         self.assertEqual(sum(p['status']=='missing' for p in payload['panels']),31)
         self.assertEqual(payload['panels'][0]['bias'],self.bias)
@@ -54,6 +60,29 @@ class ViewerTests(unittest.TestCase):
         viewer.unchanged(frozen)
         # Retain an explicit incomplete-data fixture for browser interaction checks.
         (WORK/'viewer-test.html').write_text(viewer.render(payload))
+    def test_exposure_projection_preserves_members_nulls_and_signed_values(self):
+        original=copy.deepcopy(self.pairs)
+        rows=copy.deepcopy(self.pairs)
+        rows[0]['signal1_adu']=None
+        rows[0]['signal2_adu']=-0.0
+        rows[2]['signal1_adu']=-3.25
+        rows[2]['second_seconds']=5.125
+        result=viewer.exposure_rows(rows)
+        self.assertEqual(len(result),2*len(rows))
+        self.assertEqual([r['input_index'] for r in result],[10,10,11,11,12,12,13,13])
+        self.assertIsNone(result[0]['signal_adu'])
+        self.assertEqual(result[2]['signal_adu'],-3.25)
+        self.assertEqual(result[4]['exposure_seconds'],5.125)
+        self.assertEqual(result[6]['signal_adu'].hex(),(-0.0).hex())
+        for r in result:
+            source=rows[r['source_row_index']]
+            self.assertEqual({k:r[k] for k in source},source)
+            self.assertEqual(r['population'],'pair_common_accepted_pixels')
+            self.assertEqual(r['processing_stage'],'raw_pair_bias_subtracted_without_overscan')
+        result[0]['asset']='display-only-change'
+        self.assertEqual(self.pairs,original)
+        self.assertEqual(rows[0]['first_asset'],'F0.fits')
+
     def test_unavailable_stays_null(self):
         row=self.pairs[0];row['point_gain_e_per_adu']=None;row['gain_state']='nonpositive_variance'
         path=self.run/'native/pairs.tsv';path.write_text('\t'.join(fixtures.bridge.PAIR_COLUMNS)+'\n'+'\n'.join(fixtures.row_text(fixtures.bridge.PAIR_COLUMNS,r) for r in self.pairs)+'\n')

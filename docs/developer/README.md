@@ -1,3 +1,5 @@
+Current [signal/time display increment](linearity-signal-time-display-2026-11-04.md): ASDF header Mac gate passed 27/27; third plot and mosaic metric implemented, agent checks passed, Mac display qualification and real-data generation pending. Data inspection precedes modelling.
+
 Owner's [linearity roadmap v3](linearity-roadmap-v3-2026-11-04.md) is controlling:
 reuse existing pair ASDF measurements; add average signal versus exposure time
 for both individual members and every detector/ROI; display all data beside the

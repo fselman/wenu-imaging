@@ -1,3 +1,19 @@
+## Signal/time display candidate; ASDF header Mac gate passed — 4 November 2026
+
+Actual source1a422b99 Mac ASDF comments passed27/27 (shared13 2.308s, pair9
+17.066s, sample5 6.637s), all5preservation guards true, retained at
+mac-asdf-comments-moofbx58. Do not repeat that gate without relevant changes.
+Signal/time display now projects existing ASDF pair member means/times without
+remeasurement. Preserve exact member/asset/HDU/input index/source row/population;
+inspection ordered by acquisition index/ROI, curves by exposure time. Third PNG,
+exact derived JSON and offline mosaic metric added. Null/negative data preserved.
+Agent pair9/viewer8 and actual-script JS logic checks pass; Chromium launch
+blocked by socket restrictions, browser layout NOT claimed. Mac display gate
+and real32CCD viewer pending. Use qualify_signal_time_mac.py, then generate from
+retained pair ASDF. No raw reads/extraction/fit/model/noise choices/merge/install/
+cleanup. Owner must inspect all data and instruct modelling before it begins.
+See linearity-signal-time-display-2026-11-04.md. Earlier statuses are historical.
+
 ## Owner narrows linearity roadmap: display all data before modelling — 4 November 2026
 
 Controlling roadmap: docs/developer/linearity-roadmap-v3-2026-11-04.md (#236/#235).

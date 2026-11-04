@@ -171,9 +171,15 @@ class PairQcTests(unittest.TestCase):
         shutil.move(self.run,self.work/'moved-native-evidence')
         output=self.work/'plots';output.mkdir();report=plot.render(path,output)
         self.assertFalse(report['native_TSV_opened']);self.assertFalse(report['raw_FITS_opened'])
-        self.assertEqual(len(report['outputs']),2)
+        self.assertEqual(len(report['outputs']),3)
         for image in report['outputs']:
             self.assertTrue(Path(image['path']).read_bytes().startswith(b'\x89PNG'))
+            if image['kind']=='signal_time':
+                series=image['series'][0]
+                self.assertEqual(series['exposure_seconds'],[2.,2.,5.,5.])
+                self.assertEqual(series['signal_adu'],[999.1234567890124,1001.1234567890124]*2)
+                self.assertEqual([r['input_index'] for r in series['samples']],[10,13,11,12])
+                self.assertEqual([r['pair_member'] for r in series['samples']],[1,2,1,2])
             if image['kind']=='gain':
                 self.assertEqual(image['series'][0]['values'][0],5.000617283945062)
     def test_wrong_structural_bpm_lineage_refused(self):

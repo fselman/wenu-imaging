@@ -9,6 +9,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'Pycavi2/pycavi/pycavi'))
 import pycavi_pair_qc as bridge
+from pycavi_pair_display import exposure_rows
 spec=importlib.util.spec_from_file_location('footprints',ROOT/'tools/detector-footprint.py')
 footprint=importlib.util.module_from_spec(spec);spec.loader.exec_module(footprint)
 require=bridge.qc.require
@@ -56,9 +57,9 @@ def build(detectors,processing,products):
                 require([row['raw_'+k] for k in ('xmin','xmax','ymin','ymax')]==
                         [active[0]+crop[0]-1,active[1]+crop[0]-1,active[2]+crop[2]-1,active[3]+crop[2]-1],
                         'Saved raw/retained coordinate relation differs')
-        data[identity]=dict(status='available',pairs=values['pairs'],bias=values['bias-ron'],sources=origins,
+        data[identity]=dict(status='available',pairs=values['pairs'],signals=exposure_rows(values['pairs']),bias=values['bias-ron'],sources=origins,
             provenance=provenance,rois=rois,footprint_svg=footprint.svg(detector,trims[identity],rois))
-    panels=[dict(geometry=d,**data.get(d['id'],dict(status='missing',pairs=[],bias=[],rois=[])))
+    panels=[dict(geometry=d,**data.get(d['id'],dict(status='missing',pairs=[],signals=[],bias=[],rois=[])))
             for d in geometry['detector']]
     payload=dict(schema_version=1,instrument=geometry['instrument'],panels=panels,
         columns=max(d['mosaic_column'] for d in geometry['detector']),
@@ -124,8 +125,11 @@ def main():
         require(len(payload['panels'])==32 and all(d['status']=='available' for d in payload['panels']),
                 'Completed OCAM batch requires all32 detectors')
         output=work/'qc-mosaic.html';output.write_text(render(payload))
+        data_path=work/'qc-data.json';data_path.write_text(json.dumps(payload,indent=2,allow_nan=False)+'\n')
         unchanged(frozen)
         report.update(status='complete_for_owner_inspection',detectors=32,
+            signal_time_rows=sum(len(d['signals']) for d in payload['panels']),
+            data_output=dict(path=str(data_path),sha256=bridge.sha(data_path.read_bytes())),
             pair_rows=sum(len(d['pairs']) for d in payload['panels']),bias_rows=sum(len(d['bias']) for d in payload['panels']),
             inputs_sha256=frozen,output=dict(path=str(output),sha256=bridge.sha(output.read_bytes())),source_preservation=True)
     except Exception as error:
@@ -135,7 +139,7 @@ def main():
         (work/'README.md').write_text('Derived offline ASDF QC mosaic. Measurements remain authoritative in their retained ASDF records. No raw images or native TSV files are opened. Keep while needed for inspection; regenerate from retained inputs after changes. No automatic cleanup. viewer.json records status and fingerprints.\n')
         print('VIEWER STATUS:',report['status'],flush=True)
         print('RETAINED VIEWER:',work,flush=True)
-    print(json.dumps({k:report[k] for k in ('detectors','pair_rows','bias_rows','output')},indent=2))
+    print(json.dumps({k:report[k] for k in ('detectors','pair_rows','signal_time_rows','bias_rows','output','data_output')},indent=2))
 
 
 if __name__=='__main__':main()
