@@ -1,5 +1,10 @@
 # Revised linearity roadmap v2 — collect first, fit afterward
 
+**Superseded by [roadmap v3](linearity-roadmap-v3-2026-11-04.md).** The owner
+clarified that existing ROI pair measurements supply most of the recipe; the
+immediate extension is signal versus exposure time and complete data display
+before modelling. The broad collection redesign below is historical, not current.
+
 4 November 2026. Revised in response to the owner's instruction: extract mean
 signals and variances from all exposures, order the measurements by detector,
 save them in ASDF, and explore models/parameters afterward. This is a roadmap

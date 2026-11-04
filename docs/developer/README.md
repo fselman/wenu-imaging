@@ -1,8 +1,14 @@
-Owner's [revised linearity roadmap v2](linearity-roadmap-v2-2026-11-04.md): collect
-all per-exposure ROI means/variances and paired/bias/scan evidence, grouped by
-detector; save a complete ASDF dataset in one collection job; explore models and
-parameters afterward. This supersedes the narrow proposed Stage8v1 next-step
-scope. No implementation or model defaults selected by this roadmap.
+Owner's [linearity roadmap v3](linearity-roadmap-v3-2026-11-04.md) is controlling:
+reuse existing pair ASDF measurements; add average signal versus exposure time
+for both individual members and every detector/ROI; display all data beside the
+existing variance/gain plots before any modelling. Owner inspection and an
+instruction to begin modelling follow the display. The v2 broad collection
+redesign and Stage8 next-step proposal below are historical, not prerequisites.
+New shared ASDF outputs have descriptive header comments; old archives remain
+unchanged. Agent checks pass 13 shared + 9 pair + 5 sample tests; Mac acceptance
+of this writer change and the signal/time display are pending. No fit performed.
+
+Earlier dated entries below retain their original status as historical receipts.
 
 Stage8 [noise-evidence design candidate v1](linearity-noise-evidence-design-v1-2026-11-04.md)
 is ready for owner review before implementation. It records exact43/44-read scan

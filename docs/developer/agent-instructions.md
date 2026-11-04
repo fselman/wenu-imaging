@@ -1,3 +1,34 @@
+## Owner narrows linearity roadmap: display all data before modelling — 4 November 2026
+
+Controlling roadmap: docs/developer/linearity-roadmap-v3-2026-11-04.md (#236/#235).
+Owner explicitly supersedes v2's broad collection redesign. Existing raw-pair
+ASDF contains individual signal1/signal2 and exact first/second exposure times;
+use these for the signal-versus-time extension alongside existing variance/gain
+plots. Preserve their raw-pair, bias-subtracted, no-overscan processing definition
+and common pair population. Do not call corrected individual-site pixels ROI
+means. Extract only any genuinely missing stage/measurement through existing code.
+No new full statistics/noise-evidence campaign is prerequisite for the third plot.
+
+Immediate sequence: reuse archived measurements; expose 20 exposures x 5 ROIs x
+32 detectors (3200 entries), both pair members separately; add signal/time display
+and exact value/source inspection beside existing gain/variance mosaic. Plot/HTML
+creation remains separate from recipes. ALL measurements must be saved/displayed
+and inspected by the owner before their instruction to begin modelling. No new
+fit, shutter estimate, coefficients, model-dependent cuts or covariance study now.
+
+Shared QC writer now adds a few descriptive # lines after ASDF's mandatory header
+for newly written files: purpose, filename, operation, content and structured-QC
+location. Semantic records/digests and frozen references are unchanged. Existing
+archives stay immutable/readable; no in-place editing or forced regeneration.
+Agent ASDF6 checks: shared13/13 (0.863s), pair9/9 (7.138s), sample5/5 (6.028s).
+Initial new header fixture used the bias-only adapter with a generic operation;
+corrected the fixture to use QcRecipe, then all pass. No scientific numerical
+code, real FITS reads, new measurements or actual-Mac acceptance claimed.
+No merge, install, cleanup or model selection. Later mathematical guides remain
+LaTeX plus matching compiled PDF after reviewed design and completed code.
+
+Earlier dated entries below are history where superseded by this instruction.
+
 ## Owner revises roadmap: full exposure statistics first — 4 November 2026
 
 Owner explicitly directs collecting mean signal and variances from all exposures,

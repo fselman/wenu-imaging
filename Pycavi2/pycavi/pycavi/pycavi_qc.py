@@ -9,6 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 import hashlib
+import io
 import json
 import math
 import os
@@ -331,6 +332,27 @@ def _linked_record(parent, member, root):
     return record
 
 
+def _description_comments(tree):
+    """Human-readable header only; authoritative values remain in the QC tree."""
+    descriptions = {
+        'pairs': 'Per-ROI raw flat-pair signals, exposure times, difference variances and diagnostic gain.',
+        'bias-ron': 'Per-ROI raw bias-pair differences and read-noise diagnostics.',
+        'corrected_samples': 'Individual flat-pixel signals after scan and master-bias correction, with source lineage.',
+    }
+    tables = {s.get('table_name') for s in tree['file']['selectors']}
+    contents = descriptions.get(next(iter(tables)) if len(tables) == 1 else None,
+                                'Detector measurements, availability, processing definitions and source provenance.')
+    lines = [
+        'wenu-imaging QC sidecar; referenced image pixels are not embedded.',
+        'File: ' + json.dumps(tree['file']['filename'], ensure_ascii=True),
+        'Operation: ' + json.dumps(tree['provenance']['operation'], ensure_ascii=True),
+        'Contents: ' + contents,
+        'Read qc for units, detector selectors, definitions, exclusions and frozen input links.',
+        'Unavailable measurements are null, not zero; comments are descriptive, not calibration approval.',
+    ]
+    return ''.join('# ' + line + '\n' for line in lines).encode('ascii')
+
+
 def write_record(record, directory, *, qc_root=None):
     """One common ASDF writer; input files are never opened, copied or modified."""
     require(isinstance(record, QcRecord), 'Require a sealed common QC record')
@@ -352,7 +374,18 @@ def write_record(record, directory, *, qc_root=None):
             with asdf.AsdfFile({'qc': record.as_dict()}, version='1.6.0',
                                custom_schema=SCHEMA_PATH.as_uri()) as af:
                 af.validate()
-                af.write_to(stream)
+                # ASDF 6 reads header comments but does not write AsdfFile.comments.
+                # Common QC is JSON-primitive metadata only: no binary blocks or
+                # block-offset index can be displaced by this header insertion.
+                with io.BytesIO() as buffer:
+                    af.write_to(buffer)
+                    payload = buffer.getvalue()
+                magic, standard, yaml = payload.split(b'\n', 2)
+                require(magic.startswith(b'#ASDF ') and standard.startswith(b'#ASDF_STANDARD '),
+                        'Unexpected ASDF header; refuse comment insertion')
+                stream.write(magic + b'\n' + standard + b'\n')
+                stream.write(_description_comments(record.as_dict()))
+                stream.write(yaml)
         require(temporary.stat().st_size <= MAX_RECORD_BYTES, 'QC record exceeds configured limit')
         os.link(temporary, destination)  # Exclusive publication, including racing writers.
         return destination

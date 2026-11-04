@@ -82,6 +82,38 @@ class SharedQcTests(unittest.TestCase):
         self.assertEqual(path.read_bytes(), before)
         self.assertFalse(list(self.records.glob('.qc-*')))
 
+    def test_descriptive_headers_preserve_records_and_links(self):
+        raw = self.leaf('raw1.fits')
+        raw_path = qc.write_record(raw, self.records)
+        other = self.leaf('raw2.fits')
+        qc.write_record(other, self.records)
+        parent = self.parent(raw, other)
+        parent_path = qc.write_record(parent, self.records)
+        self.assertEqual(len(list(qc.traverse_records(parent_path, qc_root=self.records))), 3)
+        for record, path in ((raw, raw_path), (parent, parent_path)):
+            header = path.read_bytes().split(b'%YAML', 1)[0]
+            self.assertTrue(header.startswith(b'#ASDF 1.0.0\n#ASDF_STANDARD 1.6.0\n# wenu-imaging'))
+            self.assertIn(b'Unavailable measurements are null', header)
+            self.assertEqual(qc.read_record(path).digest, record.digest)
+            self.assertEqual(qc.read_record(path).as_dict(), record.as_dict())
+        for kind, description in (('pairs', b'raw flat-pair signals'),
+                                  ('bias-ron', b'raw bias-pair differences'),
+                                  ('corrected_samples', b'Individual flat-pixel signals')):
+            builder = self.builder(kind + '.tsv', 'product', adapter=qc.QcRecipe)
+            builder._tree['file']['selectors'] = [dict(detector_id=d, table_name=kind) for d in ('A', 'B')]
+            record = builder.seal()
+            path = qc.write_record(record, self.records)
+            header = path.read_bytes().split(b'%YAML', 1)[0]
+            self.assertIn(description, header)
+            self.assertEqual(qc.read_record(path).as_dict(), record.as_dict())
+        # Filenames/operations are data: embedded newlines must not inject YAML.
+        builder = self.builder('odd\n---.fits', adapter=qc.QcRecipe, operation='inspect\n---')
+        record = builder.seal()
+        path = qc.write_record(record, self.records)
+        header = path.read_bytes().split(b'%YAML', 1)[0]
+        self.assertIn(b'odd\\n---.fits', header)
+        self.assertEqual(qc.read_record(path).digest, record.digest)
+
     def test_table_product_selectors_and_legacy_reading(self):
         builder = self.builder('pairs.tsv', 'product', adapter=qc.QcRecipe, operation='measure.raw_pairs')
         builder._tree['file']['selectors'] = [dict(detector_id=d, table_name='pairs') for d in ('A','B')]
