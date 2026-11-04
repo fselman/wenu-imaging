@@ -418,3 +418,23 @@ qualification. Reuse passed 6e75a7b native gates; no native rebuild/test replay.
 Retry only the real saved-header review from a fresh exported source/review
 directory. Preserve the failed attempt. Bias/saturation/BPM proposals remain
 unapproved and unchanged; no real numerical run yet.
+
+## Actual Mac saved-header review passed
+
+Owner returned successful 8736e164f43acd6c48135d8ad687c247f74a10dc preparation,
+retained /Users/fselman/Pictures/OCAM/wenu-imaging/first-pair-review-So47zUsK.
+All 30 files x 32 outputs pass the saved-header policy; source stat identities
+remain unchanged. Raw encoding evidence is BITPIX16, BSCALE1, BZERO32768 and
+absent BUNIT. The native binding uses explicit ADU fallback when BUNIT is absent.
+
+STATUS is prepared_for_owner_choices. The generated proposal selects
+ESO_CCD_#65, five ROIs, 50 pair rows, max_loaded_pixels206467604, raw saturation
+65534 ADU, legacy binary BPM good_value1, and raw biases at 09:50:05.624 and
+09:50:48.373 on 13 March 2017. No measurement or numerical fit ran.
+
+The owner has supplied the successful review receipt but has not yet explicitly
+agreed to the proposed bias/saturation/polarity settings. Obtain that scientific
+choice once, then use the already qualified 6e75a7b command/runner and corrected
+canonical-PAF fingerprint to prepare/execute the first detector run under a fresh
+Pictures/OCAM/wenu-imaging purpose directory. Preserve review and original raw
+files. No native rebuild or repeated passed numerical gate is needed.
