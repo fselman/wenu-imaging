@@ -113,6 +113,21 @@ static void layouts(void)
     image = NULL; assert(mef_layout_load(map, "configured-logical-detector", &image, NULL) == MEF_OK);
     assert(image->data[0] == 0 && image->data[4] == 65535);
     image_del(image); mef_layout_map_destroy(map); mef_layout_destroy(layout);
+    /* One physical EXTNAME populates two semantic fields; two cards still fail (#231). */
+    filename(path, "extname-identity.fits"); o = options(); o.identity_key = "EXTNAME";
+    layout = NULL;
+    assert(mef_layout_read(path, &o, NULL, &layout, NULL) == MEF_OK);
+    hdus = mef_layout_hdus(layout, &count);
+    assert(count == 2 && !strcmp(hdus[1].extname, "A") && !strcmp(hdus[1].reported_id, "A"));
+    b = binding("A"); b.extname = "A";
+    map = NULL; assert(mef_layout_bind(layout, &b, 1, NULL, &map, NULL) == MEF_OK);
+    image = NULL; assert(mef_layout_load(map, "A", &image, NULL) == MEF_OK);
+    for (j = 0; j < 5; ++j) assert(image->data[j] == expected[j]);
+    image_del(image); mef_layout_map_destroy(map);
+    b.expected_header_id = "wrong"; failed_bind(layout, &b, 1);
+    mef_layout_destroy(layout); layout = NULL;
+    filename(path, "duplicate-extname.fits");
+    assert(mef_layout_read(path, &o, NULL, &layout, NULL) == MEF_ERR_INPUT && layout == NULL);
     puts("PASS: primary/one-extension/MEF selectors, independent EXTVER presence, exact unsigned scaling");
 }
 static void shuffled(void)

@@ -2,6 +2,7 @@
 
 Explicit native command/ROI/plan handling and Python source-fingerprinted
 prepare/execute orchestration. Synthetic observations only.
+Default: command/orchestration; --layout-alias: layout/command repair #231.
 Two focused tests. No observations, fitted calibration, estimated covariance,
 Monte Carlo, publication or installation.
 """
@@ -65,6 +66,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--revision", required=True)
     p.add_argument("--run", type=Path, required=True)
+    p.add_argument("--layout-alias", action="store_true",
+                   help="Qualify #231 with native_layout and native_pair_command only")
     a = p.parse_args()
     require((platform.system(), platform.node().split(".")[0]) ==
             ("Darwin", "MC02VV0HPHTDG"), "Wrong actual Mac")
@@ -106,7 +109,8 @@ def main():
                   host=platform.platform(), python=sys.executable, commands=[],
                   checkout_before=before, installed_before=installed,
                   source_sha256=exported,
-                  purpose="One-detector native command and fingerprinted TOML orchestration")
+                  purpose=("EXTNAME identity repair #231: layout and raw command"
+                           if a.layout_alias else "One-detector native command and fingerprinted TOML orchestration"))
     print("RETAINED MAC PAIR-COMMAND RUN:", work, flush=True)
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", OPENBLAS_NUM_THREADS="1",
                OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
@@ -124,16 +128,18 @@ def main():
                    "-DMEFPP_SOURCE_REVISION=" + a.revision,
                    "-DPython3_EXECUTABLE=" + PYTHON]
         execute("configure-c17", command, work, env, report["commands"])
+        targets = ["mefpp_pair_measure"] + (["layout_probe"] if a.layout_alias else [])
         execute("build-c17", [CMAKE, "--build", str(build), "--target",
-                "mefpp_pair_measure", "-j", "2"],
+                *targets, "-j", "2"],
                 work, env, report["commands"])
         # Inventory prevents an empty/mismatched regex from passing silently.
-        selection = "^(native_pair_command|pair_runner_orchestration)$"
+        names_expected = {"native_pair_command", "native_layout" if a.layout_alias else "pair_runner_orchestration"}
+        selection = "^(" + "|".join(sorted(names_expected)) + ")$"
         inventory = subprocess.check_output([CTEST, "--test-dir", str(build),
                     "-N", "-R", selection, "--show-only=json-v1"], env=env, text=True)
         (work / "inventory-c17.json").write_text(inventory)
         names = {t["name"] for t in json.loads(inventory)["tests"]}
-        require(names == {"native_pair_command", "pair_runner_orchestration"},
+        require(names == names_expected,
                 "Unexpected focused test inventory")
         log = execute("tests-c17", [CTEST, "--test-dir", str(build), "-R", selection,
                       "--output-on-failure"], work, env, report["commands"])

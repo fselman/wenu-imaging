@@ -438,3 +438,30 @@ choice once, then use the already qualified 6e75a7b command/runner and corrected
 canonical-PAF fingerprint to prepare/execute the first detector run under a fresh
 Pictures/OCAM/wenu-imaging purpose directory. Preserve review and original raw
 files. No native rebuild or repeated passed numerical gate is needed.
+
+## CCD65 first real attempt and EXTNAME repair — 4 November 2026
+
+Owner explicitly approved both proposed raw biases, exclusion >=65534 ADU and
+legacy binary BPM 1=good. Do not request these choices again. Initial cross-session
+stat admission stopped before output creation because all 31 device numbers changed
+16777222 -> 16777223; inode/size/mtime_ns/mode all matched. The corrected launch
+records that exact transition without rewriting the earlier review and establishes
+fresh full runner fingerprints.
+
+Actual Mac attempt retained at
+/Users/fselman/Pictures/OCAM/wenu-imaging/ccd65-raw-pairs-p0sxrc40/measurement:
+failed, native exit1, first flat binding, no completed tables. Checkout and installed
+files preserved; runner final source-preservation check was not reached. Source
+tracing confirms #231: identity_key=EXTNAME was rejected as a duplicate configured
+selector before pixel loads. NULL-free messages are separate cleanup diagnostics.
+
+Bounded #231 repair supports one EXTNAME card in both extname/identity fields,
+retains duplicate-physical-card rejection and all other mapping checks, and reports
+layout error detail. New synthetic native layout and OCAM-style command regressions
+both fail before and pass after repair (agent C17 2/2,1.04s). Exact table equality,
+unsigned scaling, absent-BUNIT ADU fallback, HIERARCH selectors, identity mismatch,
+duplicate card and immutable fixtures are checked. Actual Mac repair gate pending:
+qualify_pair_command_mac.py --layout-alias; builds command/layout_probe, runs only
+native_layout/native_pair_command. Preserve old build and failed run; no raw-data
+retry until this gate is inspected. No install, fit, merge or cleanup.
+See docs/developer/ocam-extname-binding-repair-2026-11-04.md.

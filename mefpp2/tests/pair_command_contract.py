@@ -57,6 +57,37 @@ def main():
         r=subprocess.run([a.command,str(paf),str(roi),str(plan),str(out)],capture_output=True,text=True)
         assert r.returncode and saved=={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir()}
     directory=work/'input-1'
+    # OCAM key policy, absent BUNIT and a binary 1=good BPM (#231).
+    ocam=work/'input-ocam';fixture(ocam,3,'measure');(ocam/'bias.fits').unlink()
+    rename={'DETID':'EXTNAME','AMPID':'HIERARCH ESO DET OUT1 ID',
+            'XBINNING':'HIERARCH ESO DET WIN1 BINX','YBINNING':'HIERARCH ESO DET WIN1 BINY'}
+    for path in ocam.glob('*.fits'):
+        content=bytearray(path.read_bytes())
+        for start in range(0,len(content),2880):
+            if content[start:start+8].strip() not in (b'SIMPLE',b'XTENSION'):continue
+            for offset in range(start,start+2880,80):
+                card=bytes(content[offset:offset+80]).decode('ascii');key=card[:8].strip()
+                if key=='END':break
+                if key=='BUNIT':replacement=' '*80
+                elif key in rename:
+                    name=rename[key];value=card[10:].strip()
+                    replacement=(f'{name} = {value}' if len(name)>8 else f'{name:<8}= {value:>20}').ljust(80)
+                else:continue
+                assert len(replacement)==80
+                content[offset:offset+80]=replacement.encode('ascii')
+        path.write_bytes(content)
+    frozen={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in ocam.glob('*.fits')}
+    plan=work/'plan-ocam.tsv'
+    write_plan(plan,ocam,3,[('identity_key','EXTNAME'),('amplifier_key','HIERARCH ESO DET OUT1 ID'),
+        ('bin_x_key','HIERARCH ESO DET WIN1 BINX'),('bin_y_key','HIERARCH ESO DET WIN1 BINY')])
+    out=work/'output-ocam';out.mkdir()
+    r=subprocess.run([a.command,str(paf),str(roi),str(plan),str(out)],capture_output=True,text=True)
+    (work/'command-ocam.log').write_text(r.stdout+r.stderr)
+    if r.returncode:raise RuntimeError(r.stdout[-2000:]+r.stderr[-4000:])
+    assert (out/'command.complete').read_text()=='raw_pair_tables_complete\n'
+    for table in ('pairs.tsv','bias-ron.tsv'):
+        assert (out/table).read_bytes()==(work/'output-3'/table).read_bytes(),table
+    assert frozen=={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in ocam.glob('*.fits')}
     cases=[('negative',[('slot','-1')],''),('overflow',[('max_pixels','999999999999999999999999999999999')],''),
         ('nan',[('saturation','nan')],''),('missing',[],''),('duplicate',[],'detector\tD\n'),
         ('unknown',[],'typo\t1\n'),('blank',[],'\nignored\t1\n'),('crop',[('crop','1,4,2,3')],''),
@@ -69,6 +100,6 @@ def main():
         (work/f'bad-{name}.log').write_text(r.stdout+r.stderr)
         assert r.returncode and not (out/'command.complete').exists(),name
         assert not list(out.iterdir()),name
-    print('PASS: 4 complete mask modes, repeated-output preservation and 11 rejected plans')
+    print('PASS: 4 mask modes, OCAM EXTNAME/HIERARCH/ADU fallback with exact tables, preservation and 11 refused plans')
 
 if __name__=='__main__':main()

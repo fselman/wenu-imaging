@@ -79,11 +79,16 @@ static int bind_source(source *s,const plan *p,const mef_bias_settings *g,size_t
     b.active_x=mask?1:g->trim[0];b.active_y=mask?1:g->trim[2];
     b.active_width=g->trim[1]-g->trim[0]+1;b.active_height=g->trim[3]-g->trim[2]+1;
     b.health=MEF_HEALTH_UNKNOWN;b.selection=MEF_OUTPUT_SELECTED;
-    mef_status status=mef_layout_read(s->path,&o,NULL,&layout,NULL);
-    if(status==MEF_OK)status=mef_layout_bind(layout,&b,1,NULL,&s->map,NULL);
+    mef_error *error=NULL;
+    mef_status status=mef_layout_read(s->path,&o,NULL,&layout,&error);
+    if(status==MEF_OK)status=mef_layout_bind(layout,&b,1,NULL,&s->map,&error);
+    if(status!=MEF_OK)fprintf(stderr,"Layout discovery/binding status %d: %s\n",status,
+        error?mef_error_message(error):"No additional diagnostic");
+    mef_error_destroy(error);
     mef_layout_destroy(layout);
     const mef_bound_detector *d=status==MEF_OK?mef_layout_find(s->map,p->value[0]):NULL;
-    if(d&&!mask&&(d->image.axes[0]!=(size_t)rw||d->image.axes[1]!=(size_t)rh))return 0;
+    if(d&&!mask&&(d->image.axes[0]!=(size_t)rw||d->image.axes[1]!=(size_t)rh)){
+        fputs("Bound raw dimensions differ from explicit detector profile\n",stderr);return 0;}
     return status==MEF_OK;
 }
 static mef_image_ref reference(source *s,const char *id)
