@@ -174,6 +174,8 @@ class PairQcTests(unittest.TestCase):
         self.assertEqual(len(report['outputs']),3)
         for image in report['outputs']:
             self.assertTrue(Path(image['path']).read_bytes().startswith(b'\x89PNG'))
+            self.assertEqual(image['signal_axis']['limits'],[0,65535])
+            self.assertEqual(image['signal_axis']['ticks'],[0,10000,20000,30000,40000,50000,60000,65535])
             if image['kind']=='signal_time':
                 series=image['series'][0]
                 self.assertEqual(series['exposure_seconds'],[2.,2.,5.,5.])

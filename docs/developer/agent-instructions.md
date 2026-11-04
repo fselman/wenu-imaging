@@ -1,3 +1,30 @@
+## Shared plot axes/cursor; proposed middle reference interval — 4 November 2026
+
+Owner requests modular reusable plotting. Use tools/qc-plot-inspection.js for
+all HTML plot axis helpers/crosshair/x-y readout; plots supply bounds/units only.
+Static Matplotlib plots use pycavi_plot_axes.py. Both read the one maintained
+config/plotting/signal-axis-v1.json: ticks every10000ADU, final65535. Full display
+extent does not imply measured coverage. Apply to absolute signal axes only,
+not residual/rate axes. Keep negative measurements visible. Raw saturation
+exclusion65534ADU is unchanged. Cursor returns continuous plot coordinates, not
+an interpolated curve or a new measurement; exact point inspection stays separate.
+No fitting/scientific derived-value math in plotting/browser code.
+
+Owner clarifies Bonn shutter/no assumed spatial correction. Do not interpret
+focal-plane differences as spatial shutter timing in this sequence. Owner proposes
+15000..35000ADU as the next diagnostic reference interval: pass explicit
+--fit-signal-min15000 and --fit-signal-max35000 in the next separate compute run,
+record them in ASDF, retain every outside-range point. Do not alter previous data,
+fits or archives, and do not silently switch an existing all-range fit.
+
+Agent shared-module/actual-JS checks, viewer9 and pair/plot9 passed; static PNG
+inspected. The full new computation-ASDF/plot Mac gate is pending (previous
+6acd3b10 command has not returned). New qualify_plot_inspection_mac.py covers
+pending storage9+changed static9+viewer9, with3runner checks, avoiding native/
+common-header rebuild/replay. Real32diagnostic ASDF and new cursor viewer pending.
+No physical shutter/linearity model, installation, merge or cleanup.
+See docs/developer/shared-plot-inspection-2026-11-04.md; prior entries are history.
+
 ## Computations and curves must be saved in ASDF before plotting — 4 November 2026
 
 Owner explicitly requires computational/plotting separation. Controlling final

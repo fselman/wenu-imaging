@@ -17,7 +17,13 @@ function element(id) {
 }
 const context = vm.createContext({document: {getElementById: element, querySelectorAll: () => []}, window: {print() {}}});
 const run = code => vm.runInContext(code, context);
+run(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
 run(script);
+assert.deepEqual(JSON.parse(run('JSON.stringify(bounds(panels[0].pairs))')).slice(0,2),[0,65535]);
+assert.match(element('plot').innerHTML,/65,535/);
+assert.match(element('plot').innerHTML,/10,000/);
+assert.match(element('plot').innerHTML,/data-inspection/);
+assert.match(element('plot').innerHTML,/data-cursor-readout/);
 assert.equal(element('name').textContent, 'ESO_CCD_#65');
 assert.equal((element('mosaic').innerHTML.match(/class="tile"/g) || []).length, 32);
 element('metric').value = 'signal_time'; element('metric').onchange();

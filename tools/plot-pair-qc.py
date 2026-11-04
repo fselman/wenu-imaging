@@ -11,6 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'Pycavi2/pycavi/pycavi'))
 import pycavi_pair_qc as bridge
 from pycavi_pair_display import exposure_rows
+import pycavi_plot_axes as plot_axes
 
 
 def render(path,directory):
@@ -21,6 +22,7 @@ def render(path,directory):
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from matplotlib.ticker import StrMethodFormatter
+    axis_spec=plot_axes.load(ROOT/'config/plotting/signal-axis-v1.json')
     before=bridge.small(path)
     record=qc.read_record(path)
     list(qc.traverse_records(path,qc_root=path.parent))
@@ -57,13 +59,15 @@ def render(path,directory):
         ax.legend(loc='best',fontsize=9)
         if kind=='variance':ax.set_xlim(left=0);ax.set_ylim(bottom=0)
         if time_plot:ax.set_xlim(left=0)
+        axis_values=[r[field] if time_plot else r[xfield] for r in plotted]
+        axis_configuration=plot_axes.signal_axes(ax,'y' if time_plot else 'x',axis_spec,axis_values)
         fig.text(.13,.94,rows[0]['detector']+' — '+('signal versus exposure time' if time_plot else kind+' versus signal'),fontsize=19,weight='bold')
         fig.text(.13,.895,'Output '+rows[0]['amplifier']+' · '+str(len(rois))+' ROIs · full-precision ASDF measurements',fontsize=11,color='#555555')
         note='Each flat exposure shown separately on the pair-common pixel population.' if time_plot else 'Diagnostic arithmetic; no fitted or accepted instrument gain.' if kind=='gain' else 'Variance = ½ Var(F₁ − F₂), including read noise.'
         fig.text(.13,.07,note+' Lines connect measured points; no fit.',fontsize=9,color='#555555')
-        fig.text(.13,.035,'Raw pairs without overscan correction; missing values remain unavailable.',fontsize=9,color='#777777')
+        fig.text(.13,.035,'Raw pairs without overscan correction. Full signal-axis extent is not measured coverage.',fontsize=9,color='#777777')
         output=directory/('signal_vs_exposure_time.png' if time_plot else kind+'_vs_signal.png');fig.savefig(output,facecolor='white');plt.close(fig)
-        outputs.append(dict(kind=kind,path=str(output),sha256=hashlib.sha256(output.read_bytes()).hexdigest(),series=data))
+        outputs.append(dict(kind=kind,path=str(output),sha256=hashlib.sha256(output.read_bytes()).hexdigest(),series=data,signal_axis=axis_configuration))
     qc.require(bridge.small(path)==before,'ASDF source changed during plotting')
     report=dict(status='complete',source=str(path),source_sha256=bridge.sha(before),
                 qc_record_digest=record.digest,outputs=outputs,raw_FITS_opened=False,native_TSV_opened=False,

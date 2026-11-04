@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate offline geometry-driven QC HTML from validated ASDF, never raw images (#235)."""
 import argparse
+from copy import deepcopy
 import importlib.util
 import json
 from pathlib import Path
@@ -28,7 +29,7 @@ def unchanged(frozen):
 def build(detectors,processing,products,diagnostics=None):
     """Products are explicit pairs.asdf paths; omitted detectors remain visibly missing."""
     geometry,policy,trims=footprint.load(detectors,processing)
-    before=freeze([detectors,processing,Path(__file__),Path(__file__).with_name('pair-qc-viewer.html')])
+    before=freeze([detectors,processing,Path(__file__),Path(__file__).with_name('pair-qc-viewer.html'),Path(__file__).with_name('qc-plot-inspection.js'),ROOT/'config/plotting/signal-axis-v1.json'])
     by_id={d['id']:d for d in geometry['detector']};data={}
     for product in products:
         product=Path(product).resolve(strict=True)
@@ -96,10 +97,15 @@ def build(detectors,processing,products,diagnostics=None):
 
 def render(payload):
     # Escaping '<' prevents script termination by any untrusted asset/ROI/provenance text.
+    payload=deepcopy(payload)
+    payload['plot_axis_spec']=json.loads((ROOT/'config/plotting/signal-axis-v1.json').read_text())
     encoded=json.dumps(payload,ensure_ascii=True,allow_nan=False).replace('<','\\u003c')
     template=Path(__file__).with_name('pair-qc-viewer.html').read_text()
     require(template.count('__QC_PAYLOAD__')==1,'Invalid QC template')
-    return template.replace('__QC_PAYLOAD__',encoded)
+    require(template.count('__QC_PLOT_INSPECTION__')==1,'Invalid plot module placeholder')
+    module=Path(__file__).with_name('qc-plot-inspection.js').read_text()
+    require('</script' not in module.lower(),'Unsafe plot inspection module')
+    return template.replace('__QC_PAYLOAD__',encoded).replace('__QC_PLOT_INSPECTION__',module)
 
 
 

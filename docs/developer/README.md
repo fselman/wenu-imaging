@@ -1,3 +1,5 @@
+Current [shared plotting component](shared-plot-inspection-2026-11-04.md): one signal-axis spec for HTML/static plots, generic crosshair and continuous x/y readout; saved scientific values remain separate. Proposed next reference fit15000–35000ADU is recorded explicitly for computation/ASDF. Mac gate and real ASDF run pending.
+
 Current [computation → ASDF → plotting contract](design/linearity-residual-asdf-v2.md): numerical results/curves are saved before plotting; HTML only reads them. [Implementation and status](linearity-residual-asdf-2026-11-04.md), [guide PDF](linearity-residual-asdf-guide-v2.pdf), [LaTeX](linearity-residual-asdf-guide-v2.tex). This supersedes browser-side residual fitting. Agent18/18 storage/viewer checks pass; Mac qualification and actual ASDF run pending.
 
 Current [residual ASDF separation design](design/linearity-residual-asdf-v2.md) and [guide v2](linearity-residual-asdf-guide-v2.pdf) ([LaTeX](linearity-residual-asdf-guide-v2.tex)): compute/save first; plot saved curves only. Common writer/schema unchanged. Mac separated computation qualification and real ASDF products pending. Interim residual viewer complete with all five guards.
