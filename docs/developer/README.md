@@ -1,3 +1,5 @@
+Current [handoff for 5 November](handoffs/resume-2026-11-05.md): real32-detector/640-row ratio ASDF complete, Mac20/20 and all preservation guards passed. Owner reports generally tiny differential ratios. Overscan subtraction in all bias/flat frames is the next priority; current data remain uncorrected. Reuse retained runs.
+
 Current [same-exposure ratio diagnostic](roi-ratio-diagnostic-2026-11-04.md):
 compute and save new ASDF, then plot near_readout/parallel_far with shared cursor.
 Current inputs have no overscan correction. Owner requires consistent all-frame

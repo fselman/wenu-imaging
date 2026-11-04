@@ -1,3 +1,21 @@
+## Resume 5 November 2026 -- actual ratio run complete; overscan next
+
+Read [the current handoff](docs/developer/handoffs/resume-2026-11-05.md)
+before resuming. It supersedes earlier pending ratio-gate/run statements.
+Actual c33c6ce Mac qualification passed20/20, all4guards, retained
+mac-roi-ratio-pxzzz0v6. Real ratio ASDF complete at
+ocam-roi-ratio-3fjfywj0:32detectors,640rows, all5outerguards. Do not repeat.
+Owner inspected ratio plot and reports effects generally +/-0.0005 or below
+(axis units must be confirmed; normalized deviation0.0005=0.05%). Exact HTML
+run path/receipt has not been pasted; locate existing viewer receipts rather
+than regenerating. Current data have NO overscan correction. Owner's priority
+is consistent overscan subtraction in ALL bias/flat frames, preserving row
+dependence and master-bias consistency. Audit/reuse existing routine, finalize
+and review exact estimator/geometry/edges before implementation. Then NEW full
+ROI measurements -> ASDF diagnostics -> plots -> inspection before physical
+modelling. Preserve originals/runtime/source; no overnight execution, old gate
+replay, installation, merge or cleanup. Details and exact paths in handoff.
+
 ## Same-exposure ROI ratio and overscan requirement — 4 November 2026
 
 Owner requires overscan subtraction in ALL bias/flat frames: observed row ramp
