@@ -1,3 +1,23 @@
+## STOPPED: recode tomorrow after owner design consultation — 5 November 2026
+
+Owner stopped the corrected viewer after40+minutes with no logged progress,
+then instructed: "Forget it. Tomorrow we will recode this. Save the state."
+Read [the 6 November handoff](handoffs/resume-2026-11-06.md) first. It supersedes previous instructions
+to finish or relaunch the existing viewer. All32 corrected preparation and
+line/ratio diagnostic products are complete and must be reused, not recomputed.
+The unfinished inspection directory/log must be retained. No corrected plot
+inspection or final interrupted-viewer receipt has been supplied.
+
+Consult owner BEFORE CODE DESIGN, then agree design before implementation.
+The processing boundary was ALREADY AGREED: extract/correct/trim detector,
+measure5ROIs while its array remains in memory, save associated ASDF, release
+memory; later diagnostics/plots read saved tables directly. Incremental real-data
+recipe development uses three directories: raw data, reduced products,
+orchestration. Exact paths, product grouping/names and restart/replacement rules
+remain for discussion. Avoid proliferation of subdirectories and provenance copies.
+No automatic retry, optimization/rewrite, observation processing, old gate replay,
+source/runtime rehash campaign, installation, merge, cleanup or file moves.
+
 ## Corrected diagnostics complete; finish existing inspection — 5 November 2026
 
 Owner reports ocam-corrected-diagnostics-i92m_n1n complete_for_owner_inspection.

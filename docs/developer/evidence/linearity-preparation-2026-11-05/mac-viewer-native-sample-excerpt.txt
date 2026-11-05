@@ -1,0 +1,114 @@
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ pgrep -fl 'view-pair-qc.py'
+22791 /Users/fselman/Software/build/wenu-imaging/mac-asdf6-transfer-ntb2et4J/Mac-private-k4i17lwh/environment/bin/python -B /Users/fselman/Software/build/wenu-imaging/mac-corrected-diagnostics-M0t2gFsg/source/tools/view-pair-qc.py --preparation-batch /Users/fselman/Pictures/OCAM/wenu-imaging/ocam-corrected-roi-batch-NrHHb3bT --diagnostics /Users/fselman/Pictures/OCAM/wenu-imaging/ocam-corrected-diagnostics-i92m_n1n/lines/index.json --ratios /Users/fselman/Pictures/OCAM/wenu-imaging/ocam-corrected-diagnostics-i92m_n1n/ratios/index.json --run /Users/fselman/Pictures/OCAM/wenu-imaging/ocam-corrected-diagnostics-i92m_n1n/inspection
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ sample 22791 5 -file /tmp/wenu-viewer-sample.txt
+head -n 100 /tmp/wenu-viewer-sample.txt
+Sampling process 22791 for 5 seconds with 1 millisecond of run time between samples
+Sampling completed, processing symbols...
+Sample analysis of process 22791 written to file /tmp/wenu-viewer-sample.txt
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ head -n 100 /tmp/wenu-viewer-sample.txt
+Analysis of sampling python (pid 22791) every 1 millisecond
+Process:         python3.11 [22791]
+Path:            /Users/USER/*/python3.11
+Load Address:    0x104b28000
+Identifier:      python3.11
+Version:         0
+Code Type:       X86-64
+Platform:        macOS
+Parent Process:  python3.11 [22789]
+
+Date/Time:       2026-11-05 20:53:08.426 -0300
+Launch Time:     2026-11-05 20:12:51.752 -0300
+OS Version:      macOS 13.7.8 (22H730)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         186.9M
+Physical footprint (peak):  249.5M
+Idle exit:                  untracked
+----
+
+Call graph:
+    3785 Thread_510926   DispatchQueue_1: com.apple.main-thread  (serial)
+    + 3782 start  (in dyld) + 1896  [0x7ff801ae8418]
+    + ! 3782 main  (in python3.11) + 56  [0x104b29d38]
+    + !   3782 Py_RunMain  (in python3.11) + 1990  [0x104d86b66]
+    + !     3782 pymain_run_file  (in python3.11) + 85  [0x104d871e5]
+    + !       3782 pymain_run_file_obj  (in python3.11) + 267  [0x104d8776b]
+    + !         3782 _PyRun_AnyFileObject  (in python3.11) + 182  [0x104d63516]
+    + !           3782 _PyRun_SimpleFileObject  (in python3.11) + 275  [0x104d63b63]
+    + !             3782 pyrun_file  (in python3.11) + 140  [0x104d6407c]
+    + !               3782 run_mod  (in python3.11) + 132  [0x104d64254]
+    + !                 3782 PyEval_EvalCode  (in python3.11) + 249  [0x104cb88e9]
+    + !                   3782 _PyEval_Vector  (in python3.11) + 484  [0x104cb8b44]
+    + !                     2862 _PyEval_EvalFrameDefault  (in python3.11) + 19987  [0x104cc00f3]
+    + !                     : 2861 list_vectorcall  (in python3.11) + 374  [0x104bc53a6]
+    + !                     : | 2861 list_extend  (in python3.11) + 678  [0x104bc5886]
+    + !                     : |   2861 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |     2861 _PyEval_EvalFrameDefault  (in python3.11) + 92545  [0x104cd1c61]
+    + !                     : |       2861 gen_send_ex2  (in python3.11) + 207  [0x104bb557f]
+    + !                     : |         2769 _PyEval_EvalFrameDefault  (in python3.11) + 92545  [0x104cd1c61]
+    + !                     : |         + 2769 gen_send_ex2  (in python3.11) + 207  [0x104bb557f]
+    + !                     : |         +   2525 _PyEval_EvalFrameDefault  (in python3.11) + 92545  [0x104cd1c61]
+    + !                     : |         +   ! 2525 gen_send_ex2  (in python3.11) + 207  [0x104bb557f]
+    + !                     : |         +   !   1300 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   : 1300 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :   1300 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :     1300 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   :       1300 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :         1300 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :           1300 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   :             1300 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :               1300 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :                 1300 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   :                   1300 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :                     1300 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :                       1300 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   :                         1300 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :                           1300 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :                             1290 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   :                             | 1290 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :                             |   1290 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :                             |     1240 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   :                             |     + 1240 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :                             |     +   1240 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :                             |     +     235 _PyEval_EvalFrameDefault  (in python3.11) + 23491,46039,...  [0x104cc0ea3,0x104cc66b7,...]
+    + !                     : |         +   !   :                             |     +     178 _PyEval_EvalFrameDefault  (in python3.11) + 18268  [0x104cbfa3c]
+    + !                     : |         +   !   :                             |     +     ! 178 method_vectorcall  (in python3.11) + 417  [0x104b9eec1]
+    + !                     : |         +   !   :                             |     +     !   178 _PyFunction_Vectorcall  (in python3.11) + 491  [0x104b9964b]
+    + !                     : |         +   !   :                             |     +     !     141 _PyEval_EvalFrameDefault  (in python3.11) + 37527  [0x104cc4577]
+    + !                     : |         +   !   :                             |     +     !     : 141 builtin_next  (in python3.11) + 68  [0x104cb54c4]
+    + !                     : |         +   !   :                             |     +     !     :   141 gen_iternext  (in python3.11) + 149  [0x104bb67a5]
+    + !                     : |         +   !   :                             |     +     !     :     99 _PyEval_EvalFrameDefault  (in python3.11) + 25529  [0x104cc1699]
+    + !                     : |         +   !   :                             |     +     !     :     | 97 builtin_id  (in python3.11) + 77  [0x104cb419d]
+    + !                     : |         +   !   :                             |     +     !     :     | + 40 PySys_Audit  (in python3.11) + 808  [0x104d714d8]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 32 _PyFunction_Vectorcall  (in python3.11) + 491  [0x104b9964b]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! : 17 _PyEval_EvalFrameDefault  (in python3.11) + 39516,18495,...  [0x104cc4d3c,0x104cbfb1f,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! : 15 _PyEval_EvalFrameDefault  (in python3.11) + 18561  [0x104cbfb61]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! :   9 tuplecontains  (in python3.11) + 159,0,...  [0x104c22def,0x104c22d50,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! :   6 tuplecontains  (in python3.11) + 144  [0x104c22de0]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! :     6 PyUnicode_RichCompare  (in python3.11) + 0,27,...  [0x104c3cd60,0x104c3cd7b,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 6 _PyFunction_Vectorcall  (in python3.11) + 8,45,...  [0x104b99468,0x104b9948d,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 2 _PyFunction_Vectorcall  (in python3.11) + 293  [0x104b99585]
+    + !                     : |         +   !   :                             |     +     !     :     | + !   2 _platform_bzero$VARIANT$Haswell  (in libsystem_platform.dylib) + 0,115  [0x7ff801e6de60,0x7ff801e6ded3]
+    + !                     : |         +   !   :                             |     +     !     :     | + 14 PySys_Audit  (in python3.11) + 20,118,...  [0x104d711c4,0x104d71226,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + 11 PySys_Audit  (in python3.11) + 1007  [0x104d7159f]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 9 _PyObject_Free  (in python3.11) + 55,29,...  [0x104c0ee97,0x104c0ee7d,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 2 listiter_dealloc  (in python3.11) + 5,93  [0x104bcb845,0x104bcb89d]
+    + !                     : |         +   !   :                             |     +     !     :     | + 10 PySys_Audit  (in python3.11) + 564  [0x104d713e4]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 5 PyUnicode_FromString  (in python3.11) + 213,12,...  [0x104c6afd5,0x104c6af0c,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 3 PyUnicode_FromString  (in python3.11) + 122  [0x104c6af7a]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! : 3 _PyObject_Malloc  (in python3.11) + 77,54  [0x104c0d09d,0x104c0d086]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 1 PyUnicode_FromString  (in python3.11) + 39  [0x104c6af27]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! : 1 _platform_strlen  (in libsystem_platform.dylib) + 0  [0x7ff801e6df00]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 1 PyUnicode_FromString  (in python3.11) + 522  [0x104c6b10a]
+    + !                     : |         +   !   :                             |     +     !     :     | + !   1 DYLD-STUB$$memcpy  (in python3.11) + 0  [0x104e67cc6]
+    + !                     : |         +   !   :                             |     +     !     :     | + 5 PySys_Audit  (in python3.11) + 685  [0x104d7145d]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 5 listiter_next  (in python3.11) + 52,0,...  [0x104bcb974,0x104bcb940,...]
+    + !                     : |         +   !   :                             |     +     !     :     | + 4 PySys_Audit  (in python3.11) + 605  [0x104d7140d]
+    + !                     : |         +   !   :                             |     +     !     :     | + ! 3 list_iter  (in python3.11) + 1,298,...  [0x104bc4e41,0x104bc4f6a,...]
+(base) MC02VV0HPHTDG:wenu-imaging fselman$ 
