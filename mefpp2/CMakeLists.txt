@@ -219,9 +219,15 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   set_target_properties(mefpp_linearity_files PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_include_directories(mefpp_linearity_files PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_linearity_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
-  target_link_libraries(mefpp_linearity_files PUBLIC mefpp_linearity_samples mefpp_linearity_pairs)
+  target_link_libraries(mefpp_linearity_files PUBLIC mefpp_linearity_samples mefpp_linearity_pairs mefpp_linearity_prepare)
   target_compile_options(mefpp_linearity_files PRIVATE -Wall -Wextra -pedantic-errors)
   add_executable(mefpp_pair_measure ins/mef/mefpp_pair_measure.c)
+  add_executable(mefpp_linearity_prepare_command ins/mef/mefpp_linearity_prepare.c)
+  set_target_properties(mefpp_linearity_prepare_command PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_linearity_prepare_command PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_linearity_prepare_command PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_linearity_prepare_command PRIVATE mefpp_linearity_files mefpp_roi_config mefpp_config_toml)
+  target_compile_options(mefpp_linearity_prepare_command PRIVATE -Wall -Wextra -pedantic-errors)
   set_target_properties(mefpp_pair_measure PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_include_directories(mefpp_pair_measure PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_pair_measure PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -546,6 +552,11 @@ if(BUILD_TESTING)
         --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(pair_runner_orchestration PROPERTIES TIMEOUT 180 LABELS "linearity;command;provenance;configuration")
+    add_test(NAME native_linearity_preparation_command
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_preparation_command_contract.py"
+        --command "$<TARGET_FILE:mefpp_linearity_prepare_command>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_linearity_preparation_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;overscan")
     add_test(NAME native_sample_command
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sample_command_contract.py"
         --command "$<TARGET_FILE:mefpp_sample_extract>"

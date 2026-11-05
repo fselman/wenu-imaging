@@ -10,9 +10,10 @@
 \begin{document}
 \maketitle
 \section*{Scope and configuration}
-This guide describes the new in-memory preparation services, not a completed
-FITS-to-ASDF recipe or an accepted physical calibration. Actual Mac qualification
-and real corrected-ROI products remain separate gates. The reviewed design is
+This guide describes the preparation kernels and their FITS/recipe/ASDF
+integration. The kernel passed its actual Mac gate. The new integration
+requires focused Mac qualification; real corrected ROI products and physical
+calibration acceptance remain pending. The reviewed design is
 in the developer design directory:\par
 \texttt{linearity-preparation-overscan-asdf-v1.md}.
 
@@ -48,8 +49,8 @@ merge the subtractions. A supplied master is already scan-corrected and active;
 it is subtracted once and receives no second scan correction. Bias-role frame
 preparation has no master subtraction. The existing bias service performs
 frame admission and stacking; this increment does not change its median or
-rejection policy. Master lineage compatibility must be verified by the future
-file/recipe admission layer, not inferred from its pixel values.
+rejection policy. The recipe verifies master configuration, source memberships and lineage
+before reuse; compatibility is not inferred from pixel values.
 
 \newpage
 \section*{Corrected ROI statistics and populations}
@@ -68,8 +69,7 @@ d_p&=\operatorname{pix}[S_{1p}-S_{2p}],\qquad
 s_d^2=(N-1)^{-1}\sum_{p\in\mathcal P}(d_p-\overline d)^2.
 \end{align}
 Difference pixel arithmetic follows \texttt{image\_pair\_stats\_checked}.
-The native result stores standard deviations and availability; a later
-serialization stage may store their squared values and $s_d^2/2$ with explicit
+The native result stores standard deviations and availability; the native TSV transport stores their squared values and $s_d^2/2$ with explicit
 definitions. For $N<2$, sample scatter is unavailable, not zero. A corrected
 nonfinite value cannot silently remove an otherwise admitted measured pixel:
 all three corrected population counts must equal the raw count.
@@ -104,5 +104,48 @@ singleton-path agreement, common-population analytical moments, and persistent
 owner-allocation failures. Existing bias-service, sample and raw-pair controls
 check affected shared paths. Six TOML and five footprint controls check the
 configuration boundary. Agent Linux success is not actual Mac acceptance or
-scientific validation. Complete recipe/ASDF orchestration follows that gate.
+scientific validation. The actual Mac kernel gate passed four native and
+eleven Python controls; new integration qualification remains separate.
+
+\newpage
+\section*{Recipe and immutable ASDF boundary}
+\texttt{pycavi\_linearity\_recipe.preparation\_dependencies} reads the supplied
+TOMLs and preserved sample/master QC graph. It requires exact scan, trim and
+stack compatibility with the master snapshot and matches original identities,
+HDU bindings, accepted/rejected memberships and readout. Legacy header fields
+travel through a generated native compatibility TOML; they are not scientific
+configuration overrides. Historical bias QC may have null image digests; the
+completed bias execution receipt then supplies those fingerprints explicitly.
+
+\texttt{prepare\_detector} fingerprints input images before native processing,
+checks them again afterward, and freezes metadata and executable identities.
+\texttt{mefpp\_linearity\_prepare\_command} reads every bias for ordered traces,
+then streams flat pairs through \texttt{mef\_linearity\_from\_files}, using the
+qualified preparation service and the existing direct-pixel extraction. It
+reuses the existing master and never rebuilds it. Direct-pixel values are replay
+checks against the preserved archive, not substitutes for full ROI measurements.
+No separate singleton extraction campaign is required.
+
+\texttt{pycavi\_linearity\_preparation\_qc.publish} uses the unchanged common
+\texttt{QcRecipe}, writer, reader and traversal. Each per-detector product
+stores corrected individual-exposure means, sample variances, pair differences,
+original raw diagnostics/populations, ordered bias/flat traces, frozen native
+transports, both TOML texts and resolved settings, direct-site replay, and the
+copied source QC graph. Common measurements link to the actual flat inputs.
+HDU/ROI/exposure identities survive independently of pair iteration order.
+Original archives remain immutable; existing outputs cannot be overwritten.
+
+\texttt{read\_product} verifies values against embedded native transports and
+frozen relative QC links, so relocation does not require original raw images
+or native output directories. Later model experiments consume this saved
+boundary without repeating preparation. Absolute noise/covariance stays
+unavailable and physical fitting stays unperformed. The modelling accessor
+refuses to imply that missing uncertainty inputs are ready for a fit.
+
+Independent tiny FITS tests cover shuffled HDUs, known row ramps and ROI
+moments, all ten bias memberships, original direct-site values, duplicate and
+resource refusals, source preservation, ASDF roundtrip and relocation without
+native files. Focused file-adapter allocation controls and the unchanged
+singleton command check shared interfaces. None is scientific acceptance of
+observational calibration or a general dependency memory-safety claim.
 \end{document}

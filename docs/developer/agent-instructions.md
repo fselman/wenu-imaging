@@ -1,3 +1,18 @@
+## Linearity recipe/ASDF integration candidate — 5 November 2026
+
+Owner supplied existing master/sample metadata after actual d8bf560 Mac gate.
+Preserved32 masters and32sample ASDF/3200rows/1088records are dependencies.
+New recipe composes TOMLs, explicit FITS/overscan services and common ASDF;
+validates corrected-master snapshot/memberships, replays direct sites within
+new ROI pass, retains30frame ordered traces/detector and frozen source graph.
+Legacy bias QC null hashes resolve from completed bias outer receipt, not a new
+historical baseline. Agent3native+6TOML+11recipe/ASDF controls pass. Three-page
+LaTeX/PDF guide updated and visually checked. Actual Mac integration gate next:
+Pycavi2/tests/qualify_linearity_recipe_mac.py (3native+17Python,4guards).
+Reuse old overscan gate; do not repeat bias generation or a separate singleton
+campaign. No real corrected ROI products, fit, installation, merge or cleanup.
+See [integration status](linearity-recipe-integration-2026-11-05.md).
+
 ## Actual Mac overscan gate passed - 5 November 2026
 
 Owner returned d8bf5608c73b3aee8b5411b3193f4184bd0f7b5a qualification passed at

@@ -1,6 +1,7 @@
 #ifndef MEF_LINEARITY_FILES_H
 #define MEF_LINEARITY_FILES_H
 #include "mef_linearity_pairs.h"
+#include "mef_linearity_prepare.h"
 #include "mef_layout.h"
 typedef struct {
     const mef_layout_map *map;
@@ -29,11 +30,16 @@ typedef struct {
     const mef_image_ref *raw_bias_reference[2]; /* caller-selected raw biases */
     size_t max_pair_rows; /* required when measure_pairs; zero otherwise */
     size_t max_loaded_pixels; /* sum of all raw/calibration plane pixels */
+    int prepare_pairs; /* opt-in corrected full-ROI pass; requires measure_pairs */
+    const detector_roi *preparation_roi; /* separate from singleton sample ROIs */
+    int preparation_rois;
+    size_t max_working_pixels; /* kernel's conservative borrowed + working ceiling */
 } mef_linearity_files_input;
 typedef struct {
     mef_allocator allocator;
     mef_linearity_sample_result *samples;
     mef_linearity_pairs_result *pairs; /* NULL when not requested */
+    mef_linearity_prepared_result *prepared; /* owns RAW pair table when opted in */
     char *raw_bias_path[2];
     mef_bound_detector raw_bias_binding[2];
     char **input_paths, *bias_path, *bpm_path;

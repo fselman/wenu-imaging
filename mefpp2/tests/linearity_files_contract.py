@@ -100,6 +100,7 @@ def main():
     cases = [(kind, 'normal') for kind in range(4)] + [(1, case) for case in
              ('missing', 'duplicate', 'amplifier', 'pair_time', 'tolerant', 'hdu', 'readout', 'pair_id', 'registry', 'limit')]
     cases += [(kind, 'measure') for kind in range(4)] + [(1, case) for case in ('measure_readout', 'measure_limit', 'measure_rows', 'measure_alias')]
+    cases += [(kind,'measure_prepare') for kind in range(4)] + [(1,case) for case in ('measure_prepare_limit','measure_prepare_roi')]
     for kind, case in cases:
         directory=work/f'{kind}-{case}'
         fixture(directory, kind, case)
@@ -117,7 +118,7 @@ def main():
         raise RuntimeError('Affected BPM control: '+completed.stdout[-2000:]+completed.stderr[-4000:])
     assert before == {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.glob('*.fits')}
     (directory/'probe.log').write_text(completed.stdout+completed.stderr)
-    print('PASS: 22 FITS cases, source pixel/header preservation and existing BPM metadata/control')
+    print('PASS: 28 FITS cases including corrected preparation, source preservation and existing BPM control')
 
 
 if __name__ == '__main__':

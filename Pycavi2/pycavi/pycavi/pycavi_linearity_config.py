@@ -76,7 +76,7 @@ def resolve(detector_text, processing_text):
     detectors, trims, rois = d.get('detector'), p.get('trim'), p.get('roi')
     require(isinstance(detectors, list) and detectors and isinstance(trims, list) and
             isinstance(rois, list) and rois, 'Detector, processing and ROI entries required')
-    require(all(isinstance(v, dict) and {'id','amplifier','raw_size','illuminated','prescan','overscan'} <= set(v)
+    require(all(isinstance(v, dict) and {'id','amplifier','raw_size','illuminated','prescan','overscan','native_paf_chip'} <= set(v)
                 for v in detectors), 'Incomplete detector entry')
     require(all(isinstance(v, dict) and {'detector','retained','prescan_sample','overscan_sample'} <= set(v)
                 for v in trims), 'Incomplete processing entry')
@@ -87,6 +87,9 @@ def resolve(detector_text, processing_text):
     require(len(trims) == len(ids) and {v['detector'] for v in trims} == set(ids),
             'Each detector requires exactly one processing entry')
     by_id = {v['detector']: v for v in trims}
+    slots = [v['native_paf_chip'] for v in detectors]
+    require(all(type(v) is int for v in slots) and sorted(slots) == list(range(1, len(detectors)+1)),
+            'Require unique explicit native configuration slots; not HDU ordinals')
     names = set()
     for r in rois:
         require(type(r['id']) is str and r['id'] and r['id'] not in names and
@@ -125,6 +128,7 @@ def resolve(detector_text, processing_text):
             rectangle([r[k] for k in ('xmin', 'xmax', 'ymin', 'ymax')],
                       crop[1] - crop[0] + 1, crop[3] - crop[2] + 1, r['id'])
         entries.append(dict(detector_id=name, amplifier_id=detector['amplifier'],
+            configuration_detector=detector['native_paf_chip']-1,
             raw_size=list(size), full_regions=full, retained=crop, samples=samples,
             scan_samples=count, scan_kept=count-rejected, rois=selected,
             native_settings=dict(prescan=samples['prescan'][:2], overscan=samples['overscan'][:2],

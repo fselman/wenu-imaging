@@ -13,6 +13,7 @@ void mef_linearity_files_destroy(mef_linearity_files_result *r)
     mef_allocator a=r->allocator;
     mef_linearity_samples_destroy(r->samples);
     mef_linearity_pairs_destroy(r->pairs);
+    mef_linearity_prepared_destroy(r->prepared);
     for(int j=0;j<2;++j)release(&a,r->raw_bias_path[j]);
     if(r->input_paths)for(int i=0;i<r->frames;++i)release(&a,r->input_paths[i]);
     release(&a,r->input_paths);release(&a,r->input_binding);release(&a,r->bias_path);release(&a,r->bpm_path);
@@ -47,6 +48,9 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
     const mef_bound_detector *first,*cal,*d;size_t total=0;int count,width,height;
     if(!p||!out||*out||(allocator&&(!allocator->allocate||!allocator->release)))return status;
     if(allocator)a=*allocator;
+    if((p->prepare_pairs!=0&&p->prepare_pairs!=1)||
+       (p->prepare_pairs?(!p->measure_pairs||!p->preparation_roi||p->preparation_rois<1||!p->max_working_pixels):
+        (p->preparation_roi||p->preparation_rois||p->max_working_pixels)))return status;
     if((p->measure_pairs!=0&&p->measure_pairs!=1)||(p->pair_with_mad!=0&&p->pair_with_mad!=1))return status;
     for(int j=0;j<2;++j)if(p->measure_pairs?
         (!p->max_pair_rows||!p->raw_bias_map[j]||!ref_valid(p->raw_bias_reference[j])):
@@ -80,6 +84,10 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
         ++selected_rois;
     }
     if(!selected_rois)return status;
+    if(p->prepare_pairs)for(int i=0;i<p->preparation_rois;++i){const detector_roi *q=p->preparation_roi+i;
+        if(q->amplifier!=s->amplifier_index||!memchr(q->roi_id,0,64)||!q->roi_id[0]||
+           q->xmin<1||q->ymin<1||q->xmax<q->xmin||q->ymax<q->ymin||q->xmax>width||q->ymax>height)return status;
+        for(int j=0;j<i;++j)if(!strcmp(q->roi_id,p->preparation_roi[j].roi_id))return status;}
     for(int i=0;i<count;++i){const mef_linearity_file_frame *f=p->input+i;
         if(!ref_valid(&f->reference)||!f->pair_id||!f->pair_id[0]||strlen(f->pair_id)>63||f->input_index<0||
            !binding_matches(f->map,detector,&f->reference,"ADU",s->configuration_detector)||
@@ -167,7 +175,10 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
         m.reject_bits=s->reject_bits;m.saturation_raw=s->saturation_raw;m.pair_time_tolerance=p->pair_time_tolerance;m.max_rows=p->max_pair_rows;
         for(int j=0;j<2;++j){m.raw_bias[j]=raw_bias[j];m.raw_bias_asset[j]=p->raw_bias_reference[j]->asset_record_id;
             m.raw_bias_hdu[j]=p->raw_bias_reference[j]->hdu_index;}
-        status=mef_linearity_measure_pairs(&m,&a,&r->pairs);if(status!=MEF_OK)goto done;
+        if(p->prepare_pairs){m.roi=p->preparation_roi;m.rois=p->preparation_rois;
+            status=mef_linearity_prepare_pairs(&m,bias,p->max_working_pixels,&a,&r->prepared);
+        }else status=mef_linearity_measure_pairs(&m,&a,&r->pairs);
+        if(status!=MEF_OK)goto done;
     }
     mef_linearity_sample_input input=*s;input.raw=(const image_t *const *)raw;input.frame=frames;input.master_bias=bias;
     input.bpm_flags=flags;input.bpm_count=flags?(size_t)width*(size_t)height:0;input.bpm_binary=binary;

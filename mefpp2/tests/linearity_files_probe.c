@@ -51,6 +51,10 @@ int main(int argc,char **argv)
     in.binary_good_value=kind==3?1:0;in.mask_registry="WENU_BPM_V1";in.exposure_key="EXPTIME";in.max_loaded_pixels=1000;
     if(measuring){in.measure_pairs=1;in.pair_with_mad=1;in.max_pair_rows=4;
         for(int j=0;j<2;++j){in.raw_bias_map[j]=rbmap[j];in.raw_bias_reference[j]=rbref+j;}}
+    int preparing=!strncmp(mode,"measure_prepare",15);detector_roi full[2];memcpy(full,rois,sizeof full);
+    if(preparing){in.prepare_pairs=1;in.preparation_roi=full;in.preparation_rois=2;in.max_working_pixels=1000;}
+    if(!strcmp(mode,"measure_prepare_limit"))in.max_working_pixels=1;
+    if(!strcmp(mode,"measure_prepare_roi"))full[0].xmax=5;
     if(!strcmp(mode,"measure_limit"))in.max_loaded_pixels=120;
     if(!strcmp(mode,"measure_rows"))in.max_pair_rows=3;
     if(!strcmp(mode,"measure_alias"))rbref[1].asset_record_id=rbref[0].asset_record_id;
@@ -61,8 +65,12 @@ int main(int argc,char **argv)
     if(!strcmp(mode,"tolerant"))in.pair_time_tolerance=.02;
     mef_linearity_files_result *r=NULL,*occupied;fault f={0,0,0};mef_allocator a={&f,alloc,drop};
     mef_status status=mef_linearity_from_files(&in,&a,&r);
-    if(strcmp(mode,"normal")&&strcmp(mode,"tolerant")&&strcmp(mode,"measure")){assert(status!=MEF_OK&&!r&&!f.live);goto cleanup;}
+    if(strcmp(mode,"normal")&&strcmp(mode,"tolerant")&&strcmp(mode,"measure")&&strcmp(mode,"measure_prepare")){assert(status!=MEF_OK&&!r&&!f.live);goto cleanup;}
     assert(status==MEF_OK&&r);size_t allocations=f.calls;printf("Adapter/sample snapshot allocations: %zu\n",allocations);
+    if(preparing){assert(r->prepared&&!r->pairs&&r->prepared->raw->rows==4);
+        if(kind==1)assert(fabs(r->prepared->row[0].first.mean-610./3)<1e-12);
+        /* Temporarily borrow the nested RAW view for unchanged RAW assertions. */
+        r->pairs=r->prepared->raw;}
     if(measuring){assert(r->pairs&&r->pairs->rows==4&&r->pairs->rois==2&&r->pairs->pairs==2);
         assert(!strcmp(r->pairs->raw_bias_asset[0],"raw-bias:0")&&r->pairs->row[0].first==0&&r->pairs->row[0].second==3);
         assert(r->pairs->row[0].measurement.valid_pixels==(kind?3:4));
@@ -83,15 +91,16 @@ int main(int argc,char **argv)
         assert(fabs(ob.signal-expected)<1e-4);}
     assert(r->samples->bpm_binary_supplied==(kind>=2)&&r->samples->noise_state==MEF_LINEARITY_NOISE_UNAVAILABLE);
     occupied=r;assert(mef_linearity_from_files(&in,NULL,&r)!=MEF_OK&&r==occupied);
+    if(preparing)r->pairs=NULL;
     mef_linearity_files_destroy(r);r=NULL;assert(!f.live);
-    if(kind==1&&(!strcmp(mode,"normal")||!strcmp(mode,"measure")))for(size_t i=1;i<=allocations;++i){f.calls=0;f.fail=i;
+    if(kind==1&&(!strcmp(mode,"normal")||!strcmp(mode,"measure")||!strcmp(mode,"measure_prepare")))for(size_t i=1;i<=allocations;++i){f.calls=0;f.fail=i;
         assert(mef_linearity_from_files(&in,&a,&r)==MEF_ERR_MEMORY&&!r&&!f.live);}
     f.fail=0;assert(mef_linearity_from_files(&in,NULL,&r)==MEF_OK);
 cleanup:
     for(int i=0;i<4;++i)mef_layout_map_destroy((mef_layout_map *)frames[i].map);
     for(int j=0;j<2;++j)mef_layout_map_destroy(rbmap[j]);
     mef_layout_map_destroy(bias);mef_layout_map_destroy(bpm);mef_config_destroy(config);memset(frames,0,sizeof frames);memset(rois,0,sizeof rois);
-    if(r&&measuring)assert(r->pairs->row[0].measurement.valid_pixels==(kind?3:4)&&strstr(r->raw_bias_path[1],"raw-bias-1.fits"));
+    if(r&&measuring)assert((preparing?r->prepared->raw:r->pairs)->row[0].measurement.valid_pixels==(kind?3:4)&&strstr(r->raw_bias_path[1],"raw-bias-1.fits"));
     if(r){assert(r->samples->frame[0].seconds==2&&strstr(r->input_paths[0],"flat-0.fits"));mef_linearity_files_destroy(r);}
     assert(!f.live);puts("PASS: explicit FITS admission, times/pairs, mask polarity, source ownership and atomic failures");return 0;
 }
