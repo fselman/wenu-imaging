@@ -3,7 +3,7 @@
 \usepackage{amsmath,amssymb,booktabs,hyperref}
 \title{Straight-line residual inspection\\Mathematical and implementation guide, v2}
 \author{wenu-imaging}
-\date{4 November 2026}
+\date{5 November 2026}
 \setlength{\emergencystretch}{2em}
 \begin{document}
 \maketitle
@@ -17,7 +17,9 @@ For one detector and ROI, each individual flat exposure supplies exposure time
 $t_i$ in seconds and saved bias-subtracted mean signal $S_i$ in ADU. Both members
 of each pair remain separate. Their common accepted pixel population, source
 asset/HDU, acquisition index and original table row remain attached.
-There is no overscan correction or additional flat-fielding in this display.
+The input stage is explicit: legacy raw-pair signals have no overscan
+correction; preparation signals already have row-overscan and master-bias
+subtraction. Diagnostics and display perform no image correction.
 The reference-line population $I$ contains finite $(t_i,S_i)$ and satisfies the
 user's inclusive original-signal interval. Blank limits mean all available data.
 No weighting, outlier rejection or hidden exposure cut is applied. Points outside
@@ -108,4 +110,25 @@ verbatim. Separate Mac and browser acceptance remain necessary.
 \noindent The former browser-side computation and v1 guide are historical.
 ASDF is the numerical result; TSV, JSON and HTML are supporting transport or
 inspection products. No physical correction is adopted by this diagnostic.
+
+\section{Corrected preparation bridge (5 November)}
+\texttt{pycavi\_measurement\_display.read\_source} also accepts immutable
+preparation ASDF. It projects the saved individual exposure/ROI means and
+spatial variances without averaging pair members or loading raw images/native
+files. Asset, HDU, input index, pair/member, ROI coordinates and common pixel
+population remain explicit. ROI means stay distinct from direct-pixel samples.
+
+The existing \texttt{pycavi\_residuals.analyze} equations above are unchanged.
+Residual ASDF freezes the full source graph and carries the actual stage and
+source kind. The generic source-measurement digest is authoritative; the old
+source-pair digest key is a compatibility alias for that same record. Readers
+check stage/kind against the source, preserve all original samples and consume
+stored curves without fitting. Later ratio products inherit that lineage.
+
+The existing HTML/axis/cursor component renders corrected signal/time,
+spatial variance, residuals, rates and ratios. Its gain and bias-RON channels
+retain their separately labelled raw-pair meanings; spatial scatter is not an
+assigned uncertainty of a mean. Mixed corrected/raw source stages are refused
+within one mosaic. Changing a diagnostic interval creates new ASDF products;
+the original preparation and older diagnostic archives remain immutable.
 \end{document}

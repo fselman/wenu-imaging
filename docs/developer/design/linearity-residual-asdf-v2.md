@@ -1,3 +1,17 @@
+## Corrected preparation source extension — 5 November 2026
+
+The reviewed formulas, unweighted free-intercept policy and explicit
+15000..35000ADU next-run interval are unchanged. The completed corrected
+preparation ASDF is now an additional source. A shared lossless reader projects
+its stored per-exposure ROI signals, variance, pair member/asset/HDU/index and
+common populations. It does not recompute a mean or load an image/native table.
+New diagnostics freeze the complete preparation source graph and retain
+source_kind=preparation, measurement_stage=scan_corrected_master_bias_subtracted
+and a generic source_measurement_digest. The source_pair_digest field remains a
+compatibility alias to that same source record, not a claim of raw-pair stage.
+Readers verify kind and stage against the actual source. Existing raw-pair
+archives/readers remain supported and immutable. Plotting uses saved curves.
+
 # Residual computation and display separation, v2
 
 4 November 2026. Owner instruction: keep computations separate from plotting;

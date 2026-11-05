@@ -18,6 +18,8 @@ def main():
     inputs=parser.add_mutually_exclusive_group(required=True)
     inputs.add_argument('--batch',type=Path)
     inputs.add_argument('--pairs-asdf',type=Path)
+    inputs.add_argument('--preparation-asdf',type=Path)
+    inputs.add_argument('--preparation-batch',type=Path)
     parser.add_argument('--run',type=Path,required=True)
     parser.add_argument('--source-revision',required=True)
     parser.add_argument('--fit-signal-min',type=float)
@@ -38,7 +40,10 @@ def main():
             raise RuntimeError('FITS reads forbidden in saved-data computation')
     sys.addaudithook(offline)
     try:
-        products,metadata=batch_products(args.batch) if args.batch else ([args.pairs_asdf],{})
+        if args.preparation_batch:
+            from pycavi_measurement_display import preparation_products
+            products,metadata=preparation_products(args.preparation_batch)
+        else:products,metadata=batch_products(args.batch) if args.batch else ([args.preparation_asdf or args.pairs_asdf],{})
         frozen.update(metadata);seen=set()
         for product in products:
             record=residual.qc.read_record(product)
@@ -53,7 +58,7 @@ def main():
             frozen.update(result.pop('inputs_sha256'))
             result['path']=str(Path(result['path']).relative_to(work))
             report['products'].append(result)
-        if args.batch:
+        if args.batch or args.preparation_batch:
             require(seen=={f'ESO_CCD_#{n}' for n in range(65,97)},'Incomplete OCAM detector population')
         residual.unchanged(frozen)
         report.update(status='complete',source_preservation=True,inputs_sha256=frozen,

@@ -20,6 +20,10 @@ class ViewerTests(unittest.TestCase):
         self.run,self.pairs,self.bias=fixtures.fixture(self.work)
         geometry,policy,_=viewer.footprint.load(ROOT/'config/detectors/omegacam-1x1.toml',ROOT/'config/processing/omegacam-characterization.toml')
         self.geometry=geometry;self.policy=policy
+        # This legacy raw-table fixture describes display geometry only.
+        # Its deliberately shifted crop is not a numerical preparation profile.
+        self.policy.pop("linearity_preparation_schema_version",None)
+        self.policy.pop("linearity_preparation",None)
         # Use two exact supplied-transport ROI rectangles in the first detector.
         self.policy['roi']=[r for r in self.policy['roi'] if r['detector']!='ESO_CCD_#65']+[
             dict(id='CCD65.R0',detector='ESO_CCD_#65',amplifier='L',xmin=1,xmax=2,ymin=1,ymax=2),

@@ -4,6 +4,7 @@ import argparse
 from copy import deepcopy
 import importlib.util
 import json
+import re
 from pathlib import Path
 import sys
 
@@ -11,6 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'Pycavi2/pycavi/pycavi'))
 import pycavi_pair_qc as bridge
 from pycavi_pair_display import exposure_rows
+import pycavi_measurement_display as measurements
 from pycavi_pair_products import batch_products
 import pycavi_residual_qc as residual_qc
 import pycavi_roi_ratio_qc as ratio_qc
@@ -31,20 +33,30 @@ def build(detectors,processing,products,diagnostics=None,ratios=None):
     """Products are explicit pairs.asdf paths; omitted detectors remain visibly missing."""
     geometry,policy,trims=footprint.load(detectors,processing)
     before=freeze([detectors,processing,Path(__file__),Path(__file__).with_name('pair-qc-viewer.html'),Path(__file__).with_name('qc-plot-inspection.js'),ROOT/'config/plotting/signal-axis-v1.json'])
-    by_id={d['id']:d for d in geometry['detector']};data={}
+    by_id={d['id']:d for d in geometry['detector']};data={};stages=set()
     for product in products:
         product=Path(product).resolve(strict=True)
         # Shared QC input trees stay local to the product; freeze only ASDF files.
         before.update(freeze(product.parent.glob('*.asdf')))
+        measurement=measurements.read_source(product);stages.add(measurement['stage'])
+        require(len(stages)==1,'Cannot mix corrected and raw-only measurement stages')
         values={};origins={}
-        for kind,path in (('pairs',product),('bias-ron',product.with_name('bias-ron.asdf'))):
-            record=bridge.qc.read_record(path)
-            list(bridge.qc.traverse_records(path,qc_root=path.parent))
-            table=bridge.table_from_record(record)
-            require(table['kind']==kind,'Wrong QC table product')
-            values[kind]=table['rows']
-            origins[kind]=dict(path=str(path),sha256=before[str(path)],record_digest=record.digest)
-            if kind=='pairs':provenance=record.as_dict()['extensions']['raw_pair_provenance']
+        if measurement['kind']=='preparation':
+            before.update(residual_qc.source_graph(product))
+            values={'pairs':measurement['pairs'],'bias-ron':measurement['bias']}
+            origins['pairs']=dict(path=str(product),sha256=before[str(product)],
+                record_digest=measurement['record'].digest,kind='preparation')
+            origins['measurements']=dict(origins['pairs'])
+            provenance=measurement['provenance']
+        else:
+            for kind,path in (('pairs',product),('bias-ron',product.with_name('bias-ron.asdf'))):
+                record=bridge.qc.read_record(path)
+                list(bridge.qc.traverse_records(path,qc_root=path.parent))
+                table=bridge.table_from_record(record)
+                require(table['kind']==kind,'Wrong QC table product')
+                values[kind]=table['rows']
+                origins[kind]=dict(path=str(path),sha256=before[str(path)],record_digest=record.digest)
+                if kind=='pairs':provenance=record.as_dict()['extensions']['raw_pair_provenance']
         identity=values['pairs'][0]['detector']
         require(identity in by_id and identity not in data,'Unknown/duplicate QC detector')
         detector=by_id[identity];crop=trims[identity]['retained']
@@ -61,11 +73,12 @@ def build(detectors,processing,products,diagnostics=None,ratios=None):
                 require([row['raw_'+k] for k in ('xmin','xmax','ymin','ymax')]==
                         [active[0]+crop[0]-1,active[1]+crop[0]-1,active[2]+crop[2]-1,active[3]+crop[2]-1],
                         'Saved raw/retained coordinate relation differs')
-        data[identity]=dict(status='available',pairs=values['pairs'],signals=exposure_rows(values['pairs']),bias=values['bias-ron'],sources=origins,
+        data[identity]=dict(status='available',pairs=values['pairs'],signals=measurement['signals'],measurement_stage=measurement['stage'],bias=values['bias-ron'],sources=origins,
             provenance=provenance,rois=rois,footprint_svg=footprint.svg(detector,trims[identity],rois))
     panels=[dict(geometry=d,**data.get(d['id'],dict(status='missing',pairs=[],signals=[],bias=[],rois=[])))
             for d in geometry['detector']]
     payload=dict(schema_version=1,instrument=geometry['instrument'],panels=panels,
+        measurement_stage=next(iter(stages),measurements.RAW),
         columns=max(d['mosaic_column'] for d in geometry['detector']),
         rows=max(d['mosaic_row'] for d in geometry['detector']),
         geometry_sources={str(p):before[str(Path(p).resolve())] for p in (detectors,processing)},
@@ -120,6 +133,11 @@ def render(payload):
     payload['plot_axis_spec']=json.loads((ROOT/'config/plotting/signal-axis-v1.json').read_text())
     encoded=json.dumps(payload,ensure_ascii=True,allow_nan=False).replace('<','\\u003c')
     template=Path(__file__).with_name('pair-qc-viewer.html').read_text()
+    if payload.get('measurement_stage')==measurements.CORRECTED:
+        template=template.replace('OmegaCAM · raw-pair QC','OmegaCAM · corrected preparation QC')
+        template=re.sub(r'(<p class="note" id="measurement-note">).*?(</p>)',
+            r'\1Saved signals and spatial variances are row-overscan corrected with one master-bias subtraction. '
+            r'Gain and bias RON retain their separate raw-pair definitions.\2',template,count=1)
     require(template.count('__QC_PAYLOAD__')==1,'Invalid QC template')
     require(template.count('__QC_PLOT_INSPECTION__')==1,'Invalid plot module placeholder')
     module=Path(__file__).with_name('qc-plot-inspection.js').read_text()
@@ -131,7 +149,9 @@ def render(payload):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--batch',type=Path,required=True)
+    group=p.add_mutually_exclusive_group(required=True)
+    group.add_argument('--batch',type=Path)
+    group.add_argument('--preparation-batch',type=Path)
     p.add_argument('--ratios',type=Path,help='Completed compute-roi-ratios index.json')
     p.add_argument('--diagnostics',type=Path,help='Completed compute-pair-residuals index.json')
     p.add_argument('--run',type=Path,required=True,help='Fresh empty derived viewer directory')
@@ -143,7 +163,7 @@ def main():
             raise RuntimeError('Offline viewer generation')
     sys.addaudithook(offline)
     try:
-        products,frozen=batch_products(a.batch)
+        products,frozen=measurements.preparation_products(a.preparation_batch) if a.preparation_batch else batch_products(a.batch)
         payload,inputs=build(ROOT/'config/detectors/omegacam-1x1.toml',ROOT/'config/processing/omegacam-characterization.toml',products,diagnostics=a.diagnostics,ratios=a.ratios)
         frozen.update(inputs)
         require(len(payload['panels'])==32 and all(d['status']=='available' for d in payload['panels']),

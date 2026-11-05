@@ -1,3 +1,15 @@
+## Corrected preparation input extension — 5 November 2026
+
+The same approved ratio/reference definitions now consume corrected signals
+saved by the completed preparation recipe, through its derived residual-ASDF
+archive. Ratio products inherit the corrected measurement stage/source kind;
+legacy raw-only products keep their old stage. The viewer labels corrected
+signal/spatial-variance channels separately from retained raw-pair gain/RON.
+No images, new pixel statistics, physical fit, weights or uncertainty model.
+The arithmetic reference still requires both original ROI signals within the
+explicit15000..35000ADU inclusive interval. Plotting never recomputes the ratio.
+Earlier4November text below describes the original uncorrected input stage.
+
 # Same-exposure ROI ratio, final design v1
 
 4 November2026. Owner approved plotting the previously proposed near-readout /

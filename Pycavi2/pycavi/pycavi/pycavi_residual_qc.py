@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 import shutil
 import pycavi_pair_qc as pairs
-from pycavi_pair_display import exposure_rows
+from pycavi_measurement_display import read_source
 from pycavi_residuals import analyze, finite
 
 qc=pairs.qc
@@ -40,9 +40,8 @@ def publish(path,directory,*,assessment_id,created_at,source_revision,minimum=No
     qc.timestamp(created_at)
     qc.require(re.fullmatch('[0-9a-f]{40}',source_revision) is not None,'Exact computation revision required')
     frozen=source_graph(path);original=qc.read_record(path)
-    table=pairs.table_from_record(original)
-    qc.require(table['kind']=='pairs','Pair-ASDF source required')
-    samples=exposure_rows(table['rows'])
+    measurement=read_source(path,original)
+    samples=measurement['signals']
     detector=samples[0]['detector']
     qc.require(all(r['detector']==detector for r in samples),'Mixed diagnostic detectors')
     result=analyze(samples,minimum=minimum,maximum=maximum)
@@ -57,7 +56,8 @@ def publish(path,directory,*,assessment_id,created_at,source_revision,minimum=No
         writer.writeheader();writer.writerows(result['rows'])
     extension=dict(schema_version=1,**result,units=UNITS,
         source_pair_digest=original.digest,source_pair_sha256=frozen[str(path)],
-        measurement_stage='raw_pair_bias_subtracted_without_overscan',
+        measurement_stage=measurement['stage'],source_kind=measurement['kind'],
+        source_measurement_digest=original.digest,
         transport_sha256=pairs.sha(transport.read_bytes()))
     builder=qc.QcRecipe(file=dict(id=str(transport),filename=transport.name,location=str(transport),
         kind='product',sha256=extension['transport_sha256'],observed_at=None,
@@ -92,7 +92,11 @@ def read_product(path,*,expected_source_digest=None,expected_digest=None):
         (expected_source_digest is None or origin.digest==expected_source_digest),'Wrong source pair digest')
     qc.require(tree['provenance']['configuration_id']=='sha256:'+pairs.sha(pairs.canonical(value['configuration']).encode('utf-8')),
                'Diagnostic configuration differs')
-    original=exposure_rows(pairs.table_from_record(origin)['rows'])
+    measurement=read_source(origin_path,origin)
+    qc.require(value['measurement_stage']==measurement['stage'] and
+        value.get('source_kind',measurement['kind'])==measurement['kind'] and
+        value.get('source_measurement_digest',origin.digest)==origin.digest,'Diagnostic measurement stage/kind differs')
+    original=measurement['signals']
     qc.require(len(original)==len(value['rows']),'Diagnostic population differs')
     for source,row in zip(original,value['rows']):
         qc.require(pairs.canonical(source)==pairs.canonical({k:row[k] for k in source}),'Original samples changed in diagnostic')

@@ -35,7 +35,7 @@ def publish(source,directory,*,assessment_id,created_at,source_revision,minimum=
         writer.writeheader();writer.writerows(value['rows'])
     value.update(schema_version=1,units=UNITS,source_residual_digest=record.digest,
         source_residual_sha256=frozen[str(source)],source_pair_digest=saved['source_pair_digest'],
-        measurement_stage=saved['measurement_stage'],transport_sha256=pairs.sha(transport.read_bytes()))
+        measurement_stage=saved['measurement_stage'],source_kind=saved.get('source_kind','pairs'),transport_sha256=pairs.sha(transport.read_bytes()))
     builder=qc.QcRecipe(file=dict(id=str(transport),filename=transport.name,location=str(transport),kind='product',
         sha256=value['transport_sha256'],observed_at=None,
         selectors=[dict(detector_id=detector,table_name='roi_ratio')],context=dict(amplifier=samples[0]['amplifier'])),
@@ -65,7 +65,8 @@ def read_product(path,*,expected_digest=None,expected_residual_digest=None):
     qc.require(pairs.sha(pairs.small(source))==value['source_residual_sha256'],'Ratio source bytes changed')
     original=residual.read_product(source)
     qc.require(value['source_pair_digest']==original['source_pair_digest'] and
-        value['measurement_stage']==original['measurement_stage'],'Ratio source stage/lineage differs')
+        value['measurement_stage']==original['measurement_stage'] and
+        value.get('source_kind','pairs')==original.get('source_kind','pairs'),'Ratio source stage/lineage differs')
     qc.require(tree['provenance']['configuration_id']=='sha256:'+pairs.sha(pairs.canonical(value['configuration']).encode()),'Ratio configuration differs')
     from pycavi_roi_ratio import KEYS
     originals={tuple(r[k] for k in KEYS)+(r['roi'],):r for r in original['rows']}

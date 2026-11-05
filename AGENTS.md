@@ -1,3 +1,18 @@
+## Corrected saved-ASDF diagnostics bridge — 5 November 2026
+
+Owner authorized the next saved-data diagnostics/plotting stage. The new bridge
+uses stored corrected ROI means and spatial variances, preserves raw gain/RON
+labels, and refuses mixed measurement stages. Unchanged unweighted free-intercept
+line and near_readout/parallel_far ratio algorithms retain the approved inclusive
+15000..35000ADU interval. Agent32Python controls and both viewer JavaScript suites
+pass; mathematical LaTeX/PDF guides updated. Actual Mac changed-integration gate
+is pending via qualify_corrected_diagnostics_mac.py:32Python/fourguards, synthetic
+support data only, retained ASDF6 runtime, no native rebuild or observation reads.
+Reuse completed batch-NrHHb3bT; no admission/image hashing/preparation replay.
+After the gate, new diagnostic ASDF then separate plotting and owner inspection.
+No actual corrected diagnostic/HTML run or physical model is claimed yet.
+See [integration status](docs/developer/corrected-asdf-diagnostics-2026-11-05.md).
+
 ## Actual all32 corrected ROI ASDF archive complete — 5 November 2026
 
 Owner full console confirms batch-NrHHb3bT complete_for_owner_inspection:

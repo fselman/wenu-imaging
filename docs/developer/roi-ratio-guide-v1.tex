@@ -6,7 +6,7 @@
 \emergencystretch=2em
 \title{Same-exposure ROI ratio diagnostic\\Mathematics and implementation, version 1}
 \author{Wenu-imaging}
-\date{4 November 2026}
+\date{5 November 2026}
 \begin{document}
 \maketitle
 \section*{Purpose and measurement stage}
@@ -96,4 +96,20 @@ saved products. JavaScript checks exercise ratio modes, exact source inspection
 and shared axes/cursor hooks. Actual Mac qualification and real-data ratio
 publication are separate acceptance gates; fixture success is not scientific
 validation of the detector or a shutter model.
+
+\section*{Corrected preparation inputs (5 November)}
+The equations and reference membership above are unchanged for the completed
+corrected preparation archive. The shared saved-measurement reader selects its
+stored per-exposure ROI signals; the residual-ASDF layer and ratio product keep
+\texttt{source\_kind=preparation} and the actual row-overscan/master-subtracted
+stage. The legacy source-pair digest key is a compatibility alias to the
+source measurement record, not a relabelling as uncorrected raw data.
+
+The shared HTML viewer uses that stage to label corrected signals and spatial
+variances, while raw-pair gain and raw bias RON keep their own labels. The
+normalization still averages individual ratios whose two signals meet the
+inclusive interval. No corrected gain, uncertainty weighting, image statistic
+or physical shutter parameter is introduced. Analytical saved fixtures verify
+that corrected fits/ratios use corrected means even when raw diagnostic means
+differ, and relocated readers work without images or original native tables.
 \end{document}
