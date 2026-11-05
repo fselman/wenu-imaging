@@ -1,5 +1,25 @@
 # Linearity roadmap v3 — display the measurements before modelling
 
+## Owner direction and concrete overscan design — 5 November 2026
+
+The owner approved the next sequence: apply row-dependent overscan using supplied
+detector parameters to ALL bias/flat inputs; then integrate the preparation
+elements into the linearity recipe using shared subroutines; save the proper
+real-data ASDF archive as input to the modelling section. Plotting stays separate.
+Model experiments reuse immutable preparation instead of rereading raw frames.
+
+[Concrete preparation design](design/linearity-preparation-overscan-asdf-v1.md)
+records the source audit, 43/44-read strips with 10/10 rejection, independent
+raw-row correction with no row-edge smoothing, corrected-master consistency,
+full ROI statistics versus direct-site fit inputs, ordered correction traces,
+ASDF completeness/availability and recipe integration/qualification boundaries.
+This exact detailed contract is ready for human review BEFORE implementation.
+The owner's sequence approval is recorded; no new numerical implementation,
+test, raw processing or physical fit is claimed. Qualified earlier results remain
+preserved, and actual viewer receipt recovery is pending without regeneration.
+After overscan qualification, complete recipe preparation/ASDF integration before
+physical modelling. Earlier dated pending entries are historical where superseded.
+
 Current sequence after owner inspection, 4 November 2026:
 1. Preserve the complete raw-pair data and completed15000..35000ADU diagnostic
    ASDF (32detectors/160ROI summaries/3200rows; all5guards true).
