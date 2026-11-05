@@ -1981,6 +1981,11 @@ image_t * mef_overscan_correction(image_t *frame, mef_bb *bb, int nplane, char *
 image_t * mef_overscan_correction_masked(image_t *   mef_frame, mef_bb *bb,
     int nplane, char * what, const pixelmap *map)
 {
+    return mef_overscan_correction_traced(mef_frame, bb, nplane, what, map, NULL, 0);
+}
+image_t * mef_overscan_correction_traced(image_t *mef_frame, mef_bb *bb,
+    int nplane, char *what, const pixelmap *map, pixelvalue *trace, size_t rows)
+{
     int *   prescan_x = ((bb->ccd)+(bb->xtnum-1))->prescan_x;
     int *   overscan_x = ((bb->ccd)+(bb->xtnum-1))->overscan_x;
     int *   rej_int = bb->scanrej;
@@ -2002,6 +2007,8 @@ image_t * mef_overscan_correction_masked(image_t *   mef_frame, mef_bb *bb,
 	pixelvalue	*	pix ;
 	int		prescan_factor, overscan_factor;
 
+    if ((trace == NULL && rows != 0) ||
+        (trace != NULL && rows != (size_t)mef_frame->ly)) return NULL;
     /* Eclipse map polarity is 1=good; reject malformed maps before mutation. */
     if (map != NULL) {
         size_t position, count;
@@ -2068,6 +2075,7 @@ image_t * mef_overscan_correction_masked(image_t *   mef_frame, mef_bb *bb,
 			pix[i] -= filtered ;
 		}
         scan_line[j] = filtered;
+        if (trace != NULL) trace[j] = filtered;
         avg_filtered += filtered;
         nfiltered += 1;
 	}

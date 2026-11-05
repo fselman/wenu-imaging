@@ -4,9 +4,12 @@
 Native source audited: d921f68150bfb74ae313866154d634596af1a037.
 Configuration correction: owner explicitly requires detector/processing TOMLs,
 5 November 2026; this supersedes the earlier PAF-led configuration wording.
-Status: source audit and concrete design for owner review. The owner approved
-the sequence and integration goal; this document does not claim review of its
-new detailed contract, implementation, tests or actual corrected ROI products.
+Status: owner reviewed this detailed TOML-led design at5b3a493 on5November2026
+and instructed implementation. The first native/TOML preparation increment is
+implemented and agent-qualified; actual Mac gate and complete recipe/ASDF
+integration remain pending. See [implementation status](../linearity-preparation-2026-11-05.md).
+The design below retains the full agreed target; its future-tense sections are
+not claims that real corrected products or physical fits already exist.
 
 ## Executive summary and processing flow
 

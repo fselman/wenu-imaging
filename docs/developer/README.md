@@ -1,3 +1,5 @@
+Current [TOML-led overscan preparation](linearity-preparation-2026-11-05.md): agent4native+6TOML+5viewer controls passed; actual Mac gate pending. [Kernel guide PDF](linearity-preparation-guide-v1.pdf) / [LaTeX](linearity-preparation-guide-v1.tex). Complete recipe/ASDF integration follows the overscan gate.
+
 Current [handoff for 5 November](handoffs/resume-2026-11-05.md): real32-detector/640-row ratio ASDF complete, Mac20/20 and all preservation guards passed. Owner reports generally tiny differential ratios. Overscan subtraction in all bias/flat frames is the next priority; current data remain uncorrected. Reuse retained runs.
 
 Current [same-exposure ratio diagnostic](roi-ratio-diagnostic-2026-11-04.md):

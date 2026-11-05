@@ -1,0 +1,108 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm]{geometry}
+\usepackage{amsmath,hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\emergencystretch=2em
+\title{Linearity preparation: row overscan\\Mathematics and implementation, version 1}
+\author{Wenu-imaging}
+\date{5 November 2026}
+\begin{document}
+\maketitle
+\section*{Scope and configuration}
+This guide describes the new in-memory preparation services, not a completed
+FITS-to-ASDF recipe or an accepted physical calibration. Actual Mac qualification
+and real corrected-ROI products remain separate gates. The reviewed design is
+in the developer design directory:\par
+\texttt{linearity-preparation-overscan-asdf-v1.md}.
+
+The detector TOML describes the full detector bands and dimensions. The
+processing TOML selects the sample columns, trim rectangle, rejection counts,
+ROIs and preparation controls. The shared Python resolver validates their
+relationship and freezes both original texts and SHA256 identities. There is no
+PAF fallback. For CCD65, the full overscan is columns 2097--2144, but the sample
+is 2100--2142. These distinctions survive in the resolved record.
+
+\section*{Exact row correction and arithmetic}
+For raw frame $f$, raw row $y$, and the $n$ enabled scan values sorted in
+ascending order, the existing trimmed-mean routine returns
+\begin{equation}
+O_f(y)=\operatorname{pix}\!\left[
+ \frac{\sum_{k=l+1}^{n-h}v_{f,y,(k)}}{n-l-h}\right].
+\end{equation}
+The sum and division use double precision; $\operatorname{pix}$ converts to
+the native \texttt{pixelvalue} type. Low/high rejection is $l=h=10$ in the
+selected OmegaCAM profile: 43 reads retain 23, and 44 retain 24. No sigma
+clipping, smoothing, row fitting, endpoint extrapolation or global-level
+replacement is introduced. First and last raw rows use their own scan samples.
+The active-pixel BPM is not applied to electronic scan reads.
+
+The native stages are
+\begin{align}
+U_f(x,y)&=\operatorname{pix}[D_f(x,y)-O_f(y)],\\
+S_f(p)&=\operatorname{pix}[U_f(p)-B(p)]\quad\text{(flats only)}.
+\end{align}
+The trim uses inclusive FITS coordinates after scan subtraction. An active
+row $j$ maps to raw row $j+y_{\min}-1$. Preserve both native roundings: do not
+merge the subtractions. A supplied master is already scan-corrected and active;
+it is subtracted once and receives no second scan correction. Bias-role frame
+preparation has no master subtraction. The existing bias service performs
+frame admission and stacking; this increment does not change its median or
+rejection policy. Master lineage compatibility must be verified by the future
+file/recipe admission layer, not inferred from its pixel values.
+
+\newpage
+\section*{Corrected ROI statistics and populations}
+The paired service first reuses the unchanged raw-pair measurement service.
+For each configured ROI it uses the common population $\mathcal P$ admitted
+by the declared BPM and finite/raw-saturation checks in both flats and both
+raw biases. The raw saturation boundary remains 65534 ADU. Pair members retain
+their original identity, HDU, input index and exact duration.
+
+For corrected member values $S_{1p},S_{2p}$, let $N=|\mathcal P|$. The services
+retain ordinary means and sample scatter of each member and their difference:
+\begin{align}
+\overline S_i&=N^{-1}\sum_{p\in\mathcal P}S_{ip},\\
+s_i^2&=(N-1)^{-1}\sum_{p\in\mathcal P}(S_{ip}-\overline S_i)^2,\\
+d_p&=\operatorname{pix}[S_{1p}-S_{2p}],\qquad
+s_d^2=(N-1)^{-1}\sum_{p\in\mathcal P}(d_p-\overline d)^2.
+\end{align}
+Difference pixel arithmetic follows \texttt{image\_pair\_stats\_checked}.
+The native result stores standard deviations and availability; a later
+serialization stage may store their squared values and $s_d^2/2$ with explicit
+definitions. For $N<2$, sample scatter is unavailable, not zero. A corrected
+nonfinite value cannot silently remove an otherwise admitted measured pixel:
+all three corrected population counts must equal the raw count.
+
+Spatial scatter and difference scatter are diagnostic quantities, not assigned
+independent weights. The shared master cancels algebraically in differences,
+subject to native rounding. Raw bias-only RON and raw gain diagnostics retain
+their original definitions. No uncertainty model or physical response is
+estimated. ROI means remain distinct from the direct physical pixel samples
+required by the later nonlinear model.
+
+\section*{Connection to implementation and verification}
+\texttt{pycavi\_linearity\_config.resolve} performs TOML resolution only.
+
+\texttt{mef\_linearity\_prepare\_frame} validates geometry and finite enabled
+scan reads, copies the borrowed raw image and uses the existing
+\texttt{mef\_overscan\_correction\_traced} arithmetic. Its optional trace copies
+each estimate before QC median sorting, preserving physical row order.
+The legacy interfaces pass a null trace and keep their numerical behavior.
+The result owns the active image, trace and settings copy.
+
+\texttt{mef\_linearity\_prepare\_pairs} corrects the two biases for trace evidence
+and two flats at a time, reusing raw-pair admission and the existing masked
+single-image and difference statistics. Results own copied identities, raw
+diagnostics, corrected ROI statistics and traces. Borrowed inputs stay unchanged;
+occupied outputs, invalid settings, resource limits and failures do not expose
+partial completed owners. Custom allocation checks cover the new owners and
+snapshot owners; they do not establish general Eclipse allocation safety.
+
+Independent ramp fixtures cover both scan widths, raw/active edges, exact
+singleton-path agreement, common-population analytical moments, and persistent
+owner-allocation failures. Existing bias-service, sample and raw-pair controls
+check affected shared paths. Six TOML and five footprint controls check the
+configuration boundary. Agent Linux success is not actual Mac acceptance or
+scientific validation. Complete recipe/ASDF orchestration follows that gate.
+\end{document}

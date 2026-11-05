@@ -1,0 +1,21 @@
+Internal ctest changing into directory: /workspace/scratch/2fc060bf457a/build-overscan
+Test project /workspace/scratch/2fc060bf457a/build-overscan
+    Start  1: native_linearity_prepare
+1/3 Test  #1: native_linearity_prepare .........   Passed    0.00 sec
+    Start 10: native_linearity_pairs
+2/3 Test #10: native_linearity_pairs ...........   Passed    0.01 sec
+    Start 11: native_linearity_samples
+3/3 Test #11: native_linearity_samples .........   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 3
+
+Label Time Summary:
+gain          =   0.01 sec*proc (1 test)
+linearity     =   0.02 sec*proc (3 tests)
+mask          =   0.01 sec*proc (1 test)
+native        =   0.02 sec*proc (3 tests)
+overscan      =   0.00 sec*proc (1 test)
+ownership     =   0.02 sec*proc (3 tests)
+statistics    =   0.01 sec*proc (1 test)
+
+Total Test time (real) =   0.02 sec

@@ -376,6 +376,11 @@ image_t * mef_overscan_correction(image_t * mef_frame, mef_bb *, int nplane, cha
 /* Same correction with explicit raw-coordinate 1=good mask. No fallback if
  * a scan row has too few valid samples for the configured rejection. */
 image_t * mef_overscan_correction_masked(image_t *, mef_bb *, int, char *, const pixelmap *);
+/* Optional borrowed trace buffer, exactly raw-height entries. Captured before
+ * QC median sorting. Same arithmetic as the historical correction; NULL/0
+ * preserves its existing interface. Only inspect the trace on success. */
+image_t * mef_overscan_correction_traced(image_t *, mef_bb *, int, char *,
+    const pixelmap *, pixelvalue *, size_t);
 int     mef_cube_overscan_correction(cube_t *,mef_bb *, char * what);
 
 int mef_saturation_check(cube_t *, mef_bb *);

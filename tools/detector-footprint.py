@@ -5,6 +5,7 @@ import html
 import json
 from pathlib import Path
 import sys
+import importlib.util
 try:
     import tomllib
 except ImportError:
@@ -26,10 +27,17 @@ def rect(value, width, height, label):
 
 
 def load(detector_path, processing_path):
-    with detector_path.open('rb') as stream:
-        geometry = tomllib.load(stream)
-    with processing_path.open('rb') as stream:
-        processing = tomllib.load(stream)
+    detector_text = detector_path.read_bytes().decode('utf-8')
+    processing_text = processing_path.read_bytes().decode('utf-8')
+    geometry = tomllib.loads(detector_text)
+    processing = tomllib.loads(processing_text)
+    if 'linearity_preparation_schema_version' in processing:
+        # Numerical candidates and their viewer use one region/selection contract.
+        path = Path(__file__).resolve().parents[1]/'Pycavi2/pycavi/pycavi/pycavi_linearity_config.py'
+        spec = importlib.util.spec_from_file_location('linearity_configuration', path)
+        resolver = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(resolver)
+        resolver.resolve(detector_text, processing_text)
     require(geometry.get('footprint_schema_version') == 1, 'Unknown detector schema')
     require(processing.get('processing_footprint_schema_version') == 1,
             'Unknown processing schema')
@@ -173,7 +181,7 @@ def render(geometry, processing, trims):
 <div class="controls"><label>Detector <select id="choose">{options}</select></label><button id="inspect">Inspect</button><label>Detail magnification <select id="zoom"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select></label><button id="print">Print / save PDF</button></div>
 <div id="mosaic" style="grid-template-columns:repeat({cols},minmax(70px,1fr))">{''.join(cards)}</div>
 <section id="detail"><h2 id="name"></h2><div class="detail-grid"><div id="large"></div><div id="numbers"></div></div></section>
-<p>Reference geometry: validate against selected raw headers before numerical use. Candidate ROIs are editable processing choices. These visualization schemas do not activate native reduction settings.</p>
+<p>Reference geometry: validate against selected raw headers before numerical use. Numerical linearity-preparation profiles share their region validation with the recipe. This viewer performs no image correction and does not change the installed reduction settings.</p>
 <script>const panels={data};
 function show(i,scroll=true){{document.getElementById('choose').value=i;document.getElementById('detail').style.display='block';document.getElementById('name').textContent=panels[i].title;document.getElementById('large').innerHTML=panels[i].svg;document.getElementById('numbers').innerHTML=panels[i].table;zoom();if(scroll)document.getElementById('detail').scrollIntoView({{behavior:'smooth'}});}}
 function zoom(){{const s=document.querySelector('#large svg');if(s)s.style.width=(100*Number(document.getElementById('zoom').value))+'%';}}

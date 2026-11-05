@@ -1,3 +1,24 @@
+## TOML-led overscan preparation implemented; Mac gate pending - 5 November 2026
+
+Owner reviewed the detailed design at5b3a493 and instructed implementation.
+New shared TOML resolver freezes detector/processing inputs and validates sample
+versus full-band geometry, controls and ROIs. Processing TOML adds explicit
+numerical schema1 controls. Viewer reuses that resolver. New C17 frame/pair
+preparation services reuse existing row correction, preserve native rounding,
+subtract a corrected master once, retain ordered row traces and measure corrected
+ROIs on the original common raw population. Existing raw/sample/bias behavior
+is preserved; all ten bias construction remains in the existing bias recipe.
+
+Agent4native+6TOML+5viewer controls passed, including128persistent owner-failure
+positions per43/44-read fixture. LaTeX/PDF kernel guide:2pages, visually checked,
+no overfull boxes. Actual Mac qualification remains pending via
+Pycavi2/tests/qualify_linearity_prepare_mac.py. No observations or new corrected
+ASDF products exist yet. After this overscan gate, complete FITS/recipe/ASDF
+integration and direct-site/master provenance before any real corrected pass or
+physical modelling. Reuse completed earlier archives/gates; do not merge,
+install, provision dependencies or clean retained evidence.
+See [status](docs/developer/linearity-preparation-2026-11-05.md). This supersedes older design-review-pending wording below.
+
 ## Resume 5 November 2026 -- actual ratio run complete; overscan next
 
 Read [the current handoff](docs/developer/handoffs/resume-2026-11-05.md)
