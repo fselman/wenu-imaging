@@ -1,3 +1,12 @@
+## Actual Mac gate passed
+
+Owner reports source a321e6321daafdc04193f118c2d363670e59ae53 passed all32Python
+controls at mac-corrected-diagnostics-M0t2gFsg, with all four preservation guards
+true. Reuse the retained qualified source and ASDF runtime. Actual corrected
+line/ratio ASDF computation is next; independent plotting follows. Earlier
+Mac-pending statements below describe the pre-qualification candidate.
+See [the actual receipt](evidence/linearity-preparation-2026-11-05/mac-corrected-diagnostics-receipt.md).
+
 # Corrected ASDF diagnostics and independent viewing
 
 5 November 2026. Refs #235/#236; draft PR #227.

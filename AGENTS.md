@@ -1,3 +1,15 @@
+## Actual Mac corrected-diagnostic gate passed — 5 November 2026
+
+Owner reports a321e6321daafdc04193f118c2d363670e59ae53 qualification passed at
+mac-corrected-diagnostics-M0t2gFsg. All32Python controls passed; checkout,
+installed_files, exported_source and private_qc_runtime guards true. Reuse this
+retained qualified source/runtime; do not repeat the gate or preparation.
+Next compute separate line/ratio ASDF from completed batch-NrHHb3bT using the
+approved inclusive15000..35000ADU interval; then independent plots and owner
+inspection before modelling. No actual corrected diagnostic computation or
+HTML run has been reported yet. No raw reads/native/build/install/merge/cleanup.
+See [actual gate receipt](docs/developer/evidence/linearity-preparation-2026-11-05/mac-corrected-diagnostics-receipt.md).
+
 ## Corrected saved-ASDF diagnostics bridge — 5 November 2026
 
 Owner authorized the next saved-data diagnostics/plotting stage. The new bridge
