@@ -1,3 +1,15 @@
+## Actual all32 dependency admission complete — 5 November 2026
+
+Owner reports source0a87c99 receipt8/8 and complete_dependency_plan at
+ocam-linearity-preparation-plan-KSBh9ZXu. All6preservation guards true.
+All32detectors:20flats+10bias inputs; preserved masters retain9accepted for
+CCD69/74/77/84/85,10for27others. No real corrected ROI processing yet.
+Reuse exact saved plan/source and d25b106 qualified native build; do not repeat
+admission/qualification/bias construction. Next new corrected-ROI execution for
+CCD65 via prepare_detector, then remaining31after verifying execution; reuse
+completed CCD65. Separate diagnostics/plots then owner inspection before models.
+No new scientific/noise choice, fit, install, merge or cleanup. See [receipt](evidence/linearity-preparation-2026-11-05/mac-dependency-admission-receipt.md).
+
 ## Receipt-control macOS path correction — 5 November 2026 (#242)
 
 Actual dc7807a retry stopped before admission: two positive JSON tests expected
