@@ -1,3 +1,16 @@
+## Actual Mac recipe/ASDF gate passed — 5 November 2026
+
+Owner reports mac-linearity-recipe-rSGbf1Mq passed3native CTests in49.14s
+and the required17Python controls, all4preservation guards true. Reuse its
+retained source/build/private QC runtime; do not repeat qualification.
+Read saved qualification.json source_revision before the next action (fetch
+head62fce1f only repairs footprint mode; fetch output is not source proof).
+Next admit all32 preserved master/sample dependencies through the qualified
+TOML-led service and save a metadata-only plan; no FITS reads or image hashing.
+Then new corrected ROI ASDF, separate diagnostics/plots, owner inspection before
+physical modelling. No master rebuild, separate singleton extraction, install,
+merge or cleanup. See [actual receipt](docs/developer/evidence/linearity-preparation-2026-11-05/mac-recipe-receipt.md).
+
 ## Linearity recipe/ASDF integration candidate — 5 November 2026
 
 Owner supplied existing master/sample metadata after actual d8bf560 Mac gate.
