@@ -67,8 +67,11 @@ def worker(work,revision):
         # Only the eight new receipt-admission controls. No native/ASDF matrix.
         log=work/'receipt-controls.log'
         with log.open('x') as out:
-            subprocess.run([sys.executable,'-B',str(source/'Pycavi2/tests/test_linearity_bias_receipts.py')],
-                           stdout=out,stderr=subprocess.STDOUT,check=True)
+            completed=subprocess.run([sys.executable,'-B',str(source/'Pycavi2/tests/test_linearity_bias_receipts.py')],
+                                     stdout=out,stderr=subprocess.STDOUT)
+        if completed.returncode:
+            print(log.read_text(),flush=True)
+            raise RuntimeError('Receipt controls failed; retained log: '+str(log))
         require('Ran 8 tests' in log.read_text() and 'skipped=' not in log.read_text(),'Receipt control inventory differs')
         report['receipt_controls']=8;print('RECEIPT CONTROLS: 8 passed',flush=True)
         resolved=configuration.resolve_files(source/'config/detectors/omegacam-1x1.toml',

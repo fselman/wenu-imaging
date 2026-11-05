@@ -1,3 +1,16 @@
+## Receipt-control macOS path correction — 5 November 2026 (#242)
+
+Actual dc7807a retry stopped before admission: two positive JSON tests expected
+/var temporary paths while the locator correctly resolves /private/var. Six
+negative controls passed; qualified source/binary/runtime/checkout preserved.
+Retain plan-GtN3wq9D and earlier plan-vrhso3qw. Tests now expect canonical paths
+and exercise directory aliases; agent8/8 passed under a symlinked temp root.
+Runner prints failed control logs immediately. Production receipt locator and
+all numerical/FITS/common-QC code unchanged. Next retry8receipt checks+all32
+metadata admission through the new exact runner, reusing d25b106 native build.
+No broad gate/native execution/FITS opens/image hashes/install/merge/cleanup.
+Actual Mac test correction and all32 admission remain pending. See #242/#241.
+
 ## Bias receipt compatibility correction — 5 November 2026 (#241)
 
 Actual all32 metadata admission stopped before the first detector because CCD65

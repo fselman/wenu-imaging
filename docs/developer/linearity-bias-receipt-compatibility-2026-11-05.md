@@ -1,3 +1,20 @@
+## macOS temporary-path test correction — 5 November 2026 (#242)
+
+Owner's dc7807a retry retained at ocam-linearity-preparation-plan-GtN3wq9D
+stopped on two test assertions before metadata admission. The valid pilot and
+batch receipts returned canonical /private/var paths; the fixtures expected
+unresolved /var aliases. The other six controls passed. This is a test oracle
+portability defect, not a production receipt failure. All five reached guards
+passed; metadata was correctly reported null because it had not been read.
+
+Both positive controls now compare path.resolve(strict=True) and explicitly
+exercise a directory symlink. The agent ran all eight controls under a symlinked
+temporary root:8/8 passed in0.014s, retained receipt-path-controls-qzyi0wa6.
+The retry controller now displays a failed receipt-control log before stopping.
+No production locator, numerical/FITS/common-QC source, estimator or calibration
+product changed. Actual Mac corrected tests and all32 dependency admission remain
+pending; reuse the exact qualified native build and preserve failed plans.
+
 # Bias receipt compatibility correction
 
 5 November 2026. Refs #241/#235/#236; draft PR #227.

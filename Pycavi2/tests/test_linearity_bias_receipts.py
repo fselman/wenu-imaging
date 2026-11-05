@@ -29,12 +29,19 @@ class ReceiptTests(unittest.TestCase):
         path=self.directory/'outer-execution.json' if kind=='pilot' else self.root/'overall-execution.json'
         path.write_text(json.dumps(value));return path
     def admit(self):return recipe.bias_receipt_fingerprints(self.handoff,self.paths,self.master,self.detector)
+    def check_directory_alias(self, path):
+        alias=self.root/'directory-alias';alias.symlink_to(self.directory,target_is_directory=True)
+        result=recipe.bias_receipt_fingerprints(alias/'handoff.json',self.paths,self.master,self.detector)
+        self.assertEqual(result['path'],str(path.resolve(strict=True)))
+        self.assertEqual(result['inputs'],{p:'a'*64 for p in self.paths})
     def test_actual_pilot_schema_without_source_preservation(self):
         path=self.write('pilot',self.pilot);before=path.read_bytes();result=self.admit()
-        self.assertEqual(result['path'],str(path));self.assertEqual(result['inputs'],{p:'a'*64 for p in self.paths})
+        self.assertEqual(result['path'],str(path.resolve(strict=True)));self.assertEqual(result['inputs'],{p:'a'*64 for p in self.paths})
         self.assertEqual(result['sha256'],recipe.hashlib.sha256(before).hexdigest());self.assertEqual(path.read_bytes(),before)
+        self.check_directory_alias(path)
     def test_actual_parent_batch_schema(self):
-        path=self.write('batch',self.batch);self.assertEqual(self.admit()['path'],str(path))
+        path=self.write('batch',self.batch);self.assertEqual(self.admit()['path'],str(path.resolve(strict=True)))
+        self.check_directory_alias(path)
     def test_failed_pilot_does_not_fall_back_to_good_batch(self):
         self.write('batch',self.batch)
         for key in self.pilot['preservation']:
