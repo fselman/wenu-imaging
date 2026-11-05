@@ -1,10 +1,54 @@
 # Linearity data preparation: row overscan and ASDF modelling boundary
 
 5 November 2026. Refs #235/#236; draft PR #227.
-Source audited: d921f68150bfb74ae313866154d634596af1a037.
+Native source audited: d921f68150bfb74ae313866154d634596af1a037.
+Configuration correction: owner explicitly requires detector/processing TOMLs,
+5 November 2026; this supersedes the earlier PAF-led configuration wording.
 Status: source audit and concrete design for owner review. The owner approved
 the sequence and integration goal; this document does not claim review of its
 new detailed contract, implementation, tests or actual corrected ROI products.
+
+## Executive summary and processing flow
+
+The linearity recipe will take the detector TOML and processing TOML as its
+configuration inputs, resolve their settings once and call reusable native
+subroutines. It will consistently overscan-correct biases and flats, build or
+verify a compatible corrected master bias, subtract that master once from the
+flats, and save corrected measurements and provenance in immutable ASDF.
+The modelling section will read that archive; independent diagnostics support
+owner inspection before a real fit. Noise/covariance and model settings must be
+explicitly available before fitting. Preparation can complete while they remain
+unavailable. Current update: documentation and read-only TOML audit only.
+
+```mermaid
+flowchart TD
+    D["Detector TOML"] --> V["Resolve settings and bind raw FITS / BPM"]
+    P["Processing TOML"] --> V
+    subgraph PREP["Linearity recipe: data preparation"]
+        V --> B["Biases: row overscan and trim"]
+        V --> F["Flats: row overscan and trim"]
+        B --> M["Build or verify corrected master bias"]
+        M --> C["Subtract master bias once"]
+        F --> C
+        C --> Q["Measure ROIs and individual pixel sites"]
+        B --> A["Save immutable preparation ASDF"]
+        Q --> A
+    end
+    A --> I["Separate diagnostics and owner inspection"]
+    A --> G{"Model inputs ready?"}
+    I -. "Owner authorizes modelling" .-> G
+    N["Explicit noise and model settings"] --> G
+    subgraph MODEL["Linearity recipe: later modelling"]
+        G -->|Yes| J["Joint fit: common shutter / amplifier response"]
+        G -->|No| U["Report missing inputs; retain prepared data"]
+        J --> R["Save model results in separate ASDF"]
+    end
+```
+
+This diagram is the intended integrated flow, not a claim that the complete
+recipe is already implemented. Reuse of a preserved master requires exact
+configuration/source/stage compatibility. Each corrected branch retains its
+row-correction evidence, joined into the preparation archive.
 
 ## Agreed sequence and boundary
 
@@ -44,13 +88,60 @@ provenance and publishes ASDF; it must not implement another overscan estimator.
 
 ## Supplied geometry and exact estimator
 
-Use the selected configuration slot and independently bound detector identity,
-not HDU ordinal as a configuration index. Freeze the effective configuration and
-its hash. The reviewed canonical OmegaCAM PAF hash is
-709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f.
-Revalidate that effective settings agree with the retained actual-machine
-receipts before observational execution. Report unresolved header/configuration
-conflicts; do not infer or silently overwrite geometry.
+The numerical recipe takes these explicit configuration inputs:
+
+| Input | Role |
+|---|---|
+| config/detectors/omegacam-1x1.toml | Detector IDs, declared amplifier, raw size, full physical/reference bands, orientation evidence and native-slot bridge |
+| config/processing/omegacam-characterization.toml | Applied prescan/overscan switches, low/high rejection, per-detector sampled scan rectangles, retained rectangle and the 160 ROIs |
+
+Join by detector ID and declared selected amplifier/readout, then independently
+bind each raw FITS HDU using actual identity and geometry evidence. Neither
+reference_hdu nor native_paf_chip is an instruction to assume extension ordering.
+Detector reference geometry/orientation remains subject to actual-header and
+instrument validation; a schematic amplifier marker is not new hardware proof.
+
+Full detector bands and processing samples are DISTINCT. CCD65's detector
+overscan is [2097,2144,1,4200], while the selected processing sample is
+[2100,2142,1,4200]. Numerical correction uses overscan_sample, not the full band.
+Validate sample containment, row coverage, trim/raw bounds, ROI/retained bounds,
+unique matching detector IDs, enabled-scan presence and sufficient kept samples.
+Preserve both original TOMLs, hashes, schema versions and resolved typed settings
+in ASDF. Conflicts or missing numerical settings fail; no implicit PAF fallback.
+
+These existing files currently advertise visualization/reference schemas and
+candidate status. The existing detector-footprint loader validates presentation
+geometry only. The numerical implementation must add a shared validated resolver
+and an explicit versioned numerical processing contract, updating status/schema
+documentation as part of that implementation. Do not claim existing visualization
+schemas already activate the native recipe. Recipe, commands and viewer must
+share resolved region semantics, rather than maintain competing geometry.
+
+The native adapter consumes resolved typed settings from TOML. A necessary
+compatibility PAF, if used by an existing native command, is a generated transport
+with provenance and exact field checks, never an independently edited authority.
+The old canonical PAF hash
+709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f
+is historical comparison evidence only. source_paf fields retain origin; they
+do not override TOML values or mandate a hidden baseline file at execution.
+
+Existing processing TOML supplies scan settings/regions/ROIs but not every
+recipe control. The implementation's reviewed versioned extension must also
+declare the existing bias frame-admission thresholds 0..1000 ADU, stack kappa2,
+minimum3, raw saturation65534 ADU, BPM good_value1/reject_bits255, exact pair-time
+tolerance0s and existing relevant QC settings explicitly in the processing
+contract. Preserve their previously recorded scientific values; distinguish
+mask encoding alternatives, admission controls and diagnostic-only high_sigma5.
+A matching field must have one authority, not independent TOML and command
+defaults. Dataset inventories, explicit bindings, selected160sites and output/
+resource requests remain separate explicit recipe inputs with frozen provenance.
+No hardcoded instrument settings or silently invented missing TOML values.
+
+Read-only source audit parsed both TOMLs:32unique detectors and160ROIs; every
+processing sample is contained in its corresponding declared band, each ROI is
+within the retained active area,16detectors have43/23 supplied/kept reads and
+16have44/24. This is configuration evidence, not functional native qualification
+or validation of observational headers.
 
 For this selected normal/ordered 1x1 configuration, prescan is disabled,
 overscan enabled, and rejection is 10 low and 10 high reads:
@@ -198,7 +289,7 @@ bias, corrected-measurement, selected-pixel and shared-ASDF services through
 explicit typed boundaries. Thin command entry points call that same section.
 Do not retain competing scientific implementations in standalone scripts.
 
-The preparation section resolves inputs/configuration; verifies or creates its
+The preparation section resolves the detector and processing TOMLs plus explicit dataset inputs; verifies or creates its
 bias dependency; corrects/measures one detector at a time; checks site replay;
 publishes a fresh ASDF graph and complete manifest only after preservation checks.
 Existing compatible preparation can be reopened read-only by exact digest;
@@ -226,7 +317,7 @@ Then explain and run only focused changed-code checks:
 2. Synthetic independently reordered FITS bindings and fixed raw masks;
    per-member means/variances and pair statistics on the declared population;
    all bias decisions; trace row order/count; bad geometry/nonfinite scan,
-   wrong master/stage, limits, aliases and partial-output refusals.
+   wrong master/stage, missing/duplicate/conflicting TOML fields, full-band versus sample confusion, limits, aliases and partial-output refusals.
 3. Shared-ASDF roundtrip/relocation and manifest completeness; null versus zero,
    units/stages/lineage/digests; model-reader rejection of incompatible data and
    explicit unavailable noise; plotting with computation disabled.

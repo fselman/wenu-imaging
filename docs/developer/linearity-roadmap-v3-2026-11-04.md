@@ -1,5 +1,19 @@
 # Linearity roadmap v3 — display the measurements before modelling
 
+## TOML configuration correction — 5 November 2026
+
+Owner explicitly requires config/detectors/omegacam-1x1.toml and
+config/processing/omegacam-characterization.toml as the linearity preparation
+inputs. Detector full bands and processing samples are separate; correction uses
+the processing sample. PAF is historical evidence or generated compatibility
+transport, never an independent numerical authority. The existing TOMLs are
+reference/visualization schemas; numerical validation, explicit missing recipe
+settings and a versioned execution contract belong to the implementation.
+The detailed design now includes the executive summary and processing-flow
+diagram. Read-only parsing verified32detectors/160ROIs, sample containment and
+43/23 or44/24 scan counts. No native test, raw processing or implementation ran.
+See [the revised design](design/linearity-preparation-overscan-asdf-v1.md). This supersedes earlier PAF-led wording.
+
 ## Owner direction and concrete overscan design — 5 November 2026
 
 The owner approved the next sequence: apply row-dependent overscan using supplied
