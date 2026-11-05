@@ -162,8 +162,9 @@ def source_archive(state):
         inputs=[dict(path=b['path'],accepted=b['accepted']) for b in state['biases']])
     (w/'configuration.json').write_text(json.dumps(state['snapshot']))
     (w/'handoff.json').write_text(json.dumps(state['handoff']))
-    (w/'overall-execution.json').write_text(json.dumps(dict(status='complete_for_owner_inspection',
-        source_preservation=True,preservation=dict(shared_inputs=True),inputs={b['path']:dict(
-        sha256=hashlib.sha256(Path(b['path']).read_bytes()).hexdigest()) for b in state['biases']})))
+    (w/'outer-execution.json').write_text(json.dumps(dict(status='complete_for_owner_inspection',
+        detector=entry['detector'],product=state['master'],qc_product=str(path),
+        preservation={k:True for k in ('checkout','installed_files','exported_source','private_qc_runtime','inputs')},
+        inputs={b['path']:dict(sha256=hashlib.sha256(Path(b['path']).read_bytes()).hexdigest()) for b in state['biases']})))
     return Path(sample.publish_entry(old,target,assessment_id='prior',created_at='2026-11-05T00:00:00Z',
         serializer_revision='a'*40,origin=origin)['path'])

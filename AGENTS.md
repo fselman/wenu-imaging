@@ -1,3 +1,18 @@
+## Bias receipt compatibility correction — 5 November 2026 (#241)
+
+Actual all32 metadata admission stopped before the first detector because CCD65
+uses local outer-execution.json with preservation.inputs, not the batch's
+source_preservation/overall-execution.json schema. Owner confirms pilot5 guards
+and batch8 guards all true, matching first-bias digest; batch before/after equal.
+New metadata-only locator validates both real schemas and selected-master identity,
+rejects failed/missing/ambiguous receipts. Agent8 JSON checks +1 synthetic recipe
+case pass. Numerical/FITS/QC code unchanged; reuse actual d25b106 Mac native build.
+Actual corrected all32 admission remains pending via retry_linearity_admission.py:
+8 new receipt checks only, then metadata plan, no FITS opens/image hashes/native
+execution/rebuild/broad gate replay. Preserve failed plan-vrhso3qw. Report unchecked
+preservation as null, not false. No real corrected ROI archive, model, install,
+merge or cleanup. See [correction status](docs/developer/linearity-bias-receipt-compatibility-2026-11-05.md).
+
 ## Actual Mac recipe/ASDF gate passed — 5 November 2026
 
 Owner reports mac-linearity-recipe-rSGbf1Mq passed3native CTests in49.14s

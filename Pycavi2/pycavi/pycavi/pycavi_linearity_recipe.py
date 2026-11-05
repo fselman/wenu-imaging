@@ -145,6 +145,66 @@ def native_plan(resolved, selection, sites):
     return dict(plan=text,rois=region_toml(d['rois']),sites=region_toml(points),detector=d)
 
 
+def bias_receipt_fingerprints(handoff_path, bias_paths, master, detector):
+    """Read the two preserved bias-controller receipt formats, never FITS.
+
+    The local pilot outer receipt is authoritative when present. A batch
+    receipt must name the selected master in exactly one result. A failed or
+    ambiguous receipt cannot be bypassed using another run's shared inputs.
+    """
+    handoff_path = Path(handoff_path).resolve(strict=True)
+    bias_paths = set(bias_paths)
+    require(bool(bias_paths), 'Explicit bias dependencies required')
+    def read(path):
+        require(path.stat().st_size <= 64*1024*1024, 'Bias receipt exceeds metadata limit')
+        payload = path.read_bytes()
+        value = json.loads(payload)
+        require(type(value) is dict, 'Malformed bias receipt')
+        return payload, value
+    pilot = handoff_path.parent/'outer-execution.json'
+    if pilot.is_file():
+        path = pilot; payload, value = read(path)
+        require(value.get('detector') == detector and value.get('product') == master['product'],
+                'Pilot receipt names a different detector/master')
+        require(value.get('qc_product',master['qc_product']) == master['qc_product'],
+                'Pilot receipt names a different master QC product')
+        required = {'checkout','installed_files','exported_source','private_qc_runtime','inputs'}
+        require(value.get('source_preservation',True) is True, 'Pilot source preservation failed')
+    else:
+        candidates = []
+        for path in (handoff_path.parent/'overall-execution.json',
+                     handoff_path.parent.parent/'overall-execution.json'):
+            if not path.is_file():continue
+            payload, value = read(path)
+            results = value.get('results', [])
+            require(type(results) is list, 'Malformed bias batch results')
+            selected = [r for r in results if type(r) is dict and
+                        r.get('detector') == detector and r.get('product') == master['product']]
+            if selected:
+                require(len(selected) == 1, 'Duplicate selected master in bias batch receipt')
+                candidates.append((path,payload,value))
+        require(len(candidates) == 1, 'Require one batch receipt naming the selected master')
+        path,payload,value = candidates[0]
+        required = {'shared_inputs','products','checkout','installed_files','exported_source',
+                    'private_qc_runtime','reference_pilot','native_adapter'}
+        require(value.get('source_preservation') is True and
+                value.get('inputs') == value.get('after_inputs'), 'Bias batch input preservation failed')
+    guards = value.get('preservation')
+    require(value.get('status') == 'complete_for_owner_inspection' and type(guards) is dict and
+            required.issubset(guards) and all(v is True for v in guards.values()),
+            'Bias receipt is incomplete or preservation failed')
+    inputs = value.get('inputs')
+    require(type(inputs) is dict and bias_paths.issubset(inputs), 'Missing preserved bias fingerprints')
+    digests = {}
+    for name in bias_paths:
+        item = inputs[name]
+        digest = item.get('sha256') if type(item) is dict else None
+        require(type(digest) is str and len(digest) == 64 and
+                all(c in '0123456789abcdef' for c in digest), 'Invalid preserved bias digest')
+        digests[name] = digest
+    return dict(path=str(path),sha256=hashlib.sha256(payload).hexdigest(),inputs=digests)
+
+
 def preparation_dependencies(source_samples, handoff_path, resolved):
     """Admit preserved inputs without opening FITS or rebuilding a calibration."""
     try:
@@ -203,21 +263,9 @@ def preparation_dependencies(source_samples, handoff_path, resolved):
     bias_paths = {b['path'] for b in biases}
     if any(not any(r['file']['location']==path and r['file']['sha256'] is not None
                    for r in leaves.values()) for path in bias_paths):
-        receipts = [p for p in (handoff_path.parent/'overall-execution.json',
-                               handoff_path.parent.parent/'overall-execution.json') if p.is_file()]
-        matches = []
-        for receipt_path in receipts:
-            payload = pair.small(receipt_path); receipt = json.loads(payload)
-            inputs = receipt.get('inputs', {})
-            if (receipt.get('status') == 'complete_for_owner_inspection' and
-                receipt.get('source_preservation') is True and receipt.get('preservation') and
-                all(receipt['preservation'].values()) and isinstance(inputs,dict) and
-                bias_paths.issubset(inputs)):
-                matches.append((receipt_path,payload,inputs))
-        require(len(matches)==1,'Require one completed preserved bias receipt with input digests')
-        receipt_path,payload,inputs=matches[0]
-        frozen[str(receipt_path)] = pair.sha(payload)
-        bias_baseline={path:inputs[path]['sha256'] for path in bias_paths}
+        receipt = bias_receipt_fingerprints(handoff_path,bias_paths,master,entry['detector'])
+        frozen[receipt['path']] = receipt['sha256']
+        bias_baseline = receipt['inputs']
     for path in [r['path'] for r in selection['flat']]+[selection['bpm']['path']]+[b['path'] for b in biases]:
         matches = [r['file']['sha256'] for r in leaves.values()
                    if r['file']['location']==path and r['file']['sha256'] is not None]
