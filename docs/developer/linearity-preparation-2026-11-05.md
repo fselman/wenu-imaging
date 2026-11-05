@@ -1,3 +1,16 @@
+## Actual Mac overscan gate passed - 5 November 2026
+
+Owner returned d8bf5608c73b3aee8b5411b3193f4184bd0f7b5a qualification passed at
+mac-linearity-prepare-5QEzvc2c. Native4/4 in5.91s plus required6TOML+5viewer
+controls; checkout, installed_files and exported_source all true. Reuse exact
+retained source/build; do not replay this gate. See [receipt](evidence/linearity-preparation-2026-11-05/mac-receipt.md).
+
+Next is the authorized FITS/linearity-recipe/ASDF integration, using detector and
+processing TOMLs, existing corrected masters/memberships and direct-site archive.
+Read existing metadata first; no repeated bias generation, singleton extraction,
+old gate, physical fit, installation, merge or cleanup. Full corrected ROI ASDF
+products do not exist yet. Earlier pending-Mac statements below are historical.
+
 # Row-overscan preparation candidate - 5 November 2026
 
 Refs #235/#236; draft PR #227. Owner reviewed the TOML-led detailed design at
