@@ -79,4 +79,15 @@ int mef_product_qc_validate(const mef_product_qc *, char *, size_t);
  * Caller reports whole-recipe success only after FITS, ASDF and log completion.
  * A prior complete FITS stays intact if ASDF publication fails. */
 int mef_product_qc_write(const char *, const mef_product_qc *, char *, size_t);
+/* Explicit recovery after caller-established reference/QC/pixel equivalence.
+ * Native writes a new staging file only; independent full-tree/schema/FITS
+ * verification must succeed before caller exclusively publishes final ASDF.
+ * Reference values/definitions/arrays/input records are retained unchanged.
+ * Original provenance is copied into root recovery metadata; failed recipe
+ * status remains explicit. Does not read FITS pixels, raw data or run recipes. */
+typedef struct {
+    const char *reference_asdf, *fits_path, *staging_path;
+    const char *failed_log, *assembly_log, *created_at, *recipe_start, *source_revision;
+} mef_qc_recovery;
+int mef_product_qc_recover_verified(const mef_qc_recovery *, char *, size_t);
 #endif

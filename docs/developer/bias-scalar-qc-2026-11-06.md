@@ -127,3 +127,40 @@ scalar-qc-qualification-c17/build, target mef_assembly_probe only, and run the t
 expanded-budget cases with --probe. No configure/new build tree/dependency rebuild.
 Do not launch the old recipe binary again; it still contains the old assembler
 until explicitly relinked and its changed-source identity is recorded.
+
+## Native QC recovery prepared after verified equivalence
+
+Actual corrected Mac assembly recovery passed: final FITS
+CMDP.2026-11-06T21:42:22.830Z.001.fits is1077825600bytes. All864 legacy QC groups
+and all32 real detector pixel payloads match the earlier completed mosaic exactly;
+retained products/reference preserved. #273 corrected and target-verified/closed.
+Owner then verified all89445 scalar/context cards against the original validated
+ASDF, remapping only product identity in memory. Five rejection-reason cards account
+for per-detector cardinality differences. No raw reductions were rerun.
+
+Owner instructed proceeding with native recovery. A new explicit
+mef_product_qc_recover_verified metadata function is exposed through the existing
+bias_product_qc_probe recover-verified mode; no new CMake target/configuration.
+It reads the original ASDF through the qualified bounded-memory interface,
+retains all measurement values/definitions/arrays and embedded inputs, changes only
+product/assessment identity, producer, recovery creation time, actual failed recipe
+start/log and product measurement source references. A root recovery mapping keeps
+original product/record/provenance plus failed-log/assembly-log links and an explicit
+incomplete-original-recipe status. This is recovered QC, not retroactive native
+recipe success. Root metadata is allowed by the existing application schema.
+
+Native emits a new exclusive staging file, reads it back natively and leaves final
+publication to recover_verified_bias_qc.py. The independent retained ASDF6 reader
+checks schema, complete expected QC (including binary64 bit patterns, arrays and
+unavailable values), exact original provenance under recovery and all89445 FITS
+cards before exclusive link publication. The source ASDF/FITS, failed log, assembly
+log and native executable are stat-guarded. Failure retains staging/log/receipt;
+no existing file is replaced, raw frame accessed or statistic recalculated.
+
+Agent strict C17 pinned-header syntax and probe syntax pass; Python compilation
+and signed-zero/adjacent-double/type-change controls pass. Actual external-library
+recovery execution remains pending on Mac; do not claim completed ASDF until the
+independent staging checks pass. Reuse the selected source/build/tools, patch only
+three C/header/probe files plus the controller, build bias_product_qc_probe only.
+Its original numerical fixture behavior is unchanged; the recovery mode does not
+enter the bias operation. Preserve all private detector products until completion.

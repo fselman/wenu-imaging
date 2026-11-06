@@ -1,3 +1,16 @@
+## Verified real mosaic; native ASDF recovery pending — 6 November 2026
+
+Recovered FITS CMDP.2026-11-06T21:42:22.830Z.001.fits matches864 legacy QC groups
+and all32 detector pixel payloads exactly. All89445 new scalar/context cards also
+match the earlier validated ASDF. #273 closed after real assembly verification.
+Owner instructed native QC recovery with explicit provenance. Read
+[the current status](docs/developer/bias-scalar-qc-2026-11-06.md). New native
+recover-verified mode on existing bias_product_qc_probe writes staging only;
+independent schema/full-tree/array/FITS checks precede exclusive publication.
+No CMake target/configuration changes, raw reductions or statistic recalculation.
+Original ASDF and failed recipe log remain intact; do not claim retroactive recipe
+success. Keep private detector files until recovery is completed and reviewed.
+
 ## Expanded-header assembly correction pending Mac check — 6 November 2026
 
 Real scalar-QC run completed32 private detector MEFs, then failed assembled-MEF

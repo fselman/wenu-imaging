@@ -146,6 +146,11 @@ static void profile(const char *paf,int masked,int mad,int pair)
 }
 int main(int argc,char **argv)
 {
+    if(argc==10 && !strcmp(argv[1],"recover-verified")) {
+        mef_qc_recovery r={argv[2],argv[3],argv[4],argv[5],argv[6],argv[7],argv[8],argv[9]};
+        char message[512]; int code=mef_product_qc_recover_verified(&r,message,sizeof(message));
+        puts(message); return code?1:0;
+    }
     if(argc!=2 && argc!=3) return 2;
     if(argc==3) dump_directory=argv[2];
     eclipse_init(); set_logfile(0);
