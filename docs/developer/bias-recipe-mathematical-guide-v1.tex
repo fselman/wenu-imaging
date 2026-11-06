@@ -1,0 +1,544 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=22mm,headheight=14pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,booktabs,array,longtable,microtype}
+\usepackage{xcolor,xurl,hyperref,fancyhdr}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black,
+ pdftitle={Bias recipe: mathematics and implementation, version 1},pdfauthor={Wenu-imaging}}
+\urlstyle{tt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small Wenu-imaging}
+\fancyhead[R]{\small Bias recipe: mathematical guide v1}
+\fancyfoot[C]{\small\thepage}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
+\setlength{\tabcolsep}{4pt}\setlength{\emergencystretch}{2em}
+\newcommand{\code}[1]{\nolinkurl{#1}}
+\newcommand{\pix}{\operatorname{pix}}
+\newcommand{\Var}{\operatorname{Var}}\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\ind}{\mathbf{1}}
+\title{\vspace{-10mm}Bias recipe\\Mathematics and implementation\\\large Version 1 --- review copy}
+\author{Wenu-imaging}\date{6 November 2026}
+\begin{document}\maketitle\vspace{-6mm}
+\section{Purpose and authority}
+The recipe estimates a master bias \emph{signal} by correcting the electronic
+scan level separately in every input row, trimming the active rectangle,
+rejecting entire frames by their corrected active-area means, and stacking the
+retained frames with the existing Eclipse pixel median. QC describes the
+inputs, corrections and master; it does not silently modify the result.
+
+This guide explains the implementation reviewed at cleanup-source revision
+\code{b8ca41fce6df5f34cd8668c574d873a8168797b2}. It follows the owner-approved
+bias/QC decisions and the final-MEF and dual-format designs listed in
+Section~\ref{sec:authority}. Historical design documents contain superseded
+stages: this guide uses current source for actual arithmetic and the later
+approved decision for detector-mask applicability.
+
+All signal levels, standard deviations and read-noise diagnostics are in ADU.
+Pixel and frame counts are dimensionless counts. The recipe performs no gain
+conversion, flat normalization, interpolation or dark-current estimate.
+It does not provide a master variance or a covariance model.
+
+\subsection*{Three distinctions to retain}
+\begin{enumerate}
+\item The detector BPM selects physical active pixels. It is not applied to
+electronic prescan or overscan samples.
+\item Frame rejection selects complete exposures. The subsequent median stack
+still evaluates every output pixel, including pixels excluded by that BPM.
+\item The historical stack median and modern QC median have different
+even-sample conventions. Preserving the stack is part of compatibility.
+\end{enumerate}
+\subsection*{Mathematical description versus implementation}
+Equations below state the estimators. Exact reproduction also requires the
+documented order-statistic convention, evaluation order and pixel/float
+conversions. Checked statistics retain the existing sum-of-squares
+implementation; the guide does not substitute a different summation algorithm.
+
+\newpage
+\section{Identity, coordinates and admitted inputs}
+For one logical detector let $f=0,\ldots,F-1$ identify supplied raw frames
+in their original order, and let $D_f(x,y)$ be a loaded value in ADU.
+FITS scaling belongs to the existing loader; values entering this service
+are the resulting \code{pixelvalue} samples.
+
+Logical detector ID, source HDU, zero-based configuration index and output HDU
+are independent bindings. In the retained OmegaCAM run CCD65 used configuration
+index 0 and output HDU 1; CCD69 used index 16 and output HDU 17.
+The actual source HDU is checked in each input, not inferred from its ordinal.
+
+The trim rectangle is inclusive and one-based:
+\[
+ {\cal R}=[x_0,x_1]\times[y_0,y_1],\qquad
+ W_A=x_1-x_0+1,\quad H_A=y_1-y_0+1.
+\]
+An active pixel $(i,j)$ refers to raw coordinate
+\begin{equation}
+ (x,y)=(x_0+i-1,\ y_0+j-1). \label{eq:coords}
+\end{equation}
+The code converts coordinates at the array-access boundary.
+This pixel identity does not validate the legacy celestial WCS or supply
+the deferred detector-layout fallback.
+
+A binary BPM has an explicit HDU, polarity, coordinate domain, readout and
+binning. The loader normalizes the declared good value to Eclipse polarity
+$M=1$ for good and $M=0$ for excluded. Active-sized masks are embedded using
+Equation~\eqref{eq:coords}; raw-sized masks are cropped consistently for active
+measurements. Explicit omission is recorded; no mask is guessed from a filename.
+
+\subsection*{Validation before calculation}
+The service checks operation/version, detector/request bindings, common image
+dimensions, scan/trim bounds, rejection counts, finite nonnegative frame
+parameter $\kappa$, positive diagnostic parameter $k$, and minimum input count.
+The configured minimum is at least three. The entire loaded raw plane must
+contain finite values, including masked pixels. Malformed masks or contradictory
+calibration declarations fail.
+
+General statistics helpers can report nonfinite exclusions; this capability
+does not relax the finite-raw-input rule. No raw saturation threshold or
+automatic exposure discovery is added by this bias operation.
+
+\subsection*{Code boundary}
+\code{mef_layout_load}, \code{mef_layout_load_bpm} and binding checks handle
+file/geometry identity. \code{mef_cal_bias_measurements} validates and calculates
+one detector using copies, leaving caller raw planes and geometry unchanged.
+
+\newpage
+\section{Electronic row correction}
+For a raw row $y$, concatenate the enabled prescan and overscan column bands
+into a vector $s_y$ of length $n_s$. No detector BPM is applied. If both bands
+overlap, their common samples enter twice; the configuration must describe the
+intended electronic samples. Disabled bands contribute nothing.
+
+Sort the samples as $s_{y,(1)}\leq\cdots\leq s_{y,(n_s)}$. With integer low and
+high rank-rejection counts $\ell,h$, the row correction is
+\begin{equation}
+ c_f(y)=\pix\left\{\frac{1}{n_s-\ell-h}
+ \sum_{r=\ell+1}^{n_s-h}s_{y,(r)}\right\},\qquad n_s-\ell-h>0. \label{eq:scan}
+\end{equation}
+The sum uses double precision; the result is cast to the pixel type.
+These are rank cuts, not iterative sigma clipping. Every column is corrected;
+then the active rectangle is extracted:
+\begin{equation}
+ A_f(i,j)=\pix\{D_f(x_0+i-1,y_0+j-1)-c_f(y_0+j-1)\}. \label{eq:correct}
+\end{equation}
+The retained OmegaCAM configuration enables overscan only. CCD65 columns
+2100--2142 contain 43 samples; rejecting ten at each end leaves 23.
+Its active rectangle is $[51,2094]\times[5,4095]$, or $2044\times4091$ pixels.
+
+The correction profile covers every raw row, including rows outside the trim.
+Its legacy level is the pixel-median (Section~\ref{sec:medians}); its reported
+RMS is a sample standard deviation about its own mean:
+\[
+ s_c=\sqrt{\frac{\sum_y(c_f(y)-\bar c_f)^2}{H_{\rm raw}-1}}.
+\]
+The implementation subtracts the median before the centered sum-of-squares
+evaluation. This shift preserves the exact estimator. Legacy summaries pass
+through float fields. Median selection reorders the working profile; scatter
+is invariant to reordering. The bias record stores summaries, not an ordered
+profile array. Separate raw scan QC uses enabled columns over trimmed rows.
+
+\code{mef_overscan_correction_traced} corrects and crops;
+\code{function1d_average_reject_checked} implements Equation~\eqref{eq:scan}.
+
+\newpage
+\section{Frame admission and temporal stack}
+For each corrected active image, use all active pixels without a BPM, or only
+its good pixels otherwise. The per-frame mean is
+\[
+ a_f=\frac{1}{N_f}\sum_{(i,j)\in{\cal G}_f} A_f(i,j).
+\]
+An empty valid population fails. The rejection band uses all $F$ submitted
+frame means once:
+\begin{align}
+ \bar a&=\frac1F\sum_f a_f,&
+ s_a&=\sqrt{\frac{\sum_f(a_f-\bar a)^2}{F-1}},\\
+ L&=\bar a-\kappa s_a,& U&=\bar a+\kappa s_a.
+\end{align}
+The frame-band implementation accumulates centered squared deviations in a
+second pass. Reject $a_f<L$ or $a_f>U$; equality is retained.
+The band is not recalculated after rejection. The configured minimum number
+of retained frames must be met. With zero scatter the band collapses to the
+common mean. The retained OmegaCAM setting is $\kappa=2$, minimum three frames.
+
+Historical configuration entries \code{FRAMETHR.LO}/\code{FRAMETHR.HI}
+do not add absolute cuts in this kernel. The computed band is operational.
+For retained set ${\cal K}$, $K=|{\cal K}|$, the master is
+\begin{equation}
+ B(i,j)=\operatorname{med}_{\rm Eclipse}
+             \{A_f(i,j):f\in{\cal K}\}. \label{eq:stack}
+\end{equation}
+There is no per-pixel clipped mean or per-pixel rejection count.
+The BPM selects frame-mean and QC populations; it does not replace output
+pixels. The temporal median is evaluated at every active coordinate.
+\code{mef_bias_stack_masked} selects frames and consumes the private cube;
+\code{cube_avg_median} implements the stack. QC retains original input IDs.
+
+For synthetic frame means $0,1,2,10$ with illustrative $\kappa=1$,
+$\bar a=3.25$, $s_a=\sqrt{62.75/3}\simeq4.573474$. The band is approximately
+$[-1.323474,7.823474]$; the first three survive. This example uses $\kappa=1$
+to expose the rule, not the retained setting 2.
+
+\newpage
+\section{Median conventions and precision}\label{sec:medians}
+For sorted $z_{(1)}\leq\cdots\leq z_{(N)}$, the modern checked QC median is
+\[
+ m(z)=\begin{cases}z_{((N+1)/2)},&N\text{ odd},\\
+ \tfrac12 z_{(N/2)}+\tfrac12 z_{(N/2+1)},&N\text{ even}.\end{cases}
+\]
+The Eclipse pixel median used for the temporal stack returns the \emph{lower}
+middle value for even $K\geq4$: $z_{(K/2)}$. Its two-value helper averages the
+pair, but the bias stack requires at least three frames. Odd-sample routines
+return the central order statistic. The general selection convention follows
+the Wirth implementation documented in the source \cite{wirth}.
+
+Ten retained frames use the fifth sorted sample at each pixel; nine use the
+fifth. Changing this convention changes the accepted recipe. The historical
+\code{double_median} helper instead uses the upper middle for even samples;
+it is not the modern checked QC median.
+
+\subsection*{Legacy master statistics}
+With a BPM, the kernel overrides the historical master median and standard
+deviation with checked \emph{masked} statistics, then converts results to
+float. They are not inherently unmasked. Without a BPM, the historical median
+uses the pixel-median convention; modern QC averages the middle pair.
+The explicitly named \code{master_unmasked} family always omits the BPM.
+Even for equal definitions and populations, modern double results and legacy
+float fields can differ through rounding.
+
+The default \code{pixelvalue} is float; \code{DOUBLEPIX} selects a different
+build lane. Scan sums use double precision but are converted to pixel type
+before subtraction. Default FITS pixels are IEEE single precision. Existing
+legacy cards retain six-decimal formatting; new scalar cards use 17 significant
+digits with a FITS-compatible uppercase exponent. A short printed table cannot
+establish exact numerical equality.
+
+\subsection*{Worked order-statistic examples}
+For $0,2,4,6$, modern median and mean are 3; the temporal lower median is 2.
+For scan samples $100,101,102,103,200$ and one rank rejected at each end,
+the correction is 102. Raw samples 110 and 112 become 8 and 10.
+
+\newpage
+\section{Checked sample statistics and MAD}
+A statistic defines its rectangle, processing stage, mask and nonfinite policy.
+Within that rectangle, BPM-excluded pixels are counted first; among remaining
+pixels, nonfinite samples are excluded. Thus region count equals BPM-excluded
+plus nonfinite-excluded plus valid count. For valid values $z_1,\ldots,z_N$,
+\begin{align}
+ \bar z&=\frac1N\sum_i z_i, &
+ s_z&=\sqrt{\frac{\sum_i(z_i-\bar z)^2}{N-1}},\\
+ d_z&=m(\{|z_i-m(z)|\}),& \operatorname{sMAD}(z)&=1.4826\,d_z.
+\end{align}
+Both medians in $d_z$ use the averaged-middle convention. The raw MAD is scaled
+exactly once. The constant approximates $1/\Phi^{-1}(3/4)$, making scaled MAD
+consistent for normal-distribution standard deviation at large sample size
+\cite{r-mad,nist-mad}. It is not a finite-sample unbiasedness correction, nor
+does its use establish Gaussian detector noise.
+
+Unlike the two-pass frame-band scatter, per-pixel sample helpers evaluate
+\[
+ v=\frac{\sum_i z_i^2-(\sum_i z_i)^2/N}{N-1},\qquad
+ s_z=\sqrt{\max(0,v)}.
+\]
+They accumulate in double precision. Cancellation can affect nearly constant,
+large-offset data; this guide records the current arithmetic rather than
+replacing it with Welford accumulation. Legacy scan scatter uses the same
+centered sum-of-squares family after its median shift.
+
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{25mm}>{\raggedright\arraybackslash}p{115mm}}
+\toprule Situation & Representation \\\midrule
+$N=0$ & Level and scatter unavailable; not measured zero.\\
+$N=1$ & Mean/median measured; requested MAD is zero; sample stdev unavailable.\\
+MAD omitted & Unavailable by explicit choice; not zero.\\
+MAD equals zero & Valid measured result; may make a derived threshold degenerate.\\
+\bottomrule
+\end{tabular}
+\end{center}
+The historical \code{image_median_stat} computes a mean absolute deviation;
+it must not be substituted for this median absolute deviation.
+\code{image_getstats_masked_checked} selects the population;
+\code{double_median_mad_checked} calculates checked median and MAD.
+
+For $0,2,4,6$, $s=\sqrt{20/3}\simeq2.581989$, MAD $=2$ and
+scaled MAD $=2.9652$.
+
+\newpage
+\section{Which pixels belong to each diagnostic?}
+\begin{center}\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{32mm}>{\raggedright\arraybackslash}p{49mm}>{\raggedright\arraybackslash}p{55mm}}
+\toprule Family & Samples and stage & Mask \\\midrule
+\code{raw_active} & Raw input, active trim rectangle & Declared detector BPM, or explicit omission \\
+\code{corrected_active} & Row-corrected, trimmed input & Cropped active BPM, or omission \\
+Prescan / overscan & Raw enabled scan band, trimmed rows & Detector BPM not applicable \\
+Scan correction & Row corrections, full raw height & Detector BPM not applicable \\
+\code{master} & Final stacked active image & Active BPM, or omission \\
+\code{master_unmasked} & Same stacked active image & Explicitly no detector BPM \\
+\code{raw_difference} & Original raw-pair difference, active rectangle & Intersection of both good masks \\
+\bottomrule
+\end{tabular}\end{center}
+No clipping is silently added to these populations. Electronic rank rejection
+belongs to row correction, and whole-frame rejection belongs to stacking.
+Their QC context identifies these distinct stages.
+
+Per-input scan and active measurements are retained for all submitted frames,
+including rejected ones. Consequently a range over all ten inputs need not
+summarize only the nine used for a particular detector.
+
+Master spatial scatter describes differences across detector pixels, including
+structure and residual offsets. It is not the uncertainty of each master
+pixel. The difference between masked and unmasked scatter can be scientifically
+useful; neither is inherently a substitute for the other.
+
+\newpage
+\section{Read noise from the explicit raw pair}
+Two distinct, explicitly selected original raw frames $a,b$ supply
+\[
+ \Delta(x,y)=D_a(x,y)-D_b(x,y),\qquad
+ \operatorname{RON}_{s}=s_\Delta/\sqrt2,\quad
+ \operatorname{RON}_{\rm MAD}=1.4826\,d_\Delta/\sqrt2.
+\]
+The population is the active rectangle with the intersection of good masks.
+This is measured \emph{before} row correction or master subtraction. Selecting
+a raw pair is independent of later stack admission: either selected frame can
+be rejected from the master. \code{image_pair_stats_checked} forms the pixel-type
+difference and invokes checked sample statistics.
+
+For independent equal-variance noise, differencing doubles the variance.
+More generally,
+\[
+ \Var(D_a-D_b)=\Var(D_a)+\Var(D_b)-2\Cov(D_a,D_b).
+\]
+The factor $\sqrt2$ therefore has an interpretation conditional on independence
+and equal variance. Stable spatial bias structure cancels; temporal row drift
+or other changing structure can contribute. Centering the difference for a
+standard deviation is not equivalent to electronic row correction.
+The generic sampled-window \code{image_rect_readout_noise} routine is a
+different estimator and is not used for this bias diagnostic.
+
+\subsection*{Quantization and repeated robust values}
+For raw differences $-2,0,2,4$, the mean is 1 and
+\[
+ s_\Delta=\sqrt{20/3},\quad \operatorname{RON}_s=\sqrt{10/3}
+ \simeq1.825742,\quad
+ d_\Delta=2,\quad\operatorname{RON}_{\rm MAD}\simeq2.096713.
+\]
+Repeated values near 2.0967 ADU across detectors can result from the same
+integer-valued MAD of 2. They do not demonstrate identical underlying noise.
+
+\subsection*{Master uncertainty is not supplied}
+This recipe supplies no master variance or covariance plane. In particular,
+$\operatorname{RON}^2/K$ is not its implemented uncertainty model: the temporal
+stack is a median, and row correction introduces shared estimates. For pixels
+$p,q$ corrected using the same estimated row offset $c$,
+\[
+ \Cov(D_p-c,D_q-c)=\Cov(D_p,D_q)-\Cov(D_p,c)
+ -\Cov(c,D_q)+\Var(c).
+\]
+This identity explains a possible correlation; the current product does not
+estimate its terms or assume their independence.
+
+\newpage
+\section{High-offset pixels}
+With requested MAD, the selected master population gives median $m_B$ and
+scaled MAD $s_{B,\rm MAD}$. For configured positive $k$,
+\[
+ T=m_B+k\,s_{B,\rm MAD},\qquad
+ H(i,j)=\ind\{B(i,j)>T\},\qquad N_H=\sum_{i,j}H(i,j).
+\]
+The threshold population uses the declared BPM. The subsequent search visits
+\emph{all} output pixels, including BPM-excluded ones, and uses strict $>$.
+The direct flag loop has no additional finite-value filter. Finite raw-input
+validation does not prove that every hypothetical floating-point overflow in
+later arithmetic would remain finite.
+
+Flag polarity is $1=$ flagged, unlike the normalized good-pixel BPM polarity.
+Coordinates are one-based in the active output. This diagnostic does not
+create or apply a new detector BPM. A high bias offset is not a dark-current
+measurement, and $k=5$ does not by itself define a calibrated false-alarm rate.
+
+A zero MAD is a measured but degenerate scale: the threshold becomes the median
+and every larger output value qualifies. With MAD omitted the derived
+threshold/count are unavailable. A measured zero count remains zero; an empty
+coordinate set is represented with its explicit availability/reason context.
+
+For master values $0,1,1,2,20$ with no exclusions, median and MAD are both 1.
+At $k=5$, $T=1+5(1.4826)=8.413$ and only 20 is flagged. If 20 is BPM-excluded,
+the threshold is recomputed from the remaining population, but the final search
+still considers 20. This distinction is deliberate.
+
+\newpage
+\section{FITS and ASDF: one measurement, two representations}
+The accepted policy retains existing FITS QC cards and writes new scalar
+diagnostics to both formats. Measurements and context are prepared from the
+same common QC record. Neither writer independently remeasures pixels.
+\code{mef_bias_qc_fits.def} is the authoritative field-to-card mapping.
+The following summarizes families, rather than replacing that mapping.
+
+\begin{center}\small
+\begin{tabular}{p{38mm}p{98mm}}
+\toprule FITS family / field & Meaning in common QC \\\midrule
+Legacy \code{FRMEDIAN}, \code{FRSTDEV} & Historical master statistics; retain their precision and semantics \\
+\code{MAST}, \code{UMAS}, \code{DIFF} & Selected master, unmasked master, raw difference; mean, median, stdev and scaled MAD \\
+\code{RON} & Raw-pair standard-deviation and MAD estimators \\
+\code{HOT} & Count, threshold, multiplier and zero-scale/degeneracy context \\
+Per-frame \code{RAW}, \code{CORR} & Raw and corrected active statistics \\
+Per-frame \code{PRES}, \code{OVER} & Enabled electronic scan populations \\
+Legacy scan fields & Correction-profile median and sample scatter \\
+\bottomrule
+\end{tabular}\end{center}
+A statistic carries unit, status/reason, stage, region, coordinate system, mask
+identity/applicability, clipping and nonfinite policies, sample count and source
+record references as applicable. An unavailable measurement has no invented
+numeric card. Measured zero and unavailable are distinct.
+
+The verified real product contained 89,445 mapped scalar/context cards:
+$32\times2795+5$. These are not 89,445 independent numerical diagnostics.
+Five detectors had one additional rejection-reason card. Arrays, embedded
+input records and complete provenance remain in ASDF. FITS header scalars alone
+do not reconstruct a full provenance tree. A future harvester must preserve
+units, state and definitions, not merely collect numeric keyword values.
+
+\subsection*{Version domains}
+The retained native library version 0.3.0, ASDF file/core 1.6, application schema
+2.0.0, mapping identifier \code{bias-scalar/1}, and Python ASDF 6 runtime refer
+to different version domains. They must not be compared as though they were
+one software version. The native interface includes the qualified memory-backed
+readback path for the relevant library limitation.
+
+\newpage
+\section{Operation, publication and explicit recovery}
+Normal operation keeps the raw directory untouched, launches orchestration
+from its own directory and writes final reduced products to the explicit
+product directory. In the retained run these were respectively
+\code{/Users/fselman/Pictures/OCAM/bpm},
+\code{/Users/fselman/Pictures/OCAM/test_recipes/orchestration}, and
+\code{/Users/fselman/Pictures/OCAM/test_recipes/reduced/cal/bias}.
+
+The standalone coordinator processes detectors serially: load and validate,
+measure the raw pair, correct private frame copies, compute input QC, reject
+frames, stack, and prepare common QC/header data. It writes private detector
+products and releases detector-sized arrays. A single native writer assembles
+the final MEF; the native QC writer publishes ASDF. A successful recipe requires
+the required outputs to complete. Exclusive publication prevents silent
+replacement; the FITS/ASDF/log set is not an atomic three-file transaction.
+
+Expanded scalar/context headers exposed a former fixed 1 MiB aggregate
+readback budget. The fix budgets the exact emitted, padded header bytes with
+checked arithmetic while retaining the individual source-header bound.
+Image payload bytes are not charged to the header budget. This repairs an
+assembly limit; it does not change measured pixels or QC estimators.
+
+The retained failed run was explicitly recovered from its private detector
+products after verification. Recovery compared all pixel payloads and legacy
+QC, checked mapped scalar/context cards against the original QC, then wrote a
+native ASDF staging file and independently validated the complete record,
+arrays and provenance before exclusive publication. It retained the failed
+log and recovery identity. It did not retroactively declare the original
+recipe successful or authorize unrestricted provenance harvesting.
+
+The optional-cleanup change guards caller-side releases of absent optional
+objects, covers repeated/partial cleanup and creation-name replacement, and
+preserves allocator diagnostics for actual NULL misuse. It changes neither
+these equations nor the global allocation contract.
+
+\newpage
+\section{Implementation crosswalk}
+Paths below are relative to \code{mefpp2/}. The reviewed revision identifies
+actual source, while names identify the relevant calculation boundary.
+\begin{center}\small
+\begin{tabular}{p{71mm}p{65mm}}
+\toprule Path & Responsibility \\\midrule
+\code{ins/mef/common/mef_cal_bias.c} & Detector measurement service, raw RON, mask populations, hot pixels \\
+\code{ins/mef/common/mef_bias_kernel.c} & Frame means, one-pass admission policy, median stack, legacy statistics \\
+\code{ins/mef/common/mefp_lib.c} & Row correction, legacy scan summaries, trim and optional cleanup \\
+\code{src/math/function_1d.c} & Checked rank-rejected electronic mean \\
+\code{src/math/median.c} & Pixel median and order-statistic selection \\
+\code{src/math/dstats.c} & Checked double median/MAD and sample scatter \\
+\code{src/iproc/cube2image.c} & Temporal per-pixel median \\
+\code{src/iproc/image_stats.c} & Checked masked/pair populations and statistics \\
+\code{ins/mef/common/mef_bias_product_qc.c} & Shared measurement/context record construction \\
+\code{ins/mef/common/mef_bias_qc_fits.c} and \code{mef_bias_qc_fits.def} & Scalar/context FITS serialization and authoritative mapping \\
+\code{ins/mef/common/mef_bias_files.c} & File adapter and detector-product preparation \\
+\code{ins/mef/common/mef_operation_template.c} & Operation lifetime and cleanup \\
+\code{ins/mef/common/mef_mef_assemble.c} & Native MEF assembly and header budget \\
+\code{ins/mef/common/mef_product_qc_asdf.c} & Native ASDF writing, readback and explicit recovery \\
+\code{ins/mef/recipes/mefpp_bias_recipe.c} & Standalone serial coordinator \\
+\bottomrule
+\end{tabular}\end{center}
+
+\newpage
+\section{Qualification and limits of the evidence}
+The retained Mac exercise preserved ten original OmegaCAM bias frames and
+produced 32 detector extensions. Its comparison established:
+\begin{itemize}
+\item 864 legacy QC keyword groups matched retained detector references exactly;
+\item all 32 recovered detector pixel payloads matched the earlier mosaic byte
+for byte; recovered FITS size was 1,077,825,600 bytes;
+\item all 89,445 mapped scalar/context cards agreed with the original QC;
+\item independent ASDF checks validated the complete recovered record,
+including schema, values, array content/float bits, provenance and FITS mapping;
+\item focused Mac checks passed for aggregate header budgeting, individual
+header bounds, optional cleanup and four in-memory QC profiles.
+\end{itemize}
+The existing recipe was relinked with accurate revision stamp
+\code{c1751306f817d37b9c4791d65f8925f57ef1151b}. Cleanup-source revision
+\code{b8ca41fce6df5f34cd8668c574d873a8168797b2} was separately component-qualified;
+that result does not imply the production recipe was subsequently relinked.
+
+Evidence receipts are retained under the selected Mac qualification directory:
+\code{scalar-qc-qualification-c17/qualification.json},
+\code{header-budget-checks/mef-assembly-results.json},
+\code{recipe-relink.json} and \code{optional-cleanup-results.json}.
+Recovery receipt: orchestration file \code{bias-scalar-qc-asdf-recovery.json}.
+See repository status notes \code{bias-scalar-qc-2026-11-06.md} and
+\code{native-optional-cleanup-2026-11-06.md} for the staged history.
+
+These establish the reported comparisons and focused Mac behavior. Historical
+Mac/Chapman core comparisons do not qualify every new native-ASDF path on all
+platforms. This is not a claim of detector health acceptance, ESO Phase-3
+compliance, general out-of-memory coverage or reentrancy.
+
+Two nonstandard lowercase-exponent telemetry cards were byte-identical in raw
+and product primary headers. Structural/QC agreement does not resolve their
+strict FITS conformance. This inherited header issue is separate from the
+bias arithmetic and the corrected aggregate assembly limit.
+
+This guide changes documentation only. It requires no raw replay, compiler
+selection, build-directory creation or CMake reconfiguration. Future code edits
+must reuse the selected build/toolchain unless a configuration change is
+intentional and explained.
+
+\newpage
+\section{Approved design basis}\label{sec:authority}
+Repository paths identify the human-reviewed design lineage. Later decisions
+supersede earlier scope or serialization arrangements where stated.
+\begin{enumerate}
+\item \code{docs/architecture/proposed/m1/bias-service.md}: numerical
+compatibility, operation boundary and ownership.
+\item \code{docs/developer/bias-qc-eclipse-reuse-review-2026-11-02.md}:
+reused statistics, explicit raw-pair RON and high-offset diagnostics.
+\item \code{docs/developer/bias-bpm-asdf-handoff-2026-11-02.md}: detector
+BPM applies to active populations, not electronic scan samples.
+\item \code{docs/developer/design/bias-mef-native-asdf-v1.md}: final native
+MEF/ASDF product and raw/orchestration/reduced-directory operation.
+\item \code{docs/developer/design/bias-qc-fits-asdf-mapping-v1.md}:
+retain legacy cards and serialize new scalar diagnostics to both formats.
+\end{enumerate}
+This is the post-implementation mathematical account for owner review, not
+an amendment to the accepted numerical policy. Source discrepancies discovered
+in future review should be resolved explicitly rather than hidden by changing
+an equation or a test expectation.
+
+\begin{thebibliography}{9}
+\bibitem{wirth} N. Wirth, \emph{Algorithms + Data Structures = Programs},
+Prentice-Hall, 1976. Algorithm attribution as documented by the retained
+Eclipse median source; exact even-sample conventions are stated in this guide.
+\bibitem{r-mad} R Core Team, \emph{Median Absolute Deviation}, R stats reference
+manual, accessed 6 November 2026.
+\url{https://www.stat.math.ethz.ch/R-manual/R-patched/RHOME/library/stats/html/mad.html}.
+Normal-consistency scaling and median conventions.
+\bibitem{nist-mad} NIST, \emph{Median Absolute Deviation}, Dataplot reference
+manual, accessed 6 November 2026.
+\url{https://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/mad.htm}.
+Definition of MAD and normal-scale interpretation.
+\end{thebibliography}
+\end{document}
