@@ -23,6 +23,12 @@ IDS=['F1_CCD_A','F1_CCD_B']
 
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
+def interpreter_path(path):
+    # Venv identity depends on the invoked path, not its symlink target (#255).
+    path=path.absolute()
+    if not path.is_file() or not os.access(path,os.X_OK):raise ValueError('Missing selected interpreter')
+    return path
+
 class RecipeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -50,25 +56,39 @@ class RecipeTests(unittest.TestCase):
         with fits.open(cls.members[1],memmap=False) as h:fits.HDUList([h[0].copy(),h[2].copy(),h[1].copy()]).writeto(cls.swapped)
         cls.swapped_members=[cls.members[0],cls.swapped,*cls.members[2:]]
         cls.swapped_list=WORK/'swapped.list';cls.swapped_list.write_text('\n'.join(map(str,cls.swapped_members))+'\n')
-        cls.references=[];cls.reference_qc=[]
-        # Existing one-detector native command is the integration reference.
-        for d in range(2):
-            ref=WORK/f'reference-{d}';ref.mkdir()
-            argv=[str(ARGS.adapter),'cal','bias','--pafname',str(cls.paf),'--bias',str(cls.listing),
-                '--detector-id',IDS[d],'--hdu',str(d+1),'--config-detector',str(d),
-                '--readout-id','synthetic-readout','--bin-x','1','--bin-y','1',
-                '--input-bpm',str(cls.bpm),'--output',str(ref/'bias.fits'),'--work-dir',str(ref),
-                '--log-path',str(ref/'native.log'),'--config-record',str(ref/'config.json'),
-                '--qc-record',str(ref/'qc.json'),'--expected-extname',IDS[d],
-                '--measurements','yes','--mad','yes','--ron-first','0','--ron-second','3','--high-sigma','5',
-                '--bpm-hdu',str(d+1),'--bpm-good-value','1','--bpm-coordinates','active',
-                '--bpm-expected-extname','MASK_A' if d==0 else 'MASK_B']
-            with (ref/'command.log').open('x') as log:
-                subprocess.run(argv,cwd=cls.orchestration,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=120)
-            cls.references.append(ref/'bias.fits');cls.reference_qc.append(json.loads((ref/'qc.json').read_text()))
-        cls.configuration=json.loads((WORK/'reference-0/config.json').read_text())
+        normalized=WORK/'reference-inputs';normalized.mkdir()
+        renamed=normalized/'swapped-outlier.fits'
+        renamed.write_bytes(cls.members[1].read_bytes())
+        named_members=[cls.members[0],renamed,*cls.members[2:]]
+        named_list=WORK/'reference-renamed.list';named_list.write_text('\n'.join(map(str,named_members))+'\n')
+        cls.references={};cls.reference_qc={}
+        # References match actual mask/measurement policy AND input basenames.
+        # The reordered case keeps logical pixels in normal HDU order here;
+        # the candidate alone must follow the explicitly reordered input HDUs.
+        for mode in ('masked','omitted','renamed'):
+            cls.references[mode]=[];cls.reference_qc[mode]=[]
+            for d in range(2):
+                ref=WORK/f'reference-{mode}-{d}';ref.mkdir()
+                listing=named_list if mode=='renamed' else cls.listing
+                selected=mode!='omitted'
+                argv=[str(ARGS.adapter),'cal','bias','--pafname',str(cls.paf),'--bias',str(listing),
+                    '--detector-id',IDS[d],'--hdu',str(d+1),'--config-detector',str(d),
+                    '--readout-id','synthetic-readout','--bin-x','1','--bin-y','1',
+                    '--input-bpm',str(cls.bpm) if selected else 'omitted',
+                    '--output',str(ref/'bias.fits'),'--work-dir',str(ref),
+                    '--log-path',str(ref/'native.log'),'--config-record',str(ref/'config.json'),
+                    '--qc-record',str(ref/'qc.json'),'--expected-extname',IDS[d],
+                    '--measurements','yes','--mad','yes' if selected else 'no']
+                if selected:argv+=['--ron-first','0','--ron-second','3','--high-sigma','5',
+                    '--bpm-hdu',str(d+1),'--bpm-good-value','1','--bpm-coordinates','active',
+                    '--bpm-expected-extname','MASK_A' if d==0 else 'MASK_B']
+                with (ref/'command.log').open('x') as log:
+                    subprocess.run(argv,cwd=cls.orchestration,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=120)
+                cls.references[mode].append(ref/'bias.fits')
+                cls.reference_qc[mode].append(json.loads((ref/'qc.json').read_text()))
+        cls.configuration=json.loads((WORK/'reference-masked-0/config.json').read_text())
         cls.toml=WORK/'bias.toml';cls.toml.write_text(render_snapshot(cls.configuration))
-        frozen=[*cls.members,cls.swapped,cls.bpm,cls.bad_bpm,cls.paf,cls.toml,cls.listing,cls.swapped_list,*cls.references]
+        frozen=[*cls.members,cls.swapped,cls.bpm,cls.bad_bpm,cls.paf,cls.toml,cls.listing,cls.swapped_list,renamed,named_list,*[p for rows in cls.references.values() for p in rows]]
         cls.frozen={str(p):digest(p) for p in frozen}
         assert not list(cls.orchestration.iterdir())
 
@@ -109,21 +129,23 @@ class RecipeTests(unittest.TestCase):
         self.assertTrue(product.with_suffix('.log').is_file())
         self.assertIn('OUTPUTS_WRITTEN',product.with_suffix('.log').read_text())
         self.assertEqual(sorted(p.suffix for p in product.parent.iterdir()),['.asdf','.fits','.log'])
-        # Actual FITS pixels and preserved cards compared with existing native outputs.
+        mode='renamed' if swapped else 'masked' if measured else 'omitted'
+        references=self.references[mode]
+        # Strict card assertions retained, with policy/provenance-matched references.
         with fits.open(product,memmap=False) as h:
             h.verify('exception');self.assertEqual(len(h),3)
             self.assertEqual(h[0].header['NEXTEND'],2)
             cards=lambda hd:[c.image for c in hd.header.cards if c.keyword not in ('ORIGFILE','CHECKSUM','NEXTEND','DATE')]
-            with fits.open(self.references[1],memmap=False) as ref:self.assertEqual(cards(h[0]),cards(ref[0]))
+            with fits.open(references[1],memmap=False) as ref:self.assertEqual(cards(h[0]),cards(ref[0]))
             for d in range(2):
-                with fits.open(self.references[d],memmap=False) as ref:
+                with fits.open(references[d],memmap=False) as ref:
                     self.assertEqual(h[d+1].data.dtype,ref[1].data.dtype)
                     self.assertEqual(h[d+1].data.tobytes(),ref[1].data.tobytes())
                     self.assertEqual(cards(h[d+1]),cards(ref[1]))
                 self.assertEqual(h[d+1].header['ORIGFILE'],product.name)
         expected=dict(fits=str(product),raw=list(map(str,self.swapped_members if swapped else self.members)),
             hdus=[[d+1,2-d,d+1,d+1] if swapped else [d+1]*4 for d in range(2)],
-            measured=measured,configuration=self.configuration,reference_qc=self.reference_qc)
+            measured=measured,configuration=self.configuration,reference_qc=self.reference_qc[mode])
         name=product.parent.relative_to(self.products).as_posix().replace('/','_')
         expected_path=WORK/(name+'-expected.json')
         with expected_path.open('x') as stream:json.dump(expected,stream)
@@ -199,7 +221,8 @@ if __name__=='__main__':
     p.add_argument('--recipe',type=Path,required=True);p.add_argument('--adapter',type=Path,required=True)
     p.add_argument('--asdf-python',type=Path,required=True);ARGS=p.parse_args()
     WORK=ARGS.work.resolve(strict=True)
-    for key in ('recipe','adapter','asdf_python'):setattr(ARGS,key,getattr(ARGS,key).resolve(strict=True))
+    for key in ('recipe','adapter'):setattr(ARGS,key,getattr(ARGS,key).resolve(strict=True))
+    ARGS.asdf_python=interpreter_path(ARGS.asdf_python)
     os.environ.update(PYTHONDONTWRITEBYTECODE='1',PYTHONNOUSERSITE='1')
     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(RecipeTests))
     (WORK/'bias-recipe-results.json').write_text(json.dumps(dict(tests=result.testsRun,successful=result.wasSuccessful(),

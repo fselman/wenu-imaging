@@ -28,37 +28,37 @@ with asdf.config_context() as config:
             assert measurements['recipe.mad_requested']['value']==int(expected['measured'])
             assert measurements['recipe.ron_pair_requested']['value']==int(expected['measured'])
             assert measurements['variance']['value'] is None
-            if expected['measured']:
-                ref=expected['reference_qc'][dindex]
-                for prefix in ('master','master_unmasked','raw_difference'):
-                    for suffix,field,scale in (('mean','mean',1),('median','median',1),('stdev','stdev',1),('scaled_mad','mad',1.4826)):
-                        assert measurements[prefix+'.'+suffix]['value']==ref[prefix][field]*scale
-                assert measurements['read_noise']['value']==ref['ron']['stdev_adu']
-                assert measurements['read_noise.mad']['value']==ref['ron']['mad_adu']
+            ref=expected['reference_qc'][dindex]
+            for prefix in ('master','master_unmasked','raw_difference'):
+                for suffix,field,flag,scale in (('mean','mean','level_available',1),('median','median','level_available',1),('stdev','stdev','stdev_available',1),('scaled_mad','mad','mad_available',1.4826)):
+                    v=measurements[prefix+'.'+suffix]
+                    if ref[prefix][flag]: assert v['value']==ref[prefix][field]*scale
+                    else: assert v['value'] is None
+            for name,field,flag in (('read_noise','stdev_adu','stdev_available'),('read_noise.mad','mad_adu','mad_available')):
+                if ref['ron'][flag]: assert measurements[name]['value']==ref['ron'][field]
+                else: assert measurements[name]['value'] is None
+            if ref['ron']['pair_set']:
                 assert measurements['read_noise']['sources']==['raw-000000','raw-000003']
+            if ref['high_offset']['available']:
                 assert measurements['pixels.hot']['value']==ref['high_offset']['count']
                 if ref['high_offset']['count']:
                     assert list(zip(measurements['pixels.hot.x']['value'],measurements['pixels.hot.y']['value']))==[tuple(p) for p in ref['high_offset']['locations']]
-            else:
-                assert measurements['master.scaled_mad']['value'] is None
-                assert measurements['read_noise']['value'] is None
-                assert measurements['pixels.hot']['value'] is None
+            else: assert measurements['pixels.hot']['value'] is None
             for i,record in enumerate(q['embedded_input_records']):
                 binding=record['detectors'][dindex]
                 assert binding['detector_id']==d['detector_id']
                 assert binding['source_hdu']==expected['hdus'][dindex][i]
                 m={v['name']:v for v in binding['measurements']}
-                if expected['measured']:
-                    ref=expected['reference_qc'][dindex]['inputs'][i]
-                    for stage,old in (('raw_active','raw_active'),('corrected_active','corrected_active'),('prescan','prescan'),('overscan','overscan')):
-                        for suffix,field,flag,scale in (('mean','mean','level_available',1),('median','median','level_available',1),('stdev','stdev','stdev_available',1),('scaled_mad','mad','mad_available',1.4826)):
-                            v=m[stage+'.'+suffix]
-                            if ref[old][flag]: assert v['value']==ref[old][field]*scale
-                            else: assert v['value'] is None
-                    assert m['scan_correction.median']['value']==ref['scan_correction']['median']
-                    assert m['scan_correction.stdev']['value']==ref['scan_correction']['stdev']
-                    used=q['inputs'][i]['participation_by_detector'][dindex]
-                    assert used['status']==('used' if ref['accepted'] else 'rejected')
+                ref=expected['reference_qc'][dindex]['inputs'][i]
+                for stage,old in (('raw_active','raw_active'),('corrected_active','corrected_active'),('prescan','prescan'),('overscan','overscan')):
+                    for suffix,field,flag,scale in (('mean','mean','level_available',1),('median','median','level_available',1),('stdev','stdev','stdev_available',1),('scaled_mad','mad','mad_available',1.4826)):
+                        v=m[stage+'.'+suffix]
+                        if ref[old][flag]: assert v['value']==ref[old][field]*scale
+                        else: assert v['value'] is None
+                assert m['scan_correction.median']['value']==ref['scan_correction']['median']
+                assert m['scan_correction.stdev']['value']==ref['scan_correction']['stdev']
+                used=q['inputs'][i]['participation_by_detector'][dindex]
+                assert used['status']==('used' if ref['accepted'] else 'rejected')
                 assert m['raw_active.mean']['sources']==[record['record_id']]
         if expected['measured']:
             assert len(q['calibrations'])==1 and q['calibrations'][0]['role']=='bpm'

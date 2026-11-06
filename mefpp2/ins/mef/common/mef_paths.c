@@ -281,7 +281,7 @@ static int calibration_geometry(struct _mef_bb_ *bb)
     for (i = 0; i < 5; ++i) {
         if (names[i] == NULL || !is_fits_file((char *)names[i])) continue;
         for (xt = first; xt <= last; ++xt) {
-            header = qfits_header_readext(names[i], xt);
+            header = qfits_header_readext((char *)names[i], xt);
             if (header == NULL) return -1;
             width = bb->ccd[xt - 1].trimreg[1] - bb->ccd[xt - 1].trimreg[0] + 1;
             height = bb->ccd[xt - 1].trimreg[3] - bb->ccd[xt - 1].trimreg[2] + 1;

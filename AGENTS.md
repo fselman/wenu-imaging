@@ -1,3 +1,18 @@
+## Warning cleanup and integration checker correction — 6 November 2026
+
+Owner authorized addressing all63reported Mac build warnings. Read
+[the cleanup status](docs/developer/native-warning-cleanup-2026-11-06.md).
+Patch covers the63diagnostics plus adjacent dirname defects and three checker
+corrections #255/#256/#257; no warning suppression, bias-kernel or policy change.
+Agent actual C probes pass with UBSan: four QC-copy profiles, path boundaries,
+MD5/context reset, entropy, exact original-corner comparison and legacy values.
+All231named IR table values unchanged; half-degree intent #261 and ignored
+spectral minimum #265 remain separate scientific decisions. Actual Mac rebuild,
+zero-warning confirmation and corrected eight integration groups remain pending.
+Reuse retained mac-standalone-bias-SP3Cgdhb root; preserve original source/build/
+failed checks, use fresh correction subdirectories. No observations, install,
+merge, viewer or evidence cleanup. Overall #245 and PR #254 remain pending.
+
 ## Standalone native bias recipe integrated for target checks — 6 November 2026
 
 Owner instructed integration after the native MEF gate passed8Mac groups and

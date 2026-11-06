@@ -79,14 +79,14 @@ static int valid_spectrum(
 {
 	int			darkover,
 				darkunder ;
-	int			objlen   = -1,
-				objwidth = -1 ;
+	int			objwidth = -1 ;
 	double		valover,
 				valunder,
 				valcenter ;
 
-	/* Find out objlen and objwidth */
-	objlen = det->right_x[objnum] - det->left_x[objnum] + 1 ;
+	/* Legacy selection does not enforce min_spec_length; unchanged here. */
+    (void)min_spec_length;
+	/* Find object width. */
 	objwidth = det->top_y[objnum] - det->bottom_y[objnum] + 1 ;
 	if (objwidth > max_spec_width) {
 		e_error("object is too wide") ;
@@ -182,7 +182,7 @@ static int select_valid_spectra(
 {
 	int *	tl ;
 	int 	nobjs ;
-	int		i, j ;
+	int		i ;
 
 	/* Initialize */
 	*lut_spec_2_cc = NULL ;
@@ -194,7 +194,6 @@ static int select_valid_spectra(
 	
 	/* Count nb of valid specs */	
 	/* Identify valid specs */	
-	j = 0 ;
 	for (i=0 ; i<nobjs ; i++)
 		if (valid_spectrum(min_spec_length,
 							max_spec_width, 
@@ -380,7 +379,6 @@ double3 * find_brightest_spectrum_1d(
 	detected	*	det ;
 	double3		*	p ;
 	int				nb_spec ;
-	int				brightest ;
 	double			brightness ;
 	int 		*	lut_spec_2_cc ;
 	int				i ;
@@ -409,7 +407,6 @@ double3 * find_brightest_spectrum_1d(
 	/* Look for the brightest, among the detected spectra */
 	p->x[0] = det->x[lut_spec_2_cc[0]] ;
 	p->y[0] = det->y[lut_spec_2_cc[0]] ;
-	brightest = lut_spec_2_cc[0] ;
 	brightness = det->obj_mean[lut_spec_2_cc[0]] *
 				det->obj_nbpix[lut_spec_2_cc[0]] ;
 	for (i=0 ; i<nb_spec ; i++) {
@@ -417,7 +414,6 @@ double3 * find_brightest_spectrum_1d(
 				det->obj_nbpix[lut_spec_2_cc[i]] > brightness) {
 			p->x[0] = det->x[lut_spec_2_cc[i]] ;
 			p->y[0] = det->y[lut_spec_2_cc[i]] ;
-			brightest = lut_spec_2_cc[i] ;
 			brightness = det->obj_mean[lut_spec_2_cc[i]] *
 						det->obj_nbpix[lut_spec_2_cc[i]] ;
 		}

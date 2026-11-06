@@ -91,30 +91,19 @@
 /*----------------------------------------------------------------------------*/
 char * qfits_get_dir_name(char * filename)
 {
-    static char path[MAXNAMESZ];
+    static char path[MAXNAMESZ+1];
     char *last_slash;
-
-    if (strlen(filename)>MAXNAMESZ) return NULL ;
+    size_t length;
+    if (filename == NULL || strlen(filename) > MAXNAMESZ) return NULL;
     strcpy(path, filename);
-    /* Find last '/'.  */
-    last_slash = path != NULL ? strrchr (path, '/') : NULL;
-
-    if (last_slash == path)
-    /* The last slash is the first character in the string.  We have to
-    return "/".  */
-        ++last_slash;
-    else if (last_slash != NULL && last_slash[1] == '\0')
-        /* The '/' is the last character, we have to look further.  */
-        last_slash = memchr (path, last_slash - path, '/');
-
-    if (last_slash != NULL)
-        /* Terminate the path.  */
-        last_slash[0] = '\0';
-    else
-        /* This assignment is ill-designed but the XPG specs require to
-        return a string containing "." in any case no directory part is
-        found and so a static and constant string is required.  */
-        strcpy(path, ".");
+    length = strlen(path);
+    /* Ignore trailing separators before selecting the parent directory. */
+    while (length > 1 && path[length-1] == '/') path[--length] = '\0';
+    last_slash = strrchr(path, '/');
+    while (last_slash != NULL && last_slash > path && last_slash[-1] == '/') --last_slash;
+    if (last_slash == path) ++last_slash;
+    if (last_slash != NULL) *last_slash = '\0';
+    else strcpy(path, ".");
     return path;
 }
 
@@ -182,7 +171,7 @@ char * qfits_get_root_name(char * filename)
     char * lastdot ;
 
     if (strlen(filename)>MAXNAMESZ) return NULL ;
-    memset(path, MAXNAMESZ, 0);
+    memset(path, 0, sizeof(path));
     strcpy(path, filename);
     lastdot = strrchr(path, '.');
     if (lastdot == NULL) return path ;

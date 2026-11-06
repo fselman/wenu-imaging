@@ -61,7 +61,6 @@ image_t * image_detect_corners(image_t * in)
 	image_t *	corner_im ;
 	image_t *	final ;
 	pixelvalue	max_sum ;
-	double3	 *	pts_list ;
 	int			i, j, k ;
 	
 	int			susan_mask_x[SUSAN_MASK_PIX] =
@@ -143,7 +142,6 @@ image_t * image_detect_corners(image_t * in)
 		image_save_fits(corner_im, "corners.fits", BPP_DEFAULT);
 
 	/* Locate local maxima */
-	pts_list = double3_new(1024) ;
 	final = image_new(in->lx, in->ly);
 	for (j=2 ; j<(in->ly-2) ; j++) {
 		compute_status("locating corners", j, (in->ly-2), 0);

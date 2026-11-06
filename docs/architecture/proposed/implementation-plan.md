@@ -1,3 +1,5 @@
+Current 6 November warning correction: [63-diagnostic cleanup and checker fixes](../../developer/native-warning-cleanup-2026-11-06.md). Agent UBSan probes pass; Mac rebuild and corrected integration remain pending. No scientific policy change, install or merge.
+
 # mefpp refactor implementation plan — proposal
 
 2 November owner clarification and first M5 candidate: current tests use C17 only

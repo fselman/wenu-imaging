@@ -480,7 +480,6 @@ dictionary * iniparser_load(char * ininame)
     char        val[ASCIILINESZ+1];
     char    *   where ;
     FILE    *   ini ;
-    int         lineno ;
 
     if ((ini=fopen(ininame, "r"))==NULL) {
         return NULL ;
@@ -492,9 +491,7 @@ dictionary * iniparser_load(char * ininame)
      * Initialize a new dictionary entry
      */
     d = dictionary_new(0);
-    lineno = 0 ;
     while (fgets(lin, ASCIILINESZ, ini)!=NULL) {
-        lineno++ ;
         where = strskp(lin); /* Skip leading spaces */
         if (*where==';' || *where=='#' || *where==0)
             continue ; /* Comment lines */

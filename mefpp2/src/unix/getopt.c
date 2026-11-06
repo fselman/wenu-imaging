@@ -222,7 +222,7 @@ static int getopt_internal(int argc, char **argv, char *shortopts,
                        longopts[optindex].name,
                        match_chars) == 0) {
                 /* do we have an exact match? */
-                if (match_chars == (int)(strlen(longopts[optindex].name))) {
+                if (match_chars == strlen(longopts[optindex].name)) {
                     longopt_match = optindex;
                     break;
                 }

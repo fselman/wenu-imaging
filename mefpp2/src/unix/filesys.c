@@ -119,6 +119,7 @@ int test_write_permission(char * path)
 
 long get_avail_kbytes(char * path)
 {
+    (void)path; /* Unsupported platform branches deliberately return -1. */
 #if (OS_AIX | OS_LINUX | OS_HPUX | OS_DEC | OS_IRIX)
 	return get_avail_kbytes_bsd(path);
 #endif
