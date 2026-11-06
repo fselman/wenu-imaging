@@ -816,8 +816,11 @@ failed:
     if (in != NULL) fclose(in);
     if (off_hdr != local_hdr) free(off_hdr);
     if (off_dat != local_dat) free(off_dat);
-    free(pending.name); free(pending.ohdr); free(pending.data);
-    free(pending.shdr); free(pending.dsiz);
+    if (pending.name != NULL) free(pending.name);
+    if (pending.ohdr != NULL) free(pending.ohdr);
+    if (pending.data != NULL) free(pending.data);
+    if (pending.shdr != NULL) free(pending.shdr);
+    if (pending.dsiz != NULL) free(pending.dsiz);
     return -1;
 }
 

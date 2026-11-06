@@ -1,3 +1,18 @@
+## Optional cleanup guard correction prepared (#269) — 6 November 2026
+
+Owner instructed eliminating optional NULL-release chatter after completed
+FITS/ASDF recovery and the corrected c1751306 recipe relink. Read
+[the focused correction](docs/developer/native-optional-cleanup-2026-11-06.md).
+Guard only optional caller releases, including partial name lists and cache
+failure temporaries; preserve allocator diagnostics, ownership, numerical values
+and name formatting. Old caller probe reproduces diagnostic failure; guarded
+actual-allocator UBSan checks balance live pointers and pass repeated/partial
+cleanup, all name branches and cache failure. Intentional NULL free still warns.
+Actual Mac cleanup/four in-memory QC profiles remain pending. Reuse the selected
+source/cache/toolchain and build only bias_product_qc_probe. No configuration,
+new source/build tree, raw processing, product changes, installation or cleanup.
+Production recipe stays at c1751306 until a later explicitly stamped relink.
+
 ## Verified real mosaic; native ASDF recovery pending — 6 November 2026
 
 Recovered FITS CMDP.2026-11-06T21:42:22.830Z.001.fits matches864 legacy QC groups
