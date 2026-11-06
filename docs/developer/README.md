@@ -1,3 +1,5 @@
+- [Bias recipe block diagram](architecture/mefpp/README.md) / [SVG](architecture/mefpp/bias-recipe.svg): inputs, serial detector processing, common QC and native FITS/ASDF publication.
+
 - [Bias recipe mathematical guide v1 — review copy (PDF)](bias-recipe-mathematical-guide-v1.pdf) / [LaTeX](bias-recipe-mathematical-guide-v1.tex): equations, estimator conventions, mask populations, QC mapping and qualified recovery evidence. Documentation only; no rebuild or raw replay.
 
 - [Bias scalar QC in both formats (6 November 2026)](bias-scalar-qc-2026-11-06.md): owner-approved mapping implemented; focused actual Mac qualification pending.

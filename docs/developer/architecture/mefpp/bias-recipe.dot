@@ -1,0 +1,54 @@
+digraph bias_recipe {
+  graph [rankdir=TB, bgcolor="white", pad=0.3, nodesep=0.35, ranksep=0.42,
+         fontname="DejaVu Sans", fontsize=21, label="Bias recipe • cal.bias / v1", labelloc=t,
+         compound=true, newrank=true];
+  node [shape=box, style="rounded,filled", fillcolor="#f1f5f9", color="#64748b",
+        fontname="DejaVu Sans", fontsize=12, margin="0.17,0.12", penwidth=1.2];
+  edge [color="#475569", arrowsize=0.7, fontname="DejaVu Sans", fontsize=10];
+
+  raw [label="Raw data directory\nExplicit ordered bias list\nRaw FITS files remain untouched", fillcolor="#e0f2fe"];
+  settings [label="Orchestration directory\nTOML or retained PAF + explicit options\nDetector / HDU bindings; output destination", fillcolor="#e0f2fe"];
+  bpm [label="Detector BPM (optional)\nExplicit HDU, polarity, coordinates\nReadout and binning", fillcolor="#e0f2fe"];
+  {rank=same; raw; settings; bpm;}
+  admit [label="Header-only admission of all inputs\nCheck paths, identities, geometry and BPM bindings\nBefore output creation"];
+  raw -> admit; settings -> admit; bpm -> admit;
+  setup [label="Create common QC archive, exclusive log\nand private work directory under reduced destination"];
+  admit -> setup;
+
+  subgraph cluster_detector {
+    label="Serial loop: one detector at a time";
+    fontname="DejaVu Sans"; fontsize=15; color="#94a3b8";
+    style="rounded"; bgcolor="#fafcff"; margin=18;
+    load [label="Load this detector from every input\nValidate pixel data; prepare private copies / BPM"];
+    rawqc [label="Measure raw active and scan statistics\nIf selected: raw-pair difference → RON\nBefore row correction", fillcolor="#ede9fe", color="#8b5cf6"];
+    scan [label="Correct each raw row\nRank-rejected mean of enabled scan columns\nNo detector BPM on scan samples"];
+    trim [label="Trim active rectangle\nMeasure corrected active statistics\nUse good BPM pixels, or explicit omission"];
+    reject [label="Select whole frames once from corrected means\nKeep only L < mean < U; require minimum survivors\nNo iterative or per-pixel clipping"];
+    stack [label="Median stack all active pixel positions\nEclipse lower-middle median for even counts\nBPM does not replace output pixels"];
+    masterqc [label="Measure master QC\nSelected / unmasked statistics; optional MAD\nHigh-offset threshold and all-pixel count", fillcolor="#ede9fe", color="#8b5cf6"];
+    record [label="Copy measurements and context into common record\nInput identities, rejection reasons and provenance", fillcolor="#ede9fe", color="#8b5cf6"];
+    private [label="Serialize scalar/context QC from that record\nWrite private detector FITS with legacy + new QC\nRelease detector images and temporary owners"];
+    load -> rawqc -> scan -> trim -> reject -> stack -> masterqc -> record -> private;
+  }
+  setup -> load;
+  private -> load [label="next detector", style=dashed, color="#64748b", constraint=false];
+  barrier [label="All selected detectors complete\nValidate common QC archive\nNo cross-detector bias normalization"];
+  private -> barrier [label="after last detector"];
+  assemble [label="Native MEF assembly\nOne final FITS; preserve detector pixel payloads\nExact emitted-header readback budget"];
+  barrier -> assemble;
+  fits [label="Reduced products directory\nFinal multi-extension .fits\nImages + legacy and new scalar QC", fillcolor="#dcfce7", color="#16a34a"];
+  writer [label="Native ASDF writer and readback validation\nFull common QC archive, arrays and provenance"];
+  assemble -> fits;
+  assemble -> writer [label="then"];
+  record -> writer [label="archive retained across detector loop", style=dashed, color="#8b5cf6", constraint=false];
+  asdf [label="Reduced products directory\nFinal .asdf sidecar\nScalars + arrays + complete record context", fillcolor="#dcfce7", color="#16a34a"];
+  writer -> asdf;
+  {rank=same; fits; writer;}
+  done [label="Normal success path\nRemove private detector files / work directory\nFinalize log; zero command exit required", fillcolor="#dcfce7", color="#16a34a"];
+  asdf -> done;
+  failure [label="Failure after output creation\nNonzero exit; retain log and diagnostic evidence\nPartial outputs do not mean whole-recipe success", fillcolor="#fff1f2", color="#e11d48"];
+  reject -> failure [style=dashed, color="#e11d48", label="too few frames", constraint=false];
+  assemble -> failure [style=dashed, color="#e11d48", constraint=false];
+  writer -> failure [style=dashed, color="#e11d48", constraint=false];
+  {rank=same; done; failure;}
+}

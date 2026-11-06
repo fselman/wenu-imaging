@@ -154,10 +154,11 @@ frame means once:
  L&=\bar a-\kappa s_a,& U&=\bar a+\kappa s_a.
 \end{align}
 The frame-band implementation accumulates centered squared deviations in a
-second pass. Reject $a_f<L$ or $a_f>U$; equality is retained.
+second pass. Retain only $L<a_f<U$; equality at either boundary is rejected.
 The band is not recalculated after rejection. The configured minimum number
 of retained frames must be met. With zero scatter the band collapses to the
-common mean. The retained OmegaCAM setting is $\kappa=2$, minimum three frames.
+common mean, so no frame satisfies the strict inequalities and the operation
+fails the minimum-survivor check. The retained OmegaCAM setting is $\kappa=2$, minimum three frames.
 
 Historical configuration entries \code{FRAMETHR.LO}/\code{FRAMETHR.HI}
 do not add absolute cuts in this kernel. The computed band is operational.
