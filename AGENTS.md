@@ -1,3 +1,16 @@
+## Direct viewer authorized; recipe review deferred — 6 November 2026
+
+Owner: "Keep the 96 for now and prepare the viewer. After that we will take a
+look at the design of the recipe." Agreed display boundary and implementation
+are documented in docs/developer/design/direct-asdf-viewer-v1.md and
+docs/developer/direct-asdf-viewer-2026-11-06.md. The corrected CLI reads selected
+products once, checks their immediate links, and does not reaudit ancestry.
+Reuse completed real products; preserve the stopped inspection directory.
+Agent injected-record and JavaScript checks passed; actual Mac ASDF equivalence,
+real loading timings and owner browser inspection remain pending. No installation,
+recipe change, reprocessing, merge or cleanup. This supersedes the stopped-work
+hold below only for the explicitly authorized direct viewer.
+
 ## STOPPED: recode tomorrow after owner design consultation — 5 November 2026
 
 Owner stopped the corrected viewer after40+minutes with no logged progress,
