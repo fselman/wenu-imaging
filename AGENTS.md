@@ -1,3 +1,26 @@
+## Bias MEF/native-ASDF direction approved — 6 November 2026
+
+Owner approved preserving the MEF product, temporary detector separation,
+coordination before final assembly, serial execution initially, and one ASDF
+per final FITS with relevant mosaic QC and embedded input records. Read
+[docs/developer/design/bias-mef-native-asdf-v1.md](docs/developer/design/bias-mef-native-asdf-v1.md)
+and [docs/developer/bias-product-paths-2026-11-06.md](docs/developer/bias-product-paths-2026-11-06.md).
+Use the existing native recipe template and bias arithmetic. Final ASDF uses
+validated external libasdf 0.3.0/ASDF1.6, independent of Pycavi. Raw data remain
+untouchable; real acceptance invokes the actual recipe in orchestration and
+writes MEF/ASDF/logs to the selected products directory. Full-mosaic real-data
+acceptance precedes adapting the viewer with Bias and recipe/product navigation;
+plots are generated once separately, then displayed with coordinate cursor.
+The naming/path foundation is implemented in isolation; it is not yet connected
+to a recipe. Native QC and mosaic assembly remain pending. Do not claim complete
+bias processing from path-helper tests or start viewer work. No installation,
+merge or cleanup. Latest owner decisions supersede older conflicting sidecar,
+Python-owned final-ASDF and stopped-recipe scope wording below.
+
+The interim direct viewer was inspected by Fernando: "It was quick and plots
+look OK." Actual Mac9checks passed; real96-product generation133.562s and
+render/write1.061s at8dc026e. Preserve completed products and stopped old viewer.
+
 ## Direct viewer authorized; recipe review deferred — 6 November 2026
 
 Owner: "Keep the 96 for now and prepare the viewer. After that we will take a
