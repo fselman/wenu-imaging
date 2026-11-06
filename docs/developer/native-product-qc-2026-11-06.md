@@ -104,3 +104,31 @@ old qualification replay, real-data reduction, viewer change, merge or cleanup.
 Remaining work under #245: actual native-ASDF target acceptance, reviewed final
 MEF assembly, standalone recipe integration, then a full-mosaic real bias run
 from orchestration into the selected products directory and owner inspection.
+
+## Actual Mac finding and checker correction — #249
+
+The first actual Mac gate at `cee1ee38d30bf322c1af64d4f3c554ba9c747dc8`
+compiled and linked the real writer against the retained libasdf. Seven of ten
+tests passed in a 4.905-second run. All three positive publication cases completed
+the C write/readback steps, then failed in Python schema validation before the
+exact-value assertions. The error was `RefResolutionError` for the application's
+canonical schema ID, `asdf://wenu-imaging/schemas/product-qc-2.0.0`.
+
+Supplying the schema file URI alone was insufficient: internal references resolve
+against its canonical ID. The corrected verifier registers the unchanged local
+schema bytes under that ID within an `asdf.config_context()`, using ASDF6's public
+`add_resource_mapping` API. No schema download or installed-runtime change is
+needed. Schema content, C writer, C validator, probe and numerical code are unchanged.
+
+Preserve `/Users/fselman/Software/build/wenu-imaging/mac-native-product-qc-4wToOOTg`
+including its original `source`, `checks.log` and result JSON. The test driver now
+accepts `--reuse-probe` and `--verifier` so a new checks directory can exercise the
+original binary/source with only the corrected checker. Its result explicitly
+records whether compilation occurred and the reused executable path. Retry
+controls and expected values are unchanged; full target acceptance is still pending.
+
+Agent verification for this correction is limited to Python syntax and execution
+of the changed reuse path with the previously compiled structural-validator probe.
+That path must run the two structural tests, create no new executable, and record
+`compiled_now=false`. This does not exercise ASDF lookup or its corrected runtime
+behavior. #249 stays open until the retained Mac runtime passes all ten controls.

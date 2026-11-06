@@ -47,7 +47,7 @@ class WriterTests(unittest.TestCase):
         self.assertFalse(list(self.base.glob('*.tmp-*')))
         return r
     def verify(self,integer=False,bpm=False):
-        argv=[str(ARGS.asdf_python),'-B',str(ROOT/'mefpp2/tests/product_qc_verify.py'),str(self.asdf),
+        argv=[str(ARGS.asdf_python),'-B',str(ARGS.verifier or ROOT/'mefpp2/tests/product_qc_verify.py'),str(self.asdf),
               '--schema',str(ROOT/'mefpp2/ins/mef/config/qc-product-schema-2.0.0.json')]
         if integer:argv.append('--integer-count')
         if bpm:argv.append('--with-bpm')
@@ -80,10 +80,14 @@ if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--cc',type=Path,required=True)
     p.add_argument('--sdkroot',type=Path);p.add_argument('--prefix',type=Path)
     p.add_argument('--asdf-python',type=Path);p.add_argument('--source-root',type=Path,default=ROOT)
+    p.add_argument('--reuse-probe',type=Path,help='Use a retained compiled probe without rebuilding')
+    p.add_argument('--verifier',type=Path,help='Use a separately exported corrected verifier')
     ARGS=p.parse_args();ROOT=ARGS.source_root.resolve(strict=True);WORK=ARGS.work.resolve(strict=True)
     if sys.platform=='darwin' and ARGS.sdkroot is None:p.error('Darwin requires explicit --sdkroot')
     if (ARGS.prefix is None)!=(ARGS.asdf_python is None):p.error('Supply --prefix and --asdf-python together')
-    PROBE=WORK/'product-qc-probe';common=ROOT/'mefpp2/ins/mef/common'
+    PROBE=ARGS.reuse_probe.resolve(strict=True) if ARGS.reuse_probe else WORK/'product-qc-probe'
+    if ARGS.verifier:ARGS.verifier=ARGS.verifier.resolve(strict=True)
+    common=ROOT/'mefpp2/ins/mef/common'
     argv=[str(ARGS.cc),'-std=c17','-Wall','-Wextra','-Werror','-pedantic-errors','-I'+str(common)]
     sdkroot=None
     if ARGS.sdkroot:
@@ -99,13 +103,17 @@ if __name__=='__main__':
     else:argv+=['-DMEF_QC_VALIDATE_ONLY=1']
     argv+=['-lm','-o',str(PROBE)]
     # Strict C17 build of the real validator and optional real ASDF writer.
-    print('BUILD:',json.dumps(argv),flush=True);subprocess.run(argv,check=True)
+    if ARGS.reuse_probe:
+        print('REUSED PROBE:',PROBE,flush=True)
+    else:
+        print('BUILD:',json.dumps(argv),flush=True);subprocess.run(argv,check=True)
     # Structural metadata/refusal controls, with no file or numerical computation.
     suite=unittest.defaultTestLoader.loadTestsFromTestCase(ValidationTests)
     # Real libasdf publication and independent Python ASDF/schema/exact-value checks.
     if ARGS.prefix:suite.addTests(unittest.defaultTestLoader.loadTestsFromTestCase(WriterTests))
     result=unittest.TextTestRunner(verbosity=2).run(suite)
     (WORK/'product-qc-results.json').write_text(json.dumps(dict(tests=result.testsRun,successful=result.wasSuccessful(),
-        metadata_cases=len(NEGATIVES)+3,real_asdf_exercised=bool(ARGS.prefix),build_argv=argv,sdkroot=str(sdkroot),
+        metadata_cases=len(NEGATIVES)+3,real_asdf_exercised=bool(ARGS.prefix),build_argv=None if ARGS.reuse_probe else argv,sdkroot=str(sdkroot),
+        compiled_now=not bool(ARGS.reuse_probe),reused_probe=str(PROBE) if ARGS.reuse_probe else None,
         observations_opened=False,image_recipe_executed=False,pycavi_used=False))+'\n')
     raise SystemExit(not result.wasSuccessful())
