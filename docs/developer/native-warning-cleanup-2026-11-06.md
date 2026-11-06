@@ -1,3 +1,5 @@
+Actual Mac update: all63compiler warnings cleared and both native probes passed at bde4568. Seven integration groups passed; the last case was isolated to external file-backed ASDF readback. See [current readback correction](native-asdf-readback-2026-11-06.md), which supersedes pending-Mac wording below within that verified scope.
+
 # Native warning cleanup and bias checker correction — 6 November 2026
 
 The owner authorized addressing the warnings revealed by the first standalone

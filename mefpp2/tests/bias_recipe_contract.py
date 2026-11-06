@@ -32,6 +32,9 @@ def interpreter_path(path):
 class RecipeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        if ARGS.reuse_omissions:
+            cls.restore_omission_fixture()
+            return
         cls.raw=WORK/'raw';cls.orchestration=WORK/'orchestration';cls.orchestration.mkdir()
         cls.products=WORK/'products';cls.products.mkdir()
         fixture=prepare(cls.raw,ROOT)
@@ -91,6 +94,30 @@ class RecipeTests(unittest.TestCase):
         frozen=[*cls.members,cls.swapped,cls.bpm,cls.bad_bpm,cls.paf,cls.toml,cls.listing,cls.swapped_list,renamed,named_list,*[p for rows in cls.references.values() for p in rows]]
         cls.frozen={str(p):digest(p) for p in frozen}
         assert not list(cls.orchestration.iterdir())
+
+    @classmethod
+    def restore_omission_fixture(cls):
+        # Reuse only the owner's retained tiny synthetic fixture and references.
+        # Preserve its failed output, previous logs, and seven passed groups.
+        previous=json.loads((WORK/'bias-recipe-results.json').read_text())
+        assert previous['tests']==8 and not previous['successful']
+        assert previous['asdf_checks']==2 and not previous['observations_opened']
+        assert not (WORK/'bias-recipe-omissions-retry-results.json').exists()
+        assert not (WORK/'toml-omissions-memory-readback.console.log').exists()
+        cls.raw=WORK/'raw';cls.orchestration=WORK/'orchestration'
+        cls.products=WORK/'products';cls.paf=WORK/'bias.paf';cls.toml=WORK/'bias.toml'
+        cls.listing=WORK/'bias.list';cls.bpm=WORK/'mask.fits'
+        assert cls.orchestration.is_dir() and not list(cls.orchestration.iterdir())
+        assert cls.products.is_dir() and cls.toml.is_file()
+        cls.members=[Path(s) for s in cls.listing.read_text().splitlines() if s.strip()]
+        assert len(cls.members)==4 and all(p.is_file() for p in cls.members)
+        refs=[WORK/f'reference-omitted-{d}' for d in range(2)]
+        cls.references={'omitted':[p/'bias.fits' for p in refs]}
+        cls.reference_qc={'omitted':[json.loads((p/'qc.json').read_text()) for p in refs]}
+        cls.configuration=json.loads((WORK/'reference-masked-0/config.json').read_text())
+        # These are existing small synthetic fixtures/products, not observations
+        # or a source/runtime ancestry audit. No old file may be changed.
+        cls.frozen={str(p):digest(p) for p in WORK.rglob('*') if p.is_file()}
 
     def destination(self,name):
         p=self.products/name;p.mkdir(parents=True);return p
@@ -172,7 +199,9 @@ class RecipeTests(unittest.TestCase):
         self.assertTrue(out.is_file());self.verify(out,swapped=True)
 
     def test_explicit_omissions_and_toml(self):
-        out=self.destination('toml-no-mad');self.run_recipe(self.command(out,measured=False,toml=True),'toml-omissions',True)
+        name='toml-no-mad-memory-readback' if ARGS.reuse_omissions else 'toml-no-mad'
+        label='toml-omissions-memory-readback' if ARGS.reuse_omissions else 'toml-omissions'
+        out=self.destination(name);self.run_recipe(self.command(out,measured=False,toml=True),label,True)
         self.verify(next(out.glob('*.fits')),measured=False)
 
     def test_conflicting_or_missing_destination_refused(self):
@@ -219,13 +248,20 @@ class RecipeTests(unittest.TestCase):
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True)
     p.add_argument('--recipe',type=Path,required=True);p.add_argument('--adapter',type=Path,required=True)
-    p.add_argument('--asdf-python',type=Path,required=True);ARGS=p.parse_args()
+    p.add_argument('--asdf-python',type=Path,required=True)
+    p.add_argument('--reuse-omissions',action='store_true',
+        help='Retry only the timed-out omission group using retained synthetic fixtures')
+    ARGS=p.parse_args()
     WORK=ARGS.work.resolve(strict=True)
     for key in ('recipe','adapter'):setattr(ARGS,key,getattr(ARGS,key).resolve(strict=True))
     ARGS.asdf_python=interpreter_path(ARGS.asdf_python)
     os.environ.update(PYTHONDONTWRITEBYTECODE='1',PYTHONNOUSERSITE='1')
-    result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(RecipeTests))
-    (WORK/'bias-recipe-results.json').write_text(json.dumps(dict(tests=result.testsRun,successful=result.wasSuccessful(),
+    suite=unittest.TestSuite([RecipeTests('test_explicit_omissions_and_toml')]) if ARGS.reuse_omissions else unittest.defaultTestLoader.loadTestsFromTestCase(RecipeTests)
+    result=unittest.TextTestRunner(verbosity=2).run(suite)
+    receipt='bias-recipe-omissions-retry-results.json' if ARGS.reuse_omissions else 'bias-recipe-results.json'
+    (WORK/receipt).write_text(json.dumps(dict(tests=result.testsRun,successful=result.wasSuccessful(),
         actual_bias_recipe_exercised=RECIPE_CALLS>0,recipe_calls=RECIPE_CALLS,
-        real_asdf_exercised=ASDF_CHECKS>0,asdf_checks=ASDF_CHECKS,observations_opened=False,pycavi_used=False))+'\n')
+        real_asdf_exercised=ASDF_CHECKS>0,asdf_checks=ASDF_CHECKS,
+        reused_passed_groups=7 if ARGS.reuse_omissions else 0,
+        observations_opened=False,pycavi_used=False))+'\n')
     raise SystemExit(not result.wasSuccessful())
