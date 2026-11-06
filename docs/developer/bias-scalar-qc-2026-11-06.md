@@ -77,3 +77,19 @@ One mocked controller regression passes, asserting the actual generated configur
 command retains C17, compiler, SDK and prefix. This is not actual Mac qualification.
 Preserve the failed source/build/log. Export the corrected candidate separately
 and retry under scalar-qc-qualification-c17; use warning-fix-build as reference.
+
+## Actual Mac qualification passed — 6 November 2026
+
+Owner ran corrected source7d1d82f451efdceb042325d54ba3671d6acb1591 with
+warning-fix-build as reference. Configure, zero-warning build, native profiles,
+eight independent Astropy header parses and the focused recipe contract gate all
+completed successfully. Controller returned PASS and main checkout preservation
+passed. Receipt: mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/qualification.json.
+The final gate checks all additional scalar values/context against ASDF and keeps
+exact legacy-card/image-byte comparisons against synthetic reference products.
+No real observations were processed by this gate. No real pixel equivalence claim.
+
+Reuse this selected development build for source edits; preserve its qualification
+receipt/logs as the historical result. Do not create fresh build trees for routine
+edits. Existing original/failed/reference evidence stays untouched. Instruction-only
+updates require no rebuild. Real-data run remains a separate next step.

@@ -1,3 +1,43 @@
+## Reuse the selected build and pin its tools — owner instruction, 6 November 2026
+
+Routine source edits MUST reuse the selected development source/build pair and
+invoke the selected CMake executable with --build and only the affected targets.
+Do not create/export a new source tree or build directory, rerun cmake -S/-B,
+copy selected cache variables into a fresh configuration, delete CMakeCache.txt,
+clean the build, or rebuild dependencies merely because the source revision changed.
+Let the existing build system perform any necessary CMake regeneration.
+
+Before building, read the existing CMakeCache.txt and verify its source directory,
+CMake executable, compiler/toolchain, explicit language lane, SDK/deployment target,
+architecture, generator/build tool and dependency prefixes against the selected
+qualified configuration. Use absolute selected tool paths; never substitute tools
+from PATH, Conda, Homebrew, MacPorts or a default SDK. C17 means MEFPP_C_STANDARD=17,
+not merely an available C17 compiler. Verify reference executable locations rather
+than inferring that all targets exist in every recipe build directory.
+
+Explicit reconfiguration is reserved for an intentional change to configuration,
+compiler/SDK, generator or dependencies, a missing/unusable selected cache, or an
+independent qualification build justified by the task. State the concrete reason
+before doing it and preserve the full selected configuration, not an ad hoc subset.
+If the existing build/tool identity disagrees, stop that build and report the
+mismatch; do not silently choose another toolchain. Existing authorization for a
+necessary change applies; do not invent an additional approval step.
+
+Preserve evidence by retaining receipts and distinct attempt logs, not by cloning
+source/build trees for every edit. Record the exact source revision and any dirty
+source changes at each build/test; keep published reference binaries and immutable
+qualification evidence untouched. Maintain one mutable development build and
+separately identify frozen reference builds when a comparison requires them.
+
+Current selected Mac scalar-QC development pair after its successful qualification:
+mac-standalone-bias-SP3Cgdhb/scalar-qc-c17-source and
+mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/build, revision7d1d82f.
+Use /opt/local/bin/cmake and verify its existing cache. Reference adapter remains
+warning-fix-build/mefpp2/mefpp_m5. No rebuild/reconfiguration is needed for an
+instruction/documentation-only change. Earlier per-revision fresh-build directions
+are superseded for routine edits. Do not modify the source/build pair while it is
+being used by an active qualification or reduction process.
+
 ## Additive scalar QC headers prepared — 6 November 2026
 
 Owner accepted the FITS/ASDF mapping and instructed implementation. Read
