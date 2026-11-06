@@ -36,8 +36,12 @@ def main():
             cache[key] = (kind, value)
     prefix = Path(cache['MEFPP_ASDF_PREFIX'][1])
     adapter = args.reference_build / 'mefpp2/mefpp_m5'
-    if not adapter.is_file() or not (prefix / 'include/asdf').is_dir():
-        raise RuntimeError('Retained qualified reference/runtime missing')
+    if not adapter.is_file():
+        raise RuntimeError(f'Reference adapter missing: {adapter}; select its qualified build')
+    if not (prefix / 'include/asdf').is_dir():
+        raise RuntimeError(f'Retained libasdf headers missing: {prefix / "include/asdf"}')
+    if cache.get('MEFPP_C_STANDARD', (None, None))[1] != '17':
+        raise RuntimeError('Reference build must use the qualified MEFPP_C_STANDARD=17 lane')
     cmake = Path('/opt/local/bin/cmake')
     if not cmake.is_file() or not args.asdf_python.is_file():
         raise RuntimeError('Selected tool missing')
@@ -64,6 +68,7 @@ def main():
             raise RuntimeError(f'{name} failed: inspect its retained log')
 
     argv = [cmake, '-S', ROOT, '-B', build, '-DBUILD_TESTING=OFF',
+            '-DMEFPP_C_STANDARD=17',
             '-DMEFPP_BUILD_BIAS_RECIPE=ON', '-DMEFPP_BUILD_WARNING_PROBE=OFF',
             '-DMEFPP_BUILD_RESOURCES=OFF',
             '-DMEFPP_SOURCE_REVISION=' + args.revision,

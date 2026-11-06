@@ -61,3 +61,19 @@ remain in the same focused boundary gate. No old warning/scientific matrix rerun
 Only new synthetic evidence directories are created under the existing build
 root. There are no real raw/product reads, installation, merge or evidence cleanup.
 After this gate passes, review its actual results before a new real-data run.
+
+## Qualification-controller correction (#272)
+
+Owner inventory confirms the retained mefpp_m5 reference adapter exists in
+warning-fix-build, while memory-readback-build contains only the recipe. All
+three retained builds use the same valid libasdf prefix. The first preflight
+failed without creating a qualification directory. Using warning-fix-build then
+reached configure, which failed because the controller omitted the explicit
+MEFPP_C_STANDARD=17 setting. No compilation or tests ran.
+
+The controller now checks the reference C17 lane, passes it explicitly to the
+fresh configuration, and distinguishes missing adapter from missing headers.
+One mocked controller regression passes, asserting the actual generated configure
+command retains C17, compiler, SDK and prefix. This is not actual Mac qualification.
+Preserve the failed source/build/log. Export the corrected candidate separately
+and retry under scalar-qc-qualification-c17; use warning-fix-build as reference.
