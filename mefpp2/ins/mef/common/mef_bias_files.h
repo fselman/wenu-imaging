@@ -4,6 +4,7 @@
 #include "mef_cal_bias.h"
 #include "mef_layout.h"
 struct _mef_bb_;
+struct qfits_header;
 
 /* Header-only compatibility bridge. Owns its strings and one selected detector;
  * all statistics/input references are filled separately. Destroy with mef_bb_del.
@@ -30,6 +31,17 @@ mef_status mef_bias_files_execute(mef_context *, const mef_layout_map *const *,
 mef_status mef_bias_files_execute_measurements(mef_context *, const mef_layout_map *const *,
     size_t, const char *, const char *, const mef_bias_measurement_options *,
     mef_bias_result **, mef_error **);
+
+/* Measurement-only use of the same load/calculate/cleanup template. The caller
+ * can copy the common QC record before explicit publication, without rereading
+ * pixels or measuring twice. */
+mef_status mef_bias_from_files_measurements(mef_context *, const mef_layout_map *const *,
+    size_t, const char *, const mef_bias_measurement_options *,
+    mef_bias_result **, mef_error **);
+/* As legacy publication, with a borrowed, preflighted additive metadata header.
+ * Rejects collisions; existing header cards are never replaced. */
+mef_status mef_bias_publish_with_header(const mef_config *, const mef_bias_result *,
+    size_t, const char *, const struct qfits_header *, mef_error **);
 
 /* Publish a one-extension MEF from an existing owned result. Reuses legacy
  * header policy/QC formatting and checked qfits pixel output, with explicit

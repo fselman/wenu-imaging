@@ -1,3 +1,21 @@
+## Additive scalar QC headers prepared — 6 November 2026
+
+Owner accepted the FITS/ASDF mapping and instructed implementation. Read
+[the mapping](docs/developer/design/bias-qc-fits-asdf-mapping-v1.md) and
+[implementation/qualification status](docs/developer/bias-scalar-qc-2026-11-06.md).
+Existing legacy cards keep their values/meanings/formatting. The standalone
+coordinator measures once, archives the common detector record, serializes
+additive scalar/context cards and publishes through the existing native path.
+ASDF values/schema and numerical kernels remain unchanged. Native C17/UBSan
+four-profile checks pass, including eight detector headers, finite extremes,
+signed zero, overlong identifier refusal and measured-NaN refusal. Actual Mac
+Astropy/full recipe boundary checks remain pending. A focused gate reuses the
+qualified libasdf prefix and reference adapter and runs only tiny synthetic
+inputs. Do not rerun observations, alter existing masters, install, merge or
+clean evidence. Full FITS-to-ASDF recovery remains future work, not implemented.
+Owner-run real-product metadata checks passed 864 exact legacy-reference groups
+and 704 FITS/ASDF rounding comparisons; no real pixel equivalence claim.
+
 ## Native ASDF readback workaround prepared — 6 November 2026
 
 Actual Mac bde4568 cleared all63compiler warnings and passed both probes plus

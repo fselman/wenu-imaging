@@ -158,11 +158,13 @@ class RecipeTests(unittest.TestCase):
         self.assertEqual(sorted(p.suffix for p in product.parent.iterdir()),['.asdf','.fits','.log'])
         mode='renamed' if swapped else 'masked' if measured else 'omitted'
         references=self.references[mode]
+        from bias_qc_fits_contract import is_addition
+        fits_qc_headers=[]
         # Strict card assertions retained, with policy/provenance-matched references.
         with fits.open(product,memmap=False) as h:
             h.verify('exception');self.assertEqual(len(h),3)
             self.assertEqual(h[0].header['NEXTEND'],2)
-            cards=lambda hd:[c.image for c in hd.header.cards if c.keyword not in ('ORIGFILE','CHECKSUM','NEXTEND','DATE')]
+            cards=lambda hd:[c.image for c in hd.header.cards if c.keyword not in ('ORIGFILE','CHECKSUM','NEXTEND','DATE') and not is_addition(c.keyword)]
             with fits.open(references[1],memmap=False) as ref:self.assertEqual(cards(h[0]),cards(ref[0]))
             for d in range(2):
                 with fits.open(references[d],memmap=False) as ref:
@@ -170,7 +172,10 @@ class RecipeTests(unittest.TestCase):
                     self.assertEqual(h[d+1].data.tobytes(),ref[1].data.tobytes())
                     self.assertEqual(cards(h[d+1]),cards(ref[1]))
                 self.assertEqual(h[d+1].header['ORIGFILE'],product.name)
-        expected=dict(fits=str(product),raw=list(map(str,self.swapped_members if swapped else self.members)),
+                addition_cards=[c.keyword for c in h[d+1].header.cards if is_addition(c.keyword)]
+                self.assertEqual(len(addition_cards),len(set(addition_cards)))
+                fits_qc_headers.append({key:h[d+1].header[key] for key in addition_cards})
+        expected=dict(fits_qc_headers=fits_qc_headers,fits=str(product),raw=list(map(str,self.swapped_members if swapped else self.members)),
             hdus=[[d+1,2-d,d+1,d+1] if swapped else [d+1]*4 for d in range(2)],
             measured=measured,configuration=self.configuration,reference_qc=self.reference_qc[mode])
         name=product.parent.relative_to(self.products).as_posix().replace('/','_')

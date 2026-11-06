@@ -1,6 +1,8 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_bias_product_qc.h"
+#include "mef_bias_qc_fits.h"
+#include "qfits.h"
 #include "mef_config_toml.h"
 #include "mef_mef_assemble.h"
 #include "mefp_lib.h"
@@ -136,6 +138,7 @@ static int process(detector_plan *d,size_t index,size_t n,char *const *raw_paths
     mef_resolved_request_spec spec; mef_bpm_selection selection; mef_calibration_role role=MEF_CAL_BPM;
     mef_bias_result *result=NULL; mef_status status=MEF_ERR_INPUT;
     mef_bias_measurement_options measurements=*options;
+    qfits_header *qc_header=NULL; char qc_message[256];
     pixelmap *mask=NULL,*loaded=NULL; const mef_bound_detector *first;
     size_t i; int okay=0,x,y; const image_t *image;
     refs=calloc(n,sizeof(*refs)); if(refs==NULL) goto done;
@@ -172,11 +175,17 @@ static int process(detector_plan *d,size_t index,size_t n,char *const *raw_paths
     if(status==MEF_OK) status=mef_context_create(config,request,NULL,&context,error);
     if(status!=MEF_OK) goto done;
     if(snprintf(d->temporary,sizeof(d->temporary),"%s/detector-%06lu.fits",work,(unsigned long)index)>=(int)sizeof(d->temporary)) goto done;
-    status=mef_bias_files_execute_measurements(context,(const mef_layout_map *const *)d->maps,n,d->id,
-        d->temporary,&measurements,&result,error);
+    status=mef_bias_from_files_measurements(context,(const mef_layout_map *const *)d->maps,n,d->id,
+        &measurements,&result,error);
     if(status!=MEF_OK || !mef_bias_product_qc_add(archive,index,d->id,d->field[AMP],d->field[READOUT],
         d->configured,d->bin_x,d->bin_y,result,&measurements,&d->settings,(int)first->image.axes[1],
         d->bpm_path,d->bpm_hdu,d->good)) goto done;
+    if(mef_bias_qc_fits_header(mef_bias_product_qc_view(archive),index,&qc_header,
+        qc_message,sizeof(qc_message))) {
+        fprintf(stderr,"%s\n",qc_message); goto done;
+    }
+    status=mef_bias_publish_with_header(config,result,d->configured,d->temporary,qc_header,error);
+    if(status!=MEF_OK) goto done;
     image=mef_bias_result_signal(result);
     d->assembly.path=d->temporary; d->assembly.detector_id=d->id;
     d->assembly.configuration_detector=d->configured; d->assembly.output_hdu=index+1;
@@ -184,6 +193,7 @@ static int process(detector_plan *d,size_t index,size_t n,char *const *raw_paths
     d->assembly.bscale=1; d->assembly.bzero=0;
     okay=1;
 done:
+    qfits_header_destroy(qc_header);
     mef_bias_result_destroy(result); mef_context_destroy(context); mef_request_destroy(request);
     pixelmap_del(mask); pixelmap_del(loaded); free(refs);
     return okay;
