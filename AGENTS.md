@@ -1,3 +1,17 @@
+## Expanded-header assembly correction pending Mac check — 6 November 2026
+
+Real scalar-QC run completed32 private detector MEFs, then failed assembled-MEF
+readback because its7479360 header bytes exceed the fixed1MiB cumulative bound
+(#273). Retain .mefpp-bias-ukcaVE under test_recipes/reduced/cal/bias and the failed
+CMDP.2026-11-06T21:42:22.830Z.001.log. No final ASDF/whole-recipe success. Read
+[the current status](docs/developer/bias-scalar-qc-2026-11-06.md). Correction uses
+checked exact emitted header-byte budget; agent old/new32-extension reproduction
+and individual-limit refusal pass. Reuse selected source/build/tools and rebuild
+only mef_assembly_probe for the targeted Mac check. No configure, new build tree,
+raw reduction replay or cleanup. Standalone FITS assembly is not ASDF completion;
+the exited process no longer owns its in-memory QC archive. Recover product/QC
+with an explicit evidence-preserving plan before claiming whole-recipe success.
+
 ## Reuse the selected build and pin its tools — owner instruction, 6 November 2026
 
 Routine source edits MUST reuse the selected development source/build pair and

@@ -93,3 +93,37 @@ Reuse this selected development build for source edits; preserve its qualificati
 receipt/logs as the historical result. Do not create fresh build trees for routine
 edits. Existing original/failed/reference evidence stays untouched. Instruction-only
 updates require no rebuild. Real-data run remains a separate next step.
+
+## Actual expanded-header mosaic exposed assembly budget defect (#273)
+
+The actual32-detector run7d1d82f completed every private detector product but
+failed final assembled-MEF native readback. Owner read-only inventory confirms
+233280 extension-header bytes each,7479360 combined source-header bytes, exceeding
+the assembler's fixed1048576 cumulative qfits scan budget. This is a confirmed
+assembly bug, not a raw detector calculation failure. The two-detector gate did
+not cover this aggregate size. Raw/BPM, prior products, executable/configuration
+preservation passed; no whole-recipe success or final ASDF is claimed.
+
+Retain /Users/fselman/Pictures/OCAM/test_recipes/reduced/cal/bias/.mefpp-bias-ukcaVE
+and failed final log CMDP.2026-11-06T21:42:22.830Z.001.log. The temporary assembly
+was removed by existing failure cleanup; the32 private detector MEFs remain.
+Do not rerun the raw reductions or treat a standalone assembled FITS as full
+recipe/ASDF completion. Input QC archive was process-owned and destroyed at exit;
+ASDF recovery requires a separate explicit plan using retained evidence.
+
+Correction accumulates exact padded header bytes from checked ftello offsets at
+each native write_header call. Final bounded qfits readback uses that sum with
+SIZE_MAX overflow checks; image data never enter this budget. The existing1MiB
+individual-source cap, manifest/shape/span/identity checks, preserved card/pixel
+bytes and exclusive publication remain unchanged. No unbounded scanner or guessed
+larger constant is introduced.
+
+The new32-extension >7MB regression reproduces the same native readback failure
+against the old binary and passes against the correction. The individual oversized
+source refusal also passes. Strict C17 syntax passes. Actual Mac targeted check
+is pending: patch the selected scalar-qc-c17-source in place, preserve the original
+revision/patch identity, use /opt/local/bin/cmake --build on the existing
+scalar-qc-qualification-c17/build, target mef_assembly_probe only, and run the two
+expanded-budget cases with --probe. No configure/new build tree/dependency rebuild.
+Do not launch the old recipe binary again; it still contains the old assembler
+until explicitly relinked and its changed-source identity is recorded.

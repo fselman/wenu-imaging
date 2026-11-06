@@ -28,7 +28,7 @@ def header(cards):
     b = b''.join(cards + [card('END')])
     return b + b' ' * (-len(b) % 2880)
 
-def fixture(path, index, bitpix=-32, width=3, height=2, scale=1, zero=0):
+def fixture(path, index, bitpix=-32, width=3, height=2, scale=1, zero=0, extra_cards=0):
     primary = header([card('SIMPLE', 'T'), card('BITPIX', 8), card('NAXIS', 0),
         card('EXTEND', 'T'), card('NEXTEND', 1), card('ORIGFILE', "'temporary.fits'"),
         card('INSTRUME', "'TESTCAM'"), card('RDNOISE', str(index + 0.25)),
@@ -49,7 +49,8 @@ def fixture(path, index, bitpix=-32, width=3, height=2, scale=1, zero=0):
     padded = data + b'\0' * (-len(data) % 2880)
     checksum = sum(struct.unpack('>'+str(len(padded)//4)+'I', padded))
     while checksum >> 32: checksum = (checksum & 0xffffffff) + (checksum >> 32)
-    ext = header(ext_cards + [card('DATASUM', f"'{checksum}'")])
+    ext = header(ext_cards + [card('DATASUM', f"'{checksum}'")] +
+                 [card(f'HIERARCH TEST QC V{i:05d}', i) for i in range(extra_cards)])
     path.write_bytes(primary + ext + padded)
     return [str(path), f'CCD-{index:02d}', str(index * 3 + 2), str(index + 1),
             str(width), str(height), str(bitpix), str(scale), str(zero)]
@@ -139,6 +140,22 @@ with fits.open(sys.argv[1], mode='readonly', do_not_scale_image_data=True, memma
         members = [fixture(self.base/f'detector-{i}.fits', i) for i in range(32)]
         r = self.execute(members); self.assertEqual(r.returncode, 0, r.stderr); self.verify(members)
 
+    def test_expanded_headers_32_exceed_old_aggregate_limit(self):
+        members = [fixture(self.base/f'detector-{i}.fits', i, extra_cards=2880)
+                   for i in range(32)]
+        header_bytes = sum(len(Path(row[0]).read_bytes())-2880-2880 for row in members)
+        self.assertGreater(header_bytes, 7_000_000)
+        self.assertLess(len(Path(members[0][0]).read_bytes())-2880, 1048576)
+        r = self.execute(members)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.verify(members)
+
+    def test_individual_header_bound_remains_enforced(self):
+        self.members[0] = fixture(Path(self.members[0][0]), 0, extra_cards=14000)
+        r = self.execute()
+        self.assertEqual(r.returncode, 1, r.stderr)
+        self.assertFalse(self.output.exists())
+
     def test_integer_scaling_double_pixels_and_unequal_shapes(self):
         self.members[0] = fixture(Path(self.members[0][0]), 0, 16, 2, 3, 2, 32768)
         self.members[1] = fixture(Path(self.members[1][0]), 1, -64, 6, 1)
@@ -181,31 +198,41 @@ with fits.open(sys.argv[1], mode='readonly', do_not_scale_image_data=True, memma
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(); p.add_argument('--work', type=Path, required=True)
-    p.add_argument('--cc', type=Path, required=True); p.add_argument('--sdkroot', type=Path)
+    p.add_argument('--cc', type=Path); p.add_argument('--probe', type=Path);
+    p.add_argument('--expanded-only', action='store_true'); p.add_argument('--sdkroot', type=Path)
     p.add_argument('--astropy-python', type=Path); ARGS = p.parse_args()
     WORK = ARGS.work.resolve(strict=True); PROBE = WORK/'mef-assembly-probe'
-    if sys.platform == 'darwin' and not ARGS.sdkroot: p.error('Darwin requires explicit --sdkroot')
-    common = ROOT/'mefpp2/ins/mef/common'; qfits = ROOT/'mefpp2/qfits5'
-    # Generate only the existing platform fields from the selected host ABI.
-    names = ('char','short','int','long','float','double')
-    config = '#ifndef QFITS_PLATFORM_CONFIG_H\n#define QFITS_PLATFORM_CONFIG_H\n'
-    config += ''.join(f'#define SIZEOF_{n.upper()} {ctypes.sizeof(getattr(ctypes,"c_"+n))}\n' for n in names)
-    config += '#define OS_DARWIN 1\n' if sys.platform == 'darwin' else '#define OS_LINUX 1\n'
-    if sys.byteorder == 'big': config += '#define WORDS_BIGENDIAN 1\n'
-    (WORK/'qfits_platform_config.h').write_text(config+'#endif\n')
-    flags = ['-std=c17','-Wall','-Wextra','-D_DEFAULT_SOURCE=1','-D_DARWIN_C_SOURCE=1',
-             '-I'+str(common),'-I'+str(qfits/'include'),'-I'+str(WORK)]
-    if ARGS.sdkroot: flags += ['-isysroot',str(ARGS.sdkroot.resolve(strict=True))]
-    # Strict new-code inspection, then link actual in-tree qfits (no mock library).
-    new = [str(common/'mef_mef_assemble.c'),str(ROOT/'mefpp2/tests/mef_assembly_probe.c')]
-    subprocess.run([str(ARGS.cc),*flags,'-Werror','-pedantic-errors','-fsyntax-only',*new],check=True)
-    sources = re.findall(r'qfits5/src/[\w-]+\.c', (ROOT/'mefpp2/cmake/QfitsSources.cmake').read_text())
-    argv = [str(ARGS.cc),*flags,'-DXMEMORY_MODE=2','-DXMEMORY_MAXPTRS=2000000',*new,
-            *[str(ROOT/'mefpp2'/s) for s in sources],'-lm','-o',str(PROBE)]
-    print('BUILD:', json.dumps(argv), flush=True); subprocess.run(argv,check=True)
+    if not ARGS.probe and not ARGS.cc: p.error('Select existing --probe or explicit --cc')
+    if not ARGS.probe and sys.platform == 'darwin' and not ARGS.sdkroot: p.error('Darwin requires explicit --sdkroot')
+    argv = None
+    if ARGS.probe:
+        PROBE = ARGS.probe.resolve(strict=True)
+    else:
+        common = ROOT/'mefpp2/ins/mef/common'; qfits = ROOT/'mefpp2/qfits5'
+        # Generate only the existing platform fields from the selected host ABI.
+        names = ('char','short','int','long','float','double')
+        config = '#ifndef QFITS_PLATFORM_CONFIG_H\n#define QFITS_PLATFORM_CONFIG_H\n'
+        config += ''.join(f'#define SIZEOF_{n.upper()} {ctypes.sizeof(getattr(ctypes,"c_"+n))}\n' for n in names)
+        config += '#define OS_DARWIN 1\n' if sys.platform == 'darwin' else '#define OS_LINUX 1\n'
+        if sys.byteorder == 'big': config += '#define WORDS_BIGENDIAN 1\n'
+        (WORK/'qfits_platform_config.h').write_text(config+'#endif\n')
+        flags = ['-std=c17','-Wall','-Wextra','-D_DEFAULT_SOURCE=1','-D_DARWIN_C_SOURCE=1',
+                 '-I'+str(common),'-I'+str(qfits/'include'),'-I'+str(WORK)]
+        if ARGS.sdkroot: flags += ['-isysroot',str(ARGS.sdkroot.resolve(strict=True))]
+        # Strict new-code inspection, then link actual in-tree qfits (no mock library).
+        new = [str(common/'mef_mef_assemble.c'),str(ROOT/'mefpp2/tests/mef_assembly_probe.c')]
+        subprocess.run([str(ARGS.cc),*flags,'-Werror','-pedantic-errors','-fsyntax-only',*new],check=True)
+        sources = re.findall(r'qfits5/src/[\w-]+\.c', (ROOT/'mefpp2/cmake/QfitsSources.cmake').read_text())
+        argv = [str(ARGS.cc),*flags,'-DXMEMORY_MODE=2','-DXMEMORY_MAXPTRS=2000000',*new,
+                *[str(ROOT/'mefpp2'/s) for s in sources],'-lm','-o',str(PROBE)]
+        print('BUILD:', json.dumps(argv), flush=True); subprocess.run(argv,check=True)
     # Actual assembler: known-answer FITS copy, identity/coverage/header/refusal controls.
-    result = unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(AssemblyTests))
+    suite = unittest.TestSuite(AssemblyTests(name) for name in (
+        'test_expanded_headers_32_exceed_old_aggregate_limit',
+        'test_individual_header_bound_remains_enforced',
+    )) if ARGS.expanded_only else unittest.defaultTestLoader.loadTestsFromTestCase(AssemblyTests)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
     (WORK/'mef-assembly-results.json').write_text(json.dumps(dict(tests=result.testsRun,
-        successful=result.wasSuccessful(),astropy_checks=ASTROPY_CHECKS,build_argv=argv,
+        successful=result.wasSuccessful(),astropy_checks=ASTROPY_CHECKS,build_argv=argv,probe=str(PROBE),
         observations_opened=False,bias_recipe_executed=False,pycavi_used=False))+'\n')
     raise SystemExit(not result.wasSuccessful())
