@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -109,16 +110,30 @@ class PathsTests(unittest.TestCase):
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--work',type=Path,required=True)
     parser.add_argument('--cc',type=Path,required=True)
+    parser.add_argument('--sdkroot',type=Path,help='Explicit macOS SDK passed as -isysroot; required on Darwin')
+    parser.add_argument('--source-root',type=Path,default=ROOT,
+                        help='Retained unchanged source tree; permits a test-driver-only retry')
     args=parser.parse_args();WORK=args.work.resolve(strict=True)
+    ROOT=args.source_root.resolve(strict=True)
+    if sys.platform == 'darwin' and args.sdkroot is None:
+        parser.error('Darwin requires --sdkroot from xcrun --sdk macosx --show-sdk-path')
+    sdkroot=None
+    if args.sdkroot is not None:
+        sdkroot=args.sdkroot.resolve(strict=True)
+        if not (sdkroot/'usr/include/time.h').is_file():
+            parser.error('Selected SDK has no usr/include/time.h')
     PROBE=WORK/'product-paths-probe'
     common=ROOT/'mefpp2/ins/mef/common'
     # Strict C17 build of the real product path helper and its driver.
     argv=[str(args.cc),'-std=c17','-Wall','-Wextra','-Werror','-pedantic-errors','-I'+str(common),
           str(common/'mef_product_paths.c'),str(ROOT/'mefpp2/tests/product_paths_probe.c'),'-o',str(PROBE)]
+    if sdkroot is not None:argv[1:1]=['-isysroot',str(sdkroot)]
+    print('BUILD:',json.dumps(argv),flush=True)
     subprocess.run(argv,check=True)
     # Native output-rule controls; each checks unchanged synthetic raw/caller files.
     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(PathsTests))
     (WORK/'product-paths-results.json').write_text(json.dumps(dict(tests=result.testsRun,
         successful=result.wasSuccessful(),compiler=str(args.cc),build_argv=argv,
+        source_root=str(ROOT),sdkroot=str(sdkroot) if sdkroot is not None else None,
         image_recipe_executed=False,observations_opened=False,asdf_writer_exercised=False))+'\n')
     raise SystemExit(not result.wasSuccessful())

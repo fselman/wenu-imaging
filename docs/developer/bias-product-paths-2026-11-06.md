@@ -1,3 +1,23 @@
+## Mac SDK correction — actual build stopped before tests
+
+Actual source598e7dde failed on the Mac at
+/Users/fselman/Software/build/wenu-imaging/mac-bias-product-paths-IKatTfxs:
+Xcode clang could not find time.h because the test build omitted an explicit
+macOS SDK. No test or image recipe executed. Preserve source/checks.log.
+
+Correction for #247 changes only the test driver: --sdkroot is required on
+Darwin, checked for usr/include/time.h and passed as -isysroot. --source-root
+allows a runner-only retry against the unchanged retained C source. Exact
+build argv, source root and SDK are recorded. The retry must select the current
+SDK through xcrun --sdk macosx --show-sdk-path, not install headers or modify C.
+
+Agent explicit-root/source-root routing compiled the real C helper and passed
+all11controls in0.067s. Delivered helper/header/probe blob identities remain
+b8d7f242, b19d3540 and e24307c5. This is Linux routing evidence, not Mac SDK
+qualification. Actual Mac corrected compilation and all11controls remain pending.
+No dependency install, numerical source change, real processing or old gate
+replay. Reuse the failed run with a new test driver and fresh checks subdirectory.
+
 # Bias product-path foundation, 6 November 2026
 
 ## Executive summary
