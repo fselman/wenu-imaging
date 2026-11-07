@@ -806,7 +806,7 @@ image_t * cube_subtract_median_sky(
         /* Destroy the sky cube */
         cube_del_shallow(sky_cube) ;
 
-    } else if (nb_sky == 0) {
+    } else { /* nb_sky is a nonnegative count; no sky frames selected. */
         sky = cube_avg_median(cube) ;
     }
 

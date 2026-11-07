@@ -347,6 +347,7 @@ static int xmemory_addcell(
         char    *   mm_filename)
 {
     int pos, ii ;
+    (void)filename; (void)lineno; /* Used only with XMEMORY_DEBUG enabled. */
     
     /* Check there is still some space left */
     if (xmemory_table.ncells >= XMEMORY_MAXPTRS) {
@@ -562,7 +563,6 @@ void * xmemory_malloc(size_t size, const char * filename, int lineno)
     ssize_t     written;
     int         created;
     int         memtype ;
-    int         pos ;
 #ifdef __linux__
     int         p ;
 #endif
@@ -710,7 +710,7 @@ swap_ready:
     );
 
     /* Add cell into general table */
-    pos = xmemory_addcell(  ptr,
+    xmemory_addcell(  ptr,
                             size,
                             filename,
                             lineno,
@@ -877,7 +877,6 @@ char * xmemory_falloc(
             if (xmemory_p_val[i]!=NULL)
                 nptrs++ ;
             if ((xmemory_p_val[i]!=NULL) &&
-                (xmemory_p_mm_filename[i] != NULL) &&
                 (xmemory_p_mm_hash[i] == mm_hash)) {
                 if (!strncmp(xmemory_p_mm_filename[i], name,
                              MAPFILENAMESZ)) {

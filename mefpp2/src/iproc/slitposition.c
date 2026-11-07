@@ -71,7 +71,6 @@ double3 ** slitpos_analysis(
     image_t        *   filtered ;
     image_t        *   extr_fits ;
     int                 slit_pos ;
-    int                 spec_size ;
     int                 slit_size ;
     int                 slit_top_y ;
     int                 slit_bot_y ;
@@ -87,7 +86,6 @@ double3 ** slitpos_analysis(
     int                 i ;
 
     /* Flip the image or not to have a vertical slit */
-    spec_size = inimage->lx ;
     slit_size = inimage->ly ;
 
     /* Find the position of the slit */

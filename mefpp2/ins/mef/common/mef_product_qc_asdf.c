@@ -215,9 +215,10 @@ int mef_product_qc_write(const char *path,const mef_product_qc *p,char *message,
     asdf_mapping_t *root=NULL;
     asdf_sequence_t *detectors=NULL,*inputs=NULL;
     char *temporary=NULL,expected[4096],first[128],second[128];
+    void *readback=NULL;
     const char *value=NULL;
     struct stat st;FILE *header=NULL;
-    size_t n;int fd=-1,code=-1,temporary_owned=0;
+    size_t n,readback_size;int fd=-1,code=-1,temporary_owned=0;
     const char *detail="Cannot construct native ASDF QC";
     if(mef_product_qc_validate(p,message,size)!=0)return -1;
     n=strlen(p->fits_path);
@@ -238,11 +239,21 @@ int mef_product_qc_write(const char *path,const mef_product_qc *p,char *message,
     asdf_close(f);f=NULL;
     header=fopen(temporary,"rb");if(header==NULL)goto done;
     if(fgets(first,sizeof(first),header)==NULL||fgets(second,sizeof(second),header)==NULL)goto done;
-    if(fclose(header)!=0){header=NULL;goto done;}header=NULL;
     if(strncmp(first,"#ASDF ",6)||strcmp(second,"#ASDF_STANDARD 1.6.0\n")){
         detail="Native library did not emit the qualified ASDF1.6 standard";goto done;
     }
-    saved=asdf_open_file_ex(temporary,"r",NULL);if(saved==NULL)goto done;
+    /* libasdf0.3 file-backed tree parsing hangs on a target-confirmed valid
+     * sidecar (#267). Read these exact staged bytes through its qualified
+     * memory interface instead. This buffer contains QC metadata, not images;
+     * keep it alive until the native reader and all its views are closed. */
+    if(fstat(fileno(header),&st)!=0 || !S_ISREG(st.st_mode) || st.st_size<=0 ||
+        (uintmax_t)st.st_size>(uintmax_t)SIZE_MAX || fseek(header,0,SEEK_SET)!=0)goto done;
+    readback_size=(size_t)st.st_size;
+    readback=malloc(readback_size);if(readback==NULL)goto done;
+    if(fread(readback,1,readback_size,header)!=readback_size ||
+        fgetc(header)!=EOF || ferror(header))goto done;
+    if(fclose(header)!=0){header=NULL;goto done;}header=NULL;
+    saved=asdf_open_mem_ex(readback,readback_size,NULL);if(saved==NULL)goto done;
     if(asdf_get_string0(saved,"qc/record/schema_version",&value)!=ASDF_VALUE_OK||strcmp(value,MEF_PRODUCT_QC_SCHEMA)||
         asdf_get_string0(saved,"qc/file/id",&value)!=ASDF_VALUE_OK||strcmp(value,p->id)||
         asdf_get_sequence(saved,"qc/characterization/detectors",&detectors)!=ASDF_VALUE_OK||
@@ -251,6 +262,7 @@ int mef_product_qc_write(const char *path,const mef_product_qc *p,char *message,
         asdf_sequence_size(inputs)!=(int)p->input_count)goto done;
     asdf_sequence_destroy(detectors);detectors=NULL;asdf_sequence_destroy(inputs);inputs=NULL;
     asdf_close(saved);saved=NULL;
+    free(readback);readback=NULL;
     detail="Cannot exclusively publish ASDF product";
     if(link(temporary,path)!=0)goto done;
     code=0;
@@ -259,6 +271,7 @@ done:
     if(header!=NULL)fclose(header);
     asdf_sequence_destroy(detectors);asdf_sequence_destroy(inputs);
     asdf_mapping_destroy(root);if(saved!=NULL)asdf_close(saved);if(f!=NULL)asdf_close(f);
+    free(readback);
     if(temporary!=NULL){
         if(temporary_owned && unlink(temporary)!=0 && code==0){
             /* Final ASDF already exists and is complete; report retained staging. */

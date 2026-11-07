@@ -1729,7 +1729,6 @@ cube_t * mef_cube_framelist_load(framelist *flist, int xtnum)
 {
 	cube_t    *     loaded ;
 	image_t  * mef_frame ;
-	register pixelvalue *pt;
 	int                     i ;
 	int               *     exts ;
 	int                     err ;
@@ -1886,13 +1885,7 @@ cube_t *mef_cube_load_at(char *filename, int xtnum, const mef_paths *paths)
 cube_t * mef_cube_load(char * filename, int xtnum)
 {
 	cube_t    *     loaded ;
-	image_t  * mef_frame ;
-	register pixelvalue *pt;
 	framelist *     flist ;
-	int                     i ;
-	int               *     exts ;
-	int                     err ;
-	int                     single_frames ;
 
 	/* Check entries */
 	if (filename==NULL) return NULL ;
@@ -1994,8 +1987,6 @@ image_t * mef_overscan_correction_traced(image_t *mef_frame, mef_bb *bb,
     int     use_overscan = bb->use_overscan;
 	image_t	*	cropped_frame ;
 	pixelvalue		filtered ;
-    pixelvalue      avg_filtered;
-    int             nfiltered;
 	pixelvalue	*	bias_line ;
     pixelvalue  *   scan_line ;
     double          medval;
@@ -2003,7 +1994,6 @@ image_t * mef_overscan_correction_traced(image_t *mef_frame, mef_bb *bb,
     double          stdev_val ;
 	int				scan_width ;
 	int				i, j, k ;
-    int             zIndex;
 	pixelvalue	*	pix ;
 	int		prescan_factor, overscan_factor;
 
@@ -2051,8 +2041,6 @@ image_t * mef_overscan_correction_traced(image_t *mef_frame, mef_bb *bb,
     if (bias_line == NULL || scan_line == NULL) goto overscan_done;
 
 	/* Loop on all lines */
-    avg_filtered = 0.0;
-    nfiltered = 0;
 	for (j=0 ; j<mef_frame->ly ; j++) {
 		pix = mef_frame->data + j*mef_frame->lx ;
 		k=0 ;
@@ -2076,8 +2064,6 @@ image_t * mef_overscan_correction_traced(image_t *mef_frame, mef_bb *bb,
 		}
         scan_line[j] = filtered;
         if (trace != NULL) trace[j] = filtered;
-        avg_filtered += filtered;
-        nfiltered += 1;
 	}
     medval = (double) median_pixelvalue(scan_line, mef_frame->ly);
     scan_double = pixel2double_array(scan_line, mef_frame->ly);
@@ -2091,11 +2077,6 @@ image_t * mef_overscan_correction_traced(image_t *mef_frame, mef_bb *bb,
     e_comment(1, "********************* overscan medval: %f stdev_val: %f", medval, stdev_val);
 
     /* We write the bb-> qc keywords for the corresponding frame */
-    if (bb->nxts == 1) {    /* if we work in only one extension */
-        zIndex = 0;
-    } else {                        /* we are working in all the extensions */
-        zIndex = bb->xtnum-1;
-    }
     if (!strcmp(what, "bias")) {
         bb->bias_scan_median[nplane] = medval ;
         bb->bias_scan_stdev[nplane] = stdev_val ;
@@ -2279,7 +2260,6 @@ int mef_gradient_check(
 
 void simplifyFilterName(char *zFilter)
 {
-	char zChar ;
 	int i;
 
 	/* 
@@ -2314,7 +2294,6 @@ int	mef_valid_subset(mef_bb * bb, char *what)
 	char		*	name_i ;
 	char		*	first_name = NULL ;
 	char			cval[FILENAMESZ] ;
-	char		*	getval ;
 	char			*zFilter = NULL ;
 	int			i ;
     int status = -1;
@@ -2915,15 +2894,13 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 image_t * mef_build_cal(mef_bb * bb, char * what)
 {
 	cube_t	 *	i_cube ;
-	image_t *	scancorr ;
-	image_t *  	bias ;
 	image_t *	stacked ;
 	image_t *  	cur_p ;
 	image_t *  	flat ;
 	char	 *	name_i ;
 	double		lo_thr, hi_thr ;
 	int		minframe ;
-	double		avg, avg1, kappa1 ;
+	double		avg, kappa1 ;
     float      zmedian, zstdev;
 	int		i, j, p ;
 	int	 *	valid ;
@@ -3015,11 +2992,9 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 	/* Compute average value for each frame, keep those in interval */
 	all_means = malloc(i_cube->np*sizeof(double));
 	nval = 0 ;
-	avg1 = 0.00 ;
 	for (i=0 ; i<i_cube->np ; i++) {
 		compute_status("computing averages", i, i_cube->np, 1);
 		all_means[i] = image_getmean(i_cube->plane[i]);
-		avg1 += all_means[i] ;
 		/*
 		   if (debug_active()>1) {
 		   printf("\n");
@@ -3027,7 +3002,6 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
 		   }
 		   */
 	}
-	avg1 /= (double) i_cube->np ;
 
 
 	valid = malloc(i_cube->np * sizeof(int));
@@ -3172,7 +3146,7 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
         bb->dome_stdev[zIndex] = sqrt(frame_variance);
 		bb->dome_nplanes[zIndex] = frame_nplanes;
 		normFactor = bb->dome_median[zIndex]/bb->dome_median[0];
-	} else if (!strcmp(what,"sky")) {
+	} else { /* Only sky remains: bias returned above and other modes were rejected. */
 		bb->sky_median[zIndex] = frame_median;
         bb->sky_stdev[zIndex] = sqrt(frame_variance);
 		bb->sky_nplanes[zIndex] = frame_nplanes;
@@ -3430,7 +3404,7 @@ static qfits_header *mef_header_ext_hdu(char *filename, mef_bb *bb, int source_h
      *
      * */
 
-	if ( (bb->correct_ref_pix == 1) ) {
+	if (bb->correct_ref_pix == 1) {
             CRVAL1 = ((bb->ccd)+(bb->xtnum-1))->crval1;
             CRVAL2 = ((bb->ccd)+(bb->xtnum-1))->crval2;
 	    ra_char = qfits_header_getstr(f0, "RA");
@@ -3607,13 +3581,11 @@ char * rtrim(char * s) {
 qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_ref)
 {
     qfits_header*fh_phase3 ;
-    framelist   *fnames ;
     char    *   cval_ptr;
     char        cval[80] ;
     char        cval2[80] ;
-    char        *getval ;
     float       exptime, mjdobs, mjdend;
-    int         i, nframes ;
+    int         nframes ;
 
         /* Check entries */
     if (bb==NULL) {
@@ -3773,15 +3745,11 @@ qfits_header *mef_header_esophase3(mef_bb *bb, char *what, qfits_header    *fh_r
 qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 {
 	qfits_header	*fh_eclipse ;
-	qfits_header	*fh_ref ;
     qfits_header    *fh_sky_i;
 	framelist	*fnames ;
-    float       exptime;
     char        *exptime_str;
 	char		cval[80] ;
     char        cval2[80] ;
-	char		*getval ;
-	int		nchips ;
 	int		i ;
 
         /* Check entries */
@@ -4001,7 +3969,7 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
                     sprintf(cval, "%s%03d EXPTIME",bb->skyff_frame_i_key, i+1);
                     exptime_str = qfits_header_getstr(fh_sky_i, "EXPTIME");
                     if (exptime_str!=NULL) {
-                        exptime = atof(exptime_str);
+                        (void)atof(exptime_str);
                         qfits_header_add(fh_eclipse, cval, exptime_str, "Exposure time of ski i", NULL);
                     } else {
                         qfits_header_add(fh_eclipse, cval, "-1", "Exposure time of ski i (NULL)", NULL);
@@ -4121,7 +4089,6 @@ qfits_header *mef_header_eclipse(mef_bb *bb, char *what)
 char *mef_get_input_filename(mef_bb *bb, char *what)
 {
 	char *name_i;
-	char cval[80];
 
 	/* Check entries */
 	if (bb==NULL) {
@@ -4209,6 +4176,8 @@ void *mef_create_orig_filename(mef_bb *bb, char *what)
     } else {
         e_error("mef_create_orig_filename: unknown frame type: %s", what);
     }
+    /* Historical callers use only the side effects, not an owned return. */
+    return NULL;
 }
 
 char *mef_get_output_filename(mef_bb *bb, char *what)
@@ -4240,22 +4209,15 @@ qfits_header *mef_get_headers_for_hdu(char *what, mef_bb *bb, image_t *zImage, i
 	char		*name_o = NULL ;
 	char		*name_i = NULL ;
 	qfits_header	*fh_ref = NULL ;
-	qfits_header	*fh_main = NULL ;
     qfits_header    *fh_phase3 = NULL ;
 	qfits_header	*fh_main_subset = NULL ;
 	qfits_header	*fh_eclipse = NULL ;
 	qfits_header	*fh_extension = NULL ;
 	qfits_header	*fh_aux = NULL ;
     qfits_header    *fh_aux2 = NULL ;
-	qfitsdumper	qd ;
-	FILE		*out ;
 	char		cval[80] ;
     char        cval2[80] ;
-	char		*getval ;
 	int		i ;
-	char		*first_name ;
-	framelist	*fnames ;
-	int		nchips ;
 	int		zIndex ;
 
 

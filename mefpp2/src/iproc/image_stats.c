@@ -711,8 +711,7 @@ pixelvalue * image_getmedian_mov_horz(
 {
     pixelvalue  *   local_med  = NULL,
                 *   windowline = NULL ;
-    int         l,
-                wdiff,
+    int         wdiff,
                 w2 ;
     int         i,
                 j = 0 ;
@@ -726,7 +725,6 @@ pixelvalue * image_getmedian_mov_horz(
     w2 = window_size / 2 ;
 
     for (j=0 ; j<in->lx ; j++) {
-        l = i ;
         wdiff = w2 - j ;
         if (wdiff > 0) {
             memcpy(windowline,
@@ -1581,7 +1579,7 @@ double image_compute_entropy(image_t * im)
 
 	hist = histogram_compute(im,
 							(int)(1<<16),
-							(pixelvalue)(-1<<15),
+							(pixelvalue)(-(1<<15)),
 							(pixelvalue)( 1<<15));
 	if (hist==NULL) return -1 ;
 

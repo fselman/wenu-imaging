@@ -1,3 +1,7 @@
+- [Native ASDF readback: target diagnosis and bounded workaround](native-asdf-readback-2026-11-06.md).
+
+- [Native warning cleanup and corrected bias integration checks](native-warning-cleanup-2026-11-06.md) — Mac rebuild pending; original evidence retained.
+
 Current linearity preparation: [recipe/ASDF integration](linearity-recipe-integration-2026-11-05.md).
 
 Current [TOML-led overscan preparation](linearity-preparation-2026-11-05.md): agent4native+6TOML+5viewer controls passed; actual Mac gate pending. [Kernel guide PDF](linearity-preparation-guide-v1.pdf) / [LaTeX](linearity-preparation-guide-v1.tex). Complete recipe/ASDF integration follows the overscan gate.

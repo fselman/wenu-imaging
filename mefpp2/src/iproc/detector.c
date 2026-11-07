@@ -633,7 +633,6 @@ cube_t * detector_linearity_fit(
     cube_t      *   fitres ;
     image_t     *   timeline ;
     int             pos ;
-    int             npix ;
     double          f, f_prod ;
     double          y, err, sq_err ;
     matrix      *   mx, 
@@ -651,7 +650,6 @@ cube_t * detector_linearity_fit(
     }
 
     /* Loop over all pixels */
-    npix = in->lx * in->ly ;
 
     /* Create matrices */
     ma = matrix_new(deg, in->np);

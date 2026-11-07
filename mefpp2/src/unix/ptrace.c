@@ -109,6 +109,7 @@ gnu_ptrace(char * what, void * p)
 void __attribute__((__no_instrument_function__))
 __cyg_profile_func_enter(void *this_fn, void *call_site)
 {
+	(void)call_site; /* Trace uses only the function address. */
 	gnu_ptrace("enter", this_fn);
 }
 
@@ -116,6 +117,7 @@ __cyg_profile_func_enter(void *this_fn, void *call_site)
 void __attribute__((__no_instrument_function__))
 __cyg_profile_func_exit(void *this_fn, void *call_site)
 {
+	(void)call_site;
 	gnu_ptrace("exit", this_fn);
 }
 

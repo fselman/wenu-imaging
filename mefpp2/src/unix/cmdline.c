@@ -182,7 +182,6 @@ dictionary * cmdline_parse(int argc, char ** argv, cmdline_spec * spec)
 	dictionary *	d ;
 	int				i, j ;
 	char	   *	arg ;
-	int				len ;
 	int				found ;
 	char			key[1024] ;
 	int				npar ;
@@ -209,7 +208,6 @@ dictionary * cmdline_parse(int argc, char ** argv, cmdline_spec * spec)
 
 		/* Define two aliases to the current argv for easier reading */
 		arg = argv[i] ;
-		len = strlen(arg);
 		found = 0 ;
 
 		switch (identify_option_typ(arg)) {

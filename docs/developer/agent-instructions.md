@@ -1,3 +1,33 @@
+## Native ASDF readback workaround prepared — 6 November 2026
+
+Actual Mac bde4568 cleared all63compiler warnings and passed both probes plus
+seven integration groups. The remaining omission case completed detectors/MEF
+but hung in external libasdf0.3 file-backed metadata lookup (#267). Independent
+Python validates its exact ASDF; native memory-backed lookup/close passed.
+Read [the evidence and correction](native-asdf-readback-2026-11-06.md).
+Consumer now reads exact staged QC bytes through the native memory interface;
+emission, metadata checks, bias arithmetic and publication stay unchanged.
+Strict C17/Python syntax pass; corrected writer integration remains pending.
+Rebuild candidate only; --reuse-omissions reuses retained tiny synthetic fixtures/
+references and seven passed groups, preserving original products/logs/receipt.
+No source/runtime requalification campaign, real observations, install, merge,
+viewer or evidence cleanup. Keep upstream file-reader #267 open after workaround.
+
+## Warning cleanup and integration checker correction — 6 November 2026
+
+Owner authorized addressing all63reported Mac build warnings. Read
+[the cleanup status](native-warning-cleanup-2026-11-06.md).
+Patch covers the63diagnostics plus adjacent dirname defects and three checker
+corrections #255/#256/#257; no warning suppression, bias-kernel or policy change.
+Agent actual C probes pass with UBSan: four QC-copy profiles, path boundaries,
+MD5/context reset, entropy, exact original-corner comparison and legacy values.
+All231named IR table values unchanged; half-degree intent #261 and ignored
+spectral minimum #265 remain separate scientific decisions. Actual Mac rebuild,
+zero-warning confirmation and corrected eight integration groups remain pending.
+Reuse retained mac-standalone-bias-SP3Cgdhb root; preserve original source/build/
+failed checks, use fresh correction subdirectories. No observations, install,
+merge, viewer or evidence cleanup. Overall #245 and PR #254 remain pending.
+
 ## Standalone native bias recipe integrated for target checks — 6 November 2026
 
 Owner instructed integration after the native MEF gate passed8Mac groups and
