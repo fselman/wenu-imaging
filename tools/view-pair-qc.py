@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Generate offline geometry-driven QC HTML from validated ASDF, never raw images (#235)."""
 import argparse
-from copy import deepcopy
 import importlib.util
 import json
 import re
 from pathlib import Path
 import sys
+from time import perf_counter
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'Pycavi2/pycavi/pycavi'))
@@ -16,6 +16,7 @@ import pycavi_measurement_display as measurements
 from pycavi_pair_products import batch_products
 import pycavi_residual_qc as residual_qc
 import pycavi_roi_ratio_qc as ratio_qc
+from pycavi_viewer_data import DisplayReader
 spec=importlib.util.spec_from_file_location('footprints',ROOT/'tools/detector-footprint.py')
 footprint=importlib.util.module_from_spec(spec);spec.loader.exec_module(footprint)
 require=bridge.qc.require
@@ -29,23 +30,31 @@ def unchanged(frozen):
     require(freeze(frozen)==frozen,'QC viewer input changed during generation')
 
 
-def build(detectors,processing,products,diagnostics=None,ratios=None):
+def build(detectors,processing,products,diagnostics=None,ratios=None,*,reader=None,expected=None):
     """Products are explicit pairs.asdf paths; omitted detectors remain visibly missing."""
     geometry,policy,trims=footprint.load(detectors,processing)
     before=freeze([detectors,processing,Path(__file__),Path(__file__).with_name('pair-qc-viewer.html'),Path(__file__).with_name('qc-plot-inspection.js'),ROOT/'config/plotting/signal-axis-v1.json'])
+    require(reader is None or ratios is None or diagnostics is not None,
+            'Direct ratio display also requires the selected line diagnostics')
     by_id={d['id']:d for d in geometry['detector']};data={};stages=set()
+    selected={};line_identities={}
     for product in products:
         product=Path(product).resolve(strict=True)
         # Shared QC input trees stay local to the product; freeze only ASDF files.
-        before.update(freeze(product.parent.glob('*.asdf')))
-        measurement=measurements.read_source(product);stages.add(measurement['stage'])
+        if reader is None:
+            before.update(freeze(product.parent.glob('*.asdf')))
+            measurement=measurements.read_source(product)
+        else:
+            measurement=reader.preparation(product,expected.get(product) if expected is not None else None)
+            before[str(product)]=reader.inputs[str(product)]
+        stages.add(measurement['stage'])
         require(len(stages)==1,'Cannot mix corrected and raw-only measurement stages')
         values={};origins={}
         if measurement['kind']=='preparation':
-            before.update(residual_qc.source_graph(product))
+            if reader is None:before.update(residual_qc.source_graph(product))
             values={'pairs':measurement['pairs'],'bias-ron':measurement['bias']}
             origins['pairs']=dict(path=str(product),sha256=before[str(product)],
-                record_digest=measurement['record'].digest,kind='preparation')
+                record_digest=(measurement['record'].digest if reader is None else measurement['identity']['digest']),kind='preparation')
             origins['measurements']=dict(origins['pairs'])
             provenance=measurement['provenance']
         else:
@@ -58,6 +67,7 @@ def build(detectors,processing,products,diagnostics=None,ratios=None):
                 origins[kind]=dict(path=str(path),sha256=before[str(path)],record_digest=record.digest)
                 if kind=='pairs':provenance=record.as_dict()['extensions']['raw_pair_provenance']
         identity=values['pairs'][0]['detector']
+        selected[identity]=measurement
         require(identity in by_id and identity not in data,'Unknown/duplicate QC detector')
         detector=by_id[identity];crop=trims[identity]['retained']
         rois=[r for r in policy['roi'] if r['detector']==identity]
@@ -95,10 +105,13 @@ def build(detectors,processing,products,diagnostics=None,ratios=None):
             supplied.add(identity)
             path=(diagnostic_index.parent/item['path']).resolve(strict=True)
             require(path.is_relative_to(diagnostic_index.parent),'Diagnostic path escapes run')
-            before.update(residual_qc.source_graph(path))
-            value=residual_qc.read_product(path,
-                expected_source_digest=data[identity]['sources']['pairs']['record_digest'],
-                expected_digest=item['digest'])
+            if reader is None:
+                before.update(residual_qc.source_graph(path))
+                value=residual_qc.read_product(path,
+                    expected_source_digest=data[identity]['sources']['pairs']['record_digest'],
+                    expected_digest=item['digest'])
+            else:
+                value,line_identities[identity]=reader.line(path,selected[identity],item['digest'])
             data[identity]['diagnostics']=value
             data[identity]['sources']['diagnostics']=dict(path=str(path),record_digest=item['digest'])
         require(supplied==set(data),'Diagnostic detector coverage differs from displayed measurements')
@@ -114,24 +127,31 @@ def build(detectors,processing,products,diagnostics=None,ratios=None):
             identity=item['detector'];require(identity in data and identity not in seen,'Unknown/duplicate ratio detector');seen.add(identity)
             path=(ratio_index.parent/item['path']).resolve(strict=True)
             require(path.is_relative_to(ratio_index.parent),'Ratio path escapes run')
-            before.update(residual_qc.source_graph(path))
-            value=ratio_qc.read_product(path,expected_digest=item['digest'],
-                expected_residual_digest=data[identity].get('sources',{}).get('diagnostics',{}).get('record_digest'))
+            if reader is None:
+                before.update(residual_qc.source_graph(path))
+                value=ratio_qc.read_product(path,expected_digest=item['digest'],
+                    expected_residual_digest=data[identity].get('sources',{}).get('diagnostics',{}).get('record_digest'))
+            else:
+                value,_=reader.ratio(path,selected[identity],data[identity]['diagnostics'],
+                                     line_identities[identity],item['digest'])
             require(value['source_pair_digest']==data[identity]['sources']['pairs']['record_digest'],'Ratio/measurement source differs')
             data[identity]['ratio']=value
             data[identity]['sources']['ratio']=dict(path=str(path),record_digest=item['digest'])
         require(seen==set(data),'Ratio detector coverage differs')
         for panel in panels:
             if panel['status']=='available':panel['ratio']=data[panel['geometry']['id']]['ratio']
-    unchanged(before)
+    if reader is None:unchanged(before)
+    else:
+        before.update(reader.inputs)
+        payload['validation']=dict(scope='displayed_products_and_immediate_links',
+            calibration_ancestry_reaudited=False,asdf_products_decoded=len(reader.identities))
     return payload,before
 
 
 def render(payload):
     # Escaping '<' prevents script termination by any untrusted asset/ROI/provenance text.
-    payload=deepcopy(payload)
-    payload['plot_axis_spec']=json.loads((ROOT/'config/plotting/signal-axis-v1.json').read_text())
-    encoded=json.dumps(payload,ensure_ascii=True,allow_nan=False).replace('<','\\u003c')
+    display=dict(payload,plot_axis_spec=json.loads((ROOT/'config/plotting/signal-axis-v1.json').read_text()))
+    encoded=json.dumps(display,ensure_ascii=True,allow_nan=False,separators=(',',':')).replace('<','\\u003c')
     template=Path(__file__).with_name('pair-qc-viewer.html').read_text()
     if payload.get('measurement_stage')==measurements.CORRECTED:
         template=template.replace('OmegaCAM · raw-pair QC','OmegaCAM · corrected preparation QC')
@@ -157,19 +177,32 @@ def main():
     p.add_argument('--run',type=Path,required=True,help='Fresh empty derived viewer directory')
     a=p.parse_args();work=a.run.resolve(strict=True)
     require(not any(work.iterdir()),'Fresh empty viewer directory required')
-    report=dict(status='failed',raw_FITS_opened=False,native_TSV_opened=False,fitted=False,diagnostic_line_fit_available=bool(a.diagnostics),physical_correction_fitted=False)
+    started=perf_counter()
+    def progress(message):print(f'[{perf_counter()-started:.3f} s] {message}',flush=True)
+    reader=DisplayReader(progress) if a.preparation_batch else None
+    report=dict(status='failed',raw_FITS_opened=False,native_TSV_opened=False,fitted=False,diagnostic_line_fit_available=bool(a.diagnostics),physical_correction_fitted=False,
+                validation_scope='displayed_products_and_immediate_links' if reader else 'legacy_full_graph',
+                calibration_ancestry_reaudited=False if reader else None)
     def offline(event,args):
         if event in ('socket.connect','socket.connect_ex','socket.getaddrinfo','socket.sendto'):
             raise RuntimeError('Offline viewer generation')
     sys.addaudithook(offline)
     try:
-        products,frozen=measurements.preparation_products(a.preparation_batch) if a.preparation_batch else batch_products(a.batch)
-        payload,inputs=build(ROOT/'config/detectors/omegacam-1x1.toml',ROOT/'config/processing/omegacam-characterization.toml',products,diagnostics=a.diagnostics,ratios=a.ratios)
+        progress('Reading completed batch metadata')
+        expected=None
+        if reader:
+            products,expected=reader.admit_preparation(a.preparation_batch);frozen=dict(reader.inputs)
+        else:products,frozen=batch_products(a.batch)
+        payload,inputs=build(ROOT/'config/detectors/omegacam-1x1.toml',ROOT/'config/processing/omegacam-characterization.toml',products,diagnostics=a.diagnostics,ratios=a.ratios,reader=reader,expected=expected)
         frozen.update(inputs)
         require(len(payload['panels'])==32 and all(d['status']=='available' for d in payload['panels']),
                 'Completed OCAM batch requires all32 detectors')
+        progress('Rendering and writing offline viewer')
+        rendering=perf_counter()
         output=work/'qc-mosaic.html';output.write_text(render(payload))
-        data_path=work/'qc-data.json';data_path.write_text(json.dumps(payload,indent=2,allow_nan=False)+'\n')
+        data_path=work/'qc-data.json';data_path.write_text(json.dumps(payload,separators=(',',':'),allow_nan=False)+'\n')
+        report['render_write_seconds']=perf_counter()-rendering
+        progress('Checking selected input fingerprints')
         unchanged(frozen)
         report.update(status='complete_for_owner_inspection',detectors=32,
             signal_time_rows=sum(len(d['signals']) for d in payload['panels']),
@@ -180,6 +213,10 @@ def main():
     except Exception as error:
         report['error']=repr(error);raise
     finally:
+        report['elapsed_seconds']=perf_counter()-started
+        if reader:
+            report['asdf_products_decoded']=len(reader.identities)
+            report['product_load_timings']=reader.timings
         (work/'viewer.json').write_text(json.dumps(report,indent=2)+'\n')
         (work/'README.md').write_text('Derived offline ASDF QC mosaic. Measurements remain authoritative in their retained ASDF records. No raw images or native TSV files are opened. Keep while needed for inspection; regenerate from retained inputs after changes. No automatic cleanup. viewer.json records status and fingerprints.\n')
         print('VIEWER STATUS:',report['status'],flush=True)
