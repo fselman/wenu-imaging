@@ -1,0 +1,632 @@
+{
+  "$schema": "http://stsci.edu/schemas/asdf/asdf-schema-1.1.0",
+  "id": "asdf://wenu-imaging/schemas/product-qc-2.0.0",
+  "title": "Native product QC with embedded input records",
+  "type": "object",
+  "properties": {
+    "qc": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/file"
+        },
+        "record": {
+          "type": "object",
+          "properties": {
+            "schema_version": {
+              "enum": [
+                "2.0.0"
+              ]
+            },
+            "assessment_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "created_at": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+            }
+          },
+          "required": [
+            "schema_version",
+            "assessment_id",
+            "created_at"
+          ],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "producer": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "source_revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "required": [
+                "name",
+                "version",
+                "source_revision"
+              ],
+              "additionalProperties": false
+            },
+            "configuration": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "format": {
+                  "enum": [
+                    "mef_config_dump_typed_bits_json"
+                  ]
+                },
+                "snapshot": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "format",
+                "snapshot"
+              ],
+              "additionalProperties": false
+            },
+            "operation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "operation_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "recipe_start": {
+              "type": "string",
+              "minLength": 1
+            },
+            "product_sequence": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "log_path": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "producer",
+            "configuration",
+            "operation",
+            "operation_version",
+            "recipe_start",
+            "product_sequence",
+            "log_path"
+          ],
+          "additionalProperties": false
+        },
+        "characterization": {
+          "type": "object",
+          "properties": {
+            "detectors": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/product_detector"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "detectors"
+          ],
+          "additionalProperties": false
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/member"
+          },
+          "minItems": 1
+        },
+        "embedded_input_records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/embedded"
+          },
+          "minItems": 1
+        },
+        "extensions": {
+          "type": "object",
+          "properties": {
+            "record_scope": {
+              "enum": [
+                "one_final_MEF_product"
+              ]
+            },
+            "input_reference_policy": {
+              "enum": [
+                "embedded_record_id"
+              ]
+            },
+            "measurement_policy": {
+              "enum": [
+                "caller_supplied_values_only"
+              ]
+            }
+          },
+          "required": [
+            "record_scope",
+            "input_reference_policy",
+            "measurement_policy"
+          ],
+          "additionalProperties": false
+        },
+        "calibrations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "role": {
+                "type": "string",
+                "minLength": 1
+              },
+              "qc_location": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "file": {
+                "$ref": "#/definitions/file"
+              },
+              "detector_bindings": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "detector_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "source_hdu": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "detector_id",
+                    "source_hdu"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "record_id",
+              "role",
+              "qc_location",
+              "file",
+              "detector_bindings"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "file",
+        "record",
+        "provenance",
+        "characterization",
+        "inputs",
+        "embedded_input_records",
+        "extensions",
+        "calibrations"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "qc"
+  ],
+  "definitions": {
+    "measurement": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "measured",
+            "unavailable",
+            "invalid"
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "definition": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "type": "string",
+              "minLength": 1
+            },
+            "method": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sample_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "region": {
+              "type": "object",
+              "properties": {
+                "coordinates": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "bounds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                },
+                "detector_bpm": {
+                  "enum": [
+                    "omitted",
+                    "applied",
+                    "not_applicable",
+                    "unmasked_diagnostic"
+                  ]
+                },
+                "mask_record_id": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "clipping": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nonfinite": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "coordinates",
+                "bounds",
+                "detector_bpm",
+                "mask_record_id",
+                "clipping",
+                "nonfinite"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "stage",
+            "method",
+            "sample_count",
+            "region"
+          ],
+          "additionalProperties": false
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "name",
+        "unit",
+        "status",
+        "reason",
+        "value",
+        "definition",
+        "sources"
+      ],
+      "additionalProperties": false
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "filename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "raw",
+            "product"
+          ]
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "integrity": {
+          "enum": [
+            "caller_supplied_digest",
+            "not_content_verified"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "filename",
+        "location",
+        "kind",
+        "sha256",
+        "integrity"
+      ],
+      "additionalProperties": false
+    },
+    "product_detector": {
+      "type": "object",
+      "properties": {
+        "detector_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "amplifier": {
+          "type": "string",
+          "minLength": 1
+        },
+        "readout_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_detector": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_hdu": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "bin_x": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "bin_y": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "measurements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/measurement"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "detector_id",
+        "amplifier",
+        "readout_id",
+        "configuration_detector",
+        "output_hdu",
+        "bin_x",
+        "bin_y",
+        "measurements"
+      ],
+      "additionalProperties": false
+    },
+    "input_detector": {
+      "type": "object",
+      "properties": {
+        "detector_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_hdu": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "configuration_detector": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "measurements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/measurement"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "detector_id",
+        "source_hdu",
+        "configuration_detector",
+        "measurements"
+      ],
+      "additionalProperties": false
+    },
+    "member": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "original_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "file_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "participation_by_detector": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "detector_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "enum": [
+                  "used",
+                  "rejected"
+                ]
+              },
+              "reason": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "detector_id",
+              "status",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "index",
+        "original_index",
+        "file_id",
+        "record_id",
+        "participation_by_detector"
+      ],
+      "additionalProperties": false
+    },
+    "embedded": {
+      "type": "object",
+      "properties": {
+        "record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "original_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "file": {
+          "$ref": "#/definitions/file"
+        },
+        "detectors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/input_detector"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "record_id",
+        "original_index",
+        "file",
+        "detectors"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

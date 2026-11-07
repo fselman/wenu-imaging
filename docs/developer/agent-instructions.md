@@ -1,3 +1,16 @@
+## Native product-QC writer prepared — 6 November 2026
+
+One ASDF per final MEF now has an isolated native metadata writer and embedded
+input schema, described in [the current status](docs/developer/native-product-qc-2026-11-06.md).
+Agent25 structural cases and pinned-header C17 syntax inspection pass; actual
+external-libasdf write/read qualification is pending on the retained Mac runtime.
+The preceding output-path helper passed11actualMac checks with an explicit SDK.
+No bias arithmetic, recipe activation, MEF assembly, observation processing,
+viewer change, installation, merge or cleanup is included. Next verify the native
+writer on Mac, then review final MEF assembly/integration under #245. Do not claim
+a complete bias product from metadata-writer checks. Earlier owner decisions
+remain controlling, including raw immutability and standalone mefpp.
+
 ## Bias MEF/native-ASDF direction approved — 6 November 2026
 
 Owner approved preserving the MEF product, temporary detector separation,
