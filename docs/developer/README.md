@@ -1,3 +1,5 @@
+- [Bias scalar QC inspection v1](bias-qc-inspection-2026-11-07.md): one-time ASDF loading, all scalar master/input QC, product highlighting; detector comparison now, JD/database deferred. Actual Mac/browser gate pending.
+
 - [Read-only bias product comparator](../../tools/compare-bias-products.py): exact pixels/QC, native FITS–ASDF mapping and selected-header/TOML provenance; supports a subset against a larger retained reference.
 
 - [Bias short TOML call and selected FITS provenance](bias-toml-provenance-2026-11-07.md): default/all or explicit detector subsets; small configured header transfer; agent checks passed, actual Mac recipe/ASDF gate pending.

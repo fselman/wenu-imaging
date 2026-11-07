@@ -1,0 +1,24 @@
+{
+  "scope": "bias scalar inspection v1",
+  "date": "2026-11-07",
+  "agent_checks": {
+    "python_projection_cache_groups": 3,
+    "javascript_model": "passed",
+    "shared_plot_cursor_controls": "passed",
+    "syntax_and_cli_help": "passed",
+    "actual_asdf_read": "unavailable in agent runtime",
+    "actual_browser": "not passed; local launch restricted and cloud local-file URL blocked"
+  },
+  "mac_gate": "pending actual retained product generation and browser review",
+  "source_sha256": {
+    "tools/view-bias-qc.py": "145204bd53262f89319c376c71727e65db7029a4c90881510620641465b1a878",
+    "tools/bias-qc-viewer.html": "e11be8176f6a41ace615f63a2f00f31a382c11639e03e7161e012d319a8428e1",
+    "tools/bias-qc-inspection.js": "974f4471f5e5a0f4d89a2c8289e9e2d8933bdf37e643aab0236edc6c668c0920",
+    "tools/tests/test_bias_qc_inspection.py": "f0b855cfe69e818355225d8ad12fcd28001268c40ea3c1b8ca1841b77101afa9",
+    "tools/tests/test_bias_qc_inspection.cjs": "82c8c18724b7e5cf15307cda569f596142442b0bd44b9c649b71e64250697c67",
+    "tools/tests/test_bias_qc_browser.py": "9718260d6ba4cff3dd2d9bf966e7d2b24eb596a4c13b9757ae1456ee564fde6f"
+  },
+  "scientific_recalculation": false,
+  "native_build": false,
+  "raw_or_fits_read": false
+}

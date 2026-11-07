@@ -1,3 +1,18 @@
+## Bias scalar QC inspection approved; actual Mac view pending — 7 November 2026
+
+Owner accepted a first calibration view after completing the bias milestone:
+load product ASDF once, display all scalar product/detector/input QC and compare
+with selected-product highlighting. Read design/bias-qc-inspection-v1.md
+and bias-qc-inspection-2026-11-07.md (#282). This overrides the
+older viewer hold only for this bounded external inspection tool. Detector
+categories are the plot x axis; representative master JD, database/persistent
+harvesting policy and historical modelling remain deferred. No native recipe,
+configuration, build/toolchain, raw/FITS image read, reduction or installation.
+Keep products/evidence unchanged. Agent projection/cache/JS controls pass;
+actual retained-ASDF generation and browser review on Mac remain pending.
+The prior saved bias comparator passed on actual Mac after de3c5f3 integration;
+merged branches are deleted and actual main is clean. No need to repeat it.
+
 ## Mac bias TOML/provenance verified; integration authorized — 7 November 2026
 
 Owner authorized merge and branch cleanup after actual Mac acceptance. Native
