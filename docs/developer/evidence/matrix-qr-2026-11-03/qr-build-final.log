@@ -1,0 +1,38 @@
+[ 17%] Built target qfits
+[ 17%] Building C object mefpp2/CMakeFiles/eclipse.dir/src/math/matrix.c.o
+[ 17%] Linking C static library libeclipse.a
+[ 98%] Built target eclipse
+[100%] Building C object mefpp2/CMakeFiles/matrix_qr_probe.dir/tests/matrix_qr_probe.c.o
+[100%] Linking C executable matrix_qr_probe
+[100%] Built target matrix_qr_probe
+[ 17%] Built target qfits
+[ 17%] Building C object mefpp2/CMakeFiles/matrix_qr_allocation_units.dir/src/math/matrix.c.o
+[ 98%] Built target eclipse
+[ 98%] Built target matrix_qr_allocation_units
+[ 98%] Building C object mefpp2/CMakeFiles/matrix_qr_allocation_probe.dir/tests/matrix_qr_allocation_probe.c.o
+In file included from /workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/matrix_qr_allocation_probe.c:2:
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_addcell’:
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c:342:27: warning: unused parameter ‘filename’ [-Wunused-parameter]
+  342 |         const char    *   filename,
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c:343:21: warning: unused parameter ‘lineno’ [-Wunused-parameter]
+  343 |         int         lineno,
+      |         ~~~~~~~~~~~~^~~~~~
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_malloc’:
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c:565:17: warning: variable ‘pos’ set but not used [-Wunused-but-set-variable]
+  565 |     int         pos ;
+      |                 ^~~
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c: In function ‘xmemory_falloc’:
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c:880:43: warning: the comparison will always evaluate as ‘true’ for the address of ‘xmemory_p_mm_filename’ will never be NULL [-Waddress]
+  880 |                 (xmemory_p_mm_filename[i] != NULL) &&
+      |                                           ^~
+/workspace/scratch/9ccf7e35ace4/qr-implementation/mefpp2/tests/../qfits5/src/xmemory.c:190:21: note: ‘xmemory_p_mm_filename’ declared here
+  190 | static char         xmemory_p_mm_filename[XMEMORY_MAXPTRS][MAPFILENAMESZ] ;
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+[100%] Linking C executable matrix_qr_allocation_probe
+[100%] Built target matrix_qr_allocation_probe
+[ 16%] Built target qfits
+[ 94%] Built target eclipse
+[ 98%] Built target mefpp_common
+[ 98%] Linking C executable mefpp
+[100%] Built target mefpp

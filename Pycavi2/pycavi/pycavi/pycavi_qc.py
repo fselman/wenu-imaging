@@ -9,6 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 import hashlib
+import io
 import json
 import math
 import os
@@ -17,8 +18,8 @@ import statistics
 import tempfile
 from urllib.parse import quote
 
-SCHEMA_PATH = Path(__file__).resolve().parents[1] / 'config/qc-schema-1.0.0.json'
-SCHEMA_VERSION = '1.0.0'
+SCHEMA_PATH = Path(__file__).resolve().parents[1] / 'config/qc-schema-1.1.0.json'
+SCHEMA_VERSION = '1.1.0'
 MAX_RECORD_BYTES = 32 * 1024 * 1024
 
 
@@ -55,12 +56,13 @@ def timestamp(value):
 def qc_filename(filename):
     require(text(filename) and Path(filename).name == filename and '\\' not in filename,
             'Require a basename, with full source location stored separately')
-    require(filename.lower().endswith('.fits') and len(filename) > 5,
-            'Current sidecar naming supports .fits only; compression policy is pending')
+    suffix = Path(filename).suffix.lower()
+    require(suffix in ('.fits', '.tsv') and len(filename) > len(suffix),
+            'Sidecars support FITS images and native TSV products; compression policy is pending')
     # References are local filesystem names, not URLs. Escape reserved characters
     # (including literal percent) once so timestamped FITS basenames stay unique.
     # Tilde escapes avoid ASDF treating percent escapes as URI decoding.
-    return quote(filename[:-5], safe='-._').replace('~', '%7E').replace('%', '~') + '.asdf'
+    return quote(filename[:-len(suffix)], safe='-._').replace('~', '%7E').replace('%', '~') + '.asdf'
 
 
 def _local_reference(value):
@@ -82,7 +84,7 @@ def _validate(record):
             len(file['sha256']) == 64 and all(c in '0123456789abcdef' for c in file['sha256'])),
             'Invalid supplied file digest')
     meta = record['record']
-    require(meta['schema_version'] == SCHEMA_VERSION and text(meta['assessment_id']),
+    require(meta['schema_version'] in ('1.0.0', SCHEMA_VERSION) and text(meta['assessment_id']),
             'Unknown schema version or missing assessment identity')
     timestamp(meta['created_at'])
     provenance = record['provenance']
@@ -96,9 +98,17 @@ def _validate(record):
     selectors = file['selectors']
     require({s['detector_id'] for s in selectors} == set(detector_ids) and
             len(selectors) == len(detector_ids), 'Detector coverage/selector mismatch')
-    require(all(type(s['hdu_index']) is int and s['hdu_index'] >= 0 for s in selectors),
-            'Explicit nonnegative source HDU required; no detector-ID inference')
-    own_hdus = {s['detector_id']: s['hdu_index'] for s in selectors}
+    is_table = file['filename'].lower().endswith('.tsv')
+    if is_table:
+        require(file['kind'] == 'product' and meta['schema_version'] == SCHEMA_VERSION,
+                'Native TSV products require common QC 1.1; raw inputs remain FITS')
+        require(all(text(s.get('table_name')) and 'hdu_index' not in s for s in selectors),
+                'Tabular products need explicit table selectors, not invented FITS HDUs')
+    else:
+        require(all(type(s.get('hdu_index')) is int and s['hdu_index'] >= 0
+                    and 'table_name' not in s for s in selectors),
+                'FITS records need explicit nonnegative source HDUs')
+    own_hdus = {s['detector_id']: s.get('hdu_index') for s in selectors}
     require([i['index'] for i in record['inputs']] == list(range(len(record['inputs']))),
             'Input order/indices must be original and contiguous')
     require(file['kind'] != 'raw' or not record['inputs'], 'Raw QC cannot own recipe membership')
@@ -300,7 +310,7 @@ def _asdf():
 
 def _check_linked_origins(parent_tree, leaf):
     file = leaf['file']
-    hdus = {s['detector_id']: s['hdu_index'] for s in file['selectors']}
+    hdus = {s['detector_id']: s.get('hdu_index') for s in file['selectors']}
     for detector in parent_tree['characterization']['detectors']:
         for measurement in detector['measurements']:
             for source in measurement['sources']:
@@ -320,6 +330,27 @@ def _linked_record(parent, member, root):
             tree['record']['assessment_id'] == member['qc']['assessment_id'] and
             record.digest == member['qc']['record_digest'], 'Linked QC identity/content mismatch')
     return record
+
+
+def _description_comments(tree):
+    """Human-readable header only; authoritative values remain in the QC tree."""
+    descriptions = {
+        'pairs': 'Per-ROI raw flat-pair signals, exposure times, difference variances and diagnostic gain.',
+        'bias-ron': 'Per-ROI raw bias-pair differences and read-noise diagnostics.',
+        'corrected_samples': 'Individual flat-pixel signals after scan and master-bias correction, with source lineage.',
+    }
+    tables = {s.get('table_name') for s in tree['file']['selectors']}
+    contents = descriptions.get(next(iter(tables)) if len(tables) == 1 else None,
+                                'Detector measurements, availability, processing definitions and source provenance.')
+    lines = [
+        'wenu-imaging QC sidecar; referenced image pixels are not embedded.',
+        'File: ' + json.dumps(tree['file']['filename'], ensure_ascii=True),
+        'Operation: ' + json.dumps(tree['provenance']['operation'], ensure_ascii=True),
+        'Contents: ' + contents,
+        'Read qc for units, detector selectors, definitions, exclusions and frozen input links.',
+        'Unavailable measurements are null, not zero; comments are descriptive, not calibration approval.',
+    ]
+    return ''.join('# ' + line + '\n' for line in lines).encode('ascii')
 
 
 def write_record(record, directory, *, qc_root=None):
@@ -343,7 +374,18 @@ def write_record(record, directory, *, qc_root=None):
             with asdf.AsdfFile({'qc': record.as_dict()}, version='1.6.0',
                                custom_schema=SCHEMA_PATH.as_uri()) as af:
                 af.validate()
-                af.write_to(stream)
+                # ASDF 6 reads header comments but does not write AsdfFile.comments.
+                # Common QC is JSON-primitive metadata only: no binary blocks or
+                # block-offset index can be displaced by this header insertion.
+                with io.BytesIO() as buffer:
+                    af.write_to(buffer)
+                    payload = buffer.getvalue()
+                magic, standard, yaml = payload.split(b'\n', 2)
+                require(magic.startswith(b'#ASDF ') and standard.startswith(b'#ASDF_STANDARD '),
+                        'Unexpected ASDF header; refuse comment insertion')
+                stream.write(magic + b'\n' + standard + b'\n')
+                stream.write(_description_comments(record.as_dict()))
+                stream.write(yaml)
         require(temporary.stat().st_size <= MAX_RECORD_BYTES, 'QC record exceeds configured limit')
         os.link(temporary, destination)  # Exclusive publication, including racing writers.
         return destination

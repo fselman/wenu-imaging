@@ -1,0 +1,19 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/roi-build
+Test project /workspace/scratch/9ccf7e35ace4/roi-build
+    Start 6: native_linearity_files
+1/2 Test #6: native_linearity_files ...........   Passed   15.24 sec
+    Start 9: native_linearity_pairs
+2/2 Test #9: native_linearity_pairs ...........   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+gain          =   0.01 sec*proc (1 test)
+layout        =  15.24 sec*proc (1 test)
+linearity     =  15.25 sec*proc (2 tests)
+mask          =  15.24 sec*proc (1 test)
+native        =  15.25 sec*proc (2 tests)
+ownership     =  15.25 sec*proc (2 tests)
+statistics    =   0.01 sec*proc (1 test)
+
+Total Test time (real) =  15.25 sec

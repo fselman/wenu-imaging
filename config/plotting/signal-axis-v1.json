@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "signal_minimum_adu": 0,
+  "signal_maximum_adu": 65535,
+  "signal_major_step_adu": 10000,
+  "signal_ticks_adu": [0, 10000, 20000, 30000, 40000, 50000, 60000, 65535],
+  "scope": "absolute_signal_axes_only_not_residual_or_count_rate_axes",
+  "meaning": "display_extent_not_measured_coverage_or_saturation_rejection"
+}

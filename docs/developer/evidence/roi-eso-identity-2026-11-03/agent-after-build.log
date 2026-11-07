@@ -1,0 +1,11 @@
+[  2%] Built target mefpp_config_domains
+[ 19%] Built target qfits
+[ 23%] Built target mefpp_tomlc17
+[ 95%] Built target eclipse
+[ 97%] Built target mefpp_common
+[ 97%] Building C object mefpp2/CMakeFiles/mefpp_roi_config.dir/ins/mef/common/mef_roi_config.c.o
+[ 97%] Linking C static library libmefpp_roi_config.a
+[ 97%] Built target mefpp_roi_config
+[ 97%] Building C object mefpp2/CMakeFiles/roi_config_probe.dir/tests/roi_config_probe.c.o
+[100%] Linking C executable roi_config_probe
+[100%] Built target roi_config_probe

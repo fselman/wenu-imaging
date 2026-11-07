@@ -165,6 +165,88 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(mefpp_tomlc17 PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
+  # Named ROI supplement: explicit C17, isolated from legacy settings/schema.
+  add_library(mefpp_roi_config STATIC ins/mef/common/mef_roi_config.c)
+  set_target_properties(mefpp_roi_config PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_roi_config PUBLIC ins/mef/common src/include
+    PRIVATE ../third_party/tomlc17 qfits5/include)
+  target_link_libraries(mefpp_roi_config PUBLIC mefpp_tomlc17 mefpp_common)
+  target_compile_options(mefpp_roi_config PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(roi_config_probe tests/roi_config_probe.c)
+  set_target_properties(roi_config_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(roi_config_probe PRIVATE mefpp_roi_config)
+  target_compile_options(roi_config_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_library(mefpp_linearity_samples STATIC ins/mef/common/mef_linearity_samples.c)
+  set_target_properties(mefpp_linearity_samples PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_linearity_samples PUBLIC ins/mef/common src/include
+    PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_link_libraries(mefpp_linearity_samples PUBLIC mefpp_config_snapshot)
+  target_compile_definitions(mefpp_linearity_samples PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_compile_options(mefpp_linearity_samples PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_samples_probe tests/linearity_samples_probe.c)
+  set_target_properties(linearity_samples_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(linearity_samples_probe PRIVATE mefpp_linearity_samples)
+  target_compile_options(linearity_samples_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_library(mefpp_linearity_pairs STATIC ins/mef/common/mef_linearity_pairs.c
+    ins/mef/common/mef_linearity_pairs_export.c)
+  set_target_properties(mefpp_linearity_pairs PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_linearity_pairs PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_linearity_pairs PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_linearity_pairs PUBLIC mefpp_linearity_samples)
+  target_compile_options(mefpp_linearity_pairs PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_pairs_probe tests/linearity_pairs_probe.c)
+  add_library(mefpp_linearity_prepare STATIC ins/mef/common/mef_linearity_prepare.c)
+  set_target_properties(mefpp_linearity_prepare PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_linearity_prepare PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_linearity_prepare PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_linearity_prepare PUBLIC mefpp_linearity_pairs)
+  target_compile_options(mefpp_linearity_prepare PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_prepare_probe tests/linearity_prepare_probe.c)
+  set_target_properties(linearity_prepare_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_link_libraries(linearity_prepare_probe PRIVATE mefpp_linearity_prepare)
+  target_compile_options(linearity_prepare_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_test(NAME native_linearity_prepare COMMAND linearity_prepare_probe)
+  set_tests_properties(native_linearity_prepare PROPERTIES TIMEOUT 180 LABELS "native;linearity;overscan;ownership")
+  set_target_properties(linearity_pairs_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(linearity_pairs_probe PRIVATE mefpp_linearity_pairs)
+  target_compile_options(linearity_pairs_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_pairs_export_probe tests/linearity_pairs_export_probe.c)
+  set_target_properties(linearity_pairs_export_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(linearity_pairs_export_probe PRIVATE mefpp_linearity_pairs)
+  target_compile_options(linearity_pairs_export_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_library(mefpp_linearity_files STATIC ins/mef/common/mef_linearity_files.c
+    ins/mef/common/mef_linearity_raw_files.c)
+  set_target_properties(mefpp_linearity_files PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_linearity_files PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_linearity_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_linearity_files PUBLIC mefpp_linearity_samples mefpp_linearity_pairs mefpp_linearity_prepare)
+  target_compile_options(mefpp_linearity_files PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(mefpp_pair_measure ins/mef/mefpp_pair_measure.c)
+  add_executable(mefpp_linearity_prepare_command ins/mef/mefpp_linearity_prepare.c)
+  set_target_properties(mefpp_linearity_prepare_command PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_linearity_prepare_command PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_linearity_prepare_command PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_linearity_prepare_command PRIVATE mefpp_linearity_files mefpp_roi_config mefpp_config_toml)
+  target_compile_options(mefpp_linearity_prepare_command PRIVATE -Wall -Wextra -pedantic-errors)
+  set_target_properties(mefpp_pair_measure PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_pair_measure PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_pair_measure PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_pair_measure PRIVATE mefpp_linearity_files mefpp_roi_config)
+  target_compile_options(mefpp_pair_measure PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(mefpp_sample_extract ins/mef/mefpp_sample_extract.c)
+  set_target_properties(mefpp_sample_extract PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_include_directories(mefpp_sample_extract PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(mefpp_sample_extract PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_link_libraries(mefpp_sample_extract PRIVATE mefpp_linearity_files mefpp_roi_config)
+  target_compile_options(mefpp_sample_extract PRIVATE -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_raw_files_probe tests/linearity_raw_files_probe.c)
+  set_target_properties(linearity_raw_files_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(linearity_raw_files_probe PRIVATE mefpp_linearity_files)
+  target_compile_options(linearity_raw_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_executable(linearity_files_probe tests/linearity_files_probe.c)
+  set_target_properties(linearity_files_probe PROPERTIES C_STANDARD 17)
+  target_link_libraries(linearity_files_probe PRIVATE mefpp_linearity_files)
+  target_compile_options(linearity_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c
     ins/mef/common/mef_toml_bundle.c)
   target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
@@ -223,6 +305,126 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(qfits_discovery_probe tests/qfits_discovery_probe.c)
   target_link_libraries(qfits_discovery_probe PRIVATE qfits)
   add_executable(measurement_stats_probe tests/measurement_stats_probe.c)
+  if(MEFPP_BUILD_BIAS_ADAPTER)
+    add_executable(linearity_fit_probe tests/linearity_fit_probe.c)
+    target_link_libraries(linearity_fit_probe PRIVATE eclipse)
+    target_compile_options(linearity_fit_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    add_library(linearity_fit_allocation_units OBJECT src/iproc/detector_linearity_fit.c)
+    target_include_directories(linearity_fit_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(linearity_fit_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(linearity_fit_allocation_probe tests/linearity_fit_allocation_probe.c
+      $<TARGET_OBJECTS:linearity_fit_allocation_units>)
+    target_compile_definitions(linearity_fit_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(linearity_fit_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+    target_link_libraries(linearity_fit_allocation_probe PRIVATE eclipse)
+    add_executable(detector_noise_probe tests/detector_noise_probe.c)
+    target_link_libraries(detector_noise_probe PRIVATE eclipse)
+    target_compile_options(detector_noise_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    add_library(detector_noise_allocation_units OBJECT src/iproc/detector_noise.c src/math/matrix.c)
+    target_include_directories(detector_noise_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(detector_noise_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(detector_noise_allocation_probe tests/detector_noise_allocation_probe.c
+      $<TARGET_OBJECTS:detector_noise_allocation_units>)
+    target_compile_definitions(detector_noise_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(detector_noise_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(detector_noise_allocation_probe PRIVATE eclipse)
+    add_executable(roi_aggregation_probe tests/roi_aggregation_probe.c)
+    target_link_libraries(roi_aggregation_probe PRIVATE eclipse)
+    target_compile_options(roi_aggregation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    add_library(roi_aggregation_allocation_units OBJECT src/iproc/detector_roi.c
+      src/math/matrix.c)
+    target_include_directories(roi_aggregation_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(roi_aggregation_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(roi_aggregation_allocation_probe tests/roi_aggregation_allocation_probe.c
+      $<TARGET_OBJECTS:roi_aggregation_allocation_units>)
+    target_compile_definitions(roi_aggregation_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(roi_aggregation_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(roi_aggregation_allocation_probe PRIVATE eclipse)
+    add_executable(shutter_profile_probe tests/shutter_profile_probe.c)
+    target_link_libraries(shutter_profile_probe PRIVATE eclipse)
+    target_compile_options(shutter_profile_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    add_library(shutter_profile_allocation_units OBJECT src/iproc/detector_joint.c
+      src/math/optimization.c src/math/matrix.c)
+    target_include_directories(shutter_profile_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(shutter_profile_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(shutter_profile_allocation_probe tests/shutter_profile_allocation_probe.c
+      $<TARGET_OBJECTS:shutter_profile_allocation_units>)
+    target_compile_definitions(shutter_profile_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(shutter_profile_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(shutter_profile_allocation_probe PRIVATE eclipse)
+    add_executable(detector_joint_probe tests/detector_joint_probe.c)
+    target_link_libraries(detector_joint_probe PRIVATE eclipse)
+    target_compile_options(detector_joint_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    add_library(detector_joint_allocation_units OBJECT src/iproc/detector_joint.c
+      src/math/optimization.c src/math/matrix.c)
+    target_include_directories(detector_joint_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(detector_joint_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(detector_joint_allocation_probe tests/detector_joint_allocation_probe.c
+      $<TARGET_OBJECTS:detector_joint_allocation_units>)
+    target_compile_definitions(detector_joint_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(detector_joint_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(detector_joint_allocation_probe PRIVATE eclipse)
+    add_executable(simplex_probe tests/simplex_probe.c)
+    target_link_libraries(simplex_probe PRIVATE eclipse)
+    target_compile_options(simplex_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    add_library(simplex_allocation_units OBJECT src/math/optimization.c src/math/matrix.c)
+    target_include_directories(simplex_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(simplex_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(simplex_allocation_probe tests/simplex_allocation_probe.c
+      $<TARGET_OBJECTS:simplex_allocation_units>)
+    target_compile_definitions(simplex_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(simplex_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(simplex_allocation_probe PRIVATE eclipse)
+    add_executable(matrix_qr_probe tests/matrix_qr_probe.c)
+    target_link_libraries(matrix_qr_probe PRIVATE eclipse)
+    target_compile_options(matrix_qr_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    add_library(matrix_qr_allocation_units OBJECT src/math/matrix.c)
+    target_include_directories(matrix_qr_allocation_units PRIVATE src/include qfits5/include
+      "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(matrix_qr_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(matrix_qr_allocation_probe tests/matrix_qr_allocation_probe.c
+      $<TARGET_OBJECTS:matrix_qr_allocation_units>)
+    target_compile_definitions(matrix_qr_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(matrix_qr_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(matrix_qr_allocation_probe PRIVATE eclipse)
+    add_executable(gain_pair_probe tests/gain_pair_probe.c)
+    target_link_libraries(gain_pair_probe PRIVATE mefpp_bias_files)
+    target_compile_options(gain_pair_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    # Reuse accepted test-only NULL-return seams and qfits owner accounting.
+    add_library(gain_pair_allocation_units OBJECT src/iproc/detector.c
+      src/iproc/image_stats.c src/iproc/image_handling.c src/iproc/pixelmaps.c
+      src/math/dstats.c)
+    target_include_directories(gain_pair_allocation_units PRIVATE src/include
+      qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    target_compile_definitions(gain_pair_allocation_units PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      xmemory_malloc=mef_test_dependency_malloc xmemory_calloc=mef_test_dependency_calloc)
+    add_executable(gain_pair_allocation_probe tests/gain_pair_allocation_probe.c
+      $<TARGET_OBJECTS:gain_pair_allocation_units>)
+    target_compile_definitions(gain_pair_allocation_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
+    target_compile_options(gain_pair_allocation_probe PRIVATE -UNDEBUG -Wall -Wextra)
+    target_link_libraries(gain_pair_allocation_probe PRIVATE mefpp_bias_files)
+  endif()
   add_executable(bpm_response_probe tests/bpm_response_probe.c)
   target_link_libraries(bpm_response_probe PRIVATE eclipse)
   target_compile_options(bpm_response_probe PRIVATE -UNDEBUG -Wall -Wextra)
@@ -324,6 +526,12 @@ if(BUILD_TESTING)
           --probe "$<TARGET_FILE:bpm_service_probe>"
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_bpm_service PROPERTIES TIMEOUT 180 LABELS "native;bpm;ownership;mask")
+      add_test(NAME native_linearity_files
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_files_contract.py"
+          --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+          --probe "$<TARGET_FILE:linearity_files_probe>" --bpm-probe "$<TARGET_FILE:bpm_files_probe>"
+          --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(native_linearity_files PROPERTIES TIMEOUT 300 LABELS "native;linearity;layout;ownership;mask")
       add_test(NAME native_bpm_files
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_files_contract.py"
           --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
@@ -337,6 +545,53 @@ if(BUILD_TESTING)
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_bias_files PROPERTIES TIMEOUT 600 LABELS "native;bias;template;publication")
     endif()
+    add_test(NAME pair_runner_orchestration
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/pair_runner_contract.py"
+        --command "$<TARGET_FILE:mefpp_pair_measure>"
+        --runner "${CMAKE_CURRENT_SOURCE_DIR}/../tools/run-pair-measurements.py"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(pair_runner_orchestration PROPERTIES TIMEOUT 180 LABELS "linearity;command;provenance;configuration")
+    add_test(NAME native_linearity_preparation_command
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_preparation_command_contract.py"
+        --command "$<TARGET_FILE:mefpp_linearity_prepare_command>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_linearity_preparation_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;overscan")
+    add_test(NAME native_sample_command
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sample_command_contract.py"
+        --command "$<TARGET_FILE:mefpp_sample_extract>"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_sample_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;configuration")
+    add_test(NAME native_pair_command
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/pair_command_contract.py"
+        --command "$<TARGET_FILE:mefpp_pair_measure>"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_pair_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;configuration")
+    add_test(NAME native_linearity_raw_files
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_raw_files_contract.py"
+        --probe "$<TARGET_FILE:linearity_raw_files_probe>"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_linearity_raw_files PROPERTIES TIMEOUT 180 LABELS "native;linearity;layout;ownership;mask")
+    add_test(NAME native_linearity_pairs_export
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_pairs_export_contract.py"
+        --probe "$<TARGET_FILE:linearity_pairs_export_probe>"
+        --paf "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_linearity_pairs_export PROPERTIES TIMEOUT 120 LABELS "native;linearity;export")
+    add_test(NAME native_linearity_pairs COMMAND linearity_pairs_probe
+      "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf")
+    set_tests_properties(native_linearity_pairs PROPERTIES TIMEOUT 180 LABELS "native;linearity;gain;statistics;ownership")
+    add_test(NAME native_linearity_samples COMMAND linearity_samples_probe
+      "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf")
+    set_tests_properties(native_linearity_samples PROPERTIES TIMEOUT 120 LABELS "native;linearity;mask;ownership")
+    add_test(NAME native_roi_config
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/roi_config_contract.py"
+        --probe "$<TARGET_FILE:roi_config_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_roi_config PROPERTIES TIMEOUT 120 LABELS "native;configuration;roi;ownership")
     set(config_probe_sdk_args "")
     if(APPLE AND CMAKE_OSX_SYSROOT)
       list(APPEND config_probe_sdk_args --sysroot "${CMAKE_OSX_SYSROOT}")
@@ -448,6 +703,40 @@ if(BUILD_TESTING)
       set_tests_properties(shared_qc_asdf PROPERTIES TIMEOUT 120 LABELS "asdf;qc")
     endif()
     add_test(NAME native_measurement_stats COMMAND measurement_stats_probe)
+    if(MEFPP_BUILD_BIAS_ADAPTER)
+      add_test(NAME native_linearity_fit COMMAND linearity_fit_probe)
+      add_test(NAME native_linearity_fit_allocation COMMAND linearity_fit_allocation_probe)
+      set_tests_properties(native_linearity_fit native_linearity_fit_allocation PROPERTIES
+        TIMEOUT 180 LABELS "native;detector;linearity;composition;ownership")
+      add_test(NAME native_detector_noise COMMAND detector_noise_probe)
+      add_test(NAME native_detector_noise_allocation COMMAND detector_noise_allocation_probe)
+      set_tests_properties(native_detector_noise native_detector_noise_allocation
+        PROPERTIES TIMEOUT 180 LABELS "native;detector;covariance;ownership")
+      add_test(NAME native_roi_aggregation COMMAND roi_aggregation_probe)
+      set_tests_properties(native_roi_aggregation PROPERTIES TIMEOUT 60 LABELS "native;detector;roi;covariance")
+      add_test(NAME native_roi_aggregation_allocation COMMAND roi_aggregation_allocation_probe)
+      set_tests_properties(native_roi_aggregation_allocation PROPERTIES TIMEOUT 180 LABELS "native;detector;roi;allocation;ownership")
+      add_test(NAME native_shutter_profile COMMAND shutter_profile_probe)
+      set_tests_properties(native_shutter_profile PROPERTIES TIMEOUT 180 LABELS "native;detector;linearity;profile")
+      add_test(NAME native_shutter_profile_allocation COMMAND shutter_profile_allocation_probe)
+      set_tests_properties(native_shutter_profile_allocation PROPERTIES TIMEOUT 600 LABELS "native;detector;profile;allocation;ownership")
+      add_test(NAME native_detector_joint COMMAND detector_joint_probe)
+      set_tests_properties(native_detector_joint PROPERTIES TIMEOUT 180 LABELS "native;detector;linearity")
+      add_test(NAME native_detector_joint_allocation COMMAND detector_joint_allocation_probe)
+      set_tests_properties(native_detector_joint_allocation PROPERTIES TIMEOUT 300 LABELS "native;detector;allocation;ownership")
+      add_test(NAME native_simplex COMMAND simplex_probe)
+      set_tests_properties(native_simplex PROPERTIES TIMEOUT 30 LABELS "native;optimization;statistics")
+      add_test(NAME native_simplex_allocation COMMAND simplex_allocation_probe)
+      set_tests_properties(native_simplex_allocation PROPERTIES TIMEOUT 120 LABELS "native;optimization;allocation;ownership")
+      add_test(NAME native_matrix_qr COMMAND matrix_qr_probe)
+      set_tests_properties(native_matrix_qr PROPERTIES TIMEOUT 30 LABELS "native;matrix;statistics")
+      add_test(NAME native_matrix_qr_allocation COMMAND matrix_qr_allocation_probe)
+      set_tests_properties(native_matrix_qr_allocation PROPERTIES TIMEOUT 120 LABELS "native;matrix;allocation;ownership")
+      add_test(NAME native_gain_pair COMMAND gain_pair_probe)
+      set_tests_properties(native_gain_pair PROPERTIES TIMEOUT 30 LABELS "native;gain;statistics;mask")
+      add_test(NAME native_gain_pair_allocation COMMAND gain_pair_allocation_probe)
+      set_tests_properties(native_gain_pair_allocation PROPERTIES TIMEOUT 120 LABELS "native;gain;allocation;ownership")
+    endif()
     add_test(NAME native_bpm_response
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_response_contract.py"
         --probe "$<TARGET_FILE:bpm_response_probe>"

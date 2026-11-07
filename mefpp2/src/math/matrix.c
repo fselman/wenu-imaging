@@ -381,3 +381,146 @@ void matrix_dump(
 	fprintf(stdout, "\n") ;
 }
 
+
+/* Checked additions deliberately follow the legacy definitions: xmemory
+ * macros below affect only these additions, preserving old allocation paths. */
+#include <stdint.h>
+#include <float.h>
+#include "xmemory.h"
+
+void matrix_qr_result_del(matrix_qr_result *result)
+{
+    if (!result) return;
+    if (result->solution) {
+        if (result->solution->m) free(result->solution->m);
+        free(result->solution);
+    }
+    if (result->r) {
+        if (result->r->m) free(result->r->m);
+        free(result->r);
+    }
+    if (result->pivots) free(result->pivots);
+    free(result);
+}
+
+/* Do not use unchecked legacy matrix_new in an error-atomic interface. */
+static matrix *matrix_qr_new(int nr, int nc)
+{
+    matrix *m = calloc(1, sizeof(*m));
+    if (!m) return NULL;
+    m->nr = nr; m->nc = nc;
+    m->m = calloc((size_t)nr * (size_t)nc, sizeof(double));
+    if (!m->m) { free(m); return NULL; }
+    return m;
+}
+
+int matrix_leastsq_qr_checked(const matrix *design, const matrix *rhs,
+    const double *scales, double tolerance, matrix_qr_result **out)
+{
+    matrix_qr_result *res = NULL;
+    double *a = NULL, *b = NULL, *v = NULL, *z = NULL;
+    double reference = 0, norm, best, alpha, tau, dot, q, rn = 0, an = 0, invn = 0;
+    size_t m, n, i, j, k, pivot, h, count;
+    if (!design || !rhs || !scales || !out || *out ||
+        !design->m || !rhs->m || design->nr < 1 || design->nc < 1 ||
+        design->nr < design->nc || rhs->nr != design->nr || rhs->nc != 1 ||
+        !isfinite(tolerance) || tolerance <= 0 || tolerance >= 1) return -1;
+    m = (size_t)design->nr; n = (size_t)design->nc;
+    if (m > SIZE_MAX/n || m*n > SIZE_MAX/sizeof(double) ||
+        n > SIZE_MAX/sizeof(int)) return -1;
+    count = m*n;
+    for (j=0; j<n; ++j) if (!isfinite(scales[j]) || scales[j]<=0) return -1;
+    for (i=0; i<count; ++i) if (!isfinite(design->m[i])) return -1;
+    for (i=0; i<m; ++i) if (!isfinite(rhs->m[i])) return -1;
+    res = calloc(1, sizeof(*res));
+    if (!res) goto fail;
+    res->columns = (int)n;
+    res->r = matrix_qr_new((int)n, (int)n);
+    res->pivots = malloc(n*sizeof(int));
+    a = malloc(count*sizeof(double)); b = malloc(m*sizeof(double));
+    v = malloc(m*sizeof(double)); z = malloc(n*sizeof(double));
+    if (!res->r || !res->pivots || !a || !b || !v || !z) goto fail;
+    for (i=0; i<m; ++i) b[i]=rhs->m[i];
+    for (j=0; j<n; ++j) {
+        res->pivots[j]=(int)j; norm=0;
+        for (i=0; i<m; ++i) {
+            a[i*n+j]=design->m[i*n+j]*scales[j];
+            if (!isfinite(a[i*n+j])) goto fail;
+            norm=hypot(norm,a[i*n+j]);
+        }
+        if (!isfinite(norm)) goto fail;
+        if (norm>reference) reference=norm;
+    }
+    for (k=0; k<n; ++k) {
+        best=0; pivot=k;
+        for (j=k; j<n; ++j) {
+            norm=0;
+            for (i=k; i<m; ++i) norm=hypot(norm,a[i*n+j]);
+            if (!isfinite(norm)) goto fail;
+            if (norm>best) { best=norm; pivot=j; }
+        }
+        /* Compare by ratio, avoiding underflow in tolerance*reference. */
+        if (reference==0 || best/reference<=tolerance) break;
+        if (pivot!=k) {
+            int ip=res->pivots[k]; res->pivots[k]=res->pivots[pivot];
+            res->pivots[pivot]=ip;
+            for (i=0; i<m; ++i) { q=a[i*n+k];a[i*n+k]=a[i*n+pivot];a[i*n+pivot]=q; }
+        }
+        /* Unit-scaled reflector avoids squaring large values. */
+        alpha=-copysign(best,a[k*n+k]);
+        for (i=k; i<m; ++i) v[i]=a[i*n+k]/best;
+        v[k]-=alpha/best;
+        dot=0; for (i=k; i<m; ++i) dot+=v[i]*v[i];
+        tau=2/dot;
+        if (!isfinite(tau)) goto fail;
+        for (j=k+1; j<n; ++j) {
+            dot=0; for (i=k; i<m; ++i) dot+=v[i]*a[i*n+j];
+            dot*=tau; if (!isfinite(dot)) goto fail;
+            for (i=k; i<m; ++i) { a[i*n+j]-=v[i]*dot; if(!isfinite(a[i*n+j])) goto fail; }
+        }
+        dot=0; for (i=k; i<m; ++i) dot+=v[i]*b[i];
+        dot*=tau; if (!isfinite(dot)) goto fail;
+        for (i=k; i<m; ++i) { b[i]-=v[i]*dot; if(!isfinite(b[i])) goto fail; }
+        a[k*n+k]=alpha;
+        for (i=k+1; i<m; ++i) a[i*n+k]=0;
+        res->rank=(int)(k+1);
+    }
+    for (i=0; i<n; ++i) for(j=i; j<n; ++j) res->r->m[i*n+j]=a[i*n+j];
+    /* Trailing rows are the residual after projection onto accepted columns. */
+    for (i=(size_t)res->rank; i<m; ++i) rn=hypot(rn,b[i]);
+    if (!isfinite(rn)) goto fail;
+    res->residual_norm=rn;
+    if ((size_t)res->rank==n) {
+        res->solution=matrix_qr_new((int)n,1);
+        if (!res->solution) goto fail;
+        for (i=n; i-- >0;) {
+            q=b[i]; for (j=i+1; j<n; ++j) q-=a[i*n+j]*z[j];
+            z[i]=q/a[i*n+i]; if(!isfinite(z[i])) goto fail;
+            h=(size_t)res->pivots[i];
+            res->solution->m[h]=z[i]*scales[h];
+            if(!isfinite(res->solution->m[h])) goto fail;
+        }
+        for (j=0; j<n; ++j) {
+            q=0; for(i=0; i<=j; ++i) q+=fabs(a[i*n+j]);
+            if(q>an) an=q;
+            /* Column j of inverse(R), computed without storing an inverse. */
+            for(i=n; i-- >0;) {
+                q=(i==j)?1:0;
+                for(h=i+1; h<n; ++h) q-=a[i*n+h]*z[h];
+                z[i]=q/a[i*n+i]; if(!isfinite(z[i])) goto fail;
+            }
+            q=0;for(i=0;i<n;++i) q+=fabs(z[i]);
+            if(q>invn) invn=q;
+        }
+        res->scaled_condition_1=an*invn;
+        if(!isfinite(res->scaled_condition_1)) goto fail;
+        res->condition_available=1;
+    }
+    free(a);free(b);free(v);free(z);*out=res;return 0;
+fail:
+    if (a) free(a);
+    if (b) free(b);
+    if (v) free(v);
+    if (z) free(z);
+    matrix_qr_result_del(res);return -1;
+}

@@ -1,0 +1,14 @@
+test_asdf_only_plot_and_typed_tamper_refusal (__main__.PairQcTests.test_asdf_only_plot_and_typed_tamper_refusal) ... ok
+test_binding_order_and_availability_mismatch_refused (__main__.PairQcTests.test_binding_order_and_availability_mismatch_refused) ... ok
+test_conflicts_frozen_links_and_relocation (__main__.PairQcTests.test_conflicts_frozen_links_and_relocation) ... ok
+test_exact_roundtrip_units_origins_and_no_raw_open (__main__.PairQcTests.test_exact_roundtrip_units_origins_and_no_raw_open) ... ok
+test_failed_receipt_and_changed_table_refused (__main__.PairQcTests.test_failed_receipt_and_changed_table_refused) ... ok
+test_native_text_escapes_and_truncation (__main__.PairQcTests.test_native_text_escapes_and_truncation) ... ok
+test_unavailable_is_none_and_roundtrips (__main__.PairQcTests.test_unavailable_is_none_and_roundtrips) ... ok
+test_unknown_columns_nonfinite_flags_and_counts_refused (__main__.PairQcTests.test_unknown_columns_nonfinite_flags_and_counts_refused) ... ok
+test_wrong_structural_bpm_lineage_refused (__main__.PairQcTests.test_wrong_structural_bpm_lineage_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 6.283s
+
+OK

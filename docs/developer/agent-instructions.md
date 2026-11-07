@@ -1,3 +1,1021 @@
+## STOPPED: recode tomorrow after owner design consultation — 5 November 2026
+
+Owner stopped the corrected viewer after40+minutes with no logged progress,
+then instructed: "Forget it. Tomorrow we will recode this. Save the state."
+Read [the 6 November handoff](handoffs/resume-2026-11-06.md) first. It supersedes previous instructions
+to finish or relaunch the existing viewer. All32 corrected preparation and
+line/ratio diagnostic products are complete and must be reused, not recomputed.
+The unfinished inspection directory/log must be retained. No corrected plot
+inspection or final interrupted-viewer receipt has been supplied.
+
+Consult owner BEFORE CODE DESIGN, then agree design before implementation.
+The processing boundary was ALREADY AGREED: extract/correct/trim detector,
+measure5ROIs while its array remains in memory, save associated ASDF, release
+memory; later diagnostics/plots read saved tables directly. Incremental real-data
+recipe development uses three directories: raw data, reduced products,
+orchestration. Exact paths, product grouping/names and restart/replacement rules
+remain for discussion. Avoid proliferation of subdirectories and provenance copies.
+No automatic retry, optimization/rewrite, observation processing, old gate replay,
+source/runtime rehash campaign, installation, merge, cleanup or file moves.
+
+## Corrected diagnostics complete; finish existing inspection — 5 November 2026
+
+Owner reports ocam-corrected-diagnostics-i92m_n1n complete_for_owner_inspection.
+Both line and ratio commands succeeded; the wrapper required32detectors,
+3200line rows/160ROI fits and640ratio rows. All five outer guards true:
+checkout, installed_files, qualified_source, private_qc_runtime,
+qualification_receipt. Saved input fingerprints were checked. Reuse these
+completed products; no diagnostic/preparation/gate replay. Remaining current
+work is existing qualified saved-ASDF viewer, then owner inspection.
+
+Owner changes development process: consult BEFORE code design, then agree design
+before implementation. Incremental real-data recipe stages in three directories:
+raw data, reduced products, orchestration. Avoid proliferation of run directories
+and copied provenance. Runtime/I/O/storage cost must be discussed. Exact paths,
+product/restart/replacement rules and implementation remain to be agreed; do not
+reorganize or clean retained runs yet. Owner explicitly asks to finish the current
+work first. No optimization, new scientific policy, installation, merge or cleanup.
+See [actual diagnostic receipt](evidence/linearity-preparation-2026-11-05/mac-corrected-diagnostic-products-receipt.md).
+
+## Actual Mac corrected-diagnostic gate passed — 5 November 2026
+
+Owner reports a321e6321daafdc04193f118c2d363670e59ae53 qualification passed at
+mac-corrected-diagnostics-M0t2gFsg. All32Python controls passed; checkout,
+installed_files, exported_source and private_qc_runtime guards true. Reuse this
+retained qualified source/runtime; do not repeat the gate or preparation.
+Next compute separate line/ratio ASDF from completed batch-NrHHb3bT using the
+approved inclusive15000..35000ADU interval; then independent plots and owner
+inspection before modelling. No actual corrected diagnostic computation or
+HTML run has been reported yet. No raw reads/native/build/install/merge/cleanup.
+See [actual gate receipt](evidence/linearity-preparation-2026-11-05/mac-corrected-diagnostics-receipt.md).
+
+## Corrected saved-ASDF diagnostics bridge — 5 November 2026
+
+Owner authorized the next saved-data diagnostics/plotting stage. The new bridge
+uses stored corrected ROI means and spatial variances, preserves raw gain/RON
+labels, and refuses mixed measurement stages. Unchanged unweighted free-intercept
+line and near_readout/parallel_far ratio algorithms retain the approved inclusive
+15000..35000ADU interval. Agent32Python controls and both viewer JavaScript suites
+pass; mathematical LaTeX/PDF guides updated. Actual Mac changed-integration gate
+is pending via qualify_corrected_diagnostics_mac.py:32Python/fourguards, synthetic
+support data only, retained ASDF6 runtime, no native rebuild or observation reads.
+Reuse completed batch-NrHHb3bT; no admission/image hashing/preparation replay.
+After the gate, new diagnostic ASDF then separate plotting and owner inspection.
+No actual corrected diagnostic/HTML run or physical model is claimed yet.
+See [integration status](corrected-asdf-diagnostics-2026-11-05.md).
+
+## Actual all32 corrected ROI ASDF archive complete — 5 November 2026
+
+Owner full console confirms batch-NrHHb3bT complete_for_owner_inspection:
+32products,31new+reusedCCD65. Mac3orchestration controls passed; exact31unique
+new detector completion lines,100exposure/ROI rows each. All11preservation guards
+true; final63input-image guards passed. Totals3200exposure/ROI+1600pair/ROI+
+3200direct-site rows and960detector/frame traces. Noise/covariance unavailable;
+no physical fit or scientific calibration acceptance. Controller7ad545d,
+preparation source0a87c99/native d25b106. Reuse index.json and all retainedproducts;
+DO NOT repeat source export, qualification, admission, image hashing or preparation.
+Next separate saved-ASDF diagnostics/plots and owner inspection before modelling.
+No raw reads, new scientific policy, install, merge or cleanup. See [receipt](evidence/linearity-preparation-2026-11-05/mac-corrected-roi-batch-receipt.md).
+
+## Actual CCD65 corrected ROI preparation complete — 5 November 2026
+
+Owner reports ocam-corrected-roi-CCD65-t6e6o_zg complete_for_owner_inspection,
+all8preservation guards true. Product ASDF digestc12434f5c3bc2fc204968d565819157d4f24f37f20e19b44ff4633451b07549a;
+50pair/ROI+100exposure/ROI+100direct-site rows,30frame traces,noise unavailable.
+Reuse this product, saved plan-KSBh9ZXu/source0a87c99 and native d25b106 build.
+Next remaining31serial prepare_detector calls via run_ocam_corrected_roi_batch.py:
+3new orchestration controls then real run; no old gate/admission/bias/CCD65 replay.
+Native/numerical/commonQC code unchanged. Final32product index includes reused65;
+outer input/product/source/runtime preservation controls determine completion.
+No model/noise choice, plot, install, merge or cleanup. See [actual receipt](evidence/linearity-preparation-2026-11-05/mac-corrected-roi-CCD65-receipt.md).
+
+## Actual all32 dependency admission complete — 5 November 2026
+
+Owner reports source0a87c99 receipt8/8 and complete_dependency_plan at
+ocam-linearity-preparation-plan-KSBh9ZXu. All6preservation guards true.
+All32detectors:20flats+10bias inputs; preserved masters retain9accepted for
+CCD69/74/77/84/85,10for27others. No real corrected ROI processing yet.
+Reuse exact saved plan/source and d25b106 qualified native build; do not repeat
+admission/qualification/bias construction. Next new corrected-ROI execution for
+CCD65 via prepare_detector, then remaining31after verifying execution; reuse
+completed CCD65. Separate diagnostics/plots then owner inspection before models.
+No new scientific/noise choice, fit, install, merge or cleanup. See [receipt](evidence/linearity-preparation-2026-11-05/mac-dependency-admission-receipt.md).
+
+## Receipt-control macOS path correction — 5 November 2026 (#242)
+
+Actual dc7807a retry stopped before admission: two positive JSON tests expected
+/var temporary paths while the locator correctly resolves /private/var. Six
+negative controls passed; qualified source/binary/runtime/checkout preserved.
+Retain plan-GtN3wq9D and earlier plan-vrhso3qw. Tests now expect canonical paths
+and exercise directory aliases; agent8/8 passed under a symlinked temp root.
+Runner prints failed control logs immediately. Production receipt locator and
+all numerical/FITS/common-QC code unchanged. Next retry8receipt checks+all32
+metadata admission through the new exact runner, reusing d25b106 native build.
+No broad gate/native execution/FITS opens/image hashes/install/merge/cleanup.
+Actual Mac test correction and all32 admission remain pending. See #242/#241.
+
+## Bias receipt compatibility correction — 5 November 2026 (#241)
+
+Actual all32 metadata admission stopped before the first detector because CCD65
+uses local outer-execution.json with preservation.inputs, not the batch's
+source_preservation/overall-execution.json schema. Owner confirms pilot5 guards
+and batch8 guards all true, matching first-bias digest; batch before/after equal.
+New metadata-only locator validates both real schemas and selected-master identity,
+rejects failed/missing/ambiguous receipts. Agent8 JSON checks +1 synthetic recipe
+case pass. Numerical/FITS/QC code unchanged; reuse actual d25b106 Mac native build.
+Actual corrected all32 admission remains pending via retry_linearity_admission.py:
+8 new receipt checks only, then metadata plan, no FITS opens/image hashes/native
+execution/rebuild/broad gate replay. Preserve failed plan-vrhso3qw. Report unchecked
+preservation as null, not false. No real corrected ROI archive, model, install,
+merge or cleanup. See [correction status](linearity-bias-receipt-compatibility-2026-11-05.md).
+
+## Actual Mac recipe/ASDF gate passed — 5 November 2026
+
+Owner reports mac-linearity-recipe-rSGbf1Mq passed3native CTests in49.14s
+and the required17Python controls, all4preservation guards true. Reuse its
+retained source/build/private QC runtime; do not repeat qualification.
+Read saved qualification.json source_revision before the next action (fetch
+head62fce1f only repairs footprint mode; fetch output is not source proof).
+Next admit all32 preserved master/sample dependencies through the qualified
+TOML-led service and save a metadata-only plan; no FITS reads or image hashing.
+Then new corrected ROI ASDF, separate diagnostics/plots, owner inspection before
+physical modelling. No master rebuild, separate singleton extraction, install,
+merge or cleanup. See [actual receipt](evidence/linearity-preparation-2026-11-05/mac-recipe-receipt.md).
+
+## Linearity recipe/ASDF integration candidate — 5 November 2026
+
+Owner supplied existing master/sample metadata after actual d8bf560 Mac gate.
+Preserved32 masters and32sample ASDF/3200rows/1088records are dependencies.
+New recipe composes TOMLs, explicit FITS/overscan services and common ASDF;
+validates corrected-master snapshot/memberships, replays direct sites within
+new ROI pass, retains30frame ordered traces/detector and frozen source graph.
+Legacy bias QC null hashes resolve from completed bias outer receipt, not a new
+historical baseline. Agent3native+6TOML+11recipe/ASDF controls pass. Three-page
+LaTeX/PDF guide updated and visually checked. Actual Mac integration gate next:
+Pycavi2/tests/qualify_linearity_recipe_mac.py (3native+17Python,4guards).
+Reuse old overscan gate; do not repeat bias generation or a separate singleton
+campaign. No real corrected ROI products, fit, installation, merge or cleanup.
+See [integration status](linearity-recipe-integration-2026-11-05.md).
+
+## Actual Mac overscan gate passed - 5 November 2026
+
+Owner returned d8bf5608c73b3aee8b5411b3193f4184bd0f7b5a qualification passed at
+mac-linearity-prepare-5QEzvc2c. Native4/4 in5.91s plus required6TOML+5viewer
+controls; checkout, installed_files and exported_source all true. Reuse exact
+retained source/build; do not replay this gate. See [receipt](evidence/linearity-preparation-2026-11-05/mac-receipt.md).
+
+Next is the authorized FITS/linearity-recipe/ASDF integration, using detector and
+processing TOMLs, existing corrected masters/memberships and direct-site archive.
+Read existing metadata first; no repeated bias generation, singleton extraction,
+old gate, physical fit, installation, merge or cleanup. Full corrected ROI ASDF
+products do not exist yet. Earlier pending-Mac statements below are historical.
+
+## TOML-led overscan preparation implemented; Mac gate pending - 5 November 2026
+
+Owner reviewed the detailed design at5b3a493 and instructed implementation.
+New shared TOML resolver freezes detector/processing inputs and validates sample
+versus full-band geometry, controls and ROIs. Processing TOML adds explicit
+numerical schema1 controls. Viewer reuses that resolver. New C17 frame/pair
+preparation services reuse existing row correction, preserve native rounding,
+subtract a corrected master once, retain ordered row traces and measure corrected
+ROIs on the original common raw population. Existing raw/sample/bias behavior
+is preserved; all ten bias construction remains in the existing bias recipe.
+
+Agent4native+6TOML+5viewer controls passed, including128persistent owner-failure
+positions per43/44-read fixture. LaTeX/PDF kernel guide:2pages, visually checked,
+no overfull boxes. Actual Mac qualification remains pending via
+Pycavi2/tests/qualify_linearity_prepare_mac.py. No observations or new corrected
+ASDF products exist yet. After this overscan gate, complete FITS/recipe/ASDF
+integration and direct-site/master provenance before any real corrected pass or
+physical modelling. Reuse completed earlier archives/gates; do not merge,
+install, provision dependencies or clean retained evidence.
+See [status](linearity-preparation-2026-11-05.md). This supersedes older design-review-pending wording below.
+
+## Resume 5 November 2026 -- actual ratio run complete; overscan next
+
+Read [the current handoff](handoffs/resume-2026-11-05.md)
+before resuming. It supersedes earlier pending ratio-gate/run statements.
+Actual c33c6ce Mac qualification passed20/20, all4guards, retained
+mac-roi-ratio-pxzzz0v6. Real ratio ASDF complete at
+ocam-roi-ratio-3fjfywj0:32detectors,640rows, all5outerguards. Do not repeat.
+Owner inspected ratio plot and reports effects generally +/-0.0005 or below
+(axis units must be confirmed; normalized deviation0.0005=0.05%). Exact HTML
+run path/receipt has not been pasted; locate existing viewer receipts rather
+than regenerating. Current data have NO overscan correction. Owner's priority
+is consistent overscan subtraction in ALL bias/flat frames, preserving row
+dependence and master-bias consistency. Audit/reuse existing routine, finalize
+and review exact estimator/geometry/edges before implementation. Then NEW full
+ROI measurements -> ASDF diagnostics -> plots -> inspection before physical
+modelling. Preserve originals/runtime/source; no overnight execution, old gate
+replay, installation, merge or cleanup. Details and exact paths in handoff.
+
+## Same-exposure ROI ratio and overscan requirement — 4 November 2026
+
+Owner requires overscan subtraction in ALL bias/flat frames: observed row ramp
+near the output settles after a few hundred rows. Preserve the row dependence;
+a single global level must not be substituted without evidence. Use consistent
+overscan treatment of master-bias inputs and flats, avoiding double subtraction.
+The spatial pattern is evidence to inspect, not proof of a physical shutter term.
+Final ratio design: docs/developer/design/roi-ratio-asdf-v1.md. Compute
+near_readout/parallel_far for each exact exposure/member from existing stored
+original ROI signals. Save raw ratio, arithmetic reference mean (BOTH signals
+15000..35000ADU inclusive), normalized ratio, percentage departure, membership,
+units, stage and frozen lineage in NEW ASDF. No scientific math in plotting.
+Plot saved ratio vs numerator signal or time using shared axes/cursor.
+
+Current archive is raw_pair_bias_subtracted_without_overscan; ratio HTML must
+say so. This increment does not perform an image remeasurement or claim an
+overscan-corrected ROI archive. Next perform the consistent all-frame overscan
+ROI measurement pass, with its own explicit reviewed estimator/edge handling,
+then recompute these diagnostics and compare before any physical modelling.
+Do not mix the corrected singleton pilot with full ROI means. Preserve all inputs.
+
+Actual b8dfd40 Mac gate passed30/30, all4guards, retained mac-shared-plot-w2slb5vp.
+Actual separate15000..35000ADU line-ASDF computation complete at
+ocam-residual-asdf-15000-35000-hwolegq7:32products,160ROI summaries,3200rows,
+all5outerguards. Repeated pasted logs are one run; do not repeat these gates.
+New agent ratio8, viewer9 and dispatch3 pass; JavaScript ratio controls pass.
+Actual Mac ratio gate and640-row real ratio publication remain pending.
+Use qualify_roi_ratio_mac.py: reuse unchanged qualified common/numerical modules,
+run only changed ratio8+viewer9 and3dispatch checks. Then compute ratio ASDF;
+render independently. No dependency provisioning, installation, merge or cleanup.
+Mathematical implementation guide: roi-ratio-guide-v1.tex and compiled PDF.
+Earlier entries below are historical where superseded.
+
+## Shared plot axes/cursor; proposed middle reference interval — 4 November 2026
+
+Owner requests modular reusable plotting. Use tools/qc-plot-inspection.js for
+all HTML plot axis helpers/crosshair/x-y readout; plots supply bounds/units only.
+Static Matplotlib plots use pycavi_plot_axes.py. Both read the one maintained
+config/plotting/signal-axis-v1.json: ticks every10000ADU, final65535. Full display
+extent does not imply measured coverage. Apply to absolute signal axes only,
+not residual/rate axes. Keep negative measurements visible. Raw saturation
+exclusion65534ADU is unchanged. Cursor returns continuous plot coordinates, not
+an interpolated curve or a new measurement; exact point inspection stays separate.
+No fitting/scientific derived-value math in plotting/browser code.
+
+Owner clarifies Bonn shutter/no assumed spatial correction. Do not interpret
+focal-plane differences as spatial shutter timing in this sequence. Owner proposes
+15000..35000ADU as the next diagnostic reference interval: pass explicit
+--fit-signal-min15000 and --fit-signal-max35000 in the next separate compute run,
+record them in ASDF, retain every outside-range point. Do not alter previous data,
+fits or archives, and do not silently switch an existing all-range fit.
+
+Agent shared-module/actual-JS checks, viewer9 and pair/plot9 passed; static PNG
+inspected. The full new computation-ASDF/plot Mac gate is pending (previous
+6acd3b10 command has not returned). New qualify_plot_inspection_mac.py covers
+pending storage9+changed static9+viewer9, with3runner checks, avoiding native/
+common-header rebuild/replay. Real32diagnostic ASDF and new cursor viewer pending.
+No physical shutter/linearity model, installation, merge or cleanup.
+See docs/developer/shared-plot-inspection-2026-11-04.md; prior entries are history.
+
+## Computations and curves must be saved in ASDF before plotting — 4 November 2026
+
+Owner explicitly requires computational/plotting separation. Controlling final
+design: docs/developer/design/linearity-residual-asdf-v2.md. This supersedes
+browser-side OLS in v1. Pure Python service computes the already approved
+unweighted/free-intercept diagnostic; a separate command writes per-detector
+ASDF with settings, coefficients, all predictions/residuals/rates, units and
+frozen source links through the unchanged common QC factory/writer/reader.
+Original measurement ASDF stays immutable. Changing limits needs a fresh compute
+run; HTML only reads saved diagnostics, with read-only saved fit limits and
+interactive presentation controls. No fitting/prediction/residual/rate math in
+HTML. No physical shutter/amplifier correction is authorized.
+
+Actual interim residual viewer completed at ocam-residual-viewer-fes7vt_w with
+all5preservation checks. Retain it. Sourcef2a15c7 Mac qualifier passed2runner+
+8viewer tests, all4guards, mac-residual-viewer-tmpq60uq; retain the earlier failed
+run too. These old gates need no repetition. New storage9 and reader/viewer9
+checks pass here, including analytical cases, separate command, exact ASDF
+round-trip/relocation, source digests, no overwrite and fitter-disabled reads.
+Actual HTML JS shows stored residual values verbatim. Mac separation qualifier
+and real32-detector computation/ASDF publication remain pending. No old native/
+ASDF matrix replay, image reads, measurement rerun, install/merge/cleanup.
+Mathematical guide maintained as LaTeX and compiled PDF v2. Earlier entries are
+historical where superseded. See docs/developer/linearity-residual-asdf-2026-11-04.md.
+
+## Residual computation saved to ASDF before plotting — 4 November 2026
+
+Owner explicitly requires computations separate from plotting and diagnostic
+curves stored in ASDF. Controlling final design: design/linearity-residual-asdf-v2.md.
+This supersedes browser-side OLS in v1. Keep ordinary unweighted free-intercept
+fits and all sample/interval/null definitions. Python pure computation service;
+common QC factory/writer for immutable per-detector ASDF: settings, fit summaries,
+all predictions/residuals/rates, units and frozen source pair graph. Completion
+index carries product digests and source preservation. New interval -> new run.
+HTML only reads saved diagnostic curves, never refits/recomputes; fit settings
+read-only. Existing raw pair and corrected sample archives stay immutable.
+Computation command compute-pair-residuals.py is distinct from view-pair-qc.py
+with --diagnostics. No common writer/schema change or raw FITS read. Guide v2 is
+LaTeX plus compiled PDF. Actual Mac separated-computation gate/persistence pending.
+
+Interim f2a15c7 actual Mac gate passed2runner+8viewer checks (0.031s/12.199s),
+all4guards. Interim residual viewer ocam-residual-viewer-fes7vt_w completed with
+all5guards. Preserve it as history; it is not the final separated-ASDF product.
+No physical shutter/amplifier correction, flat-field adoption, merge/install or
+cleanup. Earlier browser-computation instructions are superseded by this entry.
+
+## Owner-approved straight-line residual diagnostic — 4 November 2026
+
+Owner inspected the real signal/time viewer and approved per-detector/ROI
+straight-line detrending as an exploratory display. Final approved design:
+design/linearity-residual-display-v1.md (under docs/developer). Fit unweighted
+S=a+b*t with a free intercept; retain all individual exposures, exact sources,
+nulls and outside-fit-range points. Explicit ADU fit limits; residual x=original
+signal or time, y=percent (positive prediction only) or ADU. Add S/t versus time;
+a constant shutter offset is absorbed by the line and gives a fractional delta/t
+rate effect. No physical shutter estimate or amplifier correction is authorized.
+
+Actual32-detector signal/time viewer complete at Pictures/OCAM/wenu-imaging/
+ocam-signal-time-viewer-wrwn42uk:1600pair rows,3200exposure/ROI rows,160bias rows,
+all5preservation checks true. Actual56b7f48 Mac display gate17/17 passed with
+all4guards (mac-signal-time-j4ke56uy). Do not repeat old gates or extraction.
+New residual module is display-only JS embedded into existing HTML; derived JSON
+export saves settings/OLS summaries/rows/source refs; authoritative ASDF untouched.
+Agent8analytical groups,8Python viewer controls and actual-script JS checks pass;
+browser rendering not claimed (known socket restriction). Mac residual gate and
+fresh real-data residual viewer pending. Guide is LaTeX plus compiled PDF.
+No physical model, flat-field change, merge/install/cleanup. Earlier entries are
+historical where superseded. This permission is limited to diagnostic line fits.
+
+## Signal/time display candidate; ASDF header Mac gate passed — 4 November 2026
+
+Actual source1a422b99 Mac ASDF comments passed27/27 (shared13 2.308s, pair9
+17.066s, sample5 6.637s), all5preservation guards true, retained at
+mac-asdf-comments-moofbx58. Do not repeat that gate without relevant changes.
+Signal/time display now projects existing ASDF pair member means/times without
+remeasurement. Preserve exact member/asset/HDU/input index/source row/population;
+inspection ordered by acquisition index/ROI, curves by exposure time. Third PNG,
+exact derived JSON and offline mosaic metric added. Null/negative data preserved.
+Agent pair9/viewer8 and actual-script JS logic checks pass; Chromium launch
+blocked by socket restrictions, browser layout NOT claimed. Mac display gate
+and real32CCD viewer pending. Use qualify_signal_time_mac.py, then generate from
+retained pair ASDF. No raw reads/extraction/fit/model/noise choices/merge/install/
+cleanup. Owner must inspect all data and instruct modelling before it begins.
+See linearity-signal-time-display-2026-11-04.md. Earlier statuses are historical.
+
+## Owner narrows linearity roadmap: display all data before modelling — 4 November 2026
+
+Controlling roadmap: docs/developer/linearity-roadmap-v3-2026-11-04.md (#236/#235).
+Owner explicitly supersedes v2's broad collection redesign. Existing raw-pair
+ASDF contains individual signal1/signal2 and exact first/second exposure times;
+use these for the signal-versus-time extension alongside existing variance/gain
+plots. Preserve their raw-pair, bias-subtracted, no-overscan processing definition
+and common pair population. Do not call corrected individual-site pixels ROI
+means. Extract only any genuinely missing stage/measurement through existing code.
+No new full statistics/noise-evidence campaign is prerequisite for the third plot.
+
+Immediate sequence: reuse archived measurements; expose 20 exposures x 5 ROIs x
+32 detectors (3200 entries), both pair members separately; add signal/time display
+and exact value/source inspection beside existing gain/variance mosaic. Plot/HTML
+creation remains separate from recipes. ALL measurements must be saved/displayed
+and inspected by the owner before their instruction to begin modelling. No new
+fit, shutter estimate, coefficients, model-dependent cuts or covariance study now.
+
+Shared QC writer now adds a few descriptive # lines after ASDF's mandatory header
+for newly written files: purpose, filename, operation, content and structured-QC
+location. Semantic records/digests and frozen references are unchanged. Existing
+archives stay immutable/readable; no in-place editing or forced regeneration.
+Agent ASDF6 checks: shared13/13 (0.863s), pair9/9 (7.138s), sample5/5 (6.028s).
+Initial new header fixture used the bias-only adapter with a generic operation;
+corrected the fixture to use QcRecipe, then all pass. No scientific numerical
+code, real FITS reads, new measurements or actual-Mac acceptance claimed.
+No merge, install, cleanup or model selection. Later mathematical guides remain
+LaTeX plus matching compiled PDF after reviewed design and completed code.
+
+Earlier dated entries below are history where superseded by this instruction.
+
+## Owner revises roadmap: full exposure statistics first — 4 November 2026
+
+Owner explicitly directs collecting mean signal and variances from all exposures,
+ordered by detector, saving ASDF, THEN exploring models/parameters. New roadmap:
+linearity-roadmap-v2-2026-11-04.md. It supersedes the narrow unaccepted Stage8v1
+site-only next-step scope; preserve that earlier design as history. This is a
+roadmap revision, not implementation or approved statistical model selection.
+
+For current32detectors,30frames (20flat+10bias),5existing fullROIs:4800exposure/ROI
+records with raw/corrected stages, mean/sample variance and pixel/exclusion counts;
+1600flat-pair/ROI records with exact common populations and stage-specific variance.
+Keep raw biasRON, master membership, scan evidence and existing160-site samples.
+Retain cubic signal moments so Q(mean) is never used as mean(Q). Individual-image
+spatial variance and pair-difference variance are distinct, not automatic weights.
+All valid levels stored; later model cuts/settings do not alter collection.
+
+One integrated collection+ASDF job after a reviewed complete contract and focused
+qualification; fit experiments read immutable ASDF and save separate model/results.
+Do not add repeated extraction/saving stages around parameter changes. New guide
+policy also requires LaTeX.tex plus matching compiledPDF maintained in parallel,
+after completed scientific implementation based on previously reviewed design.
+No C/Python service change, new tests/observations/fit/installation/merge/cleanup
+in this roadmap-only increment. #236 open; original archive remains preserved.
+
+## Stage8 noise-evidence design ready for human review — 4 November 2026
+
+Owner said Proceed with the roadmap. Under the new owner documentation policy,
+scientific subroutines need a finalized human-reviewed design before implementation
+and a mathematical guide tied to final code after completion (references where
+appropriate). This Stage8 design candidate is prepared, not yet reviewed/accepted:
+linearity-noise-evidence-design-v1-2026-11-04.md. No new scientific code/tests or
+observational reads run in this step; do not call the proposed checks passing.
+
+Concrete source findings: approved160 sites occupy96 distinct raw rows. Enabled
+overscan widths are43 for16detectors and44 for16; low10/high10 rejection leaves
+23/24 reads. Current10-frame master uses lower-middle fifth order statistic;
+9-frame master also fifth. Preserve exact native estimator/rounding, not a generic
+mean-of-middle median. Design captures10bias+20flat site values and scan reads,
+scalar160-master and3200-flat replay, original memberships and physical source keys.
+Expected4800site rows,2880scan estimates,125280scan reads,160master rows;63 image
+inputs guarded before/after. No old recipe rerun, model/MC/weights/range/fit chosen.
+
+Review complete design before implementing the new service/file adapter/ASDF.
+Final mathematical guide follows completed implementation, not a substitute for
+that earlier review. Existing archives and qualified software stay intact;
+#236 open. No install, merge, cleanup or new user-host processing for this review.
+
+## Actual corrected-sample ASDF archive complete — 4 November 2026
+
+Qualified0ce05fcd source persisted all32 detector products,3200 rows and1088
+shared ASDF records at Pictures/OCAM/wenu-imaging/ocam-corrected-sample-asdf-xm1ngkg_/
+persistence. Inner statuscomplete; outer complete_for_owner_inspection. All5
+preservation checks true: checkout, installed_files, exported_source,
+private_qc_runtime, native_evidence. Native source tables, master QC graph and
+runtime preserved; no observation reread, image hash or measurement rerun.
+Data preparation/archive stage is complete.3200 admitted,0missing,160/160 sites.
+Do not repeat source exports, qualification, extraction or ASDF conversion.
+
+Next substantive gate is empirical noise/covariance and the real joint correction
+fit. Reuse the agreed uncertainty policy in linearity-uncertainty-review-2026-11-03.md:
+measurement first, actual trimmed scan and median master estimator propagation,
+fixed covariance within a fit, outer sensitivity for estimated weights. Current
+raw pair variance is not automatically corrected independent variance; same-master
+cancellation prevents estimating shared master uncertainty from pair differences.
+No distribution/pooling/MC settings, interval or identity weights selected.
+Review needed same-site bias/scan evidence before choosing a model; retain within-
+block correlations and require justified independence across the3noise blocks.
+One common shutter parameter remains global; amplifier response coefficients
+remain separate. No coefficients fitted/applied, plots/HTML, install/merge/cleanup.
+#236 stays open. See corrected-sample-asdf-2026-11-04.md for actual archive receipt.
+
+## Actual Mac corrected-sample ASDF gate passed — 4 November 2026
+
+Actual0ce05fcd2c10519cf0a6726df2083cda55a4bf5a passed5/5 in8.938s at
+/Users/fselman/Software/build/wenu-imaging/mac-sample-asdf-2bqdfrlp.
+All4preservation guards true (checkout/install/exported source/private runtime).
+Use that exact qualified source/privateASDF6 runtime for actual persistence of
+ocam-linearity-samples-28h0jxnr into a fresh Pictures directory. Expected32products,
+3200rows,1088records; actual persistence pending. Native/table evidence remains
+frozen; no observations opened or image hashes/measurements/qualification repeated.
+
+This receipt changes metadata only; no Mac fetch, rebuild or installation needed.
+The conversion can run from the existing qualified copy, with normal checkout,
+installed/source/runtime/native-evidence protections and a retained outer receipt.
+No noise/covariance/interval/fit/correction choices. Preserve all evidence/runtime;
+#236 stays open. See corrected-sample-asdf-2026-11-04.md. No merge/cleanup.
+
+## All160 sites admitted; corrected-sample ASDF candidate — 4 November 2026
+
+Owner's saved-table hash review confirms3200 admitted,0missing,160/160 sites,
+100 samples perCCD. Rounded corrected-pixel coverage934.2..53381.5ADU (maxCCD86).
+No fit/nonlinearity interval inferred. Do not repeat extraction/image hashes/Cgate.
+
+New pycavi_sample_qc +persist-linearity-samples.py reuse unchanged common ASDF
+factory/reader/traversal, freezing native text+typed rows+units/availability and
+frame population, physical site/frame sources, sampling/configuration/provenance.
+Import master QC graph semantically unchanged with accepted/rejected memberships.
+34 records perCCD (expected1088total); originals not reopened or changed. Missing
+None, negative signals preserved. Noise unavailable, covariance/fit interval/
+coefficientsNone, fit not performed. No scientific weighting/model choices.
+
+Agent5new ASDF metadata checks pass5.250s, FITS/network forbidden, including exact
+roundtrip/relocation/master memberships and typed/unit/origin/noise/counter/cohort/
+conflict/frozen-link refusals. ActualMac five-check gate pending via
+qualify_sample_qc_mac.py; no old suite/native build/install. Actual ASDF sample
+persistence pending after target gate; no plots/HTML/fit/correction/merge/cleanup.
+See corrected-sample-asdf-2026-11-04.md. #236 open; approval to proceed persists.
+
+## Actual all32 corrected singleton extraction complete — 4 November 2026
+
+Actual Mac controller efebadf42bf6de6f03638ddb69af68254810ae97 completed at
+Pictures/OCAM/wenu-imaging/ocam-linearity-samples-28h0jxnr. All32 detectors,
+3200 site/frame rows, complete_for_owner_inspection. All8guards true: shared_images,
+frozen_metadata, products, checkout, installed_files, native_source, qc_source,
+private_qc_runtime. All53 selected image files verified before/after. New4metadata
+controls passed0.016s,1ASDF admission fixture2.902s; all32 real master QC chains
+verified with9/10 memberships retained for69/74/77/84/85 and10/10 for others.
+
+Do not repeat extraction/qualification or raw FITS hashing without a new reason.
+3200 is the retained row count, not a claim all observations were admitted. Next
+read only saved native TSVs after checking their retained output hashes; summarize
+admitted/missing sites and corrected signal coverage. Availability/coverage not
+yet returned. Source/FITS arrays need not be reopened for that review. Native
+transports still need final shared ASDF candidate publication. No noise/MC/fit
+interval, weighting, fitted correction or calibration acceptance chosen. Preserve
+all runs/builds/runtime; no install/merge/cleanup. #236 stays open. See
+ocam-linearity-sample-batch-2026-11-04.md for receipt and provenance limits.
+
+## Actual Mac singleton command passed; serial extraction ready — 4 November 2026
+
+Actual f560d67 Mac C17 gate passed2/2 in8.28s at mac-sample-command-1iwkve9e:
+new extraction6.67s, affected pair command1.60s. All3preservation guards true;
+metadata singleton preparation succeeded. Do not repeat this native gate or rebuild.
+
+New run_ocam_linearity_samples.py admits completed all32 masters/actual memberships,
+shared ASDF frozen links/configuration/identity and original per-file flat/BPM maps.
+Uses approved160 sites,20 original frames,32 serial qualified native commands.
+Hashes53 selected images (20flats+BPM+32masters) once before/after the whole batch;
+current full stat/hash equality and8outer preservation guards required. Original65
+has no saved historical whole-FITS digest: verify approved path/HDU/semantic QC,
+then establish a new explicit whole-file baseline; never claim historical bytes
+verified from QC alone. Other31 masters compare saved full-byte hashes.
+
+Agent4metadata controls0.006s plus1real-ASDF fixture1.662s pass; only these new
+controls run onMac before extraction. Existing qualified C/QC modules unchanged.
+Native100rows per detector preserve missing sites, exact physical coordinates and
+original frame order. Native TSVs are intermediate, not final ASDF products.
+Actual all32 extraction pending. No noise/MC/fit interval, coefficient acceptance,
+weights, correction, plotting/HTML, install/merge/cleanup. See
+ocam-linearity-sample-batch-2026-11-04.md. #236 open; sampling approval persists.
+
+## Owner-approved 160-site pilot; extraction command candidate — 4 November 2026
+
+Owner accepted the sampling proposal with “Yes, proceed.” Approved160 physical
+sites are in omegacam-linearity-pilot-sites.json; review-only proposal stays as
+history. Sampling only: no noise/MC/interval/fit/calibration choice inferred.
+Metadata preparer validates profiles/identities/slot/readout-centre/raw crops and
+writes32 five-singleton transports. Agent all32 preparation and4 changed-input
+refusals passed; no FITS opened. Keep master accepted memberships9/10 or10/10.
+
+New mefpp_sample_extract reuses unchanged bound-file/sample/scan/master kernels,
+shared raw-selection parser, singleton ROIs and explicit active master/HDU. It
+exports original-frame/site rows, missing as blank with not_admitted, frame
+population diagnostics and noise unavailable. No raw-bias remeasurement, means,
+pair averaging, hidden lamp/fit/noise policy. Full-finite API transport bounds
+are not a science interval. Native transport completion is not an overall receipt.
+
+Agent C17 command checks2/2 in1.03s; changed extension-master case recheck0.63s;
+normal mefpp builds. ActualMac focused2-command gate pending via
+qualify_sample_command_mac.py; compare unchanged kernels to passed aa5427c gate.
+Do not rerun old noise/numerical matrices. Actual extraction controller, source/
+master-lineage guards, final ASDF publication and real noise/correction fit still
+pending; approval does not require another sampling question after qualification.
+See linearity-singleton-extraction-2026-11-04.md. No install/merge/cleanup.
+
+## All32 master signals complete; fit population choice pending — 4 November 2026
+
+Actual remaining31 bias batch d84568b completed at
+Pictures/OCAM/wenu-imaging/linearity-bias-batch-05ijf_sx; masters.json indexes32
+signal candidates incl original65. Five controls pass; all8preservation guards true.
+69/74/77/84/85 accepted9/10, others10/10 under unchanged legacy rule. Preserve each
+accepted membership for conditional uncertainty; master variance still unavailable.
+Do not rerun masters or qualifiers without relevant changes.
+
+Next obstacle is the dense direct-pixel fitter's population size (~41.9M sites in
+full5ROIs*32CCD). A review-only160-site proposal is prepared: one central physical
+pixel per ROI,32detectors, at most3200 flat observations and225joint parameters
+with ONE global shutter offset. Raw/active coordinates and reflection tie-break
+are explicit and metadata-checked. NOT adopted or executed. Owner sampling choice
+needed before extraction; never substitute ROI means or silently choose quiet
+replacement pixels. See linearity-fit-sampling-proposal-2026-11-04.md and config/
+characterization/omegacam-linearity-pilot-sites-proposal.json. Noise/distribution/
+MC/fit interval options remain unselected; no identity weights to force a fit.
+#236 open. Keep all existing data/runtime; no install/merge/cleanup.
+
+## CCD65 bias pilot complete; remaining31 batch ready — 4 November 2026
+
+Actual pilot c93dcd9 at linearity-bias-CCD65-epw82wy3 completed native FITS+ASDF,
+10/10 accepted, all5preservation guards true. Raw mean274.0559..278.0642ADU becomes
+corrected mean0.031444..0.084165ADU. This is not scan-estimator uncertainty or known
+master variance. Preserve pilot and qualified022cf368 adapter/current shared QC.
+Attachment155309 shows output pasted into Bash (command-not-found), not a second
+bias recipe run; new guards check the actual retained state before processing.
+
+Remaining31 serial controller reuses pilot recipe choices, independent header/HDU
+maps and native geometry slots. Shared10bias+BPM full hashes once before/after
+whole batch; original65 reused. Per-detector native/ASDF completions remain
+provisional until outer batch source/product/preservation guards pass. Source
+image hashes live in outer receipt; existing ASDF mapper fields remain unchanged.
+Five new focused stdlib control checks pass and run onMac before processing;
+no old numerical/ASDF matrix, build, install, plotting or HTML. Actual batch pending.
+Successful masters.json indexes32 signal candidates and required outer receipt;
+variance remains unavailable. Real noise model/corrected samples/curve fit still
+pending. See ocam-linearity-bias-batch-2026-11-04.md. #236 open; no merge/cleanup.
+
+## ROI review complete; real bias dependency pilot next — 4 November 2026
+
+ASDF-only32 detector review completed at linearity-noise-review-ru0k1h1j, all5
+guards true. Coverage extends to52529.9ADU (CCD85), not onlyCCD65's38574.9.
+Targeted ROI review linearity-roi-review-nnvscgpb completed, all6guards true.
+High ordinary RON is localized in75/82/86/96; MAD-RON2.09671 everywhere is a
+quantized2ADU difference MAD, not proof of equal noise. No RON replacement,
+auto-rejection, temporal-noise diagnosis or lamp normalization. Largest69/87/88
+mismatches are2s;88 has5 saturated exclusions only in parallel_far/30s.
+
+Next bounded dependency is a real CCD65 scan-corrected median-bias pilot from the
+10 inventoried biases using the existing qualified022cf368 native bias adapter,
+canonical PAF and explicit structural BPM1=good. Keep first2 RAW RON pair. Existing
+scan/stack/rejection and high-sigma5 diagnostic settings unchanged. Controller
+run_ocam_linearity_bias.py prepares new outputs/whole-file preservation guards;
+current qualified shared ASDF backend, no plotting/HTML, rebuild or new test suite.
+Pilot pending, master variance explicitly unavailable; no Gaussian/MC/fit interval
+or coefficients selected. Inspect actual pilot before corrected-sample use. See
+ocam-linearity-bias-pilot-2026-11-04.md. #236 open; no install/merge/cleanup.
+
+## Actual Mac correction composition accepted — 4 November 2026
+
+Source aa5427c actual Intel Mac C17 gate passed native_linearity_fit2.16s and
+native_linearity_fit_allocation1.36s:2/2 in3.54s. Retain
+/Users/fselman/Software/build/wenu-imaging/mac-linearity-fit-psb7nup5.
+Checkout/installed_files/exported_source all preserved. Qualified unchanged
+noise/joint/QR/optimizer kernels reused; normal mefpp built without installation.
+Do not repeat this gate without relevant changes. This qualifies synthetic
+correction-candidate composition only, not real fitted coefficients.
+
+#236 stays open: connect bounded corrected physical samples, establish the real
+noise model/scan-estimator/median-master covariance, and add recipe/ASDF candidate
+publication. The supplied ASDF-only32-detector noise review has not yet returned;
+request that evidence before silently choosing gain/fit range/distribution/pooling
+or simulation parameters. No real fit, correction activation, accepted calibration,
+installation, merge or cleanup. Keep plotting/HTML separate from recipe execution.
+See linearity-correction-composition-2026-11-04.md and #236 receipt.
+
+## Correction-producing linearity composition candidate — 4 November 2026
+
+Owner says proceed with the pixel-response correction curve. #236 now adds an
+in-memory C17 composition: explicit corrected direct pixels + justified supplied
+noise -> QR-ordered measurements/factor -> joint global shutter profile -> owned
+amplifier cubic inverse-response curves and conditional covariance. Preserve ONE
+common delta, physical site/frame identities, actual coverage versus declared
+interval, full cross-amplifier covariance and provenance. No ROI-as-pixel shortcut.
+Missing noise/provenance/profile inputs fail; unavailable numerical gates expose
+no curves. No noise distribution/gain/interval/MC defaults or science acceptance.
+
+Agent two new C17 checks pass2/2 in0.78s; normal mefpp builds. They test known signed
+offsets, distinct amplifier cubics, correlated noise/nonidentity QR order, owned
+curve extraction, unavailability and both new allocation positions. Existing
+qualified kernels unchanged and not retested. Actual Mac gate pending via
+qualify_linearity_fit_mac.py, matching kernel bytes to passed c381168b noise gate.
+No actual32-detector coefficients fitted, FITS recipe/publication or correction
+activation yet; bounded/scalable corrected samples and established noise model
+remain before real run. Plot/HTML stages remain separate; recipe navigation later.
+See linearity-correction-composition-2026-11-04.md. No install/merge/cleanup.
+
+## Project-local QC and independent presentation — owner decision, 4 November 2026
+
+Owner says the HTML viewer looks good. Actual Mac viewer metadata gate aecce5c
+passed7 checks in11.064s at mac-pair-qc-viewer-n3dsjk5f; all four protection guards
+true. Real viewer visual feedback is positive; final generation receipt/guards
+have not yet been pasted, so do not invent their status or close#235 on that basis.
+
+Finish the linearity script before the next HTML navigation change. Then add a
+left-edge recipe selector: bias, BPM, linearity, dark, dome flats, sky flats,
+master flats, science, WCS, zero points, illumination; grow it as recipes develop.
+Keep plotting/HTML generation an independent stage from recipe execution, reading
+persisted shared ASDF QC. Regenerating a presentation must not rerun recipes or
+pixel measurements. QC is per project initially; later add a reference QC database
+through the data-source layer, retaining assessment identities/configuration/units/
+stage/provenance. No database technology, reference-selection/threshold policy,
+implementation of all recipes, file relocation or scientific defaults chosen.
+See qc-mosaic-viewer-requirements-2026-11-04.md. This is a documentation-only decision;
+no repeat qualification, install, merge, cleanup or source sync on Mac is needed.
+
+## All32 OCAM complete; offline QC mosaic candidate — 4 November 2026
+
+Actual Mac batch ef4d1e2d at Pictures/OCAM/wenu-imaging/ocam-raw-pairs-serial-nx_j6g1j/batch
+completed31 native/ASDF/plot detectors; CCD65 reused. Status complete_for_owner_inspection,
+source_preservation true, two shared hash passes/image, error null. Outer checkout,
+installed/exported/private-runtime/reference protections all true. #234 closed.
+No rerun needed. Keep batch, reference65, BPMs, builds and private QC environment.
+
+#235 implements offline geometry-driven ASDF QC HTML: gain/variance mosaic tiles,
+click/keyboard detector selection, enlarged plot/ROI toggles, full point values,
+counts/availability/raw RON/provenance and maintained footprint SVG. Reads validated
+ASDF and small receipts/TOMLs only; no raw FITS/native TSV open, estimator or fit.
+Seven new agent metadata controls pass8.661s; JS syntax passes. Agent Chromium launch
+blocked by local socket permission, so browser interaction/rendering is pending,
+not passed. Actual Mac focused metadata gate via qualify_pair_viewer_mac.py then
+real HTML generation/visual inspection pending. Reuse unchanged ASDF/native gates;
+no installation, rebuild, scientific default, merge or cleanup. See
+qc-mosaic-viewer-2026-11-04.md; PR227 remains draft.
+
+## Remaining OCAM serial batch candidate — 4 November 2026
+
+Owner says proceed after completed CCD65 ASDF/plots. Issue#234 tracks remaining31.
+New one-use batch prepares identity-mapped selections/geometry ROIs, reuses CCD65,
+and runs qualified native512092fa serially. Hash23 common image files once before
+and once after the whole native interval, matching frozen CCD65 hashes. Pending
+native receipts cannot publish ASDF before shared verification. Then unchanged
+common ASDF bridge/plotter preserve full precision per detector. Stop first failure;
+retain truthful failed/pending evidence, never auto-resume or overwrite.
+
+Twelve agent orchestration controls pass in5.262s, including all31 metadata-only
+preparation, independent mappings, shared hash counts, failures/source changes,
+one-use execution and genuine ASDF publication from supplied transports. These
+are not numerical/actual Mac acceptance. Actual Mac focused qualification pending
+via qualify_ocam_pair_batch_mac.py; reuse prior21 ASDF/plot gates only after exact
+module identity/package-version comparison with passed mac-pair-asdf-i7rw5asm.
+No native rebuild, observation access, dependency installation or old matrix.
+After Mac gate inspect real prepare-only31 manifest, then execute same approved
+science choices without repeat approval. Real batch not run. PR227 stays draft;
+no fit/merge/install/cleanup. Keep prior runs/BPMs/private runtime. Geometry HTML
+mosaic follows detector-wide data. See ocam-serial-pair-batch-2026-11-04.md.
+
+## Actual Mac ASDF persistence and plots completed — 4 November 2026
+
+Actual source9f5a35fd qualification passed12 shared-QC checks in1.648s and9 pair/
+plot checks in18.061s. Retain /Users/fselman/Software/build/wenu-imaging/mac-pair-asdf-i7rw5asm;
+checkout/installed/exported source/private QC runtime all preserved. No rerun needed.
+
+Real postprocessing retained at
+/Users/fselman/Pictures/OCAM/wenu-imaging/ccd65-pair-qc-2bz8baok:
+complete_for_owner_inspection,25 ASDF records, exact roundtrip, metadata preserved,
+50 pairs rows and5 bias-RON rows. Both plots regenerated from saved full-precision
+ASDF only. No raw FITS opened/pixels remeasured. Final outer guards all true:
+checkout,installed_files,exported_source,private_qc_runtime,native_evidence.
+Serializer9f5a35fd/native512092fa remain distinct. Canonical saved measurements:
+asdf/records/pairs.asdf digest
+b69f0a0eaacccb4680de74c207e215c413c313e76a28fd423ec792248c786bb2;
+asdf/records/bias-ron.asdf digest
+6a4e5320b5439626241353918cd949be0a4c0a96286c0173ae8d1d1a4cfe73de.
+These are semantic QC digests, not whole-file hashes. Retain both ASDF/plot trees
+and original native transport/evidence; common QC1.1/file ASDF1.6 is qualified.
+#233 closed for bounded persistence/roundtrip/plot acceptance. PR227 stays draft.
+
+Next prepare remaining31-detector serial orchestration, reusing inspected CCD65
+and qualified512092fa native command, hashing shared input set once per batch
+(before/after, not32 full passes). Persist each detector through qualified shared
+ASDF and derive plots from saved records. The planned geometry-driven HTML mosaic
+comes after detector-wide data. No batch has run yet; no scientific fit/gain
+interval/noise/covariance policy is selected. Higher-signal sequence search is
+deferred. Keep original BPM, structural copy, failed runs and needed runtimes.
+No installation, merge or cleanup. Receipt-only documentation needs no user-host
+source sync or repeated tests. See raw-pair-asdf-2026-11-04.md.
+
+## Raw-pair ASDF persistence and future mosaic viewer — 4 November 2026
+
+Owner instructed proceeding with ASDF persistence of the already-completed CCD65
+run before expanding to remaining detectors. Preserve full native precision; do not
+repeat pixel measurements. Shared QC1.1 extends only tabular product identity:
+explicit table_name selectors for TSV products, real hdu_index for FITS; no fictitious
+HDU. Existing QC1.0 FITS records remain readable; the1.0 schema resource stays intact.
+Use common QcRecipe/write_record/read_record/traverse_records for all records.
+New raw-pair adapter freezes native tables/units/availability/origins/settings,
+receipt/configuration and explicit structural-BPM lineage, publishes per-input
+binding records plus pairs.asdf/bias-ron.asdf, and verifies exact roundtrip.
+No per-frame statistics or accepted gain is invented from pair measurements.
+
+Agent metadata checks pass12 shared+9 pair/plot controls; existing tiny native TSV
+outputs also parse without rerunning native code. Actual Mac gate pending via
+qualify_pair_qc_mac.py, using retained private ASDF6 runtime and protected normal
+imaging Python. No installation, upgrade, native build or old numerical matrix.
+After inspected Mac gate, persist existing ccd65-raw-pairs-bpmfixed-zfs377ok tables
+and regenerate both plots from ASDF only in a fresh Pictures purpose directory.
+Do not use rounded chat values for authoritative plots. No raw FITS reread.
+
+Owner requests eventual HTML QC mosaic based on the maintained geometry viewer:
+choose gain/variance on mosaic tiles, click detector for enlarged selectable-ROI
+plots, read full-precision ASDF and show availability/exclusions/provenance. Record
+requirements now; implement after detector-wide data. HTML is the initial format;
+revisit only as needs develop. Higher-illumination sequence search/near-saturation
+characterization and gain/shutter fitting remain deferred. Existing five CCD65
+windows reach only~39kADU mean signal. No all31-detector run, fit, merge or cleanup
+is launched by this persistence increment. See raw-pair-asdf-2026-11-04.md and
+qc-mosaic-viewer-requirements-2026-11-04.md in docs/developer.
+
+## CCD65 real measurements completed — 4 November 2026
+
+First actual raw-pair run succeeded with qualified native512092fa and the explicit
+verified structural BPM copy. Retain
+/Users/fselman/Pictures/OCAM/wenu-imaging/ccd65-raw-pairs-bpmfixed-zfs377ok.
+execution.json: complete_for_owner_inspection, native exit0,1 detector,5 ROIs,
+50 pair rows,5 bias-RON rows; final30 source fingerprints unchanged. Outer
+checkout/installed/exported source all preserved. Owner verified full pair-table
+output hash in a subsequent read-only report. No rerun required.
+
+All50 rows have arithmetic_available gain, no nonfinite/saturation exclusions,
+and constant per-ROI populations:262144 except parallel_far262141/far_corner262143.
+Raw bias RON ADU: near1.974218,serial_far1.971490,parallel_far2.028334,
+far_corner2.228890,center2.147637. Raw bias differences have median-4ADU;
+MAD-based RON2.096713ADU throughout. These are diagnostics, not accepted gain.
+Point gains trend upward with signal: five-ROI ranges5s2.298-2.312,20s2.317-2.335,
+40s2.348-2.376,70s2.410-2.425e/ADU. Near-readout gain increases4.90% from5s to70s;
+S/t increases1.14% from2s to70s. These do not identify a unique response/shutter/
+illumination cause. No fitting interval/noise/covariance policy is selected.
+
+Actual Mac structural-copy helper passed7 tests in0.382s;64 cards added across32
+CCDs, all existing cards and stored payload preserved. Retain
+Pictures/OCAM/wenu-imaging/legacy-bpm-structure-b1h9egzp while measurements reference
+it. Original SHA d7aeb7d6041fd2e03d48785298b338ba61860e145a08a4aeb29e0fc9b5a13532;
+copy a22a6b8f478feb43f541f972a1567de962652c916d823eef68be1354e472de7a.
+#231/#232 are target-verified and closed; PR227 remains draft/unmerged. Keep original
+BPM,both failed attempts and retained qualification builds. Approved bias/saturation/
+polarity choices remain settled. Next discuss detector-wide measurements and the
+response-dependent gain before choosing fit policies. No automatic31-detector run,
+fit, installation, merge or cleanup. See ocam-ccd65-first-measurements-2026-11-04.md.
+
+## Legacy OCAM BPM structural-copy preparation — 4 November 2026
+
+Actual Mac #231 repair qualification at512092fa passed native_pair_command/native_layout
+2/2 in5.56s, retained mac-extname-binding-it2gdv4q; checkout/install/export all preserved.
+Real retry retained Pictures/OCAM/wenu-imaging/ccd65-raw-pairs-extname-w5wjs5pr:
+all flat/bias bindings pass, BPM discovery fails before pixel loads. All three
+outer preservation checks pass; final runner source checking was not reached.
+Owner supplied read-only33-HDU BPM header receipt: empty primary,32 BITPIX8
+2044x4091 IMAGE extensions with exact identities but missing PCOUNT/GCOUNT.
+Strict rejection is correct; track legacy malformed input separately as #232.
+
+Prepare an explicit derivative with missing PCOUNT=0/GCOUNT=1 only, using
+prepare-legacy-bpm-copy.py. Keep global native validation unchanged and source
+BPM untouched. It streams original stored data/padding, verifies every existing
+header card and data byte, source hash against the failed run's frozen fingerprint,
+and full source preservation. Seven agent synthetic checks pass in0.166s; actual
+Mac preparation remains pending. No native rebuild or old numerical gate replay.
+Then inspect preparation receipt before deriving a selection referencing the copy
+and retrying CCD65. Approved biases,65534 ADU boundary and BPM1=good remain settled.
+Keep both failed real attempts and original BPM; no fit/install/merge/cleanup.
+See docs/developer/ocam-legacy-bpm-copy-2026-11-04.md.
+
+## CCD65 first real attempt and EXTNAME repair — 4 November 2026
+
+Owner explicitly approved both proposed raw biases, exclusion >=65534 ADU and
+legacy binary BPM 1=good. Do not request these choices again. Initial cross-session
+stat admission stopped before output creation because all 31 device numbers changed
+16777222 -> 16777223; inode/size/mtime_ns/mode all matched. The corrected launch
+records that exact transition without rewriting the earlier review and establishes
+fresh full runner fingerprints.
+
+Actual Mac attempt retained at
+/Users/fselman/Pictures/OCAM/wenu-imaging/ccd65-raw-pairs-p0sxrc40/measurement:
+failed, native exit1, first flat binding, no completed tables. Checkout and installed
+files preserved; runner final source-preservation check was not reached. Source
+tracing confirms #231: identity_key=EXTNAME was rejected as a duplicate configured
+selector before pixel loads. NULL-free messages are separate cleanup diagnostics.
+
+Bounded #231 repair supports one EXTNAME card in both extname/identity fields,
+retains duplicate-physical-card rejection and all other mapping checks, and reports
+layout error detail. New synthetic native layout and OCAM-style command regressions
+both fail before and pass after repair (agent C17 2/2,1.04s). Exact table equality,
+unsigned scaling, absent-BUNIT ADU fallback, HIERARCH selectors, identity mismatch,
+duplicate card and immutable fixtures are checked. Actual Mac repair gate pending:
+qualify_pair_command_mac.py --layout-alias; builds command/layout_probe, runs only
+native_layout/native_pair_command. Preserve old build and failed run; no raw-data
+retry until this gate is inspected. No install, fit, merge or cleanup.
+See docs/developer/ocam-extname-binding-repair-2026-11-04.md.
+
+## Branch closeout: build-directory review — owner instruction, 3 November 2026
+
+
+## Resume checkpoint — end of 3 November 2026
+
+Owner stops for tonight and asks for cross-chat continuity. Resume wenu-imaging
+from this checkpoint and docs/developer/detector-characterization-handoff-2026-11-03.md.
+The companion resume artifact is wenu-imaging-resume-2026-11-03.txt. Do not mix
+this work with fselman/wenu charts/catalogues or the Raspberry Pi chat.
+
+Actual Mac C17 command/runner gate passed at 6e75a7bf322583e0aeaca50e1ff786b70cd259f3:
+pair_runner_orchestration/native_pair_command 2/2 in 3.04 s, retained
+/Users/fselman/Software/build/wenu-imaging/mac-pair-command-mv3iAx5L.
+All checkout/installed_files/exported_source preservation checks true.
+Protected Mac checkout remains clean main c73d9a9e3a631fbbb2346beaa3c150c110a60343.
+
+Corrected exact-byte PAF fingerprint at 8736e16: canonical OCAM PAF SHA256 is
+709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f.
+An earlier local copy omitted three final-comment trailing spaces; no parameter
+difference. Strict hash checking remains. Use corrected processing TOML with
+unchanged qualified native code; do not rebuild/replay passed gates just for this.
+
+Owner-returned real saved-header review passed: 30 files x 32 outputs, unchanged
+source stat identities, BITPIX16/BSCALE1/BZERO32768/BUNIT absent. Retained
+/Users/fselman/Pictures/OCAM/wenu-imaging/first-pair-review-So47zUsK.
+Its selection-proposed.toml targets ESO_CCD_#65/L, five ROIs, 50 pair rows,
+206467604 loaded pixels. No real pixel measurement or fit has run.
+
+Three scientific choices were explicitly requested but remain unanswered:
+first two biases (2017-03-13 09:50:05.624 and 09:50:48.373), raw exclusion
+at/above65534 ADU, legacy binary BPM 1=good. Resolve that pending choice once;
+do not infer approval from the successful metadata receipt or tonight's save.
+After agreement, reuse the qualified retained command and current corrected
+configuration to prepare/execute the first detector under Pictures/OCAM/wenu-imaging,
+preserving original files and all ten nonconsecutive flat pairs in acquisition
+order. No lamp normalization, median-zeroing, fitting, gain interval selection
+or estimated covariance is part of this first raw measurement.
+
+Maintain footprint viewer with TOML changes. Real comparison products belong in
+purpose-named Pictures/OCAM/wenu-imaging or Pictures/WFI/wenu-imaging directories
+with purpose/deletion README. At branch merge/cleanup, review build directories
+and reasons/disposition with owner; protect needed runtimes and comparison data.
+Do not merge or delete branches/builds merely to save this checkpoint. Existing
+draft PR #227 and branch docs/bpm-linearity-pairs-20261103 remain open.
+
+## Detector footprint viewer maintenance — owner direction, 3 November 2026
+
+Fernando inspected both generated Mac mosaics from source 50e52a9055fb1a761119abf529433a32dc2816dc and reports that both look OK. Review outputs:
+- OCAM: /Users/fselman/Pictures/OCAM/wenu-imaging/detector-geometry-review-iE8SBsHq/footprints.html
+- WFI: /Users/fselman/Pictures/WFI/wenu-imaging/detector-geometry-review-5qloSBd2/footprints.html
+
+Maintain tools/detector-footprint.py and tools/view-detector-footprints.sh as the detector and processing TOMLs evolve. Any change to their schemas, geometry, detector/output identities, scan/crop/ROI coordinates or configuration composition must update the viewer and affected regression checks in the same change. Keep the diagrams driven by the configuration used for inspection; do not let separate hard-coded geometry or a stale visualization-only schema drift from future authoritative TOMLs. When production TOML schemas/readers replace these reference schemas, adapt or share their interpretation and retire duplicated profiles. Preserve explicit coordinate systems, nominal illuminated versus retained areas, scan bands versus selected samples, mosaic placement and schematic amplifier-marker semantics. Regenerate affected views and record visual review when geometry changes. This acceptance confirms the displayed layout; it does not authorize numerical reduction or scientifically validate candidate ROIs. See docs/developer/detector-footprint-viewer-2026-11-03.md.
+
+
+Whenever work is finished by merging and cleaning a branch that created build
+directories, review those directories with Fernando as part of that closeout.
+Do not leave the review for an unspecified later cleanup.
+
+- Identify each build directory created by the branch and its disk usage.
+- Propose whether it can be erased. For every directory that must be kept,
+  explain the specific reason: required runtime dependency, unfinished validation,
+  unique evidence or another concrete continuing need. State when that reason
+  will cease to apply and the directory can be erased.
+- Data needed for future comparison must first be placed in an appropriately
+  named subdirectory of ~/Pictures/OCAM/wenu-imaging or
+  ~/Pictures/WFI/wenu-imaging. Each dataset subdirectory must contain a README.md
+  explaining why the data is needed and when it can be erased. Update active
+  references and record the new locations.
+- Present the concrete retention/deletion proposal for review together, then
+  perform the agreed cleanup and record its outcome. Do not assume that branch
+  deletion also settles retention of its build directories.
+- State any remaining retained directories and reasons in the final handoff.
+  Never retain an entire large build tree solely because it once held comparison
+  data or because cleanup was not considered.
+
+This is a closeout/retention requirement, not a requirement to rerun tests.
+Existing required engines/environments must remain usable until their actual
+dependencies have been resolved.
+
+## Mac optimizer accepted; direct-pixel joint candidate - 3 November 2026
+
+Actual Mac beee7c0d passed native_simplex/native_simplex_allocation 2/2 in 1.79 s
+at /Users/fselman/Software/build/wenu-imaging/mac-simplex-ddM35GKJ. All three
+preservation checks passed; clean main c73d9a9e remains unchanged.
+Owner authorized the joint wrapper next. First increment fits compact DIRECT
+PIXEL samples only: one common signed all-detector delta, per-pixel illumination
+rates, amplifier cubics, supplied fixed covariance, analytic derivatives,
+multiple declared starts and qualified Eclipse optimizer/QR. Candidate status is
+NOT science acceptance. No unvalidated ROI-mean substitution, new lamp factor,
+BPM classification, fit-range default or production publication.
+Agent C17 two new controls pass 2/2 in 0.62 s; all 47 single/persistent allocation
+positions preserve qfits owners. Normal mefpp builds. #229 corrects only the
+rank-isolation test fixture; keep open until actual Mac gate. Actual Mac joint
+candidate gate pending: qualify_detector_joint_mac.py. Profiles, instrument
+coverage acceptance, validated aggregation/covariance preparation and scalable
+measurement/recipe integration remain next. No unchanged helper replay or
+observations/install/merge/cleanup.
+See [candidate record](detector-joint-candidate-2026-11-03.md).
+
+## Mac QR accepted; checked optimizer candidate - 3 November 2026
+
+Actual Mac b382a93e passed native_matrix_qr/native_matrix_qr_allocation 2/2 in
+1.69 s at /Users/fselman/Software/build/wenu-imaging/mac-matrix-qr-Ay1wSJZe.
+All three preservation checks passed and main remains clean at c73d9a9e.
+Owner authorized the reviewed checked optimizer next. minimize_checked extends
+Eclipse optimization with context/validity/bounds/scaling, exact attempt budget,
+both spread tests and owned results; qualified QR checks initial simplex rank.
+Legacy minimize/min_test unchanged. Agent C17 two focused checks pass 2/2 in
+0.14 s, all 19 single/persistent allocation positions and hard callback cleanup;
+normal mefpp builds. Actual Mac optimizer gate pending: qualify_simplex_mac.py.
+No unchanged QR/gain replay or observations/install/merge/cleanup. Joint detector
+wrapper/common signed all-detector shutter/covariance inputs remain later work.
+See [optimizer record](simplex-implementation-2026-11-03.md).
+
+## Checked QR candidate - 3 November 2026
+
+Owner authorized proceeding after all-detector shared shutter and teaching review
+at 1b1823bf. First implementation is matrix_leastsq_qr_checked in Eclipse matrix:
+pivoted Householder QR, explicit scaling/rank/condition, immutable inputs and
+owned diagnostic result. Legacy least-squares/API/allocation paths preserved.
+Agent C17 two focused controls pass 2/2 in 0.04 s; ten single/persistent allocation
+failure positions preserve qfits owners. Normal mefpp builds. Actual Mac QR gate
+is pending; use qualify_matrix_qr_mac.py, protecting clean main/install/export.
+No unchanged gain/RON replay. Checked optimizer and joint detector wrapper remain
+later reviewed increments; no real-data processing/install/merge/cleanup.
+See [QR implementation](matrix-qr-implementation-2026-11-03.md).
+
+## Mac paired gain/RON accepted; joint interface review - 3 November 2026
+
+Actual Mac e0b16476 passed2/2 C17 controls in 2.58 s at
+/Users/fselman/Software/build/wenu-imaging/mac-gain-pair-AdGQvwqZ,
+with checkout/installed_files/exported_source preserved. Test-only oracle#228
+is accepted/closed. No unchanged test replay or real-data claim.
+Owner requests the joint shutter/linearity numerical interface review next.
+The source-grounded PDF/LaTeX proposal extends Eclipse optimization/matrix
+modules for checked bounded simplex and rank-aware pivoted QR, then a detector
+wrapper using one signed mosaic offset and amplifier curves. These additions
+are proposed BEFORE implementation; no new numerical source in this increment.
+ROI aggregation and covariance inputs remain explicit prerequisites.
+See [review](joint-shutter-linearity-interface-2026-11-03.md).
+
+## Paired gain/RON implementation candidate - 3 November 2026
+
+Owner reviewed the formula/PDF clarification and authorized implementation.
+Eclipse detector_gain_pair_checked composes existing masked/pair statistics over
+one common finite population. Raw active crops, no scan correction; explicit
+unavailability/error/alias guards, immutable inputs and no silent gain interval.
+Agent C17 two new controls pass2/2 in0.11s, including40 single/persistent allocation
+failure positions and existing operation-template pairing. Test oracle#228 was
+corrected; actual Mac C17 gate is next and pending. Use normal imaging Python
+with qualify_gain_pair_mac.py, protecting clean accepted main/install/export;
+no unchanged replay, real data, production activation or merge. Joint linearity/
+shared shutter and per-pixel flagging remain subsequent work. See
+[implementation record](gain-pair-implementation-2026-11-03.md).
+
 # wenu-imaging agent instructions
 
 ## End-of-day WFI bias handoff — 2 November 2026

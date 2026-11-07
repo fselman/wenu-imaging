@@ -1,0 +1,54 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/roi-build
+Test project /workspace/scratch/9ccf7e35ace4/roi-build
+    Start 6: native_linearity_files
+1/2 Test #6: native_linearity_files ...........***Failed    5.15 sec
+RETAINED LINEARITY FILE TEST: /workspace/scratch/9ccf7e35ace4/roi-build/mefpp2/test-work/linearity-files-iizpwxu_
+Traceback (most recent call last):
+  File "/workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/tests/linearity_files_contract.py", line 124, in <module>
+    main()
+  File "/workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/tests/linearity_files_contract.py", line 109, in main
+    raise RuntimeError(f'{kind}/{case}: {completed.stdout[-3000:]}\n{completed.stderr[-6000:]}')
+RuntimeError: 0/measure: 
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1226)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1227)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1228)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1229)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1230)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1231)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1232)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1233)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1234)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1235)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1236)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1237)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1262)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1263)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1264)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1265)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1266)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1267)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1268)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1269)
+xmem: free requested on NULL pointer -- /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/ins/mef/common/mefp_lib.c (1270)
+linearity_files_probe: /workspace/scratch/9ccf7e35ace4/roi-implementation/mefpp2/tests/linearity_files_probe.c:70: main: Assertion `fabs(r->pairs->bias[0].ron_adu-sqrt((kind?1.:2./3)/2))<1e-9' failed.
+
+
+    Start 9: native_linearity_pairs
+2/2 Test #9: native_linearity_pairs ...........   Passed    0.01 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+gain          =   0.01 sec*proc (1 test)
+layout        =   5.15 sec*proc (1 test)
+linearity     =   5.15 sec*proc (2 tests)
+mask          =   5.15 sec*proc (1 test)
+native        =   5.15 sec*proc (2 tests)
+ownership     =   5.15 sec*proc (2 tests)
+statistics    =   0.01 sec*proc (1 test)
+
+Total Test time (real) =   5.16 sec
+
+The following tests FAILED:
+	  6 - native_linearity_files (Failed)
+Errors while running CTest

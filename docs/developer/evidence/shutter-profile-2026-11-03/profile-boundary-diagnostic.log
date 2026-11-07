@@ -1,0 +1,2 @@
+BOUNDARY CASE status=1 base=5 flat=0 delta=nan
+shutter_profile_probe: /workspace/scratch/9ccf7e35ace4/profile-implementation/mefpp2/tests/shutter_profile_probe.c:79: main: Assertion `out->status==DETECTOR_JOINT_PROFILE_BOUNDARY_LIMITED&&out->flat_on_grid' failed.

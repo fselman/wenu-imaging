@@ -1,5 +1,10 @@
 # wenu-imaging roadmap
 
+Current OmegaCAM linearity work follows [roadmap v3](linearity-roadmap-v3-2026-11-04.md):
+reuse existing ASDF, add per-exposure ROI signal versus time, and display all data
+for owner inspection before modelling. The broad v2 collection redesign is
+superseded. Plot/HTML remains a separate stage; no fitting begins yet.
+
 ## End-of-day WFI bias handoff — 2 November 2026
 
 Owner visually reviewed the eight-detector WFI master as OK. Actual Mac mosaic

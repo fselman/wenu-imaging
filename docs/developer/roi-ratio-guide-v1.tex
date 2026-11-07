@@ -1,0 +1,115 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\emergencystretch=2em
+\title{Same-exposure ROI ratio diagnostic\\Mathematics and implementation, version 1}
+\author{Wenu-imaging}
+\date{5 November 2026}
+\begin{document}
+\maketitle
+\section*{Purpose and measurement stage}
+The diagnostic compares two spatial regions within each individual flat
+exposure: \texttt{near\_readout} (numerator) and \texttt{parallel\_far}
+(denominator). Their configured active-coordinate rectangles share the same
+$x$ range and differ in $y$. It examines the observed readout-side bifurcation;
+it does not estimate a shutter coefficient or fit a detector response.
+
+The current input is the retained raw-pair ASDF archive, bias-subtracted
+\emph{without overscan correction}. This stage is propagated into every ratio
+product and displayed in HTML. The owner requires a subsequent consistent
+overscan subtraction for all bias and flat frames before interpretation of
+corrected linearity. That measurement pass is separate: no images are read,
+no previous measurements replaced, and no line fit recomputed here.
+
+\section*{Identity and equations}
+For each detector, match samples by original input index, asset name, HDU,
+pair identifier and pair member. Require equal exposure time and detector.
+Time alone is not an identity: the two pair members remain separate. Duplicate
+identities or unequal ROI populations are rejected. With finite positive
+bias-subtracted ROI signals $N_j,D_j$ (ADU), form
+\begin{equation}
+R_j=\frac{N_j}{D_j}.
+\end{equation}
+Missing, nonfinite or nonpositive signals yield an unavailable ratio while
+preserving the input samples and reason. Let the inclusive reference bounds be
+$L=15000$ and $U=35000$ ADU, explicitly recorded with the product. Define
+\begin{align}
+\mathcal J&=\{j:R_j\text{ available},\ L\le N_j\le U,\ L\le D_j\le U\},\\
+R_{\rm ref}&=\frac{1}{|\mathcal J|}\sum_{j\in\mathcal J}R_j,\\
+Q_j&=R_j/R_{\rm ref},\qquad P_j=100(Q_j-1).
+\end{align}
+The reference is the unweighted mean of individual ratios, not a ratio of
+averaged signals. Save its value, count and exact member identities. If the
+reference is unavailable, keep raw ratios and leave $Q_j,P_j$ unavailable.
+All exposures, including those outside the reference bounds, remain retained.
+
+\newpage
+\section*{Interpretation and limits}
+In a linear detector with a stable illumination pattern, write
+$N_j=k_N F_j T_j$ and $D_j=k_D F_j T_j$, where $T_j$ is effective exposure time
+and $F_j$ is common illumination. Then $R_j=k_N/k_D$: both common brightness
+and common timing cancel. The normalization removes the constant spatial
+response ratio without applying a flat-field correction to the measurements.
+
+Residual additive terms do not cancel:
+\begin{equation}
+R_j=\frac{k_N F_j T_j+B_{N,j}}{k_D F_j T_j+B_{D,j}}.
+\end{equation}
+Consequently an overscan or bias mismatch can be particularly conspicuous at
+low signal. Changing illumination geometry, spatial response differences and
+detector nonlinearity can also produce a trend. The ratio is diagnostic, not
+a unique attribution to one mechanism. Common multiplicative cancellation
+requires the assumptions above. No spatial shutter model is introduced.
+
+No uncertainty or statistical weight is fabricated. Normalized points share
+$R_{\rm ref}$ and therefore are correlated. This version records uncertainty
+as unavailable; quantitative inference needs an explicit error/covariance model.
+
+\section*{Connection to software}
+\texttt{pycavi\_roi\_ratio.compute} implements matching, reference selection and
+the equations as a pure function. It retains deep copies of both original
+samples, units, availability, settings and membership. It uses finite checks
+and a stable summation for the reference.
+
+\texttt{pycavi\_roi\_ratio\_qc.publish} reads saved residual-ASDF original rows,
+freezes the source graph locally, and writes a new immutable QC product using
+the unchanged common factory, writer and reader. The operation is
+\texttt{diagnostic.same\_exposure\_roi\_ratio}. It records source record digests,
+byte hashes, producer revision and processing stage. Roundtrip equality and
+source preservation are required. Broken links or identity mismatches fail.
+
+\texttt{tools/compute-roi-ratios.py} consumes a completed source index and
+writes fresh per-detector products plus a completion index. Expected real
+coverage is 32 detectors, 20 matched exposures each: 640 ratio rows.
+\texttt{tools/view-pair-qc.py --ratios} validates and embeds those products;
+HTML only selects stored values. Its axes/cursor use the shared inspection
+module. No scientific division, normalization or line fitting occurs there.
+
+\section*{Verification}
+Eight storage/computation tests cover analytic ratios and reference membership,
+common-factor cancellation, exact member identity, unavailable cases, malformed
+populations, relocation, frozen links, immutable sources and separate
+CLI completion. Viewer checks disable both numerical services while loading
+saved products. JavaScript checks exercise ratio modes, exact source inspection
+and shared axes/cursor hooks. Actual Mac qualification and real-data ratio
+publication are separate acceptance gates; fixture success is not scientific
+validation of the detector or a shutter model.
+
+\section*{Corrected preparation inputs (5 November)}
+The equations and reference membership above are unchanged for the completed
+corrected preparation archive. The shared saved-measurement reader selects its
+stored per-exposure ROI signals; the residual-ASDF layer and ratio product keep
+\texttt{source\_kind=preparation} and the actual row-overscan/master-subtracted
+stage. The legacy source-pair digest key is a compatibility alias to the
+source measurement record, not a relabelling as uncorrected raw data.
+
+The shared HTML viewer uses that stage to label corrected signals and spatial
+variances, while raw-pair gain and raw bias RON keep their own labels. The
+normalization still averages individual ratios whose two signals meet the
+inclusive interval. No corrected gain, uncertainty weighting, image statistic
+or physical shutter parameter is introduced. Analytical saved fixtures verify
+that corrected fits/ratios use corrected means even when raw diagnostic means
+differ, and relocated readers work without images or original native tables.
+\end{document}

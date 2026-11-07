@@ -1,0 +1,127 @@
+# Visualization/reference schema; not a replacement for the native reduction configuration.
+# Rectangles are FITS 1-based inclusive [xmin, xmax, ymin, ymax].
+footprint_schema_version = 1
+instrument = "wfi"
+binning = [1, 1]
+source_manual = "https://www.eso.org/sci/facilities/lasilla/instruments/wfi/doc/2P2-MAN-ESO-90100-0001.pdf"
+geometry_status = "reference geometry; validate against each selected raw header"
+amplifier_marker = "schematic corner, not a measured package coordinate"
+
+[[detector]]
+id = "WIN1.CHIP1.OUT1"
+amplifier = "L"
+native_paf_chip = 1
+reference_hdu = 1
+mosaic_column = 1
+mosaic_row = 2
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 31, 4128]
+prescan = [1, 48, 1, 4128]
+overscan = [2095, 2142, 1, 4128]
+amplifier_corner = "upper-left"
+readout_sign = [1, -1]
+
+
+[[detector]]
+id = "WIN1.CHIP2.OUT1"
+amplifier = "L"
+native_paf_chip = 2
+reference_hdu = 2
+mosaic_column = 2
+mosaic_row = 2
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 31, 4128]
+prescan = [1, 48, 1, 4128]
+overscan = [2095, 2142, 1, 4128]
+amplifier_corner = "upper-left"
+readout_sign = [1, -1]
+
+
+[[detector]]
+id = "WIN1.CHIP3.OUT1"
+amplifier = "L"
+native_paf_chip = 3
+reference_hdu = 3
+mosaic_column = 3
+mosaic_row = 2
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 31, 4128]
+prescan = [1, 48, 1, 4128]
+overscan = [2095, 2142, 1, 4128]
+amplifier_corner = "upper-left"
+readout_sign = [1, -1]
+
+
+[[detector]]
+id = "WIN1.CHIP4.OUT1"
+amplifier = "L"
+native_paf_chip = 4
+reference_hdu = 4
+mosaic_column = 4
+mosaic_row = 2
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 31, 4128]
+prescan = [1, 48, 1, 4128]
+overscan = [2095, 2142, 1, 4128]
+amplifier_corner = "upper-left"
+readout_sign = [1, -1]
+
+
+[[detector]]
+id = "WIN1.CHIP8.OUT1"
+amplifier = "L"
+native_paf_chip = 5
+reference_hdu = 5
+mosaic_column = 4
+mosaic_row = 1
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 1, 4098]
+prescan = [2095, 2142, 1, 4128]
+overscan = [1, 48, 1, 4128]
+amplifier_corner = "lower-right"
+readout_sign = [-1, 1]
+
+
+[[detector]]
+id = "WIN1.CHIP7.OUT1"
+amplifier = "L"
+native_paf_chip = 6
+reference_hdu = 6
+mosaic_column = 3
+mosaic_row = 1
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 1, 4098]
+prescan = [2095, 2142, 1, 4128]
+overscan = [1, 48, 1, 4128]
+amplifier_corner = "lower-right"
+readout_sign = [-1, 1]
+
+
+[[detector]]
+id = "WIN1.CHIP6.OUT1"
+amplifier = "L"
+native_paf_chip = 7
+reference_hdu = 7
+mosaic_column = 2
+mosaic_row = 1
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 1, 4098]
+prescan = [2095, 2142, 1, 4128]
+overscan = [1, 48, 1, 4128]
+amplifier_corner = "lower-right"
+readout_sign = [-1, 1]
+
+
+[[detector]]
+id = "WIN1.CHIP5.OUT2"
+amplifier = "R"
+native_paf_chip = 8
+reference_hdu = 8
+mosaic_column = 1
+mosaic_row = 1
+raw_size = [2142, 4128]
+illuminated = [49, 2094, 1, 4098]
+prescan = [1, 48, 1, 4128]
+overscan = [2095, 2142, 1, 4128]
+amplifier_corner = "lower-left"
+readout_sign = [1, 1]

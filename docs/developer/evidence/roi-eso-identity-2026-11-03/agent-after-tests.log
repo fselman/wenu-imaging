@@ -1,0 +1,14 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/roi-build
+Test project /workspace/scratch/9ccf7e35ace4/roi-build
+    Start 11: native_roi_config
+1/1 Test #11: native_roi_config ................   Passed    0.08 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+configuration    =   0.08 sec*proc (1 test)
+native           =   0.08 sec*proc (1 test)
+ownership        =   0.08 sec*proc (1 test)
+roi              =   0.08 sec*proc (1 test)
+
+Total Test time (real) =   0.08 sec

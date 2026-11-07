@@ -158,4 +158,32 @@ void matrix_dump(
         char    *   name) ;
 
 
+/* Checked column-pivoted Householder least squares (PR #227, ownership #75).
+ * design: M rows by P columns, M >= P; rhs: M rows by 1, row-major.
+ * Solves design * solution ~= rhs. This orientation differs from legacy
+ * matrix_leastsq's XA=B contract. Work columns are design[:,k]*scales[k];
+ * solution is returned in ORIGINAL coordinates/order, not scaled coordinates.
+ * 0: owned diagnostic result (including rank deficiency); -1: invalid input,
+ * allocation failure or nonfinite arithmetic, with *out unchanged.
+ * out must address an empty (NULL) owner distinct from all borrowed inputs.
+ * Inputs remain unchanged. 0 < rank_tolerance < 1 is relative to the largest
+ * initial scaled column norm. Rank stops at the first rejected pivot.
+ * A deficient system has solution==NULL and condition_available==0, never an
+ * invented zero solution. residual_norm is the rank-truncated projection norm.
+ * r is P by P, upper triangular in pivoted SCALED coordinates, for subsequent
+ * triangular covariance solves. pivots[k] is the original column at position k.
+ * scaled_condition_1 estimates ||R||_1 ||inverse(R)||_1 by triangular solves;
+ * it is not the exact 2-norm condition number of the original design.
+ */
+typedef struct {
+    int rank, columns, condition_available;
+    matrix *solution;
+    matrix *r;
+    int *pivots;
+    double residual_norm, scaled_condition_1;
+} matrix_qr_result;
+int matrix_leastsq_qr_checked(const matrix *design, const matrix *rhs,
+    const double *column_scales, double rank_tolerance, matrix_qr_result **out);
+void matrix_qr_result_del(matrix_qr_result *result);
+
 #endif

@@ -1,0 +1,95 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,hyperref}
+\title{Straight-line residual inspection\\Mathematical and implementation guide, v1}
+\author{wenu-imaging}
+\date{4 November 2026}
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\maketitle
+\noindent This guide describes the completed display algorithm derived from the
+owner-approved design \path{docs/developer/design/linearity-residual-display-v1.md}.
+It operates on saved ROI means, not individual image pixels. It produces
+exploratory diagnostics, not physical shutter or amplifier calibrations.
+
+\section{Inputs and selected population}
+For one detector and ROI, each individual flat exposure supplies exposure time
+$t_i$ in seconds and saved bias-subtracted mean signal $S_i$ in ADU. Both members
+of each pair remain separate. Their common accepted pixel population, source
+asset/HDU, acquisition index and original table row remain attached.
+There is no overscan correction or additional flat-fielding in this display.
+The reference-line population $I$ contains finite $(t_i,S_i)$ and satisfies the
+user's inclusive original-signal interval. Blank limits mean all available data.
+No weighting, outlier rejection or hidden exposure cut is applied. Points outside
+$I$ remain visible and receive predictions if a line is available.
+
+\section{Centered ordinary least squares}
+With $n=|I|$, define
+\[
+ \bar t=\frac1n\sum_{i\in I}t_i,\qquad
+ \bar S=\frac1n\sum_{i\in I}S_i,
+\]
+\[
+ b=\frac{\sum_{i\in I}(t_i-\bar t)(S_i-\bar S)}
+          {\sum_{i\in I}(t_i-\bar t)^2},\qquad
+ a=\bar S-b\bar t.
+\]
+The slope $b$ has units ADU/s and $a$ has units ADU. A line requires at least two
+points and nonzero exposure-time spread. Invalid intervals, insufficient points,
+zero time spread and numerical overflow give explicit unavailable states.
+The implementation uses compensated sums. Means use the first sample as an
+origin, summing scaled differences; predictions use
+\[
+ \widehat S_i=\bar S+b(t_i-\bar t)
+\]
+rather than directly evaluating $a+bt_i$, reducing cancellation for large time
+origins. No coefficient uncertainties are inferred from these descriptive fits.
+
+\section{Residuals, rates and display}
+For each available original measurement, including outside-interval points,
+\[
+ r_i=S_i-\widehat S_i,\qquad
+ r_{\%,i}=100\frac{r_i}{\widehat S_i}\quad(\widehat S_i>0),\qquad
+ R_i=\frac{S_i}{t_i}\quad(t_i>0).
+\]
+Residuals in ADU remain available at nonpositive predictions, but percentage
+residuals do not. Zero-time count rates and unavailable signals remain null;
+negative measured signals are retained. Nonfinite derived values are null.
+Residual plots use original signal or exposure time on the horizontal axis, and
+percentage or ADU on the vertical axis, with a zero reference. Curves connect
+measurements for inspection; fitting limits affect the line, not displayed data.
+The per-ROI summary reports $a,b,n$, the actual selected time/signal ranges and
+status. The JSON download retains settings, fits, rows and ASDF source references.
+Original ASDF measurements are never rewritten.
+
+\section{What a shutter error can show}
+For an otherwise linear, correctly bias-subtracted response under stable light,
+\[
+ S_i=A(t_i+\delta)\quad\Longrightarrow\quad a=A\delta,\quad b=A,
+ \quad R_i=A\left(1+\frac{\delta}{t_i}\right).
+\]
+A free-intercept line absorbs the constant shutter offset: residuals alone do not
+recover it. Its fractional count-rate effect grows as $1/t_i$, motivating the
+separate rate view. An additive residual bias also produces a $1/t_i$ term;
+lamp variation and detector nonlinearity can contribute structure. No physical
+shutter estimate is extracted here. Different signal intervals can yield different
+residual baselines even for the same underlying response.
+
+\section{Connection to implementation and validation}
+\begin{description}
+\item[Arithmetic:] \path{tools/pair-qc-residuals.js}, function
+\texttt{QcResiduals.analyze}, taking sample rows and limits, performs grouping, interval
+selection, OLS and per-row derived values without modifying its input.
+\item[Presentation:] \path{tools/pair-qc-viewer.html} manages metric/axis/interval
+controls, ROI visibility, summaries, exact inspection and diagnostic JSON export.
+\item[Generation:] \path{tools/view-pair-qc.py} embeds the dependency-free module
+into a standalone HTML document and freezes its source with the other inputs.
+The JSON alongside the HTML is the saved measurement payload; browser-generated
+fit results are separately downloadable.
+\item[Checks:] \path{tools/tests/test_pair_qc_residuals.cjs} verifies analytical
+solutions, restricted intervals, rank failures, large time origins, null and signed
+data, and immutability. \path{tools/tests/test_pair_qc_js.cjs} exercises the actual
+embedded script with a minimal DOM surface; it does not verify browser painting.
+Existing Python viewer tests check ASDF/geometry/source packaging and preservation.
+\end{description}
+\end{document}

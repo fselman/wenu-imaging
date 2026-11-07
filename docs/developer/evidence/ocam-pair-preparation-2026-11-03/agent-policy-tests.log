@@ -1,0 +1,8 @@
+test_conflicting_metadata_is_not_rounded_or_accepted (__main__.PreparationTests.test_conflicting_metadata_is_not_rounded_or_accepted) ... ok
+test_declared_nonconsecutive_pairs (__main__.PreparationTests.test_declared_nonconsecutive_pairs) ... ok
+test_saved_inventory_unresolved_choices_and_identity_mapping (__main__.PreparationTests.test_saved_inventory_unresolved_choices_and_identity_mapping) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.048s
+
+OK

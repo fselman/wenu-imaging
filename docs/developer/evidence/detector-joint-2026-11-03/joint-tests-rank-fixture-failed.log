@@ -1,0 +1,23 @@
+Internal ctest changing into directory: /workspace/scratch/9ccf7e35ace4/joint-build
+Test project /workspace/scratch/9ccf7e35ace4/joint-build
+    Start 20: native_detector_joint
+1/2 Test #20: native_detector_joint ..............Subprocess aborted***Exception:   0.15 sec
+detector_joint_probe: /workspace/scratch/9ccf7e35ace4/joint-implementation/mefpp2/tests/detector_joint_probe.c:136: main: Assertion `detector_joint_response_fit_checked(&f.p,&f.o,&out)==0&&out->status==DETECTOR_JOINT_RANK_UNAVAILABLE' failed.
+
+    Start 21: native_detector_joint_allocation
+2/2 Test #21: native_detector_joint_allocation ...   Passed    0.51 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+allocation    =   0.51 sec*proc (1 test)
+detector      =   0.66 sec*proc (2 tests)
+linearity     =   0.15 sec*proc (1 test)
+native        =   0.66 sec*proc (2 tests)
+ownership     =   0.51 sec*proc (1 test)
+
+Total Test time (real) =   0.66 sec
+
+The following tests FAILED:
+	 20 - native_detector_joint (Subprocess aborted)
+Errors while running CTest

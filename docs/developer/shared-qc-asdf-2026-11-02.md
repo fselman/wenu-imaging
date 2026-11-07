@@ -1,3 +1,9 @@
+Current4 November update: common QC1.1 adds explicit native TSV measurement-product
+selectors while preserving QC1.0 FITS reading and the original schema resource.
+See [raw-pair persistence](raw-pair-asdf-2026-11-04.md). Existing FITS naming,
+measurement origin and relative-link policies are unchanged. Historical1.0-only
+and FITS-only statements below describe the earlier implementation.
+
 # Shared QC records and recipe creation path — 2 November 2026
 
 Current implementation update: native bias numerical measurements, explicit BPM

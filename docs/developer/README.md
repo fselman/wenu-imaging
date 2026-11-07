@@ -1,3 +1,126 @@
+Current linearity preparation: [recipe/ASDF integration](linearity-recipe-integration-2026-11-05.md).
+
+Current [TOML-led overscan preparation](linearity-preparation-2026-11-05.md): agent4native+6TOML+5viewer controls passed; actual Mac gate pending. [Kernel guide PDF](linearity-preparation-guide-v1.pdf) / [LaTeX](linearity-preparation-guide-v1.tex). Complete recipe/ASDF integration follows the overscan gate.
+
+Current [handoff for 5 November](handoffs/resume-2026-11-05.md): real32-detector/640-row ratio ASDF complete, Mac20/20 and all preservation guards passed. Owner reports generally tiny differential ratios. Overscan subtraction in all bias/flat frames is the next priority; current data remain uncorrected. Reuse retained runs.
+
+Current [same-exposure ratio diagnostic](roi-ratio-diagnostic-2026-11-04.md):
+compute and save new ASDF, then plot near_readout/parallel_far with shared cursor.
+Current inputs have no overscan correction. Owner requires consistent all-frame
+overscan subtraction next, before physical modelling. [Final design](design/roi-ratio-asdf-v1.md),
+[mathematical guide LaTeX](roi-ratio-guide-v1.tex) / [PDF](roi-ratio-guide-v1.pdf).
+
+Current [shared plotting component](shared-plot-inspection-2026-11-04.md): one signal-axis spec for HTML/static plots, generic crosshair and continuous x/y readout; saved scientific values remain separate. Proposed next reference fit15000–35000ADU is recorded explicitly for computation/ASDF. Mac gate and real ASDF run pending.
+
+Current [computation → ASDF → plotting contract](design/linearity-residual-asdf-v2.md): numerical results/curves are saved before plotting; HTML only reads them. [Implementation and status](linearity-residual-asdf-2026-11-04.md), [guide PDF](linearity-residual-asdf-guide-v2.pdf), [LaTeX](linearity-residual-asdf-guide-v2.tex). This supersedes browser-side residual fitting. Agent18/18 storage/viewer checks pass; Mac qualification and actual ASDF run pending.
+
+Current [residual ASDF separation design](design/linearity-residual-asdf-v2.md) and [guide v2](linearity-residual-asdf-guide-v2.pdf) ([LaTeX](linearity-residual-asdf-guide-v2.tex)): compute/save first; plot saved curves only. Common writer/schema unchanged. Mac separated computation qualification and real ASDF products pending. Interim residual viewer complete with all five guards.
+
+Current [approved residual-display design](design/linearity-residual-display-v1.md) and [mathematical guide](linearity-residual-display-guide-v1.pdf) ([LaTeX](linearity-residual-display-guide-v1.tex)): diagnostic free-intercept OLS residuals and count rates, explicit fit intervals, preserved measurements. Mac residual qualification and real-data generation pending. Signal/time viewer complete and owner inspected. No physical correction fit authorized.
+
+Current [signal/time display increment](linearity-signal-time-display-2026-11-04.md): ASDF header Mac gate passed 27/27; third plot and mosaic metric implemented, agent checks passed, Mac display qualification and real-data generation pending. Data inspection precedes modelling.
+
+Owner's [linearity roadmap v3](linearity-roadmap-v3-2026-11-04.md) is controlling:
+reuse existing pair ASDF measurements; add average signal versus exposure time
+for both individual members and every detector/ROI; display all data beside the
+existing variance/gain plots before any modelling. Owner inspection and an
+instruction to begin modelling follow the display. The v2 broad collection
+redesign and Stage8 next-step proposal below are historical, not prerequisites.
+New shared ASDF outputs have descriptive header comments; old archives remain
+unchanged. Agent checks pass 13 shared + 9 pair + 5 sample tests; Mac acceptance
+of this writer change and the signal/time display are pending. No fit performed.
+
+Earlier dated entries below retain their original status as historical receipts.
+
+Stage8 [noise-evidence design candidate v1](linearity-noise-evidence-design-v1-2026-11-04.md)
+is ready for owner review before implementation. It records exact43/44-read scan
+and9/10-input lower-median conventions, bounded observations/resources, proposed
+checks and the required post-implementation mathematical guide. No new code or
+measurements yet; the corrected-sample archive is complete and preserved.
+
+Actual corrected-sample ASDF archive complete:32 products,3200 rows,1088 records,
+all5outer preservation checks true at ocam-corrected-sample-asdf-xm1ngkg_. Data
+preparation is complete; next is the substantive noise/covariance decision before
+joint correction fitting. No repeated conversion/tests/native measurements.
+
+ActualMac corrected-sample ASDF qualification passed5/5 in8.938s, all4guards true
+at mac-sample-asdf-2bqdfrlp. Next persist the retained3200 samples from that exact
+qualified copy/private runtime. No new fetch, tests, native build or measurements.
+
+All160 physical sites have data:3200 admitted samples,0missing. The
+[corrected-sample ASDF adapter](corrected-sample-asdf-2026-11-04.md) passes five
+new checks here; actualMac qualification and persistence follow. No raw reread,
+C rebuild or fit/noise policy change. Plot/HTML remain separate.
+
+Actual Mac corrected-sample batch complete: all32 detectors,3200 retained rows,
+all8preservation checks true at ocam-linearity-samples-28h0jxnr. Next inspect saved
+TSV availability/coverage without FITS reread or remeasurement. See the
+[batch receipt](ocam-linearity-sample-batch-2026-11-04.md). Noise and fit pending.
+
+Current increment: actual Mac singleton command gate passed2/2 with all guards;
+[serial all32 approved-pixel extraction](ocam-linearity-sample-batch-2026-11-04.md)
+is ready for the retained data. Four new metadata controls and one ASDF admission
+fixture pass here. No native rebuild or old test matrix; actual extraction pending.
+
+Current increment (4 November): owner-approved [160-site sampling and corrected
+singleton extraction](linearity-singleton-extraction-2026-11-04.md). Agent focused
+command checks pass; actual Mac gate and guarded real extraction remain pending.
+Noise model and fit interval remain unselected. All32 master signal candidates
+are retained; do not rerun bias recipes.
+
+- [First real-data linearity sampling proposal (4 November 2026)](linearity-fit-sampling-proposal-2026-11-04.md): all32 master signals complete;160-site direct-pixel engineering pilot proposed, not adopted (#236).
+
+- [OCAM remaining bias dependencies (4 November 2026)](ocam-linearity-bias-batch-2026-11-04.md): CCD65 pilot passed; shared-input serial31-detector batch pending (#236).
+
+- [OCAM linearity bias dependency pilot (4 November 2026)](ocam-linearity-bias-pilot-2026-11-04.md): existing qualified bias recipe, CCD65/ten frames, variance unavailable; real pilot pending (#236).
+
+- [Linearity correction-curve composition (4 November 2026)](linearity-correction-composition-2026-11-04.md): supplied covariance to global shutter/amplifier candidates; focused Mac gate pending (#236).
+
+- [Offline ASDF QC mosaic candidate (4 November 2026)](qc-mosaic-viewer-2026-11-04.md): all32 measurements completed; viewer metadata gate/browser inspection pending (#235).
+
+- [Remaining OCAM serial pair batch (4 November 2026)](ocam-serial-pair-batch-2026-11-04.md): shared input verification, pending/completed receipts, per-detector ASDF and focused Mac gate (#234).
+
+[OCAM geometry and analogous ROIs](ocam-readout-rois-2026-11-03.md): the owner's
+mosaic plus native PAF/manual establish the detector-slot map and mirrored readout
+coordinates. Saved PAF/TOML candidate defines five configurable 512x512 regions
+per detector; all 160 bounds/identities are checked. No actual pixels processed.
+
+[ESO detector identity compatibility](roi-eso-identity-2026-11-03.md): named ROI
+configuration now preserves quoted # identities. Agent focused C17 passes 1/1;
+actual Mac qualification passes 1/1 in 1.27 s total. #230 is closed; real OCAM
+measurement selections remain pending.
+
+[Comparison-data retention](comparison-data-retention.md): future-comparison datasets belong
+under ~/Pictures/OCAM/wenu-imaging or ~/Pictures/WFI/wenu-imaging, in named
+subdirectories with a README explaining purpose and deletion conditions. Required
+comparison data must not remain in build directories.
+
+## Detector characterization - 3 November 2026
+
+[Current handoff](detector-characterization-handoff-2026-11-03.md) records the
+actual Mac gain/RON, QR, optimizer and direct-pixel candidate qualifications.
+The [shutter-profile increment](shutter-profile-2026-11-03.md) passed actual Mac
+C17 qualification. The [exact ROI operator](roi-aggregation-2026-11-03.md) has
+passed actual Mac C17 3/3 in 3.01 s. The
+[named ROI PAF/TOML supplement](roi-configuration-2026-11-03.md) passed focused
+C17 preparation and actual Mac 1/1 in 1.21 s. The
+[raw-plane sample service](linearity-samples-2026-11-03.md) passed focused C17
+preparation and actual Mac 1/1 in 1.05 s total. The
+[explicit covariance assembler](detector-noise-2026-11-03.md) passed focused C17
+preparation and actual Mac 4/4 in 3.69 s. The
+[explicit FITS admission adapter](linearity-files-2026-11-03.md) passed focused
+C17 preparation and actual Mac 3/3 in 20.91 s. The
+[uncertainty-estimation policy](linearity-uncertainty-review-2026-11-03.md) is owner-agreed: measurement first, actual-estimator propagation and covariance
+fixed within each fit with outer uncertainty assessment. The
+[raw-pair measurement increment](linearity-pair-measurements-2026-11-03.md) adds
+raw bias/flat measurements by named ROI and optional explicit FITS bias bindings.
+Agent preparation and actual Mac C17 qualification pass: 2/2 in 34.99 s,
+with checkout, installed files and exported source preserved. No simulation
+model or fit-range default is introduced. [Real OCAM header preparation](ocam-pair-preparation-2026-11-03.md) now records
+the selected 30-frame OBS.ID 574184 sequence and prepares saved detector/scan/
+calibration-candidate evidence for explicit measurement selections. Its actual
+Mac inventory is pending. Complete recipe integration and science acceptance remain later work.
+
 # Developer documentation
 
 - [Private libasdf / ASDF 1.6 qualification](libasdf16-private-qualification-2026-11-02.md):
@@ -599,4 +722,9 @@ Native mefpp remains serial; later threading/accelerators follow reviewed gates.
 - Retained references: [papers](../papers/README.md), [ESO standards](../standards/eso/README.md), [camera manuals](../manuals/cameras/README.md).
 
 - [ESO raw-imaging preflight and immutable source contract](eso-data-preflight-2026-10-31.md).
+
+
+
+
+
 

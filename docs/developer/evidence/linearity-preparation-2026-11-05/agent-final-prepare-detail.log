@@ -1,0 +1,29 @@
+Start testing: Nov 05 10:28 -03
+----------------------------------------------------------
+1/37 Testing: native_linearity_prepare
+1/37 Test: native_linearity_prepare
+Command: "/workspace/scratch/2fc060bf457a/build-overscan/mefpp2/linearity_prepare_probe"
+Directory: /workspace/scratch/2fc060bf457a/build-overscan/mefpp2
+"native_linearity_prepare" start time: Nov 05 10:28 -03
+Output:
+----------------------------------------------------------
+PASS: 43-read ramp/edges, staged arithmetic, raw population, moments and 128 persistent allocation failures
+PASS: 44-read ramp/edges, staged arithmetic, raw population, moments and 128 persistent allocation failures
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"native_linearity_prepare" end time: Nov 05 10:28 -03
+"native_linearity_prepare" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 05 10:28 -03
+
+linearity =   0.00 sec*proc
+
+native =   0.00 sec*proc
+
+overscan =   0.00 sec*proc
+
+ownership =   0.00 sec*proc
+

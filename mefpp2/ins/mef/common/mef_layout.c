@@ -130,7 +130,8 @@ static int select_card(const char *key, const char *value, const char *line, voi
         if (selected->seen & (1UL << j)) return -1;
         selected->seen |= 1UL << j;
         if (!fixed(selected->values[j], value) || !text(value)) return -1;
-        break;
+        /* EXTNAME may also be the configured identity (#231). Populate both
+         * slots from one card; a second physical card still fails seen above. */
     }
     return 0;
 }
@@ -155,7 +156,9 @@ static mef_status inspect_header(const qfits_header *header, const mef_layout_op
     keys[19] = "DATASEC"; keys[20] = "DETSEC"; keys[21] = "CCDSEC";
     for (i = 0; i < 22; ++i) if (keys[i] != NULL) {
         if (!text(keys[i]) || strlen(keys[i]) > 80) return MEF_ERR_INPUT;
-        for (j = 0; j < i; ++j) if (keys[j] != NULL && !strcmp(keys[i], keys[j])) return MEF_ERR_INPUT;
+        for (j = 0; j < i; ++j) if (keys[j] != NULL && !strcmp(keys[i], keys[j])) {
+            if (!(i == 15 && j == 12)) return MEF_ERR_INPUT;
+        }
     }
     if (qfits_header_visit(header, select_card, &selected) != 0) return MEF_ERR_INPUT;
     seen = selected.seen;

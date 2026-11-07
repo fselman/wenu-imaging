@@ -71,6 +71,12 @@ def fixtures(directory):
     kept = [configured[i:i + 80] for i in range(0, 2880, 80)
             if configured[i:i + 8].strip() not in (b"DETID", b"AMPID", b"BUNIT")]
     files["configured-primary.fits"] = b"".join(kept).ljust(2880, b" ") + configured[2880:]
+    # OCAM uses EXTNAME itself as detector identity, with unsigned physical pixels (#231).
+    alias = EMPTY + image("A", unsigned=True)
+    alias = alias.replace(b"'SCI'", b"'A'  ")
+    files["extname-identity.fits"] = alias
+    duplicate = EMPTY + image("A", unsigned=True, extra=[("EXTNAME", "'A'")])
+    files["duplicate-extname.fits"] = duplicate.replace(b"'SCI'", b"'A'  ")
     table = header([("XTENSION", "'BINTABLE'"), ("BITPIX", "8"), ("NAXIS", "2"),
                     ("NAXIS1", "8"), ("NAXIS2", "1"), ("PCOUNT", "0"),
                     ("GCOUNT", "1"), ("TFIELDS", "1"), ("DETID", "'A'")])
