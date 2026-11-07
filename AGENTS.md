@@ -1,3 +1,18 @@
+## Standalone native bias recipe integrated for target checks — 6 November 2026
+
+Owner instructed integration after the native MEF gate passed8Mac groups and
+three independent Astropy checks in5.630s at316d2a2. Read
+[the current contract/status](docs/developer/standalone-bias-recipe-2026-11-06.md).
+The new uninstalled mefpp_bias_recipe command connects unchanged serial bias
+operations, selected product paths/logging, private detectors, native final MEF
+and native ASDF with embedded input QC. No Python/Pycavi completion is used.
+Strict C17 new-code and four actual kernel/QC-copy profiles pass in the agent;
+full CMake/native-ASDF/FITS entry integration remains pending on the retained Mac.
+No actual observations, installation, viewer, merge or branch/evidence cleanup.
+Next focused synthetic integration gate, then obtain exact current real input/
+config/BPM/RON and orchestration/raw/products evidence for full-mosaic acceptance.
+Raw is untouchable. Existing scientific estimators and template remain controlling.
+
 ## Native final-MEF assembler prepared — 6 November 2026
 
 Owner approved the source-reviewed assembly design and instructed implementation.
