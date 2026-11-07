@@ -1,5 +1,6 @@
 /* C90 mapping into the accepted M1 configuration constructor. */
 #include "mef_config_toml.h"
+#include "mef_processing.h"
 #include "mef_toml_bundle.h"
 #include "mef_config_domains.h"
 #include "mefp_lib.h"
@@ -43,10 +44,58 @@ static int setting_valid(const char *key, const mef_toml_value *value, int overr
     return strcmp(field.storage, "float32") || (value->real <= FLT_MAX && value->real >= -FLT_MAX);
 }
 
+/* Optional fields belong to the same composed processing snapshot as all
+ * other settings. Missing whole groups preserve legacy bytes and behavior. */
+static int processing_from_bundle(const mef_toml_bundle *bundle,
+    mef_processing_policy *p, size_t *count)
+{
+    static const char *keys[] = {"BPM.ENCODING","BPM.BAD_WHEN","BPM.REJECT_BITS","BPM.REGISTRY",
+        "QC.RON.CLIP.ENABLED","QC.RON.CLIP.LOW","QC.RON.CLIP.HIGH","QC.RON.CLIP.MAX_ITERATIONS"};
+    mef_toml_value v[8]; int has[8]; size_t i;
+    memset(p,0,sizeof(*p));
+    for (i=0;i<8;++i) {
+        has[i] = mef_toml_bundle_get(bundle,keys[i],v+i) == MEF_OK;
+        if (has[i]) ++*count;
+    }
+    if (has[0] || has[1] || has[2] || has[3]) {
+        if (!has[0] || !has[1] || v[0].kind != MEF_TOML_TEXT || v[1].kind != MEF_TOML_TEXT) return 0;
+        p->bpm.supplied = 1;
+        if (!strcmp(v[0].text,"binary")) p->bpm.encoding = MEF_BPM_BINARY;
+        else if (!strcmp(v[0].text,"reason8")) p->bpm.encoding = MEF_BPM_REASON8;
+        else return 0;
+        if (!strcmp(v[1].text,"nonzero")) p->bpm.bad_when_nonzero = 1;
+        else if (strcmp(v[1].text,"zero")) return 0;
+        if (p->bpm.encoding == MEF_BPM_BINARY) { if (has[2] || has[3]) return 0; }
+        else {
+            if (!p->bpm.bad_when_nonzero || !has[2] || !has[3] ||
+                v[2].kind != MEF_TOML_INTEGER || v[2].integer < 0 || v[2].integer > 255 ||
+                v[3].kind != MEF_TOML_TEXT || !*v[3].text || strlen(v[3].text)>32) return 0;
+            p->bpm.reject_bits = (unsigned int)v[2].integer;
+            for (i=0;v[3].text[i];++i)
+                if (!((v[3].text[i]>='A' && v[3].text[i]<='Z') ||
+                    (v[3].text[i]>='0' && v[3].text[i]<='9') || v[3].text[i]=='_' || v[3].text[i]=='-' ||
+                    (v[3].text[i]>='a' && v[3].text[i]<='z'))) return 0;
+            strcpy(p->bpm.registry,v[3].text);
+        }
+    }
+    if (has[4] || has[5] || has[6] || has[7]) {
+        if (!has[4] || !has[5] || !has[6] || !has[7] ||
+            v[4].kind != MEF_TOML_INTEGER || (v[4].integer!=0 && v[4].integer!=1) ||
+            v[5].kind != MEF_TOML_REAL || v[5].real<=0 ||
+            v[6].kind != MEF_TOML_REAL || v[6].real<=0 ||
+            v[7].kind != MEF_TOML_INTEGER || v[7].integer<1 || v[7].integer>1000) return 0;
+        p->ron_clip_supplied=1; p->ron_clip_enabled=v[4].integer;
+        p->ron_clip_low=v[5].real; p->ron_clip_high=v[6].real;
+        p->ron_clip_max_iterations=v[7].integer;
+    }
+    return 1;
+}
+
 static mef_status config_from_bundle(mef_toml_bundle *document, const mef_allocator *allocator,
     mef_config **out, char *diagnostic, size_t capacity)
 {
     mef_toml_value value;
+    mef_processing_policy processing;
     mef_bb source;
     mef_status status;
     const char *failed_key, *snapshot_detail;
@@ -105,10 +154,13 @@ static mef_status config_from_bundle(mef_toml_bundle *document, const mef_alloca
 #undef DET_FLOAT
 #undef FETCH
     }
+    failed_key = "Invalid project BPM or RON clipping policy";
+    if (!processing_from_bundle(document,&processing,&count)) goto cleanup;
     failed_key = "Unknown native key (all known fields required)";
     if (count != mef_toml_bundle_count(document)) goto cleanup;
     /* Strings are borrowed only while this constructor deep-copies them. */
     status = mef_config_from_legacy(&source, allocator, out, &snapshot_detail);
+    if (status == MEF_OK) mef_config_initialize_processing(*out,&processing);
     if (status != MEF_OK) failed_key = snapshot_detail == NULL ? "Snapshot construction failed" : snapshot_detail;
 cleanup:
     if (status != MEF_OK) detail(diagnostic, capacity, failed_key);

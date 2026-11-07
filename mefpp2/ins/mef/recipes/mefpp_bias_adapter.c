@@ -3,6 +3,7 @@
 #include "mef_bias_files.h"
 #include "mef_bias_settings.h"
 #include "mef_config_toml.h"
+#include "mef_processing.h"
 #include "mefp_lib.h"
 #include <errno.h>
 #include <fcntl.h>
@@ -234,6 +235,11 @@ int main(int argc, char **argv)
         status = mef_config_clone(mef_config_document_settings(document), NULL, &config, &diagnostic);
     }
     if (status != MEF_OK) goto done;
+    if ((strcmp(values[9],"omitted") &&
+        !mef_bpm_policy_matches(&mef_config_processing(config)->bpm,MEF_BPM_BINARY,good_value,0,NULL)) ||
+        mef_config_processing(config)->ron_clip_enabled) {
+        fprintf(stderr,"Legacy adapter choices conflict with project policy; use mefpp_bias_recipe for REASON8/clipped RON\n");goto done;
+    }
     mef_bb_del(legacy); legacy = NULL;
     if (mef_config_bias_settings(config, (size_t)detector, &settings) != MEF_OK) goto done;
     stream = fresh(values[13]);

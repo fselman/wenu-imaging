@@ -83,6 +83,7 @@ static int bind_inputs(detector_plan *d,mef_layout *const *layouts,size_t n,
     const mef_config *config,mef_error **error)
 {
     mef_detector_binding binding; size_t i; int configured;
+    const mef_bpm_policy *policy = &mef_config_processing(config)->bpm;
     if(!number(d->field[CFG],&configured) || !number(d->field[BINX],&d->bin_x) || d->bin_x==0 ||
         !number(d->field[BINY],&d->bin_y) || d->bin_y==0 || !d->field[READOUT] ||
         !d->field[AMP] || !d->field[BPM] || (d->hdu_count!=1 && d->hdu_count!=n)) return 0;
@@ -114,8 +115,16 @@ static int bind_inputs(detector_plan *d,mef_layout *const *layouts,size_t n,
     } else {
         mef_layout_options options; mef_layout *layout=NULL; mef_status status;
         const mef_bound_detector *raw,*mask;
-        if(!number(d->field[BPM_HDU],&d->bpm_hdu) || !number(d->field[GOOD],&d->good) || d->good>1 ||
+        if(!number(d->field[BPM_HDU],&d->bpm_hdu) ||
             !d->field[COORDS] || (strcmp(d->field[COORDS],"raw") && strcmp(d->field[COORDS],"active"))) return 0;
+        if (policy->supplied) {
+            d->good = policy->bad_when_nonzero ? 0 : 1;
+            if (d->field[GOOD]) {
+                int legacy_good;
+                if (policy->encoding != MEF_BPM_BINARY || !number(d->field[GOOD],&legacy_good) ||
+                    legacy_good != d->good) return 0;
+            }
+        } else if (!number(d->field[GOOD],&d->good) || d->good>1) return 0;
         d->bpm_path=realpath(d->field[BPM],NULL); if(d->bpm_path==NULL) return 0;
         d->active_only=!strcmp(d->field[COORDS],"active");
         memset(&options,0,sizeof(options)); options.max_hdus=4096; options.max_header_bytes=16*1024*1024;
@@ -151,7 +160,10 @@ static int process(detector_plan *d,size_t index,size_t n,char *const *raw_paths
     }
     first=mef_layout_find(d->maps[0],d->id);
     if(d->mask_map) {
-        status=mef_layout_load_bpm(d->mask_map,d->id,d->good,&loaded,error); if(status!=MEF_OK) goto done;
+        const mef_bpm_policy *policy = &mef_config_processing(config)->bpm;
+        status = policy->supplied ? mef_layout_load_bpm_policy(d->mask_map,d->id,policy,&loaded,error) :
+            mef_layout_load_bpm(d->mask_map,d->id,d->good,&loaded,error);
+        if(status!=MEF_OK) goto done;
         if(d->active_only) {
             mask=pixelmap_new((int)first->image.axes[0],(int)first->image.axes[1]); if(mask==NULL) goto done;
             for(y=0;y<loaded->ly;++y) for(x=0;x<loaded->lx;++x)
@@ -247,6 +259,16 @@ int main(int argc,char **argv)
         if(status==MEF_OK) status=mef_config_clone(mef_config_document_settings(document),NULL,&config,&diagnostic);
     }
     if(status!=MEF_OK) goto done;
+    {
+        const mef_processing_policy *policy = mef_config_processing(config);
+        options.ron_clip_enabled = policy->ron_clip_enabled;
+        options.ron_clip.sigma_low = policy->ron_clip_low;
+        options.ron_clip.sigma_high = policy->ron_clip_high;
+        options.ron_clip.max_iterations = policy->ron_clip_max_iterations;
+        if (options.ron_clip_enabled && !options.ron_pair_set) {
+            strcpy(message,"Clipped RON requires an explicit raw pair"); goto done;
+        }
+    }
     mef_bb_del(legacy); legacy=NULL;
     frames=framelist_load(listing_path);
     if(frames==NULL || frames->n<3 || frames->n>100000) { strcpy(message,"Require an explicit list of at least three bias inputs"); goto done; }

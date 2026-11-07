@@ -456,3 +456,31 @@ mef_status mef_layout_load_bpm(const mef_layout_map *map, const char *detector,
     *out = converted;
     return MEF_OK;
 }
+
+#include "mef_processing.h"
+#include "pixelmap_flags8.h"
+mef_status mef_layout_load_bpm_policy(const mef_layout_map *map, const char *detector,
+    const mef_bpm_policy *policy, pixelmap **out, mef_error **error)
+{
+    const mef_bound_detector *d;
+    struct stat before, after;
+    unsigned char *flags = NULL;
+    pixelmap *selected = NULL;
+    int width, height, status;
+    if (!policy || !policy->supplied || !out || *out || (error && *error)) return MEF_ERR_INPUT;
+    if (policy->encoding == MEF_BPM_BINARY)
+        return mef_layout_load_bpm(map,detector,policy->bad_when_nonzero?0:1,out,error);
+    d = mef_layout_find(map,detector);
+    if (!d || policy->encoding != MEF_BPM_REASON8 || !policy->bad_when_nonzero ||
+        policy->reject_bits > 255 || !policy->registry[0]) return MEF_ERR_INPUT;
+    if (stat(map->path,&before) || !same_identity(&map->identity,&before))
+        return failure(MEF_ERR_IO,"BPM changed since discovery",NULL,error);
+    status = pixelmap_flags8_load_checked(map->path,d->image.hdu_index,policy->registry,
+        &flags,&width,&height);
+    if (status == 0 && ((size_t)width != d->image.axes[0] || (size_t)height != d->image.axes[1] ||
+        stat(map->path,&after) || !same_identity(&before,&after))) status = -1;
+    if (status == 0) status = pixelmap_flags8_selection_checked(flags,width,height,policy->reject_bits,&selected);
+    if (flags) free(flags);
+    if (status != 0) return failure(MEF_ERR_INPUT,"REASON8 mask/registry/identity admission failed",NULL,error);
+    *out = selected; return MEF_OK;
+}

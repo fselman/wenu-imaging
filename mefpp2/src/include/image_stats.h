@@ -669,4 +669,28 @@ int image_pair_stats_checked(const image_t *first, const image_t *second,
     const pixelmap *first_map, const pixelmap *second_map, const int *zone,
     int with_mad, image_sample_stats *out);
 
+/* Optional monotone clipping; never changes the legacy estimators. One owned
+ * double buffer, compacted in place; no allocation, image copy or I/O inside
+ * iterations. Median uses the averaged central pair, scale is sample stdev
+ * about the retained mean (centered double arithmetic). Inclusive cuts about
+ * the median; stop on unchanged membership or the explicit iteration limit.
+ * Counts partition region into BPM, nonfinite, clipped and retained pixels.
+ * Insufficient samples/nonconvergence are results, not fabricated estimates.
+ * Pair subtraction retains Eclipse pixelvalue rounding before double storage.
+ * Inputs/out are unchanged on error. NULL maps mean explicitly no mask. */
+typedef struct {
+    double sigma_low, sigma_high;
+    int max_iterations;
+} image_clip_options;
+typedef struct {
+    image_sample_stats sample;
+    size_t rejected_low, rejected_high;
+    int iterations, converged;
+} image_clipped_stats;
+int image_getstats_clipped_checked(const image_t *, const pixelmap *,
+    const int *zone, const image_clip_options *, image_clipped_stats *);
+int image_pair_stats_clipped_checked(const image_t *, const image_t *,
+    const pixelmap *, const pixelmap *, const int *zone,
+    const image_clip_options *, image_clipped_stats *);
+
 #endif

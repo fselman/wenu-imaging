@@ -1,0 +1,2 @@
+PASS: 300 independent sorted clipping oracles, finite/mask partitions, ties, even medians, limits and immutable reason bytes
+BENCHMARK pixels=8396800 iterations=2 scratch_bytes=67174400 cpu_seconds=0.531234

@@ -233,7 +233,7 @@ int mef_bias_recipe_expand(int argc,char **argv,int *outc,char ***outv,
                 if(v.type!=TOML_UNKNOWN){reason="BPM omitted but BPM fields supplied";goto done;}
                 continue;
             }
-            if(j==7&&v.type==TOML_UNKNOWN)continue;
+            if((j==5||j==7)&&v.type==TOML_UNKNOWN)continue;
             if(j==1||j==2||j==4||j==5) {if(!int_arg(p,field_args[j],v))goto done;}
             else {
                 const char *s=text(v);char *absolute=NULL;

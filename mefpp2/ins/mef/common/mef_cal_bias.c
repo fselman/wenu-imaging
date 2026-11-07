@@ -88,6 +88,11 @@ static mef_status validate(mef_context *context, const mef_bias_input *input,
         !strcmp(request->inputs[options->ron_first].resolved_path,
                 request->inputs[options->ron_second].resolved_path)))))
         return MEF_ERR_INPUT;
+    if (options && ((options->ron_clip_enabled != 0 && options->ron_clip_enabled != 1) ||
+        (options->ron_clip_enabled && (!options->ron_pair_set ||
+        !finite_value(options->ron_clip.sigma_low) || options->ron_clip.sigma_low <= 0 ||
+        !finite_value(options->ron_clip.sigma_high) || options->ron_clip.sigma_high <= 0 ||
+        options->ron_clip.max_iterations < 1 || options->ron_clip.max_iterations > 1000)))) return MEF_ERR_INPUT;
     if (mef_config_bias_settings(mef_context_config(context),
             input->configuration_detector, settings) != MEF_OK)
         return MEF_ERR_CONFIG;
@@ -233,6 +238,16 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
             measurement->ron_stdev_adu = measurement->raw_difference.stdev / sqrt(2.0);
             measurement->ron_mad_adu = 1.4826 * measurement->raw_difference.mad / sqrt(2.0);
             pending->qc.ron_estimate_available = measurement->ron_stdev_available;
+            if (options->ron_clip_enabled) {
+                if (image_pair_stats_clipped_checked(input->frames[options->ron_first],
+                    input->frames[options->ron_second],raw_map,raw_map,settings.trim,
+                    &options->ron_clip,&measurement->clipped_difference) != 0) {
+                    status = MEF_ERR_COMPUTATION; goto cleanup;
+                }
+                measurement->ron_clipped_available = measurement->clipped_difference.converged &&
+                    measurement->clipped_difference.sample.stdev_available;
+                measurement->ron_clipped_adu = measurement->clipped_difference.sample.stdev / sqrt(2.0);
+            }
         }
     }
 

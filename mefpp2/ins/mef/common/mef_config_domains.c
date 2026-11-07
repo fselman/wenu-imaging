@@ -52,7 +52,8 @@ int mef_domain_container(const char *path)
     mef_domain_field field;
     if (!strcmp(path, "instrument") || !strcmp(path, "processing") || !strcmp(path, "product") ||
         !strcmp(path, "product.header") || !strcmp(path, "product.naming") ||
-        !strcmp(path, "instrument.detectors")) return 1;
+        !strcmp(path, "instrument.detectors") || !strcmp(path, "processing.bpm") ||
+        !strcmp(path, "processing.ron_clip")) return 1;
     if (strlen(path) + 6 >= sizeof(candidate) || strncmp(path, "instrument.detectors.", 21)) return 0;
     strcpy(candidate, path); strcat(candidate, ".gain");
     return mef_domain_from_path(candidate, &field);

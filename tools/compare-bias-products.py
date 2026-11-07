@@ -4,6 +4,8 @@
 Run with the Astropy interpreter; --asdf-python selects the independent ASDF
 reader. Products must use the expanded bias-scalar/1 FITS mapping and the same
 ordered raw inputs. A subset product may be compared with a larger reference.
+The optional --allow-clipped-ron-additions mode permits only the documented
+clipped-RON and explicit binary-policy additions to an older reference.
 Only exact own-product source identities are normalized; scientific values,
 definitions, raw/calibration references and input measurements remain strict.
 """
@@ -23,9 +25,38 @@ SELF_SOURCES = {
 }
 IDENTITY_KEYS = SELF_SOURCES | {'ESO MPP QC ASDF', 'ESO MPP QC PROD'}
 
+CLIPPED_ADDITIONS = {
+    'read_noise.clipped', 'ron_clip.mean', 'ron_clip.median', 'ron_clip.stdev',
+    'ron_clip.retained', 'ron_clip.rejected_low', 'ron_clip.rejected_high',
+    'ron_clip.bpm_excluded', 'ron_clip.nonfinite_excluded', 'ron_clip.iterations',
+    'ron_clip.converged', 'ron_clip.sigma_low', 'ron_clip.sigma_high',
+    'ron_clip.max_iterations', 'bpm.encoding', 'bpm.bad_when_nonzero',
+}
+ADDITION_GROUPS = ('RON CLIP', 'RCL MEAN', 'RCL MED', 'RCL STD', 'RCL NVAL',
+                   'RCL NLO', 'RCL NHI', 'RCL NBPM', 'RCL NNF', 'RCL ITER',
+                   'RCL CONV', 'RCL KLO', 'RCL KHI', 'RCL LIMIT', 'BPM ENC', 'BPM BADNZ')
+
+
+def compare_headers(actual, retained, allow_additions):
+    missing = retained.keys() - actual.keys()
+    extra = actual.keys() - retained.keys()
+    assert not missing, ('Missing retained QC cards', sorted(missing))
+    if allow_additions:
+        for key in extra:
+            assert any(key == 'ESO MPP QC ' + group or
+                       key.startswith('ESO MPP QC ' + group + ' ')
+                       for group in ADDITION_GROUPS), ('Unexpected QC addition', key)
+        assert extra, 'Expected documented clipping/policy additions'
+    else:
+        assert not extra, ('Unexpected QC additions', sorted(extra))
+    for key in retained.keys() - IDENTITY_KEYS:
+        assert actual[key] == retained[key], (key, actual[key], retained[key])
+    return len(retained) - len(IDENTITY_KEYS), len(extra)
+
+
 # This runs in the explicitly selected ASDF environment, not the FITS reader's.
 ASDF_READER = r'''
-import json, sys
+import json, sys, struct, math
 from pathlib import Path
 import asdf
 import numpy as np
@@ -82,6 +113,22 @@ with asdf.config_context() as config:
             if expected['status'] == 'missing':
                 assert actual['fits_value'] is None
 
+        if e['allow_clipped_additions']:
+            current_settings = json.loads(q['provenance']['configuration']['snapshot'])
+            old_settings = json.loads(r['provenance']['configuration']['snapshot'])
+            expected_policy = {
+                'BPM.ENCODING': {'type': 'string', 'value': 'binary'},
+                'BPM.BAD_WHEN': {'type': 'string', 'value': 'zero'},
+                'QC.RON.CLIP.ENABLED': {'type': 'int', 'value': 1},
+                'QC.RON.CLIP.LOW': {'type': 'float64-bits', 'value': struct.pack('>d',5.0).hex()},
+                'QC.RON.CLIP.HIGH': {'type': 'float64-bits', 'value': struct.pack('>d',5.0).hex()},
+                'QC.RON.CLIP.MAX_ITERATIONS': {'type': 'int', 'value': 10},
+            }
+            assert not (old_settings.keys() & expected_policy.keys())
+            assert current_settings.keys() == old_settings.keys() | expected_policy.keys()
+            assert all(equal(current_settings[k],v) for k,v in old_settings.items())
+            assert all(equal(current_settings[k],v) for k,v in expected_policy.items())
+
         detectors = q['characterization']['detectors']
         retained = {d['detector_id']: d
                     for d in r['characterization']['detectors']}
@@ -95,8 +142,29 @@ with asdf.config_context() as config:
             identity = detector['detector_id']
             a = measurements(detector['measurements'], e['fits'])
             b = measurements(retained[identity]['measurements'], e['reference_fits'])
-            assert a.keys() == b.keys(), identity
-            for name in a:
+            if e['allow_clipped_additions']:
+                assert not (b.keys() & set(e['allowed_measurements']))
+                assert a.keys() == b.keys() | set(e['allowed_measurements']), identity
+                def measured(name):
+                    m = a[name]
+                    assert m['status'] == 'measured', (identity,name,m['reason'])
+                    return m['value']
+                assert measured('bpm.encoding') == 1 and measured('bpm.bad_when_nonzero') == 0
+                assert measured('bpm.good_value') == 1
+                assert measured('ron_clip.sigma_low') == measured('ron_clip.sigma_high') == 5
+                assert measured('ron_clip.max_iterations') == 10
+                assert measured('ron_clip.converged') == 1
+                assert 1 <= measured('ron_clip.iterations') <= 10
+                assert measured('ron_clip.retained') >= 2
+                assert math.isclose(measured('read_noise.clipped'), measured('ron_clip.stdev')/math.sqrt(2), rel_tol=1e-14)
+                assert a['read_noise.clipped']['sources'] == a['read_noise']['sources']
+                assert measured('ron_clip.retained') + measured('ron_clip.bpm_excluded') + measured('ron_clip.nonfinite_excluded') + measured('ron_clip.rejected_low') + measured('ron_clip.rejected_high') == measured('raw_difference.region_pixels')
+                for name in ('ron_clip.sigma_low','ron_clip.sigma_high','ron_clip.max_iterations','bpm.encoding','bpm.bad_when_nonzero'):
+                    assert a[name]['sources'] == ['<own-product>'], (identity,name)
+                assert a['read_noise.clipped']['definition']['region']['clipping'] == 'median_centered_monotone_sigma'
+            else:
+                assert a.keys() == b.keys(), identity
+            for name in b:
                 assert equal(a[name], b[name]), (identity, name)
             verify(e['qc_headers'][index], q, detector)
 
@@ -134,10 +202,15 @@ def qc(header, product):
 
 
 def main():
+    global ROOT
     p = argparse.ArgumentParser(description=__doc__)
     for key in ('product', 'reference', 'config', 'asdf-python'):
         p.add_argument('--'+key, type=Path, required=True)
+    p.add_argument('--allow-clipped-ron-additions', action='store_true')
+    p.add_argument('--source-root', type=Path, help='Matching source tree containing the schema and FITS mapping registry')
     a = p.parse_args()
+    if a.source_root is not None:
+        ROOT = a.source_root.resolve(strict=True)
     from astropy.io import fits
     # Keep invoked interpreter path: resolving a venv symlink loses its identity.
     a.asdf_python = a.asdf_python.absolute()
@@ -194,13 +267,12 @@ def main():
             assert actual.data.shape == retained.data.shape, identity
             assert actual.data.tobytes() == retained.data.tobytes(), identity
             actual_qc, retained_qc = qc(actual.header, current), qc(retained.header, reference)
-            assert actual_qc.keys() == retained_qc.keys(), identity
-            for key in retained_qc.keys() - IDENTITY_KEYS:
-                assert actual_qc[key] == retained_qc[key], (identity, key)
+            common_count, added_count = compare_headers(actual_qc, retained_qc, a.allow_clipped_ron_additions)
             qc_headers.append(actual_qc)
             capture(actual.header, config.get('provenance', {}).get('detector', []), index, identity)
-            print(f'{identity:16} MATCH        {len(actual_qc)-len(IDENTITY_KEYS)} MATCH', flush=True)
-    expected = dict(fits=str(current), reference_fits=str(reference),
+            print(f'{identity:16} MATCH        {common_count} MATCH; {added_count} added cards', flush=True)
+    expected = dict(allow_clipped_additions=a.allow_clipped_ron_additions,
+                    allowed_measurements=sorted(CLIPPED_ADDITIONS), fits=str(current), reference_fits=str(reference),
                     config_path=str(configuration), config_text=config_text,
                     cards=cards, ids=ids, qc_headers=qc_headers, root=str(ROOT),
                     schema=str(schema),
