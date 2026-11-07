@@ -1,4 +1,4 @@
-# Actual Mac and real-product validation — 7 November 2026
+# Accepted actual Mac and real-product validation — 7 November 2026
 
 Owner ran the selected-build qualification at native revision f95cc9b333be9e53d2695d77d643906ce06222ab. All build, clipping, mask-policy, clipped/reason/limit/legacy profiles, shared-policy and four-product FITS/ASDF gates passed. Receipt: `scalar-qc-qualification-c17/clipped-ron-project-bpm-f95cc9b333be/qualification.json`. Subsequent owner-run identity check matched the executable SHA256 to that receipt. No native rebuild is required for the comparator changes below.
 
@@ -6,15 +6,15 @@ Real normal-directory run completed all 32 detectors and ten raw inputs with exp
 
 Owner-reported read-only real QC check passed the ASDF schema and all **97,157** FITS/ASDF scalar/context comparisons. All 32 clipped RON estimates are available and converged in two or three passes. They span 1.92924 ADU (#66) to 2.51573 ADU (#95); existing MAD remains 2.09671 ADU. No scientific interpretation beyond the measured comparison is implied.
 
-The saved comparator now has opt-in `--allow-clipped-ron-additions`: exactly sixteen named measurement additions, six exact processing-policy fields, matching header groups and complete native FITS/ASDF mapping. Every reference measurement/value/definition/source and input QC remains strict. Existing un-clipped RON cannot be exempted. Only exact own-product identities are normalized. Four agent comparator-control tests passed; the actual real-master pixel/legacy-QC comparison is the next gate. The default comparator behavior stays strict. `--source-root` selects the matching schema/registry from the retained mutable source without modifying it. Comparator-only commits do not change the native producer revision or call for a relink.
+The saved comparator now has opt-in `--allow-clipped-ron-additions`: exactly sixteen named measurement additions, six exact processing-policy fields, matching header groups and complete native FITS/ASDF mapping. Every reference measurement/value/definition/source and input QC remains strict. Existing un-clipped RON cannot be exempted. Only exact own-product identities are normalized. Four agent comparator-control tests passed. The owner then ran comparator 3d17023f01a50e5de95373dc77d6a2b7bc84699a on Mac: all 32 pixel payloads matched exactly, 2804 retained QC cards per detector (2805 for the five detectors with a rejected input) matched, and 241 added cards per detector were validated. Both ASDF schemas, exact recipe snapshot, selected FITS cards, unchanged processing settings outside the six policy additions, complete product/input QC and full FITS/ASDF mapping passed. Checked files remained unchanged and no raw inputs were read. Owner accepted the results and authorized merge and branch cleanup. The default comparator behavior stays strict. `--source-root` selects the matching schema/registry from the retained mutable source without modifying it. Comparator-only commits do not change the native producer revision or call for a relink.
 
-Earlier pending-Mac statements below are historical and superseded by this owner-reported qualification. Full receipts/log archives have not been uploaded to the agent environment. No merge, installation, cleanup or further reduction was performed.
+Earlier pending-Mac statements below are historical and superseded by this owner-reported qualification. Full receipts/log archives have not been uploaded to the agent environment. Merge and feature-branch cleanup are authorized by the owner after this acceptance. No installation, evidence deletion or further reduction is needed.
 
 ---
 
 # Optional bias clipping and shared project BPM policy
 
-Implementation for issue #284. Owner-reported actual Mac qualification and the full 32-detector run passed on 7 November 2026; final retained-master pixel/QC comparison is pending. The owner authorized sigma clipping, selectable zero-good reason masks, project-wide processing TOML policy and efficient processing. The reviewed contract is [the design](design/bias-clipping-project-bpm-v1.md); the mathematical guide is maintained in [LaTeX](mathematics/mefpp/bias-clipped-ron.tex) and [PDF](mathematics/mefpp/bias-clipped-ron.pdf).
+Implementation for issue #284. Owner-reported actual Mac qualification and the full 32-detector run passed on 7 November 2026; the final retained-master pixel/QC comparison passed and the owner accepted integration. The owner authorized sigma clipping, selectable zero-good reason masks, project-wide processing TOML policy and efficient processing. The reviewed contract is [the design](design/bias-clipping-project-bpm-v1.md); the mathematical guide is maintained in [LaTeX](mathematics/mefpp/bias-clipped-ron.tex) and [PDF](mathematics/mefpp/bias-clipped-ron.pdf).
 
 ## Configuration
 
