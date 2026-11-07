@@ -1706,3 +1706,97 @@ int image_pair_stats_checked(const image_t *first, const image_t *second,
     if (status == 0) *out = pending;
     return status;
 }
+
+/* Shared single-plane/pair implementation. Selection permutes the retained
+ * buffer; rejection needs membership and counts, not original pixel order. */
+static void clipped_moments(double *v, size_t n, image_sample_stats *s)
+{
+    size_t i;
+    double mean = 0.0, squares = 0.0, center;
+    s->valid_pixels = n;
+    s->level_available = n != 0;
+    s->stdev_available = n > 1;
+    s->mean = s->median = s->stdev = 0.0;
+    if (n == 0) return;
+    /* Incremental mean followed by centered variance avoids E[x^2]-E[x]^2. */
+    for (i = 0; i < n; ++i) mean += (v[i] - mean) / (double)(i + 1);
+    for (i = 0; i < n; ++i) { double d = v[i] - mean; squares += d*d; }
+    center = double_kth_smallest(v, (int)n, (int)(n/2));
+    if (!(n & 1)) {
+        double lower = v[0];
+        /* kth partitions the lower half, so a second selection is unnecessary. */
+        for (i = 1; i < n/2; ++i) if (v[i] > lower) lower = v[i];
+        center = 0.5*lower + 0.5*center;
+    }
+    s->mean = mean; s->median = center;
+    if (n > 1) s->stdev = sqrt(squares / (double)(n-1));
+}
+static int clipped_stats(const image_t *first, const image_t *second,
+    const pixelmap *map, const pixelmap *second_map, const int *zone,
+    const image_clip_options *options, image_clipped_stats *out)
+{
+    image_clipped_stats p;
+    image_sample_stats *s = &p.sample;
+    double *v;
+    size_t capacity, n = 0, i, kept, pos;
+    int x, y;
+    if (!first || !first->data || !options || !out || first->lx < 1 || first->ly < 1 ||
+        first->lx > INT_MAX / first->ly || !sample_map_valid(first,map) ||
+        !isfinite(options->sigma_low) || !isfinite(options->sigma_high) ||
+        options->sigma_low <= 0 || options->sigma_high <= 0 ||
+        options->max_iterations < 1 || options->max_iterations > 1000 ||
+        (second && (!second->data || second->lx != first->lx || second->ly != first->ly ||
+                    !sample_map_valid(second,second_map))) || (!second && second_map)) return -1;
+    memset(&p,0,sizeof(p));
+    s->zone[0] = s->zone[2] = 1; s->zone[1] = first->lx; s->zone[3] = first->ly;
+    if (zone) memcpy(s->zone,zone,sizeof(s->zone));
+    if (s->zone[0] < 1 || s->zone[2] < 1 || s->zone[1] > first->lx ||
+        s->zone[3] > first->ly || s->zone[0] > s->zone[1] || s->zone[2] > s->zone[3]) return -1;
+    capacity = (size_t)(s->zone[1]-s->zone[0]+1)*(size_t)(s->zone[3]-s->zone[2]+1);
+    if (capacity > (size_t)-1 / sizeof(*v)) return -1;
+    v = malloc(capacity * sizeof(*v));
+    if (!v) return -1;
+    s->bpm_supplied = map != NULL || second_map != NULL;
+    for (y=s->zone[2]-1; y<s->zone[3]; ++y) for (x=s->zone[0]-1; x<s->zone[1]; ++x) {
+        pixelvalue value;
+        pos = (size_t)y*(size_t)first->lx+(size_t)x;
+        ++s->region_pixels;
+        if ((map && !map->data[pos]) || (second_map && !second_map->data[pos])) {
+            ++s->bpm_excluded; continue;
+        }
+        if (!isfinite(first->data[pos]) || (second && !isfinite(second->data[pos]))) {
+            ++s->nonfinite_excluded; continue;
+        }
+        value = second ? (pixelvalue)(first->data[pos]-second->data[pos]) : first->data[pos];
+        if (!isfinite(value)) { ++s->nonfinite_excluded; continue; }
+        v[n++] = value;
+    }
+    clipped_moments(v,n,s);
+    while (n > 1 && p.iterations < options->max_iterations) {
+        double low = s->median-options->sigma_low*s->stdev;
+        double high = s->median+options->sigma_high*s->stdev;
+        ++p.iterations;
+        kept = 0;
+        for (i=0; i<n; ++i) {
+            if (v[i] < low) ++p.rejected_low;
+            else if (v[i] > high) ++p.rejected_high;
+            else v[kept++] = v[i];
+        }
+        if (kept == n) { p.converged = 1; break; }
+        n = kept;
+        clipped_moments(v,n,s);
+    }
+    free(v);
+    if (!isfinite(s->mean) || !isfinite(s->median) || !isfinite(s->stdev)) return -1;
+    *out = p; return 0;
+}
+int image_getstats_clipped_checked(const image_t *image, const pixelmap *map,
+    const int *zone, const image_clip_options *options, image_clipped_stats *out)
+{ return clipped_stats(image,NULL,map,NULL,zone,options,out); }
+int image_pair_stats_clipped_checked(const image_t *first, const image_t *second,
+    const pixelmap *first_map, const pixelmap *second_map, const int *zone,
+    const image_clip_options *options, image_clipped_stats *out)
+{
+    if (!second) return -1;
+    return clipped_stats(first,second,first_map,second_map,zone,options,out);
+}

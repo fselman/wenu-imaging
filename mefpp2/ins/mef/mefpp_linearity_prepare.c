@@ -103,6 +103,11 @@ int main(int argc,char **argv)
     else if(!strcmp(p.value[10],"binary"))mask=MEF_LINEARITY_MASK_BINARY;
     else if(!strcmp(p.value[10],"reason8"))mask=MEF_LINEARITY_MASK_REASON8;else goto done;
     if((mask!=MEF_LINEARITY_MASK_OMITTED)!=p.has_bpm)goto done;
+    if (p.has_bpm && !mef_bpm_policy_matches(&mef_config_processing(config)->bpm,
+        mask == MEF_LINEARITY_MASK_BINARY ? MEF_BPM_BINARY : MEF_BPM_REASON8,
+        good,(unsigned int)reject,p.value[12])) {
+        fprintf(stderr,"Linearity mask settings conflict with shared project BPM policy\n");goto done;
+    }
     double times[FLATS];int first[FLATS],second[FLATS],pairs=0;
     for(int i=0;i<p.flats;++i){
         if(!bind_source(&p.flat[i],&p,&g,slot,bx,by,0,rw,rh)||

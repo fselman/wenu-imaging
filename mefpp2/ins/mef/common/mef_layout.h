@@ -2,6 +2,7 @@
 #ifndef MEF_LAYOUT_H
 #define MEF_LAYOUT_H
 #include "mef_runtime.h"
+#include "mef_processing.h"
 #include "image_handling.h"
 
 #define MEF_LAYOUT_TEXT 81
@@ -130,4 +131,7 @@ mef_status mef_layout_load(const mef_layout_map *map, const char *detector_id,
  * Output starts NULL, unchanged on error; owns Eclipse pixelmap_del storage. */
 mef_status mef_layout_load_bpm(const mef_layout_map *, const char *, int,
     pixelmap **, mef_error **);
+/* Shared project policy; REASON8 bytes are converted once at ingestion. */
+mef_status mef_layout_load_bpm_policy(const mef_layout_map *, const char *,
+    const mef_bpm_policy *, pixelmap **, mef_error **);
 #endif

@@ -65,6 +65,9 @@ static mef_status validate(void *opaque,mef_error **error) {
         (o->prior_active_only!=0 && o->prior_active_only!=1) ||
         (o->mask_encoding==MEF_BPM_MASK_BINARY && o->binary_good_value!=0 && o->binary_good_value!=1) ||
         (o->mask_encoding==MEF_BPM_MASK_FLAGS8 && (!o->mask_registry || !*o->mask_registry || strlen(o->mask_registry)>32))) return MEF_ERR_INPUT;
+    if (s->prior_map && !mef_bpm_policy_matches(&mef_config_processing(mef_context_config(s->context))->bpm,
+        o->mask_encoding == MEF_BPM_MASK_BINARY ? MEF_BPM_BINARY : MEF_BPM_REASON8,
+        o->binary_good_value,o->reject_bits,o->mask_registry)) return MEF_ERR_CONFIG;
     resolved=mef_request_resolved_view(mef_context_request(s->context));
     if(!resolved || resolved->request.operation!=MEF_OP_CAL_BPM || resolved->request.operation_version!=1 ||
         resolved->request.input_count!=s->count || resolved->bpm_selection_count!=1) return MEF_ERR_INPUT;

@@ -135,6 +135,12 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
         p->detectors==NULL||p->detector_count==0||p->detector_count>4096||
         (p->sha256!=NULL && !digest(p->sha256,64))||p->calibration_count>4096||
         (p->calibration_count && p->calibrations==NULL)) return fail(message,size,"Invalid product identity, execution or configuration");
+    if (p->bpm_registry) {
+        if (!*p->bpm_registry || strlen(p->bpm_registry)>32) return fail(message,size,"Invalid BPM registry");
+        for (i=0;p->bpm_registry[i];++i)
+            if (!isalnum((unsigned char)p->bpm_registry[i]) && p->bpm_registry[i]!='_' && p->bpm_registry[i]!='-')
+                return fail(message,size,"Invalid BPM registry");
+    }
     if(!header_metadata(p))return fail(message,size,"Invalid selected FITS provenance");
     n=strlen(p->fits_path);
     if(n<=5||strcmp(p->fits_path+n-5,".fits")) return fail(message,size,"Product must retain a .fits basename");

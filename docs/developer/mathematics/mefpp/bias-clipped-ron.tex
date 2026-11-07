@@ -1,0 +1,58 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,hyperref}
+\title{Optional sigma-clipped bias read noise}
+\author{wenu-imaging: mathematical and implementation guide}
+\date{7 November 2026}
+\begin{document}
+\maketitle
+\noindent This guide describes the owner-reviewed optional estimator. It does not change the existing un-clipped RON, MAD, master-bias construction, or frame-mean rejection. Measurements are in ADU. Actual Mac FITS/ASDF qualification is pending; agent native checks do not establish detector-specific scientific suitability.
+\section{Population and mask}
+Let $A_j,B_j$ denote the same detector pixel in two explicitly selected raw bias frames. Here $j$ runs over pixels within the inclusive configured region, not over frames. Form
+\[
+ d_j=\operatorname{pixelvalue}(A_j-B_j)
+\]
+before any scan or master subtraction. The cast preserves the current Eclipse working-pixel arithmetic (normally float32); double storage does not recover information absent from quantized input.
+
+First exclude pixels rejected by either supplied internal selection map. Among remaining pixels exclude nonfinite operands or nonfinite differences. For a REASON8 external byte $f_j$, the internal acceptance predicate is
+\[
+ g_j = \bigl[(f_j\mathbin{\&}r)=0\bigr],\qquad r\in\{0,\ldots,255\}.
+\]
+With $r=255$, exactly zero is accepted; an explicit smaller rejection mask deliberately ignores other reasons. Binary input retains strict values zero or one, with its project-selected polarity. Internal Eclipse maps always use one for acceptance. Original reason bytes are preserved.
+\section{Iterative estimator}
+Let $S_0$ contain the finite, accepted differences. For $n_k=|S_k|$, compute the arithmetic mean $\bar d_k$, averaged-middle median $m_k$, and sample standard deviation
+\[
+ s_k^2=\frac{1}{n_k-1}\sum_{j\in S_k}(d_j-\bar d_k)^2.
+\]
+For sorted values $d_{(1)}\leq\cdots\leq d_{(n)}$,
+\[
+ m=\begin{cases}d_{((n+1)/2)},&n\text{ odd},\\
+ \tfrac12d_{(n/2)}+\tfrac12d_{(n/2+1)},&n\text{ even}.\end{cases}
+\]
+The production implementation uses Wirth selection rather than sorting. It computes an incremental double mean followed by centered squared deviations; it avoids subtracting two large, nearly equal second moments.
+
+For finite positive thresholds $\ell,h$, retain inclusively
+\[
+ S_{k+1}=\{j\in S_k:m_k-\ell s_k\leq d_j\leq m_k+h s_k\}.
+\]
+Rejection is monotone. Stop when membership is unchanged, or after the configured maximum number of rejection passes. Recompute moments after every rejection, including the final permitted pass. Fewer than two retained samples cannot supply a sample standard deviation. A zero scale on a constant population converges without rejecting equal values. Reaching the limit after a membership change is explicitly nonconverged; a further unperformed pass is not assumed to converge.
+\section{Read-noise interpretation}
+For independent frames with equal read-noise variance $\sigma_R^2$ and negligible additional temporal variation,
+\[
+ \operatorname{Var}(A-B)=2\sigma_R^2,\qquad
+ \widehat{\mathrm{RON}}_{\rm clip}=s_{\rm final}/\sqrt{2}.
+\]
+Unequal frame variances yield the square root of their average, not separate noise estimates. Correlated noise, residual structure, unequal conditions, and finite-sample behavior require scientific assessment. Sigma clipping is a chosen rejection rule, not an unbiased estimator for every distribution. Truncation bias is not corrected; wide thresholds reduce it for Gaussian data but do not prove an unbiased result.
+
+The published clipped RON is available only if $n_{\rm final}\geq2$ and membership converged. Final partial-population moments and nonconvergence are still explicit diagnostics. Existing raw and MAD estimators remain separately named.
+\section{Code, accounting and efficiency}
+The checked functions in \texttt{image\_stats.c} share one implementation for a single plane and a pair. One double buffer is allocated for the region, populated once, permuted for median selection, and compacted in place. There is no file I/O, allocation, or image copy inside an iteration. Typical work is $O(KN)$ and scratch is $8N$ bytes on supported binary64 platforms. Wirth selection has no claimed worst-case linear bound.
+
+The final counts obey
+\[
+ N_{\rm region}=N_{\rm BPM}+N_{\rm nonfinite}+N_{\rm low}+N_{\rm high}+N_{\rm retained}.
+\]
+The bias service invokes clipping on the raw pair before scan correction. The common product record supplies both native ASDF and additive FITS QC; it records thresholds, limit, iterations, convergence, counts, mask identity, region and pair sources. The immutable processing TOML snapshot holds the shared BPM interpretation. Legacy snapshots omit optional groups and retain their former representation.
+
+Native tests compare 300 cases against a separately sorted oracle, test both binary polarities and REASON8 FITS ingestion, and retain original data. A detector-sized agent benchmark with $2048\times4100$ pixels uses 67,174,400 scratch bytes. Timings depend on host, compiler and instrumentation; they are not Mac performance claims.
+\end{document}

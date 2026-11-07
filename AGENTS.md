@@ -1,3 +1,18 @@
+## Optional clipped bias RON and shared BPM policy — 7 November 2026
+
+Owner authorized efficient sigma clipping and a project-wide processing TOML
+BPM interpretation. See docs/developer/design/bias-clipping-project-bpm-v1.md
+and docs/developer/bias-clipping-project-bpm-2026-11-07.md. Policy belongs in the
+shared immutable processing snapshot; detector bindings do not override it.
+Preserve internal Eclipse 1=accepted maps and exact external REASON8 flags.
+Legacy numerical paths/cards remain unchanged when clipping is disabled. New
+clipped RON and diagnostics are additive in native FITS/ASDF. Agent C17/UBSan,
+independent oracle, policy, mask-loader and domain checks passed; actual Mac
+native ASDF/four-product qualification is pending. Reuse the selected mutable
+Mac source/build/cache/tools. No new source/build export, ordinary reconfigure,
+installation, observational reduction, merge, branch deletion or evidence cleanup.
+This explicit scientific task supersedes older limited-finish scope statements.
+
 ## Mac bias TOML/provenance verified; integration authorized — 7 November 2026
 
 Owner authorized merge and branch cleanup after actual Mac acceptance. Native

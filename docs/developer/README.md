@@ -1,3 +1,5 @@
+Optional clipped bias RON and shared processing BPM policy: [implementation and qualification](bias-clipping-project-bpm-2026-11-07.md), [reviewed contract](design/bias-clipping-project-bpm-v1.md), [mathematics](mathematics/mefpp/bias-clipped-ron.pdf). Actual Mac qualification pending.
+
 - [Read-only bias product comparator](../../tools/compare-bias-products.py): exact pixels/QC, native FITS–ASDF mapping and selected-header/TOML provenance; supports a subset against a larger retained reference.
 
 - [Bias short TOML call and selected FITS provenance](bias-toml-provenance-2026-11-07.md): default/all or explicit detector subsets; small configured header transfer; agent checks passed, actual Mac recipe/ASDF gate pending.

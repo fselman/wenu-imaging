@@ -1057,6 +1057,62 @@
       "storage": "float64",
       "unit": "1",
       "role": "processing_config"
+    },
+    {
+      "native_pattern": "BPM.ENCODING",
+      "path_pattern": "processing.bpm.encoding",
+      "storage": "string",
+      "unit": "none",
+      "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "BPM.BAD_WHEN",
+      "path_pattern": "processing.bpm.bad_when",
+      "storage": "string",
+      "unit": "none",
+      "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "BPM.REJECT_BITS",
+      "path_pattern": "processing.bpm.reject_bits",
+      "storage": "int32",
+      "unit": "1",
+      "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "BPM.REGISTRY",
+      "path_pattern": "processing.bpm.registry",
+      "storage": "string",
+      "unit": "none",
+      "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "QC.RON.CLIP.ENABLED",
+      "path_pattern": "processing.ron_clip.enabled",
+      "storage": "int32",
+      "unit": "1",
+      "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "QC.RON.CLIP.LOW",
+      "path_pattern": "processing.ron_clip.sigma_low",
+      "storage": "float64",
+      "unit": "1",
+      "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "QC.RON.CLIP.HIGH",
+      "path_pattern": "processing.ron_clip.sigma_high",
+      "storage": "float64",
+      "unit": "1",
+      "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "QC.RON.CLIP.MAX_ITERATIONS",
+      "path_pattern": "processing.ron_clip.max_iterations",
+      "storage": "int32",
+      "unit": "count",
+      "role": "project_processing_policy"
     }
   ]
 }

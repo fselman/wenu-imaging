@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 #include "mef_bias_product_qc.h"
 #include "mef_product_qc.h"
+#include "mef_processing.h"
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
@@ -29,6 +30,7 @@ typedef struct {
 } detector_storage;
 struct mef_bias_product_qc {
     mef_product_qc product;
+    mef_processing_policy processing;
     const mef_product_paths *paths;
     char *snapshot;
     mef_qc_input_record *inputs;
@@ -103,6 +105,9 @@ mef_bias_product_qc *mef_bias_product_qc_new(const mef_config *config,
     if(config==NULL || paths==NULL || start==NULL || revision==NULL || inputs==NULL ||
         count==0 || count>100000 || detectors==0 || detectors>4096) return NULL;
     a=calloc(1,sizeof(*a)); if(a==NULL) return NULL;
+    a->processing = *mef_config_processing(config);
+    if (a->processing.bpm.supplied && a->processing.bpm.encoding == MEF_BPM_REASON8)
+        a->product.bpm_registry = a->processing.bpm.registry;
     a->product.input_count=count; a->product.detector_count=detectors; a->paths=paths;
     a->inputs=calloc(count,sizeof(*a->inputs)); a->input_ids=calloc(count,sizeof(*a->input_ids));
     a->detectors=calloc(detectors,sizeof(*a->detectors)); a->storage=calloc(detectors,sizeof(*a->storage));
@@ -204,6 +209,30 @@ int mef_bias_product_qc_add(mef_bias_product_qc *a, size_t index,
     PRODUCT("read_noise.mad",m->ron_mad_adu,"ADU","raw_pair_difference_before_any_correction","1.4826_MAD_raw_difference_div_sqrt2",m->ron_mad_available,"pair_not_requested_or_insufficient_samples",m->raw_difference.valid_pixels,m->raw_difference.zone,pair,pair_count);
     /* These two RON quantities use exactly the same mask as the raw difference. */
     if(mask!=NULL && options->ron_pair_set) for(i=b->count-2;i<b->count;++i) { b->q[i].mask_policy="applied"; b->q[i].mask_id=mask; }
+    if(options->ron_clip_enabled) {
+        const image_clipped_stats *c = &m->clipped_difference;
+        const image_sample_stats *s = &c->sample;
+        const char *reason = s->valid_pixels < 2 ? "insufficient_clipped_samples" : "clipping_not_converged";
+        size_t begin = b->count;
+        PRODUCT("read_noise.clipped",m->ron_clipped_adu,"ADU","raw_pair_difference_before_any_correction","clipped_sample_stdev_raw_difference_div_sqrt2",m->ron_clipped_available,reason,s->valid_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.mean",s->mean,"ADU","raw_pair_difference_before_any_correction","arithmetic_mean",s->level_available,"insufficient_clipped_samples",s->valid_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.median",s->median,"ADU","raw_pair_difference_before_any_correction","median_averaged_central_pair",s->level_available,"insufficient_clipped_samples",s->valid_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.stdev",s->stdev,"ADU","raw_pair_difference_before_any_correction","sample_standard_deviation_n_minus_1",s->stdev_available,"insufficient_clipped_samples",s->valid_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.retained",s->valid_pixels,"count","raw_pair_difference_before_any_correction","explicit_sample_partition",1,NULL,s->region_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.rejected_low",c->rejected_low,"count","raw_pair_difference_before_any_correction","explicit_sample_partition",1,NULL,s->region_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.rejected_high",c->rejected_high,"count","raw_pair_difference_before_any_correction","explicit_sample_partition",1,NULL,s->region_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.bpm_excluded",s->bpm_excluded,"count","raw_pair_difference_before_any_correction","explicit_sample_partition",1,NULL,s->region_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.nonfinite_excluded",s->nonfinite_excluded,"count","raw_pair_difference_before_any_correction","explicit_sample_partition",1,NULL,s->region_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.iterations",c->iterations,"count","raw_pair_difference_before_any_correction","explicit_native_setting",1,NULL,s->region_pixels,s->zone,pair,pair_count);
+        PRODUCT("ron_clip.converged",c->converged,"count","raw_pair_difference_before_any_correction","explicit_native_flag",1,NULL,s->region_pixels,s->zone,pair,pair_count);
+        for(i=begin;i<b->count;++i) {
+            b->q[i].clipping="median_centered_monotone_sigma";
+            b->q[i].mask_policy=mask?"applied":"omitted"; b->q[i].mask_id=mask;
+        }
+        PRODUCT("ron_clip.sigma_low",options->ron_clip.sigma_low,"dimensionless","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+        PRODUCT("ron_clip.sigma_high",options->ron_clip.sigma_high,"dimensionless","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+        PRODUCT("ron_clip.max_iterations",options->ron_clip.max_iterations,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+    }
     PRODUCT("pixels.hot",m->high_offset_count,"count","median_stacked_master","all_master_pixels_above_masked_median_plus_k_scaled_MAD",m->high_offset_available,"MAD_not_requested",m->master.region_pixels,m->master.zone,NULL,0);
     PRODUCT("pixels.hot.threshold",m->high_offset_threshold,"ADU","median_stacked_master","all_master_pixels_above_masked_median_plus_k_scaled_MAD",m->high_offset_available,"MAD_not_requested",m->master.region_pixels,m->master.zone,NULL,0);
     b->q[b->count-2].mask_policy=mask?"unmasked_diagnostic":"omitted";
@@ -215,7 +244,16 @@ int mef_bias_product_qc_add(mef_bias_product_qc *a, size_t index,
     PRODUCT("recipe.ron_pair_requested",options->ron_pair_set,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
     PRODUCT("pixels.hot.threshold_degenerate",m->high_offset_degenerate,"count","median_stacked_master","explicit_native_flag",m->high_offset_available,"MAD_not_requested",m->master.region_pixels,m->master.zone,NULL,0);
     if(mask!=NULL) {
-        PRODUCT("bpm.good_value",good,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+        if (!a->processing.bpm.supplied || a->processing.bpm.encoding == MEF_BPM_BINARY) {
+            PRODUCT("bpm.good_value",good,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+        }
+        if (a->processing.bpm.supplied) {
+            PRODUCT("bpm.encoding",a->processing.bpm.encoding,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+            PRODUCT("bpm.bad_when_nonzero",a->processing.bpm.bad_when_nonzero,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+            if (a->processing.bpm.encoding == MEF_BPM_REASON8) {
+                PRODUCT("bpm.reject_bits",a->processing.bpm.reject_bits,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
+            }
+        }
         PRODUCT("bpm.active_coordinates",options->bpm_active_only,"count","recipe_parameters","explicit_native_setting",1,NULL,1,NULL,NULL,0);
     }
     PRODUCT("legacy.frame_mean_average",legacy->frame_mean_average,"ADU","frame_mean_rejection","legacy_frame_mean_average",1,NULL,m->count,NULL,NULL,0);
