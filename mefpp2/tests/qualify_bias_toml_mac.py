@@ -53,6 +53,9 @@ require(setting(before,'CMAKE_OSX_SYSROOT')=='/Applications/Xcode.app/Contents/D
 require(setting(before,'MEFPP_ASDF_PREFIX')=='/Users/fselman/Software/build/wenu-imaging/mac-asdf16-streams-o8KPDcUm/libasdf-environment','Native ASDF prefix differs')
 require(digest(recipe)=='4fc47f0e33e379864e4850f10ae78f12a22e0b15dce874cc8e23c606b8422e46','Selected recipe changed')
 require(asdf_python.is_file(),'Qualified ASDF interpreter missing')
+require((root/'warning-fix-build/mefpp2/mefpp_m5').is_file(),'Retained qualified reference adapter missing')
+require(Path(setting(before,'MEFPP_ASDF_PREFIX'),'include/asdf').is_dir(),'Retained native ASDF headers missing')
+require(Path(setting(before,'MEFPP_ASDF_LIBRARY')).is_file(),'Retained native ASDF library missing')
 processes=subprocess.check_output(['ps','-axo','pid=,command='],text=True)
 active=[line for line in processes.splitlines() if (str(build) in line or str(source) in line)
         and any(name in line for name in ('cmake','make','clang','mefpp_bias_recipe','bias_product_qc_probe'))]
