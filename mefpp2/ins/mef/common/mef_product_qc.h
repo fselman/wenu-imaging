@@ -53,6 +53,17 @@ typedef struct {
     const mef_qc_calibration_binding *bindings;
     size_t binding_count;
 } mef_qc_calibration_record;
+/* Selected final-product FITS provenance only; no numerical QC interpretation. */
+typedef struct {
+    const char *detector_id; /* NULL for primary header. */
+    int hdu, present;
+    char keyword[81], fits_value[81], value[81], comment[81], card[81];
+    /* missing, undefined, string, integer, real, boolean or fits_literal. */
+    const char *type;
+    int64_t integer;
+    double real;
+    int boolean;
+} mef_qc_fits_card;
 typedef struct {
     const char *id, *fits_path, *sha256, *log_path;
     const char *assessment_id, *recipe_name, *recipe_start;
@@ -69,6 +80,9 @@ typedef struct {
     size_t calibration_count;
     const mef_qc_detector_record *detectors;
     size_t detector_count;
+    const char *recipe_config_path, *recipe_config_snapshot;
+    const mef_qc_fits_card *header_cards;
+    size_t header_card_count;
 } mef_product_qc;
 /* Structural validation only. No thresholds, means, RON, plots, hashes or FITS
  * pixels are computed. Caller owns all borrowed values during the call. */

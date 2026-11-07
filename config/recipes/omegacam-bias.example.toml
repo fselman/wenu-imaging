@@ -1,0 +1,247 @@
+# Standalone bias processing envelope; existing numerical settings are referenced.
+# Copy beside the already qualified native bias.toml; do not replace that file.
+bias_recipe_schema_version = 1
+settings = "bias.toml"
+
+[bias]
+# Omit this field for the same default, or use an explicit ID array.
+detectors = "all"
+mad = true
+ron_pair = [0, 1]
+high_sigma = 5.0
+readout_id = "OMEGACAM:normal:ordered:1x1"
+bin_x = 1
+bin_y = 1
+# Retained structural BPM for this project; change explicitly for another project.
+input_bpm = "/Users/fselman/Pictures/OCAM/wenu-imaging/legacy-bpm-structure-b1h9egzp/prepared/OCAM_BPM_1x1_structural.fits"
+bpm_good_value = 1
+bpm_coordinates = "active"
+amplifier_id = "explicit-whole-detector"
+
+[provenance]
+primary = ["MJD-OBS", "MJD-END", "DATE-OBS", "TIMESYS", "EXPTIME", "TELESCOP", "INSTRUME", "PRODCATG"]
+detector = ["EXTNAME", "EXTVER", "HIERARCH ESO DET CHIP ID", "HIERARCH ESO DET OUT1 ID"]
+
+[[detector]]
+id = "ESO_CCD_#65"
+configuration_detector = 0
+hdus = [1]
+expected_extname = "ESO_CCD_#65"
+bpm_hdu = 1
+
+[[detector]]
+id = "ESO_CCD_#66"
+configuration_detector = 1
+hdus = [2]
+expected_extname = "ESO_CCD_#66"
+bpm_hdu = 2
+
+[[detector]]
+id = "ESO_CCD_#67"
+configuration_detector = 2
+hdus = [3]
+expected_extname = "ESO_CCD_#67"
+bpm_hdu = 3
+
+[[detector]]
+id = "ESO_CCD_#68"
+configuration_detector = 3
+hdus = [4]
+expected_extname = "ESO_CCD_#68"
+bpm_hdu = 4
+
+[[detector]]
+id = "ESO_CCD_#73"
+configuration_detector = 4
+hdus = [5]
+expected_extname = "ESO_CCD_#73"
+bpm_hdu = 5
+
+[[detector]]
+id = "ESO_CCD_#74"
+configuration_detector = 5
+hdus = [6]
+expected_extname = "ESO_CCD_#74"
+bpm_hdu = 6
+
+[[detector]]
+id = "ESO_CCD_#75"
+configuration_detector = 6
+hdus = [7]
+expected_extname = "ESO_CCD_#75"
+bpm_hdu = 7
+
+[[detector]]
+id = "ESO_CCD_#76"
+configuration_detector = 7
+hdus = [8]
+expected_extname = "ESO_CCD_#76"
+bpm_hdu = 8
+
+[[detector]]
+id = "ESO_CCD_#81"
+configuration_detector = 8
+hdus = [9]
+expected_extname = "ESO_CCD_#81"
+bpm_hdu = 9
+
+[[detector]]
+id = "ESO_CCD_#82"
+configuration_detector = 9
+hdus = [10]
+expected_extname = "ESO_CCD_#82"
+bpm_hdu = 10
+
+[[detector]]
+id = "ESO_CCD_#83"
+configuration_detector = 10
+hdus = [11]
+expected_extname = "ESO_CCD_#83"
+bpm_hdu = 11
+
+[[detector]]
+id = "ESO_CCD_#84"
+configuration_detector = 11
+hdus = [12]
+expected_extname = "ESO_CCD_#84"
+bpm_hdu = 12
+
+[[detector]]
+id = "ESO_CCD_#89"
+configuration_detector = 12
+hdus = [13]
+expected_extname = "ESO_CCD_#89"
+bpm_hdu = 13
+
+[[detector]]
+id = "ESO_CCD_#90"
+configuration_detector = 13
+hdus = [14]
+expected_extname = "ESO_CCD_#90"
+bpm_hdu = 14
+
+[[detector]]
+id = "ESO_CCD_#91"
+configuration_detector = 14
+hdus = [15]
+expected_extname = "ESO_CCD_#91"
+bpm_hdu = 15
+
+[[detector]]
+id = "ESO_CCD_#92"
+configuration_detector = 15
+hdus = [16]
+expected_extname = "ESO_CCD_#92"
+bpm_hdu = 16
+
+[[detector]]
+id = "ESO_CCD_#69"
+configuration_detector = 16
+hdus = [17]
+expected_extname = "ESO_CCD_#69"
+bpm_hdu = 17
+
+[[detector]]
+id = "ESO_CCD_#70"
+configuration_detector = 17
+hdus = [18]
+expected_extname = "ESO_CCD_#70"
+bpm_hdu = 18
+
+[[detector]]
+id = "ESO_CCD_#71"
+configuration_detector = 18
+hdus = [19]
+expected_extname = "ESO_CCD_#71"
+bpm_hdu = 19
+
+[[detector]]
+id = "ESO_CCD_#72"
+configuration_detector = 19
+hdus = [20]
+expected_extname = "ESO_CCD_#72"
+bpm_hdu = 20
+
+[[detector]]
+id = "ESO_CCD_#77"
+configuration_detector = 20
+hdus = [21]
+expected_extname = "ESO_CCD_#77"
+bpm_hdu = 21
+
+[[detector]]
+id = "ESO_CCD_#78"
+configuration_detector = 21
+hdus = [22]
+expected_extname = "ESO_CCD_#78"
+bpm_hdu = 22
+
+[[detector]]
+id = "ESO_CCD_#79"
+configuration_detector = 22
+hdus = [23]
+expected_extname = "ESO_CCD_#79"
+bpm_hdu = 23
+
+[[detector]]
+id = "ESO_CCD_#80"
+configuration_detector = 23
+hdus = [24]
+expected_extname = "ESO_CCD_#80"
+bpm_hdu = 24
+
+[[detector]]
+id = "ESO_CCD_#85"
+configuration_detector = 24
+hdus = [25]
+expected_extname = "ESO_CCD_#85"
+bpm_hdu = 25
+
+[[detector]]
+id = "ESO_CCD_#86"
+configuration_detector = 25
+hdus = [26]
+expected_extname = "ESO_CCD_#86"
+bpm_hdu = 26
+
+[[detector]]
+id = "ESO_CCD_#87"
+configuration_detector = 26
+hdus = [27]
+expected_extname = "ESO_CCD_#87"
+bpm_hdu = 27
+
+[[detector]]
+id = "ESO_CCD_#88"
+configuration_detector = 27
+hdus = [28]
+expected_extname = "ESO_CCD_#88"
+bpm_hdu = 28
+
+[[detector]]
+id = "ESO_CCD_#93"
+configuration_detector = 28
+hdus = [29]
+expected_extname = "ESO_CCD_#93"
+bpm_hdu = 29
+
+[[detector]]
+id = "ESO_CCD_#94"
+configuration_detector = 29
+hdus = [30]
+expected_extname = "ESO_CCD_#94"
+bpm_hdu = 30
+
+[[detector]]
+id = "ESO_CCD_#95"
+configuration_detector = 30
+hdus = [31]
+expected_extname = "ESO_CCD_#95"
+bpm_hdu = 31
+
+[[detector]]
+id = "ESO_CCD_#96"
+configuration_detector = 31
+hdus = [32]
+expected_extname = "ESO_CCD_#96"
+bpm_hdu = 32

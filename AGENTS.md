@@ -1,3 +1,18 @@
+## Limited bias TOML/provenance finish — 7 November 2026
+
+Owner explicitly requested a small TOML-selected primary/detector-header
+provenance addition to product ASDF, single-detector support, and removal of
+the repeated detector CLI blocks. Default selection is all configured catalogue
+detectors, also --detectors all; subsets require explicit IDs. This authorizes
+the bounded implementation described in docs/developer/design/bias-toml-provenance-v1.md.
+Read docs/developer/bias-toml-provenance-2026-11-07.md for agent evidence and the
+pending actual Mac gate. Keep numerical settings/kernels/QC, existing products,
+installed software and retained evidence unchanged. No viewer/database,
+JD aggregation, new raw reduction or dependency installation. Reuse the selected
+Mac source/build/cache/tools and build affected existing targets only; no new
+source/build export. Earlier paused-QC discussion remains paused outside this
+explicit limited finish.
+
 ## Bias recipe complete; QC comparison discussion paused — resume 7 November 2026
 
 Owner requested saving state and continuing tomorrow. Read

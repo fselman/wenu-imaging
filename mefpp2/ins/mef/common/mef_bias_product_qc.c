@@ -2,6 +2,10 @@
 #include "mef_bias_product_qc.h"
 #include "mef_product_qc.h"
 #include <stdlib.h>
+#include <errno.h>
+#include <ctype.h>
+#include <math.h>
+#include "qfits.h"
 #include <string.h>
 /* Eclipse's public image headers expose allocator macros. These metadata owners
  * use libc; numerical image owners still use their library destructors. */
@@ -32,6 +36,7 @@ struct mef_bias_product_qc {
     mef_qc_detector_record *detectors;
     mef_qc_calibration_record *calibrations;
     detector_storage *storage;
+    mef_qc_fits_card *header_cards;
 };
 static int bucket_new(bucket *b, const char *source)
 {
@@ -261,6 +266,107 @@ void mef_bias_product_qc_destroy(mef_bias_product_qc *a)
         if(a->detectors) free((void *)a->detectors[i].inputs);
     }
     if(a->calibrations) for(i=0;i<a->product.calibration_count;++i) free((void *)a->calibrations[i].bindings);
+    free(a->header_cards);
     free(a->snapshot); free(a->inputs); free(a->input_ids); free(a->detectors);
     free(a->storage); free(a->calibrations); free(a->calibration_ids); free(a);
+}
+
+static void header_value(mef_qc_fits_card *c)
+{
+    char number[81], *end; size_t i,n;
+    if(!c->present){c->type="missing";return;}
+    if(!*c->fits_value){c->type="undefined";return;}
+    c->type="fits_literal";strcpy(c->value,c->fits_value);
+    if(c->fits_value[0]=='\'') {
+        n=0;
+        for(i=1;c->fits_value[i];++i) {
+            if(c->fits_value[i]=='\'') {
+                if(c->fits_value[i+1]=='\'')++i;
+                else {
+                    size_t tail=i+1;
+                    while(isspace((unsigned char)c->fits_value[tail]))++tail;
+                    while(n && c->value[n-1]==' ')--n;
+                    if(c->fits_value[tail]||(n&&c->value[n-1]=='&')) {
+                        strcpy(c->value,c->fits_value);return;
+                    }
+                    c->value[n]=0;c->type="string";return;
+                }
+            }
+            c->value[n++]=c->fits_value[i];
+        }
+        strcpy(c->value,c->fits_value);return;
+    }
+    if(!strcmp(c->fits_value,"T")||!strcmp(c->fits_value,"F")) {
+        c->boolean=c->fits_value[0]=='T';c->type="boolean";return;
+    }
+    errno=0;c->integer=strtoll(c->fits_value,&end,10);
+    while(isspace((unsigned char)*end))++end;
+    if(!errno&&end!=c->fits_value&&!*end){c->type="integer";return;}
+    strcpy(number,c->fits_value);
+    for(i=0;number[i];++i)if(number[i]=='D'||number[i]=='d')number[i]='E';
+    errno=0;c->real=strtod(number,&end);
+    while(isspace((unsigned char)*end))++end;
+    if(!errno&&end!=number&&!*end&&isfinite(c->real))c->type="real";
+}
+static int capture_header(qfits_header *h,const char *const *keys,size_t count,
+    mef_qc_fits_card *cards,int hdu,const char *id,char *message,size_t size)
+{
+    size_t j; int i;
+    for(j=0;j<count;++j) {
+        mef_qc_fits_card *c=cards+j;
+        c->hdu=hdu;c->detector_id=id;
+        if(!keys[j]||strlen(keys[j])>79)return 0;
+        strcpy(c->keyword,keys[j]);
+        for(i=0;i<h->n;++i) {
+            char key[81],value[81],comment[81],line[81];
+            const char *canonical;
+            if(qfits_header_getitem(h,i,key,value,comment,line))return 0;
+            canonical=!strncmp(key,"HIERARCH ",9)?key+9:key;
+            if(strcmp(canonical,keys[j]))continue;
+            if(c->present)return 0; /* Ambiguous selected keyword is not first-wins. */
+            c->present=1;strcpy(c->fits_value,value);strcpy(c->comment,comment);
+            if(strlen(line)!=80) {
+                if(message&&size)snprintf(message,size,"Selected card %s has no complete 80-byte source card",keys[j]);
+                return 0;
+            }
+            strcpy(c->card,line);
+        }
+        header_value(c);
+    }
+    return 1;
+}
+int mef_bias_product_qc_headers(mef_bias_product_qc *a,
+    const char *const *primary,size_t np,const char *const *detector,size_t nd,
+    const char *path,const char *snapshot,char *message,size_t size)
+{
+    size_t i,total; qfits_header *h=NULL;int okay=0;
+    if(message&&size)*message=0;
+    if(!a||np>16||nd>16||(np&&!primary)||(nd&&!detector)||!path||!snapshot||
+        a->header_cards)return -1;
+    total=np+nd*a->product.detector_count;
+    a->product.recipe_config_path=path;a->product.recipe_config_snapshot=snapshot;
+    if(!total)return 0;
+    /* Same existing bounded qfits scanner; final product only, never raw pixels. */
+    if(qfits_cache_prime_bounded((char *)a->paths->fits,
+        a->product.detector_count+1,16*1024*1024)) {
+        if(message&&size)snprintf(message,size,"Cannot prime bounded final FITS headers");
+        goto done;
+    }
+    a->header_cards=calloc(total,sizeof(*a->header_cards));if(!a->header_cards)goto done;
+    if(np) {
+        h=qfits_header_read((char *)a->paths->fits);
+        if(!h||!capture_header(h,primary,np,a->header_cards,0,NULL,message,size))goto done;
+        qfits_header_destroy(h);h=NULL;
+    }
+    for(i=0;nd&&i<a->product.detector_count;++i) {
+        h=qfits_header_readext((char *)a->paths->fits,a->detectors[i].output_hdu);
+        if(!h||!capture_header(h,detector,nd,a->header_cards+np+i*nd,
+            a->detectors[i].output_hdu,a->detectors[i].id,message,size))goto done;
+        qfits_header_destroy(h);h=NULL;
+    }
+    a->product.header_cards=a->header_cards;a->product.header_card_count=total;okay=1;
+done:
+    qfits_header_destroy(h);
+    if(!okay&&message&&size&&!*message)snprintf(message,size,"Selected final FITS header capture failed");
+    return okay?0:-1;
 }

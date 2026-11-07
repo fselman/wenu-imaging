@@ -17,6 +17,9 @@ int mef_bias_product_qc_add(mef_bias_product_qc *, size_t output_index,
     const mef_bias_result *, const mef_bias_measurement_options *,
     const mef_bias_settings *, int raw_rows, const char *bpm_path,
     int bpm_hdu, int bpm_good_value);
+/* Capture selected final FITS headers after assembly, before ASDF publication. */
+int mef_bias_product_qc_headers(mef_bias_product_qc *, const char *const *, size_t,
+    const char *const *, size_t, const char *, const char *, char *, size_t);
 int mef_bias_product_qc_check(mef_bias_product_qc *, char *, size_t);
 const mef_product_qc *mef_bias_product_qc_view(const mef_bias_product_qc *);
 int mef_bias_product_qc_write(mef_bias_product_qc *, char *, size_t);

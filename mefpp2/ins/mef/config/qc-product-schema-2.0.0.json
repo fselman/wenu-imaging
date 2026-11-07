@@ -103,6 +103,122 @@
             "log_path": {
               "type": "string",
               "minLength": 1
+            },
+            "recipe_configuration": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "format": {
+                  "enum": [
+                    "bias-recipe-toml/1"
+                  ]
+                },
+                "snapshot": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "path",
+                "format",
+                "snapshot"
+              ],
+              "additionalProperties": false
+            },
+            "fits_headers": {
+              "type": "array",
+              "maxItems": 65552,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "keyword": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 79
+                  },
+                  "role": {
+                    "enum": [
+                      "primary",
+                      "detector"
+                    ]
+                  },
+                  "hdu": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "detector_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "status": {
+                    "enum": [
+                      "present",
+                      "missing"
+                    ]
+                  },
+                  "value_type": {
+                    "enum": [
+                      "missing",
+                      "undefined",
+                      "string",
+                      "integer",
+                      "real",
+                      "boolean",
+                      "fits_literal"
+                    ]
+                  },
+                  "value": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "fits_value": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "comment": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "card": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 80
+                  },
+                  "source_file": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "keyword",
+                  "role",
+                  "hdu",
+                  "detector_id",
+                  "status",
+                  "value_type",
+                  "value",
+                  "fits_value",
+                  "comment",
+                  "card",
+                  "source_file"
+                ],
+                "additionalProperties": false
+              }
             }
           },
           "required": [
