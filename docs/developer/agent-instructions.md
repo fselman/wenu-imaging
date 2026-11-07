@@ -1,3 +1,22 @@
+## Bias recipe complete; QC comparison discussion paused — resume 7 November 2026
+
+Owner requested saving state and continuing tomorrow. Read
+[the current handoff](handoffs/resume-bias-qc-2026-11-07.md)
+first.
+Main/Mac integration and ten-branch cleanup are complete at b1f2f509;
+the selected existing Mac recipe was relinked/stamped to that revision and
+passed its one-test synthetic FITS/ASDF check in 3.427 s with no allocator
+diagnostics. No build or observational reduction needs repeating.
+Owner is considering a cross-product QC view: all product parameters from a
+recipe directory, parameter-versus-JD comparisons, selected-product highlighting,
+harvest once into a reusable QC collection, eventual historical database.
+Collection/database/layout details are not approved for implementation; resume
+discussion. Immediate existing-product inspection/comparison is an acceptable
+starting point. Both retained masters share inputs and byte-identical pixels;
+do not treat them as independent historical measurements. Preserve all products,
+raws, logs, private detector files, binaries and qualification evidence.
+This update supersedes earlier pending relink/merge/cleanup paragraphs below.
+
 ## Optional cleanup guard correction prepared (#269) — 6 November 2026
 
 Owner instructed eliminating optional NULL-release chatter after completed

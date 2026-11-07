@@ -1,3 +1,5 @@
+- [Resume bias/QC discussion on 7 November](handoffs/resume-bias-qc-2026-11-07.md): integration, Mac relink/smoke and cleanup complete; cross-product/JD/harvest-once QC direction saved. No reprocessing or database implementation.
+
 - [Bias recipe block diagram](architecture/mefpp/README.md) / [SVG](architecture/mefpp/bias-recipe.svg): inputs, serial detector processing, common QC and native FITS/ASDF publication.
 
 - [Bias recipe mathematical guide v1 — review copy (PDF)](bias-recipe-mathematical-guide-v1.pdf) / [LaTeX](bias-recipe-mathematical-guide-v1.tex): equations, estimator conventions, mask populations, QC mapping and qualified recovery evidence. Documentation only; no rebuild or raw replay.
