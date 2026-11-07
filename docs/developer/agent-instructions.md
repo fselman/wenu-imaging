@@ -1,3 +1,18 @@
+## Native final-MEF assembler prepared — 6 November 2026
+
+Owner approved the source-reviewed assembly design and instructed implementation.
+Read [the current contract/status](docs/developer/native-mef-assembly-2026-11-06.md).
+The isolated native assembler copies completed detector products into one MEF,
+with explicit reference primary, verified identities/spans and exclusive publish.
+Eight agent synthetic groups pass, including32detectors and exact data/cards;
+Mac build and independent Astropy/data-checksum verification remain pending.
+The previous native ASDF writer passed all10actualMac checks in2.589s at1434606;
+checker#249 is closed and its original failed run/source are preserved.
+Bias arithmetic and normal recipe behavior are unchanged. Connect the standalone
+coordinator only after this assembly gate. No observations, viewer, installation,
+merge or cleanup. Overall#245 remains open; final real whole-mosaic acceptance
+still requires invocation from orchestration into the chosen products directory.
+
 ## Native product-QC writer prepared — 6 November 2026
 
 One ASDF per final MEF now has an isolated native metadata writer and embedded
