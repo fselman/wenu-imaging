@@ -8,7 +8,9 @@
 #include <assert.h>
 #include <unistd.h>
 #include "bias_header_provenance_probe.inc"
+#include "bias_clipping_probe.inc"
 static const char *dump_directory;
+static int clipping_profile, reason_profile;
 static const mef_qc_measurement *find(const mef_qc_measurement *q,size_t n,const char *name)
 {
     size_t i; for(i=0;i<n;++i) if(!strcmp(q[i].name,name)) return q+i;
@@ -31,6 +33,12 @@ static void profile(const char *paf,int masked,int mad,int pair)
         bb->ccd[i].trimreg[2]=1; bb->ccd[i].trimreg[3]=4;
     }
     assert(mef_config_from_legacy(bb,NULL,&config,&diagnostic)==MEF_OK);
+    if (reason_profile) {
+        mef_processing_policy policy;
+        memset(&policy,0,sizeof(policy));policy.bpm.supplied=1;
+        policy.bpm.encoding=MEF_BPM_REASON8;policy.bpm.bad_when_nonzero=1;policy.bpm.reject_bits=255;
+        strcpy(policy.bpm.registry,"WENU_BPM_V1");mef_config_initialize_processing(config,&policy);
+    }
     memset(&output,0,sizeof(output)); strcpy(output.fits,"/synthetic/products/CMDP.2026-11-06T16:00:00.123Z.001.fits");
     strcpy(output.asdf,"/synthetic/products/CMDP.2026-11-06T16:00:00.123Z.001.asdf");
     strcpy(output.log,"/synthetic/products/CMDP.2026-11-06T16:00:00.123Z.001.log");
@@ -79,9 +87,19 @@ static void profile(const char *paf,int masked,int mad,int pair)
         input.frames=borrowed; input.count=4; input.configuration_detector=d;
         options.bpm=mask; options.with_mad=mad; options.high_sigma=5;
         options.ron_pair_set=pair; options.ron_first=0; options.ron_second=3;
+        if (clipping_profile) {
+            options.ron_clip_enabled=1;options.ron_clip.sigma_low=5;options.ron_clip.sigma_high=5;
+            options.ron_clip.max_iterations=clipping_profile==2?1:10;
+            if(clipping_profile==2)options.ron_clip.sigma_low=options.ron_clip.sigma_high=1;
+        }
         assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_OK);
         assert(mef_config_bias_settings(config,d,&settings)==MEF_OK);
         m=mef_bias_result_measurements(result); legacy=mef_bias_result_qc(result);
+        if(clipping_profile) {
+            if(clipping_profile==2)assert(!m->clipped_difference.converged && !m->ron_clipped_available);
+            else assert(m->clipped_difference.converged && m->ron_clipped_available);
+            assert(m->ron_clipped_adu==m->clipped_difference.sample.stdev/sqrt(2.0));
+        }
         expected_master[d]=m->master.mean;
         assert(mef_bias_product_qc_add(archive,d,ids[d],"explicit-amplifier","synthetic-readout",d,1,1,
             result,&options,&settings,4,masked?"/synthetic/bpm.fits":NULL,(int)d+1,1));
@@ -155,6 +173,17 @@ static void profile(const char *paf,int masked,int mad,int pair)
 }
 int main(int argc,char **argv)
 {
+    if(argc==3 && !strcmp(argv[1],"mask-policy")) {
+        eclipse_init();set_logfile(0);mask_policy_contract(argv[2]);return 0;
+    }
+    if(argc==4 && (!strcmp(argv[1],"clipped-profile") || !strcmp(argv[1],"reason-profile") || !strcmp(argv[1],"clipped-limit"))) {
+        reason_profile=!strcmp(argv[1],"reason-profile");
+        eclipse_init();set_logfile(0);clipping_profile=!strcmp(argv[1],"clipped-limit")?2:1;dump_directory=argv[3];
+        profile(argv[2],1,1,1);puts("PASS: actual bias kernel and additive clipped FITS mapping");return 0;
+    }
+    if(argc==2 && !strcmp(argv[1],"clipping")) {
+        eclipse_init();set_logfile(0);clipping_contract();clipping_benchmark();return 0;
+    }
     if(argc==4 && !strcmp(argv[1],"headers")) {
         metadata_directory=argv[3];eclipse_init();set_logfile(0);
         profile_detector_count=1;profile(argv[2],0,1,1);

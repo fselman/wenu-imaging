@@ -28,18 +28,29 @@ def main():
         assert 'Incomplete collection' in page.locator('#errors').inner_text()
         assert 'shared by 3 products' in page.locator('#products').inner_text()
         assert page.locator('#plot path[data-row]').count()==1
-        assert page.locator('#plot circle[data-row]').count()==4
-        assert page.locator('#measurements tr').count()==15
+        assert page.locator('#plot circle[data-row]').count()==0
+        assert 'Clipped RON' in page.locator('#metric option:checked').inner_text()
+        assert page.locator('#parameter-set').input_value()=='core'
+        assert page.locator('#overview tr').count()==5
+        assert 'Not stored' in page.locator('#overview').inner_text()
+        assert 'repeated reductions' in page.locator('#shared-note').inner_text()
+        assert page.locator('#measurements tr').count()==31
         page.locator('#plot path[data-row]').first.click()
         assert 'read_noise' in page.locator('#detail').inner_text()
         original_requests=list(requests)
         # Change product only: all other measurements remain loaded and visible.
         page.select_option('#product',label='master-old.asdf')
+        assert page.locator('#plot path[data-row]').count()==0
+        # Raw RON is separately selectable for cross-product comparison.
+        raw=page.locator('#metric option').evaluate_all("options=>options.find(o=>o.textContent.startsWith('Raw RON ')).value")
+        page.select_option('#metric',value=raw)
         assert page.locator('#plot path[data-row]').count()==2
         assert page.locator('#plot circle[data-row]').count()==3
-        assert page.locator('#measurements tr').count()==15
-        assert page.locator('#measurements tr.selected').count()==6
+        assert page.locator('#measurements tr').count()==31
+        assert page.locator('#measurements tr.selected').count()==12
         # Missing values are tabulated and never plotted as zero.
+        page.select_option('#parameter-set',value='all')
+        assert page.locator('#measurements tr').count()==41
         page.fill('#search','variance')
         assert page.locator('#measurements tr').count()==5
         assert 'unavailable' in page.locator('#measurements').inner_text()
@@ -48,7 +59,7 @@ def main():
         assert page.locator('#plot circle[data-row]').count()==1
         page.select_option('#detector',label='All detectors')
         page.select_option('#scope',value='input')
-        assert page.locator('#measurements tr').count()==150
+        assert page.locator('#measurements tr').count()==310
         page.locator('#next').click()
         assert 'Page 2 / 3' in page.locator('#page').inner_text()
         page.select_option('#table-mode',value='metric')
@@ -59,7 +70,7 @@ def main():
         page.set_viewport_size(dict(width=390,height=844))
         assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), 'Mobile page overflow'
         page.set_viewport_size(dict(width=1440,height=1000))
-        page.select_option('#scope',value='product');page.select_option('#table-mode',value='all')
+        page.select_option('#scope',value='product');page.select_option('#table-mode',value='all');page.select_option('#parameter-set',value='core')
         page.locator('#provenance').locator('..').evaluate('(el)=>el.open=true')
         page.screenshot(path=str(a.work/'overview.png'),full_page=True)
         browser.close()

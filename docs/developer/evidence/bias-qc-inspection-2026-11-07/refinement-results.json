@@ -1,0 +1,23 @@
+{
+  "successful_metadata_model_checks": true,
+  "python_test_groups": 3,
+  "javascript_controls": [
+    "common/all parameter sets",
+    "clipped RON priority",
+    "overview stored raw/MAD/clipped values",
+    "missing clipped values not fabricated",
+    "stored membership counts",
+    "shared raw-input sequence groups",
+    "definition units/regions",
+    "scope/detector filtering",
+    "pagination",
+    "shared plot cursor binding"
+  ],
+  "javascript_syntax": true,
+  "python_syntax": true,
+  "real_asdf_reads_in_agent": false,
+  "browser_painting_passed": false,
+  "browser_failure": "Chromium launch fails before page load: socket/ptrace operations not permitted",
+  "mac_generation_and_browser_review": "pending",
+  "native_build_or_reduction": false
+}

@@ -46,8 +46,25 @@ def record(name, subset=False):
 
 
 def sample_data(directory):
-    products = [view.extract(directory/(name+'.asdf'), record(name, subset))
-                for name,subset in [('master-old',False),('master-recovered',False),('master-new',True)]]
+    products = []
+    for name,subset in [('master-old',False),('master-recovered',False),('master-new',True)]:
+        q = record(name,subset)
+        for d in q['characterization']['detectors']:
+            for metric,value,unit in [('read_noise.mad',2.0967,'ADU'),('master.mean',-.2,'ADU'),
+                                      ('master.median',-.18,'ADU'),('master.stdev',.8,'ADU'),('pixels.hot',4,'count')]:
+                d['measurements'].append(measurement(metric,value,unit))
+            if name=='master-new':
+                clipped=measurement('read_noise.clipped',1.99)
+                clipped['definition']['method']='clipped_sample_stdev_raw_difference_div_sqrt2'
+                clipped['definition']['region']['clipping']='median_centered_monotone_sigma'
+                d['measurements'].append(clipped)
+        for i,entry in enumerate(q['embedded_input_records']):
+            for d in entry['detectors']:
+                d['measurements'][0]['name']='raw_active.mean'
+            q['inputs'].append(dict(record_id=entry['record_id'],participation_by_detector=[
+                dict(detector_id=d['detector_id'],status='used' if i==0 else 'rejected',reason=None if i==0 else 'native_frame_mean_rejection')
+                for d in entry['detectors']]))
+        products.append(view.extract(directory/(name+'.asdf'),q))
     return dict(schema_version=1, directory=str(directory), products=products,
                 errors=[dict(path='bad.asdf', error='Invalid schema <test>')],
                 generated_at='2026-11-07', observation_epoch_policy='not_selected')

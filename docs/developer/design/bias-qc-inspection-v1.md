@@ -47,3 +47,11 @@ definition/filter/zero/missing/pagination checks on synthetic stored metadata;
 actual retained-ASDF generation and browser review on Mac. Synthetic tests are
 not a claim of actual native-ASDF or browser acceptance. No new dependency,
 scientific subroutine, mathematical guide change, build or reduction is needed.
+
+## Owner-approved refinement after clipped RON acceptance
+
+Default to seven common master parameters: clipped RON, raw RON, MAD RON, master mean, median, RMS and high-offset count. Embedded-input defaults show raw/corrected mean/RMS and scan median/RMS. An explicit All stored parameters control reveals the complete scalar collection; nothing is removed from harvesting or the page data. Prefer clipped RON on initial load when stored, while preserving a deliberate measurement selection during filtering.
+
+A master overview displays those values side by side for every product/detector. Clipped RON is prominent; absence in an older product is Not stored, distinct from a stored unavailable diagnostic or numeric zero. Used/rejected frame counts summarize existing participation metadata, explicitly labeled as membership counts, without recalculating statistics or introducing synthetic QC measurements. Missing membership is Not recorded.
+
+Retain all products on selection and visibly identify shared ordered raw-input sequences as repeated reductions rather than independent historical measurements. These are stored path identities, not hashes of image contents. Cache immutable definition keys, filtered row collections and overview projections in memory. Product selection never reopens ASDF; each generation deliberately reads each product once. JD, persistent harvesting/database policy and scientific acceptance thresholds remain deferred.

@@ -45,7 +45,9 @@ def verify(header, product, detector):
         put(key + ' STG', codes['stage', definition['stage']])
         put(key + ' MASK', codes['mask', region['detector_bpm']])
         put(key + ' COORD', codes['coord', region['coordinates']])
-        assert region['clipping'] == 'none'
+        assert region['clipping'] in ('none', 'median_centered_monotone_sigma')
+        if region['clipping'] != 'none':
+            put(key + ' CLIP', 'MEDSIG')
         assert region['nonfinite'] == 'excluded'
         if region['mask_record_id'] is not None:
             put(key + ' BPMID', region['mask_record_id'])
@@ -98,6 +100,8 @@ def verify(header, product, detector):
         ), set(ms) - mapped
         return ms
 
+    if product['extensions'].get('bpm_registry') is not None:
+        put('BPM REG', product['extensions']['bpm_registry'])
     put('MAPVER', 'bias-scalar/1')
     put('ASDF', Path(product['file']['location']).with_suffix('.asdf').name)
     put('PROD', product['file']['filename'])

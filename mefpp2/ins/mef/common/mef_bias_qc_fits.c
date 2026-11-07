@@ -96,8 +96,9 @@ static int context(qfits_header *h,const char *key,const mef_qc_measurement *q)
     if(!field(h,key,"STG",code("stage",q->stage),1) ||
        !field(h,key,"MASK",code("mask",q->mask_policy),1) ||
        !field(h,key,"COORD",code("coord",q->coordinates),1) ||
-       !q->clipping || strcmp(q->clipping,"none") ||
+       !q->clipping || (strcmp(q->clipping,"none") && strcmp(q->clipping,"median_centered_monotone_sigma")) ||
        !q->nonfinite_policy || strcmp(q->nonfinite_policy,"excluded")) return 0;
+    if(strcmp(q->clipping,"none") && !field(h,key,"CLIP","MEDSIG",1)) return 0;
     if(q->mask_id && !field(h,key,"BPMID",q->mask_id,1)) return 0;
     for(i=0;i<4;++i) {
         if(q->bounds[i]<0 || !integer(h,key,bounds[i],(uint64_t)q->bounds[i])) return 0;
@@ -165,7 +166,8 @@ static int samples(qfits_header *h,int scope,const char *prefix,const mef_qc_mea
     for(i=0;i<LENGTH(scalars);++i) if(scalars[i].scope==scope) {
         const mef_qc_measurement *m=find(q,n,scalars[i].asdf);
         /* BPM parameter measurements exist only when a BPM was supplied. */
-        if(!m && !strncmp(scalars[i].asdf,"bpm.",4)) continue;
+        if(!m && (!strncmp(scalars[i].asdf,"bpm.",4) || !strncmp(scalars[i].asdf,"ron_clip.",9) ||
+            !strcmp(scalars[i].asdf,"read_noise.clipped"))) continue;
         snprintf(key,sizeof(key),"%s%s%s",prefix,*prefix?" ":"",scalars[i].fits);
         if(!measurement(h,key,m,1)) return 0;
     }
@@ -211,6 +213,7 @@ int mef_bias_qc_fits_header(const mef_product_qc *p,size_t index,qfits_header **
            (!b->accepted && !field(h,prefix,"WHY",code("reason",b->rejection_reason),1)) ||
            !samples(h,1,prefix,b->measurements,b->measurement_count)) goto failed;
     }
+    if(p->bpm_registry && !field(h,"BPM REG","",p->bpm_registry,1)) goto failed;
     *out=h; return 0;
 failed:
     qfits_header_destroy(h);

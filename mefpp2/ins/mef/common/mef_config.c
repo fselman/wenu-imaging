@@ -1,5 +1,6 @@
 /* Owned immutable snapshot adapter. Legacy numerical processing is untouched. */
 #include "mef_config.h"
+#include "mef_processing.h"
 #include "mefp_lib.h"
 #include <float.h>
 #include <limits.h>
@@ -13,6 +14,7 @@ typedef struct {
 
 struct mef_config {
     mef_allocator allocator;
+    mef_processing_policy processing;
     mef_detector_config *detectors;
 #include "mef_config_members.h"
 };
@@ -86,6 +88,7 @@ mef_status mef_config_from_legacy(const struct _mef_bb_ *source,
     }
     /* Initialize pointer members explicitly; do not assume all-zero NULL bits. */
     config->allocator = selected;
+    memset(&config->processing, 0, sizeof(config->processing));
     config->detectors = NULL;
 #define MEF_STRING(member, key) config->member = NULL;
 #define MEF_INT(member, key) config->member = source->member;
@@ -164,6 +167,7 @@ mef_status mef_config_clone(const mef_config *source, const mef_allocator *alloc
         return MEF_ERR_MEMORY;
     }
     copy->allocator = a;
+    copy->processing = source->processing;
     copy->detectors = NULL;
 #define MEF_STRING(member, key) copy->member = NULL;
 #define MEF_INT(member, key) copy->member = source->member;
@@ -288,6 +292,24 @@ mef_status mef_config_dump(const mef_config *config, FILE *stream)
         DET_FLOAT(crpix2, "MEF.CRPIX2")
 #undef DET_FLOAT
     }
+    if (config->processing.bpm.supplied) {
+        const mef_bpm_policy *p = &config->processing.bpm;
+        entry(stream,&first,"BPM.ENCODING","string");
+        json_string(stream,p->encoding == MEF_BPM_REASON8 ? "reason8" : "binary"); fputc('}',stream);
+        entry(stream,&first,"BPM.BAD_WHEN","string");
+        json_string(stream,p->bad_when_nonzero ? "nonzero" : "zero"); fputc('}',stream);
+        if (p->encoding == MEF_BPM_REASON8) {
+            entry(stream,&first,"BPM.REJECT_BITS","int"); fprintf(stream,"%u}",p->reject_bits);
+            entry(stream,&first,"BPM.REGISTRY","string"); json_string(stream,p->registry); fputc('}',stream);
+        }
+    }
+    if (config->processing.ron_clip_supplied) {
+        const mef_processing_policy *p = &config->processing;
+        entry(stream,&first,"QC.RON.CLIP.ENABLED","int"); fprintf(stream,"%d}",p->ron_clip_enabled);
+        entry(stream,&first,"QC.RON.CLIP.LOW","float64-bits"); bits(stream,&p->ron_clip_low,sizeof(double)); fputc('}',stream);
+        entry(stream,&first,"QC.RON.CLIP.HIGH","float64-bits"); bits(stream,&p->ron_clip_high,sizeof(double)); fputc('}',stream);
+        entry(stream,&first,"QC.RON.CLIP.MAX_ITERATIONS","int"); fprintf(stream,"%d}",p->ron_clip_max_iterations);
+    }
     fputs("\n}\n", stream);
     return ferror(stream) ? MEF_ERR_IO : MEF_OK;
 }
@@ -364,4 +386,19 @@ mef_status mef_config_bpm_settings(const mef_config *config, size_t detector,
     value.high = config->bpm_gainthr_hi;
     *out = value;
     return MEF_OK;
+}
+
+const mef_processing_policy *mef_config_processing(const mef_config *config)
+{ return config ? &config->processing : NULL; }
+void mef_config_initialize_processing(mef_config *config, const mef_processing_policy *policy)
+{ config->processing = *policy; }
+
+int mef_bpm_policy_matches(const mef_bpm_policy *p, mef_bpm_encoding encoding,
+    int good, unsigned int reject_bits, const char *registry)
+{
+    if (!p || !p->supplied) return 1;
+    if (p->encoding != encoding) return 0;
+    if (encoding == MEF_BPM_BINARY) return good == (p->bad_when_nonzero ? 0 : 1);
+    return encoding == MEF_BPM_REASON8 && reject_bits == p->reject_bits && registry &&
+        !strcmp(registry,p->registry);
 }

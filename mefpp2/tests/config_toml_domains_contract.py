@@ -98,8 +98,10 @@ def main():
     documented = json.loads((root / 'docs/architecture/proposed/m2/typed-field-catalog.json').read_text())
     assert catalog == documented
     baseline = json.loads((root / 'docs/architecture/proposed/m1/effective-settings-baseline.json').read_text())
-    assert {f['native_pattern'] for f in catalog['fields']} == {f['key_template'] for f in baseline['registry']}
-    assert len(catalog['fields']) == 151
+    assert {f['native_pattern'] for f in catalog['fields']} == {f['key_template'] for f in baseline['registry']} | {
+        'BPM.ENCODING', 'BPM.BAD_WHEN', 'BPM.REJECT_BITS', 'BPM.REGISTRY',
+        'QC.RON.CLIP.ENABLED', 'QC.RON.CLIP.LOW', 'QC.RON.CLIP.HIGH', 'QC.RON.CLIP.MAX_ITERATIONS'}
+    assert len(catalog['fields']) == 159
     by_key = {f['native_pattern']: f for f in catalog['fields']}
     types = {'int': 'int32', 'float': 'float32', 'double': 'float64', 'char *': 'string'}
     for old in baseline['registry']:
@@ -233,7 +235,7 @@ def main():
         log = run([probe, good, settings, sources, bad], 'reject-' + name)
         assert 'REJECTED:' in log and json.loads(settings.read_text()) == values
         rejected.append(name)
-    print('PASS:', len(profiles), 'typed/document/lifetime profiles; 151 catalog templates', flush=True)
+    print('PASS:', len(profiles), 'typed/document/lifetime profiles; 159 catalog templates (151 required + 8 optional project policies)', flush=True)
     print('PASS:', len(rejected), 'domain/unit rejection/recovery cases', flush=True)
 
     # Retain provenance and exact code/schema/probe identities for this attempt.

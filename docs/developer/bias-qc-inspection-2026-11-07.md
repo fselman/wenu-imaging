@@ -1,3 +1,15 @@
+# Common-parameter refinement — 7 November 2026
+
+After acceptance/merge of clipped bias RON, owner authorized refining this existing viewer. It now defaults to Common QC with clipped RON first, and a master overview shows clipped/raw/MAD RON, master mean/median/RMS, high-offset counts and stored input membership counts for all product/detector rows. All stored parameters remain accessible with one selector. Older products explicitly show Not stored for clipped RON; stored unavailable values and zero remain distinct. Shared raw-sequence groups are prominently labeled; product selection highlights its rows and diamond markers without removing other products.
+
+The refinement is based on accepted main af24c3699957d03a11f26c0bc47172b202ca0ede and retains the original PR #283. Owner previously reported that the first viewer worked, while requesting a smaller parameter set; no detailed first-generation browser receipt was supplied. No native recipe, numerical QC, build, configuration or reduced product is changed. No persistent QC store or representative JD is introduced.
+
+Three Python projection/cache/error test groups and JS model/selector/overview tests pass, including seven master defaults, clipped priority, full-parameter fallback, no fabricated missing values, existing membership counts and shared-input groups. Definition keys and filtered collections are cached in memory. The real-browser harness has been updated for the new controls, but cannot run here: installed Chromium exits on denied socket/ptrace operations before loading the page. This is not a passing browser result; owner Mac generation and visual review are the next gate. No dependency installation or alternate browser access route was attempted.
+
+Earlier three-product descriptions below describe the initial retained collection. A new generation enumerates all top-level product ASDF files, including the accepted full 32-detector clipped product CMDP.2026-11-07T21:05:44.919Z.001.asdf. It reads them once with the existing qualified ASDF environment and matching updated schema. Use a fresh orchestration inspection directory and preserve earlier pages, products and logs. The guarded `tools/qualify-bias-qc-viewer-mac.py` helper exports only the five matching viewer/helper/schema assets from the candidate, generates once with the existing private ASDF environment, records product identities and a receipt, and opens the new page. The main checkout stays at af24c36; no native mutable source/build changes are made.
+
+---
+
 # Bias scalar QC inspection — 7 November 2026
 
 Owner approved the bounded first view in design/bias-qc-inspection-v1.md. It is

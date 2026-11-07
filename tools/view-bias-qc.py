@@ -78,6 +78,7 @@ def extract(path, q, detectors=None):
                    raw_sequence=sequence_id, raw_inputs=sequence,
                    metadata=plain(dict(file=q['file'], record=q['record'],
                                        provenance=q['provenance'], calibrations=q['calibrations'],
+                                       extensions=q.get('extensions', {}),
                                        detector_bindings=[{k: v for k, v in d.items()
                                                            if k != 'measurements'} for d in detectors])),
                    array_measurements=[], rows=[])

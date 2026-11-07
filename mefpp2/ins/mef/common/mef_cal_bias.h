@@ -19,13 +19,15 @@ typedef struct {
  * omission. No filename/HDU/polarity inference or silent geometry conversion.
  * MAD is optional. RON pair indices are explicit, distinct, zero based; when
  * enabled subtraction uses RAW frames before ANY overscan correction.
- * high_sigma is finite, positive (initial owner choice 5). No clipping occurs. */
+ * high_sigma is finite, positive (initial owner choice 5). Clipping is optional and separate from these legacy diagnostics. */
 typedef struct {
     const pixelmap *bpm;
     int with_mad, ron_pair_set;
     int bpm_active_only; /* File provenance: mask was embedded from active coordinates. */
     size_t ron_first, ron_second;
     double high_sigma;
+    int ron_clip_enabled;
+    image_clip_options ron_clip;
 } mef_bias_measurement_options;
 typedef struct {
     image_sample_stats active_raw, active_corrected, prescan, overscan;
@@ -37,6 +39,9 @@ typedef struct {
     size_t ron_first, ron_second;
     int ron_stdev_available, ron_mad_available;
     double ron_stdev_adu, ron_mad_adu;
+    image_clipped_stats clipped_difference;
+    int ron_clipped_available;
+    double ron_clipped_adu;
     int high_offset_available, high_offset_degenerate;
     double high_offset_threshold;
     size_t high_offset_count;

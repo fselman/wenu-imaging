@@ -1,4 +1,8 @@
-- [Bias scalar QC inspection v1](bias-qc-inspection-2026-11-07.md): one-time ASDF loading, all scalar master/input QC, product highlighting; detector comparison now, JD/database deferred. Actual Mac/browser gate pending.
+Bias QC viewer refinement: [common parameters, clipped RON and shared-input grouping](bias-qc-inspection-2026-11-07.md). Prepared for retained-product Mac review; no native build or reduction.
+
+Clipped bias RON and shared BPM policy accepted on Mac, including real 32-detector exact-reference comparison: [acceptance and retained evidence](bias-clipping-project-bpm-2026-11-07.md). Merge/branch cleanup authorized; preserve products and qualified build.
+
+Optional clipped bias RON and shared processing BPM policy: [implementation and qualification](bias-clipping-project-bpm-2026-11-07.md), [reviewed contract](design/bias-clipping-project-bpm-v1.md), [mathematics](mathematics/mefpp/bias-clipped-ron.pdf). Actual Mac qualification pending.
 
 - [Read-only bias product comparator](../../tools/compare-bias-products.py): exact pixels/QC, native FITS–ASDF mapping and selected-header/TOML provenance; supports a subset against a larger retained reference.
 

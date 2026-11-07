@@ -74,6 +74,7 @@ typedef struct {
     /* Exact existing mef_config_dump output; no second native settings parser.
      * This is embedded text in ASDF, not a separate JSON handoff file. */
     const char *configuration_snapshot;
+    const char *bpm_registry; /* Optional shared REASON8 policy, borrowed. */
     const mef_qc_input_record *inputs;
     size_t input_count;
     const mef_qc_calibration_record *calibrations;

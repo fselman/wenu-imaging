@@ -241,6 +241,7 @@ static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
     if(okay)okay=string(extensions,"record_scope","one_final_MEF_product")&&
         string(extensions,"input_reference_policy","embedded_record_id")&&
         string(extensions,"measurement_policy","caller_supplied_values_only");
+    if(okay && p->bpm_registry) okay=string(extensions,"bpm_registry",p->bpm_registry);
     if(okay){okay=map(root,"extensions",extensions);extensions=NULL;}
     asdf_mapping_destroy(record);asdf_mapping_destroy(provenance);asdf_mapping_destroy(producer);
     asdf_mapping_destroy(configuration);asdf_mapping_destroy(characterization);asdf_mapping_destroy(extensions);
