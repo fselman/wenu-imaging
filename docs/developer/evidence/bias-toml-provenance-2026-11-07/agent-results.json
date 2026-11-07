@@ -1,0 +1,27 @@
+{
+  "agent_checks_successful": true,
+  "strict_c17_syntax": true,
+  "ubsan_native_parser_groups": 8,
+  "actual_kernel_profiles": 4,
+  "selected_header_detector_counts": [
+    1,
+    2
+  ],
+  "allocator_diagnostics": 0,
+  "schema_check": true,
+  "python_syntax_only": true,
+  "asdf_native_runtime_available": false,
+  "actual_mac_gate": "pending",
+  "observations_opened": false,
+  "production_sha256": {
+    "mefpp2/ins/mef/common/mef_bias_recipe_config.c": "cc8c300b19ebb287c588d18c2a5af56fd19aa94d2a5642f2cc601e934da39d7d",
+    "mefpp2/ins/mef/common/mef_bias_recipe_config.h": "ed8f7e784c3f4d4149294b9390f6d53f0c8bff0ac7a53ace677e9f46cb3a9a16",
+    "mefpp2/ins/mef/common/mef_bias_product_qc.c": "9eacc3d44f7964899722163485ed6457c249ccb0d907bc16f9c4d4136a63c2e1",
+    "mefpp2/ins/mef/common/mef_product_qc_asdf.c": "cf6b63a624d18d0a13f41ba86d15997d44cca1a5039873c5afddf1f392251c26",
+    "mefpp2/ins/mef/common/mef_product_qc.h": "cb49987496e5a8a2c13975378d8705f79768da34c2fc5e9bd12068c4d0b00145",
+    "mefpp2/ins/mef/common/mef_product_qc_validate.c": "9fe408fdaca783c114fc1b11bcb513ba41563da6904075f2d117afb083f6655f",
+    "mefpp2/ins/mef/common/mef_bias_files.c": "e6041dacd12e83b6b6e7b84df92987d91d906cc0b4110b9e64fb21af5c57ae9c",
+    "mefpp2/ins/mef/recipes/mefpp_bias_recipe.c": "438cf62e104920825976b0600e9351e1c268cd04d12d534c7b85684ad8d6c324",
+    "mefpp2/ins/mef/config/qc-product-schema-2.0.0.json": "893caff924e492f2afcae6f5017cf1d66804d2d88b3d168dd10d007124a86ddb"
+  }
+}

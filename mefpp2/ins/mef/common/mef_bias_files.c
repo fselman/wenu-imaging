@@ -215,9 +215,9 @@ static qfits_header *primary_image_header(qfits_header *source,
     return out;
 }
 
-mef_status mef_bias_publish_with_header(const mef_config *config,
+static mef_status publish_header(const mef_config *config,
     const mef_bias_result *result, size_t configuration_detector,
-    const char *final_path, const qfits_header *additions, mef_error **error)
+    const char *final_path, const qfits_header *additions, const char *output_detector, mef_error **error)
 {
     const mef_request_spec *request;
     const mef_bias_qc *qc;
@@ -292,6 +292,19 @@ mef_status mef_bias_publish_with_header(const mef_config *config,
         qfits_header_destroy(primary); qfits_header_destroy(extension);
         primary = new_primary; extension = new_extension;
     }
+    if (output_detector != NULL) {
+        char value[80];
+        char *old = qfits_header_getstr(extension, "EXTNAME");
+        if (!*output_detector || strlen(output_detector) > 68 ||
+            strchr(output_detector, '\'') || strchr(output_detector, '\n')) {
+            status = MEF_ERR_INPUT; goto done;
+        }
+        if (old == NULL || strcmp(qfits_pretty_string(old), output_detector)) {
+            snprintf(value, sizeof(value), "'%s'", output_detector);
+            if (old == NULL) qfits_header_add(extension, "EXTNAME", value, "Logical detector", NULL);
+            else qfits_header_mod(extension, "EXTNAME", value, NULL);
+        }
+    }
     if (additions != NULL) {
         char key[81], value[81], comment[81], line[81];
         int k;
@@ -344,3 +357,12 @@ mef_status mef_bias_publish(const mef_config *config,
     return mef_bias_publish_with_header(config, result, configuration_detector,
         final_path, NULL, error);
 }
+
+mef_status mef_bias_publish_with_header(const mef_config *config,
+    const mef_bias_result *result, size_t detector, const char *path,
+    const qfits_header *header, mef_error **error)
+{ return publish_header(config,result,detector,path,header,NULL,error); }
+mef_status mef_bias_publish_with_header_named(const mef_config *config,
+    const mef_bias_result *result, size_t detector, const char *path,
+    const qfits_header *header, const char *id, mef_error **error)
+{ return publish_header(config,result,detector,path,header,id,error); }

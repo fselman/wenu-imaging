@@ -168,6 +168,43 @@ static asdf_mapping_t *calibration_record(asdf_file_t *f,const mef_qc_calibratio
     asdf_mapping_destroy(d);asdf_sequence_destroy(bindings);
     if(!okay){asdf_mapping_destroy(m);return NULL;}return m;
 }
+static asdf_mapping_t *header_card(asdf_file_t *f,const mef_qc_fits_card *c,const char *source)
+{
+    asdf_mapping_t *m=asdf_mapping_create(f);
+    int okay=m!=NULL;
+    if(okay)okay=string(m,"source_file",source)&&string(m,"keyword",c->keyword)&&
+        string(m,"role",c->detector_id?"detector":"primary")&&
+        count(m,"hdu",(uint64_t)c->hdu)&&nullable(m,"detector_id",c->detector_id)&&
+        string(m,"status",c->present?"present":"missing")&&string(m,"value_type",c->type)&&
+        nullable(m,"fits_value",c->present?c->fits_value:NULL)&&
+        nullable(m,"comment",c->present?c->comment:NULL)&&
+        nullable(m,"card",c->present?c->card:NULL);
+    if(okay) {
+        if(!strcmp(c->type,"missing")||!strcmp(c->type,"undefined"))
+            okay=asdf_mapping_set_null(m,"value")==ASDF_VALUE_OK;
+        else if(!strcmp(c->type,"integer"))okay=asdf_mapping_set_int64(m,"value",c->integer)==ASDF_VALUE_OK;
+        else if(!strcmp(c->type,"real"))okay=asdf_mapping_set_double(m,"value",c->real)==ASDF_VALUE_OK;
+        else if(!strcmp(c->type,"boolean"))okay=asdf_mapping_set_bool(m,"value",c->boolean!=0)==ASDF_VALUE_OK;
+        else okay=string(m,"value",c->value);
+    }
+    if(!okay){asdf_mapping_destroy(m);return NULL;}return m;
+}
+static int header_provenance(asdf_file_t *f,asdf_mapping_t *provenance,const mef_product_qc *p)
+{
+    asdf_mapping_t *config=NULL;asdf_sequence_t *cards=NULL;size_t i;int okay=1;
+    if(p->recipe_config_path) {
+        config=asdf_mapping_create(f);
+        okay=config&&string(config,"path",p->recipe_config_path)&&
+            string(config,"format","bias-recipe-toml/1")&&string(config,"snapshot",p->recipe_config_snapshot);
+        if(okay){okay=map(provenance,"recipe_configuration",config);config=NULL;}
+    }
+    if(okay&&p->header_card_count) {
+        cards=asdf_sequence_create(f);okay=cards!=NULL;
+        for(i=0;okay&&i<p->header_card_count;++i)okay=append(cards,header_card(f,p->header_cards+i,p->fits_path));
+        if(okay){okay=seq(provenance,"fits_headers",cards);cards=NULL;}
+    }
+    asdf_mapping_destroy(config);asdf_sequence_destroy(cards);return okay;
+}
 static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
 {
     asdf_mapping_t *root=asdf_mapping_create(f),*record=NULL,*provenance=NULL,*producer=NULL,*configuration=NULL,*characterization=NULL,*extensions=NULL;
@@ -191,6 +228,7 @@ static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
     if(okay)okay=string(provenance,"operation",p->recipe_name)&&count(provenance,"operation_version",p->recipe_version)&&
         string(provenance,"recipe_start",p->recipe_start)&&count(provenance,"product_sequence",p->product_sequence)&&
         string(provenance,"log_path",p->log_path);
+    if(okay)okay=header_provenance(f,provenance,p);
     if(okay){okay=map(root,"provenance",provenance);provenance=NULL;}
     for(i=0;okay && i<p->detector_count;++i)okay=append(detectors,detector(f,p->detectors+i));
     if(okay){okay=seq(characterization,"detectors",detectors);detectors=NULL;}

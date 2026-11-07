@@ -324,7 +324,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       add_library(mefpp_bias_product_qc STATIC ins/mef/common/mef_bias_product_qc.c
         ins/mef/common/mef_bias_qc_fits.c)
       target_link_libraries(mefpp_bias_product_qc PUBLIC mefpp_bias_files mefpp_product_qc)
-      add_executable(mefpp_bias_recipe ins/mef/recipes/mefpp_bias_recipe.c)
+      add_executable(mefpp_bias_recipe ins/mef/recipes/mefpp_bias_recipe.c
+        ins/mef/common/mef_bias_recipe_config.c)
+      target_include_directories(mefpp_bias_recipe PRIVATE ../third_party/tomlc17)
       target_link_libraries(mefpp_bias_recipe PRIVATE mefpp_bias_product_qc mefpp_config_toml mefpp_mef_assembly)
       target_compile_definitions(mefpp_bias_recipe PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
       set_target_properties(mefpp_bias_recipe PROPERTIES BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")

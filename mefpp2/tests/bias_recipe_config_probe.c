@@ -1,0 +1,19 @@
+#include "mef_bias_recipe_config.h"
+#include <stdio.h>
+int main(int argc,char **argv)
+{
+    int count=argc;char **args=argv,message[512]="";mef_bias_recipe_config *owner=NULL;
+    if(!mef_bias_recipe_expand(argc,argv,&count,&args,&owner,message,sizeof(message))) {
+        fprintf(stderr,"%s\n",message);return 1;
+    }
+    for(int i=1;i<count;++i)puts(args[i]);
+    if(owner) {
+        size_t n;const char *const *keys=mef_bias_recipe_primary_keys(owner,&n);
+        printf("PRIMARY_COUNT=%lu\n",(unsigned long)n);
+        for(size_t i=0;i<n;++i)puts(keys[i]);
+        keys=mef_bias_recipe_detector_keys(owner,&n);
+        printf("DETECTOR_COUNT=%lu\n",(unsigned long)n);
+        for(size_t i=0;i<n;++i)puts(keys[i]);
+    }
+    mef_bias_recipe_config_destroy(owner);return 0;
+}

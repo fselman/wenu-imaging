@@ -92,6 +92,37 @@ static int measurements(const mef_product_qc *p,const mef_qc_measurement *m,size
     }
     return 1;
 }
+static int header_metadata(const mef_product_qc *p)
+{
+    size_t i,j;
+    if((p->recipe_config_path==NULL)!=(p->recipe_config_snapshot==NULL))return 0;
+    if(p->recipe_config_path&&(!text(p->recipe_config_path)||p->recipe_config_path[0]!='/'||
+        !text(p->recipe_config_snapshot)))return 0;
+    if(p->header_card_count>16*(p->detector_count+1)||
+        (p->header_card_count&&(!p->header_cards||!p->recipe_config_path)))return 0;
+    for(i=0;i<p->header_card_count;++i) {
+        const mef_qc_fits_card *c=p->header_cards+i;int found=0;
+        if(!memchr(c->keyword,0,81)||!*c->keyword||!memchr(c->fits_value,0,81)||
+            !memchr(c->value,0,81)||!memchr(c->comment,0,81)||!memchr(c->card,0,81)||
+            !c->type||(c->present!=0&&c->present!=1))return 0;
+        if(c->detector_id) {
+            for(j=0;j<p->detector_count;++j)
+                if(p->detectors[j].id&&!strcmp(c->detector_id,p->detectors[j].id)&&c->hdu==p->detectors[j].output_hdu)found=1;
+            if(!found)return 0;
+        } else if(c->hdu!=0)return 0;
+        if(!c->present) {
+            if(strcmp(c->type,"missing")||*c->card||*c->fits_value)return 0;
+        } else {
+            if(strlen(c->card)!=80||(!strcmp(c->type,"real")&&!isfinite(c->real))||
+                (!strcmp(c->type,"boolean")&&c->boolean!=0&&c->boolean!=1))return 0;
+            if(strcmp(c->type,"undefined")&&strcmp(c->type,"string")&&strcmp(c->type,"integer")&&
+                strcmp(c->type,"real")&&strcmp(c->type,"boolean")&&strcmp(c->type,"fits_literal"))return 0;
+        }
+        for(j=0;j<i;++j)if(c->hdu==p->header_cards[j].hdu&&
+            !strcmp(c->keyword,p->header_cards[j].keyword))return 0;
+    }
+    return 1;
+}
 int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
 {
     size_t i,j,k,n;
@@ -104,6 +135,7 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
         p->detectors==NULL||p->detector_count==0||p->detector_count>4096||
         (p->sha256!=NULL && !digest(p->sha256,64))||p->calibration_count>4096||
         (p->calibration_count && p->calibrations==NULL)) return fail(message,size,"Invalid product identity, execution or configuration");
+    if(!header_metadata(p))return fail(message,size,"Invalid selected FITS provenance");
     n=strlen(p->fits_path);
     if(n<=5||strcmp(p->fits_path+n-5,".fits")) return fail(message,size,"Product must retain a .fits basename");
     {

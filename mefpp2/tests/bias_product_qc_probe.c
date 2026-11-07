@@ -6,6 +6,8 @@
 #include "optional_cleanup_probe.c"
 #include "mefp_lib.h"
 #include <assert.h>
+#include <unistd.h>
+#include "bias_header_provenance_probe.inc"
 static const char *dump_directory;
 static const mef_qc_measurement *find(const mef_qc_measurement *q,size_t n,const char *name)
 {
@@ -32,9 +34,14 @@ static void profile(const char *paf,int masked,int mad,int pair)
     memset(&output,0,sizeof(output)); strcpy(output.fits,"/synthetic/products/CMDP.2026-11-06T16:00:00.123Z.001.fits");
     strcpy(output.asdf,"/synthetic/products/CMDP.2026-11-06T16:00:00.123Z.001.asdf");
     strcpy(output.log,"/synthetic/products/CMDP.2026-11-06T16:00:00.123Z.001.log");
-    archive=mef_bias_product_qc_new(config,&output,"2026-11-06T16:00:00.123Z",MEFPP_CANDIDATE_REVISION,paths,4,2);
+    if(metadata_directory) {
+        snprintf(output.fits,sizeof(output.fits),"%s/headers-%lu.fits",metadata_directory,(unsigned long)profile_detector_count);
+        snprintf(output.asdf,sizeof(output.asdf),"%s/headers-%lu.asdf",metadata_directory,(unsigned long)profile_detector_count);
+        snprintf(output.log,sizeof(output.log),"%s/headers-%lu.log",metadata_directory,(unsigned long)profile_detector_count);
+    }
+    archive=mef_bias_product_qc_new(config,&output,"2026-11-06T16:00:00.123Z",MEFPP_CANDIDATE_REVISION,paths,4,profile_detector_count);
     assert(archive!=NULL);
-    for(d=0;d<2;++d) {
+    for(d=0;d<profile_detector_count;++d) {
         image_t *frames[4]; const image_t *borrowed[4]; pixelvalue saved[4][24];
         mef_image_ref refs[4],calibration; mef_bpm_selection bpm;
         mef_calibration_role role=MEF_CAL_BPM; mef_resolved_request_spec spec;
@@ -136,23 +143,32 @@ static void profile(const char *paf,int masked,int mad,int pair)
         pixelmap_del(mask);
     }
     assert(mef_bias_product_qc_check(archive,message,sizeof(message))==0);
-    for(d=0;d<2;++d) {
+    for(d=0;d<profile_detector_count;++d) {
         const mef_qc_detector_record *q=mef_bias_product_qc_view(archive)->detectors+d;
         assert(*find(q->measurements,q->measurement_count,"master.mean")->values==expected_master[d]);
         for(i=0;i<4;++i) assert(*find(q->inputs[i].measurements,q->inputs[i].measurement_count,"raw_active.mean")->values==expected_raw[d][i]);
     }
     assert(mef_bias_product_qc_view(archive)->calibration_count==(size_t)(masked?1:0));
-    if(masked) assert(mef_bias_product_qc_view(archive)->calibrations[0].binding_count==2);
+    if(masked) assert(mef_bias_product_qc_view(archive)->calibrations[0].binding_count==profile_detector_count);
+    if(metadata_directory)selected_header_contract(archive,&output);
     mef_bias_product_qc_destroy(archive); mef_config_destroy(config); mef_bb_del(bb);
 }
 int main(int argc,char **argv)
 {
+    if(argc==4 && !strcmp(argv[1],"headers")) {
+        metadata_directory=argv[3];eclipse_init();set_logfile(0);
+        profile_detector_count=1;profile(argv[2],0,1,1);
+        profile_detector_count=2;profile(argv[2],1,1,1);
+        puts("PASS: actual one/two-detector QC and selected final FITS provenance");return 0;
+    }
     if(argc==3 && !strcmp(argv[1],"cleanup")) { optional_cleanup_contract(argv[2]); return 0; }
+#ifndef MEF_QC_IN_MEMORY_ONLY
     if(argc==10 && !strcmp(argv[1],"recover-verified")) {
         mef_qc_recovery r={argv[2],argv[3],argv[4],argv[5],argv[6],argv[7],argv[8],argv[9]};
         char message[512]; int code=mef_product_qc_recover_verified(&r,message,sizeof(message));
         puts(message); return code?1:0;
     }
+#endif
     if(argc!=2 && argc!=3) return 2;
     if(argc==3) dump_directory=argv[2];
     eclipse_init(); set_logfile(0);

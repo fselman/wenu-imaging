@@ -151,7 +151,7 @@ class RecipeTests(unittest.TestCase):
         self.assertEqual(list(self.orchestration.iterdir()),[])
         return text
 
-    def verify(self,product,*,swapped=False,measured=True):
+    def verify(self,product,*,swapped=False,measured=True,reference_index=1):
         global ASDF_CHECKS
         self.assertTrue(product.with_suffix('.log').is_file())
         self.assertIn('OUTPUTS_WRITTEN',product.with_suffix('.log').read_text())
@@ -165,7 +165,7 @@ class RecipeTests(unittest.TestCase):
             h.verify('exception');self.assertEqual(len(h),3)
             self.assertEqual(h[0].header['NEXTEND'],2)
             cards=lambda hd:[c.image for c in hd.header.cards if c.keyword not in ('ORIGFILE','CHECKSUM','NEXTEND','DATE') and not is_addition(c.keyword)]
-            with fits.open(references[1],memmap=False) as ref:self.assertEqual(cards(h[0]),cards(ref[0]))
+            with fits.open(references[reference_index],memmap=False) as ref:self.assertEqual(cards(h[0]),cards(ref[0]))
             for d in range(2):
                 with fits.open(references[d],memmap=False) as ref:
                     self.assertEqual(h[d+1].data.dtype,ref[1].data.dtype)

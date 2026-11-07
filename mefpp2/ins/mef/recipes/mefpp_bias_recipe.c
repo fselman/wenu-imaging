@@ -2,6 +2,7 @@
 #define _XOPEN_SOURCE 700
 #include "mef_bias_product_qc.h"
 #include "mef_bias_qc_fits.h"
+#include "mef_bias_recipe_config.h"
 #include "qfits.h"
 #include "mef_config_toml.h"
 #include "mef_mef_assemble.h"
@@ -18,7 +19,7 @@
 
 /* This uninstalled command is an explicit native caller of the existing bias
  * operation template. The installed legacy executable is unchanged. */
-enum { CFG, READOUT, BINX, BINY, BPM, BPM_HDU, GOOD, COORDS, BPM_NAME, AMP, FIELD_COUNT };
+enum { CFG, READOUT, BINX, BINY, BPM, BPM_HDU, GOOD, COORDS, BPM_NAME, AMP, RAW_NAME, FIELD_COUNT };
 typedef struct {
     const char *id, *field[FIELD_COUNT];
     int *hdus; size_t hdu_count, configured;
@@ -46,7 +47,7 @@ static int set(const char **slot,const char *value)
 static int parse(int argc,char **argv,arguments *a)
 {
     static const char *keys[FIELD_COUNT]={"--config-detector","--readout-id","--bin-x","--bin-y",
-        "--input-bpm","--bpm-hdu","--bpm-good-value","--bpm-coordinates","--bpm-expected-extname","--amplifier-id"};
+        "--input-bpm","--bpm-hdu","--bpm-good-value","--bpm-coordinates","--bpm-expected-extname","--amplifier-id","--raw-expected-extname"};
     int i,j; detector_plan *d=NULL;
     if(argc<3 || strcmp(argv[1],"cal") || strcmp(argv[2],"bias")) return 0;
     a->detectors=calloc((size_t)argc/2,sizeof(*a->detectors)); if(a->detectors==NULL) return 0;
@@ -89,7 +90,8 @@ static int bind_inputs(detector_plan *d,mef_layout *const *layouts,size_t n,
     if(mef_config_bias_settings(config,d->configured,&d->settings)!=MEF_OK) return 0;
     d->maps=calloc(n,sizeof(*d->maps)); if(d->maps==NULL) return 0;
     memset(&binding,0,sizeof(binding)); binding.detector_id=d->id; binding.unit="ADU";
-    binding.extname=d->id; binding.readout_id=d->field[READOUT]; binding.bin_x=d->bin_x; binding.bin_y=d->bin_y;
+    binding.extname=d->field[RAW_NAME] ?
+        (strcmp(d->field[RAW_NAME],"omitted")?d->field[RAW_NAME]:NULL):d->id; binding.readout_id=d->field[READOUT]; binding.bin_x=d->bin_x; binding.bin_y=d->bin_y;
     binding.active_x=d->settings.trim[0]; binding.active_y=d->settings.trim[2];
     binding.active_width=d->settings.trim[1]-d->settings.trim[0]+1;
     binding.active_height=d->settings.trim[3]-d->settings.trim[2]+1;
@@ -97,9 +99,8 @@ static int bind_inputs(detector_plan *d,mef_layout *const *layouts,size_t n,
     binding.selection=MEF_OUTPUT_SELECTED;
     for(i=0;i<n;++i) {
         binding.hdu_index=d->hdus[d->hdu_count==1?0:i];
-        /* First integrated command: explicit named MEF detector extensions.
-         * The older single-primary operation remains available in mefpp_m5. */
-        if(binding.hdu_index<1 || mef_layout_bind(layouts[i],&binding,1,NULL,d->maps+i,error)!=MEF_OK ||
+        /* Explicit source HDU 0 or extension: logical ID and EXTNAME are independent. */
+        if(binding.hdu_index<0 || mef_layout_bind(layouts[i],&binding,1,NULL,d->maps+i,error)!=MEF_OK ||
             mef_layout_compatible(d->maps[0],d->maps[i],"ADU","ADU",NULL,error)!=MEF_OK) return 0;
         {
             const mef_bound_detector *raw=mef_layout_find(d->maps[i],d->id);
@@ -184,7 +185,7 @@ static int process(detector_plan *d,size_t index,size_t n,char *const *raw_paths
         qc_message,sizeof(qc_message))) {
         fprintf(stderr,"%s\n",qc_message); goto done;
     }
-    status=mef_bias_publish_with_header(config,result,d->configured,d->temporary,qc_header,error);
+    status=mef_bias_publish_with_header_named(config,result,d->configured,d->temporary,qc_header,d->id,error);
     if(status!=MEF_OK) goto done;
     image=mef_bias_result_signal(result);
     d->assembly.path=d->temporary; d->assembly.detector_id=d->id;
@@ -200,7 +201,9 @@ done:
 }
 int main(int argc,char **argv)
 {
-    arguments a; mef_product_paths paths; char start[MEF_RECIPE_TIME_SIZE],message[512]="";
+    arguments a; mef_bias_recipe_config *recipe_document=NULL;
+    int expanded_argc=argc; char **expanded_argv=argv;
+    mef_product_paths paths; char start[MEF_RECIPE_TIME_SIZE],message[512]="";
     char cwd[MEF_PRODUCT_PATH_SIZE],work[MEF_PRODUCT_PATH_SIZE]="";
     char *config_path=NULL,*listing_path=NULL,**raw_paths=NULL,*end;
     mef_config *config=NULL; mef_config_document *document=NULL; mef_bb *legacy=NULL;
@@ -212,7 +215,9 @@ int main(int argc,char **argv)
     memset(&a,0,sizeof(a)); memset(&options,0,sizeof(options));
     /* One sampled recipe-start instant, independent of detector count. */
     if(mef_recipe_start_time(start,sizeof(start),message,sizeof(message)) ||
-        getcwd(cwd,sizeof(cwd))==NULL || !parse(argc,argv,&a)) goto usage;
+        getcwd(cwd,sizeof(cwd))==NULL) goto done;
+    if(!mef_bias_recipe_expand(argc,argv,&expanded_argc,&expanded_argv,&recipe_document,message,sizeof(message))) goto done;
+    if(!parse(expanded_argc,expanded_argv,&a)) goto usage;
     if(mef_product_paths_resolve(cwd,a.output_dir,a.output,"CMDP",start,1,&paths,message,sizeof(message))) goto done;
     {
         const char *name=strrchr(paths.fits,'/')+1;
@@ -262,6 +267,17 @@ int main(int argc,char **argv)
         detector_plan *d=a.detectors+i;
         if(!bind_inputs(d,layouts,n,config,&error)) { strcpy(message,"Invalid explicit detector/BPM binding or geometry"); goto done; }
         if(!strcmp(d->id,a.reference)) reference_found=1;
+        /* Different logical detectors may not reuse one physical input plane. */
+        for(j=0;j<i;++j) {
+            size_t frame;
+            for(frame=0;frame<n;++frame) {
+                const mef_bound_detector *now=mef_layout_find(d->maps[frame],d->id);
+                const mef_bound_detector *old=mef_layout_find(a.detectors[j].maps[frame],a.detectors[j].id);
+                if(now->image.hdu_index==old->image.hdu_index) {
+                    strcpy(message,"Selected detector catalogue reuses an input HDU");goto done;
+                }
+            }
+        }
         for(j=0;j<i;++j) if(!strcmp(d->id,a.detectors[j].id) || d->configured==a.detectors[j].configured) {
             strcpy(message,"Duplicate detector identity or configuration slot"); goto done;
         }
@@ -295,6 +311,13 @@ int main(int argc,char **argv)
     if(mef_mef_assemble(paths.fits,a.reference,assembly,a.count,message,sizeof(message))) goto done;
     fprintf(log,"NATIVE_ASDF_START\n"); if(fflush(log)) goto done;
     printf("BIAS_NATIVE_ASDF %s\n",paths.asdf); fflush(stdout);
+    if(recipe_document) {
+        size_t primary_count,detector_count;
+        const char *const *primary_keys=mef_bias_recipe_primary_keys(recipe_document,&primary_count);
+        const char *const *detector_keys=mef_bias_recipe_detector_keys(recipe_document,&detector_count);
+        if(mef_bias_product_qc_headers(archive,primary_keys,primary_count,detector_keys,detector_count,
+            mef_bias_recipe_path(recipe_document),mef_bias_recipe_source(recipe_document),message,sizeof(message))) goto done;
+    }
     if(mef_bias_product_qc_write(archive,message,sizeof(message))) goto done;
     set_logfile(0);
     for(i=0;i<a.count;++i) if(unlink(a.detectors[i].temporary)) fprintf(log,"RETAINED_TEMPORARY %s\n",a.detectors[i].temporary);
@@ -305,6 +328,7 @@ int main(int argc,char **argv)
     printf("BIAS_RECIPE_COMPLETE\nFITS %s\nASDF %s\nLOG %s\n",paths.fits,paths.asdf,paths.log);
     okay=1; goto done;
 usage:
+    fprintf(stderr,"Short form: cal bias --config RECIPE.toml --bias ABS_LIST (--output-dir DIR|--output FITS) [--detectors all|ID,ID]\n");
     fprintf(stderr,"Standalone candidate: cal bias (--pafname PAF|--config TOML) --bias ABS_LIST (--output-dir DIR|--output FITS) --reference-detector ID --mad (yes|no) [--ron-first INDEX --ron-second INDEX] [--high-sigma K]\n"
         "Repeat detector blocks: --detector-id EXTNAME --config-detector ZERO_BASED --readout-id ID --bin-x N --bin-y N --amplifier-id ID --input-bpm (omitted|FITS) --hdu N [--hdu N ... one per input]\n"
         "Selected BPM additionally requires --bpm-hdu N --bpm-good-value (0|1) --bpm-coordinates (raw|active) [--bpm-expected-extname NAME]. Output parent must exist; no overwrite.\n");
@@ -328,5 +352,6 @@ done:
     for(i=0;i<n;++i) { if(layouts) mef_layout_destroy(layouts[i]); if(raw_paths) free(raw_paths[i]); }
     free(layouts); free(raw_paths); free(assembly); free(a.detectors); free(config_path); free(listing_path);
     framelist_del(frames); mef_config_destroy(config); mef_config_document_destroy(document); mef_bb_del(legacy);
+    mef_bias_recipe_config_destroy(recipe_document);
     return okay?EXIT_SUCCESS:EXIT_FAILURE;
 }

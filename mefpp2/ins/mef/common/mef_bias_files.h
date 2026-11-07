@@ -43,6 +43,10 @@ mef_status mef_bias_from_files_measurements(mef_context *, const mef_layout_map 
 mef_status mef_bias_publish_with_header(const mef_config *, const mef_bias_result *,
     size_t, const char *, const struct qfits_header *, mef_error **);
 
+/* Recipe output identity is independent of source EXTNAME or primary-image HDU. */
+mef_status mef_bias_publish_with_header_named(const mef_config *, const mef_bias_result *,
+    size_t, const char *, const struct qfits_header *, const char *, mef_error **);
+
 /* Publish a one-extension MEF from an existing owned result. Reuses legacy
  * header policy/QC formatting and checked qfits pixel output, with explicit
  * input HDU, configuration detector and output ordinal. One creation identity

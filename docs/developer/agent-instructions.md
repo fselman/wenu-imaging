@@ -1,3 +1,34 @@
+## Mac bias TOML/provenance verified; integration authorized — 7 November 2026
+
+Owner authorized merge and branch cleanup after actual Mac acceptance. Native
+five-product synthetic gate/four refusals passed with the existing build. Real
+CCD65/CCD66 subset CMDP.2026-11-07T13:35:31.698Z.001 completed; exact pixels,
+2804 nonidentity QC cards per detector, 13 independently correct own-product
+references, selected-header ASDF provenance, TOML snapshot and ten-input QC
+passed read-only checks. See bias-toml-provenance-2026-11-07.md.
+The reusable tools/compare-bias-products.py retains the verified comparison
+rules; packaging/CLI and catalogue-driven mapping checks are agent-checked,
+while its first saved-tool run on Mac follows synchronization. No native rebuild,
+reconfiguration or reduction is needed for integration. Preserve all products,
+failed attempts, mutable build/cache, binaries, launcher backup and receipts.
+The optional removal of redundant cal bias syntax remains discussion only.
+This update supersedes pending-Mac statements below for this bounded feature.
+
+## Limited bias TOML/provenance finish — 7 November 2026
+
+Owner explicitly requested a small TOML-selected primary/detector-header
+provenance addition to product ASDF, single-detector support, and removal of
+the repeated detector CLI blocks. Default selection is all configured catalogue
+detectors, also --detectors all; subsets require explicit IDs. This authorizes
+the bounded implementation described in design/bias-toml-provenance-v1.md.
+Read bias-toml-provenance-2026-11-07.md for agent evidence and the
+pending actual Mac gate. Keep numerical settings/kernels/QC, existing products,
+installed software and retained evidence unchanged. No viewer/database,
+JD aggregation, new raw reduction or dependency installation. Reuse the selected
+Mac source/build/cache/tools and build affected existing targets only; no new
+source/build export. Earlier paused-QC discussion remains paused outside this
+explicit limited finish.
+
 ## Bias recipe complete; QC comparison discussion paused — resume 7 November 2026
 
 Owner requested saving state and continuing tomorrow. Read
