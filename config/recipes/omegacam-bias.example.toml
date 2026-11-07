@@ -4,6 +4,8 @@ bias_recipe_schema_version = 1
 settings = "bias.toml"
 
 [bias]
+# Default: average the two central samples when an even number is retained.
+median_even_handling = "average"
 # Omit this field for the same default, or use an explicit ID array.
 detectors = "all"
 mad = true

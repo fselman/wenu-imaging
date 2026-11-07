@@ -505,6 +505,8 @@ image_t	* cube_avg_sum(cube_t * incube)
  */
 /*--------------------------------------------------------------------------*/
 image_t * cube_avg_median(cube_t * to_average)
+{ return cube_avg_median_opts(to_average,MEDIAN_EVEN_LOWER); }
+image_t * cube_avg_median_opts(cube_t * to_average, median_even_handling mode)
 {
 	image_t	*	avg ;
 	int				plane, nplanes;
@@ -512,7 +514,7 @@ image_t * cube_avg_median(cube_t * to_average)
 	pixelvalue	*	timeline ;
 
 	/* Error handling: test entries	*/
-	if (to_average == NULL) return NULL ;
+	if (to_average == NULL || (mode != MEDIAN_EVEN_AVERAGE && mode != MEDIAN_EVEN_LOWER)) return NULL ;
 	if (to_average->np<3) {
 	    e_error("median average has no meaning with less than 3 planes") ;
 	    return NULL ;
@@ -531,7 +533,7 @@ image_t * cube_avg_median(cube_t * to_average)
 		  for (plane=0 ; plane<nplanes ; plane++) {
 		       timeline[plane] = to_average->plane[plane]->data[pos] ;
 		  }
-		  avg->data[pos] = median_pixelvalue(timeline, nplanes) ;
+		  avg->data[pos] = median_pixelvalue_opts(timeline, nplanes, mode) ;
 	     }
 	}
 	free(timeline);

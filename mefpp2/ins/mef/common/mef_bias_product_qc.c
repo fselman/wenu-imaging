@@ -171,6 +171,8 @@ int mef_bias_product_qc_add(mef_bias_product_qc *a, size_t index,
     store->inputs=calloc(m->count,sizeof(*store->inputs));
     bindings=calloc(m->count,sizeof(*bindings)); d->inputs=bindings;
     if(store->inputs==NULL || bindings==NULL || !bucket_new(&store->product,a->product.id)) return 0;
+    if (legacy->median_even_handling != MEDIAN_EVEN_AVERAGE && legacy->median_even_handling != MEDIAN_EVEN_LOWER) return 0;
+    d->median_even_handling = legacy->median_even_handling == MEDIAN_EVEN_LOWER ? "lower" : "average";
     d->id=id; d->amplifier=amplifier; d->readout_id=readout; d->configuration_detector=configured;
     d->output_hdu=(int)index+1; d->bin_x=bin_x; d->bin_y=bin_y; d->input_count=m->count;
     for(i=0;i<m->count;++i) {

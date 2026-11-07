@@ -1,3 +1,19 @@
+## Bias even-sample median implementation authorized — 7 November 2026
+
+Owner chose `median_even_handling`, default `average`, explicit `lower` for
+historical bias pixels, and approved implementation. Read
+`docs/developer/design/bias-median-even-handling-v1.md` and
+`docs/developer/bias-median-even-handling-2026-11-07.md` (issue #287).
+Apply only detector-local temporal stacking; preserve generic Eclipse callers,
+frame rejection, scan/input QC and raw-pair RON. Effective mode must be in
+FITS/ASDF. Agent numerical/config/service checks pass; actual selected-Mac
+native product/ASDF qualification is pending. Reuse the selected mutable
+source/build/cache/compiler/SDK/dependencies and retain backups/evidence.
+No fresh export/build tree, routine reconfigure, observational run, installation,
+merge, branch deletion or product cleanup. Preserve independent viewer PR #283.
+This explicit scientific task supersedes earlier numerical-freeze statements
+only for the approved even-sample bias estimator.
+
 ## Clipped bias RON accepted; merge and branch cleanup authorized — 7 November 2026
 
 Owner accepted the actual Mac qualification, real 32-detector run and final

@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\title{Detector-local bias stacking: even-sample medians}
+\author{wenu-imaging implementation guide}
+\date{7 November 2026}
+\begin{document}
+\maketitle
+\section{Scientific contract}
+For detector $d$ and active pixel $p$, let $x_{d,p,i}$ be the scan-corrected
+value in accepted input frame $i$. Existing frame-mean rejection selects the
+accepted set $A_d$ independently for each detector. This change does not alter
+$A_d$, scan correction, masks, or raw-pair read-noise measurements.
+Let $n_d=|A_d|$, and write the ordered retained samples at this pixel as
+$x_{(1)}\leq\cdots\leq x_{(n_d)}$. The frame index runs across retained
+exposures at the same pixel, not across pixels or detectors.
+The master value is
+\[
+ B_{d,p}=\begin{cases}
+ x_{((n_d+1)/2)},&n_d\text{ odd},\\
+ (x_{(n_d/2)}+x_{(n_d/2+1)})/2,&n_d\text{ even, average},\\
+ x_{(n_d/2)},&n_d\text{ even, lower}.
+ \end{cases}
+\]
+The processing option \texttt{median\_even\_handling} defaults to
+\texttt{average}; \texttt{lower} explicitly retains the historical bias
+convention. For ten symmetric samples $[-5,-4,-3,-2,-1,1,2,3,4,5]$, the
+results are respectively $0$ and $-1$. No mosaic-wide offset is estimated
+or removed. Detector-dependent positive structure is not explained away by
+this change.
+\section{Numerical implementation and efficiency}
+\texttt{median\_pixelvalue\_opts} in \texttt{src/math/median.c} performs
+one in-place Wirth order-statistic selection. For even average mode it selects
+the upper middle value $u=x_{(n_d/2+1)}$. The maximum of the first $n_d/2$
+partition entries is then the lower middle value $\ell=x_{(n_d/2)}$.
+The stored result is
+\[
+ \operatorname{pixelvalue}\!\left(0.5\operatorname{double}(\ell)
+                         +0.5\operatorname{double}(u)\right).
+\]
+This avoids overflow from a working-precision sum and rounds once to the
+working pixel type. Inputs to the helper must be finite, with positive count
+and a valid enum. Odd counts retain the existing optimized selection helpers.
+\texttt{cube\_avg\_median\_opts} reuses a single timeline buffer across all
+pixels. A ten-frame float32 timeline occupies 40 bytes; there is no allocation
+per pixel, full sort, second selection, or additional image-sized scratch.
+The extra partition scan is linear in sample count; Wirth selection retains its expected-linear cost.
+Generic Eclipse median wrappers preserve their previous conventions.
+\section{Configuration, QC and reproducibility}
+The recipe accepts \texttt{[bias] median\_even\_handling}. Shared processing
+TOML also accepts \texttt{MEF.BIAS.MEDIAN.EVEN.HANDLING}; the typed domain
+path is \texttt{processing.bias\_median\_even\_handling}. An explicit
+conflict fails before processing. The optional legacy PAF key has the same
+native name. The effective choice travels through immutable configuration,
+bias settings, the bias result, and native product serialization.
+Each detector records it in ASDF characterization and the FITS card
+\texttt{ESO MPP QC MED EVEN}, including a defaulted choice. Old ASDF products
+without this optional field remain valid.
+Master statistics and high-offset diagnostics are computed from that
+individual detector's resulting pixels, with their existing finite/BPM
+population definitions. A spatial master median is a separate operation from
+the temporal median above. Raw/input measurements, accepted membership, raw
+RON, MAD RON and clipped RON are unchanged for identical inputs and policies.
+\section{Verification and limits}
+The native probe checks 3200 independent sorted-oracle cases, odd/even cubes,
+input preservation, finite extremes, unchanged generic helpers and the actual
+bias kernel. Actual service profiles cover the effective mode and FITS QC.
+The Mac contract additionally compares explicit lower against the retained
+historical adapter, and default/explicit average against independently ordered
+scan-corrected planes. An independent ASDF reader checks schema, mapped FITS
+QC, mode provenance, recomputed spatial master statistics and unchanged input
+QC/RON. Invalid and conflicting settings must fail.
+The detector-sized timing is an agent-workspace microbenchmark, not a Mac
+performance qualification. Native Mac ASDF/product checks remain pending until
+the retained qualification receipt reports success. No real-data correction
+or installation follows from these synthetic tests alone.
+\end{document}

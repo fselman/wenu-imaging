@@ -1113,6 +1113,13 @@
       "storage": "int32",
       "unit": "count",
       "role": "project_processing_policy"
+    },
+    {
+      "native_pattern": "MEF.BIAS.MEDIAN.EVEN.HANDLING",
+      "path_pattern": "processing.bias_median_even_handling",
+      "storage": "string",
+      "unit": "none",
+      "role": "project_processing_policy"
     }
   ]
 }

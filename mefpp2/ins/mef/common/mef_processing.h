@@ -12,6 +12,7 @@ typedef struct {
 } mef_bpm_policy;
 typedef struct {
     mef_bpm_policy bpm;
+    int median_even_supplied, median_even_handling; /* 0 average (default), 1 lower. */
     int ron_clip_supplied, ron_clip_enabled, ron_clip_max_iterations;
     double ron_clip_low, ron_clip_high;
 } mef_processing_policy;

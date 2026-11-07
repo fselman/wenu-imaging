@@ -6,6 +6,7 @@ typedef struct {
     int prescan[2], overscan[2], trim[4], rejection[2];
     int use_prescan, use_overscan, minimum_frames;
     double kappa;
+    int median_even_handling;
 } mef_bias_settings;
 /* Explicit zero-based configuration index, independent of physical HDU index. */
 mef_status mef_config_bias_settings(const mef_config *config, size_t detector,

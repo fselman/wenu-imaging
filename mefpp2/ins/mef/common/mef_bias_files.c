@@ -259,6 +259,7 @@ static mef_status publish_header(const mef_config *config,
      * are detached before legacy destruction, including every error path. */
     bb->bias_scan_median = (float *)qc->scan_median;
     bb->bias_scan_stdev = (float *)qc->scan_stdev;
+    bb->bias_median_even_handling = (median_even_handling)qc->median_even_handling;
     bb->bias_avg1 = (float *)&qc->frame_mean_average;
     bb->bias_sig1 = (float *)&qc->frame_mean_sigma;
     bb->bias_framethr_lo = (float *)&qc->rejection_low;
@@ -310,9 +311,17 @@ static mef_status publish_header(const mef_config *config,
         int k;
         for (k = 0; k < additions->n; ++k) {
             if (qfits_header_getitem((qfits_header *)additions, k, key, value, comment, line) != 0 ||
-                strncmp(key, "HIERARCH ESO MPP QC ", 20) ||
-                qfits_header_getstr(extension, key) != NULL) {
+                strncmp(key, "HIERARCH ESO MPP QC ", 20)) {
                 status = MEF_ERR_INPUT; goto done;
+            }
+            {
+                const char *existing=qfits_header_getstr(extension,key);
+                if (existing) {
+                    /* This one card is emitted by both the legacy bias helper
+                     * and typed QC. Keep it only if both explicitly agree. */
+                    if (!strcmp(key,"HIERARCH ESO MPP QC MED EVEN") && !strcmp(existing,value)) continue;
+                    status=MEF_ERR_INPUT;goto done;
+                }
             }
             qfits_header_add(extension, key, value, NULL, NULL);
             if (qfits_header_getstr(extension, key) == NULL) {

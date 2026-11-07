@@ -158,3 +158,4 @@ MEF_DOMAIN("QC.RON.CLIP.ENABLED", "processing.ron_clip.enabled", "int32", "1", "
 MEF_DOMAIN("QC.RON.CLIP.LOW", "processing.ron_clip.sigma_low", "float64", "1", "project_processing_policy")
 MEF_DOMAIN("QC.RON.CLIP.HIGH", "processing.ron_clip.sigma_high", "float64", "1", "project_processing_policy")
 MEF_DOMAIN("QC.RON.CLIP.MAX_ITERATIONS", "processing.ron_clip.max_iterations", "int32", "count", "project_processing_policy")
+MEF_DOMAIN("MEF.BIAS.MEDIAN.EVEN.HANDLING", "processing.bias_median_even_handling", "string", "none", "project_processing_policy")

@@ -24,6 +24,7 @@
  ---------------------------------------------------------------------------*/
 
 #include "qfits.h"
+#include "median.h"
 
 #include "comm.h"
 #include "xmemory.h"
@@ -303,6 +304,8 @@ image_t * cube_avg_sum(cube_t * incube) ;
 /*--------------------------------------------------------------------------*/
 /* <python> */
 image_t * cube_avg_median(cube_t * to_average) ;
+/* Explicit convention for bias callers; existing wrapper remains lower-central. */
+image_t * cube_avg_median_opts(cube_t *, median_even_handling);
 /* </python> */
 
 

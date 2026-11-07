@@ -102,6 +102,9 @@ def verify(header, product, detector):
 
     if product['extensions'].get('bpm_registry') is not None:
         put('BPM REG', product['extensions']['bpm_registry'])
+    if detector.get('median_even_handling') is not None:
+        assert detector['median_even_handling'] in ('average', 'lower')
+        put('MED EVEN', detector['median_even_handling'])
     put('MAPVER', 'bias-scalar/1')
     put('ASDF', Path(product['file']['location']).with_suffix('.asdf').name)
     put('PROD', product['file']['filename'])
