@@ -116,3 +116,16 @@ Independent Astropy/reference-pixel and retained ASDF6 schema/card/typed-value/
 provenance/mapping checks run, plus four early selection/binding refusals.
 No observations are opened. This target gate must pass before claiming
 completed standalone ASDF behavior for the new feature.
+
+## Mac contract correction (#280)
+
+Candidate 3cae0756 built and passed native selected-header controls on the
+selected Mac. The first actual short-command product passed detector pixel
+comparisons, then the reused legacy primary-header verifier expected detector B
+(RDNOISE 4.0) while the TOML correctly defaulted to first selected detector A
+(RDNOISE 4.1). Parameterize the verifier reference index, preserving legacy
+default B and explicitly checking A for default/all TOML tests. No production
+code or numerical expectation is relaxed. A --reuse-fixture option reads and
+freezes the failed attempt's tiny inputs/references and all previous evidence;
+new products/logs go to a separate exclusive attempt. No adapter, rebuild or
+configuration replay is needed. Full native ASDF acceptance remains pending.

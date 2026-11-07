@@ -13,15 +13,38 @@ p=argparse.ArgumentParser()
 for key in ('work','recipe','adapter','asdf-python'):
     p.add_argument('--'+key,type=Path,required=True)
 p.add_argument('--revision',required=True)
+p.add_argument('--reuse-fixture',type=Path,help='Retain and reuse a prior tiny synthetic fixture without rerunning adapters')
 a=p.parse_args();a.work=a.work.resolve();a.work.mkdir()
 a.recipe=a.recipe.resolve(strict=True);a.adapter=a.adapter.resolve(strict=True)
 a.asdf_python=old.interpreter_path(a.asdf_python)
 old.ARGS=a;old.ARGS.reuse_omissions=False;old.WORK=a.work
-old.RecipeTests.setUpClass()  # Existing small F1 fixture and native reference pixels/QC.
+if a.reuse_fixture is None:
+    old.RecipeTests.setUpClass()  # Existing small F1 fixture and native reference pixels/QC.
+else:
+    # Read retained synthetic inputs/references; freeze every previous evidence file.
+    previous=a.reuse_fixture.resolve(strict=True)
+    assert previous != a.work
+    cls=old.RecipeTests
+    cls.raw=previous/'raw';cls.orchestration=previous/'orchestration'
+    assert cls.raw.is_dir() and cls.orchestration.is_dir() and not list(cls.orchestration.iterdir())
+    cls.products=a.work/'products';cls.products.mkdir()
+    cls.paf=previous/'bias.paf';cls.toml=previous/'bias.toml'
+    cls.listing=previous/'bias.list';cls.bpm=previous/'mask.fits';cls.bad_bpm=previous/'bad-mask.fits'
+    cls.members=[Path(v) for v in cls.listing.read_text().splitlines() if v.strip()]
+    assert len(cls.members)==4 and all(v.is_file() for v in cls.members)
+    cls.references={mode:[previous/f'reference-{mode}-{d}'/'bias.fits' for d in range(2)]
+                    for mode in ('masked','omitted','renamed')}
+    cls.reference_qc={mode:[json.loads(v.with_name('qc.json').read_text()) for v in paths]
+                      for mode,paths in cls.references.items()}
+    cls.configuration=json.loads((previous/'reference-masked-0/config.json').read_text())
+    cls.frozen={str(v):old.digest(v) for v in previous.rglob('*') if v.is_file()}
+
 case=old.RecipeTests('test_explicit_omissions_and_toml')
 recipe_specs={}
 def config(label,entries,selection=None):
     text='bias_recipe_schema_version=1\nsettings="bias.toml"\n[bias]\nmad=false\nreadout_id="synthetic-readout"\nbin_x=1\nbin_y=1\ninput_bpm="omitted"\namplifier_id="explicit-whole-detector"\n'
+    if a.reuse_fixture is not None:
+        text=text.replace('settings="bias.toml"','settings='+json.dumps(str(case.toml)))
     if selection is not None:text+='detectors='+json.dumps(selection)+'\n'
     text+='[provenance]\nprimary='+json.dumps(PRIMARY)+'\ndetector='+json.dumps(DETECTOR)+'\n'
     for identity,index,hdu in entries:
@@ -59,7 +82,7 @@ def run(label,entries,listing,selector=None,legacy_check=False):
                 assert hdus[output].data.tobytes()==ref[1].data.tobytes()
             cards.extend(expected_card(hdus[output].header,k,output,identity) for k in DETECTOR)
     for card in cards:card["source_file"]=str(product)
-    if legacy_check:case.verify(product,measured=False)
+    if legacy_check:case.verify(product,measured=False,reference_index=0)
     expected=dict(revision=a.revision,recipe_path=str(cfg),recipe_text=cfg.read_text(),
                   cards=cards,detectors=[v[0] for v in selected],
                   configuration_indices=[v[1] for v in selected],source_hdus=[v[2] for v in selected])
