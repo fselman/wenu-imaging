@@ -1,3 +1,5 @@
+- [BPM polarity and reason-byte impact audit](bpm-polarity-impact-audit-2026-11-07.md): whole bundled Eclipse/mefpp source inventory; existing zero-good REASON8 support, binary compatibility boundaries and affected legacy loaders. Static audit only.
+
 - [Read-only bias product comparator](../../tools/compare-bias-products.py): exact pixels/QC, native FITS–ASDF mapping and selected-header/TOML provenance; supports a subset against a larger retained reference.
 
 - [Bias short TOML call and selected FITS provenance](bias-toml-provenance-2026-11-07.md): default/all or explicit detector subsets; small configured header transfer; agent checks passed, actual Mac recipe/ASDF gate pending.
