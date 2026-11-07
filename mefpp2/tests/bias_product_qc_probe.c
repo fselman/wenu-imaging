@@ -3,6 +3,7 @@
 #include "mef_bias_qc_fits.h"
 #include <math.h>
 #include <float.h>
+#include "optional_cleanup_probe.c"
 #include "mefp_lib.h"
 #include <assert.h>
 static const char *dump_directory;
@@ -146,6 +147,7 @@ static void profile(const char *paf,int masked,int mad,int pair)
 }
 int main(int argc,char **argv)
 {
+    if(argc==3 && !strcmp(argv[1],"cleanup")) { optional_cleanup_contract(argv[2]); return 0; }
     if(argc==10 && !strcmp(argv[1],"recover-verified")) {
         mef_qc_recovery r={argv[2],argv[3],argv[4],argv[5],argv[6],argv[7],argv[8],argv[9]};
         char message[512]; int code=mef_product_qc_recover_verified(&r,message,sizeof(message));

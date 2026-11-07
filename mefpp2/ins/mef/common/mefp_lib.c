@@ -1209,7 +1209,8 @@ static void mef_clear_names(char ***names, int *count)
 {
     int i;
     if (*names != NULL) {
-        for (i = 0; i < *count; i++) free((*names)[i]);
+        for (i = 0; i < *count; i++)
+            if ((*names)[i] != NULL) free((*names)[i]);
         free(*names);
         *names = NULL;
     }
@@ -1223,18 +1224,30 @@ void mef_bb_clear_work(mef_bb *bb)
     mef_clear_names(&bb->dome_frame_name, &bb->dome_nframes);
     mef_clear_names(&bb->sky_frame_name, &bb->sky_nframes);
     mef_clear_names(&bb->science_frame_name, &bb->science_nframes);
-    free(bb->bias_scan_median); bb->bias_scan_median = NULL;
-    free(bb->bias_scan_stdev); bb->bias_scan_stdev = NULL;
-    free(bb->dome_scan_median); bb->dome_scan_median = NULL;
-    free(bb->dome_scan_stdev); bb->dome_scan_stdev = NULL;
-    free(bb->sky_scan_median); bb->sky_scan_median = NULL;
-    free(bb->sky_scan_stdev); bb->sky_scan_stdev = NULL;
-    free(bb->science_scan_median); bb->science_scan_median = NULL;
-    free(bb->science_scan_stdev); bb->science_scan_stdev = NULL;
-    free(bb->individual_frame_avg); bb->individual_frame_avg = NULL;
-    free(bb->individual_frame_median); bb->individual_frame_median = NULL;
-    free(bb->individual_frame_sigma); bb->individual_frame_sigma = NULL;
-    free(bb->xtname); bb->xtname = NULL;
+    if (bb->bias_scan_median != NULL) free(bb->bias_scan_median);
+    bb->bias_scan_median = NULL;
+    if (bb->bias_scan_stdev != NULL) free(bb->bias_scan_stdev);
+    bb->bias_scan_stdev = NULL;
+    if (bb->dome_scan_median != NULL) free(bb->dome_scan_median);
+    bb->dome_scan_median = NULL;
+    if (bb->dome_scan_stdev != NULL) free(bb->dome_scan_stdev);
+    bb->dome_scan_stdev = NULL;
+    if (bb->sky_scan_median != NULL) free(bb->sky_scan_median);
+    bb->sky_scan_median = NULL;
+    if (bb->sky_scan_stdev != NULL) free(bb->sky_scan_stdev);
+    bb->sky_scan_stdev = NULL;
+    if (bb->science_scan_median != NULL) free(bb->science_scan_median);
+    bb->science_scan_median = NULL;
+    if (bb->science_scan_stdev != NULL) free(bb->science_scan_stdev);
+    bb->science_scan_stdev = NULL;
+    if (bb->individual_frame_avg != NULL) free(bb->individual_frame_avg);
+    bb->individual_frame_avg = NULL;
+    if (bb->individual_frame_median != NULL) free(bb->individual_frame_median);
+    bb->individual_frame_median = NULL;
+    if (bb->individual_frame_sigma != NULL) free(bb->individual_frame_sigma);
+    bb->individual_frame_sigma = NULL;
+    if (bb->xtname != NULL) free(bb->xtname);
+    bb->xtname = NULL;
 }
 
 void mef_bb_del(mef_bb * bb)
@@ -1259,15 +1272,15 @@ void mef_bb_del(mef_bb * bb)
 	if (bb->name_bias_o)        free(bb->name_bias_o);
     if (bb->name_bpm)           free(bb->name_bpm);
     if (bb->name_bpm_o)         free(bb->name_bpm_o);
-    free(bb->bias_framethr_lo);
-    free(bb->bias_framethr_hi);
-    free(bb->bias_avg1);
-    free(bb->bias_sig1);
-    free(bb->orig_bias);
-    free(bb->orig_dome);
-    free(bb->orig_sky);
-    free(bb->orig_mff);
-    free(bb->orig_science);
+    if (bb->bias_framethr_lo != NULL) free(bb->bias_framethr_lo);
+    if (bb->bias_framethr_hi != NULL) free(bb->bias_framethr_hi);
+    if (bb->bias_avg1 != NULL) free(bb->bias_avg1);
+    if (bb->bias_sig1 != NULL) free(bb->bias_sig1);
+    if (bb->orig_bias != NULL) free(bb->orig_bias);
+    if (bb->orig_dome != NULL) free(bb->orig_dome);
+    if (bb->orig_sky != NULL) free(bb->orig_sky);
+    if (bb->orig_mff != NULL) free(bb->orig_mff);
+    if (bb->orig_science != NULL) free(bb->orig_science);
     if (bb->orig_bpm)           free(bb->orig_bpm); /* Generated BPM metadata (#112). */
 
     /*
@@ -4135,42 +4148,42 @@ void *mef_create_orig_filename(mef_bb *bb, char *what)
     if (!strcmp(what, "bias")) {
         /* The final name to use for the file is only written in the ORIGFILE key */
         sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
-        free(bb->orig_bias);
+        if (bb->orig_bias != NULL) free(bb->orig_bias);
         bb->orig_bias = strdup(cval) ;
         e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_bias);
 
     } else if (!strcmp(what, "bpm")) {
         /* The final name to use for the file is only written in the ORIGFILE key */
         sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
-        free(bb->orig_bpm);
+        if (bb->orig_bpm != NULL) free(bb->orig_bpm);
         bb->orig_bpm = strdup(cval) ;    
         e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_bpm);
 
     } else if (!strcmp(what, "dome")) {
         /* The final name to use for the file is only written in the ORIGFILE key */
         sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
-        free(bb->orig_dome);
+        if (bb->orig_dome != NULL) free(bb->orig_dome);
         bb->orig_dome = strdup(cval) ;
         e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_dome);
 
     } else if (!strcmp(what, "sky")) {
         /* The final name to use for the file is only written in the ORIGFILE key */
         sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
-        free(bb->orig_sky);
+        if (bb->orig_sky != NULL) free(bb->orig_sky);
         bb->orig_sky = strdup(cval) ;
         e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_sky);
 
     } else if (!strcmp(what, "combined")) {
         /* The final name to use for the file is only written in the ORIGFILE key */
         sprintf(cval, "CMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
-        free(bb->orig_mff);
+        if (bb->orig_mff != NULL) free(bb->orig_mff);
         bb->orig_mff = strdup(cval) ;
         e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_mff);
 
     } else if (!strcmp(what, "science")) {
         /* The final name to use for the file is only written in the ORIGFILE key */
         sprintf(cval, "SMDP.%s.%s.fits", bb->instrument, get_datetimemili_iso8601());
-        free(bb->orig_science);
+        if (bb->orig_science != NULL) free(bb->orig_science);
         bb->orig_science = strdup(cval) ;
         e_comment(1,"mef_create_orig_filename: ORIGFILE: %s", bb->orig_science);
     } else {
