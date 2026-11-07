@@ -151,6 +151,15 @@ mef_status mef_bias_files_execute_measurements(mef_context *context,
     return bias_run(context, maps, count, detector, final_path, measurements, out, error);
 }
 
+mef_status mef_bias_from_files_measurements(mef_context *context,
+    const mef_layout_map *const *maps, size_t count, const char *detector,
+    const mef_bias_measurement_options *measurements,
+    mef_bias_result **out, mef_error **error)
+{
+    if (measurements == NULL) return MEF_ERR_INPUT;
+    return bias_run(context, maps, count, detector, NULL, measurements, out, error);
+}
+
 /* #211/#212: qfits_header_del leaves n stale. qfits_header_copy traverses
  * forward links and rebuilds n via append. Never index the deleted source or
  * merge it as an update. Build the required structural prefix without deletion.
@@ -206,9 +215,9 @@ static qfits_header *primary_image_header(qfits_header *source,
     return out;
 }
 
-mef_status mef_bias_publish(const mef_config *config,
+mef_status mef_bias_publish_with_header(const mef_config *config,
     const mef_bias_result *result, size_t configuration_detector,
-    const char *final_path, mef_error **error)
+    const char *final_path, const qfits_header *additions, mef_error **error)
 {
     const mef_request_spec *request;
     const mef_bias_qc *qc;
@@ -283,6 +292,21 @@ mef_status mef_bias_publish(const mef_config *config,
         qfits_header_destroy(primary); qfits_header_destroy(extension);
         primary = new_primary; extension = new_extension;
     }
+    if (additions != NULL) {
+        char key[81], value[81], comment[81], line[81];
+        int k;
+        for (k = 0; k < additions->n; ++k) {
+            if (qfits_header_getitem((qfits_header *)additions, k, key, value, comment, line) != 0 ||
+                strncmp(key, "HIERARCH ESO MPP QC ", 20) ||
+                qfits_header_getstr(extension, key) != NULL) {
+                status = MEF_ERR_INPUT; goto done;
+            }
+            qfits_header_add(extension, key, value, NULL, NULL);
+            if (qfits_header_getstr(extension, key) == NULL) {
+                status = MEF_ERR_MEMORY; goto done;
+            }
+        }
+    }
     n = strlen(final_path);
     if (n > (size_t)-1 - 32) { status = MEF_ERR_INPUT; goto done; }
     temporary = malloc(n + 32);
@@ -311,4 +335,12 @@ done:
     }
     if (status != MEF_OK) return failed(status, "Bias publication failed; no success reported", error);
     return status;
+}
+
+mef_status mef_bias_publish(const mef_config *config,
+    const mef_bias_result *result, size_t configuration_detector,
+    const char *final_path, mef_error **error)
+{
+    return mef_bias_publish_with_header(config, result, configuration_detector,
+        final_path, NULL, error);
 }

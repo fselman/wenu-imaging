@@ -1,3 +1,5 @@
+- [Bias scalar QC in both formats (6 November 2026)](bias-scalar-qc-2026-11-06.md): owner-approved mapping implemented; focused actual Mac qualification pending.
+
 - [Native ASDF readback: target diagnosis and bounded workaround](native-asdf-readback-2026-11-06.md).
 
 - [Native warning cleanup and corrected bias integration checks](native-warning-cleanup-2026-11-06.md) — Mac rebuild pending; original evidence retained.

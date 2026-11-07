@@ -1,7 +1,11 @@
 /* Actual in-memory bias operation and QC copying; no ASDF writer substituted. */
 #include "mef_bias_product_qc.h"
+#include "mef_bias_qc_fits.h"
+#include <math.h>
+#include <float.h>
 #include "mefp_lib.h"
 #include <assert.h>
+static const char *dump_directory;
 static const mef_qc_measurement *find(const mef_qc_measurement *q,size_t n,const char *name)
 {
     size_t i; for(i=0;i<n;++i) if(!strcmp(q[i].name,name)) return q+i;
@@ -74,6 +78,49 @@ static void profile(const char *paf,int masked,int mad,int pair)
         assert(mef_bias_product_qc_add(archive,d,ids[d],"explicit-amplifier","synthetic-readout",d,1,1,
             result,&options,&settings,4,masked?"/synthetic/bpm.fits":NULL,(int)d+1,1));
         view=mef_bias_product_qc_view(archive);
+        {
+            qfits_header *header=NULL;
+            int code=mef_bias_qc_fits_header(view,d,&header,message,sizeof(message));
+            if(code) fprintf(stderr,"%s\n",message);
+            assert(code==0 && header!=NULL);
+            assert(atof(qfits_header_getstr(header,"HIERARCH ESO MPP QC MAST MEAN"))==m->master.mean);
+            if(mad) assert(atof(qfits_header_getstr(header,"HIERARCH ESO MPP QC HOT N"))==m->high_offset_count);
+            assert((qfits_header_getstr(header,"HIERARCH ESO MPP QC RON STD")!=NULL)==(m->ron_stdev_available!=0));
+            if(dump_directory) {
+                char path[4096]; FILE *stream;
+                snprintf(path,sizeof(path),"%s/profile-%d%d%d-%lu.hdr",dump_directory,masked,mad,pair,(unsigned long)d);
+                stream=fopen(path,"wx"); assert(stream);
+                qfits_header_append(header,"END",NULL,NULL,NULL);
+                assert(qfits_header_dump(header,stream)==0); assert(fclose(stream)==0);
+            }
+            qfits_header_destroy(header); header=NULL;
+            /* Long/quoted identifiers must fail safely instead of truncating. */
+            mef_qc_detector_record copy=view->detectors[d];
+            mef_product_qc changed=*view;
+            char long_id[128]; memset(long_id,'X',sizeof(long_id)-1); long_id[sizeof(long_id)-1]=0;
+            copy.readout_id=long_id; changed.detectors=&copy; changed.detector_count=1;
+            assert(mef_bias_qc_fits_header(&changed,0,&header,message,sizeof(message))!=0 && header==NULL);
+            /* Metadata must not accept a measured NaN or invent availability. */
+            size_t count=copy.measurement_count;
+            mef_qc_measurement *bad=malloc(count*sizeof(*bad)); assert(bad);
+            memcpy(bad,copy.measurements,count*sizeof(*bad)); copy.measurements=bad;
+            copy.readout_id="synthetic-readout";
+            double invalid=NAN; bad[0].values=&invalid;
+            assert(mef_bias_qc_fits_header(&changed,0,&header,message,sizeof(message))!=0 && header==NULL);
+            /* Finite extremes and signed zero must round-trip without a
+             * lowercase exponent or accidental integer conversion. */
+            const double values[]={DBL_MIN,DBL_MAX,-0.0,0x1.0000000000001p0};
+            for(size_t k=0;k<sizeof(values)/sizeof(values[0]);++k) {
+                bad[0].values=values+k;
+                assert(mef_bias_qc_fits_header(&changed,0,&header,message,sizeof(message))==0);
+                const char *number=qfits_header_getstr(header,"HIERARCH ESO MPP QC MAST MEAN");
+                double actual=strtod(number,NULL);
+                assert(actual==values[k] && !strchr(number,'e'));
+                if(values[k]==0) assert(signbit(actual)==signbit(values[k]));
+                qfits_header_destroy(header); header=NULL;
+            }
+            free(bad);
+        }
         if(pair) assert(*find(view->detectors[d].measurements,view->detectors[d].measurement_count,"read_noise")->values==m->ron_stdev_adu);
         else assert(find(view->detectors[d].measurements,view->detectors[d].measurement_count,"read_noise")->values==NULL);
         for(i=0;i<4;++i) {
@@ -99,7 +146,13 @@ static void profile(const char *paf,int masked,int mad,int pair)
 }
 int main(int argc,char **argv)
 {
-    if(argc!=2) return 2;
+    if(argc==10 && !strcmp(argv[1],"recover-verified")) {
+        mef_qc_recovery r={argv[2],argv[3],argv[4],argv[5],argv[6],argv[7],argv[8],argv[9]};
+        char message[512]; int code=mef_product_qc_recover_verified(&r,message,sizeof(message));
+        puts(message); return code?1:0;
+    }
+    if(argc!=2 && argc!=3) return 2;
+    if(argc==3) dump_directory=argv[2];
     eclipse_init(); set_logfile(0);
     profile(argv[1],0,1,1); profile(argv[1],1,1,1); profile(argv[1],0,0,1); profile(argv[1],1,0,0);
     puts("PASS: four actual bias QC copying/lifetime profiles, explicit BPM/MAD/RON choices");

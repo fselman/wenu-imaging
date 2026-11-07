@@ -1,3 +1,88 @@
+## Verified real mosaic; native ASDF recovery pending — 6 November 2026
+
+Recovered FITS CMDP.2026-11-06T21:42:22.830Z.001.fits matches864 legacy QC groups
+and all32 detector pixel payloads exactly. All89445 new scalar/context cards also
+match the earlier validated ASDF. #273 closed after real assembly verification.
+Owner instructed native QC recovery with explicit provenance. Read
+[the current status](docs/developer/bias-scalar-qc-2026-11-06.md). New native
+recover-verified mode on existing bias_product_qc_probe writes staging only;
+independent schema/full-tree/array/FITS checks precede exclusive publication.
+No CMake target/configuration changes, raw reductions or statistic recalculation.
+Original ASDF and failed recipe log remain intact; do not claim retroactive recipe
+success. Keep private detector files until recovery is completed and reviewed.
+
+## Expanded-header assembly correction pending Mac check — 6 November 2026
+
+Real scalar-QC run completed32 private detector MEFs, then failed assembled-MEF
+readback because its7479360 header bytes exceed the fixed1MiB cumulative bound
+(#273). Retain .mefpp-bias-ukcaVE under test_recipes/reduced/cal/bias and the failed
+CMDP.2026-11-06T21:42:22.830Z.001.log. No final ASDF/whole-recipe success. Read
+[the current status](docs/developer/bias-scalar-qc-2026-11-06.md). Correction uses
+checked exact emitted header-byte budget; agent old/new32-extension reproduction
+and individual-limit refusal pass. Reuse selected source/build/tools and rebuild
+only mef_assembly_probe for the targeted Mac check. No configure, new build tree,
+raw reduction replay or cleanup. Standalone FITS assembly is not ASDF completion;
+the exited process no longer owns its in-memory QC archive. Recover product/QC
+with an explicit evidence-preserving plan before claiming whole-recipe success.
+
+## Reuse the selected build and pin its tools — owner instruction, 6 November 2026
+
+Routine source edits MUST reuse the selected development source/build pair and
+invoke the selected CMake executable with --build and only the affected targets.
+Do not create/export a new source tree or build directory, rerun cmake -S/-B,
+copy selected cache variables into a fresh configuration, delete CMakeCache.txt,
+clean the build, or rebuild dependencies merely because the source revision changed.
+Let the existing build system perform any necessary CMake regeneration.
+
+Before building, read the existing CMakeCache.txt and verify its source directory,
+CMake executable, compiler/toolchain, explicit language lane, SDK/deployment target,
+architecture, generator/build tool and dependency prefixes against the selected
+qualified configuration. Use absolute selected tool paths; never substitute tools
+from PATH, Conda, Homebrew, MacPorts or a default SDK. C17 means MEFPP_C_STANDARD=17,
+not merely an available C17 compiler. Verify reference executable locations rather
+than inferring that all targets exist in every recipe build directory.
+
+Explicit reconfiguration is reserved for an intentional change to configuration,
+compiler/SDK, generator or dependencies, a missing/unusable selected cache, or an
+independent qualification build justified by the task. State the concrete reason
+before doing it and preserve the full selected configuration, not an ad hoc subset.
+If the existing build/tool identity disagrees, stop that build and report the
+mismatch; do not silently choose another toolchain. Existing authorization for a
+necessary change applies; do not invent an additional approval step.
+
+Preserve evidence by retaining receipts and distinct attempt logs, not by cloning
+source/build trees for every edit. Record the exact source revision and any dirty
+source changes at each build/test; keep published reference binaries and immutable
+qualification evidence untouched. Maintain one mutable development build and
+separately identify frozen reference builds when a comparison requires them.
+
+Current selected Mac scalar-QC development pair after its successful qualification:
+mac-standalone-bias-SP3Cgdhb/scalar-qc-c17-source and
+mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/build, revision7d1d82f.
+Use /opt/local/bin/cmake and verify its existing cache. Reference adapter remains
+warning-fix-build/mefpp2/mefpp_m5. No rebuild/reconfiguration is needed for an
+instruction/documentation-only change. Earlier per-revision fresh-build directions
+are superseded for routine edits. Do not modify the source/build pair while it is
+being used by an active qualification or reduction process.
+
+## Additive scalar QC headers prepared — 6 November 2026
+
+Owner accepted the FITS/ASDF mapping and instructed implementation. Read
+[the mapping](docs/developer/design/bias-qc-fits-asdf-mapping-v1.md) and
+[implementation/qualification status](docs/developer/bias-scalar-qc-2026-11-06.md).
+Existing legacy cards keep their values/meanings/formatting. The standalone
+coordinator measures once, archives the common detector record, serializes
+additive scalar/context cards and publishes through the existing native path.
+ASDF values/schema and numerical kernels remain unchanged. Native C17/UBSan
+four-profile checks pass, including eight detector headers, finite extremes,
+signed zero, overlong identifier refusal and measured-NaN refusal. Actual Mac
+Astropy/full recipe boundary checks remain pending. A focused gate reuses the
+qualified libasdf prefix and reference adapter and runs only tiny synthetic
+inputs. Do not rerun observations, alter existing masters, install, merge or
+clean evidence. Full FITS-to-ASDF recovery remains future work, not implemented.
+Owner-run real-product metadata checks passed 864 exact legacy-reference groups
+and 704 FITS/ASDF rounding comparisons; no real pixel equivalence claim.
+
 ## Native ASDF readback workaround prepared — 6 November 2026
 
 Actual Mac bde4568 cleared all63compiler warnings and passed both probes plus

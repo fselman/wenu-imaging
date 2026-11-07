@@ -3,6 +3,7 @@ import argparse
 import json
 from pathlib import Path
 import asdf
+from bias_qc_fits_contract import verify as verify_fits_qc
 
 p=argparse.ArgumentParser();p.add_argument('--file',type=Path,required=True)
 p.add_argument('--schema',type=Path,required=True);p.add_argument('--expected',type=Path,required=True)
@@ -24,6 +25,7 @@ with asdf.config_context() as config:
         assert [r['original_index'] for r in q['embedded_input_records']]==list(range(4))
         assert json.loads(q['provenance']['configuration']['snapshot'])==expected['configuration']
         for dindex,d in enumerate(ds):
+            verify_fits_qc(expected['fits_qc_headers'][dindex],q,d)
             measurements={m['name']:m for m in d['measurements']}
             assert measurements['recipe.mad_requested']['value']==int(expected['measured'])
             assert measurements['recipe.ron_pair_requested']['value']==int(expected['measured'])

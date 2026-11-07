@@ -83,12 +83,13 @@ done:
     qfits_header_destroy(extension);
     return okay;
 }
-static int write_header(FILE *out, qfits_header *h, const char *basename, size_t count, int primary)
+static int write_header(FILE *out, qfits_header *h, const char *basename, size_t count, int primary, size_t *header_bytes)
 {
     qfits_header *copy = qfits_header_new();
     char value[80], key[81], val[81], comment[81], line[81];
     int i, okay = 0;
-    if (copy == NULL) return 0;
+    off_t begin = ftello(out), end;
+    if (copy == NULL || begin < 0) goto done;
     /* Rebuild without deletion: qfits_header_del leaves n inconsistent (#212).
      * Retain original card text and ordering except the explicit edited cards. */
     for (i = 0; i < h->n; ++i) {
@@ -106,7 +107,15 @@ static int write_header(FILE *out, qfits_header *h, const char *basename, size_t
     }
     qfits_header_append(copy, "END", NULL, NULL, NULL);
     if (!header_string(copy, "ORIGFILE", basename)) goto done;
-    okay = qfits_header_dump(copy, out) == 0 && !ferror(out);
+    if (qfits_header_dump(copy, out) != 0 || ferror(out)) goto done;
+    end = ftello(out);
+    /* The qfits bound is cumulative over the complete MEF, not per HDU.
+     * Use exact emitted, padded header bytes; do not include image payloads
+     * or disable the bounded scanner. Source inspection remains capped. */
+    if (end < begin || end - begin < 2880 || (end - begin) % 2880 ||
+        (uintmax_t)(end - begin) > SIZE_MAX - *header_bytes) goto done;
+    *header_bytes += (size_t)(end - begin);
+    okay = 1;
  done:
     qfits_header_destroy(copy);
     return okay;
@@ -142,7 +151,7 @@ int mef_mef_assemble(const char *final_path, const char *reference_id,
     char *temporary = NULL;
     const char *basename, *detail = "Invalid assembly manifest";
     struct stat st;
-    size_t i, j, reference = SIZE_MAX, length;
+    size_t i, j, reference = SIZE_MAX, length, header_bytes = 0;
     int fd = -1, owned = 0, committed = 0;
     if (final_path == NULL || final_path[0] != '/' || reference_id == NULL ||
         !*reference_id || detectors == NULL || count == 0 || count > 4096) goto done;
@@ -185,11 +194,11 @@ int mef_mef_assemble(const char *final_path, const char *reference_id,
     if (out == NULL) goto done;
     fd = -1;
     h = qfits_header_read((char *)detectors[reference].path);
-    if (h == NULL || !write_header(out, h, basename, count, 1)) goto done;
+    if (h == NULL || !write_header(out, h, basename, count, 1, &header_bytes)) goto done;
     qfits_header_destroy(h); h = NULL;
     for (i = 0; i < count; ++i) {
         h = qfits_header_readext((char *)detectors[i].path, 1);
-        if (h == NULL || !write_header(out, h, basename, count, 0) ||
+        if (h == NULL || !write_header(out, h, basename, count, 0, &header_bytes) ||
             !copy_data(out, detectors + i, spans + i)) goto done;
         qfits_header_destroy(h); h = NULL;
     }
@@ -197,7 +206,7 @@ int mef_mef_assemble(const char *final_path, const char *reference_id,
     out = NULL;
     detail = "Assembled MEF failed native readback";
     qfits_cache_purge();
-    if (qfits_cache_prime_bounded(temporary, count + 1, 1048576) ||
+    if (qfits_cache_prime_bounded(temporary, count + 1, header_bytes) ||
         qfits_query_n_ext(temporary) != (int)count) goto done;
     h = qfits_header_read(temporary);
     if (h == NULL || qfits_header_getint(h, "NAXIS", -1) != 0 ||
