@@ -1,5 +1,63 @@
 # Bias completion: short TOML call and selected provenance — 7 November 2026
 
+## Actual Mac acceptance complete; merge authorized
+
+7 November: owner authorized merge/branch cleanup after the selected Mac built
+3cae0756 with pinned cache/tools and passed native header controls. Corrected
+dab9b44 verifier reused the same executable/cache and retained tiny references:
+five actual products (default all, explicit all, subset, single-extension raw,
+primary-image raw), four refusals and independent FITS/ASDF checks passed.
+Receipt: scalar-qc-qualification-c17/toml-provenance-reference-fix-dab9b44/qualification.json
+under the selected retained build root. #280 is verified closed. Producer stamp
+remains accurately 3cae0756; later changes are verification/documentation only.
+
+Real CCD65/CCD66 subset completed as CMDP.2026-11-07T13:35:31.698Z.001 in
+/Users/fselman/Pictures/OCAM/test_recipes/reduced/cal/bias. Comparison with
+retained CMDP.2026-11-06T21:42:22.830Z.001 passed exact detector pixels and
+2804 nonidentity QC cards per detector. All 13 product-specific cards are
+independently correct for each own product: ASDF, PROD and SRC1 for BPM ACTIVE,
+BPM GOOD, HOT DEGEN, HOT K, HOT N, HOT THR, MAST, REQ MAD, REQ PAIR, UMAS, VAR.
+ASDF schemas, selected FITS card values/types/missing states, exact processing
+TOML snapshot, complete FITS/ASDF scalar/context mapping, product/input QC and
+ten original inputs/bindings passed. Normalize only exact own-product sources
+when comparing records; preserve raw/calibration identities. #281 comparator
+defect is verified closed. No raw read or product mutation during verification.
+
+Actual orchestration now has bias-recipe.toml with absolute settings/BPM paths,
+a shortened run-bias.sh using the qualified recipe, and preserved old launcher
+run-bias.sh.before-toml. Legacy numerical bias.toml/bias.list remain in place.
+The all-32 catalogue is retained; this real execution selected two detectors.
+No new all-32 execution is claimed. No installation or new platform validation.
+
+## Saved read-only comparator
+
+Owner requested retaining the successful comparison as tools/compare-bias-products.py.
+It accepts explicit product, reference, processing envelope and ASDF interpreter
+paths, discovers output detector IDs and checks their catalogue bindings. The
+reference may contain additional detectors. Both products must have expanded
+bias-scalar/1 FITS cards and the same ordered raw inputs; this is equivalence
+verification, not a comparison of independent historical measurements. It reads
+product arrays and headers plus ASDF/configuration; never reads raw inputs or
+writes files. Existing registry/schema are reused; FITS and ASDF keep their
+separate qualified interpreters. Missing/duplicate cards, differing scientific
+values and incorrect own-product links fail.
+
+The original inline two-detector algorithm passed on Mac. Saved-tool outer and
+independent reader syntax, CLI help, strict 13-key identity coverage and rejection
+of a wrong self-source pass in the agent environment. The saved-tool invocation
+itself has not yet run on Mac. No production native source changed to add it.
+
+```bash
+/Users/fselman/anaconda3/envs/wenu-imaging/bin/python -B \
+  /Users/fselman/Developer/wenu-imaging/tools/compare-bias-products.py \
+  --product /Users/fselman/Pictures/OCAM/test_recipes/reduced/cal/bias/CMDP.2026-11-07T13:35:31.698Z.001.fits \
+  --reference /Users/fselman/Pictures/OCAM/test_recipes/reduced/cal/bias/CMDP.2026-11-06T21:42:22.830Z.001.fits \
+  --config /Users/fselman/Pictures/OCAM/test_recipes/orchestration/bias-recipe.toml \
+  --asdf-python /Users/fselman/Software/build/wenu-imaging/mac-asdf6-transfer-ntb2et4J/Mac-private-k4i17lwh/environment/bin/python
+```
+
+Earlier pending-target text below is historical and superseded by this result.
+
 ## Executive summary
 
 Owner requested a bounded finish to bias: transfer a small TOML-selected set
