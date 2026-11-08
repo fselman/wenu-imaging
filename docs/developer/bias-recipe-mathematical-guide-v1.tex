@@ -17,7 +17,7 @@
 \newcommand{\Var}{\operatorname{Var}}\newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\ind}{\mathbf{1}}
 \title{\vspace{-10mm}Bias recipe\\Mathematics and implementation\\\large Version 1 --- review copy}
-\author{Wenu-imaging}\date{6 November 2026; zero-spread clarification 8 November}
+\author{Wenu-imaging}\date{8 November 2026; human source-review edition}
 \begin{document}\maketitle\vspace{-6mm}
 \section{Purpose and authority}
 The recipe estimates a master bias \emph{signal} by correcting the electronic
@@ -26,13 +26,21 @@ rejecting entire frames by their corrected active-area means, and stacking the
 retained frames with the existing Eclipse pixel median. QC describes the
 inputs, corrections and master; it does not silently modify the result.
 
-This guide explains the implementation reviewed at cleanup-source revision
-\code{b8ca41fce6df5f34cd8668c574d873a8168797b2}. It follows the owner-approved
-bias/QC decisions and the final-MEF and dual-format designs listed in
-Section~\ref{sec:authority}. Historical design documents contain superseded
-stages: the zero-spread paragraph includes the 8 November diagnostic change;
-other sections retain their documented baseline for actual arithmetic and the later
-approved decision for detector-mask applicability.
+This edition accompanies the owner-authorized readability pass over the bias
+recipe and its supporting routines. Its numerical baseline is the qualified
+zero-spread producer \code{b833aca7df520171d9dcf4f0094a43bb5aad33a6}; the
+source review changes names, layout and comments, not the accepted estimators.
+The source landmarks below identify the current implementation without depending
+on line numbers. Owner comprehension review and actual Mac qualification of the
+readability candidate remain pending. Earlier qualification belongs to its
+recorded producer, not automatically to this candidate.
+
+This guide incorporates the already accepted average/lower temporal-median
+choice and explicit zero-spread refusal. Optional clipped raw-pair RON is
+explained in the companion guide \code{mathematics/mefpp/bias-clipped-ron.tex}
+and its matching PDF; the median supplement is
+\code{mathematics/mefpp/bias-median-even-handling.tex} and its matching PDF.
+The designs in Section~\ref{sec:authority} retain the scientific authority.
 
 All signal levels, standard deviations and read-noise diagnostics are in ADU.
 Pixel and frame counts are dimensionless counts. The recipe performs no gain
@@ -45,14 +53,119 @@ It does not provide a master variance or a covariance model.
 electronic prescan or overscan samples.
 \item Frame rejection selects complete exposures. The subsequent median stack
 still evaluates every output pixel, including pixels excluded by that BPM.
-\item The historical stack median and modern QC median have different
-even-sample conventions. Preserving the stack is part of compatibility.
+\item Temporal stacking uses the configured average/lower even-sample policy.
+Modern checked QC uses an averaged central pair; legacy telemetry helpers
+retain their documented conventions. These roles must not be conflated.
 \end{enumerate}
 \subsection*{Mathematical description versus implementation}
 Equations below state the estimators. Exact reproduction also requires the
 documented order-statistic convention, evaluation order and pixel/float
 conversions. Checked statistics retain the existing sum-of-squares
 implementation; the guide does not substitute a different summation algorithm.
+
+
+\newpage
+\section*{Reading the source}\label{sec:source-reading}
+Start with the three labelled phases in \code{main}, then follow one detector
+through \code{process_bias_detector}, the file adapter, the in-memory service,
+and the small stacking kernel. Read configuration and serialization helpers
+after the scientific flow is clear. All paths below are relative to
+\code{mefpp2/ins/mef/}; \code{common/} contains services and
+\code{recipes/} contains the command coordinator.
+
+A landmark is a comment in the source, not an executable C label. Search for
+its exact bracketed identifier. Each occurs once in source; the guide can
+reference the same stage for several equations. Comments mark scientific
+boundaries and explain intent, while ordinary statements remain uncluttered.
+
+\small
+\begin{longtable}{@{}p{0.40\linewidth}p{0.55\linewidth}@{}}
+\toprule
+Landmark and purpose & Source file and routine \\
+\midrule
+\endhead
+\code{[BIAS-RECIPE-ADMISSION]}\newline
+Configuration, input identities and all detector bindings &
+\code{recipes/mefpp_bias_recipe.c}\newline
+\code{main} \\[4pt]
+\code{[BIAS-DETECTOR-LOOP]}\newline
+Independent detector calibration, no mosaic balancing &
+\code{recipes/mefpp_bias_recipe.c}\newline
+\code{main} \\[4pt]
+\code{[BIAS-PRODUCT-PUBLICATION]}\newline
+Complete-detector barrier, final MEF then ASDF &
+\code{recipes/mefpp_bias_recipe.c}\newline
+\code{main} \\[4pt]
+\code{[BIAS-DETECTOR-CALIBRATION]}\newline
+One detector's service call and result ownership &
+\code{recipes/mefpp_bias_recipe.c}\newline
+\code{process_bias_detector} \\[4pt]
+\code{[BIAS-INPUT-LOADING]}\newline
+Load explicit bound detector HDUs &
+\code{common/mef_bias_files.c}\newline
+\code{load_bias_frames} \\[4pt]
+\bottomrule
+\end{longtable}
+\normalsize
+The coordinator owns recipe-wide resources. The file adapter owns loaded raw
+frames only for the duration of one detector operation; the returned result
+owns its master and QC. Read the following scientific stages before exploring
+the argument parser or metadata serializers.
+
+\newpage
+\subsection*{Inside one detector}
+\small
+\begin{longtable}{@{}p{0.40\linewidth}p{0.55\linewidth}@{}}
+\toprule
+Landmark and purpose & Source file and routine \\
+\midrule
+\endhead
+\code{[BIAS-RAW-PAIR-RON]}\newline
+Noise from borrowed raw frames, before admission &
+\code{common/mef_cal_bias.c}\newline
+\code{mef_cal_bias_measurements} \\[4pt]
+\code{[BIAS-SCAN-CORRECTION]}\newline
+Private frame copies, row correction and trimming &
+\code{common/mef_cal_bias.c}\newline
+\code{mef_cal_bias_measurements} \\[4pt]
+\code{[SCAN-ROW-CORRECTION]}\newline
+The shared electronic-row estimator and subtraction &
+\code{common/mefp_lib.c}\newline
+\code{mef_overscan_correction_traced} \\[4pt]
+\code{[BIAS-FRAME-SELECTION]}\newline
+Corrected frame means, one strict interval, zero-spread stop &
+\code{common/mef_bias_kernel.c}\newline
+\code{mef_bias_stack_masked_diagnostic} \\[4pt]
+\code{[BIAS-TEMPORAL-STACK]}\newline
+Configured median of retained frames at every active pixel &
+\code{common/mef_bias_kernel.c}\newline
+\code{mef_bias_stack_masked_diagnostic} \\[4pt]
+\code{[BIAS-MASTER-QC]}\newline
+Master statistics and diagnostic high-offset flags &
+\code{common/mef_cal_bias.c}\newline
+\code{mef_cal_bias_measurements} \\[4pt]
+\code{[BIAS-DETECTOR-WRITE]}\newline
+Staged detector MEF and exclusive publication &
+\code{common/mef_bias_files.c}\newline
+\code{publish_bias_header} \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Supporting routines.}
+\code{common/mef_bias_recipe_config.c}, \code{mef_bias_recipe_expand},
+handles the TOML envelope and detector selection.
+\code{common/mef_bias_product_qc.c}, \code{mef_bias_product_qc_add},
+copies measured values, masks and provenance into the common archive.
+\code{common/mef_bias_qc_fits.c}, \code{mef_bias_qc_fits_header},
+serializes that stored QC into additive FITS cards. These supporting routines
+do not choose new pixels or rerun the scientific estimators.
+
+The first reading pass retains existing operation/ownership boundaries.
+Long validation and coordinator routines are separated into logical paragraphs;
+ordinary argument handling uses explicit control flow. Further extraction should
+be driven by the owner's source review rather than an arbitrary function-size
+limit. Passing numerical checks alone does not complete that review.
 
 \newpage
 \section{Identity, coordinates and admitted inputs}
@@ -142,6 +255,9 @@ profile array. Separate raw scan QC uses enabled columns over trimmed rows.
 
 \newpage
 \section{Frame admission and temporal stack}
+Source: \code{mef_bias_kernel.c}, \code{mef_bias_stack_masked_diagnostic},
+\code{[BIAS-FRAME-SELECTION]} and \code{[BIAS-TEMPORAL-STACK]}.
+
 For each corrected active image, use all active pixels without a BPM, or only
 its good pixels otherwise. The per-frame mean is
 \[
@@ -173,14 +289,15 @@ Historical configuration entries \code{FRAMETHR.LO}/\code{FRAMETHR.HI}
 do not add absolute cuts in this kernel. The computed band is operational.
 For retained set ${\cal K}$, $K=|{\cal K}|$, the master is
 \begin{equation}
- B(i,j)=\operatorname{med}_{\rm Eclipse}
+ B(i,j)=\operatorname{med}_{\rm configured}
              \{A_f(i,j):f\in{\cal K}\}. \label{eq:stack}
 \end{equation}
 There is no per-pixel clipped mean or per-pixel rejection count.
 The BPM selects frame-mean and QC populations; it does not replace output
 pixels. The temporal median is evaluated at every active coordinate.
-\code{mef_bias_stack_masked} selects frames and consumes the private cube;
-\code{cube_avg_median} implements the stack. QC retains original input IDs.
+\code{mef_bias_stack_masked_diagnostic} selects frames and consumes the private
+cube; \code{cube_avg_median_opts} implements the configured stack.
+QC retains original input IDs.
 
 For synthetic frame means $0,1,2,10$ with illustrative $\kappa=1$,
 $\bar a=3.25$, $s_a=\sqrt{62.75/3}\simeq4.573474$. The band is approximately
@@ -194,16 +311,21 @@ For sorted $z_{(1)}\leq\cdots\leq z_{(N)}$, the modern checked QC median is
  m(z)=\begin{cases}z_{((N+1)/2)},&N\text{ odd},\\
  \tfrac12 z_{(N/2)}+\tfrac12 z_{(N/2+1)},&N\text{ even}.\end{cases}
 \]
-The Eclipse pixel median used for the temporal stack returns the \emph{lower}
-middle value for even $K\geq4$: $z_{(K/2)}$. Its two-value helper averages the
-pair, but the bias stack requires at least three frames. Odd-sample routines
-return the central order statistic. The general selection convention follows
-the Wirth implementation documented in the source \cite{wirth}.
+The bias temporal stack defaults to \code{median_even_handling="average"}.
+For even $K$, it uses $\tfrac12 z_{(K/2)}+\tfrac12 z_{(K/2+1)}$, evaluated
+in double precision and converted once to \code{pixelvalue}. Explicit
+\code{"lower"} uses $z_{(K/2)}$ for historical bias compatibility. Both modes
+use the central order statistic for odd $K$. The bias stack requires at least
+three retained frames. Selection follows the Wirth implementation documented
+in the source \cite{wirth}; the existing timeline buffer is reused.
 
-Ten retained frames use the fifth sorted sample at each pixel; nine use the
-fifth. Changing this convention changes the accepted recipe. The historical
-\code{double_median} helper instead uses the upper middle for even samples;
-it is not the modern checked QC median.
+Ten retained frames therefore use the midpoint of the fifth and sixth sorted
+samples by default, or the fifth in lower mode; nine frames use the fifth in
+both modes. Generic Eclipse median callers retain their historical behavior:
+the old pixel helper returns the lower central value for even $K\geq4$, while
+its two-value case averages. The historical \code{double_median} helper uses
+the upper middle for even samples. These helpers must not be substituted for
+the configured temporal estimator or the modern checked QC median.
 
 \subsection*{Legacy master statistics}
 With a BPM, the kernel overrides the historical master median and standard
@@ -222,7 +344,7 @@ digits with a FITS-compatible uppercase exponent. A short printed table cannot
 establish exact numerical equality.
 
 \subsection*{Worked order-statistic examples}
-For $0,2,4,6$, modern median and mean are 3; the temporal lower median is 2.
+For $0,2,4,6$, modern QC and default temporal median are 3; explicit temporal lower mode gives 2.
 For scan samples $100,101,102,103,200$ and one rank rejected at each end,
 the correction is 102. Raw samples 110 and 112 become 8 and 10.
 

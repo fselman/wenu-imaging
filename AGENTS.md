@@ -1,3 +1,16 @@
+## Bias readability candidate: source review first — 8 November 2026
+
+Owner accepted the permanent readability policy (PR #291, merged at 165d02d)
+and explicitly authorized applying it to the bias recipe and routines. Read
+[the source-review map](docs/developer/bias-readability-2026-11-08.md) and approved
+scope/design before further changes. Names/layout/ordinary control flow and twelve
+scientific-stage landmarks are prepared; guide LaTeX/PDF updated. Agent C17/UBSan,
+exact legacy/file/QC/configuration and landmark checks pass. Owner comprehension
+review and selected-Mac recipe qualification are still pending. Preserve native
+b833aca7, mutable build/cache, products and all evidence. No Mac rebuild until the
+scoped target gate, no observation/install or implementation merge. Linearity is
+paused; earlier next-linearity reminders are superseded by the owner's pause.
+
 ## Mandatory human readability and source-guide landmarks
 
 Owner-approved permanent policy (8 November 2026): read and follow

@@ -1,0 +1,54 @@
+{
+  "successful": true,
+  "scope": "C17 syntax and per-translation-unit expanded token comparison; identifiers restored, braces ignored; not a proof of all behavior",
+  "files": [
+    {
+      "path": "mefpp2/ins/mef/recipes/mefpp_bias_recipe.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 6023
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_kernel.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 1038
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_cal_bias.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 3791
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_files.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 4061
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_recipe_config.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 3917
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_product_qc.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 8041
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_qc_fits.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 2971
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mefp_lib.c",
+      "c17_syntax": true,
+      "normalized_expanded_tokens_identical": true,
+      "token_count": 39218
+    }
+  ]
+}
