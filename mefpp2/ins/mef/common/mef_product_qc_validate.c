@@ -176,6 +176,8 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
     }
     for(i=0;i<p->detector_count;++i) {
         const mef_qc_detector_record *d=p->detectors+i;
+        if(d->median_even_handling && strcmp(d->median_even_handling,"average") && strcmp(d->median_even_handling,"lower"))
+            return fail(message,size,"Invalid bias median even handling");
         if(!text(d->id)||!text(d->amplifier)||!text(d->readout_id)||d->output_hdu<1||(size_t)d->output_hdu>p->detector_count||d->bin_x<1||d->bin_y<1||
             d->inputs==NULL||d->input_count!=p->input_count||!measurements(p,d->measurements,d->measurement_count,d->id))
             return fail(message,size,"Invalid product detector coverage or QC");

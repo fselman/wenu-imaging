@@ -8,7 +8,9 @@ int main(int argc,char **argv)
     }
     for(int i=1;i<count;++i)puts(args[i]);
     if(owner) {
-        size_t n;const char *const *keys=mef_bias_recipe_primary_keys(owner,&n);
+        size_t n;const char *mode=mef_bias_recipe_median_even_handling(owner);
+        printf("MEDIAN_EVEN=%s\n",mode?mode:"default");
+        const char *const *keys=mef_bias_recipe_primary_keys(owner,&n);
         printf("PRIMARY_COUNT=%lu\n",(unsigned long)n);
         for(size_t i=0;i<n;++i)puts(keys[i]);
         keys=mef_bias_recipe_detector_keys(owner,&n);

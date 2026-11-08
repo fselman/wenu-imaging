@@ -171,6 +171,7 @@ typedef struct _mef_bb_ {
     float   *bias_avg1;
     float   *bias_sig1;
 	double	bias_kappa1 ;
+    median_even_handling bias_median_even_handling;
 	int		bias_minframe ;
 	int		bias_save ;
     float * bias_stdev;

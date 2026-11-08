@@ -58,6 +58,7 @@ typedef struct {
     float frame_mean_average, frame_mean_sigma, rejection_low, rejection_high;
     float product_median, product_stdev;
     int accepted_frames;
+    int median_even_handling;
     size_t input_frames;
     const float *scan_median, *scan_stdev;
     const int *accepted; /* One per original frame, including rejected frames. */

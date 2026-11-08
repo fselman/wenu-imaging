@@ -1,4 +1,8 @@
+Accepted static bias viewer and retained requirements/audit branches: [integration record](bias-viewer-docs-integration-2026-11-07.md).
+
 Bias QC viewer refinement: [common parameters, clipped RON and shared-input grouping](bias-qc-inspection-2026-11-07.md). Prepared for retained-product Mac review; no native build or reduction.
+
+Detector-local bias median: [implementation and pending Mac gate](bias-median-even-handling-2026-11-07.md), [approved contract](design/bias-median-even-handling-v1.md).
 
 Clipped bias RON and shared BPM policy accepted on Mac, including real 32-detector exact-reference comparison: [acceptance and retained evidence](bias-clipping-project-bpm-2026-11-07.md). Merge/branch cleanup authorized; preserve products and qualified build.
 

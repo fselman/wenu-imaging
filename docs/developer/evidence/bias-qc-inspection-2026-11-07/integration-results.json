@@ -1,0 +1,12 @@
+{
+  "successful": true,
+  "owner_visual_acceptance": true,
+  "python_projection_groups": 3,
+  "javascript_model_and_cursor_checks": "passed",
+  "browser_automated_painting": "blocked previously; not claimed",
+  "accepted_viewer_assets_unchanged": true,
+  "native_configuration_dependency_inputs_unchanged": true,
+  "update_button_implemented": false,
+  "update_button_status": "explicitly deferred",
+  "build_or_reduction_executed": false
+}

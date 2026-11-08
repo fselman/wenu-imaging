@@ -10,6 +10,12 @@ image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
 image_t *mef_bias_stack_masked(cube_t *cube, int minimum, double kappa,
     mef_bias_statistics *statistics, int *decisions, const pixelmap *map)
 {
+    return mef_bias_stack_masked_opts(cube,minimum,kappa,statistics,decisions,map,MEDIAN_EVEN_AVERAGE);
+}
+image_t *mef_bias_stack_masked_opts(cube_t *cube, int minimum, double kappa,
+    mef_bias_statistics *statistics, int *decisions, const pixelmap *map,
+    median_even_handling mode)
+{
     image_sample_stats measured;
     double *means;
     int *valid;
@@ -22,7 +28,7 @@ image_t *mef_bias_stack_masked(cube_t *cube, int minimum, double kappa,
     stacked = NULL;
     if (statistics == NULL) { cube_del(cube); return NULL; }
     statistics->measured = 0;
-    if (cube == NULL || cube->np < minimum) goto cleanup;
+    if (cube == NULL || cube->np < minimum || (mode != MEDIAN_EVEN_AVERAGE && mode != MEDIAN_EVEN_LOWER)) goto cleanup;
     count = cube->np;
     means = malloc((size_t)count * sizeof(*means));
     valid = malloc((size_t)count * sizeof(*valid));
@@ -58,7 +64,7 @@ image_t *mef_bias_stack_masked(cube_t *cube, int minimum, double kappa,
     }
     if (kept < minimum) goto cleanup;
     if (kept < count && cube_reject_planes(&cube, valid) != 0) goto cleanup;
-    stacked = cube_avg_median(cube);
+    stacked = cube_avg_median_opts(cube,mode);
     if (stacked == NULL) goto cleanup;
     if (image_getmedian_checked(stacked, &median) != 0) {
         image_del(stacked); stacked = NULL; goto cleanup;

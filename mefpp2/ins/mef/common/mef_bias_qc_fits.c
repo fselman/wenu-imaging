@@ -191,6 +191,9 @@ int mef_bias_qc_fits_header(const mef_product_qc *p,size_t index,qfits_header **
        !integer(h,"BINX","",(uint64_t)d->bin_x) || !integer(h,"BINY","",(uint64_t)d->bin_y) ||
        !field(h,"READID","",d->readout_id,1) || !field(h,"AMP","",d->amplifier,1) ||
        !samples(h,0,"",d->measurements,d->measurement_count)) goto failed;
+    if(d->median_even_handling &&
+        ((strcmp(d->median_even_handling,"average") && strcmp(d->median_even_handling,"lower")) ||
+        !field(h,"MED EVEN","",d->median_even_handling,1))) goto failed;
     const mef_qc_measurement *pair=find(d->measurements,d->measurement_count,"read_noise");
     if(!pair) goto failed;
     for(i=0;i<pair->source_count;++i) {

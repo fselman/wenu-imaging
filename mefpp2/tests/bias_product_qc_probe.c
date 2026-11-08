@@ -9,8 +9,9 @@
 #include <unistd.h>
 #include "bias_header_provenance_probe.inc"
 #include "bias_clipping_probe.inc"
+#include "bias_median_even_probe.inc"
 static const char *dump_directory;
-static int clipping_profile, reason_profile;
+static int clipping_profile, reason_profile, average_profile;
 static const mef_qc_measurement *find(const mef_qc_measurement *q,size_t n,const char *name)
 {
     size_t i; for(i=0;i<n;++i) if(!strcmp(q[i].name,name)) return q+i;
@@ -24,7 +25,7 @@ static void profile(const char *paf,int masked,int mad,int pair)
     mef_config *config=NULL; mef_bias_product_qc *archive;
     mef_bias_settings settings; size_t d,i; int x,y;
     double expected_master[2],expected_raw[2][4]; char message[512];
-    assert(bb!=NULL); bb->bias_minframe=3; bb->bias_kappa1=10;
+    assert(bb!=NULL); bb->bias_median_even_handling=average_profile?MEDIAN_EVEN_AVERAGE:MEDIAN_EVEN_LOWER; bb->bias_minframe=3; bb->bias_kappa1=10;
     bb->use_prescan=0; bb->use_overscan=1; bb->scanrej[0]=bb->scanrej[1]=0;
     for(i=0;i<2;++i) {
         bb->ccd[i].prescan_x[0]=bb->ccd[i].prescan_x[1]=1;
@@ -35,7 +36,7 @@ static void profile(const char *paf,int masked,int mad,int pair)
     assert(mef_config_from_legacy(bb,NULL,&config,&diagnostic)==MEF_OK);
     if (reason_profile) {
         mef_processing_policy policy;
-        memset(&policy,0,sizeof(policy));policy.bpm.supplied=1;
+        policy=*mef_config_processing(config);policy.bpm.supplied=1;
         policy.bpm.encoding=MEF_BPM_REASON8;policy.bpm.bad_when_nonzero=1;policy.bpm.reject_bits=255;
         strcpy(policy.bpm.registry,"WENU_BPM_V1");mef_config_initialize_processing(config,&policy);
     }
@@ -95,6 +96,12 @@ static void profile(const char *paf,int masked,int mad,int pair)
         assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_OK);
         assert(mef_config_bias_settings(config,d,&settings)==MEF_OK);
         m=mef_bias_result_measurements(result); legacy=mef_bias_result_qc(result);
+        {
+            const image_t *signal=mef_bias_result_signal(result);
+            for(int row=0;row<4;++row)for(int col=0;col<3;++col)
+                assert(signal->data[row*3+col]==(pixelvalue)(10+3*d+col*(average_profile?2.5:2.0)));
+            assert(legacy->median_even_handling==(average_profile?MEDIAN_EVEN_AVERAGE:MEDIAN_EVEN_LOWER));
+        }
         if(clipping_profile) {
             if(clipping_profile==2)assert(!m->clipped_difference.converged && !m->ron_clipped_available);
             else assert(m->clipped_difference.converged && m->ron_clipped_available);
@@ -173,6 +180,13 @@ static void profile(const char *paf,int masked,int mad,int pair)
 }
 int main(int argc,char **argv)
 {
+    if(argc==2 && !strcmp(argv[1],"median-even")) {
+        eclipse_init();set_logfile(0);median_even_contract();median_even_benchmark();return 0;
+    }
+    if(argc==4 && !strcmp(argv[1],"median-average-profile")) {
+        eclipse_init();set_logfile(0);average_profile=1;dump_directory=argv[3];
+        profile(argv[2],1,1,1);puts("PASS: actual average-mode bias pixels and typed FITS mode provenance");return 0;
+    }
     if(argc==3 && !strcmp(argv[1],"mask-policy")) {
         eclipse_init();set_logfile(0);mask_policy_contract(argv[2]);return 0;
     }

@@ -96,7 +96,8 @@ static mef_status validate(mef_context *context, const mef_bias_input *input,
     if (mef_config_bias_settings(mef_context_config(context),
             input->configuration_detector, settings) != MEF_OK)
         return MEF_ERR_CONFIG;
-    if (settings->minimum_frames < 3 || !finite_value(settings->kappa) ||
+    if ((settings->median_even_handling != MEDIAN_EVEN_AVERAGE && settings->median_even_handling != MEDIAN_EVEN_LOWER) ||
+        settings->minimum_frames < 3 || !finite_value(settings->kappa) ||
         settings->kappa < 0.0 || settings->rejection[0] < 0 ||
         settings->rejection[1] < 0) return MEF_ERR_CONFIG;
     if (input->count < (size_t)settings->minimum_frames) return MEF_ERR_INPUT;
@@ -300,8 +301,8 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     cube->lx = cube->plane[0]->lx;
     cube->ly = cube->plane[0]->ly;
     detail = "Bias rejection or median stacking failed; no result transferred";
-    pending->signal = mef_bias_stack_masked(cube, settings.minimum_frames,
-        settings.kappa, &stats, (int *)pending->qc.accepted, active_map);
+    pending->signal = mef_bias_stack_masked_opts(cube, settings.minimum_frames,
+        settings.kappa, &stats, (int *)pending->qc.accepted, active_map, (median_even_handling)settings.median_even_handling);
     cube = NULL; /* Kernel always consumes the working cube. */
     if (pending->signal == NULL) goto cleanup;
 
@@ -317,6 +318,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     pending->qc.product_median = stats.median;
     pending->qc.product_stdev = stats.stdev;
     pending->qc.accepted_frames = stats.accepted;
+    pending->qc.median_even_handling = settings.median_even_handling;
     if (options != NULL) {
         pixelmap *flags;
         measurement = &pending->measurements;

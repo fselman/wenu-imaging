@@ -50,12 +50,19 @@ static int processing_from_bundle(const mef_toml_bundle *bundle,
     mef_processing_policy *p, size_t *count)
 {
     static const char *keys[] = {"BPM.ENCODING","BPM.BAD_WHEN","BPM.REJECT_BITS","BPM.REGISTRY",
-        "QC.RON.CLIP.ENABLED","QC.RON.CLIP.LOW","QC.RON.CLIP.HIGH","QC.RON.CLIP.MAX_ITERATIONS"};
-    mef_toml_value v[8]; int has[8]; size_t i;
+        "QC.RON.CLIP.ENABLED","QC.RON.CLIP.LOW","QC.RON.CLIP.HIGH","QC.RON.CLIP.MAX_ITERATIONS","MEF.BIAS.MEDIAN.EVEN.HANDLING"};
+    mef_toml_value v[9]; int has[9]; size_t i;
     memset(p,0,sizeof(*p));
-    for (i=0;i<8;++i) {
+    for (i=0;i<9;++i) {
         has[i] = mef_toml_bundle_get(bundle,keys[i],v+i) == MEF_OK;
         if (has[i]) ++*count;
+    }
+    if (has[8]) {
+        if (v[8].kind != MEF_TOML_TEXT) return 0;
+        p->median_even_supplied=1;
+        if (!strcmp(v[8].text,"average")) p->median_even_handling=MEDIAN_EVEN_AVERAGE;
+        else if (!strcmp(v[8].text,"lower")) p->median_even_handling=MEDIAN_EVEN_LOWER;
+        else return 0;
     }
     if (has[0] || has[1] || has[2] || has[3]) {
         if (!has[0] || !has[1] || v[0].kind != MEF_TOML_TEXT || v[1].kind != MEF_TOML_TEXT) return 0;
@@ -104,6 +111,7 @@ static mef_status config_from_bundle(mef_toml_bundle *document, const mef_alloca
     char key[80];
     detail(diagnostic, capacity, "");
     source.ccd = NULL;
+    source.bias_median_even_handling = MEDIAN_EVEN_AVERAGE;
     failed_key = "MEF.NCHIPS";
     status = MEF_ERR_CONFIG;
     if (mef_toml_bundle_get(document, failed_key, &value) != MEF_OK ||
@@ -154,7 +162,7 @@ static mef_status config_from_bundle(mef_toml_bundle *document, const mef_alloca
 #undef DET_FLOAT
 #undef FETCH
     }
-    failed_key = "Invalid project BPM or RON clipping policy";
+    failed_key = "Invalid processing BPM, RON clipping or bias median policy";
     if (!processing_from_bundle(document,&processing,&count)) goto cleanup;
     failed_key = "Unknown native key (all known fields required)";
     if (count != mef_toml_bundle_count(document)) goto cleanup;

@@ -48,6 +48,13 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(self.ids(self.invoke()),['A','B'])
         self.assertEqual(self.ids(self.invoke(selection='all')),['A','B'])
         self.assertEqual(self.ids(self.invoke(BASE.replace('mad = true','detectors = "all"\nmad = true'))),['A','B'])
+    def test_median_even_handling(self):
+        self.assertIn("MEDIAN_EVEN=default",self.invoke())
+        for mode in ("average","lower"):
+            self.assertIn("MEDIAN_EVEN="+mode,self.invoke(BASE.replace("mad = true",'median_even_handling = "'+mode+'"\nmad = true')))
+        for value in ('"upper"','true','1'):
+            self.invoke(BASE.replace("mad = true","median_even_handling = "+value+"\nmad = true"),success=False)
+        self.invoke(BASE.replace('id = "A"','median_even_handling = "lower"\nid = "A"'),success=False)
     def test_subset_and_catalogue_order(self):
         out=self.invoke(selection='B')
         self.assertEqual(self.ids(out),['B'])

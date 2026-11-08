@@ -1,3 +1,17 @@
+## Accepted bias QC viewer and retained documentation — 7 November 2026
+
+Owner confirmed the refreshed average-median product and common parameter list,
+selectors and plots, then accepted viewer integration/branch cleanup. Merge the
+static viewer PR #283 and retain the documentation-only BPM polarity audit and
+AI/QC/education requirements branches. These records do not authorize further
+scientific or AI implementation. Viewer selection uses one in-memory ASDF load
+per generation; new files require an explicit new page generation. The Update
+button/local-service proposal was explicitly deferred: implement none of it.
+Current canonical schema supports the accepted median field. Preserve native
+producer 74327c4, build/cache, all products, raw inputs, old pages and evidence.
+No build, reconfiguration, reduction, installation or historical replay.
+This supersedes earlier pending viewer review/no-merge statements for this scope.
+
 ## Bias QC viewer refinement authorized — 7 November 2026
 
 Owner instructed proceeding with clipped RON prominence, a smaller common QC
@@ -13,6 +27,40 @@ the first viewer worked; the refined generation/browser review remains pending.
 Use a fresh orchestration page directory and the qualified ASDF interpreter.
 See docs/developer/bias-qc-inspection-2026-11-07.md and its design. This explicit
 request supersedes older viewer holds, but authorizes no merge or branch cleanup.
+
+## Bias average median accepted; merge and branch cleanup authorized — 7 November 2026
+
+Owner accepted synthetic and real 32-detector median qualification and instructed
+merge and clean (PR #288, issue #287). See
+`docs/developer/bias-median-even-handling-2026-11-07.md`. All 194346 FITS/ASDF
+comparisons and independent master statistics/hot counts passed. The 27 even
+stacks shift upward by 0.239002–0.312177 ADU; five odd stacks retain exact pixel
+bytes. Input QC, membership, other numerical settings and RON are unchanged.
+Retain native producer 74327c49832a9337fad49a0bec1b5fd7af81cde5: later commits
+change tests, comparison tools or documentation only and require no relink.
+Preserve raw inputs, all products/private work, failed attempts, TOML backups,
+receipts and the selected mutable source/build/cache/tools. Cleanup applies only
+to the merged median feature branch; preserve independent viewer PR #283.
+The inherited zero-spread strict rejection behavior remains unchanged (see
+historical #276); CCD68/90 residuals remain separate follow-up questions.
+No new reduction, installation, numerical change or viewer merge is authorized.
+This supersedes pending-Mac/no-merge statements below for this feature only.
+
+## Bias even-sample median implementation authorized — 7 November 2026
+
+Owner chose `median_even_handling`, default `average`, explicit `lower` for
+historical bias pixels, and approved implementation. Read
+`docs/developer/design/bias-median-even-handling-v1.md` and
+`docs/developer/bias-median-even-handling-2026-11-07.md` (issue #287).
+Apply only detector-local temporal stacking; preserve generic Eclipse callers,
+frame rejection, scan/input QC and raw-pair RON. Effective mode must be in
+FITS/ASDF. Agent numerical/config/service checks pass; actual selected-Mac
+native product/ASDF qualification is pending. Reuse the selected mutable
+source/build/cache/compiler/SDK/dependencies and retain backups/evidence.
+No fresh export/build tree, routine reconfigure, observational run, installation,
+merge, branch deletion or product cleanup. Preserve independent viewer PR #283.
+This explicit scientific task supersedes earlier numerical-freeze statements
+only for the approved even-sample bias estimator.
 
 ## Clipped bias RON accepted; merge and branch cleanup authorized — 7 November 2026
 

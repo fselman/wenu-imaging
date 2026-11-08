@@ -1,0 +1,3 @@
+PASS: 3200 sorted median oracles, odd/even cubes, input preservation, legacy wrapper, finite midpoint and default-average/lower bias kernels
+BENCHMARK mode=average pixels=8396800 frames=10 timeline_bytes=40 cpu_seconds=0.766866
+BENCHMARK mode=lower pixels=8396800 frames=10 timeline_bytes=40 cpu_seconds=0.643283

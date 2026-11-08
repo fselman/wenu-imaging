@@ -68,6 +68,8 @@ mef_status mef_config_from_legacy(const struct _mef_bb_ *source,
     if (diagnostic != NULL) *diagnostic = NULL;
     if (out == NULL || *out != NULL || source == NULL ||
         source->nchips <= 0 || source->ccd == NULL ||
+        (source->bias_median_even_handling != MEDIAN_EVEN_AVERAGE &&
+         source->bias_median_even_handling != MEDIAN_EVEN_LOWER) ||
         (allocator != NULL && (allocator->allocate == NULL ||
                                allocator->release == NULL))) {
         if (diagnostic != NULL) *diagnostic = "Invalid snapshot arguments";
@@ -89,6 +91,8 @@ mef_status mef_config_from_legacy(const struct _mef_bb_ *source,
     /* Initialize pointer members explicitly; do not assume all-zero NULL bits. */
     config->allocator = selected;
     memset(&config->processing, 0, sizeof(config->processing));
+    config->processing.median_even_handling = source->bias_median_even_handling;
+    config->processing.median_even_supplied = source->bias_median_even_handling != MEDIAN_EVEN_AVERAGE;
     config->detectors = NULL;
 #define MEF_STRING(member, key) config->member = NULL;
 #define MEF_INT(member, key) config->member = source->member;
@@ -292,6 +296,11 @@ mef_status mef_config_dump(const mef_config *config, FILE *stream)
         DET_FLOAT(crpix2, "MEF.CRPIX2")
 #undef DET_FLOAT
     }
+    if (config->processing.median_even_supplied) {
+        entry(stream,&first,"MEF.BIAS.MEDIAN.EVEN.HANDLING","string");
+        json_string(stream,config->processing.median_even_handling == MEDIAN_EVEN_LOWER ? "lower" : "average");
+        fputc('}',stream);
+    }
     if (config->processing.bpm.supplied) {
         const mef_bpm_policy *p = &config->processing.bpm;
         entry(stream,&first,"BPM.ENCODING","string");
@@ -339,6 +348,7 @@ mef_status mef_config_bias_header_context(const mef_config *config,
 #undef MEF_FLOAT
 #undef MEF_DOUBLE
     bb->nchips = bb->nxts = bb->xtnum = 1;
+    bb->bias_median_even_handling = (median_even_handling)config->processing.median_even_handling;
     bb->ccd = calloc(1, sizeof(*bb->ccd));
     if (bb->ccd == NULL) goto fail;
     d = config->detectors + detector;
@@ -371,6 +381,7 @@ mef_status mef_config_bias_settings(const mef_config *config, size_t detector,
     out->use_overscan = config->use_overscan;
     out->minimum_frames = config->bias_minframe;
     out->kappa = config->bias_kappa1;
+    out->median_even_handling = config->processing.median_even_handling;
     return MEF_OK;
 }
 

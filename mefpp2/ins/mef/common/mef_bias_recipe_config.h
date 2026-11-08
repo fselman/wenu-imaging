@@ -10,5 +10,6 @@ const char *mef_bias_recipe_source(const mef_bias_recipe_config *);
 const char *mef_bias_recipe_path(const mef_bias_recipe_config *);
 const char *const *mef_bias_recipe_primary_keys(const mef_bias_recipe_config *, size_t *);
 const char *const *mef_bias_recipe_detector_keys(const mef_bias_recipe_config *, size_t *);
+const char *mef_bias_recipe_median_even_handling(const mef_bias_recipe_config *);
 void mef_bias_recipe_config_destroy(mef_bias_recipe_config *);
 #endif

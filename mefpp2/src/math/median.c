@@ -303,3 +303,16 @@ median_pixelvalue(pixelvalue * a, int n)
 	return median;
 }
 
+
+/* Bias opts in explicitly; generic Eclipse callers keep their old convention. */
+pixelvalue median_pixelvalue_opts(pixelvalue *a, int n, median_even_handling mode)
+{
+    pixelvalue upper, lower;
+    int i;
+    if (n & 1) return median_pixelvalue(a,n);
+    if (mode == MEDIAN_EVEN_LOWER) return kth_smallest(a,n,n/2-1);
+    upper = kth_smallest(a,n,n/2);
+    lower = a[0];
+    for (i=1;i<n/2;++i) if (a[i]>lower) lower=a[i];
+    return (pixelvalue)(0.5*(double)lower+0.5*(double)upper);
+}

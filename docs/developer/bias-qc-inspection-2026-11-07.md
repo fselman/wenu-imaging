@@ -1,3 +1,9 @@
+# Accepted static bias QC viewer
+
+Owner confirmed the refreshed page includes the average-median product, accepted the common parameter list, selectors and plots, and authorized integration and cleanup. This is human visual acceptance; it does not turn the earlier blocked agent Chromium attempt into a browser pass. The static viewer assets remain byte-identical to accepted candidate 63be4882686f9c2dd70271fed3eb20613bff7c80. Canonical schema comes from accepted main e036fc8, including the new optional detector median-mode field.
+
+The Update button and local viewer service were proposed and explicitly deferred. No such code was implemented. Current pages are snapshots: generate a fresh page to include new/changed products. The historical qualification helper below pins its original pre-merge baseline and should not be replayed on current main; normal page generation uses `tools/view-bias-qc.py` from the merged checkout and its current schema. Preserve all old pages and native products/builds.
+
 # Common-parameter refinement — 7 November 2026
 
 After acceptance/merge of clipped bias RON, owner authorized refining this existing viewer. It now defaults to Common QC with clipped RON first, and a master overview shows clipped/raw/MAD RON, master mean/median/RMS, high-offset counts and stored input membership counts for all product/detector rows. All stored parameters remain accessible with one selector. Older products explicitly show Not stored for clipped RON; stored unavailable values and zero remain distinct. Shared raw-sequence groups are prominently labeled; product selection highlights its rows and diamond markers without removing other products.
