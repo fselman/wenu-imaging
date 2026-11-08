@@ -39,7 +39,7 @@ def main():
     zero = binary.replace('"zero"', '"nonzero"')
     reason = '\n"BPM.ENCODING" = "reason8"\n"BPM.BAD_WHEN" = "nonzero"\n"BPM.REJECT_BITS" = 255\n"BPM.REGISTRY" = "WENU_BPM_V1"\n'
     clip = '\n"QC.RON.CLIP.ENABLED" = 1\n"QC.RON.CLIP.LOW" = 5.0\n"QC.RON.CLIP.HIGH" = 5.0\n"QC.RON.CLIP.MAX_ITERATIONS" = 10\n'
-    for name, extra in [('binary', binary), ('zero-good', zero), ('reason', reason),
+    for name, extra in [('average', '\n\"MEF.BIAS.MEDIAN.EVEN.HANDLING\"=\"average\"\n'), ('lower', '\n\"MEF.BIAS.MEDIAN.EVEN.HANDLING\"=\"lower\"\n'), ('binary', binary), ('zero-good', zero), ('reason', reason),
                         ('clip', clip), ('combined', reason + clip), ('disabled', clip.replace(' = 1\n', ' = 0\n'))]:
         actual = run(name, base + extra)
         assert all(actual[k] == v for k, v in legacy.items())
@@ -58,7 +58,7 @@ def main():
         catalog = json.loads((a.source_root / 'docs/architecture/proposed/m2/typed-field-catalog.json').read_text())
         domain = render_domains(actual, catalog)
         assert run(name + '-domain', domain) == actual
-    bad = [binary.replace('"zero"', '"guess"'), binary.replace('"binary"', '"guess"'),
+    bad = ['\n"MEF.BIAS.MEDIAN.EVEN.HANDLING"="upper"\n','\n"MEF.BIAS.MEDIAN.EVEN.HANDLING"=0\n',binary.replace('"zero"', '"guess"'), binary.replace('"binary"', '"guess"'),
            binary + '"BPM.REJECT_BITS" = 255\n', reason.replace(' = 255', ' = 256'),
            reason.replace(' = 255', ' = -1'), reason.replace('"nonzero"', '"zero"'),
            reason.replace('"WENU_BPM_V1"', '"bad registry"'), reason.replace('"WENU_BPM_V1"', '"' + 'A'*33 + '"'),

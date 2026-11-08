@@ -610,6 +610,12 @@
             "$ref": "#/definitions/measurement"
           },
           "minItems": 1
+        },
+        "median_even_handling": {
+          "enum": [
+            "average",
+            "lower"
+          ]
         }
       },
       "required": [

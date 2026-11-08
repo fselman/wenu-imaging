@@ -1,3 +1,5 @@
+Detector-local bias median: [implementation and pending Mac gate](bias-median-even-handling-2026-11-07.md), [approved contract](design/bias-median-even-handling-v1.md).
+
 Clipped bias RON and shared BPM policy accepted on Mac, including real 32-detector exact-reference comparison: [acceptance and retained evidence](bias-clipping-project-bpm-2026-11-07.md). Merge/branch cleanup authorized; preserve products and qualified build.
 
 Optional clipped bias RON and shared processing BPM policy: [implementation and qualification](bias-clipping-project-bpm-2026-11-07.md), [reviewed contract](design/bias-clipping-project-bpm-v1.md), [mathematics](mathematics/mefpp/bias-clipped-ron.pdf). Actual Mac qualification pending.

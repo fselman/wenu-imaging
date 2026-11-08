@@ -794,6 +794,13 @@ mef_bb * mef_bb_new_from_paf(char *cfgfile)
         if (mef_paf_value(cfgfile, buffer, 2, &value) != 0) goto fail;
         fvalue = atof(value);
 	bb->bias_kappa1			= fvalue;
+    bb->bias_median_even_handling = MEDIAN_EVEN_AVERAGE;
+    value = qfits_paf_query(cfgfile,"MEF.BIAS.MEDIAN.EVEN.HANDLING");
+    if (value != NULL) {
+        if (!strcmp(value,"lower")) bb->bias_median_even_handling = MEDIAN_EVEN_LOWER;
+        else if (strcmp(value,"average")) { e_error("Invalid bias median_even_handling"); goto fail; }
+    }
+
         if (debug_active() >= 1) { e_comment(1, "mef_bb_new: %s:\t\t %f\n",buffer,bb->bias_kappa1); }
 
         sprintf(buffer,"MEF.BIAS.FRAMENUM.MIN");
@@ -2986,7 +2993,7 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
     /* The bias service and legacy recipe share the extracted arithmetic. */
     if (!strcmp(what, "bias")) {
         mef_bias_statistics statistics;
-        stacked = mef_bias_stack(i_cube, minframe, kappa1, &statistics, NULL);
+        stacked = mef_bias_stack_masked_opts(i_cube, minframe, kappa1, &statistics, NULL, NULL, bb->bias_median_even_handling);
         zIndex = bb->nxts == 1 ? 0 : bb->xtnum - 1;
         if (statistics.measured) {
             bb->bias_avg1[zIndex] = statistics.average;
@@ -4421,6 +4428,9 @@ qfits_header *mef_get_headers_for_hdu(char *what, mef_bb *bb, image_t *zImage, i
 	qfits_header_mod(fh_extension, "BSCALE", "1.0", "pixel=FITS*BSCALE+BZERO");
 
     if (!strcmp(what, "bias")) {
+        qfits_header_add(fh_extension,"HIERARCH ESO MPP QC MED EVEN",
+            bb->bias_median_even_handling == MEDIAN_EVEN_LOWER ? "'lower'" : "'average'",
+            "Even retained-sample handling in bias stack",NULL);
         sprintf(cval,"%s AVG1", bb->bias_frame_i_key);
         sprintf(cval2, "%f", bb->bias_avg1[zIndex]);
         qfits_header_add(fh_extension, cval, cval2, "Average of frame combination.", NULL);

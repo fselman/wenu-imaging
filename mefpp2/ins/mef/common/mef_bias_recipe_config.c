@@ -17,6 +17,7 @@ struct mef_bias_recipe_config {
     int argc, capacity;
     const char *primary[16], *detector[16];
     size_t primary_count, detector_count;
+    const char *median_even_handling;
 };
 static int fail(char *m,size_t n,const char *s)
 { if(m&&n)snprintf(m,n,"%s",s);return 0; }
@@ -108,7 +109,7 @@ int mef_bias_recipe_expand(int argc,char **argv,int *outc,char ***outv,
 {
     static const char *root_keys[]={"bias_recipe_schema_version","settings","bias","detector","provenance"};
     static const char *bias_keys[]={"detectors","reference_detector","mad","ron_pair","high_sigma",
-        "readout_id","bin_x","bin_y","input_bpm","bpm_hdu","bpm_good_value","bpm_coordinates","bpm_expected_extname","amplifier_id"};
+        "readout_id","bin_x","bin_y","input_bpm","bpm_hdu","bpm_good_value","bpm_coordinates","bpm_expected_extname","amplifier_id","median_even_handling"};
     static const char *det_keys[]={"id","configuration_detector","hdus","expected_extname",
         "readout_id","bin_x","bin_y","input_bpm","bpm_hdu","bpm_good_value","bpm_coordinates",
         "bpm_expected_extname","amplifier_id"};
@@ -152,6 +153,15 @@ int mef_bias_recipe_expand(int argc,char **argv,int *outc,char ***outv,
     if(provenance.type!=TOML_UNKNOWN && (!TABLE(provenance,prov_keys)||
         !keys(toml_get(provenance,"primary"),p->primary,&p->primary_count)||
         !keys(toml_get(provenance,"detector"),p->detector,&p->detector_count)))goto done;
+    {
+        toml_datum_t handling=toml_get(bias,"median_even_handling");
+        if (handling.type != TOML_UNKNOWN) {
+            p->median_even_handling=text(handling);
+            if (!p->median_even_handling || (strcmp(p->median_even_handling,"average") && strcmp(p->median_even_handling,"lower"))) {
+                reason="median_even_handling must be average or lower";goto done;
+            }
+        }
+    }
     count=(size_t)entries.u.arr.size;
     for(size_t i=0;i<count;++i) {
         toml_datum_t e=entries.u.arr.elem[i];ids[i]=text(toml_get(e,"id"));
@@ -247,3 +257,6 @@ done:
     if(f)fclose(f);
     fail(message,size,reason);free(settings);free(csv);mef_bias_recipe_config_destroy(p);return 0;
 }
+
+const char *mef_bias_recipe_median_even_handling(const mef_bias_recipe_config *p)
+{ return p ? p->median_even_handling : NULL; }

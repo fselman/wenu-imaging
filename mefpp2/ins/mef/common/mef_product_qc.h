@@ -36,6 +36,7 @@ typedef struct {
 } mef_qc_input_binding;
 typedef struct {
     const char *id, *amplifier, *readout_id;
+    const char *median_even_handling; /* Optional for historical records. */
     size_t configuration_detector;
     int output_hdu, bin_x, bin_y;
     const mef_qc_measurement *measurements;

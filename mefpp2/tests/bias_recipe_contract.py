@@ -42,6 +42,8 @@ class RecipeTests(unittest.TestCase):
         for key,value in dict(fixture['synthetic_paf_overrides'],**{'MEF.BIAS.KAPPA1':1.2}).items():
             text,count=re.subn(r'^'+re.escape(key)+r'\s+[^;\n]*;',key+' '+str(value)+';',text,flags=re.M)
             assert count==1,key
+        # These are frozen historical-lower regression cases.
+        text+='\nMEF.BIAS.MEDIAN.EVEN.HANDLING \"lower\";\n'
         cls.paf=WORK/'bias.paf';cls.paf.write_text(text)
         with fits.open(cls.raw/'bias0.fits',memmap=False) as h:
             h[1].data[:,:9]+=100;h[2].data[:,:9]+=100;h.writeto(cls.raw/'outlier.fits')
@@ -90,6 +92,7 @@ class RecipeTests(unittest.TestCase):
                 cls.references[mode].append(ref/'bias.fits')
                 cls.reference_qc[mode].append(json.loads((ref/'qc.json').read_text()))
         cls.configuration=json.loads((WORK/'reference-masked-0/config.json').read_text())
+        cls.configuration['MEF.BIAS.MEDIAN.EVEN.HANDLING']={'type':'string','value':'lower'}
         cls.toml=WORK/'bias.toml';cls.toml.write_text(render_snapshot(cls.configuration))
         frozen=[*cls.members,cls.swapped,cls.bpm,cls.bad_bpm,cls.paf,cls.toml,cls.listing,cls.swapped_list,renamed,named_list,*[p for rows in cls.references.values() for p in rows]]
         cls.frozen={str(p):digest(p) for p in frozen}

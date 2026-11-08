@@ -85,6 +85,8 @@ static int measurement_record(FILE *stream, const mef_bias_result *result,
     fprintf(stream,",\"bin_x\":%d,\"bin_y\":%d,\"configuration_detector\":%d,\"input_hdu\":%d,\"output_hdu\":1,\"output\":",atoi(values[7]),atoi(values[8]),atoi(values[5]),atoi(values[4]));
     record_string(stream,values[10]);
     fputs(",\"configuration_record\":",stream); record_string(stream,values[13]);
+    fputs(",\"median_even_handling\":",stream);
+    record_string(stream,mef_bias_result_qc(result)->median_even_handling == MEDIAN_EVEN_LOWER ? "lower" : "average");
     fputs(",\"configuration\":",stream);
     if(mef_config_dump(config,stream)!=MEF_OK) return 0;
     fprintf(stream,",\"bpm\":{\"selected\":%d",options->bpm!=NULL);

@@ -93,6 +93,7 @@ static mef_context *context_for(mef_bb *legacy, int count, int mode,
     spec.calibration_role_count = mode == 1 ? 1 : 0;
     spec.bpm_selections = selections;
     spec.bpm_selection_count = mode == 2 ? 2 : 1;
+    legacy->bias_median_even_handling=MEDIAN_EVEN_LOWER;
     assert(mef_config_from_legacy(legacy, NULL, &config, &diagnostic) == MEF_OK);
     assert(mef_request_create_resolved(&spec, NULL, &request, NULL) == MEF_OK);
     assert(mef_context_create(config, request, allocator, &context, NULL) == MEF_OK);

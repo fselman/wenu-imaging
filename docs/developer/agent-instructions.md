@@ -1,3 +1,37 @@
+## Bias average median accepted; merge and branch cleanup authorized — 7 November 2026
+
+Owner accepted synthetic and real 32-detector median qualification and instructed
+merge and clean (PR #288, issue #287). See
+`docs/developer/bias-median-even-handling-2026-11-07.md`. All 194346 FITS/ASDF
+comparisons and independent master statistics/hot counts passed. The 27 even
+stacks shift upward by 0.239002–0.312177 ADU; five odd stacks retain exact pixel
+bytes. Input QC, membership, other numerical settings and RON are unchanged.
+Retain native producer 74327c49832a9337fad49a0bec1b5fd7af81cde5: later commits
+change tests, comparison tools or documentation only and require no relink.
+Preserve raw inputs, all products/private work, failed attempts, TOML backups,
+receipts and the selected mutable source/build/cache/tools. Cleanup applies only
+to the merged median feature branch; preserve independent viewer PR #283.
+The inherited zero-spread strict rejection behavior remains unchanged (see
+historical #276); CCD68/90 residuals remain separate follow-up questions.
+No new reduction, installation, numerical change or viewer merge is authorized.
+This supersedes pending-Mac/no-merge statements below for this feature only.
+
+## Bias even-sample median implementation authorized — 7 November 2026
+
+Owner chose `median_even_handling`, default `average`, explicit `lower` for
+historical bias pixels, and approved implementation. Read
+`docs/developer/design/bias-median-even-handling-v1.md` and
+`docs/developer/bias-median-even-handling-2026-11-07.md` (issue #287).
+Apply only detector-local temporal stacking; preserve generic Eclipse callers,
+frame rejection, scan/input QC and raw-pair RON. Effective mode must be in
+FITS/ASDF. Agent numerical/config/service checks pass; actual selected-Mac
+native product/ASDF qualification is pending. Reuse the selected mutable
+source/build/cache/compiler/SDK/dependencies and retain backups/evidence.
+No fresh export/build tree, routine reconfigure, observational run, installation,
+merge, branch deletion or product cleanup. Preserve independent viewer PR #283.
+This explicit scientific task supersedes earlier numerical-freeze statements
+only for the approved even-sample bias estimator.
+
 ## Clipped bias RON accepted; merge and branch cleanup authorized — 7 November 2026
 
 Owner accepted the actual Mac qualification, real 32-detector run and final

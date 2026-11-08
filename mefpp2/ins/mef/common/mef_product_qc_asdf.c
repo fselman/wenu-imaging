@@ -109,6 +109,9 @@ static asdf_mapping_t *detector(asdf_file_t *f,const mef_qc_detector_record *d)
         !seq(m,"measurements",measurements(f,d->measurements,d->measurement_count))) {
         asdf_mapping_destroy(m);return NULL;
     }
+    if (d->median_even_handling && !string(m,"median_even_handling",d->median_even_handling)) {
+        asdf_mapping_destroy(m);return NULL;
+    }
     return m;
 }
 static asdf_mapping_t *input_record(asdf_file_t *f,const mef_product_qc *p,size_t index)

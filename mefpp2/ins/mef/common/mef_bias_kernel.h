@@ -13,4 +13,6 @@ image_t *mef_bias_stack(cube_t *cube, int minimum, double kappa,
 /* Same stack arithmetic; explicit active-area mask selects frame means and
  * product statistics, not output pixels. Consumes cube on every return. */
 image_t *mef_bias_stack_masked(cube_t *, int, double, mef_bias_statistics *, int *, const pixelmap *);
+image_t *mef_bias_stack_masked_opts(cube_t *, int, double, mef_bias_statistics *, int *,
+    const pixelmap *, median_even_handling);
 #endif

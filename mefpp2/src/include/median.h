@@ -171,4 +171,11 @@ opt_med25(pixelvalue * p) ;
 pixelvalue
 median_pixelvalue(pixelvalue * a, int n) ;
 
+/* Explicit even-sample convention. Existing median_pixelvalue remains legacy.
+ * Precondition: finite input, n>=1 and a valid mode; array is permuted in place.
+ * No allocation. Average computes a double midpoint, rounded once to pixelvalue. */
+/* Explicit opts requires n>=1, finite samples and a valid mode; permutes a.
+ * Generic median_pixelvalue retains its historical convention. */
+typedef enum { MEDIAN_EVEN_AVERAGE = 0, MEDIAN_EVEN_LOWER = 1 } median_even_handling;
+pixelvalue median_pixelvalue_opts(pixelvalue *, int, median_even_handling);
 #endif

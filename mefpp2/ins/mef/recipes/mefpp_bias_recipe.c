@@ -261,6 +261,17 @@ int main(int argc,char **argv)
     if(status!=MEF_OK) goto done;
     {
         const mef_processing_policy *policy = mef_config_processing(config);
+        const char *requested=mef_bias_recipe_median_even_handling(recipe_document);
+        if (requested) {
+            mef_processing_policy effective=*policy;
+            int mode=!strcmp(requested,"lower")?MEDIAN_EVEN_LOWER:MEDIAN_EVEN_AVERAGE;
+            if (policy->median_even_supplied && policy->median_even_handling != mode) {
+                strcpy(message,"Conflicting explicit median_even_handling settings");goto done;
+            }
+            effective.median_even_supplied=1;effective.median_even_handling=mode;
+            mef_config_initialize_processing(config,&effective);
+        }
+
         options.ron_clip_enabled = policy->ron_clip_enabled;
         options.ron_clip.sigma_low = policy->ron_clip_low;
         options.ron_clip.sigma_high = policy->ron_clip_high;
