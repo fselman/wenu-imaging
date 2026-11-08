@@ -1,3 +1,20 @@
+## Bias readability qualified on Mac; final acceptance pending — 8 November 2026
+
+Owner positively reviewed the short coordinator and authorized testing. The
+selected Mac synthetic gate now passes, including native FITS/ASDF, exact
+reference/QC, mapping/policy/provenance and failure tests. See
+`docs/developer/bias-readability-2026-11-08.md` and its `mac-qualification.json`.
+Producer 36381892f4f768c3a2c7450114f96021fd5c76d7 remains the qualified binary;
+SHA256 822bbadd11c5d82c799163b3f384b344706b57ccd73ee542bf7c283af9b72e49.
+Later commits change tests/documentation only; no relink is needed for them.
+All preservation checks pass; retain b833aca7 backup, current binary/cache,
+failed attempts, products and logs. Three warnings are in the unchanged frozen
+test reference. Harness defects #294/#295 are target-confirmed resolved.
+Final owner acceptance/merge is pending: keep PR #293 unmerged. Documentation
+consolidation follows this refactor; linearity stays paused. No further build,
+qualification replay, observation, installation or cleanup is implied.
+This current status supersedes older pending-Mac statements below.
+
 ## Conditional bias source review and permanent reference policy — 8 November 2026
 
 Owner conditionally approved structural extraction; final acceptance requires

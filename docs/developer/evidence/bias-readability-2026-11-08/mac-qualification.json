@@ -1,0 +1,63 @@
+{
+  "evidence_origin": "Owner-supplied actual Mac terminal gate outputs and read-only receipt/hash/preservation verification, 8 November 2026. Full attempt receipts/logs remain on that host; not fetched into agent.",
+  "status": "passed",
+  "producer_revision": "36381892f4f768c3a2c7450114f96021fd5c76d7",
+  "successful_test_revision": "c83575f87e0379df059a2e95a01c7f254440b57b",
+  "host": "MC02VV0HPHTDG",
+  "binary_sha256": "822bbadd11c5d82c799163b3f384b344706b57ccd73ee542bf7c283af9b72e49",
+  "cache_sha256": "60077e9c50601d9df5d32c6267adb16dd305aa319d50b44d4d34b8b1d889a22d",
+  "initial_attempt": "/Users/fselman/Software/build/wenu-imaging/mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/readability-36381892f4f7-dkg784s0",
+  "receipt": "/Users/fselman/Software/build/wenu-imaging/mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/readability-fixture-retry-hdjyvy51/qualification.json",
+  "passed_initial_groups": [
+    "build",
+    "run-resources",
+    "operation-template",
+    "service",
+    "native-recipe (eight groups)"
+  ],
+  "passed_continuation_groups": [
+    "confirm-retained-mismatch",
+    "recipe-envelope",
+    "recipe-median",
+    "recipe-clipped",
+    "recipe-zero-spread"
+  ],
+  "preservation_checks": {
+    "binary_unchanged": true,
+    "cache_unchanged": true,
+    "previous_attempt_unchanged": true,
+    "reference_adapter_unchanged": true,
+    "checkout_unchanged": true,
+    "source_unchanged_except_test_overlay": true
+  },
+  "build_warnings": [
+    {
+      "file": "mefpp2/tests/bias_legacy_reference.c",
+      "line": 11,
+      "warning": "unused variable 'scancorr' [-Wunused-variable]"
+    },
+    {
+      "file": "mefpp2/tests/bias_legacy_reference.c",
+      "line": 12,
+      "warning": "unused variable 'bias' [-Wunused-variable]"
+    },
+    {
+      "file": "mefpp2/tests/bias_legacy_reference.c",
+      "line": 306,
+      "warning": "variable 'normFactor' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]"
+    }
+  ],
+  "warning_scope": "Unchanged frozen test reference; retained as reported, not suppressed or repaired in this refactor.",
+  "harness_defects": {
+    "294": "Retained ASDF confirmed exact one-field expected-snapshot omission; corrected envelope and remaining native groups pass.",
+    "295": "Initial continuation stopped before writes; corrected preflight and full continuation pass."
+  },
+  "continuation_rebuilt": false,
+  "continuation_reconfigured": false,
+  "observations_accessed": false,
+  "installed": false,
+  "owner_final_acceptance": "pending",
+  "merged": false,
+  "documentation_consolidation": "queued after this refactor",
+  "linearity": "paused"
+}

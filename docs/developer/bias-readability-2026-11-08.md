@@ -1,13 +1,13 @@
 # Bias recipe: source review edition
 
-**Conditional acceptance; final source review pending.** The high-level command
+**Mac qualification passed; final owner acceptance pending.** The high-level command
 is now 60 lines, using the common outer coordinator scaffold. Its support is
 split into prepare, input admission, detector processing and product publication
 modules. Shared run resources live in `mef_recipe_run.h/.c`; scientific services
 and the inner operation lifecycle remain in use. See the
-[coordinator design](design/common-recipe-coordinator-v1.md). PR #293 stays draft
-and unmerged until the owner reviews the finished result and the relevant Mac
-gate passes.
+[coordinator design](design/common-recipe-coordinator-v1.md). The owner reviewed the finished source positively and authorized testing; the
+Mac gate now passes. PR #293 remains unmerged pending final owner acceptance.
+Earlier dated pending-gate statements below retain their historical scope.
 
 Documentation consolidation is queued **after this refactor**. Historical stage
 documents will be reconciled then. Explanatory milestone labels have been removed
@@ -161,3 +161,30 @@ exception and reaches the first-write boundary after correction. This validates
 runner control flow only, not Mac/native results. The retained failed attempt,
 producer binary/cache, already passed groups and all pending native groups remain
 unchanged. Continue the same bounded test-only gate; no rebuild or reconfiguration.
+
+## Completed selected-Mac qualification — 8 November 2026
+
+The owner supplied the successful continuation and independent read-only receipt
+verification. All planned groups pass across the retained initial attempt and
+scoped continuation: native build/run/lifecycle/service/reference, eight native
+coordinator groups, exact one-field harness-cause confirmation, envelope/header/
+primary-HDU provenance, temporal-median oracle, mask/clipped RON and zero-spread
+refusal. Actual C-generated FITS/ASDF were independently read and verified.
+[Mac evidence summary](evidence/bias-readability-2026-11-08/mac-qualification.json)
+identifies the owner's observations separately from agent checks and points to
+the complete receipts/logs retained on the Mac.
+
+The qualified producer remains 36381892f4f768c3a2c7450114f96021fd5c76d7, binary
+SHA256 822bbadd11c5d82c799163b3f384b344706b57ccd73ee542bf7c283af9b72e49; full cache
+SHA256 60077e9c50601d9df5d32c6267adb16dd305aa319d50b44d4d34b8b1d889a22d. Successful
+continuation test head is c83575f87e0379df059a2e95a01c7f254440b57b. All six explicit
+preservation checks passed, including old attempt, reference, source, checkout,
+executable and cache. No rebuild/reconfiguration occurred during continuation.
+Three reported build warnings belong to unchanged `bias_legacy_reference.c`
+(lines 11, 12, 306); no suppression or reference-source repair was made.
+
+Issues #294/#295 meet their target test acceptance criteria. Final owner
+acceptance and integration remain separate and pending. Documentation
+consolidation is the queued follow-up; it has not been launched here. Preserve
+all qualified artifacts and prior attempts. No observation, installation, further
+reduction/rebuild, scientific change or resumed linearity was performed.
