@@ -50,9 +50,13 @@ has a read-only real-product comparator:
 [`tools/compare-bias-products.py`](../tools/compare-bias-products.py). Earlier actual
 OmegaCAM/WFI comparisons are recorded in issues/PRs. The representative full-chain
 references include OmegaCAM CP Pup/CN Ori and WFI Trapezium work; these names alone
-do not define a reproducible automated suite. Freezing the precise per-recipe case
-manifests, accepted references and tolerances remains to be completed with the
-owner. This cleanup does not create or claim new real-data qualification.
+do not define a reproducible automated suite. The first
+[OmegaCAM bias case](../tests/acceptance/bias/omegacam.toml) records host-confirmed
+configuration hashes, ordered-input-list identity, the average-median reference
+and selected executable. The current candidate completed all 32 detectors with
+zero exit; its reference comparison and content fingerprints remain pending.
+Other cases, including WFI, remain to be fixed with
+the owner. This inventory does not claim new real-data qualification.
 
 Use issue/PR summaries for results: what ran, which executable/configuration,
 pass/fail and material differences. Routine build logs, per-attempt receipts and

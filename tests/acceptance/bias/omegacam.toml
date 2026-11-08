@@ -1,0 +1,63 @@
+# Host-confirmed case identity. The selected native run completed; comparison is pending.
+case_version = 1
+case_id = "bias-omegacam-normal-1x1-average"
+status = "native_run_completed_comparison_pending"
+operation = "cal.bias"
+instrument = "OmegaCAM"
+detector_count = 32
+input_count = 10
+
+[host]
+system = "Darwin"
+machine = "x86_64"
+hostname_short = "MC02VV0HPHTDG"
+repository = "/Users/fselman/Developer/wenu-imaging"
+orchestration = "/Users/fselman/Pictures/OCAM/test_recipes/orchestration"
+product_parent = "/Users/fselman/Pictures/OCAM/test_recipes/reduced/cal/bias"
+
+[configuration]
+recipe = "bias-recipe.toml"
+recipe_sha256 = "45e52d6124303a1afeda9d90a4624bbeeaa8e78a71ee4f54328f95784dd5ea94"
+settings = "bias.toml"
+settings_sha256 = "01ff27b6982a0ef972b166d57b1905ee7bde299c2ab01da42fd93fe364e42b05"
+input_list = "bias.list"
+input_list_sha256 = "ce49a70bd0d097dbae197ebac1a5395e9c58de1f5bd2f8dcd4dc80b49b3af147"
+raw_directory = "/Users/fselman/Pictures/OCAM/bpm"
+raw_size_bytes_each = 576604800
+# This list hash fixes all ten input paths and their order. Raw content hashes
+# and the selected calibration content fingerprint remain to be captured.
+
+[policy]
+median_even_handling = "average"
+bpm_encoding = "binary"
+bpm_bad_when = "zero"
+ron_clip_enabled = true
+ron_clip_low = 5.0
+ron_clip_high = 5.0
+ron_clip_max_iterations = 10
+
+[reference]
+fits = "/Users/fselman/Pictures/OCAM/test_recipes/reduced/cal/bias/CMDP.2026-11-08T00:41:24.199Z.001.fits"
+producer_revision = "74327c49832a9337fad49a0bec1b5fd7af81cde5"
+fits_size_bytes = 1078470720
+recipe_snapshot_matches = true
+ordered_inputs_match = true
+all_detectors_use_average = true
+# The older 2026-11-07 product is not this case's regression reference.
+# OUTPUTS_WRITTEN in a log alone does not establish a zero command exit.
+
+[candidate]
+executable = "/Users/fselman/Software/build/wenu-imaging/mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/build/mefpp2/mefpp_bias_recipe"
+sha256 = "822bbadd11c5d82c799163b3f384b344706b57ccd73ee542bf7c283af9b72e49"
+producer_revision = "36381892f4f768c3a2c7450114f96021fd5c76d7"
+
+[comparison]
+command = "tools/compare-bias-products.py"
+pixel_policy = "exact"
+qc_policy = "exact_existing_comparator_contract"
+allow_clipped_ron_additions = false
+source_identity_policy = "normalize_only_own_product_identity"
+required_exit_status = 0
+required_completion_marker = "BIAS_RECIPE_COMPLETE"
+# The comparator covers pixels, QC, mapping and selected provenance, not every
+# FITS header or raw input content. WFI and a new candidate comparison remain open.
