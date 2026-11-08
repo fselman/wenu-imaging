@@ -1,7 +1,7 @@
 """Five tiny actual recipe successes: all/subset, one extension and primary image.
 Uses the existing synthetic numerical reference constructor, never observations.
 """
-import argparse,json,os,subprocess,sys
+import argparse,json,os,subprocess,sys,tomllib
 from pathlib import Path
 import numpy as np
 from astropy.io import fits
@@ -37,6 +37,13 @@ else:
     cls.reference_qc={mode:[json.loads(v.with_name('qc.json').read_text()) for v in paths]
                       for mode,paths in cls.references.items()}
     cls.configuration=json.loads((previous/'reference-masked-0/config.json').read_text())
+
+    # The frozen adapter predates median-policy provenance. The retained TOML
+    # explicitly selects historical lower mode; keep the full expected snapshot
+    # identical to normal fixture setup rather than dropping that comparison (#294).
+
+    assert tomllib.loads(cls.toml.read_text())['native']['MEF.BIAS.MEDIAN.EVEN.HANDLING']=='lower'
+    cls.configuration['MEF.BIAS.MEDIAN.EVEN.HANDLING']={'type':'string','value':'lower'}
     cls.frozen={str(v):old.digest(v) for v in previous.rglob('*') if v.is_file()}
 
 case=old.RecipeTests('test_explicit_omissions_and_toml')

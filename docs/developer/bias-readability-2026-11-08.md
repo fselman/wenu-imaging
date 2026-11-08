@@ -109,3 +109,43 @@ retained qualification parent. No automatic restoration, retry, cleanup or merge
 The runner has passed Python compilation and CLI-help checks in the agent;
 its actual Mac execution remains pending. The previously recorded agent results
 retain their original scope. Documentation consolidation follows this refactor.
+
+## Mac gate stopped at fixture reuse; scoped continuation — issue #294
+
+Owner supplied actual execution at test head 7bfe6edd99a1bf15d496ee9257baf29ebf84e2fa.
+The reviewed 3638189 producer built successfully in the retained tree. Shared run
+resources, inner operation lifecycle, both-instrument service/reference and all
+eight native recipe groups passed. Envelope verification stopped at the full
+configuration-snapshot equality assertion. Retained attempt:
+`/Users/fselman/Software/build/wenu-imaging/mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/readability-36381892f4f7-dkg784s0`.
+Its receipt is `qualification.json`. Nothing after envelope ran. Preserve all
+partial products, logs, passed groups, executable/cache and source backups.
+
+Source analysis found a harness omission: normal fixture setup explicitly adds
+`MEF.BIAS.MEDIAN.EVEN.HANDLING=lower` to the expected snapshot/emitted TOML because
+the older frozen adapter dump predates that provenance field. The envelope reuse
+branch reloads that old dump but failed to restore the policy. The corrected
+branch verifies the declared TOML policy and restores that exact typed field.
+Full snapshot equality, pixels, QC, FITS/header, schema and provenance assertions
+remain intact. No production source is changed. An isolated execution of the
+actual metadata-restoration branch reproduces the missing expectation and passes
+after correction; it is not native/ASDF runtime qualification. See the retained
+[check](evidence/bias-readability-2026-11-08/reused-fixture-regression.json).
+
+`inspect_bias_reuse_snapshot.py` independently reads the failed ASDF with the
+selected ASDF interpreter, validates its schema and requires exactly the one
+missing expected policy. `continue_bias_readability_mac.py` performs that check
+before changing test support; any other difference stops the continuation.
+It verifies the saved passed-group receipts, current executable/cache and full
+production source; overlays only the corrected envelope test, and uses a fresh
+retry directory. It reruns envelope and continues the previously unrun median,
+clipped-RON and zero-spread groups. It does not rebuild, reconfigure or repeat
+the passed groups. Previous-attempt files are hashed before/after; the executable,
+cache, frozen reference, checkout and source preservation are checked in the
+receipt. Progress is printed every 30 seconds while a command runs. All retries
+and failed attempts remain separate.
+
+Python compilation/CLI and metadata-restoration checks pass in the agent. The
+actual saved one-field cause and remaining Mac native groups are pending target
+execution. Issue #294 stays open; final acceptance/merge and documentation
+consolidation remain pending.
