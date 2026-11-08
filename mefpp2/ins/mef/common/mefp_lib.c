@@ -1996,144 +1996,187 @@ image_t * mef_overscan_correction_masked(image_t *   mef_frame, mef_bb *bb,
 {
     return mef_overscan_correction_traced(mef_frame, bb, nplane, what, map, NULL, 0);
 }
-image_t * mef_overscan_correction_traced(image_t *mef_frame, mef_bb *bb,
-    int nplane, char *what, const pixelmap *map, pixelvalue *trace, size_t rows)
+/* Correct a caller-owned working frame in place and return a new trimmed image.
+ * The caller still owns the working frame. Optional row traces borrow storage;
+ * scan-column coordinates are restored before leaving the correction block.
+ * The bias service calls this shared helper without a detector BPM on scan reads.
+ */
+image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_context, int frame_index,
+    char *calibration_kind, const pixelmap *scan_mask, pixelvalue *row_level_trace,
+    size_t trace_rows)
 {
-    int *   prescan_x = ((bb->ccd)+(bb->xtnum-1))->prescan_x;
-    int *   overscan_x = ((bb->ccd)+(bb->xtnum-1))->overscan_x;
-    int *   rej_int = bb->scanrej;
-    int *   crop_reg = ((bb->ccd)+(bb->xtnum-1))->trimreg;
-    int     use_prescan = bb->use_prescan;
-    int     use_overscan = bb->use_overscan;
-	image_t	*	cropped_frame ;
-	pixelvalue		filtered ;
-	pixelvalue	*	bias_line ;
-    pixelvalue  *   scan_line ;
-    double          medval;
-    double      *   scan_double;
-    double          stdev_val ;
-	int				scan_width ;
-	int				i, j, k ;
-	pixelvalue	*	pix ;
-	int		prescan_factor, overscan_factor;
+    int *prescan_x = ((legacy_context->ccd) + (legacy_context->xtnum - 1))->prescan_x;
+    int *overscan_x = ((legacy_context->ccd) + (legacy_context->xtnum - 1))->overscan_x;
+    int *rejected_scan_counts = legacy_context->scanrej;
+    int *trim_region = ((legacy_context->ccd) + (legacy_context->xtnum - 1))->trimreg;
+    int use_prescan = legacy_context->use_prescan;
+    int use_overscan = legacy_context->use_overscan;
+    image_t *cropped_frame;
+    pixelvalue row_level_adu;
+    pixelvalue *row_scan_samples;
+    pixelvalue *row_levels_adu;
+    double scan_median_adu;
+    double *centered_row_levels;
+    double scan_stdev_adu;
+    int scan_width;
+    int column, row, sample_count;
+    pixelvalue *row_pixels;
+    int prescan_factor, overscan_factor;
 
-    if ((trace == NULL && rows != 0) ||
-        (trace != NULL && rows != (size_t)mef_frame->ly)) return NULL;
-    /* Eclipse map polarity is 1=good; reject malformed maps before mutation. */
-    if (map != NULL) {
-        size_t position, count;
-        if (map->data == NULL || map->lx != mef_frame->lx || map->ly != mef_frame->ly)
-            return NULL;
-        count = (size_t)map->lx * (size_t)map->ly;
-        for (position = 0; position < count; ++position)
-            if (map->data[position] != PIXELMAP_0 && map->data[position] != PIXELMAP_1)
-                return NULL;
+    if ((row_level_trace == NULL && trace_rows != 0) ||
+        (row_level_trace != NULL && trace_rows != (size_t)raw_frame->ly)) {
+        return NULL;
     }
-	/* Sanity tests with input parameters */
- 	prescan_factor = 0;
-	overscan_factor = 0;
-	if (use_prescan != 0) prescan_factor = 1;
-	if (use_overscan != 0) overscan_factor = 1;
+    /* Eclipse map polarity is 1=good; reject malformed maps before mutation. */
+    if (scan_mask != NULL) {
+        size_t position, count;
+        if (scan_mask->data == NULL || scan_mask->lx != raw_frame->lx ||
+            scan_mask->ly != raw_frame->ly) {
+            return NULL;
+        }
+        count = (size_t)scan_mask->lx * (size_t)scan_mask->ly;
+        for (position = 0; position < count; ++position) {
+            if (scan_mask->data[position] != PIXELMAP_0 &&
+                scan_mask->data[position] != PIXELMAP_1) {
+                return NULL;
+            }
+        }
+    }
+    /* Sanity tests with input parameters */
+    prescan_factor = 0;
+    overscan_factor = 0;
+    if (use_prescan != 0) {
+        prescan_factor = 1;
+    }
+    if (use_overscan != 0) {
+        overscan_factor = 1;
+    }
 
-	scan_width = (prescan_x[1]-prescan_x[0]+1)*prescan_factor +
-		(overscan_x[1]-overscan_x[0]+1)*overscan_factor ;
+    scan_width = (prescan_x[1] - prescan_x[0] + 1) * prescan_factor +
+                 (overscan_x[1] - overscan_x[0] + 1) * overscan_factor;
 
-	if ((rej_int[0]+rej_int[1])>=scan_width) {
-		e_error("in rejection parameters: rejecting too many pixels");
-		return NULL ;
-	}
+    if ((rejected_scan_counts[0] + rejected_scan_counts[1]) >= scan_width) {
+        e_error("in rejection parameters: rejecting too many pixels");
+        return NULL;
+    }
 
-	if ((crop_reg[0]>=crop_reg[1])||(crop_reg[2]>=crop_reg[3])) {
-		e_error("in crop region definition");
-		return NULL ;
-	}
-
+    if ((trim_region[0] >= trim_region[1]) || (trim_region[2] >= trim_region[3])) {
+        e_error("in crop region definition");
+        return NULL;
+    }
 
     cropped_frame = NULL;
-    bias_line = NULL; scan_line = NULL; scan_double = NULL;
+    row_scan_samples = NULL;
+    row_levels_adu = NULL;
+    centered_row_levels = NULL;
 
-	/* Bring coordinates back to C convention */
-	prescan_x[0]-- ; prescan_x[1]-- ; overscan_x[0]-- ; overscan_x[1]-- ;
+    /* Bring coordinates back to C convention */
+    prescan_x[0]--;
+    prescan_x[1]--;
+    overscan_x[0]--;
+    overscan_x[1]--;
 
-	/* Make out bias column */
-	bias_line = malloc(scan_width * sizeof(pixelvalue));
-    scan_line = malloc(mef_frame->ly * sizeof(pixelvalue));
-    if (bias_line == NULL || scan_line == NULL) goto overscan_done;
-
-	/* Loop on all lines */
-	for (j=0 ; j<mef_frame->ly ; j++) {
-		pix = mef_frame->data + j*mef_frame->lx ;
-		k=0 ;
-		if (use_prescan != 0) {
-		   for (i=prescan_x[0] ; i<=prescan_x[1] ; i++) {
-			if (map == NULL || map->data[j*mef_frame->lx+i] == PIXELMAP_1)
-                bias_line[k++] = pix[i];
-		   }
-		}
-		if (use_overscan != 0) {
-		   for (i=overscan_x[0] ; i<=overscan_x[1] ; i++) {
-			if (map == NULL || map->data[j*mef_frame->lx+i] == PIXELMAP_1)
-                bias_line[k++] = pix[i] ;
-		   }
-		}
-        if (function1d_average_reject_checked(bias_line, k,
-                rej_int[0], rej_int[1], &filtered) != 0) goto overscan_done;
-        /* e_comment(1,"Subtracting %f from each bias pixel", filtered); */
-		for (i=0 ; i<mef_frame->lx ; i++) {
-			pix[i] -= filtered ;
-		}
-        scan_line[j] = filtered;
-        if (trace != NULL) trace[j] = filtered;
-	}
-    medval = (double) median_pixelvalue(scan_line, mef_frame->ly);
-    scan_double = pixel2double_array(scan_line, mef_frame->ly);
-    if (scan_double == NULL) goto overscan_done;
-    for (j=0 ; j<mef_frame->ly ; j++) {
-        scan_double[j] -= medval;
+    /* Make out bias column */
+    row_scan_samples = malloc(scan_width * sizeof(pixelvalue));
+    row_levels_adu = malloc(raw_frame->ly * sizeof(pixelvalue));
+    if (row_scan_samples == NULL || row_levels_adu == NULL) {
+        goto overscan_done;
     }
-    stdev_val = double_rms(scan_double, mef_frame->ly);
 
+    /* [SCAN-ROW-CORRECTION]
+     * Estimate each electronic row level from enabled scan columns, subtract
+     * the pixelvalue result across that row, then retain its trace for QC.
+     */
+    for (row = 0; row < raw_frame->ly; row++) {
+        row_pixels = raw_frame->data + row * raw_frame->lx;
+        sample_count = 0;
+        if (use_prescan != 0) {
+            for (column = prescan_x[0]; column <= prescan_x[1]; column++) {
+                if (scan_mask == NULL ||
+                    scan_mask->data[row * raw_frame->lx + column] == PIXELMAP_1) {
+                    row_scan_samples[sample_count++] = row_pixels[column];
+                }
+            }
+        }
+        if (use_overscan != 0) {
+            for (column = overscan_x[0]; column <= overscan_x[1]; column++) {
+                if (scan_mask == NULL ||
+                    scan_mask->data[row * raw_frame->lx + column] == PIXELMAP_1) {
+                    row_scan_samples[sample_count++] = row_pixels[column];
+                }
+            }
+        }
+        if (function1d_average_reject_checked(row_scan_samples, sample_count,
+                rejected_scan_counts[0], rejected_scan_counts[1], &row_level_adu) != 0) {
+            goto overscan_done;
+        }
+        for (column = 0; column < raw_frame->lx; column++) {
+            row_pixels[column] -= row_level_adu;
+        }
+        row_levels_adu[row] = row_level_adu;
+        if (row_level_trace != NULL) {
+            row_level_trace[row] = row_level_adu;
+        }
+    }
+    scan_median_adu = (double)median_pixelvalue(row_levels_adu, raw_frame->ly);
+    centered_row_levels = pixel2double_array(row_levels_adu, raw_frame->ly);
+    if (centered_row_levels == NULL) {
+        goto overscan_done;
+    }
+    for (row = 0; row < raw_frame->ly; row++) {
+        centered_row_levels[row] -= scan_median_adu;
+    }
+    scan_stdev_adu = double_rms(centered_row_levels, raw_frame->ly);
 
-    e_comment(1, "********************* overscan medval: %f stdev_val: %f", medval, stdev_val);
+    e_comment(1, "********************* overscan medval: %f stdev_val: %f", scan_median_adu,
+        scan_stdev_adu);
 
     /* We write the bb-> qc keywords for the corresponding frame */
-    if (!strcmp(what, "bias")) {
-        bb->bias_scan_median[nplane] = medval ;
-        bb->bias_scan_stdev[nplane] = stdev_val ;
-        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->bias_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
+    if (!strcmp(calibration_kind, "bias")) {
+        legacy_context->bias_scan_median[frame_index] = scan_median_adu;
+        legacy_context->bias_scan_stdev[frame_index] = scan_stdev_adu;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f",
+            get_basename(legacy_context->bias_frame_name[frame_index]), legacy_context->xtnum,
+            frame_index, scan_median_adu, scan_stdev_adu);
     }
 
-    if (!strcmp(what, "dome")) {
-        bb->dome_scan_median[nplane] = medval ;
-        bb->dome_scan_stdev[nplane] = stdev_val ;
-        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->dome_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
+    if (!strcmp(calibration_kind, "dome")) {
+        legacy_context->dome_scan_median[frame_index] = scan_median_adu;
+        legacy_context->dome_scan_stdev[frame_index] = scan_stdev_adu;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f",
+            get_basename(legacy_context->dome_frame_name[frame_index]), legacy_context->xtnum,
+            frame_index, scan_median_adu, scan_stdev_adu);
     }
 
-    if (!strcmp(what, "sky")) {
-        bb->sky_scan_median[nplane] = medval ;
-        bb->sky_scan_stdev[nplane] = stdev_val ;
-        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->sky_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
+    if (!strcmp(calibration_kind, "sky")) {
+        legacy_context->sky_scan_median[frame_index] = scan_median_adu;
+        legacy_context->sky_scan_stdev[frame_index] = scan_stdev_adu;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f",
+            get_basename(legacy_context->sky_frame_name[frame_index]), legacy_context->xtnum,
+            frame_index, scan_median_adu, scan_stdev_adu);
     }
 
-    if (!strcmp(what, "science")) {
-        bb->science_scan_median[nplane] = medval ;
-        bb->science_scan_stdev[nplane] = stdev_val ;
-        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f", get_basename(bb->science_frame_name[nplane]), bb->xtnum, nplane, medval, stdev_val);
+    if (!strcmp(calibration_kind, "science")) {
+        legacy_context->science_scan_median[frame_index] = scan_median_adu;
+        legacy_context->science_scan_stdev[frame_index] = scan_stdev_adu;
+        e_comment(1, "%s[%d]  -- nplane: %d  overscan medval: %f stdev_val: %f",
+            get_basename(legacy_context->science_frame_name[frame_index]), legacy_context->xtnum,
+            frame_index, scan_median_adu, scan_stdev_adu);
     }
 
-
-	/* Extract cropped region */
-	cropped_frame = image_getvig(mef_frame,
-			crop_reg[0],
-			crop_reg[2],
-			crop_reg[1],
-			crop_reg[3]);
-
+    /* Extract cropped region */
+    cropped_frame =
+        image_getvig(raw_frame, trim_region[0], trim_region[2], trim_region[1], trim_region[3]);
 
 overscan_done:
-    free(scan_double); free(bias_line); free(scan_line);
-    prescan_x[0]++; prescan_x[1]++; overscan_x[0]++; overscan_x[1]++;
-	return cropped_frame ;
+    free(centered_row_levels);
+    free(row_scan_samples);
+    free(row_levels_adu);
+    prescan_x[0]++;
+    prescan_x[1]++;
+    overscan_x[0]++;
+    overscan_x[1]++;
+    return cropped_frame;
 }
 
 int	mef_cube_overscan_correction(cube_t *i_cube,mef_bb *bb, char * what)
