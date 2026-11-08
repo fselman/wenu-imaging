@@ -1,6 +1,6 @@
 # wenu-imaging roadmap
 
-Current bounded correction: owner-approved [explicit zero-spread failure](bias-zero-spread-2026-11-08.md), preserving failure and reporting detector/input means. Agent checks pass; selected Mac qualification is pending before linearity continuation. No residual investigation or other scope expansion.
+Current bounded correction: owner-approved [explicit zero-spread failure](bias-zero-spread-2026-11-08.md), preserving failure and reporting detector/input means. Agent and actual Mac qualification pass; producer b833aca7. Owner integration review precedes linearity continuation. No residual investigation or other scope expansion.
 
 Current OmegaCAM linearity work follows [roadmap v3](linearity-roadmap-v3-2026-11-04.md):
 reuse existing ASDF, add per-exposure ROI signal versus time, and display all data

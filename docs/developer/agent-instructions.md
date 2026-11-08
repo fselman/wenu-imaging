@@ -1,12 +1,14 @@
-## Explicit zero-spread diagnostic authorized — 8 November 2026
+## Explicit zero-spread diagnostic qualified on Mac — 8 November 2026
 
-Owner selected stop-and-display for exactly zero computed frame-mean spread and
-instructed implementation. See docs/developer/bias-zero-spread-2026-11-08.md and
-the reviewed design. Both native and legacy callers report detector/input means;
-nonzero strict endpoints and median policies remain unchanged. Agent C17/UBSan
-kernel/service/legacy checks pass; actual Mac selected-build/recipe gate is pending.
-Preserve 74327c4 reference, products, source/build/cache/tools and all evidence.
-No observational replay, explicit reconfigure, installation, merge or cleanup.
+Owner-supplied actual Mac receipt and independent binary/cache verification pass.
+See docs/developer/bias-zero-spread-2026-11-08.md and mac-acceptance.json there.
+Producer b833aca7: explicit zero-spread failure; service/legacy controls pass;
+one tiny native recipe exits 1 with detector/input means and no FITS/ASDF.
+Only producer-revision cache key changed; reference 74327c4 and all evidence remain.
+Three warnings belong to unchanged frozen test reference, outside tested bias
+normalization flow; no warning suppression or production warning was reported.
+This update is documentation only: no relink, gate replay, observation or install.
+Ready for owner integration review; merge/branch cleanup need their instruction.
 Then resume linearity; CCD68/90 residuals and viewer Update remain deferred.
 
 ## Resume 8 November: zero-spread first, then linearity

@@ -76,8 +76,8 @@ performance qualification. Native Mac synthetic and real-product checks have pas
 FITS/ASDF cards and independent spatial master statistics agree. The 27 even
 stacks shift upward by 0.239002--0.312177 ADU; the five odd stacks retain exact
 pixel bytes. Input QC, frame selection and RON remain unchanged. The owner
-accepted the change. Native producer revision 74327c4 remains the qualified
-binary; later test/tool/documentation changes require no relink. Preserve all
+accepted the change. Median producer revision 74327c4 remains a retained
+reference; the zero-spread diagnostic producer is b833aca7. Preserve all
 qualification and product evidence. CCD68/90 positive residuals and inherited
 zero-width strict frame-rejection behavior are separate from the median choice.
 The owner decision of 8 November 2026 (issue \#289) preserves zero-spread
@@ -85,6 +85,11 @@ failure and adds an explicit diagnostic before stacking: detector ID, every
 input filename and its computed corrected mean in ADU. Exactly zero is tested
 in double precision; positive spread keeps the strict endpoints without a
 near-zero tolerance. No master is transferred for the failed detector.
-Actual Mac qualification of this diagnostic change is pending; earlier median
-acceptance remains valid for its recorded producer.
+Actual Mac qualification passed at producer b833aca7: service/legacy checks,
+expected native recipe exit 1, explicit detector/input diagnostics, no final
+FITS/ASDF, unchanged synthetic raws, and independent binary/cache verification.
+Only the producer-revision cache key changed. Three inherited compiler warnings
+are confined to the unchanged frozen test reference; its bias path returns
+before flat normalization. Documentation updates need no relink or replay;
+earlier median acceptance remains valid for its recorded producer.
 \end{document}
