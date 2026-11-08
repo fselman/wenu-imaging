@@ -1,3 +1,16 @@
+## Resume 8 November: zero-spread first, then linearity
+
+Read `docs/developer/handoffs/resume-2026-11-08.md` first. Owner saved state after
+clean main 797e58b and all three remaining branch deletions. Tomorrow address
+zero-spread bias rejection (agree exact boundary before coding), then continue
+developing the linearity script using the completed saved products and agreed
+in-memory detector/ROI boundary. Do not replay old reductions/qualification or
+reconfigure by default. Preserve the qualified native 74327c4 build and evidence.
+CCD68/90 positive residual investigation is deferred until wenu-imaging development
+is finished. The viewer Update button/local service remains explicitly deferred.
+No scientific change, run, installation or investigation was made in this save.
+This owner direction supersedes earlier next-task/residual-investigation advice.
+
 ## Accepted bias QC viewer and retained documentation — 7 November 2026
 
 Owner confirmed the refreshed average-median product and common parameter list,

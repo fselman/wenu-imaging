@@ -1,3 +1,5 @@
+Current handoff: [8 November — zero-spread rejection, then linearity](handoffs/resume-2026-11-08.md). CCD68/90 investigation stays after development.
+
 Accepted static bias viewer and retained requirements/audit branches: [integration record](bias-viewer-docs-integration-2026-11-07.md).
 
 Bias QC viewer refinement: [common parameters, clipped RON and shared-input grouping](bias-qc-inspection-2026-11-07.md). Prepared for retained-product Mac review; no native build or reduction.
