@@ -1,10 +1,10 @@
-# Common recipe coordinator: structural amendment for review
+# Common recipe coordinator: conditionally approved structural amendment
 
 Owner direction, 8 November 2026, within issue #292: the short bias recipe must
 come from the common recipe template so that subsequent recipes share its
 structure. The high-level file should normally occupy two readable pages and
 at most three. Comments need visible blank lines around them. This is the design
-amendment for the next structural pass, not an implemented new coordinator API.
+amendment for the next structural pass, conditionally approved implementation scope; final source acceptance is pending.
 
 ## Build on both existing template layers
 
@@ -33,8 +33,7 @@ do not create an unrelated bias-only coordinator architecture.
 | Publish products | Reuse header, assembly and QC-writing services with truthful declared commit boundaries | Product profile, metadata authority and operation-specific outputs |
 | Finish or fail | Report status and release owners once; retain required evidence/private work on failure | Operation-specific retained results and diagnostics |
 
-These are common responsibilities, not six newly added runtime callbacks. Exact
-C interfaces and module boundaries must be reviewed before extraction. Reuse the
+These are common responsibilities, not six newly added runtime callbacks. The conditionally approved C interfaces and module boundaries appear below. Reuse the
 existing configuration/request/context/result separation, status/error machinery,
 operation runner, product-path services, detector binding and MEF/QC services.
 Use small shared run-resource state and operation-specific typed payloads; do not
@@ -74,16 +73,28 @@ landmark occurs once in the shared implementation and may be referenced by
 several guides; recipe-specific landmarks use their operation prefix. Keep the
 LaTeX/PDF guide's file/routine/identifier references synchronized during extraction.
 
-## Next implementation/review boundary
+## Implementation/review boundary
 
-The current follow-up fixes comment spacing and presents this amendment. The
-common operation runner receives layout/braces only; its callbacks and order
-remain unchanged. The outer bias coordinator is still the first-pass draft and
-has not yet met the two-to-three-page requirement.
+The outer bias command now implements these phases in 60 readable lines, with
+support in `mef_bias_recipe_prepare.c`, `mef_bias_recipe_inputs.c`,
+`mef_bias_recipe_process.c` and `mef_bias_recipe_products.c`. Shared run mechanics
+live in `mef_recipe_run.h/.c`. Final owner source review and bounded selected-Mac
+qualification remain pending. Preserve b833aca7 and existing products/evidence.
+No observational rerun, installation or resumption of linearity is authorized.
 
-Next review the phase/module/interface decomposition, then extract shared
-support and shorten bias using that common scaffold. Preserve b833aca7 scientific
-behavior, selected Mac build/binary and saved products/evidence. Owner source
-review and the relevant bounded target qualification remain required before
-accepting the implementation. No observational rerun, installation, unrelated
-recipe implementation or resumption of linearity is part of this amendment.
+## Conditional implementation contract — 8 November 2026
+
+The owner conditionally approved proceeding and requires seeing the finished
+source before final acceptance. The outer coordinator calls prepare, admit,
+begin, per-detector processing, verify, publish, complete, and finish directly.
+`mef_recipe_run` owns only shared paths, start time, log and private workspace;
+`mef_bias_recipe` owns bias configuration, input bindings, assembly and QC.
+Focused prepare/input/process/product modules implement those phases. The inner
+operation runner and scientific service remain unchanged. No new dispatcher or
+scientific policy is introduced. The draft stays unmerged.
+
+After this refactor, consolidate superseded documentation and entry points in a
+separate cleanup. Shipped source comments must describe behavior or reference an
+immutable design revision or GitHub issue, never a temporary development stage.
+Legacy executable and stored producer identifiers need an explicit compatibility
+migration before renaming; retain them during this behavior-preserving extraction.

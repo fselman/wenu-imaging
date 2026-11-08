@@ -54,7 +54,7 @@ typedef struct _mef_ccd_ {
 } mef_ccd ;
 
 typedef struct _mef_bb_ {
-    /* Optional borrowed original input list for the M5 header adapter only.
+    /* Optional borrowed original input list for the bias header adapter only.
      * Never freed here; the ordinary recipe leaves this NULL. */
     const framelist *bias_header_inputs;
 

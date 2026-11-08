@@ -39,7 +39,7 @@ typedef struct {
 } mef_bpm_files_qc;
 /* Header-only preflight: every request path/HDU/detector/config slot, selected
  * bias/prior map, readout/binning/unit/active geometry and EXPTIME/pair metadata.
- * Then reuse M4 selected-plane loads and qualified typed numerical service.
+ * Then reuse selected-plane loads and qualified typed numerical service.
  * Quick requires >=5 usable pairs at >=5 distinct times AND measured levels;
  * provisional requires >=2 distinct measured levels, explicitly labelled.
  * Cuts/span/pair tolerance supplied, never invented. Entire unusable frames are

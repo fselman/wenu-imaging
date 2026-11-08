@@ -2,23 +2,37 @@
 
 ## Current structural amendment — 8 November 2026
 
-The owner requires the short high-level recipe to follow this common scaffold,
-so all recipes share a clear structure. Read the [coordinator amendment for
-review](design/common-recipe-coordinator-v1.md). The existing executable
+The owner conditionally approved the [coordinator design](design/common-recipe-coordinator-v1.md).
+Bias now implements the common outer structure in a 60-line command. Final owner
+source acceptance and selected-Mac qualification remain pending. The existing
 `mef_operation_run` remains the inner validate/load/calculate/optional-publish/
-cleanup lifecycle; it is not, by itself, the whole command coordinator.
-The amendment specifies the shared outer responsibilities and scientific
-boundaries before extracting them from bias. Its exact C interfaces are still
-for design review; no new runtime coordinator has been implemented.
+cleanup lifecycle; its callbacks and scientific behavior are unchanged.
 
-High-level recipe files should normally fit two readable pages and at most
-three, using meaningful shared subroutine calls. Do not shrink code by packing
-statements or hide the whole program behind one opaque call. Put blank lines
-before and after stand-alone explanatory comments in both templates and recipes.
-Bias is the first structural application; its 864-line first-pass command remains
-unaccepted while this decomposition is prepared. No other recipe or numerical
-change is authorized by the amendment. Earlier dated implementation/scaffold
-notes below retain their historical scope.
+Every outer coordinator follows this visible order:
+
+1. Initialize safely destructible owners and sample the start time once.
+2. Prepare configuration and admit every explicit input/detector binding.
+3. Open run resources after admission.
+4. Execute the declared scientific processing, preserving collective steps.
+5. Verify stored results and QC; publish through existing product services.
+6. Complete reporting or retain failed work, then release owners once.
+
+`mef_recipe_run.h/.c` supplies common paths, exclusive logging, private workspace,
+completion and failure reporting. Its small state borrows operation/progress/
+workspace names and source revision; it contains no detector state or scientific
+policy. Its functions return true on success. `mef_bias_recipe.h` contains the
+separate bias owners and typed phase functions. The command explicitly orders
+them; there is no new callback dispatcher. Existing product path resolution and
+inner operation services remain in use.
+
+High-level files should normally fit two readable pages, at most three. Put blank
+lines before and after standalone explanatory comments. Do not pack statements or
+hide the whole recipe behind one opaque call. Future recipes reuse this structure
+while retaining their own typed scientific services, collective calculations and
+publication contracts. Implementing those recipes is outside the present scope.
+
+The older dated notes below are historical. Consolidating them and other
+superseded documentation is queued after the bias readability refactor.
 
 
 Current bias completion path: [bias-recipe-completion-2026-11-02.md](bias-recipe-completion-2026-11-02.md).

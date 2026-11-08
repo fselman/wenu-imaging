@@ -1,4 +1,4 @@
-/* Opt-in M5 bias/BPM commands: one explicitly configured detector per invocation.
+/* Explicit bias/BPM commands: one explicitly configured detector per invocation.
  * Not installed and never selected by the normal mefpp executable. */
 #include "mef_bias_files.h"
 #include "mef_bias_settings.h"
@@ -276,7 +276,7 @@ int main(int argc, char **argv)
         refs[i].asset_record_id = frames->name[i]; /* Explicit local path identity. */
         refs[i].detector_id = values[3]; refs[i].resolved_path = frames->name[i];
         refs[i].hdu_index = hdu;
-        /* M1's optional named selector requires EXTNAME and EXTVER together.
+        /* The optional named selector requires EXTNAME and EXTVER together.
          * Use the explicit physical HDU when EXTVER is absent; never invent 1. */
         if (bound->image.has_extname && bound->image.has_extver) {
             refs[i].extname = bound->image.extname; refs[i].extver = bound->image.extver;
@@ -357,6 +357,6 @@ done:
     mef_config_document_destroy(document); mef_bb_del(legacy);
     return exit_status;
 usage:
-    fprintf(stderr, "Opt-in M5: cal bias (--pafname PAF | --config TOML) --bias ABS_LIST --detector-id ID --hdu N --config-detector ZERO_BASED --readout-id ID --bin-x N --bin-y N --input-bpm (omitted|ABS_FITS) --output ABS_FITS --work-dir ABS_DIR --log-path ABS_LOG --config-record ABS_JSON --qc-record ABS_JSON [--expected-extname NAME] [--measurements yes --mad (yes|no) [--ron-first INDEX --ron-second INDEX] [--high-sigma K]] [--bpm-hdu N --bpm-good-value (0|1) --bpm-coordinates (raw|active) [--bpm-expected-extname NAME]]\n");
+    fprintf(stderr, "Explicit detector adapter: cal bias (--pafname PAF | --config TOML) --bias ABS_LIST --detector-id ID --hdu N --config-detector ZERO_BASED --readout-id ID --bin-x N --bin-y N --input-bpm (omitted|ABS_FITS) --output ABS_FITS --work-dir ABS_DIR --log-path ABS_LOG --config-record ABS_JSON --qc-record ABS_JSON [--expected-extname NAME] [--measurements yes --mad (yes|no) [--ron-first INDEX --ron-second INDEX] [--high-sigma K]] [--bpm-hdu N --bpm-good-value (0|1) --bpm-coordinates (raw|active) [--bpm-expected-extname NAME]]\n");
     return EXIT_FAILURE;
 }

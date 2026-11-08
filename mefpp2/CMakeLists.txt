@@ -154,10 +154,10 @@ if(NOT HAVE_SQRT_WITHOUT_LIBM)
 endif()
 
 
-# M1 inspection is opt-in. The legacy executable and installed payload do not
+# Configuration inspection is opt-in. The legacy executable and installed payload do not
 # depend on the snapshot library, which is not yet a supported public ABI.
-option(MEFPP_BUILD_CONFIG_PROBES "Build isolated M1 configuration probes" OFF)
-option(MEFPP_BUILD_BIAS_ADAPTER "Build uninstalled M5 one-detector bias command" OFF)
+option(MEFPP_BUILD_CONFIG_PROBES "Build isolated configuration probes" OFF)
+option(MEFPP_BUILD_BIAS_ADAPTER "Build uninstalled one-detector bias command" OFF)
 if(MEFPP_BUILD_BIAS_ADAPTER)
   set(MEFPP_BUILD_CONFIG_PROBES ON)
 endif()
@@ -173,7 +173,7 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     target_compile_options(mefpp_config_snapshot PRIVATE -Wall -Wextra -pedantic-errors)
   endif()
   target_link_libraries(mefpp_config_snapshot PUBLIC mefpp_common)
-  # M2 parser exception: unmodified dependency and its private shim only.
+  # Configuration parser exception: unmodified dependency and its private shim only.
   # Neither target is linked to mefpp or installed. Other code stays C90/C17.
   add_library(mefpp_config_domains STATIC ins/mef/common/mef_config_domains.c)
   target_include_directories(mefpp_config_domains PUBLIC ins/mef/common)
@@ -274,6 +274,16 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     ins/mef/common/mef_toml_bundle.c)
   target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
   target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
+  add_library(mefpp_recipe_run STATIC ins/mef/common/mef_recipe_run.c
+    ins/mef/common/mef_product_paths.c)
+  target_link_libraries(mefpp_recipe_run PUBLIC mefpp_config_snapshot)
+  target_compile_definitions(mefpp_recipe_run PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_compile_options(mefpp_recipe_run PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(mefpp_recipe_run PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  add_executable(recipe_run_probe tests/recipe_run_probe.c)
+  target_link_libraries(recipe_run_probe PRIVATE mefpp_recipe_run)
+  target_compile_options(recipe_run_probe PRIVATE -UNDEBUG -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(recipe_run_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   if(MEFPP_BUILD_BIAS_ADAPTER)
     add_library(mefpp_bias_files STATIC ins/mef/common/mef_bias_files.c
       ins/mef/common/mef_operation_template.c)
@@ -314,10 +324,10 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       endif()
       find_library(MEFPP_ASDF_LIBRARY NAMES asdf PATHS "${MEFPP_ASDF_PREFIX}/lib" NO_DEFAULT_PATH REQUIRED)
       add_library(mefpp_product_qc STATIC ins/mef/common/mef_product_qc_validate.c
-        ins/mef/common/mef_product_qc_asdf.c ins/mef/common/mef_product_paths.c)
+        ins/mef/common/mef_product_qc_asdf.c)
       target_include_directories(mefpp_product_qc PUBLIC ins/mef/common)
       target_include_directories(mefpp_product_qc SYSTEM PRIVATE "${MEFPP_ASDF_PREFIX}/include")
-      target_link_libraries(mefpp_product_qc PUBLIC "${MEFPP_ASDF_LIBRARY}")
+      target_link_libraries(mefpp_product_qc PUBLIC "${MEFPP_ASDF_LIBRARY}" mefpp_recipe_run)
       if(NOT APPLE)
         target_link_libraries(mefpp_product_qc PUBLIC m)
       endif()
@@ -325,7 +335,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
         ins/mef/common/mef_bias_qc_fits.c)
       target_link_libraries(mefpp_bias_product_qc PUBLIC mefpp_bias_files mefpp_product_qc)
       add_executable(mefpp_bias_recipe ins/mef/recipes/mefpp_bias_recipe.c
-        ins/mef/common/mef_bias_recipe_config.c)
+        ins/mef/common/mef_bias_recipe_config.c
+        ins/mef/common/mef_bias_recipe_prepare.c ins/mef/common/mef_bias_recipe_inputs.c
+        ins/mef/common/mef_bias_recipe_process.c ins/mef/common/mef_bias_recipe_products.c)
       target_include_directories(mefpp_bias_recipe PRIVATE ../third_party/tomlc17)
       target_link_libraries(mefpp_bias_recipe PRIVATE mefpp_bias_product_qc mefpp_config_toml mefpp_mef_assembly)
       target_compile_definitions(mefpp_bias_recipe PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")

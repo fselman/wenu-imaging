@@ -1,0 +1,20 @@
+-- GLOB mismatch!
+-- Candidate mefpp: C17; /usr/bin/cc; resources=OFF
+-- Configuring done (0.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /workspace/scratch/18be85df1254/zero-build
+[ 15%] Built target qfits
+[ 86%] Built target eclipse
+[ 90%] Built target mefpp_common
+[ 97%] Built target mefpp_config_snapshot
+[ 97%] Building C object mefpp2/CMakeFiles/mefpp_recipe_run.dir/ins/mef/common/mef_recipe_run.c.o
+[ 97%] Linking C static library libmefpp_recipe_run.a
+[100%] Built target mefpp_recipe_run
+[ 15%] Built target qfits
+[ 84%] Built target eclipse
+[ 88%] Built target mefpp_common
+[ 95%] Built target mefpp_config_snapshot
+[ 97%] Built target mefpp_recipe_run
+[100%] Building C object mefpp2/CMakeFiles/recipe_run_probe.dir/tests/recipe_run_probe.c.o
+[100%] Linking C executable recipe_run_probe
+[100%] Built target recipe_run_probe

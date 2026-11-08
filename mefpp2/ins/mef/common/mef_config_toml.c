@@ -1,4 +1,4 @@
-/* C90 mapping into the accepted M1 configuration constructor. */
+/* C90 mapping into the typed configuration constructor. */
 #include "mef_config_toml.h"
 #include "mef_processing.h"
 #include "mef_toml_bundle.h"

@@ -1,3 +1,14 @@
+## Conditional bias source review and permanent reference policy — 8 November 2026
+
+Owner conditionally approved structural extraction; final acceptance requires
+review of the resulting source. Keep PR #293 unmerged. Use the common coordinator
+design in `docs/developer/design/common-recipe-coordinator-v1.md`. Queue the
+documentation consolidation as the next cleanup after this refactor; retain
+historical evidence. Shipped source must not refer to temporary build stages or
+step documents: describe technical behavior, or cite an immutable design revision
+or GitHub issue. Preserve compatibility-sensitive executable names and stored
+producer metadata until an explicit migration is approved. Linearity stays paused.
+
 ## Owner feedback: common template and comment spacing — 8 November 2026
 
 The bias first pass is not structurally accepted. High-level recipe files should

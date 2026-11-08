@@ -1,4 +1,4 @@
-/* Internal M1 lifetime boundary; ANSI C90, not an installed/frozen ABI. */
+/* Internal typed lifetime boundary; ANSI C90, not an installed/frozen ABI. */
 #ifndef MEF_RUNTIME_H
 #define MEF_RUNTIME_H
 #include "mef_config.h"
@@ -76,7 +76,7 @@ const mef_resolved_request_spec *mef_request_resolved_view(const mef_request *re
  * if error allocation also failed. Status is always authoritative.
  * Destructors accept NULL. Views are const, borrowed until owner destruction.
  * No FITS/list I/O, file existence checks, cwd/environment changes or scientific
- * applicability checks. Unix paths must already be absolute; M3 resolves them.
+ * applicability checks. Unix paths must already be absolute; the command layer resolves them.
  */
 mef_status mef_request_create(const mef_request_spec *spec,
     const mef_allocator *allocator, mef_request **out, mef_error **error);

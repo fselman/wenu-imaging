@@ -57,9 +57,9 @@ typedef struct {
  * tolerance. Preserve input order and exact header times; no adjacency, sorting,
  * lamp correction or scientific level/range acceptance is inferred.
  * Active bias/BPM only; legacy binary polarity is declared and converted through
- * the existing M4 loader. No reason bits are invented. Borrowed sources must be
- * frozen by caller; existing M4 source identity/load guards remain in force.
- * Reuse selected M4 loads, then the existing typed sample service. Result owns
+ * the existing selected-plane loader. No reason bits are invented. Borrowed sources must be
+ * frozen by caller; existing source identity/load guards remain in force.
+ * Reuse selected-plane loads, then the existing typed sample service. Result owns
  * source path/binding snapshots and samples, outliving input maps/configuration.
  * Optional pair measurements require two additional bound RAW bias references,
  * same readout/geometry, and an explicit row limit. They reuse raw loads before

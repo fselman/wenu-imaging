@@ -15,7 +15,7 @@ typedef struct {
     size_t max_loaded_pixels;
 } mef_linearity_raw_files_input;
 /* RAW measurement only: preflight bindings, masks, exact times/pairs and budget,
- * then reuse the existing M4 plane loaders and raw pair service. Never call the
+ * then reuse the existing selected-plane loaders and raw pair service. Never call the
  * corrected sample service; no overscan/master or dense pixel-observation owner.
  * At most this one detector's selected planes are loaded. Budget counts flat,
  * raw bias and optional BPM pixels, not total process bytes or dependency scratch.

@@ -1,4 +1,4 @@
-/* Internal M4 C90 layout boundary (#182); not an installed/frozen ABI. */
+/* Internal C90 layout boundary (#182); not an installed/frozen ABI. */
 #ifndef MEF_LAYOUT_H
 #define MEF_LAYOUT_H
 #include "mef_runtime.h"

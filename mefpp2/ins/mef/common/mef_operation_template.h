@@ -1,5 +1,5 @@
 /* Shared operation skeleton. Typed payloads and algorithms stay in adapters.
- * Recipe scaffold/lessons: docs/developer/native-operation-recipe-template.md.
+ * Coordinator contract: GitHub issue #292.
  * Bias is the qualified first example, not a blanket scientific/QC contract. */
 
 #ifndef MEF_OPERATION_TEMPLATE_H
@@ -32,9 +32,8 @@ typedef struct {
      * Do not index/merge a qfits header after deletion: its n can be stale
      * (#211/#212). Reuse a qualified header adapter or a reviewed shared
      * extraction; structural conversion uses fresh construction/copies.
-     * Shared project QC assembly now uses QcRecipe/BiasQcRecipe and the single
-     * ASDF writer in pycavi_qc.py; see shared-qc-asdf-2026-11-02.md. Native
-     * payloads stay typed and serializer-independent. Do not copy the legacy
+     * Shared native QC assembly uses mef_product_qc and its ASDF writer.
+     * Payloads stay typed and serializer-independent. Do not copy the legacy
      * provisional JSON output into the next recipe as its persistence policy.
      * Final QC estimators/regions/thresholds and CLI handoff remain explicit. */
 

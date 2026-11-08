@@ -1,0 +1,38 @@
+{
+  "BIAS-RAW-PAIR-RON": [
+    "mefpp2/ins/mef/common/mef_cal_bias.c"
+  ],
+  "BIAS-SCAN-CORRECTION": [
+    "mefpp2/ins/mef/common/mef_cal_bias.c"
+  ],
+  "BIAS-MASTER-QC": [
+    "mefpp2/ins/mef/common/mef_cal_bias.c"
+  ],
+  "SCAN-ROW-CORRECTION": [
+    "mefpp2/ins/mef/common/mefp_lib.c"
+  ],
+  "BIAS-DETECTOR-CALIBRATION": [
+    "mefpp2/ins/mef/common/mef_bias_recipe_process.c"
+  ],
+  "BIAS-INPUT-LOADING": [
+    "mefpp2/ins/mef/common/mef_bias_files.c"
+  ],
+  "BIAS-DETECTOR-WRITE": [
+    "mefpp2/ins/mef/common/mef_bias_files.c"
+  ],
+  "BIAS-FRAME-SELECTION": [
+    "mefpp2/ins/mef/common/mef_bias_kernel.c"
+  ],
+  "BIAS-TEMPORAL-STACK": [
+    "mefpp2/ins/mef/common/mef_bias_kernel.c"
+  ],
+  "BIAS-RECIPE-ADMISSION": [
+    "mefpp2/ins/mef/recipes/mefpp_bias_recipe.c"
+  ],
+  "BIAS-DETECTOR-LOOP": [
+    "mefpp2/ins/mef/recipes/mefpp_bias_recipe.c"
+  ],
+  "BIAS-PRODUCT-PUBLICATION": [
+    "mefpp2/ins/mef/recipes/mefpp_bias_recipe.c"
+  ]
+}

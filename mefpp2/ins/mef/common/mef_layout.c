@@ -1,4 +1,4 @@
-/* M4 bounded file-layout discovery/binding, reusing qfits/Eclipse (#182). */
+/* Bounded file-layout discovery/binding, reusing qfits/Eclipse (#182). */
 #include "mef_layout.h"
 #include "image_io.h"
 #include "pixelmaps.h"

@@ -1,0 +1,4 @@
+RETAINED RUN: /workspace/scratch/18be85df1254/readability-checks/m5-bias-ecdy7ov0
+PASS: omegacam legacy/PAF/TOML/primary pixels, headers, QC, no-clobber and missing-HDU
+PASS: wfi legacy/PAF/TOML/primary pixels, headers, QC, no-clobber and missing-HDU
+EVIDENCE: /workspace/scratch/18be85df1254/readability-checks/m5-bias-ecdy7ov0

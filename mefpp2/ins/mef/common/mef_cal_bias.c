@@ -182,7 +182,7 @@ static mef_status validate_bias_inputs(mef_context *context, const mef_bias_inpu
             return MEF_ERR_UNSUPPORTED;
         }
 
-        /* M4: the caller supplies the same validated plane for primary or MEF
+        /* The caller supplies the same validated plane for primary or MEF
          * storage. Numerical validation must not depend on the file's HDU. */
 
         if (input->frames[frame_index] == NULL || input->frames[frame_index]->data == NULL ||

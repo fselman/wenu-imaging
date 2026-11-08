@@ -67,7 +67,7 @@ typedef struct {
 /* Copies raw pixels before existing overscan/trimming and stacking. Requires a
  * resolved CAL_BIAS v1 request, one detector and explicit BPM omission. Selected
  * BPM/calibrations return UNSUPPORTED, never silently ignored. Finite data and
- * valid legacy geometry required. M4 primary/extension planes share this entry;
+ * valid legacy geometry required. Primary/extension planes share this entry;
  * the loader owns selector validation. No I/O, cwd changes, publication or discovery.
  * Result/error start NULL; occupied outputs are rejected intact. Status is
  * authoritative if diagnostic allocation fails. Result outlives context/input.

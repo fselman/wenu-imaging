@@ -29,7 +29,8 @@ inputs, corrections and master; it does not silently modify the result.
 This edition accompanies the owner-authorized readability pass over the bias
 recipe and its supporting routines. Its numerical baseline is the qualified
 zero-spread producer \code{b833aca7df520171d9dcf4f0094a43bb5aad33a6}; the
-source review changes names, layout and comments, not the accepted estimators.
+source review changes names, layout, comments and coordinator decomposition,
+not the accepted estimators.
 The source landmarks below identify the current implementation without depending
 on line numbers. Owner comprehension review and actual Mac qualification of the
 readability candidate remain pending. Earlier qualification belongs to its
@@ -66,7 +67,9 @@ implementation; the guide does not substitute a different summation algorithm.
 
 \newpage
 \section*{Reading the source}\label{sec:source-reading}
-Start with the three labelled phases in \code{main}, then follow one detector
+Start with the 60-line coordinator and its three labelled phases in \code{main}.
+The prepare/input/process/product support modules expose the mechanics;
+\code{mef_recipe_run} owns common paths, logging and workspace only. Follow one detector
 through \code{process_bias_detector}, the file adapter, the in-memory service,
 and the small stacking kernel. Read configuration and serialization helpers
 after the scientific flow is clear. All paths below are relative to
@@ -98,7 +101,7 @@ Complete-detector barrier, final MEF then ASDF &
 \code{main} \\[4pt]
 \code{[BIAS-DETECTOR-CALIBRATION]}\newline
 One detector's service call and result ownership &
-\code{recipes/mefpp_bias_recipe.c}\newline
+\code{common/mef_bias_recipe_process.c}\newline
 \code{process_bias_detector} \\[4pt]
 \code{[BIAS-INPUT-LOADING]}\newline
 Load explicit bound detector HDUs &

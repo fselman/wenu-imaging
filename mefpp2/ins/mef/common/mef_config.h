@@ -1,4 +1,4 @@
-/* Internal M1 API; not an installed or stable public ABI. ANSI C90. */
+/* Internal configuration API; not an installed or stable public ABI. ANSI C90. */
 #ifndef MEF_CONFIG_H
 #define MEF_CONFIG_H
 

@@ -1,17 +1,25 @@
 # Bias recipe: source review edition
 
-**Owner feedback: structural revision required.** The first-pass command is
-864 lines with a roughly 392-line main; it does not yet meet the requested
-high-level two-page/maximum-three-page structure. The next pass is template-led:
-see the [common coordinator amendment](design/common-recipe-coordinator-v1.md)
-and updated [operation scaffold](native-operation-recipe-template.md). Current
-follow-up changes give stand-alone comments blank lines before and after and
-format the existing operation runner without changing its lifecycle. Source
-acceptance and the outer structural extraction remain pending.
+**Conditional acceptance; final source review pending.** The high-level command
+is now 60 lines, using the common outer coordinator scaffold. Its support is
+split into prepare, input admission, detector processing and product publication
+modules. Shared run resources live in `mef_recipe_run.h/.c`; scientific services
+and the inner operation lifecycle remain in use. See the
+[coordinator design](design/common-recipe-coordinator-v1.md). PR #293 stays draft
+and unmerged until the owner reviews the finished result and the relevant Mac
+gate passes.
+
+Documentation consolidation is queued **after this refactor**. Historical stage
+documents will be reconciled then. Explanatory milestone labels have been removed
+from source comments and adapter help. The compatibility command `mefpp_m5` and
+its stored producer identity/version remain unchanged pending an explicit
+migration; this is an interface/provenance exception, not a documentation link.
+New source references must describe behavior or cite an immutable design revision
+or GitHub issue. The mandatory instruction is recorded in both agent files.
 
 Issue #292. The owner accepted the mandatory readability policy (PR #291, now merged at 165d02d), then instructed applying it to the bias routines so that he can read and review the result before accepting it. Linearity remains paused.
 
-This candidate expands compressed code, uses descriptive domain names and ordinary option control flow, adds logical spacing/braces, and places twelve sparse source comment landmarks at scientific stages. Existing public function signatures, formulas, operation order, mask populations, median modes, zero-spread/error wording, ownership/cleanup and file/publication contracts are retained. The shared `mefp_lib.c` edit is restricted to `mef_overscan_correction_traced`; the rest of that legacy file and dependency algorithms are unchanged. Existing operation boundaries are retained in this first pass; function extraction can be driven by source-review feedback rather than an arbitrary length limit.
+This candidate expands compressed code, uses descriptive domain names and ordinary option control flow, adds logical spacing/braces, and places twelve sparse source comment landmarks at scientific stages. Existing public function signatures, formulas, operation order, mask populations, median modes, zero-spread/error wording, ownership/cleanup and file/publication contracts are retained. The shared `mefp_lib.c` edit is restricted to `mef_overscan_correction_traced`; the rest of that legacy file and dependency algorithms are unchanged. The outer coordinator now exposes explicit phases; supporting functions retain the established calculation and publication order.
 
 The mathematical guide now describes already accepted average/lower bias stacking consistently and provides a source-file/routine/landmark map in [LaTeX](bias-recipe-mathematical-guide-v1.tex) and [PDF](bias-recipe-mathematical-guide-v1.pdf), pages 2–3. Updating historical wording is not a new scientific decision.
 
@@ -20,14 +28,14 @@ The mathematical guide now describes already accepted average/lower bias stackin
 | Read | Source | Entry point / landmarks |
 |---|---|---|
 | 1. Follow the whole recipe | [Coordinator](../../mefpp2/ins/mef/recipes/mefpp_bias_recipe.c) | `main`: `[BIAS-RECIPE-ADMISSION]`, `[BIAS-DETECTOR-LOOP]`, `[BIAS-PRODUCT-PUBLICATION]` |
-| 2. Follow one detector | Same coordinator, then [file adapter](../../mefpp2/ins/mef/common/mef_bias_files.c) | `process_bias_detector`; `load_bias_frames` at `[BIAS-INPUT-LOADING]` |
+| 2. Follow one detector | [Detector processing](../../mefpp2/ins/mef/common/mef_bias_recipe_process.c), then [file adapter](../../mefpp2/ins/mef/common/mef_bias_files.c) | `process_bias_detector`; `load_bias_frames` at `[BIAS-INPUT-LOADING]` |
 | 3. Understand correction and QC | [In-memory service](../../mefpp2/ins/mef/common/mef_cal_bias.c) | `mef_cal_bias_measurements`: raw-pair RON, scan correction, master QC landmarks |
 | 4. Read the compact scientific kernel | [Frame selection and stack](../../mefpp2/ins/mef/common/mef_bias_kernel.c) | `mef_bias_stack_masked_diagnostic`: `[BIAS-FRAME-SELECTION]`, `[BIAS-TEMPORAL-STACK]` |
 | 5. Inspect the row estimator if needed | [Shared scan correction](../../mefpp2/ins/mef/common/mefp_lib.c) | `mef_overscan_correction_traced`, `[SCAN-ROW-CORRECTION]` |
 | 6. Inspect output ownership and encoding | [File adapter](../../mefpp2/ins/mef/common/mef_bias_files.c), [QC archive](../../mefpp2/ins/mef/common/mef_bias_product_qc.c), [FITS mapping](../../mefpp2/ins/mef/common/mef_bias_qc_fits.c) | `publish_bias_header`, `[BIAS-DETECTOR-WRITE]`; `mef_bias_product_qc_add`; `mef_bias_qc_fits_header` |
 | 7. Inspect configuration details last | [Recipe envelope](../../mefpp2/ins/mef/common/mef_bias_recipe_config.c) | `mef_bias_recipe_expand` |
 
-## Checks actually run in the agent workspace
+## First-pass checks (retained historical evidence)
 
 All eight changed translation units pass C17 syntax and expanded-token comparison with the qualified b833aca7 source, allowing documented identifier changes, explicit braces, macro expansion and source-location metadata. Adjacent string literals are compared by their combined value. This is an expression/order check, not a general proof of semantic equivalence. Seven dedicated bias units also pass `-Wall -Wextra -Werror -pedantic-errors`.
 
@@ -50,5 +58,22 @@ runner adds braces only and passes its six ordering/early-stop/cleanup scenarios
 in the retained C17/UBSan agent build. See
 [evidence](evidence/bias-readability-2026-11-08/presentation-followup.json).
 The earlier numerical/file/QC evidence remains identified with the first source
-review; no whole bias matrix was replayed for whitespace. The outer coordinator
-phase/interface amendment is for review, not implemented generic machinery.
+review; no whole bias matrix was replayed for whitespace. This earlier follow-up preceded the structural extraction described below.
+
+## Structural extraction checks
+
+The new coordinator, four support modules and recipe-envelope module pass strict
+C17 syntax checks. The shared run library and probe build and execute with UBSan:
+exclusive log/no-clobber, failure retention and successful resource completion
+pass using an empty synthetic input catalogue. The six inner operation lifecycle
+cases pass. Sixteen bias service/legacy profiles and actual PAF/TOML/primary-FITS
+contracts pass for OmegaCAM and WFI against the frozen reference. The moved
+per-detector algorithm and binding function retain their token sequences (apart
+from the integer-parser helper name). See
+[structural evidence](evidence/bias-readability-2026-11-08/structural-results.json).
+These agent checks do not execute the newly extracted full native recipe or its
+ASDF writer; that runtime gate remains explicitly pending on the selected Mac.
+
+The earlier token-comparison claim applies to the first-pass files, not to the
+new multi-file coordinator. Source hashes and the updated landmark map identify
+this structural candidate separately. No observations or installation occurred.

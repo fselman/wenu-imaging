@@ -203,7 +203,7 @@ int mef_bpm_command(int argc,char **argv) {
     exit_status=EXIT_SUCCESS;
     goto done;
 usage:
-    fprintf(stderr,"Opt-in M5: cal bpm (--pafname ABS_PAF | --config ABS_TOML)\n"
+    fprintf(stderr,"Explicit detector adapter: cal bpm (--pafname ABS_PAF | --config ABS_TOML)\n"
         "Required key/value options: --flats ABS_TSV(path TAB hdu TAB pair_id per row), --roi-file ABS_TEXT(xlo xhi ylo yhi per row),\n"
         "--detector-id ID --config-detector N --readout-id ID --bin-x N --bin-y N --master-bias ABS_FITS --bias-hdu N,\n"
         "--input-bpm (omitted|ABS_FITS) --bpm-encoding (omitted|reason8|binary) --reject-bits N,\n"

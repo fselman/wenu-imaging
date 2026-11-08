@@ -1,4 +1,4 @@
-/* Internal serial M5 adapter; C90 source, not an installed or frozen ABI. */
+/* Internal serial bias file adapter; C90 source, not an installed or frozen ABI. */
 #ifndef MEF_BIAS_FILES_H
 #define MEF_BIAS_FILES_H
 #include "mef_cal_bias.h"
@@ -13,7 +13,7 @@ mef_status mef_config_bias_header_context(const mef_config *, size_t,
     struct _mef_bb_ **);
 
 /* Exactly one selected logical detector, independently mapped in each file.
- * Reuses M4 loading, then the existing mef_cal_bias operation. No discovery,
+ * Reuses selected-plane loading, then the existing mef_cal_bias operation. No discovery,
  * cwd changes, output writes, BPM fallback or unit conversion. Request paths
  * and original order must match maps. Input maps/context are borrowed; result
  * owns signal, QC and copied request. Full raw planes and the kernel's private
