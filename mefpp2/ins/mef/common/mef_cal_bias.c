@@ -3,6 +3,7 @@
  * copies, select/stack them, and measure the master. A pending result owns every
  * allocation until success; failure returns no partial result to the caller.
  */
+
 #include "mef_cal_bias.h"
 #include "mef_bias_settings.h"
 #include "mef_bias_kernel.h"
@@ -180,8 +181,10 @@ static mef_status validate_bias_inputs(mef_context *context, const mef_bias_inpu
         if (strcmp(request->inputs[frame_index].detector_id, request->inputs[0].detector_id)) {
             return MEF_ERR_UNSUPPORTED;
         }
+
         /* M4: the caller supplies the same validated plane for primary or MEF
          * storage. Numerical validation must not depend on the file's HDU. */
+
         if (input->frames[frame_index] == NULL || input->frames[frame_index]->data == NULL ||
             input->frames[frame_index]->lx != width || input->frames[frame_index]->ly != height) {
             return MEF_ERR_INPUT;
@@ -254,6 +257,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     resolved = mef_request_resolved_view(mef_context_request(context));
 
     /* Construct a safely destructible pending owner, before numerical work. */
+
     detail = "Cannot allocate pending bias result or QC arrays";
     status = MEF_ERR_MEMORY;
     pending_result = allocator->allocate(allocator->user, sizeof(*pending_result));
@@ -308,9 +312,11 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
                 goto cleanup;
             }
         }
+
         /* [BIAS-RAW-PAIR-RON]
          * Raw-pair noise is independent of later scan correction and admission.
          */
+
         if (options->ron_pair_set) {
             detector_measurements->ron_first = options->ron_first;
             detector_measurements->ron_second = options->ron_second;
@@ -349,6 +355,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
      * Use a local geometry copy because the shared scan helper temporarily
      * converts its column bounds to zero-based indices. Raw inputs stay borrowed.
      */
+
     memcpy(
         legacy_detector_geometry.prescan_x, bias_settings.prescan, sizeof(bias_settings.prescan));
     memcpy(legacy_detector_geometry.overscan_x, bias_settings.overscan,
@@ -401,7 +408,9 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
                 }
             }
         }
+
         /* Detector BPM does not apply to empty electronic scan reads. */
+
         corrected_frame = mef_overscan_correction(
             corrected_frames->plane[frame_index], &overscan_bridge, (int)frame_index, "bias");
         if (corrected_frame == NULL) {
@@ -434,6 +443,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     }
 
     /* Structural postcondition, followed by explicit legacy-QC collection. */
+
     detail = "Bias result dimensions do not match the requested trim region";
     if (pending_result->signal->lx != bias_settings.trim[1] - bias_settings.trim[0] + 1 ||
         pending_result->signal->ly != bias_settings.trim[3] - bias_settings.trim[2] + 1) {
@@ -451,6 +461,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     /* [BIAS-MASTER-QC]
      * Characterize the completed master; high-offset flags do not replace pixels.
      */
+
     if (options != NULL) {
         pixelmap *flags;
         detector_measurements = &pending_result->measurements;

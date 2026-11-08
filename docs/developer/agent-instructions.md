@@ -1,3 +1,16 @@
+## Owner feedback: common template and comment spacing — 8 November 2026
+
+The bias first pass is not structurally accepted. High-level recipe files should
+normally fit two readable pages and at most three. Amend the existing common
+operation/recipe scaffold before extracting shared support from the outer bias
+command; do not create a separate bias-only architecture. Read
+[the coordinator amendment](design/common-recipe-coordinator-v1.md).
+Its exact outer C interfaces remain for review; the current executable runner's
+callback sequence is unchanged. Give stand-alone explanatory comments blank lines
+before and after. Keep source/guide landmarks aligned. Preserve b833aca7 and all
+products/build evidence; linearity remains paused. No numerical change, target
+rebuild, observation or installation is implied by this amendment.
+
 ## Bias readability candidate: source review first — 8 November 2026
 
 Owner accepted the permanent readability policy (PR #291, merged at 165d02d)
@@ -32,6 +45,14 @@ Do not waive this policy without an explicit owner instruction.
   serialization or other distracting details into meaningfully named helpers
   when that improves the narrative. Do not conceal the scientific sequence in
   generic dispatch machinery or multiply tiny helpers merely to shorten functions.
+- A high-level recipe is a short coordinator: normally two comfortably formatted
+  pages and at most three (roughly 100--150 lines under ordinary review layout).
+  Keep parsing, binding mechanics, resource management and serialization in
+  appropriately scoped reusable support routines. Do not meet the limit by
+  compressing statements or merely relocating the whole coordinator into one
+  equally opaque function. The common recipe template defines the shared
+  structure; bias must implement that pattern rather than establish an isolated
+  recipe-specific architecture. Scientific differences remain explicit.
 - Prefer focused routines with one coherent purpose. Length is a review signal,
   not a numerical limit. Choose boundaries that a reader can explain without
   following a long chain of trivial wrappers.
@@ -56,6 +77,11 @@ Do not waive this policy without an explicit owner instruction.
   of its purpose, inputs, outputs and major stages. Document important routine
   contracts concisely: inputs/outputs, units, relevant mask population, ownership,
   side effects and failure behavior. Include only information useful to the reader.
+- Put a blank line before and after a stand-alone explanatory block comment,
+  including a scientific-stage landmark, so that it acts as a paragraph break.
+  A file boundary needs no preceding blank line. Short inline ownership notes
+  may remain inline where they are clearer; do not add comments merely to create
+  spacing. Use the same convention in actual templates and their code examples.
 - Comments explain scientific intent, assumptions, ordering constraints,
   invariants and nonobvious implementation decisions. Do not narrate ordinary
   assignments, allocations or loops. Clear names and structure carry the routine

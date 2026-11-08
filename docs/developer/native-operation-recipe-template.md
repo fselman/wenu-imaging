@@ -1,5 +1,26 @@
 # Template for the next native operation recipes
 
+## Current structural amendment — 8 November 2026
+
+The owner requires the short high-level recipe to follow this common scaffold,
+so all recipes share a clear structure. Read the [coordinator amendment for
+review](design/common-recipe-coordinator-v1.md). The existing executable
+`mef_operation_run` remains the inner validate/load/calculate/optional-publish/
+cleanup lifecycle; it is not, by itself, the whole command coordinator.
+The amendment specifies the shared outer responsibilities and scientific
+boundaries before extracting them from bias. Its exact C interfaces are still
+for design review; no new runtime coordinator has been implemented.
+
+High-level recipe files should normally fit two readable pages and at most
+three, using meaningful shared subroutine calls. Do not shrink code by packing
+statements or hide the whole program behind one opaque call. Put blank lines
+before and after stand-alone explanatory comments in both templates and recipes.
+Bias is the first structural application; its 864-line first-pass command remains
+unaccepted while this decomposition is prepared. No other recipe or numerical
+change is authorized by the amendment. Earlier dated implementation/scaffold
+notes below retain their historical scope.
+
+
 Current bias completion path: [bias-recipe-completion-2026-11-02.md](bias-recipe-completion-2026-11-02.md).
 Bias is the only new recipe implemented; BPM is the next recipe to create, not
 an existing caller. Numerical/QC definitions and the native-ASDF handoff below
@@ -61,11 +82,13 @@ status. Existing native routines remain the calculation authority.
 ```c
 /* Typed state: borrowed config/request/maps; temporary inputs/workspace;
  * pending owned result; reviewed output/publication policy. */
+
 recipe_state state;
 mef_operation_steps steps;
 mef_status status;
 
 /* Initialize all owners before anything can fail. Reject occupied out/error. */
+
 recipe_state_initialize(&state, config, request, maps, output_policy);
 steps.validate = recipe_validate;
 steps.load = recipe_load;

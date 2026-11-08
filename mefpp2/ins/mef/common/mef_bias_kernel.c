@@ -3,6 +3,7 @@
  * frame means and master statistics, not output pixels. Every return consumes
  * the cube; only a successful return transfers the new master to the caller.
  */
+
 #include "mef_bias_kernel.h"
 
 image_t *mef_bias_stack(cube_t *cube, int minimum_frames, double rejection_kappa,
@@ -58,9 +59,11 @@ image_t *mef_bias_stack_masked_diagnostic(cube_t *cube, int minimum_frames, doub
     if (frame_means_adu == NULL || admission_flags == NULL) {
         goto cleanup;
     }
+
     /* [BIAS-FRAME-SELECTION]
      * Form one rejection interval from all submitted corrected frame means.
      */
+
     mean_level_adu = 0.00;
     for (frame_index = 0; frame_index < frame_count; ++frame_index) {
         if (active_mask == NULL) {
@@ -92,8 +95,10 @@ image_t *mef_bias_stack_masked_diagnostic(cube_t *cube, int minimum_frames, doub
     statistics->high = rejection_high_adu;
     statistics->measured = 1;
     if (frame_mean_sigma_adu == 0.0) {
+
         /* A collapsed strict interval cannot admit any frame. Stop explicitly,
          * before stacking, rather than silently admitting equal frame means. */
+
         statistics->zero_spread = 1;
         e_error("Bias zero-spread failure: detector [%s], %d frame means, sigma=0 ADU; "
                 "cannot form a nonzero rejection interval; processing stopped before stacking",
@@ -116,6 +121,7 @@ image_t *mef_bias_stack_masked_diagnostic(cube_t *cube, int minimum_frames, doub
     }
 
     /* Exact endpoints remain excluded, even when the interval is very narrow. */
+
     accepted_count = 0;
     for (frame_index = 0; frame_index < frame_count; ++frame_index) {
         admission_flags[frame_index] = frame_means_adu[frame_index] > rejection_low_adu &&
@@ -131,9 +137,11 @@ image_t *mef_bias_stack_masked_diagnostic(cube_t *cube, int minimum_frames, doub
     if (accepted_count < frame_count && cube_reject_planes(&cube, admission_flags) != 0) {
         goto cleanup;
     }
+
     /* [BIAS-TEMPORAL-STACK]
      * Stack every active coordinate, including BPM-excluded output pixels.
      */
+
     master_bias = cube_avg_median_opts(cube, median_mode);
     if (master_bias == NULL) {
         goto cleanup;

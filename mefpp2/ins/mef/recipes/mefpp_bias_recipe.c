@@ -2,6 +2,7 @@
  * Read main first: admit every binding, calibrate detectors, then assemble FITS
  * and write the associated ASDF archive. Failed on-disk work remains evidence.
  */
+
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_bias_product_qc.h"
@@ -237,7 +238,9 @@ static int bind_detector_inputs(detector_plan *detector, mef_layout *const *layo
     binding.selection = MEF_OUTPUT_SELECTED;
     for (i = 0; i < frame_count; ++i) {
         binding.hdu_index = detector->hdus[detector->hdu_count == 1 ? 0 : i];
+
         /* Explicit source HDU 0 or extension: logical ID and EXTNAME are independent. */
+
         if (binding.hdu_index < 0 ||
             mef_layout_bind(layouts[i], &binding, 1, NULL, detector->raw_layouts + i, error) !=
                 MEF_OK ||
@@ -424,9 +427,11 @@ static int process_bias_detector(detector_plan *detector, size_t index, size_t f
             (unsigned long)index) >= (int)sizeof(detector->temporary_path)) {
         goto done;
     }
+
     /* [BIAS-DETECTOR-CALIBRATION]
      * The file adapter owns the loaded raws; the result owns its corrected master.
      */
+
     status = mef_bias_from_files_measurements(context,
         (const mef_layout_map *const *)detector->raw_layouts, frame_count, detector->detector_id,
         &measurements, &result, error);
@@ -499,10 +504,12 @@ int main(int argc, char **argv)
     int reference_found = 0;
     memset(&arguments, 0, sizeof(arguments));
     memset(&options, 0, sizeof(options));
+
     /* [BIAS-RECIPE-ADMISSION]
      * Resolve configuration and all detector bindings before creating products.
      * Sample the recipe-start instant once, independently of detector count.
      */
+
     if (mef_recipe_start_time(recipe_start, sizeof(recipe_start), message, sizeof(message)) ||
         getcwd(invocation_directory, sizeof(invocation_directory)) == NULL) {
         goto done;
@@ -621,7 +628,9 @@ int main(int argc, char **argv)
     memset(&layout_options, 0, sizeof(layout_options));
     layout_options.max_hdus = 4096;
     layout_options.max_header_bytes = 16 * 1024 * 1024;
+
     /* Header-only admission of every input/detector precedes output creation. */
+
     for (i = 0; i < frame_count; ++i) {
         if (frames->name[i][0] != '/' || (raw_paths[i] = realpath(frames->name[i], NULL)) == NULL) {
             goto done;
@@ -645,7 +654,9 @@ int main(int argc, char **argv)
         if (!strcmp(detector->detector_id, arguments.reference_detector_id)) {
             reference_found = 1;
         }
+
         /* Different logical detectors may not reuse one physical input plane. */
+
         for (j = 0; j < i; ++j) {
             size_t frame;
             for (frame = 0; frame < frame_count; ++frame) {
@@ -709,6 +720,7 @@ int main(int argc, char **argv)
     /* [BIAS-DETECTOR-LOOP]
      * Each detector has its own corrections, frame membership and private MEF.
      */
+
     for (i = 0; i < arguments.detector_count; ++i) {
         fprintf(log, "DETECTOR_START %lu %s CONFIGURATION %lu\n", (unsigned long)i,
             arguments.detectors[i].detector_id,
@@ -729,10 +741,12 @@ int main(int argc, char **argv)
             goto done;
         }
     }
+
     /* [BIAS-PRODUCT-PUBLICATION]
      * All selected detector products must be complete before final assembly.
      * Bias adds no cross-detector normalization or balancing here.
      */
+
     if (mef_bias_product_qc_check(archive, message, sizeof(message))) {
         goto done;
     }
@@ -802,7 +816,9 @@ usage:
         "Selected BPM additionally requires --bpm-hdu N --bpm-good-value (0|1) --bpm-coordinates "
         "(raw|active) [--bpm-expected-extname NAME]. Output parent must exist; no overwrite.\n");
 done:
+
     /* Release in-memory owners; preserve failed file products and private work. */
+
     set_logfile(0);
     if (!succeeded) {
         if (*message) {

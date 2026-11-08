@@ -1996,11 +1996,13 @@ image_t * mef_overscan_correction_masked(image_t *   mef_frame, mef_bb *bb,
 {
     return mef_overscan_correction_traced(mef_frame, bb, nplane, what, map, NULL, 0);
 }
+
 /* Correct a caller-owned working frame in place and return a new trimmed image.
  * The caller still owns the working frame. Optional row traces borrow storage;
  * scan-column coordinates are restored before leaving the correction block.
  * The bias service calls this shared helper without a detector BPM on scan reads.
  */
+
 image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_context, int frame_index,
     char *calibration_kind, const pixelmap *scan_mask, pixelvalue *row_level_trace,
     size_t trace_rows)
@@ -2027,7 +2029,9 @@ image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_conte
         (row_level_trace != NULL && trace_rows != (size_t)raw_frame->ly)) {
         return NULL;
     }
+
     /* Eclipse map polarity is 1=good; reject malformed maps before mutation. */
+
     if (scan_mask != NULL) {
         size_t position, count;
         if (scan_mask->data == NULL || scan_mask->lx != raw_frame->lx ||
@@ -2042,7 +2046,9 @@ image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_conte
             }
         }
     }
+
     /* Sanity tests with input parameters */
+
     prescan_factor = 0;
     overscan_factor = 0;
     if (use_prescan != 0) {
@@ -2071,12 +2077,14 @@ image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_conte
     centered_row_levels = NULL;
 
     /* Bring coordinates back to C convention */
+
     prescan_x[0]--;
     prescan_x[1]--;
     overscan_x[0]--;
     overscan_x[1]--;
 
     /* Make out bias column */
+
     row_scan_samples = malloc(scan_width * sizeof(pixelvalue));
     row_levels_adu = malloc(raw_frame->ly * sizeof(pixelvalue));
     if (row_scan_samples == NULL || row_levels_adu == NULL) {
@@ -2087,6 +2095,7 @@ image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_conte
      * Estimate each electronic row level from enabled scan columns, subtract
      * the pixelvalue result across that row, then retain its trace for QC.
      */
+
     for (row = 0; row < raw_frame->ly; row++) {
         row_pixels = raw_frame->data + row * raw_frame->lx;
         sample_count = 0;
@@ -2132,6 +2141,7 @@ image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_conte
         scan_stdev_adu);
 
     /* We write the bb-> qc keywords for the corresponding frame */
+
     if (!strcmp(calibration_kind, "bias")) {
         legacy_context->bias_scan_median[frame_index] = scan_median_adu;
         legacy_context->bias_scan_stdev[frame_index] = scan_stdev_adu;
@@ -2165,6 +2175,7 @@ image_t *mef_overscan_correction_traced(image_t *raw_frame, mef_bb *legacy_conte
     }
 
     /* Extract cropped region */
+
     cropped_frame =
         image_getvig(raw_frame, trim_region[0], trim_region[2], trim_region[1], trim_region[3]);
 

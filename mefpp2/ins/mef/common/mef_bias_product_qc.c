@@ -2,6 +2,7 @@
  * Copy service results into one QC archive for native ASDF serialization and
  * FITS mapping. This layer does not correct pixels or choose frame membership.
  */
+
 #define _POSIX_C_SOURCE 200809L
 #include "mef_bias_product_qc.h"
 #include "mef_product_qc.h"
@@ -12,8 +13,10 @@
 #include <math.h>
 #include "qfits.h"
 #include <string.h>
+
 /* Eclipse's public image headers expose allocator macros. These metadata owners
  * use libc; numerical image owners still use their library destructors. */
+
 #undef malloc
 #undef calloc
 #undef realloc
@@ -375,7 +378,9 @@ int mef_bias_product_qc_add(mef_bias_product_qc *archive, size_t index, const ch
         "1.4826_MAD_raw_difference_div_sqrt2", m->ron_mad_available,
         "pair_not_requested_or_insufficient_samples", m->raw_difference.valid_pixels,
         m->raw_difference.zone, pair, pair_count);
+
     /* These two RON quantities use exactly the same mask as the raw difference. */
+
     if (mask != NULL && options->ron_pair_set) {
         for (i = storage->count - 2; i < storage->count; ++i) {
             storage->measurement[i].mask_policy = "applied";
@@ -732,7 +737,9 @@ int mef_bias_product_qc_headers(mef_bias_product_qc *archive, const char *const 
     if (!total) {
         return 0;
     }
+
     /* Same existing bounded qfits scanner; final product only, never raw pixels. */
+
     if (qfits_cache_prime_bounded(
             (char *)archive->paths->fits, archive->product.detector_count + 1, 16 * 1024 * 1024)) {
         if (message && size) {

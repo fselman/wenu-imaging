@@ -11,3 +11,15 @@ Provide a reading map and source-file/routine/landmark references in the existin
 Qualification: token/evaluation-order comparison against the qualified source (allowing explicit renames, braces and macro expansion), strict C17 syntax/build checks, existing synthetic service/legacy exact pixel/QC and lifetime/failure contracts, affected configuration/QC/file checks where available, and a bounded selected-Mac recipe comparison using tiny synthetic inputs when needed. Preserve existing selected build/cache/tools and qualified binary; no fresh Mac export/reconfigure by default, observational replay or installation. Generated producer stamps must describe the actual built source. Human source comprehension remains a separate pending owner acceptance gate.
 
 Linearity remains paused. No merge of the readability implementation is authorized by approval to prepare it.
+
+## Owner structural feedback after the first pass
+
+The first pass improved names/layout but retained an 864-line command, including
+a roughly 392-line main. The owner requires a high-level recipe of two pages,
+maximum three, with calls to reusable services, and specifically directs that
+this be achieved by amending the common template. The next structural pass must
+follow [the common coordinator amendment](common-recipe-coordinator-v1.md),
+including the existing inner operation lifecycle, rather than only extracting
+bias-specific helpers. Add blank lines around explanatory comments. Current
+source comprehension is not accepted; outer interface/module design review
+precedes that structural extraction. No new scientific algorithm is authorized.

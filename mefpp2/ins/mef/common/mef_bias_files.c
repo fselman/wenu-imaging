@@ -3,6 +3,7 @@
  * frames belong to the adapter; successful results transfer to the caller.
  * Publication writes one detector MEF without replacing an existing final path.
  */
+
 #include "mef_bias_files.h"
 #include "mefp_lib.h"
 #include <limits.h>
@@ -19,6 +20,7 @@ static mef_status report_file_failure(mef_status status, const char *message, me
 
 /* The first concrete use of the reusable operation template. Later adapters
  * provide their own typed state/callbacks without copying this orchestration. */
+
 #include "mef_operation_template.h"
 
 typedef struct {
@@ -104,9 +106,11 @@ static mef_status load_bias_frames(void *opaque, mef_error **error)
     if (state->frames == NULL || state->borrowed == NULL) {
         return report_file_failure(MEF_ERR_MEMORY, "Cannot allocate bias plane handles", error);
     }
+
     /* [BIAS-INPUT-LOADING]
      * Each map selects the logical detector's explicit source HDU, not its ordinal.
      */
+
     for (i = 0; i < state->count; ++i) {
         status = mef_layout_load(state->maps[i], state->detector, state->frames + i, error);
         if (status != MEF_OK) {
@@ -225,6 +229,7 @@ mef_status mef_bias_from_files_measurements(mef_context *context, const mef_layo
  * forward links and rebuilds n via append. Never index the deleted source or
  * merge it as an update. Build the required structural prefix without deletion.
  * Existing extension-input publication does not enter this conversion. */
+
 static int is_structural_fits_key(const char *key)
 {
     return !strcmp(key, "SIMPLE") || !strcmp(key, "XTENSION") || !strcmp(key, "BITPIX") ||
@@ -264,7 +269,9 @@ static qfits_header *copy_primary_image_header(
         qfits_header_append(out, "NAXIS2", value, NULL, NULL);
         qfits_header_append(out, "PCOUNT", "0", NULL, NULL);
         qfits_header_append(out, "GCOUNT", "1", NULL, NULL);
+
         /* Loaded/calculated pixels are physical ADU, not stored raw integers. */
+
         qfits_header_append(out, "BSCALE", "1.0", "pixel=FITS*BSCALE+BZERO", NULL);
         qfits_header_append(out, "BZERO", "0.0", "pixel=FITS*BSCALE+BZERO", NULL);
     }
@@ -320,8 +327,10 @@ static mef_status publish_bias_header(const mef_config *config, const mef_bias_r
     if (status != MEF_OK) {
         goto done;
     }
+
     /* Bound the existing legacy 80-byte creation-name formatter. This is not
      * a clock/naming correction or a new filename grammar (#207 stays open). */
+
     if (strlen(legacy_header_context->instrument) > 24 ||
         strlen(legacy_header_context->recipe_key) > 48 ||
         strlen(legacy_header_context->bias_frame_i_key) > 48) {
@@ -347,8 +356,10 @@ static mef_status publish_bias_header(const mef_config *config, const mef_bias_r
     names.name = members;
     legacy_header_context->bias_header_inputs = &names;
     legacy_header_context->bias_nframes = (int)bias_qc->input_frames;
+
     /* All helpers now see one statistics/configuration slot. Borrowed views
      * are detached before legacy destruction, including every error path. */
+
     legacy_header_context->bias_scan_median = (float *)bias_qc->scan_median;
     legacy_header_context->bias_scan_stdev = (float *)bias_qc->scan_stdev;
     legacy_header_context->bias_median_even_handling =
@@ -359,8 +370,10 @@ static mef_status publish_bias_header(const mef_config *config, const mef_bias_r
     legacy_header_context->bias_framethr_hi = (float *)&bias_qc->rejection_high;
     legacy_header_context->bias_median = (float *)&bias_qc->product_median;
     legacy_header_context->bias_stdev = (float *)&bias_qc->product_stdev;
+
     /* The legacy Phase3 helper requires both raw time cards (#24 unchanged).
      * Fail before calling atof(NULL); do not invent a time for missing cards. */
+
     primary_header = qfits_header_read(legacy_header_context->name_bias);
     if (primary_header == NULL || qfits_header_getstr(primary_header, "EXPTIME") == NULL ||
         qfits_header_getstr(primary_header, "MJD-OBS") == NULL ||
@@ -382,8 +395,10 @@ static mef_status publish_bias_header(const mef_config *config, const mef_bias_r
         status = MEF_ERR_INPUT;
         goto done;
     }
+
     /* A raw primary image is written as one extension with an empty primary.
      * Existing MEF inputs preserve the old header policy byte for byte. */
+
     if (source_hdu == 0) {
         qfits_header *new_primary, *new_extension;
         new_primary = copy_primary_image_header(primary_header, signal, 1);
@@ -429,8 +444,10 @@ static mef_status publish_bias_header(const mef_config *config, const mef_bias_r
             {
                 const char *existing = qfits_header_getstr(detector_header, key);
                 if (existing) {
+
                     /* This one card is emitted by both the legacy bias helper
                      * and typed QC. Keep it only if both explicitly agree. */
+
                     if (!strcmp(key, "HIERARCH ESO MPP QC MED EVEN") && !strcmp(existing, value)) {
                         continue;
                     }
@@ -445,9 +462,11 @@ static mef_status publish_bias_header(const mef_config *config, const mef_bias_r
             }
         }
     }
+
     /* [BIAS-DETECTOR-WRITE]
      * Stage physical-ADU pixels and headers, then publish by an exclusive link.
      */
+
     path_length = strlen(final_path);
     if (path_length > (size_t)-1 - 32) {
         status = MEF_ERR_INPUT;

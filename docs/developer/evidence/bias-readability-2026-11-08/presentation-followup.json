@@ -1,0 +1,33 @@
+{
+  "previous_review_commit": "9309566e3c5376150f310268a3cf485b16d20014",
+  "scope": "Blank lines around stand-alone comments; existing operation runner layout/braces only; coordinator design amendment is documentation, not a new runtime API",
+  "executable_tokens_unchanged": true,
+  "runner_allows_added_braces": true,
+  "operation_template_probe": {
+    "exit_status": 0,
+    "scenarios": 6,
+    "coverage": [
+      "success",
+      "validation/load/calculation/publication early failure",
+      "optional publication",
+      "cleanup"
+    ],
+    "binary_sha256": "5744d04bc86389f184a2f408f67981761f2bb31f10da6f38d72f7180f8edc19e"
+  },
+  "source_sha256": {
+    "mefpp2/ins/mef/recipes/mefpp_bias_recipe.c": "213313ccd9cc5c807bba9051660e378bcc9a48dfa97fa7c8de84ef1befb8df71",
+    "mefpp2/ins/mef/common/mef_bias_kernel.c": "f4fe88e91f607e0bde8c3c7b195029696e5bbfbccfa8c25e667267ed2d8dcd53",
+    "mefpp2/ins/mef/common/mef_cal_bias.c": "800bc985146036cbf6577b79f2f025ea3c28f0550250f2e43743787eddb27603",
+    "mefpp2/ins/mef/common/mef_bias_files.c": "0f89099f279ab478c468305629d7ebb8bd8d1d18fc713bffd3061312f1cc15de",
+    "mefpp2/ins/mef/common/mef_bias_product_qc.c": "c2b641e183bb4141597ae696e4f04ecd4ce768c87a8bc96aebe87a6c0c3d05ce",
+    "mefpp2/ins/mef/common/mef_bias_qc_fits.c": "2bca20866267707417f50e8bb9ef5676e6161cd448cbe2a3934cccfdccca2364",
+    "mefpp2/ins/mef/common/mef_bias_recipe_config.c": "ecf7673affaf972aba2559db6644be15b1662c1053bea6db310eb832a3c5b15b",
+    "mefpp2/ins/mef/common/mefp_lib.c": "570c3e7f575a81b0865d54ed2a93047711af1a8fbe4c02af9972263c96d43fc1",
+    "mefpp2/ins/mef/common/mef_operation_template.c": "fd2149c1f9a7591539c313d033129bda50f4c90125b77de9cf8dea10715b9c91",
+    "mefpp2/ins/mef/common/mef_operation_template.h": "0e4dd9b7e6dfca404deb8ba858f94b467a67f244678e9031d1fef8f73adec6ba"
+  },
+  "mac_build_changed": false,
+  "observations_accessed": false,
+  "outer_structural_refactor": "pending common-template interface review",
+  "owner_source_acceptance": "pending"
+}

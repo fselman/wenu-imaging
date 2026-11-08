@@ -1,3 +1,16 @@
+## Owner feedback: common template and comment spacing — 8 November 2026
+
+The bias first pass is not structurally accepted. High-level recipe files should
+normally fit two readable pages and at most three. Amend the existing common
+operation/recipe scaffold before extracting shared support from the outer bias
+command; do not create a separate bias-only architecture. Read
+[the coordinator amendment](docs/developer/design/common-recipe-coordinator-v1.md).
+Its exact outer C interfaces remain for review; the current executable runner's
+callback sequence is unchanged. Give stand-alone explanatory comments blank lines
+before and after. Keep source/guide landmarks aligned. Preserve b833aca7 and all
+products/build evidence; linearity remains paused. No numerical change, target
+rebuild, observation or installation is implied by this amendment.
+
 ## Bias readability candidate: source review first — 8 November 2026
 
 Owner accepted the permanent readability policy (PR #291, merged at 165d02d)

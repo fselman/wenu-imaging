@@ -1,5 +1,14 @@
 # Bias recipe: source review edition
 
+**Owner feedback: structural revision required.** The first-pass command is
+864 lines with a roughly 392-line main; it does not yet meet the requested
+high-level two-page/maximum-three-page structure. The next pass is template-led:
+see the [common coordinator amendment](design/common-recipe-coordinator-v1.md)
+and updated [operation scaffold](native-operation-recipe-template.md). Current
+follow-up changes give stand-alone comments blank lines before and after and
+format the existing operation runner without changing its lifecycle. Source
+acceptance and the outer structural extraction remain pending.
+
 Issue #292. The owner accepted the mandatory readability policy (PR #291, now merged at 165d02d), then instructed applying it to the bias routines so that he can read and review the result before accepting it. Linearity remains paused.
 
 This candidate expands compressed code, uses descriptive domain names and ordinary option control flow, adds logical spacing/braces, and places twelve sparse source comment landmarks at scientific stages. Existing public function signatures, formulas, operation order, mask populations, median modes, zero-spread/error wording, ownership/cleanup and file/publication contracts are retained. The shared `mefp_lib.c` edit is restricted to `mef_overscan_correction_traced`; the rest of that legacy file and dependency algorithms are unchanged. Existing operation boundaries are retained in this first pass; function extraction can be driven by source-review feedback rather than an arbitrary length limit.
@@ -31,3 +40,15 @@ All twelve source landmarks are unique and referenced in the LaTeX guide. The gu
 This is prepared for the owner's reading, not accepted human comprehension. First review the source and reading map, and revise anything whose flow or scientific meaning remains difficult to follow. Then use fresh actual-host evidence and the selected mutable Mac source/build/cache/tools for the bounded affected-recipe qualification. Preserve the qualified b833aca7 executable (SHA256 4728e6d00c6c1bb5fc55710a53281910a60ad728fa696363cf8dfb22c3593b14), all original products and prior evidence. A checkout synchronization for reading does not update that mutable source or binary.
 
 No observations, installations, coefficient/model work, frozen-linearity dependency substitution or merge/cleanup of this implementation is authorized by this source-review preparation. Linearity remains paused; CCD68/90 residual investigations and viewer Update remain deferred.
+
+## Template/spacing follow-up
+
+The owner explicitly required using the common template for the next structural
+revision and blank lines around explanatory comments. Those presentation changes
+preserve executable tokens in ten source/header files; the existing operation
+runner adds braces only and passes its six ordering/early-stop/cleanup scenarios
+in the retained C17/UBSan agent build. See
+[evidence](evidence/bias-readability-2026-11-08/presentation-followup.json).
+The earlier numerical/file/QC evidence remains identified with the first source
+review; no whole bias matrix was replayed for whitespace. The outer coordinator
+phase/interface amendment is for review, not implemented generic machinery.

@@ -1,0 +1,55 @@
+{
+  "successful": true,
+  "files": [
+    {
+      "path": "mefpp2/ins/mef/recipes/mefpp_bias_recipe.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_kernel.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_cal_bias.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_files.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_product_qc.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_qc_fits.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_bias_recipe_config.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mefp_lib.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_operation_template.c",
+      "tokens_unchanged": true,
+      "added_control_braces_only": true
+    },
+    {
+      "path": "mefpp2/ins/mef/common/mef_operation_template.h",
+      "tokens_unchanged": true,
+      "added_control_braces_only": false
+    }
+  ]
+}

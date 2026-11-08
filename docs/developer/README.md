@@ -1,3 +1,5 @@
+Current design feedback: [common recipe coordinator amendment](design/common-recipe-coordinator-v1.md), extending the [existing operation scaffold](native-operation-recipe-template.md). The short outer bias recipe still needs structural extraction; comment spacing is corrected.
+
 Current source-review candidate: [bias readability and reading order](bias-readability-2026-11-08.md). Agent checks pass; owner reading and actual Mac candidate gate remain pending. Preserve qualified b833aca7; linearity is paused.
 
 Mandatory agent policy: [human readable code and source-guide landmarks](agent-instructions.md#human-readable-code-and-source-guide-landmarks). Clear source and human review are required alongside numerical qualification. Linearity development is currently paused.

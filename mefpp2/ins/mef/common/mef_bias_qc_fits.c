@@ -2,6 +2,7 @@
  * Values, availability and population definitions come from the shared archive;
  * the versioned mapping registry supplies names/codes. No statistics are rerun.
  */
+
 #include "mef_bias_qc_fits.h"
 #include "qfits.h"
 #include <math.h>
@@ -99,6 +100,7 @@ static const mef_qc_measurement *find_measurement(
 
 /* Preflight the exact 80-byte HIERARCH layout. No supplied comments or CONTINUE cards.
  * qfits must never silently truncate a keyword, value or quoted string. */
+
 static int append_fits_card(qfits_header *header, const char *name, const char *value, int string)
 {
     char key[81], quoted[81];
@@ -186,7 +188,9 @@ static int append_measurement_context(
     for (i = 0; i < measurement->source_count; ++i) {
         char suffix[32];
         snprintf(suffix, sizeof(suffix), "SRC%lu", (unsigned long)i + 1);
+
         /* Product identities are absolute paths in ASDF. FITS uses basename. */
+
         if (!measurement->source_ids || !measurement->source_ids[i]) {
             return 0;
         }
@@ -239,7 +243,9 @@ static int append_measurement(
                     *product_qc = 'E';
                 }
             }
+
             /* A float-looking card preserves type for integral-valued ADU. */
+
             if (!strchr(number, '.') && !strchr(number, 'E')) {
                 strcat(number, ".0");
             }
@@ -272,7 +278,9 @@ static int append_sample_group(qfits_header *header, int scope, const char *pref
                 snprintf(key, sizeof(key), "%s %s", group, metrics[j].fits);
                 const mef_qc_measurement *m =
                     find_measurement(measurement, measurement_count, name);
+
                 /* The registry groups only definitions whose context is identical. */
+
                 if (!m || !m->stage || !m->mask_policy || !m->coordinates || !m->clipping ||
                     !m->nonfinite_policy || strcmp(m->clipping, "none") ||
                     strcmp(m->nonfinite_policy, "excluded") || strcmp(first->stage, m->stage) ||
@@ -299,7 +307,9 @@ static int append_sample_group(qfits_header *header, int scope, const char *pref
         if (scalars[i].scope == scope) {
             const mef_qc_measurement *m =
                 find_measurement(measurement, measurement_count, scalars[i].asdf);
+
             /* BPM parameter measurements exist only when a BPM was supplied. */
+
             if (!m && (!strncmp(scalars[i].asdf, "bpm.", 4) ||
                           !strncmp(scalars[i].asdf, "ron_clip.", 9) ||
                           !strcmp(scalars[i].asdf, "read_noise.clipped"))) {
@@ -324,8 +334,10 @@ int mef_bias_qc_fits_header(
         index >= product_qc->detector_count || !product_qc->fits_path) {
         goto failed;
     }
+
     /* Numeric formatting is locale sensitive. Refuse rather than mutate global
      * locale or emit a decimal comma in scientific metadata. */
+
     if (strcmp(localeconv()->decimal_point, ".")) {
         goto failed;
     }
@@ -371,7 +383,9 @@ int mef_bias_qc_fits_header(
     for (i = 0; i < pair->source_count; ++i) {
         size_t j;
         char key[32];
+
         /* Unrequested RON uses the product as its source, not a raw pair. */
+
         if (!strncmp(pair->source_ids[i], "raw-", 4)) {
             for (j = 0; j < product_qc->input_count; ++j) {
                 if (!strcmp(pair->source_ids[i], product_qc->inputs[j].id)) {

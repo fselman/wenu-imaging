@@ -3,6 +3,7 @@
  * The returned owner keeps expanded strings alive until recipe teardown;
  * this layer performs no image correction or scientific measurement.
  */
+
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_bias_recipe_config.h"
