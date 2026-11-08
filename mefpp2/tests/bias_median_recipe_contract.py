@@ -9,9 +9,28 @@ import bias_recipe_contract as old
 p=argparse.ArgumentParser(description=__doc__)
 for k in ('work','recipe','adapter','asdf-python'):p.add_argument('--'+k,type=Path,required=True)
 p.add_argument('--revision',required=True)
+p.add_argument('--reuse-fixture',type=Path)
 a=p.parse_args();a.work=a.work.resolve();a.work.mkdir();a.asdf_python=old.interpreter_path(a.asdf_python)
 a.reuse_omissions=False;old.ARGS=a;old.WORK=a.work
-old.RecipeTests.setUpClass();case=old.RecipeTests('test_explicit_omissions_and_toml')
+if a.reuse_fixture is None:
+    old.RecipeTests.setUpClass()
+else:
+    previous=a.reuse_fixture.resolve(strict=True);assert previous!=a.work
+    cls=old.RecipeTests
+    cls.raw=previous/'raw';cls.orchestration=a.work/'orchestration';cls.orchestration.mkdir()
+    cls.products=a.work/'products';cls.products.mkdir()
+    cls.paf=previous/'bias.paf';cls.toml=previous/'bias.toml'
+    cls.listing=previous/'bias.list';cls.bpm=previous/'mask.fits';cls.bad_bpm=previous/'bad-mask.fits'
+    cls.members=[Path(v) for v in cls.listing.read_text().splitlines() if v.strip()]
+    assert len(cls.members)==4 and all(v.is_file() for v in cls.members)
+    cls.references={mode:[previous/f'reference-{mode}-{d}'/'bias.fits' for d in range(2)]
+                    for mode in ('masked','omitted','renamed')}
+    cls.reference_qc={mode:[json.loads(v.with_name('qc.json').read_text()) for v in paths]
+                      for mode,paths in cls.references.items()}
+    cls.configuration=json.loads((previous/'reference-masked-0/config.json').read_text())
+    cls.configuration['MEF.BIAS.MEDIAN.EVEN.HANDLING']={'type':'string','value':'lower'}
+    cls.frozen={str(v):old.digest(v) for v in previous.rglob('*') if v.is_file()}
+case=old.RecipeTests('test_explicit_omissions_and_toml')
 # First retain the exact historical oracle against the frozen reference adapter.
 out=case.destination('legacy-reference');case.run_recipe(case.command(out,toml=False),'legacy-reference',True)
 case.verify(next(out.glob('*.fits')))
@@ -34,9 +53,25 @@ def run(label,listing,mode=None,pair=False,policy=None,success=True):
         headers[label]=[{k:v.header[k] for k in v.header if k.startswith('ESO MPP QC ')} for v in h[1:]]
         for v in h[1:]:assert v.header['ESO MPP QC MED EVEN']==(mode or 'average')
     return arrays
-# Identical triplets expose the scan-corrected plane without temporal ambiguity.
+def identical_triplet(source,directory):
+    """Separate regular synthetic files, identical bytes, distinct resolved paths."""
+    directory.mkdir();payload=source.read_bytes();members=[]
+    for index in range(3):
+        destination=directory/f'replica-{index}-{source.name}'
+        with destination.open('xb') as f:f.write(payload)
+        assert not destination.is_symlink() and destination.read_bytes()==payload
+        members.append(destination.resolve(strict=True))
+    assert len(set(members))==3
+    return members
+# Retain the real recipe's duplicate-identity refusal as an explicit check.
+duplicate=a.work/'duplicate.list';duplicate.write_text((str(case.members[0])+'\n')*3)
+run('duplicate-refused',duplicate,success=False)
+# Identical pixels in distinct files expose scan correction without ambiguity.
+raw_oracle=a.work/'raw-identical';raw_oracle.mkdir()
 for i,path in enumerate(case.members):
-    listing=a.work/f'single-{i}.list';listing.write_text((str(path)+'\n')*3)
+    copies=identical_triplet(path,raw_oracle/f'plane-{i}')
+    case.frozen.update({str(v):old.digest(v) for v in copies})
+    listing=a.work/f'single-{i}.list';listing.write_text('\n'.join(map(str,copies))+'\n')
     corrected.append(run('single-'+str(i),listing))
 expected=np.stack(corrected)
 values={};master={}
@@ -56,4 +91,4 @@ expected_path=a.work/'median-expected.json';expected_path.write_text(json.dumps(
 with (a.work/'asdf-verify.log').open('x') as log:
     subprocess.run([str(a.asdf_python),'-B',str(old.ROOT/'mefpp2/tests/bias_median_asdf_verify.py'),'--expected',str(expected_path),'--schema',str(old.ROOT/'mefpp2/ins/mef/config/qc-product-schema-2.0.0.json')],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=60)
 (a.work/'results.json').write_text(json.dumps(dict(successful=True,products=products,legacy_exact=True,raw_observations_accessed=False),indent=2)+'\n')
-print('PASS: exact historical lower, default/explicit average temporal oracle, native FITS/ASDF mode and QC, input/RON invariance and three refusals')
+print('PASS: exact historical lower, default/explicit average temporal oracle, native FITS/ASDF mode and QC, input/RON invariance and four refusals')
