@@ -1,9 +1,9 @@
 # Current priorities
 
-1. Complete owner acceptance/integration of the readable bias coordinator (PR #293).
-   The selected Mac synthetic native FITS/ASDF qualification passes.
-2. Finish the documentation cleanup and adopt recipe-based primary acceptance
-   (issue #296). Keep installation, recipe and scientific guides current.
+1. Maintain concise documentation and human-readable recipes under the accepted
+   policies. Bias readability and documentation cleanup are owner-accepted.
+2. Complete agreed real-data case manifests, accepted references and tolerances
+   for the small recipe-based primary acceptance suite.
 3. Resume linearity only when the owner requests it, using existing saved
    measurements/products. Noise/uncertainty and fit policies require scientific review.
 4. Continue readable recipe refactoring using the common template; qualify each

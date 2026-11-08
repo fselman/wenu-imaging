@@ -7,12 +7,12 @@ bundled qfits/Eclipse. Work in this monorepo, not the historical component repos
 Use C17 for current native development. Intel Mac is the current qualification
 host; retain CentOS 7/Chapman compatibility. Do not upgrade dependencies implicitly.
 
-The bias readability change is qualified on Mac but awaits final owner acceptance
-and merge (PR #293). Its native producer is 36381892f4f768c3a2c7450114f96021fd5c76d7,
+The owner accepted the Mac-qualified bias readability change and documentation
+cleanup (PRs #293 and #297). The native producer remains 36381892f4f768c3a2c7450114f96021fd5c76d7,
 binary SHA256 822bbadd11c5d82c799163b3f384b344706b57ccd73ee542bf7c283af9b72e49.
 Preserve that executable/cache and the b833aca7 backup. Linearity is paused.
 CCD68/90 residual investigation and the viewer Update service remain deferred.
-This documentation cleanup is separate (issue #296); it does not authorize merging.
+Work summaries and completed changes are recorded in GitHub issues and PRs.
 
 ## Human-readable implementation
 
