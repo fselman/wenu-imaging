@@ -16,6 +16,13 @@ image_t *mef_bias_stack_masked_opts(cube_t *cube, int minimum, double kappa,
     mef_bias_statistics *statistics, int *decisions, const pixelmap *map,
     median_even_handling mode)
 {
+    return mef_bias_stack_masked_diagnostic(cube, minimum, kappa, statistics,
+        decisions, map, mode, NULL);
+}
+image_t *mef_bias_stack_masked_diagnostic(cube_t *cube, int minimum, double kappa,
+    mef_bias_statistics *statistics, int *decisions, const pixelmap *map,
+    median_even_handling mode, const mef_bias_diagnostic *diagnostic)
+{
     image_sample_stats measured;
     double *means;
     int *valid;
@@ -28,6 +35,8 @@ image_t *mef_bias_stack_masked_opts(cube_t *cube, int minimum, double kappa,
     stacked = NULL;
     if (statistics == NULL) { cube_del(cube); return NULL; }
     statistics->measured = 0;
+    statistics->zero_spread = 0;
+    statistics->accepted = 0;
     if (cube == NULL || cube->np < minimum || (mode != MEDIAN_EVEN_AVERAGE && mode != MEDIAN_EVEN_LOWER)) goto cleanup;
     count = cube->np;
     means = malloc((size_t)count * sizeof(*means));
@@ -56,6 +65,23 @@ image_t *mef_bias_stack_masked_opts(cube_t *cube, int minimum, double kappa,
     statistics->low = low;
     statistics->high = high;
     statistics->measured = 1;
+    if (sigma == 0.0) {
+        /* A collapsed strict interval cannot admit any frame. Stop explicitly,
+         * before stacking, rather than silently admitting equal frame means. */
+        statistics->zero_spread = 1;
+        e_error("Bias zero-spread failure: detector [%s], %d frame means, sigma=0 ADU; "
+            "cannot form a nonzero rejection interval; processing stopped before stacking",
+            diagnostic != NULL && diagnostic->detector_id != NULL && *diagnostic->detector_id ?
+                diagnostic->detector_id : "unspecified", count);
+        for (i = 0; i < count; ++i) {
+            if (decisions != NULL) decisions[i] = 0;
+            e_error("Bias zero-spread input %d [%s]: corrected mean=%.17g ADU", i + 1,
+                diagnostic != NULL && diagnostic->input_names != NULL &&
+                diagnostic->input_names[i] != NULL ? diagnostic->input_names[i] :
+                    "name unavailable", means[i]);
+        }
+        goto cleanup;
+    }
     kept = 0;
     for (i = 0; i < count; ++i) {
         valid[i] = means[i] > low && means[i] < high;
@@ -79,8 +105,8 @@ image_t *mef_bias_stack_masked_opts(cube_t *cube, int minimum, double kappa,
     }
     statistics->accepted = kept;
 cleanup:
-    free(means);
-    free(valid);
+    if (means != NULL) free(means);
+    if (valid != NULL) free(valid);
     cube_del(cube);
     return stacked;
 }

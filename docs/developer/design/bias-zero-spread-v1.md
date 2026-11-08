@@ -1,0 +1,11 @@
+# Explicit zero-spread bias failure
+
+Owner-reviewed behavior, 8 November 2026, issue #289. Fernando chose stopping processing and displaying the problem, then authorized implementation. This supersedes the proposed equal-mean admission rule; no acceptance fallback is authorized.
+
+After computing corrected detector-local frame means and their sample standard deviation in double precision, exactly `sigma == 0.0` is an explicit computation failure before admission or temporal stacking. Report logical detector identity, each input filename in original order, and its computed mean with 17 significant digits in ADU. The service error must name zero spread even when the caller does not inspect the terminal. Never infer zero from legacy float QC fields. No epsilon, inclusive endpoints, normalization, or new scientific estimator.
+
+The internal kernel gains an optional borrowed diagnostic context and an explicit zero-spread flag; existing wrappers remain source compatible. Both native service and legacy bias caller supply identity/names. Missing context uses frame indices. Kernel ownership remains consume-on-every-return; the service transfers no partial result. A failed detector aborts the standalone recipe before final FITS/ASDF publication; its failure log and any earlier private work remain evidence. No changes to existing final products.
+
+Nonzero spread, strict endpoints, minimum survivors, median modes, BPM populations and raw-pair RON remain unchanged. Invalid/empty populations continue to fail through their existing checks. Minimum-input checks precede spread computation. Tests cover exactly zero in masked/unmasked paths, different pixel arrays with equal means, positive tiny spread, exact endpoints, minimum inputs/survivors, invalid means, and both service/legacy diagnostic propagation. Existing equivalence checks establish unchanged pixels/QC and ownership. A focused synthetic recipe failure check on the selected Mac remains required; no observations or historical-gate replay.
+
+Maintain the affected mathematical guide in LaTeX and PDF. Reuse the selected Mac mutable source/build/cache/tools after fresh host evidence; no routine reconfiguration or installation. Development-workspace checks are not Mac acceptance. No merge or branch deletion is authorized.

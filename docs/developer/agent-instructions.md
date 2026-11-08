@@ -1,3 +1,14 @@
+## Explicit zero-spread diagnostic authorized — 8 November 2026
+
+Owner selected stop-and-display for exactly zero computed frame-mean spread and
+instructed implementation. See docs/developer/bias-zero-spread-2026-11-08.md and
+the reviewed design. Both native and legacy callers report detector/input means;
+nonzero strict endpoints and median policies remain unchanged. Agent C17/UBSan
+kernel/service/legacy checks pass; actual Mac selected-build/recipe gate is pending.
+Preserve 74327c4 reference, products, source/build/cache/tools and all evidence.
+No observational replay, explicit reconfigure, installation, merge or cleanup.
+Then resume linearity; CCD68/90 residuals and viewer Update remain deferred.
+
 ## Resume 8 November: zero-spread first, then linearity
 
 Read `docs/developer/handoffs/resume-2026-11-08.md` first. Owner saved state after

@@ -72,7 +72,8 @@ def main():
     common = root / 'mefpp2/ins/mef/common'
     inputs = [p for p in common.iterdir() if p.suffix in ('.c', '.h', '.def')]
     inputs += [root / 'mefpp2/tests' / p for p in (
-        'bias_service_probe.c', 'bias_legacy_reference.c', 'bias_service_contract.py')]
+        'bias_service_probe.c', 'bias_legacy_reference.c', 'bias_service_contract.py',
+        'bias_zero_spread_probe.inc')]
     inputs += [root / 'mefpp2/ins/mef/config' / (p + '.paf') for p in ('omegacam', 'wfi')]
     before = {str(p): digest(p) for p in inputs}
     report = {'status': 'running', 'host': platform.node(), 'platform': platform.platform(),
@@ -100,6 +101,15 @@ def main():
                 raise RuntimeError(f'Incomplete equivalence coverage: {log}')
             if 'zero new owners' not in text or 'PASS: bias service contract;' not in text:
                 raise RuntimeError(f'Incomplete lifecycle coverage: {log}')
+            # Require the new controls and identity/mean diagnostics in real caller output.
+            for marker in ('PASS: zero-spread kernel boundaries;', 'PASS: zero-spread service;',
+                           'detector [legacy:test]', 'detector [detector:test]',
+                           'input 1 [equal-a.fits]: corrected mean=101 ADU',
+                           'input 3 [/synthetic bias/frame 2.fits]: corrected mean=0 ADU'):
+                if marker not in text:
+                    raise RuntimeError(f'Missing zero-spread evidence {marker}: {log}')
+            if 'runtime error:' in text:
+                raise RuntimeError(f'UBSan failure: {log}')
             print('PASS:', instrument, '8 legacy equivalence profiles and failure/lifetime controls', flush=True)
         # Verification only: the source/configuration fixtures and parent cwd stay unchanged.
         report['source_unchanged'] = before == {str(p): digest(p) for p in inputs}

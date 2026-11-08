@@ -1,3 +1,5 @@
+Current bias correction: [explicit zero-spread failure](bias-zero-spread-2026-11-08.md), [reviewed behavior](design/bias-zero-spread-v1.md). Agent C17/UBSan checks pass; actual Mac gate pending.
+
 Current handoff: [8 November — zero-spread rejection, then linearity](handoffs/resume-2026-11-08.md). CCD68/90 investigation stays after development.
 
 Accepted static bias viewer and retained requirements/audit branches: [integration record](bias-viewer-docs-integration-2026-11-07.md).

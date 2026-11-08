@@ -1,0 +1,9 @@
+[ 17%] Built target qfits
+[ 89%] Built target eclipse
+[ 91%] Building C object mefpp2/CMakeFiles/mefpp_common.dir/ins/mef/common/mef_bias_kernel.c.o
+[ 93%] Linking C static library libmefpp_common.a
+[ 93%] Built target mefpp_common
+[ 98%] Built target mefpp_config_snapshot
+[ 98%] Building C object mefpp2/CMakeFiles/bias_service_probe.dir/tests/bias_service_probe.c.o
+[100%] Linking C executable bias_service_probe
+[100%] Built target bias_service_probe

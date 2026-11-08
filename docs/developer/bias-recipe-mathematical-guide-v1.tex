@@ -17,7 +17,7 @@
 \newcommand{\Var}{\operatorname{Var}}\newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\ind}{\mathbf{1}}
 \title{\vspace{-10mm}Bias recipe\\Mathematics and implementation\\\large Version 1 --- review copy}
-\author{Wenu-imaging}\date{6 November 2026}
+\author{Wenu-imaging}\date{6 November 2026; zero-spread clarification 8 November}
 \begin{document}\maketitle\vspace{-6mm}
 \section{Purpose and authority}
 The recipe estimates a master bias \emph{signal} by correcting the electronic
@@ -30,7 +30,8 @@ This guide explains the implementation reviewed at cleanup-source revision
 \code{b8ca41fce6df5f34cd8668c574d873a8168797b2}. It follows the owner-approved
 bias/QC decisions and the final-MEF and dual-format designs listed in
 Section~\ref{sec:authority}. Historical design documents contain superseded
-stages: this guide uses current source for actual arithmetic and the later
+stages: the zero-spread paragraph includes the 8 November diagnostic change;
+other sections retain their documented baseline for actual arithmetic and the later
 approved decision for detector-mask applicability.
 
 All signal levels, standard deviations and read-noise diagnostics are in ADU.
@@ -156,9 +157,17 @@ frame means once:
 The frame-band implementation accumulates centered squared deviations in a
 second pass. Retain only $L<a_f<U$; equality at either boundary is rejected.
 The band is not recalculated after rejection. The configured minimum number
-of retained frames must be met. With zero scatter the band collapses to the
-common mean, so no frame satisfies the strict inequalities and the operation
-fails the minimum-survivor check. The retained OmegaCAM setting is $\kappa=2$, minimum three frames.
+of retained frames must be met. By the owner decision of 8 November 2026
+(issue \#289), exactly $s_a=0$ is an explicit computation failure before
+admission or stacking: the collapsed interval cannot admit any frame.
+The native and legacy bias callers report the detector ID, every input filename
+and its computed corrected mean (17 significant digits, ADU). The native service
+also returns a specific zero-spread error and transfers no master. The recipe
+stops before final FITS/ASDF publication and retains failure evidence.
+The test uses the computed double-precision $s_a$, never its rounded legacy
+float QC representation. No near-zero tolerance or inclusive endpoint rule is
+introduced; every nonzero-spread case keeps the existing arithmetic.
+The retained OmegaCAM setting is $\kappa=2$, minimum three frames.
 
 Historical configuration entries \code{FRAMETHR.LO}/\code{FRAMETHR.HI}
 do not add absolute cuts in this kernel. The computed band is operational.

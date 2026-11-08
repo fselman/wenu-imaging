@@ -10,11 +10,11 @@ static void zero_spread_contract(void)
         cube_t *cube=cube_new(2,1,3);mef_bias_statistics stats;int decisions[3];
         for(int j=0;j<3;++j){cube->plane[j]=image_new(2,1);cube->plane[j]->data[0]=(pixelvalue)(100.25+(bracket?j-1:0));cube->plane[j]->data[1]=(pixelvalue)(101.5+(bracket?j-1:0));}
         image_t *master=mef_bias_stack(cube,3,100,&stats,decisions);
-        assert(stats.measured && stats.sigma==(bracket?1:0));
+        assert(stats.measured && stats.sigma==(bracket?1:0) && stats.zero_spread==!bracket);
         if(bracket){assert(master && stats.accepted==3);assert(master->data[0]==100.25 && master->data[1]==101.5);image_del(master);}
         else assert(master==NULL && !decisions[0] && !decisions[1] && !decisions[2]);
     }
-    puts("PASS: inherited zero-spread refusal reproduced; symmetric bracket accepted with exact central pixels");
+    puts("PASS: explicit zero-spread refusal reproduced; symmetric bracket accepted with exact central pixels");
 }
 static void median_even_contract(void)
 {

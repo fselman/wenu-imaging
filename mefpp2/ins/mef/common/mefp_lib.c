@@ -2993,7 +2993,12 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
     /* The bias service and legacy recipe share the extracted arithmetic. */
     if (!strcmp(what, "bias")) {
         mef_bias_statistics statistics;
-        stacked = mef_bias_stack_masked_opts(i_cube, minframe, kappa1, &statistics, NULL, NULL, bb->bias_median_even_handling);
+        mef_bias_diagnostic diagnostic;
+        diagnostic.detector_id = bb->xtname != NULL ? bb->xtname :
+            bb->ccd[bb->xtnum - 1].extname;
+        diagnostic.input_names = bb->bias_frame_name;
+        stacked = mef_bias_stack_masked_diagnostic(i_cube, minframe, kappa1,
+            &statistics, NULL, NULL, bb->bias_median_even_handling, &diagnostic);
         zIndex = bb->nxts == 1 ? 0 : bb->xtnum - 1;
         if (statistics.measured) {
             bb->bias_avg1[zIndex] = statistics.average;

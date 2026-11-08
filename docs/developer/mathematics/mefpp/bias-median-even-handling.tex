@@ -50,7 +50,7 @@ Generic Eclipse median wrappers preserve their previous conventions.
 \section{Configuration, QC and reproducibility}
 The recipe accepts \texttt{[bias] median\_even\_handling}. Shared processing
 TOML also accepts \texttt{MEF.BIAS.MEDIAN.EVEN.HANDLING}; the typed domain
-path is \texttt{processing.bias\_median\_even\_handling}. An explicit
+path is \nolinkurl{processing.bias_median_even_handling}. An explicit
 conflict fails before processing. The optional legacy PAF key has the same
 native name. The effective choice travels through immutable configuration,
 bias settings, the bias result, and native product serialization.
@@ -79,5 +79,12 @@ pixel bytes. Input QC, frame selection and RON remain unchanged. The owner
 accepted the change. Native producer revision 74327c4 remains the qualified
 binary; later test/tool/documentation changes require no relink. Preserve all
 qualification and product evidence. CCD68/90 positive residuals and inherited
-zero-width strict frame-rejection behavior remain separate issues.
+zero-width strict frame-rejection behavior are separate from the median choice.
+The owner decision of 8 November 2026 (issue \#289) preserves zero-spread
+failure and adds an explicit diagnostic before stacking: detector ID, every
+input filename and its computed corrected mean in ADU. Exactly zero is tested
+in double precision; positive spread keeps the strict endpoints without a
+near-zero tolerance. No master is transferred for the failed detector.
+Actual Mac qualification of this diagnostic change is pending; earlier median
+acceptance remains valid for its recorded producer.
 \end{document}

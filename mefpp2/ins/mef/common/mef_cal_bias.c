@@ -163,6 +163,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     const mef_resolved_request_spec *resolved;
     mef_bias_settings settings;
     mef_bias_statistics stats;
+    mef_bias_diagnostic diagnostic;
     mef_bias_result *pending;
     mef_status status;
     mef_bb work;
@@ -301,10 +302,17 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     cube->lx = cube->plane[0]->lx;
     cube->ly = cube->plane[0]->ly;
     detail = "Bias rejection or median stacking failed; no result transferred";
-    pending->signal = mef_bias_stack_masked_opts(cube, settings.minimum_frames,
-        settings.kappa, &stats, (int *)pending->qc.accepted, active_map, (median_even_handling)settings.median_even_handling);
+    diagnostic.detector_id = resolved->request.inputs[0].detector_id;
+    diagnostic.input_names = names;
+    pending->signal = mef_bias_stack_masked_diagnostic(cube, settings.minimum_frames,
+        settings.kappa, &stats, (int *)pending->qc.accepted, active_map, (median_even_handling)settings.median_even_handling, &diagnostic);
     cube = NULL; /* Kernel always consumes the working cube. */
-    if (pending->signal == NULL) goto cleanup;
+    if (pending->signal == NULL) {
+        if (stats.zero_spread)
+            detail = "Bias zero-spread failure: computed frame-mean sigma is exactly zero; "
+                "processing stopped before stacking; detector and input means reported in error log";
+        goto cleanup;
+    }
 
     /* Structural postcondition, followed by explicit legacy-QC collection. */
     detail = "Bias result dimensions do not match the requested trim region";

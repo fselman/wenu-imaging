@@ -421,6 +421,8 @@ static void measurements(mef_bb *legacy, int detector_index)
     pixelmap_del(map);
     puts("PASS: opt-in bias active-only BPM/rejection/stage QC, raw RON, MAD, lifetimes, metadata and failure controls");
 }
+
+#include "bias_zero_spread_probe.inc"
 int main(int argc, char **argv)
 {
     mef_bb *legacy;
@@ -428,10 +430,13 @@ int main(int argc, char **argv)
     assert(argc == 3);
     fixture_directory = argv[2];
     legacy = mef_bb_new_from_paf(argv[1]); assert(legacy != NULL);
+    legacy->xtname = strdup("legacy:test"); assert(legacy->xtname != NULL);
     detector_index = legacy->nchips - 1; /* Deliberately differs from physical HDU 2. */
     for (profile = 0; profile < 8; ++profile) equivalence(legacy, detector_index, profile);
     controls(legacy, detector_index);
     measurements(legacy, detector_index);
+    zero_spread_boundaries();
+    zero_spread_service(legacy, detector_index);
     mef_bias_result_destroy(NULL); mef_bb_del(legacy);
     puts("PASS: bias service contract; legacy-compatible ADU signal, variance unavailable");
     return 0;
