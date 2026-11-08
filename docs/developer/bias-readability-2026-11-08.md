@@ -77,3 +77,35 @@ ASDF writer; that runtime gate remains explicitly pending on the selected Mac.
 The earlier token-comparison claim applies to the first-pass files, not to the
 new multi-file coordinator. Source hashes and the updated landmark map identify
 this structural candidate separately. No observations or installation occurred.
+
+## Selected Mac testing authorized — 8 November 2026
+
+The owner reviewed the 60-line coordinator, said “Much better”, and instructed
+proceeding to testing. This authorizes the bounded synthetic gate; final acceptance
+and merge remain pending. Actual-host read-only preflight confirms clean checkout
+36381892f4f768c3a2c7450114f96021fd5c76d7, exact b833aca7 production sources,
+recipe SHA256 4728e6d00c6c1bb5fc55710a53281910a60ad728fa696363cf8dfb22c3593b14,
+full cache SHA256 b09476a9b4ac63e043a292492e289be3aecd295952071b27ea2995c82af0ae4a,
+and frozen adapter SHA256
+58aeaeb988c56766492cc19a87db115fc1f1b643c0541a7582107e274b600038. The selected
+private ASDF interpreter reports 6.0.0. These observations are preflight evidence,
+not runtime acceptance of the refactor.
+
+`mefpp2/tests/qualify_bias_readability_mac.py` guards this exact state, preserves
+the binary/cache/affected source files, overlays the reviewed producer revision,
+changes only its producer cache stamp and incrementally builds the recipe and
+affected probes. It runs shared run ownership/no-clobber/failure checks, inner
+lifecycle checks, the two-instrument service/reference contract, eight native
+coordinator groups, envelope/header/primary-HDU coverage, temporal-median oracle,
+BPM/clipped-RON contracts and explicit zero-spread refusal. Native FITS/ASDF are
+created by the actual C recipe; the separate ASDF interpreter verifies the
+stored products and schema. Fresh synthetic directories only; no observations,
+installation, dependency changes, new build tree or unrelated recipe qualification.
+
+The runner prints progress every 30 seconds while a command is active, stops
+before dependent groups on failure, retains every log/output/backup and writes
+`qualification.json` in a fresh `readability-36381892f4f7-*` directory under the
+retained qualification parent. No automatic restoration, retry, cleanup or merge.
+The runner has passed Python compilation and CLI-help checks in the agent;
+its actual Mac execution remains pending. The previously recorded agent results
+retain their original scope. Documentation consolidation follows this refactor.
