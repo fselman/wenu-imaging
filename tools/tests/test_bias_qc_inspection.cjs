@@ -1,0 +1,33 @@
+// Stored-value filtering and comparison grouping; no ASDF/measurement mocks.
+const assert=require('node:assert/strict'),m=require('../bias-qc-inspection.js');
+const row=(value,unit='ADU',mask='applied')=>({scope:'product',detector:'CCD_A',measurement:{name:'read_noise',unit,status:value===null?'unavailable':'measured',value,definition:{stage:'raw_pair',method:'std',region:{detector_bpm:mask}}}});
+const a=row(2),b=row(2,'electron'),c=row(2,'ADU','omitted'),missing=row(null),zero=row(0);
+assert.equal(m.definitionGroups([a,b,c]).length,3);
+assert.equal(m.points([a,b,c,missing,zero],m.metricKey(a)).length,2);
+assert.equal(m.numeric(missing),false);assert.equal(m.numeric(zero),true);
+assert.equal(m.numeric(row(Infinity)),false);assert.equal(m.numeric(row('2')),false);
+assert.equal(m.rowsFor([a,{...b,scope:'input'}],{scope:'product',detector:'CCD_A'}).length,1);
+assert.equal(m.rowsFor([a],{scope:'product',detector:'missing'}).length,0);
+assert.equal(m.stable({b:1,a:2}),m.stable({a:2,b:1}));
+const many=Array.from({length:301},(_,i)=>i),last=m.page(many,100);
+assert.deepEqual(last.rows,[300]);assert.equal(last.pages,3);assert.equal(m.page([],9).index,0);
+assert.equal(m.range([]),null);assert(m.range([0,0])[0]<0);assert(m.range([2,2])[1]>2);
+console.log('PASS: separate units/definitions, unavailable vs zero, scope/detector filters, pagination and constant range.');
+const clipped={...a,measurement:{...a.measurement,name:'read_noise.clipped',value:1.99}},mean={...a,measurement:{...a.measurement,name:'master.mean',value:-.2}},advanced={...a,measurement:{...a.measurement,name:'variance'}};
+const coreState={scope:'product',detector:'',parameters:'core'};
+assert.deepEqual(m.parameterRows([a,clipped,mean,advanced],coreState),[a,clipped,mean]);
+assert.equal(m.parameterRows([a,clipped,mean,advanced],{...coreState,parameters:'all'}).length,4);
+const groups=m.definitionGroups([a,clipped,mean,advanced]);
+assert.equal(m.chooseMetric(groups,'')[1],clipped);
+assert.equal(m.chooseMetric(groups,m.metricKey(a))[1],a);
+const products=[{id:'old',detectors:['CCD_A'],raw_sequence:'same',rows:[{...a,product:'old'}],participation:[{participation_by_detector:[{detector_id:'CCD_A',status:'used'}]},{participation_by_detector:[{detector_id:'CCD_A',status:'rejected'}]}]},
+{id:'new',detectors:['CCD_A'],raw_sequence:'same',rows:[{...clipped,product:'new'}],participation:[]}];
+const overview=m.overviewRows(products);
+assert.equal(overview[0].values['read_noise'].value,2);
+assert.equal(overview[0].values['read_noise.clipped'],undefined);
+assert.deepEqual(overview[0].frames,{used:1,rejected:1,unknown:0,total:2});
+assert.equal(overview[1].values['read_noise.clipped'].value,1.99);
+assert.equal(overview[1].frames,null);
+assert.equal(m.inputGroups(products).get('same'),2);
+assert.equal(products[0].rows.length,1);
+console.log('PASS: common/all parameter sets, clipped-RON default, stored-value overview, absent vs unavailable, membership counts and shared-input groups.');

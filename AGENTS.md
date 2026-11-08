@@ -1,3 +1,33 @@
+## Accepted bias QC viewer and retained documentation — 7 November 2026
+
+Owner confirmed the refreshed average-median product and common parameter list,
+selectors and plots, then accepted viewer integration/branch cleanup. Merge the
+static viewer PR #283 and retain the documentation-only BPM polarity audit and
+AI/QC/education requirements branches. These records do not authorize further
+scientific or AI implementation. Viewer selection uses one in-memory ASDF load
+per generation; new files require an explicit new page generation. The Update
+button/local-service proposal was explicitly deferred: implement none of it.
+Current canonical schema supports the accepted median field. Preserve native
+producer 74327c4, build/cache, all products, raw inputs, old pages and evidence.
+No build, reconfiguration, reduction, installation or historical replay.
+This supersedes earlier pending viewer review/no-merge statements for this scope.
+
+## Bias QC viewer refinement authorized — 7 November 2026
+
+Owner instructed proceeding with clipped RON prominence, a smaller common QC
+parameter set and visible shared-input groups after completing the bias recipe.
+Continue PR #283 using accepted main af24c36. Preserve all stored scalar QC via
+an All stored parameters selector; show raw/MAD/clipped RON side by side and
+older missing clipped values as Not stored. Count only stored membership for
+used/rejected inputs. Each ASDF is read once per page generation; selectors use
+in-memory data. Keep exact unit/method/region groups and full provenance.
+No native C/libasdf, build, configuration, raw/product changes, statistical
+recalculation, representative JD or persistent database. Owner previously said
+the first viewer worked; the refined generation/browser review remains pending.
+Use a fresh orchestration page directory and the qualified ASDF interpreter.
+See docs/developer/bias-qc-inspection-2026-11-07.md and its design. This explicit
+request supersedes older viewer holds, but authorizes no merge or branch cleanup.
+
 ## Bias average median accepted; merge and branch cleanup authorized — 7 November 2026
 
 Owner accepted synthetic and real 32-detector median qualification and instructed
