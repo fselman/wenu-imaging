@@ -23,7 +23,16 @@ SELF_SOURCES = {
                   'HOT N', 'HOT THR', 'MAST', 'REQ MAD',
                   'REQ PAIR', 'UMAS', 'VAR')
 }
-IDENTITY_KEYS = SELF_SOURCES | {'ESO MPP QC ASDF', 'ESO MPP QC PROD'}
+# These optional parameter cards also cite the product, rather than a raw pair.
+# Measured clipping results retain their raw-input references and compare strictly.
+OPTIONAL_SELF_SOURCES = {
+    'ESO MPP QC ' + group + ' SRC1'
+    for group in ('RCL KLO', 'RCL KHI', 'RCL LIMIT',
+                  'BPM ENC', 'BPM BADNZ', 'BPM BITS')
+}
+IDENTITY_KEYS = SELF_SOURCES | OPTIONAL_SELF_SOURCES | {
+    'ESO MPP QC ASDF', 'ESO MPP QC PROD'
+}
 
 CLIPPED_ADDITIONS = {
     'read_noise.clipped', 'ron_clip.mean', 'ron_clip.median', 'ron_clip.stdev',
@@ -51,7 +60,7 @@ def compare_headers(actual, retained, allow_additions):
         assert not extra, ('Unexpected QC additions', sorted(extra))
     for key in retained.keys() - IDENTITY_KEYS:
         assert actual[key] == retained[key], (key, actual[key], retained[key])
-    return len(retained) - len(IDENTITY_KEYS), len(extra)
+    return len(retained.keys() - IDENTITY_KEYS), len(extra)
 
 
 # This runs in the explicitly selected ASDF environment, not the FITS reader's.
@@ -196,7 +205,7 @@ def qc(header, product):
     assert len(rows) == len(values), 'Duplicate QC keyword'
     assert values['ESO MPP QC ASDF'] == product.with_suffix('.asdf').name
     assert values['ESO MPP QC PROD'] == product.name
-    for key in SELF_SOURCES:
+    for key in SELF_SOURCES | (OPTIONAL_SELF_SOURCES & values.keys()):
         assert values[key] == product.name, (key, values[key], product.name)
     return values
 
