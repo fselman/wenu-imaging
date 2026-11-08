@@ -53,23 +53,38 @@ def run(label,listing,mode=None,pair=False,policy=None,success=True):
         headers[label]=[{k:v.header[k] for k in v.header if k.startswith('ESO MPP QC ')} for v in h[1:]]
         for v in h[1:]:assert v.header['ESO MPP QC MED EVEN']==(mode or 'average')
     return arrays
-def identical_triplet(source,directory):
-    """Separate regular synthetic files, identical bytes, distinct resolved paths."""
-    directory.mkdir();payload=source.read_bytes();members=[]
-    for index in range(3):
-        destination=directory/f'replica-{index}-{source.name}'
-        with destination.open('xb') as f:f.write(payload)
-        assert not destination.is_symlink() and destination.read_bytes()==payload
-        members.append(destination.resolve(strict=True))
-    assert len(set(members))==3
+def bracket_values(data,zone,delta):
+    """Exactly representable active-only offset; scan pixels remain unchanged."""
+    x1,x2,y1,y2=zone;result=data.astype(np.float32).copy()
+    active=result[y1-1:y2,x1-1:x2];before=active.copy()
+    active+=np.float32(delta)
+    assert np.all(active.astype(np.float64)-before.astype(np.float64)==delta)
+    outside=np.ones(result.shape,dtype=bool);outside[y1-1:y2,x1-1:x2]=False
+    assert np.array_equal(result[outside],data[outside])
+    return result
+def bracket_triplet(source,directory):
+    """Distinct synthetic files at offsets -1, 0, +1: central plane unchanged."""
+    directory.mkdir();members=[];saved=old.digest(source)
+    with fits.open(source,memmap=False) as original:
+        for index,delta in enumerate((-1,0,1)):
+            hdus=fits.HDUList([v.copy() for v in original])
+            for d in range(2):
+                zone=[configuration[f'MEF.CROP.{axis}.{bound}.CHIP{d+1}']['value']
+                      for axis,bound in [('X','MIN'),('X','MAX'),('Y','MIN'),('Y','MAX')]]
+                assert configuration[f'MEF.OVERSCAN.X.MIN.CHIP{d+1}']['value']>zone[1]
+                hdus[d+1].data=bracket_values(hdus[d+1].data,zone,delta)
+            destination=directory/f'bracket-{index}-{source.name}';hdus.writeto(destination)
+            hdus.close();members.append(destination.resolve(strict=True))
+    assert len(set(members))==3 and old.digest(source)==saved
     return members
 # Retain the real recipe's duplicate-identity refusal as an explicit check.
 duplicate=a.work/'duplicate.list';duplicate.write_text((str(case.members[0])+'\n')*3)
 run('duplicate-refused',duplicate,success=False)
-# Identical pixels in distinct files expose scan correction without ambiguity.
-raw_oracle=a.work/'raw-identical';raw_oracle.mkdir()
+# Symmetric active-only offsets preserve the central corrected plane and
+# avoid the inherited zero-spread strict frame-rejection interval.
+raw_oracle=a.work/'raw-bracketed';raw_oracle.mkdir()
 for i,path in enumerate(case.members):
-    copies=identical_triplet(path,raw_oracle/f'plane-{i}')
+    copies=bracket_triplet(path,raw_oracle/f'plane-{i}')
     case.frozen.update({str(v):old.digest(v) for v in copies})
     listing=a.work/f'single-{i}.list';listing.write_text('\n'.join(map(str,copies))+'\n')
     corrected.append(run('single-'+str(i),listing))

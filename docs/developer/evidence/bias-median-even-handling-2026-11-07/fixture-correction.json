@@ -1,7 +1,7 @@
 {
   "successful": true,
-  "scope": "agent fixture construction and Python syntax only",
-  "checks": ["identical payload bytes", "three distinct resolved input paths", "independent regular files", "source payload preserved"],
+  "scope": "agent symmetric-bracket oracle and Python syntax only",
+  "checks": ["exact central pixel median", "unit frame-mean spread", "scan pixels unchanged", "native inherited zero-spread refusal", "native bracket acceptance with exact pixels"],
   "native_producer_unchanged": "74327c49832a9337fad49a0bec1b5fd7af81cde5",
   "actual_mac_corrected_product_contract": "pending"
 }

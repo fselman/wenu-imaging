@@ -43,7 +43,8 @@ for name in git('ls-tree','-r','--name-only',producer,'--','CMakeLists.txt','mef
 processes=subprocess.check_output(['ps','-axo','pid=,command='],text=True)
 require(not [line for line in processes.splitlines() if (str(build) in line or str(source) in line) and any(v in line for v in ('cmake','make','clang','mefpp_bias_recipe','bias_product_qc_probe'))],'Selected build active')
 require(recipe.is_file() and asdf_python.is_file(),'Selected runtime missing')
-retained={str(v):digest(v) for v in previous.rglob('*') if v.is_file()}
+attempts=[previous]+sorted(v for v in q.glob('median-fixture-retry-*') if v.is_dir())
+retained={str(v):digest(v) for attempt in attempts for v in attempt.rglob('*') if v.is_file()}
 binary_before=digest(recipe);cache_before=digest(cache_path)
 work.mkdir()
 for name in names:
@@ -66,7 +67,7 @@ require(retained=={p:digest(Path(p)) for p in retained},'Failed attempt changed'
 require(not git('status','--porcelain','--untracked-files=all'),'Main checkout changed')
 require(result.returncode==0,'Corrected contract failed; retain log '+str(log))
 receipt=dict(successful=True,producer_revision=producer,test_revision=a.test_revision,
-    binary_sha256=binary_before,cache_sha256=cache_before,previous_qualification=str(previous),
+    binary_sha256=binary_before,cache_sha256=cache_before,previous_qualification=str(previous),preserved_attempts=list(map(str,attempts)),
     previous_gates=['median-even','average-profile','legacy-profiles','policy'],
     recipe_results=json.loads((work/'recipe/results.json').read_text()),
     failed_attempt_preserved=True,rebuilt=False,reconfigured=False,raw_observations_accessed=False)
