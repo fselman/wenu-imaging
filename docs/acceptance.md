@@ -53,10 +53,13 @@ references include OmegaCAM CP Pup/CN Ori and WFI Trapezium work; these names al
 do not define a reproducible automated suite. The first
 [OmegaCAM bias case](../tests/acceptance/bias/omegacam.toml) records host-confirmed
 configuration hashes, ordered-input-list identity, the average-median reference
-and selected executable. The current candidate completed all 32 detectors with
-zero exit; its reference comparison and content fingerprints remain pending.
-Other cases, including WFI, remain to be fixed with
-the owner. This inventory does not claim new real-data qualification.
+and selected executable. The selected Mac candidate completed all 32 detectors
+with zero exit and passed the reference comparison: exact pixels, no added QC
+cards, ASDF schema/configuration and product/input QC mapping. Comparison used
+the corrected own-product identity handling; checked files remained unchanged.
+This is a real-data regression result for this case, not independent validation
+of every scientific estimator. Content fingerprints and other cases, including
+WFI, remain to be completed with the owner.
 
 Use issue/PR summaries for results: what ran, which executable/configuration,
 pass/fail and material differences. Routine build logs, per-attempt receipts and

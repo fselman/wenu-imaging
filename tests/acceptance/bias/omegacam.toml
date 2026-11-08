@@ -1,7 +1,7 @@
-# Host-confirmed case identity. The selected native run completed; comparison is pending.
+# Host-confirmed case identity. Native execution and reference comparison passed on Mac.
 case_version = 1
 case_id = "bias-omegacam-normal-1x1-average"
-status = "native_run_completed_comparison_pending"
+status = "mac_real_data_comparison_passed"
 operation = "cal.bias"
 instrument = "OmegaCAM"
 detector_count = 32
@@ -60,4 +60,4 @@ source_identity_policy = "normalize_only_own_product_identity"
 required_exit_status = 0
 required_completion_marker = "BIAS_RECIPE_COMPLETE"
 # The comparator covers pixels, QC, mapping and selected provenance, not every
-# FITS header or raw input content. WFI and a new candidate comparison remain open.
+# FITS header or raw input content. WFI and content fingerprints remain open.
