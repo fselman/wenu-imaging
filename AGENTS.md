@@ -1,3 +1,21 @@
+## Bias average median accepted; merge and branch cleanup authorized — 7 November 2026
+
+Owner accepted synthetic and real 32-detector median qualification and instructed
+merge and clean (PR #288, issue #287). See
+`docs/developer/bias-median-even-handling-2026-11-07.md`. All 194346 FITS/ASDF
+comparisons and independent master statistics/hot counts passed. The 27 even
+stacks shift upward by 0.239002–0.312177 ADU; five odd stacks retain exact pixel
+bytes. Input QC, membership, other numerical settings and RON are unchanged.
+Retain native producer 74327c49832a9337fad49a0bec1b5fd7af81cde5: later commits
+change tests, comparison tools or documentation only and require no relink.
+Preserve raw inputs, all products/private work, failed attempts, TOML backups,
+receipts and the selected mutable source/build/cache/tools. Cleanup applies only
+to the merged median feature branch; preserve independent viewer PR #283.
+The inherited zero-spread strict rejection behavior remains unchanged (see
+historical #276); CCD68/90 residuals remain separate follow-up questions.
+No new reduction, installation, numerical change or viewer merge is authorized.
+This supersedes pending-Mac/no-merge statements below for this feature only.
+
 ## Bias even-sample median implementation authorized — 7 November 2026
 
 Owner chose `median_even_handling`, default `average`, explicit `lower` for

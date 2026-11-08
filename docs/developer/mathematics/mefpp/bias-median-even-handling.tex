@@ -72,7 +72,12 @@ scan-corrected planes. An independent ASDF reader checks schema, mapped FITS
 QC, mode provenance, recomputed spatial master statistics and unchanged input
 QC/RON. Invalid and conflicting settings must fail.
 The detector-sized timing is an agent-workspace microbenchmark, not a Mac
-performance qualification. Native Mac ASDF/product checks remain pending until
-the retained qualification receipt reports success. No real-data correction
-or installation follows from these synthetic tests alone.
+performance qualification. Native Mac synthetic and real-product checks have passed: all 194346 mapped
+FITS/ASDF cards and independent spatial master statistics agree. The 27 even
+stacks shift upward by 0.239002--0.312177 ADU; the five odd stacks retain exact
+pixel bytes. Input QC, frame selection and RON remain unchanged. The owner
+accepted the change. Native producer revision 74327c4 remains the qualified
+binary; later test/tool/documentation changes require no relink. Preserve all
+qualification and product evidence. CCD68/90 positive residuals and inherited
+zero-width strict frame-rejection behavior remain separate issues.
 \end{document}

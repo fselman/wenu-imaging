@@ -1,3 +1,11 @@
+# Accepted detector-local average median
+
+Owner accepted the completed synthetic and real qualification and authorized merge/branch cleanup. The current accepted native producer is **74327c49832a9337fad49a0bec1b5fd7af81cde5**; later test/tool/documentation commits do not require a rebuild or revision-stamp change. Preserve all inputs, products, private work, failed attempts, backups, qualification evidence and the selected build. Viewer PR #283 remains independent and unmerged. Historical pending statements below describe retained stages and are superseded by this acceptance.
+
+The real comparison passed **194,346** FITS/ASDF mappings, exact unchanged input QC/membership/other numerical settings/RON, independently recomputed master statistics and hot counts, five exact odd-count pixel payloads, and nonnegative shifts for all 27 even-count detectors. Even-count mean shifts span **0.239002–0.312177 ADU**; this quantitatively explains most earlier negative means. CCD68 and CCD90 remain positive at 1.924859 and 0.671544 ADU and need separate scientific investigation. The inherited zero-spread strict frame-rejection behavior remains unchanged, as already documented by #276.
+
+Full-precision report: `/Users/fselman/Pictures/OCAM/test_recipes/orchestration/bias-median-comparison-vxe_vg1a/comparison.json`. Rounded owner-supplied per-detector means and acceptance summary are retained in `evidence/bias-median-even-handling-2026-11-07/mac-real-comparison.csv` and `mac-real-acceptance.json`. The CSV retains independently rounded reported shifts; differences of its displayed means may differ in the last decimal.
+
 # Detector-local bias median: even sample handling
 
 Issue #287. Owner selected `median_even_handling`, default `average`, and approved the [scientific contract](design/bias-median-even-handling-v1.md). This deliberately changes even-count bias master pixels; explicit `lower` retains historical pixels. Odd counts are unchanged. No cross-detector normalization is introduced.
