@@ -1,3 +1,110 @@
+## Human readable code and source guide landmarks
+
+**Binding owner policy, approved 8 November 2026.** Programs are written for
+people to read and understand. Fernando will read the recipes and their
+scientific routines. The intended reader knows programming and scientific data
+processing; do not write elementary programming tutorials into the source.
+These requirements apply to all agent-authored or materially refactored recipes,
+scientific services and supporting code, regardless of which agent produces it.
+They are acceptance requirements, not optional polish. Passing tests, an agent's
+explanation, or a mathematical guide does not compensate for unreadable source.
+Do not waive this policy without an explicit owner instruction.
+
+### Structure and names
+
+- Make the successful processing sequence visible in the coordinating routine.
+  A reader must be able to identify configuration/input admission, detector
+  processing, QC collection, assembly/publication and failure cleanup where
+  applicable. Keep each routine at a coherent level of abstraction; move parsing,
+  serialization or other distracting details into meaningfully named helpers
+  when that improves the narrative. Do not conceal the scientific sequence in
+  generic dispatch machinery or multiply tiny helpers merely to shorten functions.
+- Prefer focused routines with one coherent purpose. Length is a review signal,
+  not a numerical limit. Choose boundaries that a reader can explain without
+  following a long chain of trivial wrappers.
+- Use descriptive domain names. Distinguish detector identity, configuration
+  index, source HDU, output HDU and pixel coordinates. Include units in names when
+  useful to prevent ambiguity. Short loop indices are acceptable in small obvious
+  loops; terse names such as `d`, `n`, `process` or `set` must not obscure the
+  meaning of a substantial operation.
+- Use one statement per line, consistent indentation, explicit braces for control
+  blocks and blank lines between logical paragraphs. Expand compound expressions
+  and conditions when they impede reading; name meaningful intermediate results.
+  Keep line lengths comfortable for ordinary source review, normally about
+  80--100 columns, without forcing awkward expression changes.
+- Prefer direct, ordinary control flow. Avoid macros that hide routine control
+  flow and clever compression that saves typing at the reader's expense. A clear
+  centralized C cleanup block remains appropriate for resource ownership; this
+  policy does not ban `goto cleanup` or require speculative architecture changes.
+
+### Sparse comments and stable landmarks
+
+- Start each recipe or substantial scientific source file with a short account
+  of its purpose, inputs, outputs and major stages. Document important routine
+  contracts concisely: inputs/outputs, units, relevant mask population, ownership,
+  side effects and failure behavior. Include only information useful to the reader.
+- Comments explain scientific intent, assumptions, ordering constraints,
+  invariants and nonobvious implementation decisions. Do not narrate ordinary
+  assignments, allocations or loops. Clear names and structure carry the routine
+  explanation; do not compensate for compressed code with a mass of comments.
+- Add a few labelled **comment landmarks** at meaningful scientific stages that
+  the guide needs to reference. Use a distinctive stable identifier, for example:
+
+  ```c
+  /* [BIAS-FRAME-SELECTION]
+   * Reject frames using their corrected detector-local mean levels.
+   */
+  ```
+
+  These are comments, not C labels or executable statements. Do not label every
+  routine, loop, allocation or error check. A routine name alone is sufficient
+  when it already locates the scientific operation clearly.
+- Landmark identifiers must be descriptive and unique within the repository's
+  source code, with an operation prefix such as `BIAS-`. Do not derive them from
+  source line numbers, document section numbers or equation numbering. Preserve
+  identifiers through harmless moves and reformatting; rename or retire one only
+  when its meaning changes or its stage is removed, updating the references.
+- The mathematical guide references the source file, routine and exact landmark,
+  for example `mef_bias_kernel.c`, `mef_bias_stack_masked_diagnostic`,
+  `[BIAS-FRAME-SELECTION]`. Several equations or paragraphs may refer to one
+  landmark. Keep detailed derivations and references in the guide, with essential
+  assumptions, units and boundary behavior still evident in the source.
+- Update source landmarks and affected guide references together. As part of
+  review, verify that referenced landmarks exist, are unique and designate the
+  described implementation. Maintain the existing requirement for LaTeX source
+  and corresponding compiled, visually checked PDF together. No new documentation
+  generator or automatic checking framework is required by this policy.
+
+### Human comprehension and change discipline
+
+- Before presenting a recipe, perform a dedicated reading pass in addition to
+  correctness checks. Can the intended reader follow the processing order,
+  scientific decisions, data/ownership transitions and failure handling from the
+  source? Remove unnecessary abstractions, stale comments and compressed idioms.
+- Present a concise suggested reading order for a new or substantially reworked
+  recipe: coordinating routine, scientific routines and corresponding guide
+  sections/landmarks. Give the owner a small coherent change that can be reviewed
+  directly, without relying on the agent to interpret the code on every reading.
+- Human source review is a distinct acceptance requirement alongside numerical
+  qualification. Record the actual review/qualification state; do not claim owner
+  comprehension or acceptance merely because the agent has read the source.
+- Keep readability-only work separate from scientific or behavioral changes.
+  Preserve evaluation order, floating-point behavior, rejection boundaries,
+  masks, units, ownership, error semantics, I/O contracts and provenance unless
+  separately authorized. Formatting and comments alone do not authorize a new
+  algorithm, dependency, bulk rewrite, build/export, installation or observational
+  replay. Select checks appropriate to the actual change; tests must supplement
+  human review rather than replace it.
+- Apply these requirements from the start of new recipe work. Bring existing
+  code into compliance through explicitly scoped readability passes, with the
+  bias recipe intended as the first reference example; this policy-only change
+  does not itself rewrite or relaunch that recipe.
+
+The owner has paused linearity development while discussing recipe readability.
+Preserve the completed zero-spread qualification, selected native producer
+b833aca7, all saved products and evidence. Resume dependent work only within the
+owner's current scope; earlier next-linearity reminders do not override this pause.
+
 ## Explicit zero-spread diagnostic qualified on Mac — 8 November 2026
 
 Owner-supplied actual Mac receipt and independent binary/cache verification pass.

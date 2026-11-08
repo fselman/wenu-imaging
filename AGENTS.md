@@ -1,3 +1,16 @@
+## Mandatory human readability and source-guide landmarks
+
+Owner-approved permanent policy (8 November 2026): read and follow
+[Human readable code and source guide landmarks](docs/developer/agent-instructions.md#human-readable-code-and-source-guide-landmarks)
+before writing or refactoring recipes and scientific routines. Source must be
+readable by a programmer familiar with scientific data processing: clear flow,
+meaningful names, logical spacing, sparse intent/contract comments, and a few
+stable unique scientific-stage comment landmarks referenced by file/routine/ID
+in the LaTeX/PDF guide. Human source review is an acceptance requirement separate
+from numerical tests. These rules are mandatory, not optional post-processing.
+Linearity development is paused by the owner. This change establishes policy;
+it does not rewrite recipes, alter science, rebuild, install or reprocess data.
+
 ## Explicit zero-spread diagnostic qualified on Mac — 8 November 2026
 
 Owner-supplied actual Mac receipt and independent binary/cache verification pass.
