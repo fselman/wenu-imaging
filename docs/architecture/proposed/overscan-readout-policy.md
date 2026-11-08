@@ -61,7 +61,7 @@ not overwrite selected geometry or establish verified hardware identity.
 
 ## Staged implementation
 
-M2's [project authoring contract](m2/project-contracts/README.md) validates the
+M2's [project authoring contract](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/architecture/proposed/m2/project-contracts/README.md) validates the
 three valid states, contradiction rejection, per-channel settings, active channel
 selection and frozen source records. WFI/OmegaCAM examples preserve exact accepted
 native geometry and explicitly unknown physical identity/inventory. Separate

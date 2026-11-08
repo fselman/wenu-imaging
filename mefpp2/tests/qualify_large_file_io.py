@@ -1,4 +1,4 @@
-"""Private approved large-image I/O qualification; tool arguments must follow docs/developer/selected-tools.md."""
+"""Private approved large-image I/O qualification; tool arguments must follow AGENTS.md."""
 import argparse
 import hashlib
 import io
@@ -82,7 +82,7 @@ def main():
     require(not any(run.iterdir()) or {p.name for p in run.iterdir()} == {"qualify.py"}, "Run directory is not fresh")
     require(shutil.disk_usage(run).free >= 12 * 2**30, "Require 12 GiB free for approved private I/O plan")
     tools = {}
-    # Invocation paths come from selected-tools.md, never PATH/xcrun rediscovery.
+    # Invocation paths come from AGENTS.md, never PATH/xcrun rediscovery.
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
         declared = getattr(args, name)
         tools[name] = selected_tool(declared)

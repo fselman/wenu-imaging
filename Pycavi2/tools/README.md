@@ -159,7 +159,7 @@ or Ubuntu obtain the actual checkout/interpreter/engine locations first; do not
 reuse chapman3's paths or assume those targets passed. Compare each platform's
 JSON measurements and installed versions after executing there. The earlier
 manual chapman3 results are evidence for those manual runs, not an execution of
-this new tool. Follow machine guards in `docs/developer/agent-instructions.md`
+this new tool. Follow machine guards in `AGENTS.md`
 when preparing runnable command blocks.
 
 ## Remote notebook launcher

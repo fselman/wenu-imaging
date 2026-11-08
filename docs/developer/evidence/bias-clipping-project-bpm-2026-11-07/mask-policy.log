@@ -1,1 +1,0 @@
-PASS: identical native FITS selections for both binary polarities and reason bytes 0/1/2/128/255; wrong registry and binary reinterpretation refused

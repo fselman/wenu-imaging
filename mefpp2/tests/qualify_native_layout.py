@@ -1,4 +1,4 @@
-"""Private M4 qualification; tool arguments must follow docs/developer/selected-tools.md."""
+"""Private M4 qualification; tool arguments must follow AGENTS.md."""
 import argparse
 import hashlib
 import io
@@ -80,7 +80,7 @@ def main():
             "Unexpected private run directory")
     require(not any(run.iterdir()) or {p.name for p in run.iterdir()} == {"qualify.py"}, "Run directory is not fresh")
     tools = {}
-    # Invocation paths come from selected-tools.md, never PATH/xcrun rediscovery.
+    # Invocation paths come from AGENTS.md, never PATH/xcrun rediscovery.
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
         declared = getattr(args, name)
         tools[name] = selected_tool(declared)

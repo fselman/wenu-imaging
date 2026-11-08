@@ -62,10 +62,10 @@ Provide an old-fashioned, readable **Practical Guide**, organized around complet
 ## Related architecture
 
 - [Architecture index](../README.md)
-- [Current proposed implementation plan](implementation-plan.md)
+- [Current proposed implementation plan](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/architecture/proposed/implementation-plan.md)
 - [WAD and processing projects](wad-processing-project.md)
 - [Proposed Pycavi/mefpp architecture](pycavi-mefpp.md)
-- [Current mefpp architecture review](../../developer/mefpp-architecture-review-2026-11-01.md)
+- [Current mefpp architecture review](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/developer/mefpp-architecture-review-2026-11-01.md)
 
 ## Adopted principle — expert-operator tool equivalence (2026-11-01)
 

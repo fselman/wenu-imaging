@@ -1,13 +1,13 @@
 # Proposed Pycavi/mefpp target architecture
 
-Detailed delivery sequence: [implementation milestones M0–M11 and later passes P/G](implementation-plan.md). This is a proposal; publishing it does not start implementation.
+Detailed delivery sequence: [implementation milestones M0–M11 and later passes P/G](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/architecture/proposed/implementation-plan.md). This is a proposal; publishing it does not start implementation.
 
-Discussion proposal, revision 5, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](../../developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](../../developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](../../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
+Discussion proposal, revision 5, 29 October 2026. Builds on accepted baseline 22a32d3, [owner direction v2.9](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/developer/native-roadmap-amendment-v2.9-2026-10-29.md), the [source analysis](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/developer/mefpp-refactor-analysis-2026-10-29.md) and [Chapman4 inventory](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
 Status: proposed contracts and names; no implementation or dependency selection. Owner-directed revision 2 includes versioned dependency/association tracking and future incremental reprocessing as part of the architecture, with automatic cascades deferred beyond the first pass.
 Revision 3 adds the owner's project-overview CLI, variance creation/propagation, linearity, native dark construction/optional subtraction and fringe construction with later Python subtraction. See milestones M3 and M6a–M6d.
 Revision 4 records Wenu Attribute Dictionary (WAD), an ASDF ProcessingProject, a shared project service and M0a following owner instruction. Detailed schemas/APIs/layout remain proposals. See [WAD and processing projects](wad-processing-project.md).
 Revision 5 records the owner's chain-wide optional input-BPM policy and required variance capability from M6a; see [the policy and stage matrix](bpm-variance-policy.md). Existing runtime behavior is not changed by this design update.
-Compare the [original architecture](../original/pycavi-mefpp.md).
+Compare the [original architecture](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/architecture/original/pycavi-mefpp.md).
 
 ## Executive summary
 

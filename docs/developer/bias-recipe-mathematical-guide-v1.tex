@@ -26,15 +26,11 @@ rejecting entire frames by their corrected active-area means, and stacking the
 retained frames with the existing Eclipse pixel median. QC describes the
 inputs, corrections and master; it does not silently modify the result.
 
-This edition accompanies the owner-authorized readability pass over the bias
-recipe and its supporting routines. Its numerical baseline is the qualified
-zero-spread producer \code{b833aca7df520171d9dcf4f0094a43bb5aad33a6}; the
-source review changes names, layout, comments and coordinator decomposition,
-not the accepted estimators.
-The source landmarks below identify the current implementation without depending
-on line numbers. Source review is positive and the selected Mac synthetic
-FITS/ASDF gate passes for producer \code{3638189}. Full receipts remain on
-the Mac; final owner acceptance and integration remain pending.
+This guide explains the implemented estimators and their source mapping.
+Sparse source landmarks identify scientific stages without depending on line
+numbers. Validation results and work summaries belong in GitHub issues and
+pull requests; the guide describes the algorithm rather than its development
+history.
 
 This guide incorporates the already accepted average/lower temporal-median
 choice and explicit zero-spread refusal. Optional clipped raw-pair RON is
@@ -68,7 +64,7 @@ implementation; the guide does not substitute a different summation algorithm.
 \newpage
 \section*{Reading the source}\label{sec:source-reading}
 Start with the 60-line coordinator and its three labelled phases in \code{main}.
-The prepare/input/process/product support modules expose the mechanics;
+The preparation, input, processing and publication modules expose the mechanics;
 \code{mef_recipe_run} owns common paths, logging and workspace only. Follow one detector
 through \code{process_bias_detector}, the file adapter, the in-memory service,
 and the small stacking kernel. Read configuration and serialization helpers
@@ -600,59 +596,21 @@ actual source, while names identify the relevant calculation boundary.
 \bottomrule
 \end{tabular}\end{center}
 
-\newpage
-\section{Qualification and limits of the evidence}
-The retained Mac exercise preserved ten original OmegaCAM bias frames and
-produced 32 detector extensions. Its comparison established:
-\begin{itemize}
-\item 864 legacy QC keyword groups matched retained detector references exactly;
-\item all 32 recovered detector pixel payloads matched the earlier mosaic byte
-for byte; recovered FITS size was 1,077,825,600 bytes;
-\item all 89,445 mapped scalar/context cards agreed with the original QC;
-\item independent ASDF checks validated the complete recovered record,
-including schema, values, array content/float bits, provenance and FITS mapping;
-\item focused Mac checks passed for aggregate header budgeting, individual
-header bounds, optional cleanup and four in-memory QC profiles.
-\end{itemize}
-The existing recipe was relinked with accurate revision stamp
-\code{c1751306f817d37b9c4791d65f8925f57ef1151b}. Cleanup-source revision
-\code{b8ca41fce6df5f34cd8668c574d873a8168797b2} was separately component-qualified;
-that result does not imply the production recipe was subsequently relinked.
+\section{Validation}
+Acceptance compares representative real-data products by recipe: pixels,
+detector mapping, FITS metadata and saved ASDF QC/provenance. See
+\code{docs/acceptance.md} for the maintained policy. Target results and known
+limitations belong in GitHub issues; successful numerical comparisons alone
+do not establish detector health or ESO Phase-3 compliance.
 
-Evidence receipts are retained under the selected Mac qualification directory:
-\code{scalar-qc-qualification-c17/qualification.json},
-\code{header-budget-checks/mef-assembly-results.json},
-\code{recipe-relink.json} and \code{optional-cleanup-results.json}.
-Recovery receipt: orchestration file \code{bias-scalar-qc-asdf-recovery.json}.
-See repository status notes \code{bias-scalar-qc-2026-11-06.md} and
-\code{native-optional-cleanup-2026-11-06.md} for the staged history.
-
-These establish the reported comparisons and focused Mac behavior. Historical
-Mac/Chapman core comparisons do not qualify every new native-ASDF path on all
-platforms. This is not a claim of detector health acceptance, ESO Phase-3
-compliance, general out-of-memory coverage or reentrancy.
-
-Two nonstandard lowercase-exponent telemetry cards were byte-identical in raw
-and product primary headers. Structural/QC agreement does not resolve their
-strict FITS conformance. This inherited header issue is separate from the
-bias arithmetic and the corrected aggregate assembly limit.
-
-This guide changes documentation only. It requires no raw replay, compiler
-selection, build-directory creation or CMake reconfiguration. Future code edits
-must reuse the selected build/toolchain unless a configuration change is
-intentional and explained.
-
-\newpage
 \section{Approved design basis}\label{sec:authority}
 Repository paths identify the human-reviewed design lineage. Later decisions
 supersede earlier scope or serialization arrangements where stated.
 \begin{enumerate}
 \item \code{docs/architecture/proposed/m1/bias-service.md}: numerical
 compatibility, operation boundary and ownership.
-\item \code{docs/developer/bias-qc-eclipse-reuse-review-2026-11-02.md}:
-reused statistics, explicit raw-pair RON and high-offset diagnostics.
-\item \code{docs/developer/bias-bpm-asdf-handoff-2026-11-02.md}: detector
-BPM applies to active populations, not electronic scan samples.
+\item \code{docs/developer/design/bias-clipping-project-bpm-v1.md}:
+raw-pair RON populations and explicit BPM policy.
 \item \code{docs/developer/design/bias-mef-native-asdf-v1.md}: final native
 MEF/ASDF product and raw/orchestration/reduced-directory operation.
 \item \code{docs/developer/design/bias-qc-fits-asdf-mapping-v1.md}:

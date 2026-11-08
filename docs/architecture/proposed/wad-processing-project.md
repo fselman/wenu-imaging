@@ -12,7 +12,7 @@ adapter is an implementation increment, not a qualified general WAD/ASDF runtime
 
 Design direction recorded 29 October 2026; version 2 includes the 31 October preflight decision. Owner instructed "Proceed" after reviewing WAD and the ASDF processing-project proposal. This authorizes this architecture/roadmap update. Concrete schemas, APIs, packaging and numerical implementation remain pending milestones, not installed capabilities.
 
-See the [target architecture](pycavi-mefpp.md) and [implementation plan](implementation-plan.md). Existing accepted Stage 2/2.1 evidence and original files remain unchanged.
+See the [target architecture](pycavi-mefpp.md) and [implementation plan](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/architecture/proposed/implementation-plan.md). Existing accepted Stage 2/2.1 evidence and original files remain unchanged.
 
 ## Executive summary
 
@@ -185,6 +185,6 @@ Our external FITS references, ProcessingProject records and future cascade plans
 
 ## Status
 
-Concrete preparation: [M0/M0a review package](m0-m0a/README.md), including the small catalog/example and explicit limits. These are schema/contract sketches in a dependency-free review notation, not a qualified ASDF runtime or public WAD API.
+Concrete preparation: [M0/M0a review package](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/architecture/proposed/m0-m0a/README.md), including the small catalog/example and explicit limits. These are schema/contract sketches in a dependency-free review notation, not a qualified ASDF runtime or public WAD API.
 
 Architecture direction recorded; exact schema vocabulary, tag namespace, packaging, project revision protocol, migration compatibility and numerical acceptance remain concrete milestone decisions. Original architecture and frozen roadmap amendments are unchanged.

@@ -1,6 +1,0 @@
-test_multicall_symlink_preserves_selected_entry_point (__main__.ToolInvocationTests.test_multicall_symlink_preserves_selected_entry_point) ... ok
-
-----------------------------------------------------------------------
-Ran 1 test in 0.005s
-
-OK

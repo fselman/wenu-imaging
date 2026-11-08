@@ -1,6 +1,6 @@
 # Dataset-specific candidate: five 512x512 ROIs per detector, 128-pixel edge margin.
 # Bounds are FITS 1-based inclusive ACTIVE coordinates; upper-half boxes are reflected.
-# See docs/developer/ocam-readout-rois-2026-11-03.md before applying to observations.
+# Review detector/ROI applicability against the declared active geometry before use.
 roi_schema_version = 1
 
 [[roi]]

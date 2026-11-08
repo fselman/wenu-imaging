@@ -1,9 +1,0 @@
-{
-  "source": "owner supplied selected-Mac terminal result",
-  "successful": true,
-  "producer_revision": "74327c49832a9337fad49a0bec1b5fd7af81cde5",
-  "test_revision": "a203d040ffe34b9e245a837398fe8315c2f9a340",
-  "receipt": "/Users/fselman/Software/build/wenu-imaging/mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/median-fixture-retry-a203d040ffe3/qualification.json",
-  "checks": ["exact historical lower", "default and explicit average pixel oracle", "native FITS/ASDF mode and QC", "input and RON invariance", "four refusals", "recipe/cache unchanged", "failed attempts, fixtures and main preserved"],
-  "real_run": "authorized, pending"
-}

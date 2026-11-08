@@ -2,7 +2,7 @@
 
 Owner authorized continuation after acceptance/merge of PR #143 and clean Mac
 and shared Chapman main `98454283341a5bbce641119bed686fa56ff9c44b`.
-The owner also selected [grouped native commands](../command-line-services.md).
+The owner also selected [grouped native commands](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/architecture/proposed/command-line-services.md).
 This increment implements the first numerical service with the accepted C90
 validation/calculation/postcondition/qc/ownership pattern. It does not complete
 M1 or implement the grouped CLI.
@@ -118,7 +118,7 @@ existing scope under #75. No full historical matrix is repeated.
 Actual Intel Mac and representative shared Chapman C90 CMake builds and all five
 focused CTests now pass 5/5 at f5858310e505bfc1b137491dc35676b9245ce674,
 including the normal engine link and opt-in probes. See the
-[paired receipt](../../../developer/m1-bias-paired-results-2026-10-29.md) for exact
+[paired receipt](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/developer/m1-bias-paired-results-2026-10-29.md) for exact
 paths, times and limits. Target C17/sanitizer results are not claimed. This is
 ready for bounded owner review; no repeated test/build is needed for the receipt. No install, observational
 reduction, native recipe launch, automatic repair/retry, tool requalification,

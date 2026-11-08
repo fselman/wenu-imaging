@@ -8,7 +8,7 @@ Status: owner reviewed this detailed TOML-led design at5b3a493 on5November2026
 and instructed implementation. The first native/TOML preparation increment is
 implemented and actual-Mac-qualified at d8bf560. Recipe/ASDF integration is
 now agent-qualified; its focused actual Mac gate and real corrected ROI archive
-remain pending. See the 5 November integration status. See [implementation status](../linearity-preparation-2026-11-05.md).
+remain pending. See the 5 November integration status. See [implementation status](https://github.com/fselman/wenu-imaging/blob/e83f7a378c10a8a4ae7d6b7fa9301e62a68af7b5/docs/developer/linearity-preparation-2026-11-05.md).
 The design below retains the full agreed target; its future-tense sections are
 not claims that real corrected products or physical fits already exist.
 

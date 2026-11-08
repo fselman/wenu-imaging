@@ -1,9 +1,0 @@
-Test recipe incomplete; no overall success reported.
-synthetic failure
-Retained private work: /workspace/scratch/18be85df1254/readability-checks/structural-run/.mefpp-test-OYSaSD
-Test recipe incomplete; no overall success reported.
-TEST_RECIPE_COMPLETE
-FITS /workspace/scratch/18be85df1254/readability-checks/structural-run/complete.fits
-ASDF /workspace/scratch/18be85df1254/readability-checks/structural-run/complete.asdf
-LOG /workspace/scratch/18be85df1254/readability-checks/structural-run/complete.log
-PASS: shared recipe run ownership, exclusive log, no-clobber, failure retention

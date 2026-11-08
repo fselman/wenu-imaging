@@ -1,4 +1,0 @@
-WORK DIRECTORY: /workspace/scratch/b0416c2b7710/clipping-checks/m2 domains 0gvc02_n
-PASS: 11 typed/document/lifetime profiles; 159 catalog templates (151 required + 8 optional project policies)
-PASS: 25 domain/unit rejection/recovery cases
-REPORT: /workspace/scratch/b0416c2b7710/clipping-checks/m2 domains 0gvc02_n/run-provenance.json

@@ -1,4 +1,4 @@
-"""Private M5 qualification (bias or response core, C17); selected-tools.md governs tool arguments."""
+"""Private M5 qualification (bias or response core, C17); AGENTS.md governs tool arguments."""
 import argparse
 import hashlib
 import io
@@ -176,7 +176,7 @@ def main():
     if args.private_install:
         selected_tool(args.funpack)
     tools = {}
-    # Invocation paths come from selected-tools.md, never PATH/xcrun rediscovery.
+    # Invocation paths come from AGENTS.md, never PATH/xcrun rediscovery.
     for name in ("compiler", "cmake", "ctest", "make", "ar", "ranlib"):
         declared = getattr(args, name)
         tools[name] = selected_tool(declared)

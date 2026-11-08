@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/workspace/scratch/18be85df1254/wenu-imaging/mefpp2/tests/bias_files_contract.py", line 17, in <module>
-    from astropy.io import fits
-ModuleNotFoundError: No module named 'astropy'

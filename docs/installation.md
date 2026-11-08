@@ -1,72 +1,53 @@
-# Installation — quick start
+# Installation
 
-Native M3 path qualification, 30 October 2026: [paired Mac/Chapman checks](developer/m3-native-paths-paired-results-2026-10-30.md)
-passed both affected CTests at 113156b94fe68f7bf2848c93ecd7451551db2984,
-including actual C execution from unrelated directories with separate inputs,
-calibrations and destinations. Protected installed files/checkouts stayed unchanged.
-PR #167 is owner-accepted/merged; full M3 remains open. Current installation,
-configured engine and Python dependency bounds remain unchanged.
+Use an isolated Python environment and a separate native installation prefix.
+Installing a candidate does not select it for normal reductions.
 
-M3 candidate, 30 October 2026: the new optional `pycavi project inspect` command
-provides [read-only legacy metadata inspection](developer/m3-project-inspection.md). Source invocation
-and the package entry target pass agent and actual Mac/Chapman checks (15/15
-on each target); this bounded increment is ready for owner review.
-No installed package/script is changed by this delivery; a future reviewed wheel
-provides the entry point. Existing setup commands/dependency bounds and native
-installation/engine selection remain unchanged. No installation is requested now.
+## Python
 
-Last updated: 25 October 2026. The current native candidate is on
-`fix/native-cmake-build` ([PR #81](https://github.com/fselman/wenu-imaging/pull/81));
-it is not yet merged into main.
-
-## Native mefpp
-
-Prerequisites: a C compiler, CMake >=3.29, Make and `funpack` (CFITSIO tools).
-Eclipse, qfits, configuration templates and compressed BPM resources are included.
-No dependency packages are downloaded automatically. The frontend checks required
-tools and explains missing prerequisites; macOS selects the active Xcode tools
-and SDK, while Linux defaults to `cc`. Explicit overrides are optional.
-
-From the repository root (or from `mefpp2`), the normal procedure is:
+From the repository root:
 
 ```sh
-./configure --prefix="$HOME/.local/mefpp"
-make
-make install
+python -m pip install .
 ```
 
-Use a fresh private prefix; sudo is unnecessary. The default prefix, when omitted,
-is `$HOME/.local/mefpp`. Configuration defaults to C90 and a serial Debug build;
-`make install` ensures the build is complete before installing. The executable is
-`PREFIX/bin/mefpp`; its PAFs and masks are in `PREFIX/config` and `PREFIX/static_cal`.
-Existing edited/conflicting files are preserved by refusing the installation.
-Installation does not change the engine selected by Pycavi or process observations.
+For notebooks:
 
-`./configure --help` lists optional compiler/build-path settings. `make check`
-runs developer tests and needs Python 3; Python is not required for the ordinary
-native build/runtime. See [developer installation](developer/native-installation.md)
-for qualification, staging, diagnostics and platform evidence.
+```sh
+python -m pip install '.[notebooks]'
+pycavi_setup /path/to/new-notebook-workspace
+```
 
-**Status:** the normal C90 configure/make/install route, optional checks,
-installed resources, repeat installation and staging passed on Intel macOS 13.7.8
-at source 7c5238f8. Direct CMake C90/C17 acceptance is recorded separately.
-chapman3, Apple Silicon and native Windows qualification remain pending.
+Setup preserves existing files unless `--overwrite` is explicit. Use command
+`--help` for options. The wheel does not install mefpp, Source-Extractor, SCAMP,
+SWarp, astrometry.net or its indexes. Check their configured executable paths in
+the target environment before reduction.
 
-## Pycavi
+## Native build
 
-Use the separate [Python installation guide](developer/installation.md) with the
-established Python 3.11 environment and reviewed dependency versions. Its wheel
-does not install mefpp, SExtractor, SCAMP, SWarp, Astrometry.net or reference data.
+Requirements include a C compiler, CMake 3.29 or newer, Make and CFITSIO `funpack`
+for the bundled compressed resources. From the repository root, configure a new
+candidate build and private prefix explicitly:
 
-A pip-versus-Conda/micromamba distribution is a deferred [roadmap TODO](developer/roadmap.md).
-No mefpp package has been published through either route. Detailed tests, build
-flags and acceptance histories stay under `docs/developer`.
+```sh
+cmake -S . -B /path/to/new-build -DMEFPP_C_STANDARD=17 \
+  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/path/to/private-prefix
+cmake --build /path/to/new-build --parallel 2
+cmake --install /path/to/new-build
+```
 
-## Data preflight candidate
+These are new-install examples. During development, reuse the selected qualified
+build, compiler, SDK, dependencies and cache rather than routinely reconfiguring.
+The normal installed executable is `PREFIX/bin/mefpp`; resources are installed
+under the prefix. Installation refuses conflicting existing resource files.
 
-The read-only `pycavi preflight` subcommand is introduced by the
-[ESO preflight candidate](developer/eso-data-preflight-2026-10-31.md). It reuses
-the existing Python dependencies/configuration resources. Actual Mac/Chapman
-qualification and explicit installation remain pending; existing installed
-commands are unchanged until an approved source version is installed. The
-private source runner can test the candidate without installing it.
+The standalone native bias recipe is a development target, built with
+`MEFPP_BUILD_BIAS_ADAPTER=ON` and `MEFPP_BUILD_BIAS_RECIPE=ON`. It also requires an
+exact 40-character `MEFPP_SOURCE_REVISION` and the selected qualified native ASDF
+prefix (`MEFPP_ASDF_PREFIX`). This does not make it the normal installed engine.
+Do not install or upgrade ASDF dependencies merely to follow these examples.
+
+After installation run the [primary acceptance suite](acceptance.md) appropriate
+to the supported recipes/instruments. An import or `--help` smoke check alone does
+not establish product equivalence. Keep the old installation available until the
+candidate's products are accepted.

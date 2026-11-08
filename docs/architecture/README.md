@@ -1,24 +1,9 @@
-# Architecture documents
+# Configuration and architecture resources
 
-1 November source-grounded [mefpp current/target architecture and roadmap review](../developer/mefpp-architecture-review-2026-11-01.md)
-includes five Mermaid diagrams, FITS keyword authority, complete source inventory,
-new source findings and staged delivery. Proposal only; no implementation acceptance.
+For the current overview read [architecture](../developer/architecture.md).
 
-- [M1 cumulative closure review](../developer/m1-closure-review-2026-10-29.md): foundation gate checklist, native/WAD crosswalk and unchanged M2 sequence; owner closure decision pending.
-
-- [Grouped native command/service mapping](proposed/command-line-services.md): owner-selected `mefpp cal bias` syntax; command adapters remain subsequent work.
-- [First concrete M1 bias service](proposed/m1/bias-service.md): shared legacy arithmetic, owned signal/QC result and bounded verification.
-
-- [Optional BPMs and required variances](proposed/bpm-variance-policy.md): owner-directed chain-wide contract, baseline source observations and staged acceptance; numerical implementation remains pending.
-
-- [Original Pycavi/mefpp architecture](original/pycavi-mefpp.md): source-based pre-refactor snapshot at accepted main 22a32d39463a73ab32d2ba9d811f949198852902, including the current diagram and working-directory behavior. [Mermaid source](original/pycavi-mefpp.mmd).
-- [Proposed target architecture](proposed/pycavi-mefpp.md): revision-4 executive summary and diagram: WAD, ASDF processing projects, explicit paths, versioned dependency/association graph and future incremental reprocessing. First-pass records are separated from deferred trigger/cascade execution. [Mermaid source](proposed/pycavi-mefpp.mmd).
-- [WAD and ASDF processing projects](proposed/wad-processing-project.md): common schemas, project/plan/run lifecycle, metadata authority, offline resources and publication/recovery contracts.
-- [M0/M0a contract review package](proposed/m0-m0a/README.md): linked synthetic records, native interface sketch, configuration ledger and bounded checks; production implementation pending.
-- [Production Chapman dependency gate](../developer/toml-asdf-chapman-qualification-2026-10-29.md): exact candidate/dependency review, isolated Mac/Chapman trials and adoption criteria; target execution pending.
-- [Implementation plan](proposed/implementation-plan.md): detailed first-pass milestones, gates/rollback and later parallel/incremental passes.
-- [Detailed refactor analysis](../developer/mefpp-refactor-analysis-2026-10-29.md), [PAF inventory](../developer/mefpp-refactor-paf-inventory-2026-10-29.md) and [Chapman4 evidence](../developer/mefpp-refactor-chapman4-inventory-2026-10-29.md).
-
-"Original" is a dated observed baseline. "Proposed" is an unimplemented design; publication does not approve its detailed interfaces or start refactoring.
-
-- [M1 common ANSI C90 subroutine template](proposed/m1/README.md): calling/ownership pattern and module checklist; compile-only review scaffold, not production implementation.
+The `proposed/` tree contains executable configuration catalogs, schemas and
+examples used by Pycavi and its configuration checks, alongside earlier design
+material. These resources retain their existing paths until a reviewed package
+migration. They do not supersede current owner decisions or authorize implementation.
+Scientific recipe contracts are under [developer/design](../developer/design/).

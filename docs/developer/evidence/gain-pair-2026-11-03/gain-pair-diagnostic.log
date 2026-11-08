@@ -1,2 +1,0 @@
-comparison got=29.999999999999993 expected=45
-gain_pair_probe: /workspace/scratch/9ccf7e35ace4/gain-pair-implementation/mefpp2/tests/gain_pair_probe.c:12: near_value: Assertion `fabs(got-expected) < 1e-8*(1+fabs(expected))' failed.
