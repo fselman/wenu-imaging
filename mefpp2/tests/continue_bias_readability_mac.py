@@ -73,9 +73,7 @@ def main():
             if line and not line.startswith(('#', '//')) and '=' in line), 'Configured cache differs')
     require(digest(gate.ADAPTER) == gate.ADAPTER_HASH, 'Frozen reference adapter changed')
     require(all(digest(gate.SOURCE / name) == value
-                for name, value in before['source_sha256'].items()) and all(
-            digest(gate.SOURCE / name) == value
-            for name, value in record.get('test_overlay_sha256', {}).items()), 'Previous source overlay changed')
+                for name, value in before['source_sha256'].items()), 'Previous source overlay changed')
     for name in git('ls-tree', '-r', '--name-only', gate.CANDIDATE, '--',
                     'CMakeLists.txt', 'mefpp2', 'third_party').splitlines():
         if gate.production_file(name):

@@ -149,3 +149,15 @@ Python compilation/CLI and metadata-restoration checks pass in the agent. The
 actual saved one-field cause and remaining Mac native groups are pending target
 execution. Issue #294 stays open; final acceptance/merge and documentation
 consolidation remain pending.
+
+## Continuation preflight correction — issue #295
+
+The owner invocation at bf432bf stopped before creating a retry directory or
+changing source/build resources. An accidental preflight reference to `record`
+preceded its initialization. The correction removes only that premature overlay
+check; initial preflight compares the prior receipt, and finalization still checks
+the new test overlay. Simulated host/receipt execution reproduces the original
+exception and reaches the first-write boundary after correction. This validates
+runner control flow only, not Mac/native results. The retained failed attempt,
+producer binary/cache, already passed groups and all pending native groups remain
+unchanged. Continue the same bounded test-only gate; no rebuild or reconfiguration.

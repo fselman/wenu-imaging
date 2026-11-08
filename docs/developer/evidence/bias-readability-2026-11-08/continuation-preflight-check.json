@@ -1,0 +1,5 @@
+{
+  "scope": "simulated host/receipt control-flow only; no native or Mac execution",
+  "before": "failed on uninitialized record",
+  "after": "reached first-write boundary"
+}
