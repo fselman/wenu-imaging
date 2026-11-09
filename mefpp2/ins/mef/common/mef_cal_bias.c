@@ -217,8 +217,9 @@ mef_status mef_cal_bias(
     return mef_cal_bias_measurements(context, input, NULL, out, error);
 }
 
-mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input *input,
-    const mef_bias_measurement_options *options, mef_bias_result **out, mef_error **error)
+static mef_status calculate_bias_measurements(mef_context *context, const mef_bias_input *input,
+    image_t **owned_frames, const mef_bias_measurement_options *options,
+    mef_bias_result **out, mef_error **error)
 {
     pixelmap *active_bpm;
     const pixelmap *raw_bpm;
@@ -254,6 +255,21 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
     status = validate_bias_inputs(context, input, &bias_settings, options);
     if (status != MEF_OK) {
         goto cleanup;
+    }
+    if (owned_frames != NULL) {
+        size_t earlier;
+        for (frame_index = 0; frame_index < input->count; ++frame_index) {
+            if (owned_frames[frame_index] != input->frames[frame_index]) {
+                status = MEF_ERR_INPUT;
+                goto cleanup;
+            }
+            for (earlier = 0; earlier < frame_index; ++earlier) {
+                if (owned_frames[earlier]->data == owned_frames[frame_index]->data) {
+                    status = MEF_ERR_INPUT;
+                    goto cleanup;
+                }
+            }
+        }
     }
     resolved = mef_request_resolved_view(mef_context_request(context));
 
@@ -354,7 +370,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
 
     /* [BIAS-SCAN-CORRECTION]
      * Use a local geometry copy because the shared scan helper temporarily
-     * converts its column bounds to zero-based indices. Raw inputs stay borrowed.
+     * converts its column bounds to zero-based indices.
      */
 
     memcpy(
@@ -408,6 +424,14 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
                     goto cleanup;
                 }
             }
+        }
+
+        /* Raw-pair and per-frame raw QC are complete. The private copy carries
+         * correction forward; an owned input no longer needs its raw pixels. */
+
+        if (owned_frames != NULL) {
+            image_del(owned_frames[frame_index]);
+            owned_frames[frame_index] = NULL;
         }
 
         /* Detector BPM does not apply to empty electronic scan reads. */
@@ -524,4 +548,20 @@ cleanup:
         (void)mef_error_create(status, detail, allocator, error);
     }
     return status;
+}
+
+mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input *input,
+    const mef_bias_measurement_options *options, mef_bias_result **out, mef_error **error)
+{
+    return calculate_bias_measurements(context, input, NULL, options, out, error);
+}
+
+mef_status mef_cal_bias_owned_measurements(mef_context *context, const mef_bias_input *input,
+    image_t **owned_frames, const mef_bias_measurement_options *options,
+    mef_bias_result **out, mef_error **error)
+{
+    if (owned_frames == NULL) {
+        return MEF_ERR_INPUT;
+    }
+    return calculate_bias_measurements(context, input, owned_frames, options, out, error);
 }

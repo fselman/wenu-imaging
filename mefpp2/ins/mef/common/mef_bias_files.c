@@ -129,8 +129,8 @@ static mef_status calculate_bias_detector(void *opaque, mef_error **error)
     input.frames = state->borrowed;
     input.count = state->count;
     input.configuration_detector = state->configuration_detector;
-    return mef_cal_bias_measurements(
-        state->context, &input, state->measurements, &state->pending, error);
+    return mef_cal_bias_owned_measurements(
+        state->context, &input, state->frames, state->measurements, &state->pending, error);
 }
 
 static mef_status publish_bias_step(void *opaque, mef_error **error)

@@ -862,6 +862,11 @@ if(BUILD_TESTING)
           ${profile} small - 1)
       set_tests_properties(native_bias_stack_lifetime_${profile} PROPERTIES
         TIMEOUT 30 LABELS "native;bias;ownership;memory")
+      add_test(NAME native_bias_raw_lifetime_${profile}
+        COMMAND bias_memory_probe "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+          ${profile} small - 1 owned)
+      set_tests_properties(native_bias_raw_lifetime_${profile} PROPERTIES
+        TIMEOUT 30 LABELS "native;bias;ownership;memory")
     endforeach()
     add_test(NAME native_eclipse_allocation
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/eclipse_allocation_contract.py"

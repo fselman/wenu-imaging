@@ -376,6 +376,23 @@ static void measurements(mef_bb *legacy, int detector_index)
     corrected_mean=qc->frames[4].active_corrected.mean;
     assert(fabs(corrected_mean-(24-2500))<1e-10);
     assert(qc->frames[4].active_raw.mean>corrected_mean+100);
+    /* Ownership opt-in must reject mismatched or shared pixel owners before
+     * consuming anything. Borrowed service inputs remain valid afterward. */
+    {
+        image_t *owners[5];
+        const image_t *views[5];
+        mef_bias_input invalid = input;
+        mef_bias_result *rejected = NULL;
+        for (i = 0; i < 5; ++i) { owners[i] = frames[i]; views[i] = frames[i]; }
+        owners[0] = frames[1];
+        assert(mef_cal_bias_owned_measurements(context, &input, owners, &options,
+            &rejected, NULL) == MEF_ERR_INPUT && !rejected);
+        owners[0] = frames[0]; owners[1] = frames[0]; views[1] = frames[0];
+        invalid.frames = views;
+        assert(mef_cal_bias_owned_measurements(context, &invalid, owners, &options,
+            &rejected, NULL) == MEF_ERR_INPUT && !rejected);
+        for (i = 0; i < 5; ++i) assert(owners[i]);
+    }
     /* Selecting legacy QC must preserve the masked scientific calculation. */
     {
         mef_bias_result *minimal = NULL;

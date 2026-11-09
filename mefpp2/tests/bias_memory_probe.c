@@ -15,6 +15,8 @@
 #endif
 
 static int active_width, active_height, expected_release, released;
+static image_t **raw_owners;
+static int consume_raws;
 static long resident_kib(void)
 {
 #ifdef __APPLE__
@@ -37,8 +39,10 @@ static long resident_kib(void)
 }
 static void phase(const char *name)
 {
-    printf("PHASE %s rss_kib=%ld corrected_cube_released=%d\n",
-        name, resident_kib(), released);
+    int live = 0;
+    if (raw_owners) for (int i = 0; i < 10; ++i) live += raw_owners[i] != NULL;
+    printf("PHASE %s rss_kib=%ld corrected_cube_released=%d live_raw_frames=%d\n",
+        name, resident_kib(), released, live);
     fflush(stdout);
 }
 void mef_memory_cube_del(cube_t *cube)
@@ -56,6 +60,7 @@ int mef_memory_master_stats(image_t *image, pixelvalue *value)
     if (image->lx == active_width && image->ly == active_height) {
         phase("kernel-master-statistics-start");
         assert(released == expected_release);
+        if (consume_raws) for (int i = 0; i < 10; ++i) assert(!raw_owners[i]);
     }
     return image_getmedian_checked(image, value);
 }
@@ -114,7 +119,10 @@ int main(int argc, char **argv)
     int width, height, trim[4], wfi;
     const char *diagnostic = NULL;
     struct rusage usage;
-    assert(argc == 6); /* PAF, legacy|full, small|wfi, snapshot, expected release 0|1 */
+    assert(argc == 6 || argc == 7); /* Optional final argument: owned. */
+    consume_raws = argc == 7;
+    if (consume_raws) assert(!strcmp(argv[6], "owned"));
+    raw_owners = frames;
     assert(!strcmp(argv[2], "legacy") || !strcmp(argv[2], "full"));
     assert(!strcmp(argv[3], "small") || !strcmp(argv[3], "wfi"));
     assert(!strcmp(argv[5], "0") || !strcmp(argv[5], "1"));
@@ -170,10 +178,14 @@ int main(int argc, char **argv)
     options.ron_clip.max_iterations = 10;
     input.frames = borrowed; input.count = 10; input.configuration_detector = 0;
     phase("service-start");
-    assert(mef_cal_bias_measurements(context, &input, &options, &result, NULL) == MEF_OK);
+    assert((consume_raws
+        ? mef_cal_bias_owned_measurements(context, &input, frames, &options, &result, NULL)
+        : mef_cal_bias_measurements(context, &input, &options, &result, NULL)) == MEF_OK);
     phase("service-complete");
     assert(released && mef_bias_result_qc(result)->accepted_frames == 10);
-    for (int i = 0; i < 10; ++i)
+    if (consume_raws) {
+        for (int i = 0; i < 10; ++i) assert(!frames[i]);
+    } else for (int i = 0; i < 10; ++i)
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x)
                 assert(frames[i]->data[(size_t)y * width + x] == raw_pixel(i, x, y, trim));
@@ -188,6 +200,6 @@ int main(int argc, char **argv)
     mef_request_destroy(request); mef_config_destroy(config); mef_bb_del(legacy);
     for (int i = 0; i < 10; ++i) image_del(frames[i]);
     pixelmap_del(mask);
-    puts("PASS: release order, ten accepted frames and every borrowed raw pixel unchanged");
+    puts("PASS: release order, ten accepted frames; owned raws consumed or borrowed pixels unchanged");
     return 0;
 }

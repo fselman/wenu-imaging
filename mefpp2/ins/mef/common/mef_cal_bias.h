@@ -82,6 +82,14 @@ mef_status mef_cal_bias(mef_context *context, const mef_bias_input *input,
     mef_bias_result **out, mef_error **error);
 mef_status mef_cal_bias_measurements(mef_context *, const mef_bias_input *,
     const mef_bias_measurement_options *, mef_bias_result **, mef_error **);
+/* File-adapter ownership path. owned_frames must contain exactly the distinct
+ * images viewed by input->frames. Release each raw after pair/per-frame raw QC
+ * and copying; set its owner slot NULL. On any return the caller must destroy
+ * remaining non-NULL slots. Input views of consumed images become invalid;
+ * ordinary borrowed calls above retain every input unchanged. */
+mef_status mef_cal_bias_owned_measurements(mef_context *, const mef_bias_input *,
+    image_t **owned_frames, const mef_bias_measurement_options *,
+    mef_bias_result **, mef_error **);
 /* Borrowed QC outlives input/context, owned by result. NULL on legacy call. */
 const mef_bias_measurements *mef_bias_result_measurements(const mef_bias_result *);
 void mef_bias_result_destroy(mef_bias_result *result);

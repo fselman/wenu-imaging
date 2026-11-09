@@ -107,7 +107,8 @@ Load explicit bound detector HDUs &
 \end{longtable}
 \normalsize
 The coordinator owns recipe-wide resources. The file adapter owns loaded raw
-frames only for the duration of one detector operation; the returned result
+frames and releases each after its last raw measurement and private copy;
+the returned result
 owns its master and QC. Read the following scientific stages before exploring
 the argument parser or metadata serializers.
 
@@ -300,13 +301,22 @@ The stack allocates an independent master image. Once stacking succeeds, the
 kernel releases the consumed corrected cube before master-statistics working
 arrays are allocated, and clears its cleanup pointer. This changes no
 estimator or numerical evaluation order; failures still release each owner
-once. Borrowed raw images remain owned by the file adapter/caller through the
-service call. Releasing the corrected cube removes its overlap with master
+once. Ordinary in-memory calls keep borrowed raw images unchanged through the
+service call. The file adapter uses \code{mef_cal_bias_owned_measurements}:
+all validation and requested raw-pair diagnostics precede consumption; each
+frame is copied and its raw/scan QC measured before its raw owner is released
+and nulled, then correction proceeds on the private copy. No later stage reads
+that raw view. On failure, adapter cleanup destroys remaining non-null owners.
+Mismatched or shared pixel owners are rejected before consumption. This
+reduces raw/corrected overlap without changing scientific evaluation order.
+Releasing the corrected cube removes its overlap with master
 statistics but cannot remove an earlier full-QC peak during per-frame
 measurements. Resident memory also includes allocator and mapped-file state;
 actual-host profiling remains necessary. The synthetic
 \code{bias_memory_probe} checks release order in both QC profiles and can
-capture compiler-local numerical snapshots for ten WFI-sized raw frames.
+capture compiler-local numerical snapshots for ten WFI-sized raw frames;
+its optional final \code{owned} argument checks that no raw owners survive
+to stacking. Failure injection covers partial consumption and caller cleanup.
 QC retains original input IDs.
 
 For synthetic frame means $0,1,2,10$ with illustrative $\kappa=1$,
