@@ -54,6 +54,35 @@ def read_source(path, role, limit=MAX_BYTES):
     return dict(path=str(path), role=role, text=raw.decode('utf-8'), sha256=digest(raw))
 
 
+OPTIONAL_NATIVE_POLICY_KEYS = frozenset({
+    'BPM.ENCODING', 'BPM.BAD_WHEN', 'BPM.REJECT_BITS', 'BPM.REGISTRY',
+    'QC.RON.CLIP.ENABLED', 'QC.RON.CLIP.LOW', 'QC.RON.CLIP.HIGH',
+    'QC.RON.CLIP.MAX_ITERATIONS', 'MEF.BIAS.MEDIAN.EVEN.HANDLING',
+})
+
+
+def supplied_policy_keys(settings):
+    """Optional native policy groups are present only when explicitly supplied.
+
+    The C snapshot owns defaults and validation. Preserve absence rather than
+    inventing values for historical PAF/TOML configurations.
+    """
+    present = set(settings) & OPTIONAL_NATIVE_POLICY_KEYS
+    bpm = {key for key in present if key.startswith('BPM.')}
+    if bpm:
+        encoding = settings.get('BPM.ENCODING', {})
+        require(encoding.get('type') == 'string' and encoding.get('value') in ('binary', 'reason8'),
+                'Invalid native BPM policy encoding')
+        expected = {'BPM.ENCODING', 'BPM.BAD_WHEN'}
+        if encoding['value'] == 'reason8':
+            expected |= {'BPM.REJECT_BITS', 'BPM.REGISTRY'}
+        require(bpm == expected, 'Incomplete/extra native BPM policy group')
+    clipping = {key for key in present if key.startswith('QC.RON.CLIP.')}
+    require(not clipping or clipping == {key for key in OPTIONAL_NATIVE_POLICY_KEYS if key.startswith('QC.RON.CLIP.')},
+            'Incomplete native RON clipping policy group')
+    return present
+
+
 def stored_literal(entry):
     kind, value = entry['type'], entry['value']
     if kind == 'string':
@@ -294,7 +323,9 @@ class ConfigurationMigration(ProjectComposition):
                 expected_keys.update(pattern % i for i in range(1, count + 1))
             else:
                 expected_keys.add(pattern)
-        require(set(settings) == expected_keys, 'Incomplete/extra native configuration settings')
+        present = supplied_policy_keys(settings)
+        require(set(settings) == (expected_keys - OPTIONAL_NATIVE_POLICY_KEYS) | present,
+                'Incomplete/extra native configuration settings')
         for source in sources:
             require(digest(source['text'].encode('utf-8')) == source['sha256'], 'Source text/hash mismatch')
         fields = {}
@@ -393,6 +424,7 @@ class ConfigurationMigration(ProjectComposition):
         for field in self.catalog['fields']:
             pattern = field['native_pattern']
             consumed.update(pattern % i for i in range(1, int(count) + 1)) if '%d' in pattern else consumed.add(pattern)
+        consumed -= OPTIONAL_NATIVE_POLICY_KEYS
         require(not consumed - selected.keys(), 'Missing required PAF keys: ' + ', '.join(sorted(consumed - selected.keys())))
         ledger['unconsumed_keys'] = sorted(set(selected) - consumed)
         # The unchanged decoder sees one explicitly selected occurrence per key.
