@@ -112,7 +112,8 @@ with asdf.config_context() as config:
         assert saved['path'] == e['config_path']
         assert saved['snapshot'] == e['config_text']
         assert saved['format'] == 'bias-recipe-toml/1'
-        actual_cards = q['provenance']['fits_headers']
+        # The writer omits this optional collection when no cards were selected.
+        actual_cards = q['provenance'].get('fits_headers', [])
         assert len(actual_cards) == len(e['cards'])
         for actual, expected in zip(actual_cards, e['cards']):
             for key, value in expected.items():

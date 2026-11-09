@@ -69,8 +69,8 @@ image_t *mef_bias_stack_masked_diagnostic(cube_t *cube, int minimum_frames, doub
         if (active_mask == NULL) {
             frame_means_adu[frame_index] = image_getmean(cube->plane[frame_index]);
         } else {
-            if (image_getstats_masked_checked(
-                    cube->plane[frame_index], active_mask, NULL, 0, &active_statistics) != 0 ||
+            if (image_getstats_masked_selected_checked(cube->plane[frame_index],
+                    active_mask, NULL, IMAGE_SAMPLE_MEAN, &active_statistics) != 0 ||
                 !active_statistics.level_available) {
                 goto cleanup;
             }

@@ -389,6 +389,26 @@ it must not be substituted for this median absolute deviation.
 \code{image_getstats_masked_checked} selects the population;
 \code{double_median_mad_checked} calculates checked median and MAD.
 
+
+The selective entry point
+\code{image_getstats_masked_selected_checked} accepts independent
+\code{IMAGE_SAMPLE_MEAN}, \code{IMAGE_SAMPLE_STDEV},
+\code{IMAGE_SAMPLE_MEDIAN} and \code{IMAGE_SAMPLE_MAD} request bits.
+Population counts and mask/zone metadata are always returned. Unrequested
+values remain zero; availability applies only to requested results.
+\code{level_available} covers a requested mean or median, with the request
+identifying which value is present. MAD needs an internal median even when
+the caller does not request that median as an output. Empty/unknown requests
+fail without changing the output record.
+
+The original checked entry point retains mean, sample scatter, median and
+optional MAD. Both paths retain the existing population and accumulation
+order. The internal legacy statistics pass omits its discarded median;
+checked median/MAD still use the same double-precision helper. Bias frame
+admission requests only the masked mean, avoiding unused scatter and
+order-statistic work. An empty population still fails frame admission.
+No stored QC quantity or estimator is removed.
+
 For $0,2,4,6$, $s=\sqrt{20/3}\simeq2.581989$, MAD $=2$ and
 scaled MAD $=2.9652$.
 

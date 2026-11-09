@@ -154,11 +154,12 @@ image_stats * image_getstats(image_t *image_in)
   It is Ok to provide NULL for all optional parameters.
  */
 /*----------------------------------------------------------------------------*/
-image_stats * image_getstats_opts(
+static image_stats * image_getstats_opts_internal(
 		image_t		*	in,
 		pixelmap	*	map,
 		pixelvalue	*	val_range,
-		int			*	zone)
+		int			*	zone,
+        unsigned int fields)
 {
 	int				i, j, pos ;
 	int				valid ;
@@ -177,7 +178,8 @@ image_stats * image_getstats_opts(
 	if (in==NULL) return NULL ;
 
 	/* Stupid check */
-	if (map==NULL && val_range==NULL && zone==NULL) {
+	if (map==NULL && val_range==NULL && zone==NULL &&
+        fields == (IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_STDEV | IMAGE_SAMPLE_MEDIAN)) {
 		return image_getstats(in);
 	}
 
@@ -277,7 +279,9 @@ image_stats * image_getstats_opts(
 				/* Sum */
 				sum += (double)curpix ;
 				/* Square sum */
-				sqsum += (double)curpix * (double)curpix ;
+                if (fields & IMAGE_SAMPLE_STDEV) {
+                    sqsum += (double)curpix * (double)curpix ;
+                }
 				/* Absolute sum */
 				asum += fabs((double)curpix);
 				bufsz ++ ;
@@ -297,8 +301,10 @@ image_stats * image_getstats_opts(
     ret_stats->absflux 	= asum ;
     ret_stats->energy 	= sqsum ;
 
-    ret_stats->avg_pix = sum/(double)bufsz ;
-	if (bufsz==1) {
+    if (fields & IMAGE_SAMPLE_MEAN) {
+        ret_stats->avg_pix = sum/(double)bufsz ;
+    }
+	if (!(fields & IMAGE_SAMPLE_STDEV) || bufsz==1) {
 		ret_stats->stdev = 0 ;
 	} else {
         /* Rounding errors can cause the variance to be negative */
@@ -306,6 +312,11 @@ image_stats * image_getstats_opts(
         ret_stats->stdev =ret_stats->stdev > 0 ? sqrt(ret_stats->stdev) : 0;
 	}
 	ret_stats->npix = bufsz ;
+
+    /* Checked callers supply their own median convention. */
+    if (!(fields & IMAGE_SAMPLE_MEDIAN)) {
+        return ret_stats;
+    }
 
 	/* Now compute median */
 	/* Allocate a new array of pixels with only valid pixels */
@@ -337,6 +348,14 @@ image_stats * image_getstats_opts(
 	ret_stats->median_pix = (double)median_pixelvalue(pixbuf, bufsz);
 	free(pixbuf);
 	return ret_stats ;
+}
+
+
+image_stats *image_getstats_opts(image_t *image, pixelmap *map,
+    pixelvalue *val_range, int *zone)
+{
+    return image_getstats_opts_internal(image, map, val_range, zone,
+        IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_STDEV | IMAGE_SAMPLE_MEDIAN);
 }
 
 
@@ -1606,8 +1625,8 @@ static int sample_map_valid(const image_t *image, const pixelmap *map)
         if (map->data[i] != PIXELMAP_0 && map->data[i] != PIXELMAP_1) return 0;
     return 1;
 }
-int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
-    const int *zone, int with_mad, image_sample_stats *out)
+int image_getstats_masked_selected_checked(const image_t *image, const pixelmap *map,
+    const int *zone, unsigned int fields, image_sample_stats *out)
 {
     image_sample_stats pending;
     pixelmap *selected;
@@ -1617,7 +1636,9 @@ int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
     int x, y;
     if (image == NULL || image->data == NULL || out == NULL || image->lx < 1 || image->ly < 1 ||
         image->lx > INT_MAX / image->ly ||
-        (size_t)image->lx * (size_t)image->ly > (size_t)-1 / sizeof(double) || (with_mad != 0 && with_mad != 1) ||
+        (size_t)image->lx * (size_t)image->ly > (size_t)-1 / sizeof(double) ||
+        fields == 0 || (fields & ~(IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_STDEV |
+            IMAGE_SAMPLE_MEDIAN | IMAGE_SAMPLE_MAD)) != 0 ||
         !sample_map_valid(image, map)) return -1;
     memset(&pending, 0, sizeof(pending));
     pending.zone[0] = pending.zone[2] = 1;
@@ -1644,12 +1665,25 @@ int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
         pixelmap_del(selected); *out = pending; return 0;
     }
     pixelmap_updatecount(selected);
-    stats = image_getstats_opts((image_t *)image, selected, NULL, pending.zone);
-    if (stats == NULL) { pixelmap_del(selected); return -1; }
-    pending.mean = stats->avg_pix;
-    pending.stdev_available = pending.valid_pixels > 1;
-    pending.stdev = pending.stdev_available ? stats->stdev : 0.0;
-    free(stats);
+    if (fields & (IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_STDEV)) {
+        stats = image_getstats_opts_internal((image_t *)image, selected, NULL,
+            pending.zone, fields & (IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_STDEV));
+        if (stats == NULL) { pixelmap_del(selected); return -1; }
+        pending.mean = stats->avg_pix;
+        pending.stdev_available = (fields & IMAGE_SAMPLE_STDEV) && pending.valid_pixels > 1;
+        pending.stdev = pending.stdev_available ? stats->stdev : 0.0;
+        free(stats);
+        if (!isfinite(pending.mean) || !isfinite(pending.stdev)) {
+            pixelmap_del(selected);
+            return -1;
+        }
+    }
+    pending.level_available = (fields & (IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_MEDIAN)) != 0;
+    if (!(fields & (IMAGE_SAMPLE_MEDIAN | IMAGE_SAMPLE_MAD))) {
+        pixelmap_del(selected);
+        *out = pending;
+        return 0;
+    }
     values = malloc(pending.valid_pixels * sizeof(double));
     if (values == NULL) { pixelmap_del(selected); return -1; }
     index = 0;
@@ -1659,17 +1693,30 @@ int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
             if (selected->data[pos] == PIXELMAP_1) values[index++] = image->data[pos];
         }
     pixelmap_del(selected);
-    if (double_median_mad_checked(values, (int)index, with_mad, &center, &mad) != 0) {
+    if (double_median_mad_checked(values, (int)index,
+            (fields & IMAGE_SAMPLE_MAD) != 0, &center, &mad) != 0) {
         free(values); return -1;
     }
     free(values);
     if (!isfinite(pending.mean) || !isfinite(pending.stdev)) return -1;
-    pending.median = center; pending.level_available = 1;
-    pending.mad_available = with_mad;
-    pending.mad = with_mad ? mad : 0.0;
+    pending.median = (fields & IMAGE_SAMPLE_MEDIAN) ? center : 0.0;
+    pending.mad_available = (fields & IMAGE_SAMPLE_MAD) != 0;
+    pending.mad = pending.mad_available ? mad : 0.0;
     *out = pending;
     return 0;
 }
+
+int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
+    const int *zone, int with_mad, image_sample_stats *out)
+{
+    if (with_mad != 0 && with_mad != 1) {
+        return -1;
+    }
+    return image_getstats_masked_selected_checked(image, map, zone,
+        IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_STDEV | IMAGE_SAMPLE_MEDIAN |
+            (with_mad ? IMAGE_SAMPLE_MAD : 0), out);
+}
+
 int image_pair_stats_checked(const image_t *first, const image_t *second,
     const pixelmap *first_map, const pixelmap *second_map, const int *zone,
     int with_mad, image_sample_stats *out)
