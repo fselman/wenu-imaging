@@ -68,6 +68,10 @@ synthetic from real-data checks, and prepared commands from observed success.
 
 Raw observations are read-only. Keep raw, orchestration and product directories
 separate; use fresh output directories and preserve accepted reference products.
+Project TOML owns shared directory roots; recipes reference it rather than
+redeclaring raw, calibration, output, work or log roots. Reuse the existing project
+composition reader and its relative-path rules. The project TOML resides in
+orchestration, output maps to reduced, and calibration/work/logs remain below it.
 Run recipe tests with their working directory in orchestration. Keep configurations,
 lists and requests there, observational inputs in raw, and products, logs, private
 working files and execution receipts under reduced. Existing calibrations are

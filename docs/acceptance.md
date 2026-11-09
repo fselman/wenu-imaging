@@ -41,12 +41,17 @@ this layout with preserved input fingerprints and unchanged analytical expectati
 The preparation entry point accepts a recipe envelope through
 `tools/prepare-linearity.py --config bpm-linearity.toml --execute`.
 Copy [the example](../config/recipes/omegacam-bpm-linearity.example.toml) into
-orchestration and edit its paths to the preserved dependencies and qualified native
-executable. Paths are relative to the recipe file. The recipe validates separate
-raw/orchestration/reduced roots, observations under raw, calibrations under
-reduced/cal, and a fresh run below reduced. Generated native controls go in
-orchestration/<run-name>; the native subprocess runs from orchestration. Logs,
-intermediate measurements, ASDF and the execution receipt stay in the reduced run.
+orchestration and reference the existing project TOML there. The shared project
+reader owns includes, validation and relative root resolution. The recipe repeats
+no directory roots: project `raw` supplies observations, `calibration` supplies
+read-only dependencies under reduced/cal, and `output` is the reduced root.
+Project `work` and `logs` must lie below output. The project TOML's containing
+directory is orchestration. The recipe's `run` is relative to project output;
+its other file references are relative to the recipe. Generated native controls
+go in orchestration/<run-name>; the native subprocess runs from orchestration.
+Private measurements and logs go below the declared work/log roots, while the
+ASDF product and execution receipt stay in the output run. Project/include and
+recipe hashes are checked throughout execution and recorded in the receipt.
 Reusing either run or control directory is refused. This entry point still prepares
 one detector from an existing sample archive and master; it does not yet provide
 the complete native BPM/linearity characterization lifecycle. Legacy explicit

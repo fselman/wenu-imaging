@@ -1,13 +1,14 @@
 # Preparation only: reuses preserved masters and extracts corrected measurements.
 # Copy into orchestration; set these paths to the admitted inputs and executable.
+# Run is relative to the project output root; other references are recipe-relative.
 # Run from orchestration: python /path/to/tools/prepare-linearity.py --config bpm-linearity.toml --execute
 # Create a fresh empty reduced run directory before execution. Never reuse a run name.
 linearity_recipe_schema_version = 1
 
-[paths]
-raw = "../../bpm"
-orchestration = "."
-reduced = "../reduced"
+# Directory roots are resolved by the shared project TOML reader.
+# The project TOML lives in orchestration; output/work/logs are under reduced,
+# and calibration is under reduced/cal. No roots are repeated in this recipe.
+project = "project.toml"
 
 [preparation]
 detector_toml = "omegacam-1x1.toml"
@@ -15,5 +16,5 @@ processing_toml = "omegacam-characterization.toml"
 source_samples = "../reduced/cal/bpm-linearity/prior/samples.asdf"
 handoff = "../reduced/cal/bias/prior/handoff.json"
 native = "/path/to/qualified/mefpp_linearity_prepare_command"
-run = "../reduced/cal/bpm-linearity/run-001"
+run = "cal/bpm-linearity/run-001"
 source_revision = "REPLACE_WITH_QUALIFIED_SOURCE_REVISION"

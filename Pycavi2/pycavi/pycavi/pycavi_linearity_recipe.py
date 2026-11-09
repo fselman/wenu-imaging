@@ -296,7 +296,8 @@ def image_fingerprint(path):
     return dict(sha256=h.hexdigest(), stat=stat(after))
 
 
-def preparation_layout(dependencies, directory, *, raw, orchestration, reduced):
+def preparation_layout(dependencies, directory, *, raw, orchestration, reduced,
+                       calibration=None, work=None, logs=None):
     """Admit the recipe's directories before writing controls or opening images."""
     roots = {name: Path(path).resolve(strict=True) for name, path in
              [('raw', raw), ('orchestration', orchestration), ('reduced', reduced)]}
@@ -308,6 +309,14 @@ def preparation_layout(dependencies, directory, *, raw, orchestration, reduced):
     run = Path(directory).resolve(strict=True)
     require(run != roots['reduced'] and run.is_relative_to(roots['reduced']),
             'Run directory must be below reduced')
+    auxiliary = dict(calibration=Path(calibration or roots['reduced']/'cal').resolve(strict=True),
+                     work=Path(work or roots['reduced']).resolve(strict=True),
+                     logs=Path(logs or roots['reduced']).resolve(strict=True))
+    for name, path in auxiliary.items():
+        require(path.is_dir() and path.is_relative_to(roots['reduced']),
+                'Project '+name+' root must be under reduced')
+    require(auxiliary['calibration'].is_relative_to(roots['reduced']/'cal'),
+            'Project calibration root must be under reduced/cal')
     d = dependencies
     observations = [b['path'] for b in d['biases']] + [f['path'] for f in d['selection']['flat']]
     calibrations = [d['master']['product'], d['selection']['bpm']['path']]
@@ -315,15 +324,21 @@ def preparation_layout(dependencies, directory, *, raw, orchestration, reduced):
         require(Path(name).resolve(strict=True).is_relative_to(roots['raw']),
                 'Observation outside raw directory: '+name)
     for name in calibrations:
-        require(Path(name).resolve(strict=True).is_relative_to(roots['reduced'] / 'cal'),
+        require(Path(name).resolve(strict=True).is_relative_to(auxiliary['calibration']),
                 'Calibration outside reduced/cal: '+name)
     controls = roots['orchestration'] / run.name
     require(not controls.exists(), 'Recipe control directory already exists')
-    return dict(roots, controls=controls)
+    private = auxiliary['work']/run.name if work is not None else run
+    run_logs = auxiliary['logs']/run.name if logs is not None else run
+    for path in {private, run_logs} - {run}:
+        require(not path.exists() and not run.is_relative_to(path) and not path.is_relative_to(run),
+                'Private work/log directory conflicts with the product run')
+    return dict(roots, controls=controls, calibration=auxiliary['calibration'],
+                private_work=private, run_logs=run_logs)
 
 
 def prepare_detector(dependencies, executable, directory, *, resolved, source_revision,
-                     assessment_id, created_at, layout=None):
+                     assessment_id, created_at, layout=None, configuration_sources=None):
     """Run the native preparation and publish one immutable ASDF product.
 
     Dependencies are the result of preparation_dependencies. The command reads
@@ -348,10 +363,11 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
     before = {}; report = dict(status='failed', fitted=False, scientific_acceptance=False)
     if paths:
         report['directories'] = {name: str(path) for name, path in paths.items()}
+    report['configuration_sources'] = configuration_sources or {}
     binary_digest = archive.pair.sha(executable.read_bytes())
     def metadata_preserved():
         return all(archive.pair.sha(archive.pair.small(Path(p)))==digest
-                   for p,digest in d['metadata_sha256'].items())
+                   for p,digest in {**d['metadata_sha256'], **(configuration_sources or {})}.items())
     try:
         require(metadata_preserved(), 'Preparation metadata changed')
         for path, digest in d['baseline'].items():
@@ -359,6 +375,8 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
             require(before[path]['sha256']==digest, 'Input differs from preserved archive: '+path)
         if paths:
             controls.mkdir()
+            for path in {paths['private_work'], paths['run_logs']} - {directory}:
+                path.mkdir()
         for name, text in [('native.toml',d['configuration']), ('plan.tsv',d['transport']['plan']),
                            ('rois.toml',d['transport']['rois']), ('sites.toml',d['transport']['sites'])]:
             (controls/name).write_text(text)
@@ -368,12 +386,14 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
             require(all(not any(c in v for c in '\t\r\n\0') for v in cells), 'Invalid bias transport cell')
             bias_text+='\t'.join(cells)+'\n'
         (controls/'biases.tsv').write_text(bias_text)
-        native = directory/'native';native.mkdir()
+        native = (paths['private_work'] if paths else directory)/'native'
+        native.mkdir()
         argv = [str(executable),*[str(controls/n) for n in ('native.toml','rois.toml','sites.toml','plan.tsv')],
                 d['master']['product'],str(d['master']['hdu']),d['master']['product'],
                 str(controls/'biases.tsv'),str(native)]
         report['argv']=argv;report['native_binary_sha256']=binary_digest
-        with (directory/'native.log').open('x') as log:
+        log_path = (paths['run_logs'] if paths else directory)/'native.log'
+        with log_path.open('x') as log:
             subprocess.run(argv, cwd=paths['orchestration'] if paths else controls,
                            stdout=log, stderr=subprocess.STDOUT, check=True)
         after = {p:image_fingerprint(p) for p in before}

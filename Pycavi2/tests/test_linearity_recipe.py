@@ -97,14 +97,26 @@ class RecipeTests(unittest.TestCase):
         raw.chmod(0o555)
         run = reduced/'cal/bpm-linearity/run-001'
         run.mkdir(parents=True)
-        envelope = dict(linearity_recipe_schema_version=1,
-            paths=dict(raw=str(raw), orchestration='.', reduced=str(reduced)),
+        for folder in ('work', 'logs'):
+            (reduced/folder).mkdir()
+        project = (ROOT/'docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml').read_text()
+        project = project.replace('project_schema_version = 1', 'project_schema_version = 2', 1)
+        replacements = {'raw': raw, 'calibration': reduced/'cal', 'output': reduced,
+                        'work': reduced/'work', 'logs': reduced/'logs'}
+        for key, value in replacements.items():
+            project = project.replace('"review locations/'+key+'"', json.dumps(str(value)))
+        project = project.replace('"../../examples/omegacam/full.toml"', json.dumps(str(controls/'native.toml')))
+        header, domains = project.split('[association]', 1)
+        (controls/'project.toml').write_text(header.replace('project_schema_version = 2',
+            'project_schema_version = 2\ninclude = ["domains.toml"]', 1))
+        (controls/'domains.toml').write_text('project_schema_version = 2\n[association]'+domains)
+        envelope = dict(linearity_recipe_schema_version=1, project='project.toml',
             preparation=dict(detector_toml='detector_toml.toml', processing_toml='processing_toml.toml',
                 source_samples=str(source), handoff=str(state['handoff_path']),
                 native=str(Path(os.environ['LINEARITY_PREPARE_BINARY']).resolve()),
-                run=str(run), source_revision='b'*40))
-        text = 'linearity_recipe_schema_version = 1\n'
-        for table in ('paths', 'preparation'):
+                run='cal/bpm-linearity/run-001', source_revision='b'*40))
+        text = 'linearity_recipe_schema_version = 1\nproject = "project.toml"\n'
+        for table in ('preparation',):
             text += '\n['+table+']\n'
             text += ''.join(key+' = '+json.dumps(value)+'\n' for key, value in envelope[table].items())
         path = controls/'bpm-linearity.toml'
@@ -117,7 +129,10 @@ class RecipeTests(unittest.TestCase):
         self.assertEqual(receipt['directories']['orchestration'], str(controls))
         self.assertTrue((controls/'run-001/native.toml').is_file())
         self.assertFalse((run/'native.toml').exists())
-        self.assertTrue((run/'native.log').is_file())
+        self.assertTrue((reduced/'logs/run-001/native.log').is_file())
+        self.assertTrue((reduced/'work/run-001/native/command.complete').is_file())
+        self.assertEqual(set(receipt['configuration_sources']),
+                         {str(path), str(controls/'project.toml'), str(controls/'domains.toml')})
         product = archive.read_product(receipt['product']['path'])
         self.assertEqual(len(product['exposure_rows']), 100)
         self.assertEqual(product['exposure_rows'][0]['signal_adu'], 205.5)
