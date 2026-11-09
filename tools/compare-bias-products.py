@@ -12,6 +12,7 @@ definitions, raw/calibration references and input measurements remain strict.
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import tomllib
@@ -46,7 +47,7 @@ ADDITION_GROUPS = ('RON CLIP', 'RCL MEAN', 'RCL MED', 'RCL STD', 'RCL NVAL',
                    'RCL CONV', 'RCL KLO', 'RCL KHI', 'RCL LIMIT', 'BPM ENC', 'BPM BADNZ')
 
 
-def compare_headers(actual, retained, allow_additions):
+def compare_headers(actual, retained, allow_additions, product=None, reference=None):
     missing = retained.keys() - actual.keys()
     extra = actual.keys() - retained.keys()
     assert not missing, ('Missing retained QC cards', sorted(missing))
@@ -59,6 +60,12 @@ def compare_headers(actual, retained, allow_additions):
     else:
         assert not extra, ('Unexpected QC additions', sorted(extra))
     for key in retained.keys() - IDENTITY_KEYS:
+        # Disabled diagnostics may cite their own product instead of a raw pair.
+        # Normalize only that exact identity on both sides; keep raw sources strict.
+        if (re.fullmatch(r'ESO MPP QC .+ SRC[1-9][0-9]*', key)
+                and product is not None and reference is not None
+                and actual[key] == product.name and retained[key] == reference.name):
+            continue
         assert actual[key] == retained[key], (key, actual[key], retained[key])
     return len(retained.keys() - IDENTITY_KEYS), len(extra)
 
@@ -277,7 +284,8 @@ def main():
             assert actual.data.shape == retained.data.shape, identity
             assert actual.data.tobytes() == retained.data.tobytes(), identity
             actual_qc, retained_qc = qc(actual.header, current), qc(retained.header, reference)
-            common_count, added_count = compare_headers(actual_qc, retained_qc, a.allow_clipped_ron_additions)
+            common_count, added_count = compare_headers(
+                actual_qc, retained_qc, a.allow_clipped_ron_additions, current, reference)
             qc_headers.append(actual_qc)
             capture(actual.header, config.get('provenance', {}).get('detector', []), index, identity)
             print(f'{identity:16} MATCH        {common_count} MATCH; {added_count} added cards', flush=True)
