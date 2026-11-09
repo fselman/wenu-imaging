@@ -107,7 +107,8 @@ Load explicit bound detector HDUs &
 \end{longtable}
 \normalsize
 The coordinator owns recipe-wide resources. The file adapter owns loaded raw
-frames only for the duration of one detector operation; the returned result
+frames and releases each after its last raw measurement and private copy;
+the returned result
 owns its master and QC. Read the following scientific stages before exploring
 the argument parser or metadata serializers.
 
@@ -296,6 +297,26 @@ The BPM selects frame-mean and QC populations; it does not replace output
 pixels. The temporal median is evaluated at every active coordinate.
 \code{mef_bias_stack_masked_diagnostic} selects frames and consumes the private
 cube; \code{cube_avg_median_opts} implements the configured stack.
+The stack allocates an independent master image. Once stacking succeeds, the
+kernel releases the consumed corrected cube before master-statistics working
+arrays are allocated, and clears its cleanup pointer. This changes no
+estimator or numerical evaluation order; failures still release each owner
+once. Ordinary in-memory calls keep borrowed raw images unchanged through the
+service call. The file adapter uses \code{mef_cal_bias_owned_measurements}:
+all validation and requested raw-pair diagnostics precede consumption; each
+frame is copied and its raw/scan QC measured before its raw owner is released
+and nulled, then correction proceeds on the private copy. No later stage reads
+that raw view. On failure, adapter cleanup destroys remaining non-null owners.
+Mismatched or shared pixel owners are rejected before consumption. This
+reduces raw/corrected overlap without changing scientific evaluation order.
+Releasing the corrected cube removes its overlap with master
+statistics but cannot remove an earlier full-QC peak during per-frame
+measurements. Resident memory also includes allocator and mapped-file state;
+actual-host profiling remains necessary. The synthetic
+\code{bias_memory_probe} checks release order in both QC profiles and can
+capture compiler-local numerical snapshots for ten WFI-sized raw frames;
+its optional final \code{owned} argument checks that no raw owners survive
+to stacking. Failure injection covers partial consumption and caller cleanup.
 QC retains original input IDs.
 
 For synthetic frame means $0,1,2,10$ with illustrative $\kappa=1$,
@@ -355,7 +376,13 @@ The TOML equivalent is \texttt{[bias] qc = "full"} or
 choice; omission preserves \code{full}. Unknown or duplicate command-line
 choices fail before processing.
 
-Full QC retains the existing measurements and optional MAD choice.
+Full QC defaults to MAD off: omitted \texttt{[bias] mad} means
+\texttt{mad = false}, and omitted long-form \code{--mad} means \code{no}.
+Explicit \texttt{mad = true} or long-form \code{--mad yes} opts in.
+Clipped RON remains independent of this choice and follows its existing
+configuration. MAD-based scatter, MAD RON and the MAD-based hot-pixel
+diagnostic are unavailable when MAD is off; hot-pixel thresholds have not
+been replaced by sigma-clipping. Other measurements keep their definitions.
 Legacy QC retains the row-correction median/scatter and scan parameters,
 frame-admission summaries and master median/scatter already produced by the
 reduction. It skips the added raw-active, corrected-active and scan-region
@@ -412,7 +439,7 @@ centered sum-of-squares family after its median shift.
 \toprule Situation & Representation \\\midrule
 $N=0$ & Level and scatter unavailable; not measured zero.\\
 $N=1$ & Mean/median measured; requested MAD is zero; sample stdev unavailable.\\
-MAD omitted & Unavailable by explicit choice; not zero.\\
+MAD omitted & Unavailable by default or explicit choice; not zero.\\
 MAD equals zero & Valid measured result; may make a derived threshold degenerate.\\
 \bottomrule
 \end{tabular}

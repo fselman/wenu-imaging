@@ -182,6 +182,47 @@ static void sweep(mef_bb *legacy, int rejection)
         assert(memcmp(&geometry, &legacy->ccd[detector_index], sizeof(geometry)) == 0);
         for (i = 0; i < count; ++i) assert(memcmp(saved[i], frames[i]->data, sizeof(saved[i])) == 0);
     }
+    /* Adapter-owned raws may be partly consumed when a dependency fails. The
+     * remaining slots must still be valid owners, and cleanup must balance. */
+    {
+        int saw_partial = 0;
+        for (persistent = 0; persistent <= 1; ++persistent) {
+            for (failure = 0; failure <= calls; ++failure) {
+                image_t *owned[6];
+                const image_t *views[6];
+                mef_bias_input consuming = input;
+                int consumed = 0;
+                for (i = 0; i < count; ++i) {
+                    owned[i] = image_copy(frames[i]); assert(owned[i]); views[i] = owned[i];
+                }
+                consuming.frames = views;
+                result = NULL; error = NULL; arm(failure, persistent);
+                status = mef_cal_bias_owned_measurements(
+                    context, &consuming, owned, NULL, &result, &error);
+                disarm();
+                if (failure) {
+                    assert(dependency_fired && status != MEF_OK && !result);
+                    assert(!error || mef_error_status(error) == status);
+                } else {
+                    assert(status == MEF_OK && result);
+                    assert(!memcmp(expected, mef_bias_result_signal(result)->data, sizeof(expected)));
+                }
+                for (i = 0; i < count; ++i) {
+                    consumed += owned[i] == NULL;
+                    if (owned[i]) assert(!memcmp(saved[i], owned[i]->data, sizeof(saved[i])));
+                    image_del(owned[i]);
+                    assert(!memcmp(saved[i], frames[i]->data, sizeof(saved[i])));
+                }
+                if (!failure) assert(consumed == count);
+                saw_partial |= consumed > 0 && consumed < count;
+                mef_error_destroy(error); mef_bias_result_destroy(result);
+                unchanged(before); assert(own.owners == baseline_owners);
+                assert(!memcmp(&geometry, &legacy->ccd[detector_index], sizeof(geometry)));
+            }
+        }
+        assert(saw_partial);
+        puts("PASS: owned raw partial consumption, dependency failures and exact recovery pixels");
+    }
     /* Recovery in the same context proves no damaged reusable state. */
     for (i = 0; i < 5; ++i) {
         result = NULL; arm(0, 0); assert(mef_cal_bias(context, &input, &result, NULL) == MEF_OK); disarm();

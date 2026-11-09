@@ -8,7 +8,8 @@ settings = "bias.toml"
 median_even_handling = "average"
 # Omit this field for the same default, or use an explicit ID array.
 detectors = "all"
-mad = true
+# Optional; false is the default. Set true to request MAD and its hot-pixel QC.
+mad = false
 ron_pair = [0, 1]
 high_sigma = 5.0
 readout_id = "OMEGACAM:normal:ordered:1x1"

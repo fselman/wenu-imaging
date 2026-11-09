@@ -48,6 +48,10 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(self.ids(self.invoke()),['A','B'])
         self.assertEqual(self.ids(self.invoke(selection='all')),['A','B'])
         self.assertEqual(self.ids(self.invoke(BASE.replace('mad = true','detectors = "all"\nmad = true'))),['A','B'])
+    def test_mad_defaults_off_and_explicit_opt_in(self):
+        for setting, expected in (('', 'no'), ('mad = false', 'no'), ('mad = true', 'yes')):
+            out = self.invoke(BASE.replace('mad = true', setting))
+            self.assertEqual(out[out.index('--mad')+1], expected)
     def test_qc_profiles(self):
         self.assertNotIn('--qc', self.invoke())
         for profile in ('legacy', 'full'):
