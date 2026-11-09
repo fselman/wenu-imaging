@@ -6,6 +6,32 @@
 static void close_to(double actual, double expected) {
     assert(fabs(actual-expected) < 1e-9 * (1+fabs(expected)));
 }
+/* Every request must preserve the selected results of the full estimator. */
+static void check_selected(const image_t *image, const pixelmap *map, const int *zone)
+{
+    image_sample_stats full, actual, expected, sentinel;
+    assert(image_getstats_masked_checked(image, map, zone, 1, &full) == 0);
+    for (unsigned int fields = 1; fields < 16; ++fields) {
+        assert(image_getstats_masked_selected_checked(image, map, zone, fields, &actual) == 0);
+        expected = full;
+        if (!(fields & IMAGE_SAMPLE_MEAN)) expected.mean = 0.0;
+        if (!(fields & IMAGE_SAMPLE_STDEV)) {
+            expected.stdev = 0.0; expected.stdev_available = 0;
+        }
+        if (!(fields & IMAGE_SAMPLE_MEDIAN)) expected.median = 0.0;
+        if (!(fields & IMAGE_SAMPLE_MAD)) {
+            expected.mad = 0.0; expected.mad_available = 0;
+        }
+        if (!(fields & (IMAGE_SAMPLE_MEAN | IMAGE_SAMPLE_MEDIAN)))
+            expected.level_available = 0;
+        assert(!memcmp(&actual, &expected, sizeof(actual)));
+    }
+    memset(&sentinel, 0x5a, sizeof(sentinel)); actual = sentinel;
+    assert(image_getstats_masked_selected_checked(image, map, zone, 0, &actual) == -1);
+    assert(!memcmp(&actual, &sentinel, sizeof(actual)));
+    assert(image_getstats_masked_selected_checked(image, map, zone, 16, &actual) == -1);
+    assert(!memcmp(&actual, &sentinel, sizeof(actual)));
+}
 int main(void) {
     image_t *a, *b;
     pixelmap *m, *n;
@@ -24,6 +50,7 @@ int main(void) {
     assert(a && b && m && n);
     for(i=0;i<8;++i) { a->data[i]=(pixelvalue)(i+1); b->data[i]=0; }
     a->data[7]=1000; m->data[7]=0; memcpy(saved,a->data,sizeof(saved));
+    check_selected(a, m, NULL); check_selected(a, NULL, roi);
     /* Masked outlier: independent integers 1..7, sample variance 28/6. */
     assert(image_getstats_masked_checked(a,m,NULL,1,&s)==0);
     assert(s.valid_pixels==7 && s.bpm_excluded==1 && s.nonfinite_excluded==0);
@@ -37,6 +64,7 @@ int main(void) {
     m->data[0]=2;
     assert(image_getstats_masked_checked(a,m,NULL,1,&s)==-1 && !memcmp(&s,&sentinel,sizeof(s)));
     m->data[0]=1;
+    check_selected(a, m, NULL);
     assert(!memcmp(a->data,saved,sizeof(saved)));
     /* Pair mask intersection excludes different bad pixels; inputs untouched. */
     n->data[0]=0;
@@ -47,7 +75,9 @@ int main(void) {
     a->data[1]=NAN; a->data[2]=INFINITY; m->data[2]=0;
     assert(image_getstats_masked_checked(a,m,NULL,1,&s)==0);
     assert(s.nonfinite_excluded==1 && s.bpm_excluded==2 && s.valid_pixels==5);
+    check_selected(a, m, NULL);
     memset(m->data,0,8);
+    check_selected(a, m, NULL);
     assert(image_getstats_masked_checked(a,m,NULL,1,&s)==0 && !s.level_available && !s.stdev_available);
     m->data[0]=1;
     assert(image_getstats_masked_checked(a,m,NULL,1,&s)==0 && s.level_available && !s.stdev_available);

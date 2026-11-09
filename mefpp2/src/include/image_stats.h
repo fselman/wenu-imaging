@@ -650,7 +650,7 @@ double image_compute_entropy(image_t * im) ;
  * silently clamped. No value-range cut/clipping, interpolation or correction.
  * Counts partition the region: BPM-excluded first, then nonfinite among the
  * remaining pixels, then valid. Absence of BPM is recorded, never inferred.
- * Means/sample stdev reuse image_getstats_opts. Median/MAD use the checked
+ * Means/sample stdev reuse the image_getstats_opts accumulation. Median/MAD use the checked
  * averaged-middle math helper. N=0 has no level; N<2 has no stdev. Zero MAD is
  * a valid measured value. Availability flags are authoritative, not zeros.
  * Inputs unchanged; 0=success (including unavailable statistics), -1=error
@@ -660,6 +660,20 @@ typedef struct {
     int zone[4], bpm_supplied, level_available, stdev_available, mad_available;
     double mean, median, stdev, mad;
 } image_sample_stats;
+/* Selected results: counts/zone/BPM metadata are always returned. Unrequested
+ * values remain zero; availability flags apply only to requested results.
+ * level_available covers a requested mean or median; the request distinguishes
+ * them. MAD computes its median dependency without returning an unrequested
+ * median. Nonempty requests only; unknown bits fail with *out unchanged. */
+enum {
+    IMAGE_SAMPLE_MEAN = 1u,
+    IMAGE_SAMPLE_STDEV = 2u,
+    IMAGE_SAMPLE_MEDIAN = 4u,
+    IMAGE_SAMPLE_MAD = 8u
+};
+int image_getstats_masked_selected_checked(const image_t *image, const pixelmap *map,
+    const int *zone, unsigned int fields, image_sample_stats *out);
+/* Compatibility entry point: mean, stdev, median and optional MAD. */
 int image_getstats_masked_checked(const image_t *image, const pixelmap *map,
     const int *zone, int with_mad, image_sample_stats *out);
 /* Raw difference with intersection of independently supplied good-pixel maps.
