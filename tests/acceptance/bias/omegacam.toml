@@ -60,4 +60,4 @@ source_identity_policy = "normalize_only_own_product_identity"
 required_exit_status = 0
 required_completion_marker = "BIAS_RECIPE_COMPLETE"
 # The comparator covers pixels, QC, mapping and selected provenance, not every
-# FITS header or raw input content. WFI and content fingerprints remain open.
+# FITS header or raw input content. See wfi.toml for WFI coverage; content fingerprints remain open.

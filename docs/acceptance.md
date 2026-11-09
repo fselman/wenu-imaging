@@ -58,8 +58,18 @@ with zero exit and passed the reference comparison: exact pixels, no added QC
 cards, ASDF schema/configuration and product/input QC mapping. Comparison used
 the corrected own-product identity handling; checked files remained unchanged.
 This is a real-data regression result for this case, not independent validation
-of every scientific estimator. Content fingerprints and other cases, including
-WFI, remain to be completed with the owner.
+of every scientific estimator.
+
+The owner accepted the [WFI bias case](../tests/acceptance/bias/wfi.toml).
+The same executable completed all eight detectors with WFI configuration only;
+the average-median product passed ASDF schema, exact recipe snapshot, ordered
+input membership and FITS/QC mapping checks. A diagnostic changing only the even
+median convention to `lower` reproduced every pixel of the retained WFI master
+exactly, explaining the differences from the average-median product. Keep these
+two conventions distinct: the retained master is a lower-median pixel reference,
+not an average-median or historical-QC reference. Its older provenance lacks the
+configuration snapshot needed by the current full comparator. Content
+fingerprints and historical WFI QC equivalence remain open.
 
 Use issue/PR summaries for results: what ran, which executable/configuration,
 pass/fail and material differences. Routine build logs, per-attempt receipts and
