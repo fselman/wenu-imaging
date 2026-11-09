@@ -483,8 +483,9 @@ int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
     }
     toml_datum_t mad = toml_get(bias, "mad"), ron = toml_get(bias, "ron_pair"),
                  sigma = toml_get(bias, "high_sigma");
-    if (mad.type != TOML_BOOLEAN ||
-        !append_option_value(recipe, "--mad", mad.u.boolean ? "yes" : "no")) {
+    if ((mad.type != TOML_UNKNOWN && mad.type != TOML_BOOLEAN) ||
+        !append_option_value(recipe, "--mad",
+            mad.type == TOML_BOOLEAN && mad.u.boolean ? "yes" : "no")) {
         goto done;
     }
     if (ron.type != TOML_UNKNOWN &&

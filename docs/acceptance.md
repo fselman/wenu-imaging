@@ -74,3 +74,8 @@ fingerprints and historical WFI QC equivalence remain open.
 Use issue/PR summaries for results: what ran, which executable/configuration,
 pass/fail and material differences. Routine build logs, per-attempt receipts and
 historical replay scripts do not belong in permanent documentation.
+
+New bias recipes default to MAD off. Explicit `mad = true` remains an opt-in;
+the archived acceptance configurations retain their recorded measurement policy.
+Clipped RON follows its separate settings. With MAD off, MAD scatter/RON and
+MAD-based hot-pixel diagnostics are explicitly unavailable, not zero.

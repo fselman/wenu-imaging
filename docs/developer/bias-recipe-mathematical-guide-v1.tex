@@ -376,7 +376,13 @@ The TOML equivalent is \texttt{[bias] qc = "full"} or
 choice; omission preserves \code{full}. Unknown or duplicate command-line
 choices fail before processing.
 
-Full QC retains the existing measurements and optional MAD choice.
+Full QC defaults to MAD off: omitted \texttt{[bias] mad} means
+\texttt{mad = false}, and omitted long-form \code{--mad} means \code{no}.
+Explicit \texttt{mad = true} or long-form \code{--mad yes} opts in.
+Clipped RON remains independent of this choice and follows its existing
+configuration. MAD-based scatter, MAD RON and the MAD-based hot-pixel
+diagnostic are unavailable when MAD is off; hot-pixel thresholds have not
+been replaced by sigma-clipping. Other measurements keep their definitions.
 Legacy QC retains the row-correction median/scatter and scan parameters,
 frame-admission summaries and master median/scatter already produced by the
 reduction. It skips the added raw-active, corrected-active and scan-region
@@ -433,7 +439,7 @@ centered sum-of-squares family after its median shift.
 \toprule Situation & Representation \\\midrule
 $N=0$ & Level and scatter unavailable; not measured zero.\\
 $N=1$ & Mean/median measured; requested MAD is zero; sample stdev unavailable.\\
-MAD omitted & Unavailable by explicit choice; not zero.\\
+MAD omitted & Unavailable by default or explicit choice; not zero.\\
 MAD equals zero & Valid measured result; may make a derived threshold degenerate.\\
 \bottomrule
 \end{tabular}

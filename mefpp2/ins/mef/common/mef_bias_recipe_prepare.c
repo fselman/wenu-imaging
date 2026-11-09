@@ -157,11 +157,14 @@ static int parse_recipe_arguments(int argc, char **argv, bias_recipe_arguments *
     }
     if ((arguments->paf_path == NULL) == (arguments->toml_path == NULL) ||
         arguments->bias_list_path == NULL || arguments->reference_detector_id == NULL ||
-        arguments->mad_option == NULL ||
-        (strcmp(arguments->mad_option, "yes") && strcmp(arguments->mad_option, "no")) ||
+        (arguments->mad_option != NULL && strcmp(arguments->mad_option, "yes") &&
+            strcmp(arguments->mad_option, "no")) ||
         !arguments->detector_count ||
         (arguments->ron_first_option == NULL) != (arguments->ron_second_option == NULL)) {
         return 0;
+    }
+    if (arguments->mad_option == NULL) {
+        arguments->mad_option = "no";
     }
     return 1;
 }
@@ -294,13 +297,14 @@ void mef_bias_recipe_usage(void)
         "FITS) [--detectors all|ID,ID] [--qc legacy|full]\n");
     fprintf(stderr,
         "Standalone candidate: cal bias [--qc legacy|full] (--pafname PAF|--config TOML) --bias ABS_LIST "
-        "(--output-dir DIR|--output FITS) --reference-detector ID --mad (yes|no) [--ron-first "
+        "(--output-dir DIR|--output FITS) --reference-detector ID [--mad (yes|no)] [--ron-first "
         "INDEX --ron-second INDEX] [--high-sigma K]\n"
         "Repeat detector blocks: --detector-id EXTNAME --config-detector ZERO_BASED --readout-id "
         "ID --bin-x N --bin-y N --amplifier-id ID --input-bpm (omitted|FITS) --hdu N [--hdu N ... "
         "one per input]\n"
         "Selected BPM additionally requires --bpm-hdu N --bpm-good-value (0|1) --bpm-coordinates "
-        "(raw|active) [--bpm-expected-extname NAME]. Output parent must exist; no overwrite.\n");
+        "(raw|active) [--bpm-expected-extname NAME]. MAD defaults to no. "
+        "Output parent must exist; no overwrite.\n");
 }
 
 void mef_bias_recipe_destroy(mef_bias_recipe *recipe)
