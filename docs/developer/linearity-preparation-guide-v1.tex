@@ -250,12 +250,20 @@ against the embedded original records, including the permitted identity/HDU
 remapping. Native FITS readback checks layout before exclusive publication;
 a separate independent comparison checks every final padded image payload.
 
+Historical calibration locations need not be rewritten in their original ASDF
+records. Explicit recipe \texttt{calibration\_bindings} declare the original
+location, a copy below the project's calibration root, and the preserved SHA256.
+Only master/BPM locations are rebound; HDUs, asset IDs, raw paths and scientific
+settings remain fixed. Admission compares the declared digest with the original
+archive; batch verification checks the actual copied bytes. Native preparation
+embeds both the unchanged source graph and these declarations. Its saved reader
+checks that the context changed only the declared locations. Project preparation
+copies and verifies calibration bytes without decoding pixels or running a
+reduction. A conflicting fingerprint is refused, never adopted as a new baseline.
+
 \texttt{read\_manifest} verifies joined ASDF hashes and source/detector mapping
-and exposes saved diagnostics after relocation. It neither opens FITS pixels
-nor runs native commands; FITS integrity rechecking is explicitly false for this
-metadata reader. A separate acceptance comparison remains necessary for image
-products. The synthetic coordinator case covers metadata-first refusal, preserved
-prior/reference populations, exact saved ROI values, two image hashes per batch,
-immutable outputs and saved reading with raw inputs hidden. The final native ASDF join requires its own Mac qualification. Actual
-observational acceptance and Viewer integration remain separate gates.
+after relocation, without FITS pixels or native commands. FITS integrity rechecking
+is explicitly false for this metadata reader; independent image comparison remains
+necessary. The C publication path passed its synthetic Mac gate at revision
+\texttt{6f3eaaf}. Observational acceptance and Viewer integration remain pending.
 \end{document}

@@ -359,6 +359,14 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
     d = dependencies
     # Re-admit all caller-owned metadata rather than trusting a stale dictionary.
     admitted = preparation_dependencies(d['source_samples'], d['handoff_path'], resolved)
+    if d.get('calibration_bindings'):
+        require(publication == 'native', 'Calibration bindings require native publication')
+        try:
+            from . import pycavi_calibration_bindings as calibrations
+        except ImportError:
+            import pycavi_calibration_bindings as calibrations
+        require(layout is not None and layout.get('calibration'), 'Calibration bindings require project roots')
+        admitted = calibrations.bind(admitted, resolved, d['calibration_bindings'], layout['calibration'])
     require(canonical(d)==canonical(admitted),
             'Preparation dependencies changed after admission')
     paths = preparation_layout(d, directory, **layout) if layout is not None else None

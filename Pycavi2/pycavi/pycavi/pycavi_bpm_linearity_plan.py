@@ -7,10 +7,12 @@ try:
     from .pycavi_configuration import ProjectComposition
     from . import pycavi_linearity_config as configuration
     from . import pycavi_linearity_recipe as preparation
+    from . import pycavi_calibration_bindings as calibrations
 except ImportError:
     from pycavi_configuration import ProjectComposition
     import pycavi_linearity_config as configuration
     import pycavi_linearity_recipe as preparation
+    import pycavi_calibration_bindings as calibrations
 require = preparation.require
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -28,7 +30,7 @@ def admit(path):
     path = Path(path).resolve(strict=True)
     data = tomllib.loads(path.read_text())
     fields(data, ('bpm_linearity_recipe_schema_version', 'project', 'run', 'native',
-                  'preparation', 'bpm', 'detectors') + (('assembly',) if 'assembly' in data else ()), 'combined recipe')
+                  'preparation', 'bpm', 'detectors') + tuple(k for k in ('assembly', 'calibration_bindings') if k in data), 'combined recipe')
     require(type(data['bpm_linearity_recipe_schema_version']) is int and
             data['bpm_linearity_recipe_schema_version'] == 1, 'Unsupported combined recipe')
     project_path = reference(path.parent, data['project'])
@@ -72,6 +74,8 @@ def admit(path):
     require(isinstance(data['detectors'], list) and 0 < len(data['detectors']) <= len(resolved['detectors']),
             'Explicit nonempty detector selection required')
     catalogue = {d['detector_id']: (i, d) for i, d in enumerate(resolved['detectors'])}
+    bindings = calibrations.resolve(data.get('calibration_bindings', []), roots['calibration'])
+    used_bindings = set()
     entries, positions, baseline, metadata = [], [], {}, {}
     for index, entry in enumerate(data['detectors']):
         fields(entry, ('detector_id', 'source_samples', 'handoff', 'reference_rois'), 'detector entry')
@@ -80,6 +84,8 @@ def admit(path):
         positions.append(position)
         dependencies = preparation.preparation_dependencies(reference(path.parent, entry['source_samples']),
             reference(path.parent, entry['handoff']), resolved)
+        dependencies = calibrations.bind(dependencies, resolved, bindings, roots['calibration'])
+        used_bindings.update(r['source'] for r in dependencies.get('calibration_bindings', []))
         require(dependencies['selection']['detector'] == entry['detector_id'], 'Detector dependency differs')
         ids = entry['reference_rois']
         rois = {r['id']: r for r in detector['rois']}
@@ -102,6 +108,7 @@ def admit(path):
         key = str(Path(run.name)/f'detector-{index:03d}')
         entries.append(dict(detector=detector, dependencies=dependencies, key=key, bpm_loaded_pixels=loaded_pixels,
             reference_rois=[[rois[name][k] for k in ('xmin', 'xmax', 'ymin', 'ymax')] for name in ids]))
+    require(used_bindings == {row['source'] for row in bindings}, 'Unused calibration copy binding')
     require(positions == sorted(set(positions)), 'Select unique detectors in detector-TOML catalogue order')
     if assembly is not None:
         require(assembly['reference_detector'] in [e['detector']['detector_id'] for e in entries], 'Explicit selected assembly reference required')
@@ -113,12 +120,14 @@ def admit(path):
                     selected['bpm']['path'] == common['bpm']['path'], 'Assembly requires common ordered flats, master and prior')
     sources = {item['path']: item['sha256'] for item in project['sources']}
     sources[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+    native_reference = Path(project['native_configuration'])
+    sources[str(native_reference)] = hashlib.sha256(native_reference.read_bytes()).hexdigest()
     for name, item in resolved['sources'].items():
         sources[resolved['source_paths'][name]] = item['sha256']
     sources[project['catalog']['path']] = project['catalog']['sha256']
     code_paths = [Path(__file__).with_name(name+'.py') for name in ('pycavi_bpm_linearity_plan',
         'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_assembly', 'pycavi_linearity_recipe',
-        'pycavi_linearity_native_archive', 'pycavi_native_product_qc')]
+        'pycavi_linearity_native_archive', 'pycavi_native_product_qc', 'pycavi_calibration_bindings')]
     code_paths.append(ROOT/'tools/run-bpm-linearity.py')
     code_sources = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in code_paths}
     metadata.update(sources)

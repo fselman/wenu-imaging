@@ -79,7 +79,7 @@ def resume_linearity_candidate(args, build, git):
     if args.combined:
         additional += ['tools/run-bpm-linearity.py', 'Pycavi2/tests/bpm_linearity_recipe_contract.py']
         additional += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
-            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_assembly')]
+            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_assembly', 'pycavi_calibration_bindings')]
     for name in additional:
         path = validation/name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -166,6 +166,90 @@ def qualify_assembly(args, candidate, case, blob, run, guards):
     print('VERIFICATION:', candidate/'verification.json', flush=True)
 
 
+def prepare_observation_project(args, build, git):
+    """Reuse the qualified engines and a small retained Python harness."""
+    revision = '6f3eaafc3b25bd9498665e06c35c5565f50b186c'
+    require(not git('diff', '--name-only', revision, args.revision, '--', 'mefpp2'), 'Native code changed; requalify it')
+    controls = args.prepare_project.resolve(strict=True)
+    root = Path('/Users/fselman/Pictures/OCAM')
+    require(controls == root/'test_recipes/orchestration', 'Unexpected observational orchestration root')
+    launcher = controls/'run-bpm-linearity.sh'
+    require(not launcher.exists() and not launcher.is_symlink(), 'BPM/linearity launcher already exists')
+    retained = build.parent.parent/'bpm-native-qc-gopmq2yj'
+    qualified = build.parent.parent/'bpm-native-qc-cwxq1zd6'
+    proof = json.loads((qualified/'verification.json').read_text())
+    require(proof['successful'] and proof['source_revision'] == revision, 'Final native assembly not qualified')
+    engines = {qualified/'mefpp_bpm_assemble': '183ec1a68787b7a848cf26910495d3a3e0d862c2b51bf813699c4481d1924251',
+               retained/'mefpp_m5': '390b1f69288b36a31a27270088b90146272e7e0804e742fd094e12f7324286fe',
+               retained/'mefpp_linearity_prepare_command': '4c7392c760416d26d3d3389f24bee017946630b5f561486a585bc8e41de31d0d'}
+    require(all(p.is_file() and sha(p) == digest for p, digest in engines.items()), 'Qualified native executable changed')
+    previous = retained/'linearity-recipe-recheck-bnuubdyb/validation-source'
+    sources = [p for p in previous.rglob('*') if p.is_file()]
+    require(sources, 'Retained coordinator harness missing')
+    for path in sources:
+        name = path.relative_to(previous).as_posix()
+        require(not path.is_symlink() and path.read_bytes() == git('show', '9e10ac4681b12d419e9504859ae31b4359952851:'+name),
+                'Retained harness changed: '+name)
+    protected = [build/'CMakeCache.txt', build/'mefpp2/mefpp_bias_recipe',
+                 build.parent.parent/'main-bias-jk_5noln/mefpp_bias_recipe', *engines]
+    for instrument in ('WFI', 'OCAM'):
+        folder = Path('/Users/fselman/Pictures')/instrument/'test_recipes/orchestration'
+        protected += [folder/'run-bias.sh', folder/'bias-recipe.toml']
+    guards = {str(p): sha(p) for p in protected}
+    work = Path(tempfile.mkdtemp(prefix='bpm-linearity-project-', dir=build.parent.parent))
+    source = work/'source'
+    names = [p.relative_to(previous).as_posix() for p in sources]
+    names += ['tools/prepare-bpm-linearity-project.py', 'tools/run-bpm-linearity.py',
+              'Pycavi2/pycavi/pycavi/pycavi_calibration_bindings.py',
+              'Pycavi2/pycavi/pycavi/pycavi_bpm_linearity_assembly.py',
+              'config/detectors/omegacam-1x1.toml', 'config/processing/omegacam-characterization.toml']
+    for name in set(names):
+        path = source/name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(git('show', args.revision+':'+name))
+    reduced = root/'test_recipes/reduced'
+    logs = reduced/'logs'
+    logs.mkdir(parents=True, exist_ok=True)
+    log = logs/(work.name+'-setup.log')
+    argv = [args.asdf_python, '-B', source/'tools/prepare-bpm-linearity-project.py',
+        '--orchestration', controls, '--raw', root/'bpm', '--reduced', reduced,
+        '--samples', root/'wenu-imaging/ocam-corrected-sample-asdf-xm1ngkg_/persistence/asdf/CCD65/samples.asdf',
+        '--handoff', root/'wenu-imaging/linearity-bias-CCD65-epw82wy3/handoff.json',
+        '--bpm', retained/'mefpp_m5', '--native-preparation', retained/'mefpp_linearity_prepare_command',
+        '--native-revision', 'e7c46646116f4cbca2eaf6955a4315c39f3e3f3b',
+        '--assembly', qualified/'mefpp_bpm_assemble', '--assembly-revision', revision,
+        '--detector-config', source/'config/detectors/omegacam-1x1.toml',
+        '--processing-config', source/'config/processing/omegacam-characterization.toml',
+        '--detector', 'ESO_CCD_#65', '--upper-fraction', '0.85', '--minimum-span', '0.15',
+        '--maximum-pair-difference', '0.02', '--prepare']
+    print('PREPARING PROJECT | LOG:', log, flush=True)
+    try:
+        with log.open('x') as stream:
+            subprocess.run(list(map(str, argv)), cwd=controls, stdout=stream, stderr=subprocess.STDOUT,
+                env=dict(os.environ, OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1', PYTHONDONTWRITEBYTECODE='1'), check=True)
+    finally:
+        require({name: sha(Path(name)) for name in guards} == guards, 'Protected source/cache/executable/configuration changed')
+    print(log.read_text(), end='', flush=True)
+    import shlex
+    command = [args.asdf_python, '-B', source/'tools/run-bpm-linearity.py',
+               '--config', controls/'bpm-linearity-recipe.toml', '--execute']
+    shell = '#!/bin/bash\nset -euo pipefail\n'
+    shell += 'test "$(uname -s):$(hostname -s)" = "Darwin:MC02VV0HPHTDG"\n'
+    shell += 'export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1\n'
+    shell += 'cd '+shlex.quote(str(controls))+'\n'
+    shell += 'exec nice -n 10 '+shlex.join(list(map(str, command)))+' "$@"\n'
+    with launcher.open('x') as stream:
+        stream.write(shell)
+    launcher.chmod(0o755)
+    for path in source.rglob('*'):
+        if path.is_file():
+            path.chmod(0o444)
+    print('LAUNCHER:', launcher, flush=True)
+    print('COORDINATOR:', source/'tools/run-bpm-linearity.py', flush=True)
+    print('ASDF PYTHON:', args.asdf_python, flush=True)
+    print('PASS: project prepared; no native build or reduction performed', flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkout', type=Path, required=True)
@@ -176,10 +260,13 @@ def main():
     parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
     parser.add_argument('--resume-linearity-candidate', type=Path, help='Recheck only the recipe using the unchanged e7c4664 producer')
     parser.add_argument('--verify-combined-case', type=Path, help='Finish saved-case checks without repeating native processing')
+    parser.add_argument('--prepare-project', type=Path, help='Author the OmegaCAM pilot project and calibration-copy bindings; no build or reduction')
     parser.add_argument('--assembly-reference', type=Path, help='Reuse passed 4c8702c FITS assembly checks; rebuild only the corrected QC publisher')
     parser.add_argument('--assembly-case', type=Path, help='Build only final assembly components; join an already qualified synthetic case')
     parser.add_argument('--combined', action='store_true', help='Recheck the combined detector coordinator using retained native producers')
     args = parser.parse_args()
+    require(not args.prepare_project or not (args.assembly_case or args.resume_linearity_candidate or args.linearity or args.reuse_probe),
+            'Project preparation does not build or qualify native code')
     require(not args.assembly_reference or args.assembly_case, 'Assembly reference requires a saved case')
     require(not args.assembly_case or not (args.linearity or args.resume_linearity_candidate or args.reuse_probe),
             'Assembly qualification reuses saved products; do not select another build mode')
@@ -205,6 +292,9 @@ def main():
     require(entries['CMAKE_BUILD_TYPE']=='Release' and entries['MEFPP_C_STANDARD']=='17', 'Unexpected build profile')
     require((prefix/'include/asdf/file.h').is_file() and (prefix/'lib/libasdf.dylib').is_file(), 'Retained libasdf unavailable')
     require(args.asdf_python.is_file(), 'Retained ASDF reader unavailable')
+    if args.prepare_project:
+        prepare_observation_project(args, build, git)
+        return
     if args.resume_linearity_candidate:
         resume_linearity_candidate(args, build, git)
         return
@@ -405,7 +495,7 @@ def main():
         required += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
             'pycavi_qc','pycavi_pair_qc','pycavi_sample_qc','pycavi_linearity_config',
             'pycavi_linearity_recipe','pycavi_linearity_preparation_qc','pycavi_linearity_native_archive','pycavi_native_product_qc',
-            'pycavi_configuration')]
+            'pycavi_configuration','pycavi_calibration_bindings')]
     for name in required:
         path=validation/name; path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(blob(args.revision,name))
     orchestration, reduced = candidate/'orchestration', candidate/'reduced'

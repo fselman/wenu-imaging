@@ -36,6 +36,9 @@ def prepare_context(dependencies, resolved, directory, controls, *, source_revis
         biases=dependencies['biases'], master=dependencies['master'],
         master_snapshot=dependencies['master_snapshot'], source_revision=source_revision,
         source_graph=dict(entry=source.name, sha256=hashes), dependency_evidence=evidence)
+    if dependencies.get('calibration_bindings'):
+        context['calibration_bindings'] = dependencies['calibration_bindings']
+        context['calibration_root'] = dependencies['calibration_root']
     path = controls/'preparation-context.json'
     with path.open('x') as stream:
         stream.write(recipe.canonical(context)+'\n')
@@ -70,6 +73,12 @@ def read_product(path):
                    'Frozen dependency graph changed')
     source = (root/graph['entry']).resolve(strict=True)
     qc.require(source.is_relative_to(root), 'Source graph escapes archive')
+    if context.get('calibration_bindings'):
+        try:
+            from . import pycavi_calibration_bindings as calibrations
+        except ImportError:
+            import pycavi_calibration_bindings as calibrations
+        calibrations.verify_context(context, source)
     expected = previous.sample.read_product(source)
     names = {'configuration.json', 'master-reference.tsv', 'bias-traces.tsv', 'command.complete'}
     names.update(name for name in texts if name.startswith('pair-'))

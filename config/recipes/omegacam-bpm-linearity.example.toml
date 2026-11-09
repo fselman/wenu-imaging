@@ -38,3 +38,11 @@ detector_id = "ESO_CCD_#65"
 source_samples = "../reduced/cal/bpm-linearity/prior/CCD65/samples.asdf"
 handoff = "../reduced/cal/bias/prior/CCD65/handoff.json"
 reference_rois = ["REPLACE_WITH_REVIEWED_REFERENCE_ROI_ID"]
+
+# Optional historical calibration copy. path is relative to the project's
+# calibration root; source and SHA256 must match the unchanged source archive.
+# Prepare the byte-identical copy before metadata admission.
+# [[calibration_bindings]]
+# source = "/original/retained/OCAM_MB_CCD65_candidate.fits"
+# path = "imports/CCD65/OCAM_MB_CCD65_candidate.fits"
+# sha256 = "REPLACE_WITH_PRESERVED_CALIBRATION_SHA256"

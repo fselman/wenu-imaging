@@ -86,6 +86,7 @@ def main():
     parser.add_argument('--preparation', type=Path, required=True)
     parser.add_argument('--source-revision', required=True)
     parser.add_argument('--work-parent', type=Path, required=True)
+    parser.add_argument('--calibration-copies', action='store_true', help='Use byte-identical imported calibrations; preserve the original source graph')
     parser.add_argument('--assembly', type=Path, help='Also publish the final BPM MEF with this native command')
     parser.add_argument('--assembly-source-revision', help='Exact assembler source revision')
     parser.add_argument('--verify-saved', type=Path, help='Finish checks on an already processed synthetic case; no native execution')
@@ -129,6 +130,16 @@ def main():
         text += '\n['+key+']\n'+''.join(name+' = '+json.dumps(item)+'\n' for name, item in value.items())
     text += '\n[[detectors]]\ndetector_id = "ESO_CCD_#65"\nreference_rois = ["CCD65.R0"]\n'
     text += 'source_samples = '+json.dumps(str(source))+'\nhandoff = '+json.dumps(str(state['handoff_path']))+'\n'
+    if args.calibration_copies:
+        imported = reduced/'cal/imported'
+        imported.mkdir()
+        for original in (Path(state['master']), Path(state['selection']['bpm']['path'])):
+            copied = imported/original.name
+            shutil.copyfile(original, copied)
+            copied.chmod(0o444)
+            text += '\n[[calibration_bindings]]\n'+''.join(
+                k+' = '+json.dumps(v)+'\n' for k, v in dict(source=str(original),
+                path='imported/'+original.name, sha256=hashlib.sha256(original.read_bytes()).hexdigest()).items())
     path = controls/'bpm-linearity.toml'
     path.write_text(text)
     protected = [*state['raw'].glob('*.fits'), Path(state['master']), Path(state['selection']['bpm']['path'])]
@@ -152,6 +163,17 @@ def main():
     else:
         raise AssertionError('Unknown reference ROI admitted')
     assert not list(run.iterdir())
+    if args.calibration_copies:
+        bad = controls/'wrong-calibration-digest.toml'
+        expected = hashlib.sha256(Path(state['selection']['bpm']['path']).read_bytes()).hexdigest()
+        bad.write_text(text.replace(expected, '0'*64, 1))
+        try:
+            planner.admit(bad)
+        except ValueError as error:
+            assert 'preserved fingerprint' in str(error)
+        else:
+            raise AssertionError('Calibration copy with conflicting declared digest admitted')
+        assert not list(run.iterdir())
     calls = Counter()
     def counted(name):
         calls[str(name)] += 1
