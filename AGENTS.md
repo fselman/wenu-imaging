@@ -7,10 +7,14 @@ bundled qfits/Eclipse. Work in this monorepo, not the historical component repos
 Use C17 for current native development. Intel Mac is the current qualification
 host; retain CentOS 7/Chapman compatibility. Do not upgrade dependencies implicitly.
 
-The owner accepted the Mac-qualified bias readability change and documentation
-cleanup (PRs #293 and #297). The native producer remains 36381892f4f768c3a2c7450114f96021fd5c76d7,
-binary SHA256 822bbadd11c5d82c799163b3f384b344706b57ccd73ee542bf7c283af9b72e49.
-Preserve that executable/cache and the b833aca7 backup. Linearity is paused.
+The owner accepted and selected the Mac-qualified bias producer
+ecf41ea347a20058c7eab435eb9d6fb10b5be02f (PRs #300/#301/#303), binary SHA256
+3c28e637a07cfa05ec83e18d238115c73e1b77b305b4ed0bf62d2d033e7cdacd.
+Both WFI/OCAM launchers select main-bias-jk_5noln/mefpp_bias_recipe under the
+retained mac-standalone-bias-SP3Cgdhb build root, with full QC and MAD off.
+Preserve the previous 36381892 executable/cache and the b833aca7 backup.
+BPM/linearity is being aligned with the bias recipe lifecycle, readable source,
+native product/QC publication and directory contract; reuse its numerical services.
 CCD68/90 residual investigation and the viewer Update service remain deferred.
 Work summaries and completed changes are recorded in GitHub issues and PRs.
 
@@ -64,6 +68,11 @@ synthetic from real-data checks, and prepared commands from observed success.
 
 Raw observations are read-only. Keep raw, orchestration and product directories
 separate; use fresh output directories and preserve accepted reference products.
+Run recipe tests with their working directory in orchestration. Keep configurations,
+lists and requests there, observational inputs in raw, and products, logs, private
+working files and execution receipts under reduced. Existing calibrations are
+read-only dependencies under reduced/cal. Apply the same layout to synthetic
+file-integration fixtures; pure in-memory numerical checks need no directory tree.
 Do not overwrite an installation or switch the selected engine without instruction.
 Reuse the selected build/toolchain/cache; no routine fresh export, reconfigure,
 dependency installation or replay of unchanged qualification matrices.

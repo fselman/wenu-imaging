@@ -30,6 +30,14 @@ pixels, MEF structure, detector mapping, important headers and ASDF QC/provenanc
 Compare numerical arrays and scientific metadata rather than whole FITS file bytes,
 which can differ in agreed timestamps or checksums. Report differences explicitly.
 
+File-based recipe tests run with the working directory set to orchestration.
+Keep TOMLs, input lists and requests there; raw observations remain read-only in
+raw. Products, logs, private work and execution receipts belong under reduced;
+existing calibration dependencies remain read-only under reduced/cal. Synthetic
+file-integration fixtures use this same separation. Pure numerical unit checks
+may use in-memory arrays. The native linearity-preparation command case exercises
+this layout with preserved input fingerprints and unchanged analytical expectations.
+
 ## When to run
 
 - A recipe change: affected recipe cases and dependent cases when appropriate.

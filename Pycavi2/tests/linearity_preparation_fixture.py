@@ -16,8 +16,15 @@ import pycavi_linearity_config as config
 import pycavi_linearity_recipe as recipe
 
 
-def fixture(work):
+def fixture(work, *, separated=False):
     work=Path(work);work.mkdir(parents=True,exist_ok=True);name='ESO_CCD_#65'
+    raw = work / 'raw' if separated else work
+    orchestration = work / 'orchestration' if separated else work
+    reduced = work / 'reduced' if separated else work
+    bias_directory = reduced / 'cal/bias' if separated else work
+    bpm_directory = reduced / 'cal/bpm' if separated else work
+    for directory in (raw, orchestration, reduced, bias_directory, bpm_directory):
+        directory.mkdir(parents=True, exist_ok=True)
     detector='''footprint_schema_version=1
 instrument="omegacam"
 binning=[1,1]
@@ -82,7 +89,7 @@ overscan_sample=[8,8,1,4]
             content+=plane([0]*32,8,4,primary=False,detector='OTHER')
             content+=plane(data,8,4,primary=False,detector=name,amplifier='L');hdu=2
         else:content=plane(data,8,4,extra=extra,detector=name,amplifier='L');hdu=0
-        path=work/f'flat{f}.fits';path.write_bytes(content)
+        path=raw/f'flat{f}.fits';path.write_bytes(content)
         flats.append(dict(path=str(path),hdu=hdu,asset=path.name,index=10+f,pair=f'P{min(f,19-f)}'))
     biases=[]
     for f in range(10):
@@ -91,11 +98,11 @@ overscan_sample=[8,8,1,4]
             data.append(10+10*y+20*f)
             data += [12+10*y+20*f+3+((1 if x%2 else -1) if f==0 else 0) for x in range(6)]
             data.append(14+10*y+20*f)
-        path=work/f'bias{f}.fits';path.write_bytes(plane(data,8,4,extra=[('EXPTIME','0')],detector=name,amplifier='L'))
+        path=raw/f'bias{f}.fits';path.write_bytes(plane(data,8,4,extra=[('EXPTIME','0')],detector=name,amplifier='L'))
         biases.append(dict(path=str(path),hdu=0,asset=path.name,index=f,accepted=int(f!=3)))
     empty=header([('SIMPLE','T'),('BITPIX','8'),('NAXIS','0'),('EXTEND','T')])
-    master=work/'master.fits';master.write_bytes(empty+plane([3]*12,6,2,primary=False,detector=name,amplifier='L'))
-    bpm=work/'bpm.fits';bpm.write_bytes(empty+plane([1]*12,6,2,primary=False,byte=True,mask=True,detector=name,amplifier='L'))
+    master=bias_directory/'master.fits';master.write_bytes(empty+plane([3]*12,6,2,primary=False,detector=name,amplifier='L'))
+    bpm=bpm_directory/'bpm.fits';bpm.write_bytes(empty+plane([1]*12,6,2,primary=False,byte=True,mask=True,detector=name,amplifier='L'))
     selection=dict(selection_schema_version=1,detector=name,readout_id='OMEGACAM:normal:ordered:1x1',bin_x=1,bin_y=1,
         raw_saturation_adu=65534.,pair_time_tolerance_s=0.,max_loaded_pixels=10000,max_rows=50,with_mad=True,reject_bits=255,
         exposure_hdu=0,header_keys=dict(identity='DETID',amplifier='AMPID',bin_x='XBINNING',bin_y='YBINNING',exposure='EXPTIME'),
@@ -104,11 +111,12 @@ overscan_sample=[8,8,1,4]
     sites=[dict(detector=name,amplifier='L',configuration_detector=0,source_roi=f'CCD65.R{i}',
                 active_pixel=[i+1,1],raw_pixel=[i+2,2]) for i in range(5)]
     prepared=recipe.native_plan(resolved,selection,sites)
-    (work/'native.toml').write_text(recipe.native_configuration(resolved,snapshot))
-    for k,filename in [('plan','plan.tsv'),('rois','rois.toml'),('sites','sites.toml')]:(work/filename).write_text(prepared[k])
-    (work/'biases.tsv').write_text('input_index\thdu\tasset\tpath\taccepted\n'+''.join(
+    (orchestration/'native.toml').write_text(recipe.native_configuration(resolved,snapshot))
+    for k,filename in [('plan','plan.tsv'),('rois','rois.toml'),('sites','sites.toml')]:(orchestration/filename).write_text(prepared[k])
+    (orchestration/'biases.tsv').write_text('input_index\thdu\tasset\tpath\taccepted\n'+''.join(
         f"{b['index']}\t{b['hdu']}\t{b['asset']}\t{b['path']}\t{b['accepted']}\n" for b in biases))
-    return dict(work=work,resolved=resolved,selection=selection,sites=sites,biases=biases,master=str(master),snapshot=snapshot)
+    return dict(work=orchestration,raw=raw,reduced=reduced,resolved=resolved,
+                selection=selection,sites=sites,biases=biases,master=str(master),snapshot=snapshot)
 
 
 def native_argv(state,command,out):
