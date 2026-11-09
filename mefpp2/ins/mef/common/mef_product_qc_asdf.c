@@ -529,6 +529,7 @@ static int remap_product_sources(asdf_file_t *f,asdf_mapping_t *detector,const c
     asdf_sequence_t *metrics=NULL;
     asdf_value_t *value=asdf_mapping_get(detector,"measurements");
     int i,j,okay=value && asdf_value_as_sequence(value,&metrics)==ASDF_VALUE_OK;
+    /* The typed containers are aliases, not separately owned handles. */
     for(i=0;okay && i<asdf_sequence_size(metrics);++i) {
         asdf_value_t *item=asdf_sequence_get(metrics,i),*old_sources=NULL;
         asdf_mapping_t *metric=NULL;
@@ -543,11 +544,16 @@ static int remap_product_sources(asdf_file_t *f,asdf_mapping_t *detector,const c
                 asdf_sequence_append_string0(sources,!strcmp(text,old_id)?id:text)==ASDF_VALUE_OK;
             asdf_value_destroy(v);
         }
-        if(okay) {okay=asdf_mapping_set_sequence(metric,"sources",sources)==ASDF_VALUE_OK;if(okay)sources=NULL;}
-        asdf_sequence_destroy(sources);asdf_sequence_destroy(old);
-        asdf_value_destroy(old_sources);asdf_mapping_destroy(metric);asdf_value_destroy(item);
+        /* Release the view while its node is still attached, before replacement. */
+        asdf_value_destroy(old_sources);
+        if(okay) {
+            okay=asdf_mapping_set_sequence(metric,"sources",sources)==ASDF_VALUE_OK;
+            if(okay) sources=NULL;
+        }
+        asdf_sequence_destroy(sources);
+        asdf_value_destroy(item);
     }
-    asdf_sequence_destroy(metrics);asdf_value_destroy(value);
+    asdf_value_destroy(value);
     return okay;
 }
 
@@ -706,6 +712,7 @@ int mef_bpm_assembly_qc_write(const mef_bpm_assembly_qc *r,char *message,size_t 
     docs=calloc(r->detector_count,sizeof(*docs));
     detail="Detector ASDF identities, configuration or common ordered inputs/calibrations differ";
     if(!docs || !assembly_admit(r,docs,&inputs,&calibrations)) goto done;
+    detail="Cannot create assembled QC document";
     out=asdf_open_mem_ex(NULL,0,NULL);
     root=mapping_copy_at(docs[0].file,"qc");
     if(!out || !root || asdf_set_mapping(out,"qc",root)!=ASDF_VALUE_OK) goto done;
@@ -714,6 +721,7 @@ int mef_bpm_assembly_qc_write(const mef_bpm_assembly_qc *r,char *message,size_t 
     if(!root || asdf_mapping_set_null(root,"sha256")!=ASDF_VALUE_OK ||
         !string(root,"integrity","not_content_verified")) goto done;
     asdf_mapping_destroy(root);root=NULL;
+    detail="Cannot join detector/input QC and remap final product identity";
     if(!recovery_set(out,"qc/file","id",r->fits_path) || !recovery_set(out,"qc/file","location",r->fits_path) ||
         !recovery_set(out,"qc/file","filename",leaf(r->fits_path)) ||
         !recovery_set(out,"qc/record","assessment_id",r->fits_path) || !recovery_set(out,"qc/record","created_at",r->created_at) ||
@@ -723,6 +731,7 @@ int mef_bpm_assembly_qc_write(const mef_bpm_assembly_qc *r,char *message,size_t 
         !recovery_set(out,"qc/provenance","log_path",r->log_path) ||
         !assembly_detectors(out,r,docs) || !assembly_inputs(out,r,docs,inputs) ||
         !assembly_calibrations(out,r,docs,calibrations)) goto done;
+    detail="Cannot attach assembly recipe snapshot and original detector evidence";
     config=asdf_mapping_create(out);
     if(!config || !string(config,"path",r->recipe_path) || !string(config,"format","bpm-linearity-recipe-toml/1") ||
         !string(config,"snapshot",r->recipe_snapshot)) goto done;
@@ -763,6 +772,7 @@ int mef_bpm_assembly_qc_write(const mef_bpm_assembly_qc *r,char *message,size_t 
     if(link(temporary,r->asdf_path))goto done;
     status=0;
 done:
+    if(status) fprintf(stderr,"BPM_QC_ASSEMBLY_FAILURE: %s\n",detail);
     if(stream)fclose(stream);
     if(fd>=0)close(fd);
     asdf_mapping_destroy(root);asdf_mapping_destroy(extensions);asdf_mapping_destroy(item);asdf_mapping_destroy(config);

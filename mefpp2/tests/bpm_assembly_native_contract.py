@@ -100,7 +100,9 @@ def main():
     argv = [str(args.command.resolve(strict=True)), str(manifest), str(output), members[-1]['detector_id'], str(log),
             report['created_at'], report['native_source_revision'], str(recipe)]
     result = subprocess.run(argv, capture_output=True, text=True)
-    assert result.returncode == 0, result.stdout+result.stderr
+    with (reduced/'native-invocation.json').open('x') as stream:
+        json.dump(dict(argv=argv, returncode=result.returncode, stdout=result.stdout, stderr=result.stderr), stream, indent=2)
+    assert result.returncode == 0, f'Native exit {result.returncode}; case {work}\n'+result.stdout+result.stderr
     assert output.with_suffix('.asdf').read_bytes().splitlines()[1] == b'#ASDF_STANDARD 1.6.0'
     saved = assembly.read_product(output.with_suffix('.asdf'))
     q = saved['qc']

@@ -146,17 +146,21 @@ def qualify_assembly(args, candidate, case, blob, run, guards):
         path.write_bytes(blob(args.revision, name))
     controls, reduced = candidate/'orchestration', candidate/'reduced'
     controls.mkdir(); reduced.mkdir()
-    run([args.asdf_python, validation/names[0], '--probe', candidate/'bpm_mef_assembly_probe',
-         '--work-parent', reduced], 'bpm-mef-byte-checks', controls)
-    run([args.asdf_python, validation/names[1], '--probe', candidate/'mef_assembly_probe',
-         '--work', reduced], 'existing-mef-assembly-checks', controls)
+    if args.assembly_reference:
+        print('REUSING PASSED FITS CHECKS:', args.assembly_reference, flush=True)
+    else:
+        run([args.asdf_python, validation/names[0], '--probe', candidate/'bpm_mef_assembly_probe',
+             '--work-parent', reduced], 'bpm-mef-byte-checks', controls)
+        run([args.asdf_python, validation/names[1], '--probe', candidate/'mef_assembly_probe',
+             '--work', reduced], 'existing-mef-assembly-checks', controls)
     run([args.asdf_python, validation/names[2], '--command', candidate/'mefpp_bpm_assemble',
          '--case', case, '--assembly-source-revision', args.revision, '--work-parent', reduced],
         'native-bpm-assembly-checks', controls)
     require({name: sha(Path(name)) for name in guards} == guards, 'Protected bias files changed')
     report = dict(successful=True, source_revision=args.revision, retained_case=str(case),
                   executable=str(candidate/'mefpp_bpm_assemble'), sha256=sha(candidate/'mefpp_bpm_assemble'),
-                  protected_files=guards, raw_images_read=False, characterization_repeated=False)
+                  protected_files=guards, raw_images_read=False, characterization_repeated=False,
+                  reused_FITS_checks=str(args.assembly_reference) if args.assembly_reference else None)
     (candidate/'verification.json').write_text(json.dumps(report, indent=2)+'\n')
     print('PASS: native BPM MEF/ASDF assembly; exact pixels/QC; saved detector products reused', flush=True)
     print('VERIFICATION:', candidate/'verification.json', flush=True)
@@ -172,9 +176,11 @@ def main():
     parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
     parser.add_argument('--resume-linearity-candidate', type=Path, help='Recheck only the recipe using the unchanged e7c4664 producer')
     parser.add_argument('--verify-combined-case', type=Path, help='Finish saved-case checks without repeating native processing')
+    parser.add_argument('--assembly-reference', type=Path, help='Reuse passed 4c8702c FITS assembly checks; rebuild only the corrected QC publisher')
     parser.add_argument('--assembly-case', type=Path, help='Build only final assembly components; join an already qualified synthetic case')
     parser.add_argument('--combined', action='store_true', help='Recheck the combined detector coordinator using retained native producers')
     args = parser.parse_args()
+    require(not args.assembly_reference or args.assembly_case, 'Assembly reference requires a saved case')
     require(not args.assembly_case or not (args.linearity or args.resume_linearity_candidate or args.reuse_probe),
             'Assembly qualification reuses saved products; do not select another build mode')
     require(not args.verify_combined_case or args.combined, 'Saved-case check requires --combined')
@@ -210,6 +216,24 @@ def main():
         require(verification['successful'] and verification['saved_combined_case'] == str(case), 'Saved-case checks must have passed')
         require({name: sha(Path(name)) for name in verification['protected_files']} == verification['protected_files'],
                 'Retained producer or selected configuration changed')
+    if args.assembly_reference:
+        reference = args.assembly_reference.resolve(strict=True)
+        require(reference.parent == build.parent.parent, 'Assembly reference outside retained build root')
+        original = '4c8702c587fd8ab8407c6af4ed43733a9d62dcc0'
+        unchanged = ['mefpp2/CMakeLists.txt', 'mefpp2/ins/mef/common/mef_mef_assemble.c',
+                     'mefpp2/ins/mef/common/mef_mef_assemble.h', 'mefpp2/ins/mef/mefpp_bpm_assemble.c',
+                     'mefpp2/ins/mef/common/mef_bpm_assembly_qc.h', 'mefpp2/tests/bpm_mef_assembly_probe.c',
+                     'mefpp2/tests/mef_assembly_probe.c', 'mefpp2/tests/bpm_mef_assembly_contract.py',
+                     'mefpp2/tests/mef_assembly_contract.py']
+        require(not git('diff', '--name-only', original, args.revision, '--', *unchanged),
+                'FITS assembly changed; repeat its checks')
+        require('PASS: two detectors' in (reference/'bpm-mef-byte-checks.log').read_text() and
+                'OK' in (reference/'existing-mef-assembly-checks.log').read_text(), 'Reference FITS checks not passed')
+        for member in (reference/'validation-source').rglob('*'):
+            if member.is_file():
+                name = member.relative_to(reference/'validation-source').as_posix()
+                require(not member.is_symlink() and member.read_bytes() == git('show', original+':'+name),
+                        'Reference verifier changed: '+name)
     reused_probe = None
     if args.reuse_probe:
         reused_probe = args.reuse_probe.resolve(strict=True)
@@ -245,6 +269,11 @@ def main():
     for instrument in ('WFI','OCAM'):
         folder = Path('/Users/fselman/Pictures')/instrument/'test_recipes/orchestration'
         protected += [folder/'run-bias.sh', folder/'bias-recipe.toml']
+    if args.assembly_reference:
+        for name in ('mefpp_bpm_assemble', 'bpm_mef_assembly_probe', 'mef_assembly_probe'):
+            member = reference/name
+            require(member.is_file() and not member.is_symlink(), 'Reference assembly binary unavailable')
+            protected.append(member)
     guards = {str(path):sha(path) for path in protected}
     adapter = build/'mefpp2/mefpp_m5'
     adapter_before = adapter.read_bytes() if adapter.exists() else None
@@ -285,7 +314,8 @@ def main():
             except BaseException:
                 process.terminate(); process.wait(); raise
         require(code==0,label+' failed; inspect '+str(log))
-    assembly_targets = ('mefpp_bpm_assemble', 'bpm_mef_assembly_probe', 'mef_assembly_probe')
+    assembly_targets = ('mefpp_bpm_assemble',) if args.assembly_reference else (
+        'mefpp_bpm_assemble', 'bpm_mef_assembly_probe', 'mef_assembly_probe')
     assembly_before = {}
     if args.assembly_case:
         for name in assembly_targets:
