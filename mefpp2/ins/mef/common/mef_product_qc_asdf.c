@@ -242,10 +242,17 @@ static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
     if(okay){okay=seq(root,"embedded_input_records",embedded);embedded=NULL;}
     for(i=0;okay && i<p->calibration_count;++i)okay=append(calibrations,calibration_record(f,p->calibrations+i));
     if(okay){okay=seq(root,"calibrations",calibrations);calibrations=NULL;}
-    if(okay)okay=string(extensions,"record_scope","one_final_MEF_product")&&
+    if(okay)okay=string(extensions,"record_scope",p->primary_image?"one_final_primary_image_product":"one_final_MEF_product")&&
         string(extensions,"input_reference_policy","embedded_record_id")&&
         string(extensions,"measurement_policy","caller_supplied_values_only");
     if(okay && p->bpm_registry) okay=string(extensions,"bpm_registry",p->bpm_registry);
+    if(okay && p->operation_context_format) {
+        asdf_mapping_t *context=asdf_mapping_create(f);
+        okay=context && string(context,"format",p->operation_context_format) &&
+            string(context,"snapshot",p->operation_context_snapshot);
+        if(okay) {okay=map(extensions,"operation_context",context);context=NULL;}
+        asdf_mapping_destroy(context);
+    }
     if(okay){okay=map(root,"extensions",extensions);extensions=NULL;}
     asdf_mapping_destroy(record);asdf_mapping_destroy(provenance);asdf_mapping_destroy(producer);
     asdf_mapping_destroy(configuration);asdf_mapping_destroy(characterization);asdf_mapping_destroy(extensions);

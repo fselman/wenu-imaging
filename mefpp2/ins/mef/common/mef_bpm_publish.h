@@ -19,8 +19,9 @@ typedef struct {
 mef_status mef_bpm_publish(const mef_bpm_files_result *, const char *,
     const mef_bpm_publish_options *, mef_error **);
 /* Native values -> versioned internal transport, NOT the saved QC format.
- * Caller creates fresh handoff stream after publish success. Common Python QC
- * writer is the only ASDF serializer; no FITS pixel calculations in Python. */
+ * Caller creates a fresh handoff stream after publish success. Retained Python
+ * completion consumes this transport; the native product-QC adapter embeds the
+ * same versioned context and uses the shared C ASDF writer directly. */
 mef_status mef_bpm_write_handoff(FILE *, const mef_bpm_files_result *,
     const char *, const mef_bpm_publish_options *, mef_error **);
 #endif

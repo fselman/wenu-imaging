@@ -142,6 +142,12 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
             if (!isalnum((unsigned char)p->bpm_registry[i]) && p->bpm_registry[i]!='_' && p->bpm_registry[i]!='-')
                 return fail(message,size,"Invalid BPM registry");
     }
+    if ((p->primary_image != 0 && p->primary_image != 1) ||
+        (p->primary_image && p->detector_count != 1) ||
+        ((p->operation_context_format == NULL) != (p->operation_context_snapshot == NULL)) ||
+        (p->operation_context_format && (!text(p->operation_context_format) ||
+         !text(p->operation_context_snapshot))))
+        return fail(message,size,"Invalid product layout or native operation context");
     if(!header_metadata(p))return fail(message,size,"Invalid selected FITS provenance");
     n=strlen(p->fits_path);
     if(n<=5||strcmp(p->fits_path+n-5,".fits")) return fail(message,size,"Product must retain a .fits basename");
@@ -179,7 +185,7 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
         const mef_qc_detector_record *d=p->detectors+i;
         if(d->median_even_handling && strcmp(d->median_even_handling,"average") && strcmp(d->median_even_handling,"lower"))
             return fail(message,size,"Invalid bias median even handling");
-        if(!text(d->id)||!text(d->amplifier)||!text(d->readout_id)||d->output_hdu<1||(size_t)d->output_hdu>p->detector_count||d->bin_x<1||d->bin_y<1||
+        if(!text(d->id)||!text(d->amplifier)||!text(d->readout_id)||(p->primary_image ? d->output_hdu!=0 : (d->output_hdu<1||(size_t)d->output_hdu>p->detector_count))||d->bin_x<1||d->bin_y<1||
             d->inputs==NULL||d->input_count!=p->input_count||!measurements(p,d->measurements,d->measurement_count,d->id))
             return fail(message,size,"Invalid product detector coverage or QC");
         for(j=0;j<i;++j) if(!strcmp(d->id,p->detectors[j].id)||d->output_hdu==p->detectors[j].output_hdu)

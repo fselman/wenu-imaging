@@ -86,6 +86,11 @@ typedef struct {
     const char *recipe_config_path, *recipe_config_snapshot;
     const mef_qc_fits_card *header_cards;
     size_t header_card_count;
+    /* Explicit primary-image product support; zero retains the MEF contract. */
+    int primary_image;
+    /* Optional lossless native operation context, embedded rather than a file.
+     * The numerical service owns its versioned fields; the writer stores text. */
+    const char *operation_context_format, *operation_context_snapshot;
 } mef_product_qc;
 /* Structural validation only. No thresholds, means, RON, plots, hashes or FITS
  * pixels are computed. Caller owns all borrowed values during the call. */

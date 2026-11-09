@@ -30,3 +30,9 @@ contracts. Source references use immutable designs or issues, not development st
 
 Bias needs no cross-detector balancing. Flats or collective fits may need it; share
 structure and services without imposing bias's scientific independence on them.
+
+`mef_product_qc` is the common native product validator/ASDF writer. Recipe adapters
+populate typed records; they do not create another serializer. Bias supplies MEF
+extension bindings. The BPM adapter supplies its existing primary-image binding
+and preserves diagnostic HDUs plus the versioned operation context. Primary-image
+support is explicit, limited to one detector, and does not relax MEF validation.

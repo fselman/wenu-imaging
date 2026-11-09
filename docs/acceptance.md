@@ -57,6 +57,25 @@ one detector from an existing sample archive and master; it does not yet provide
 the complete native BPM/linearity characterization lifecycle. Legacy explicit
 arguments remain available for retained controllers during migration.
 
+The existing native `cal bpm` adapter can publish through the same C ASDF writer
+as bias when built with the retained libasdf option. `--native-asdf` selects a
+sidecar sharing the final FITS basename and replaces the Python completion step;
+`--qc-record` remains available for retained controllers. Its primary BPM image
+and diagnostic HDUs are preserved. Typed common QC retains original input/HDU
+order, participation and available/unavailable statistics; the complete existing
+native BPM context is embedded in ASDF. Primary-image QC is explicit and limited
+to one detector, while the MEF mapping contract remains unchanged.
+
+`native_bpm_product_qc` checks actual native results on generated FITS, including
+excluded frames, reason-bit/binary/omitted priors, MAD off and immutable inputs.
+The optional `bpm_native_asdf_probe` and `bpm_native_qc_contract.py --asdf-python
+... --adapter ...` additionally exercise the existing library writer and production
+CLI with an independent reader. This library-backed gate is pending Mac execution;
+the linearity-preparation archive and complete combined recipe are not yet ported. The retained-cache Mac
+qualification helper is `tools/qualify-bpm-native-qc-mac.py`; it refuses unknown
+cached source edits, restores source/cache/adapter before testing private candidates,
+and leaves the selected bias producer and launchers unchanged.
+
 ## When to run
 
 - A recipe change: affected recipe cases and dependent cases when appropriate.
