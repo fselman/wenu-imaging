@@ -376,6 +376,29 @@ static void measurements(mef_bb *legacy, int detector_index)
     corrected_mean=qc->frames[4].active_corrected.mean;
     assert(fabs(corrected_mean-(24-2500))<1e-10);
     assert(qc->frames[4].active_raw.mean>corrected_mean+100);
+    /* Selecting legacy QC must preserve the masked scientific calculation. */
+    {
+        mef_bias_result *minimal = NULL;
+        const mef_bias_qc *a, *b;
+        options.legacy_qc = 1;
+        assert(mef_cal_bias_measurements(context, &input, &options, &minimal, NULL) == MEF_OK);
+        assert(!memcmp(mef_bias_result_signal(result)->data,
+            mef_bias_result_signal(minimal)->data, 24 * sizeof(pixelvalue)));
+        a = mef_bias_result_qc(result); b = mef_bias_result_qc(minimal);
+        assert(a->accepted_frames == b->accepted_frames);
+        assert(a->frame_mean_average == b->frame_mean_average);
+        assert(a->frame_mean_sigma == b->frame_mean_sigma);
+        assert(a->product_median == b->product_median && a->product_stdev == b->product_stdev);
+        assert(!memcmp(a->accepted, b->accepted, 5 * sizeof(int)));
+        assert(!memcmp(a->scan_median, b->scan_median, 5 * sizeof(float)));
+        assert(!memcmp(a->scan_stdev, b->scan_stdev, 5 * sizeof(float)));
+        assert(!mef_bias_result_measurements(minimal)->frames[0].active_raw.level_available);
+        assert(!mef_bias_result_measurements(minimal)->master.level_available);
+        assert(!mef_bias_result_measurements(minimal)->ron_stdev_available);
+        assert(!mef_bias_result_measurements(minimal)->high_offset_available);
+        mef_bias_result_destroy(minimal);
+        options.legacy_qc = 0;
+    }
     mef_context_destroy(context); context=NULL; /* Result owns QC, not borrowed data. */
     assert(qc->frames[4].active_corrected.mean==corrected_mean);
     mef_bias_result_destroy(result);

@@ -248,6 +248,25 @@ static const char *register_calibration(
     return archive->calibrations[i].id;
 }
 
+/* Keep the legacy-derived scalars and cheap configuration provenance. All
+ * expanded records remain present, explicitly unavailable rather than zero. */
+static void restrict_legacy_qc(qc_measurement_storage *storage, int input)
+{
+    for (size_t i = 0; i < storage->count; ++i) {
+        mef_qc_measurement *measurement = storage->measurement + i;
+        int keep = input ? !strncmp(measurement->name, "scan_correction.", 16)
+                         : !strncmp(measurement->name, "legacy.", 7) ||
+                               !strcmp(measurement->name, "variance") ||
+                               !strcmp(measurement->stage, "recipe_parameters");
+        if (!keep) {
+            measurement->state = MEF_QC_UNAVAILABLE;
+            measurement->reason = "disabled_by_legacy_qc";
+            measurement->values = NULL;
+            measurement->value_count = 0;
+        }
+    }
+}
+
 int mef_bias_product_qc_add(mef_bias_product_qc *archive, size_t index, const char *id,
     const char *amplifier, const char *readout, size_t configured, int bin_x, int bin_y,
     const mef_bias_result *result, const mef_bias_measurement_options *options,
@@ -270,6 +289,11 @@ int mef_bias_product_qc_add(mef_bias_product_qc *archive, size_t index, const ch
         m->count != archive->product.input_count ||
         request->input_count != archive->product.input_count ||
         archive->detectors[index].id != NULL) {
+        return 0;
+    }
+    if (index == 0) {
+        archive->product.qc_profile = options->legacy_qc ? "legacy" : NULL;
+    } else if ((archive->product.qc_profile != NULL) != options->legacy_qc) {
         return 0;
     }
     store = archive->storage + index;
@@ -387,7 +411,8 @@ int mef_bias_product_qc_add(mef_bias_product_qc *archive, size_t index, const ch
             storage->measurement[i].mask_id = mask;
         }
     }
-    if (options->ron_clip_enabled) {
+    if (options->ron_clip_enabled ||
+        (options->legacy_qc && archive->processing.ron_clip_enabled)) {
         const image_clipped_stats *c = &m->clipped_difference;
         const image_sample_stats *sample_statistics = &c->sample;
         const char *reason = sample_statistics->valid_pixels < 2 ? "insufficient_clipped_samples"
@@ -540,6 +565,12 @@ int mef_bias_product_qc_add(mef_bias_product_qc *archive, size_t index, const ch
             measurement->vector = 1;
             measurement->value_count = n;
             measurement->values = i ? store->hot_y : store->hot_x;
+        }
+    }
+    if (options->legacy_qc) {
+        restrict_legacy_qc(storage, 0);
+        for (i = 0; i < m->count; ++i) {
+            restrict_legacy_qc(store->inputs + i, 1);
         }
     }
     d->measurements = storage->measurement;

@@ -106,6 +106,8 @@ def verify(header, product, detector):
         assert detector['median_even_handling'] in ('average', 'lower')
         put('MED EVEN', detector['median_even_handling'])
     put('MAPVER', 'bias-scalar/1')
+    if product['provenance'].get('qc_profile'):
+        put('PROFILE', product['provenance']['qc_profile'])
     put('ASDF', Path(product['file']['location']).with_suffix('.asdf').name)
     put('PROD', product['file']['filename'])
     for fits_name, asdf_name in (

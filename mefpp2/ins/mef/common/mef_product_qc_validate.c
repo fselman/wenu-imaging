@@ -95,6 +95,7 @@ static int measurements(const mef_product_qc *p,const mef_qc_measurement *m,size
 static int header_metadata(const mef_product_qc *p)
 {
     size_t i,j;
+    if(p->qc_profile&&strcmp(p->qc_profile,"full")&&strcmp(p->qc_profile,"legacy"))return 0;
     if((p->recipe_config_path==NULL)!=(p->recipe_config_snapshot==NULL))return 0;
     if(p->recipe_config_path&&(!text(p->recipe_config_path)||p->recipe_config_path[0]!='/'||
         !text(p->recipe_config_snapshot)))return 0;

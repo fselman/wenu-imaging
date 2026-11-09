@@ -375,6 +375,10 @@ int mef_bias_qc_fits_header(
             !append_context_field(header, "MED EVEN", "", d->median_even_handling, 1))) {
         goto failed;
     }
+    if (product_qc->qc_profile &&
+        !append_context_field(header, "PROFILE", "", product_qc->qc_profile, 1)) {
+        goto failed;
+    }
     const mef_qc_measurement *pair =
         find_measurement(d->measurements, d->measurement_count, "read_noise");
     if (!pair) {
