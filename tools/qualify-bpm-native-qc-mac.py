@@ -70,6 +70,11 @@ def resume_linearity_candidate(args, build, git):
     for path in sources:
         name = path.relative_to(previous)
         (validation/name).write_bytes(git('show', args.revision+':'+name.as_posix()))
+    if args.verify_combined_case:
+        case = args.verify_combined_case.resolve(strict=True)
+        require(case.parent == candidate/'reduced' and case.name.startswith('combined-characterization-'),
+                'Expected retained synthetic combined case')
+        require(not case.is_symlink(), 'Retained case must not be a symlink')
     additional = ['Pycavi2/pycavi/pycavi/pycavi_native_product_qc.py']
     if args.combined:
         additional += ['tools/run-bpm-linearity.py', 'Pycavi2/tests/bpm_linearity_recipe_contract.py']
@@ -81,6 +86,8 @@ def resume_linearity_candidate(args, build, git):
         path.write_bytes(git('show', args.revision+':'+name))
     import sys
     label = 'bpm-linearity-coordinator-checks' if args.combined else 'linearity-native-recipe-checks'
+    if args.verify_combined_case:
+        label = 'bpm-linearity-saved-case-checks'
     log = retry/(label+'.log')
     print('REUSING NATIVE:', command, '| SHA256:', sha(command), flush=True)
     print('RUNNING:', label, '| LOG:', log, flush=True)
@@ -99,6 +106,8 @@ def resume_linearity_candidate(args, build, git):
                 arguments = [args.asdf_python, validation/'Pycavi2/tests/linearity_native_recipe_contract.py',
                     '--native-command', command, '--source-revision', native_revision,
                     '--work-parent', candidate/'reduced']
+            if args.verify_combined_case:
+                arguments += ['--verify-saved', case]
             process = subprocess.Popen(list(map(str, arguments)), cwd=candidate/'orchestration',
                 env=environment, stdout=stream, stderr=subprocess.STDOUT)
             try:
@@ -115,7 +124,8 @@ def resume_linearity_candidate(args, build, git):
     require(code == 0, 'Recipe check failed; inspect '+str(log))
     report = dict(successful=True, native_source_revision=native_revision,
         verification_source_revision=args.revision, native_binary_sha256=sha(command),
-        original_failure_receipt=str(receipts[0]), check=label, protected_files=guards, log=str(log))
+        original_failure_receipt=str(receipts[0]), check=label, protected_files=guards, log=str(log),
+        saved_combined_case=str(case) if args.verify_combined_case else None)
     (retry/'verification.json').write_text(json.dumps(report, indent=2)+'\n')
     print(log.read_text(), end='', flush=True)
     print('PASS:', label, 'with retained native producers; no build repeated', flush=True)
@@ -131,8 +141,10 @@ def main():
     parser.add_argument('--reuse-probe', type=Path, help='Retained df562fe native-ASDF probe; build only the corrected CLI')
     parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
     parser.add_argument('--resume-linearity-candidate', type=Path, help='Recheck only the recipe using the unchanged e7c4664 producer')
+    parser.add_argument('--verify-combined-case', type=Path, help='Finish saved-case checks without repeating native processing')
     parser.add_argument('--combined', action='store_true', help='Recheck the combined detector coordinator using retained native producers')
     args = parser.parse_args()
+    require(not args.verify_combined_case or args.combined, 'Saved-case check requires --combined')
     require(not args.combined or args.resume_linearity_candidate is not None, 'Combined check requires a retained candidate')
     require(platform.system()=='Darwin' and platform.node().split('.')[0]=='MC02VV0HPHTDG', 'Wrong qualification host')
     require(platform.machine()=='x86_64', 'Expected retained Intel environment')

@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 import shutil
+import stat
 from pathlib import Path
 import subprocess
 import sys
@@ -21,13 +22,75 @@ import pycavi_bpm_linearity_recipe as recipe
 import pycavi_linearity_native_archive as archive
 
 
+def rename_fixture_directory(source, destination):
+    """macOS requires write permission on the directory being renamed."""
+    mode = stat.S_IMODE(source.stat().st_mode)
+    source.chmod(mode | stat.S_IWUSR)
+    try:
+        moved = source.rename(destination)
+    except BaseException:
+        source.chmod(mode)
+        raise
+    moved.chmod(mode)
+
+
+def verify_saved_case(work):
+    raw, controls, reduced = work/'raw', work/'orchestration', work/'reduced'
+    run = reduced/'cal/bpm-linearity/combined'
+    path = controls/'bpm-linearity.toml'
+    guard = raw/'preservation-guard.bin'
+    assert raw.is_dir() and not (work/'hidden-raw').exists()
+    os.chdir(controls)
+    relocated = Path(tempfile.mkdtemp(prefix='relocated-characterization-', dir=reduced))/'product'
+    shutil.copytree(run, relocated)
+    hidden = work/'hidden-raw'
+    rename_fixture_directory(raw, hidden)
+    native_run = subprocess.run
+    try:
+        subprocess.run = lambda *a, **k: (_ for _ in ()).throw(AssertionError('Saved reader executed a command'))
+        saved = recipe.read_manifest(relocated/'manifest.json')
+        assert len(saved['detectors'][0]['preparation']['exposure_rows']) == 100
+        assert saved['FITS_integrity_rechecked'] is False
+    finally:
+        subprocess.run = native_run
+        rename_fixture_directory(hidden, raw)
+    frozen = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in run.rglob('*') if p.is_file()}
+    try:
+        planner.admit(path)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('Completed run admitted for overwrite')
+    assert frozen == {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in run.rglob('*') if p.is_file()}
+    guard_before = guard.stat()
+    guard_receipt = Path(tempfile.mkdtemp(prefix='guard-check-', dir=reduced))/'inputs.json'
+    guard_inputs = recipe.BatchInputs({str(guard): hashlib.sha256(guard.read_bytes()).hexdigest()}, guard_receipt)
+    guard.write_bytes(b'modified')
+    os.utime(guard, ns=(guard_before.st_atime_ns, guard_before.st_mtime_ns))
+    guard_inputs.observe(guard)
+    try:
+        guard_inputs.verify()
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('Changed bytes with restored timestamp escaped final verification')
+    finally:
+        guard.write_bytes(b'original')
+        os.utime(guard, ns=(guard_before.st_atime_ns, guard_before.st_mtime_ns))
+    print('PASS: saved-product relocation without raw inputs or subprocesses; overwrite and byte-preservation guards')
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--bpm', type=Path, required=True)
     parser.add_argument('--preparation', type=Path, required=True)
     parser.add_argument('--source-revision', required=True)
     parser.add_argument('--work-parent', type=Path, required=True)
+    parser.add_argument('--verify-saved', type=Path, help='Finish checks on an already processed synthetic case; no native execution')
     args = parser.parse_args()
+    if args.verify_saved:
+        verify_saved_case(args.verify_saved.resolve(strict=True))
+        return
     priority = os.getpriority(os.PRIO_PROCESS, 0)
     if priority < 10:
         os.nice(10-priority)
@@ -103,41 +166,7 @@ def main():
     with (run/'manifest.json').open() as stream:
         assert json.load(stream) == result
     assert before == {str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in before}
-    relocated = reduced/'relocated-characterization'
-    shutil.copytree(run, relocated)
-    hidden = work/'hidden-raw'
-    state['raw'].rename(hidden)
-    native_run = subprocess.run
-    try:
-        subprocess.run = lambda *a, **k: (_ for _ in ()).throw(AssertionError('Saved reader executed a command'))
-        saved = recipe.read_manifest(relocated/'manifest.json')
-        assert len(saved['detectors'][0]['preparation']['exposure_rows']) == 100
-        assert saved['FITS_integrity_rechecked'] is False
-    finally:
-        subprocess.run = native_run
-        hidden.rename(state['raw'])
-    frozen = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in run.rglob('*') if p.is_file()}
-    try:
-        planner.admit(path)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError('Completed run admitted for overwrite')
-    assert frozen == {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in run.rglob('*') if p.is_file()}
-    guard_before = guard.stat()
-    guard_inputs = recipe.BatchInputs({str(guard): hashlib.sha256(guard.read_bytes()).hexdigest()}, reduced/'guard-inputs.json')
-    guard.write_bytes(b'modified')
-    os.utime(guard, ns=(guard_before.st_atime_ns, guard_before.st_mtime_ns))
-    guard_inputs.observe(guard)
-    try:
-        guard_inputs.verify()
-    except ValueError:
-        pass
-    else:
-        raise AssertionError('Changed bytes with restored timestamp escaped final verification')
-    finally:
-        guard.write_bytes(b'original')
-        os.utime(guard, ns=(guard_before.st_atime_ns, guard_before.st_mtime_ns))
+    verify_saved_case(work)
     print('RETAINED COMBINED CHARACTERIZATION:', work)
     print('PASS: metadata-first admission, explicit prior/reference populations, serial native stages and joined manifest')
     print('PASS: shared images hashed exactly once before/after; exact measurements, input preservation and no overwrite')
