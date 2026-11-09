@@ -389,8 +389,10 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         (controls/'biases.tsv').write_text(bias_text)
         native = (paths['private_work'] if paths else directory)/'native'
         native.mkdir()
+        # Keep the complete location separate from the bounded native asset ID.
+        master_asset = 'master-bias:'+hashlib.sha256(d['master']['product'].encode()).hexdigest()
         argv = [str(executable),*[str(controls/n) for n in ('native.toml','rois.toml','sites.toml','plan.tsv')],
-                d['master']['product'],str(d['master']['hdu']),d['master']['product'],
+                d['master']['product'],str(d['master']['hdu']),master_asset,
                 str(controls/'biases.tsv'),str(native)]
         output = directory/'asdf'
         if publication == 'native':

@@ -20,9 +20,12 @@ def main():
     parser.add_argument('--source-revision', required=True)
     parser.add_argument('--work-parent', type=Path, required=True)
     args = parser.parse_args()
-    work = Path(tempfile.mkdtemp(prefix='native-preparation-recipe-', dir=args.work_parent)).resolve()
+    parent = args.work_parent/('project-location-'+'x'*100)
+    parent.mkdir(exist_ok=True)
+    work = Path(tempfile.mkdtemp(prefix='native-preparation-recipe-', dir=parent)).resolve()
     state = fixture(work, separated=True)
     source = source_archive(state)
+    assert len(state['master']) > 127, 'Exercise full locations beyond the asset-ID limit'
     controls, reduced = state['work'], state['reduced']
     for name, item in state['resolved']['sources'].items():
         (controls/(name+'.toml')).write_text(item['text'])
@@ -56,6 +59,8 @@ def main():
     assert result.returncode == 0, result.stdout+result.stderr
     report = json.loads((run/'execution.json').read_text())
     assert report['status'] == 'complete_for_owner_inspection' and report['publication'] == 'native'
+    assert report['argv'][5] == state['master'] and len(report['argv'][7]) < 128
+    assert report['argv'][7] == 'master-bias:'+hashlib.sha256(state['master'].encode()).hexdigest()
     product = Path(report['product']['path'])
     value = archive.read_product(product)
     assert len(value['exposure_rows']) == 100 and len(value['scan_traces']) == 30

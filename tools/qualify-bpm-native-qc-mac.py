@@ -25,6 +25,85 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def resume_linearity_candidate(args, build, git):
+    """Recheck the recipe with an unchanged native producer; never rebuild it."""
+    native_revision = 'e7c46646116f4cbca2eaf6955a4315c39f3e3f3b'
+    require(args.linearity and not args.reuse_probe, 'Resume only the linearity recipe check')
+    require(not git('diff', '--name-only', native_revision, args.revision, '--', 'mefpp2'),
+            'Native dependencies changed; retained producer cannot be reused')
+    candidate = args.resume_linearity_candidate.resolve(strict=True)
+    require(candidate.is_relative_to(build.parent.parent) and candidate != build.parent.parent,
+            'Candidate outside retained build root')
+    command = candidate/'mefpp_linearity_prepare_command'
+    receipts = list(candidate.glob('reduced/native-preparation-recipe-*/reduced/cal/bpm-linearity/native-recipe/execution.json'))
+    require(len(receipts) == 1, 'Expected one retained failed recipe receipt')
+    receipt = json.loads(receipts[0].read_text())
+    require(receipt['status'] == 'failed' and Path(receipt['argv'][0]).resolve() == command,
+            'Unexpected failed recipe producer')
+    require(command.is_file() and not command.is_symlink() and
+            sha(command) == receipt['native_binary_sha256'], 'Retained native executable changed')
+    context_path = Path(receipt['argv'][-1]).resolve(strict=True)
+    require(context_path.is_relative_to(candidate) and
+            json.loads(context_path.read_text())['source_revision'] == native_revision,
+            'Retained native revision differs')
+    require('COVERAGE: real native ASDF, independent schema/value reader' in
+            (candidate/'linearity-native-asdf-checks.log').read_text(),
+            'Direct native ASDF check did not pass')
+    previous = candidate/'validation-source'
+    require(all(not path.is_symlink() for path in previous.rglob('*')), 'Retained validation symlink')
+    sources = [path for path in previous.rglob('*') if path.is_file()]
+    for path in sources:
+        name = path.relative_to(previous).as_posix()
+        require(not path.is_symlink() and path.read_bytes() == git('show', native_revision+':'+name),
+                'Retained validation source changed: '+name)
+    selected = build.parent.parent/'main-bias-jk_5noln/mefpp_bias_recipe'
+    require(sha(selected) == '3c28e637a07cfa05ec83e18d238115c73e1b77b305b4ed0bf62d2d033e7cdacd',
+            'Selected bias producer differs')
+    protected = [selected, command, build/'CMakeCache.txt', build/'mefpp2/mefpp_bias_recipe']
+    for instrument in ('WFI', 'OCAM'):
+        folder = Path('/Users/fselman/Pictures')/instrument/'test_recipes/orchestration'
+        protected += [folder/'run-bias.sh', folder/'bias-recipe.toml']
+    guards = {str(path): sha(path) for path in protected}
+    retry = Path(tempfile.mkdtemp(prefix='linearity-recipe-recheck-', dir=candidate))
+    validation = retry/'validation-source'
+    shutil.copytree(previous, validation)
+    for path in sources:
+        name = path.relative_to(previous)
+        (validation/name).write_bytes(git('show', args.revision+':'+name.as_posix()))
+    import sys
+    log = retry/'linearity-native-recipe-checks.log'
+    print('REUSING NATIVE:', command, '| SHA256:', sha(command), flush=True)
+    print('RUNNING: linearity-native-recipe-checks | LOG:', log, flush=True)
+    environment = dict(os.environ, OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1',
+                       MKL_NUM_THREADS='1', PYTHONDONTWRITEBYTECODE='1')
+    try:
+        with log.open('xb') as stream:
+            process = subprocess.Popen([str(args.asdf_python),
+                str(validation/'Pycavi2/tests/linearity_native_recipe_contract.py'),
+                '--native-command', str(command), '--source-revision', native_revision,
+                '--work-parent', str(candidate/'reduced')], cwd=candidate/'orchestration',
+                env=environment, stdout=stream, stderr=subprocess.STDOUT)
+            try:
+                while True:
+                    try:
+                        code = process.wait(timeout=30)
+                        break
+                    except subprocess.TimeoutExpired:
+                        print('linearity-native-recipe-checks: still running', flush=True)
+            except BaseException:
+                process.terminate(); process.wait(); raise
+    finally:
+        require({name: sha(Path(name)) for name in guards} == guards, 'Protected files changed')
+    require(code == 0, 'Recipe check failed; inspect '+str(log))
+    report = dict(successful=True, native_source_revision=native_revision,
+        verification_source_revision=args.revision, native_binary_sha256=sha(command),
+        original_failure_receipt=str(receipts[0]), protected_files=guards, log=str(log))
+    (retry/'verification.json').write_text(json.dumps(report, indent=2)+'\n')
+    print(log.read_text(), end='', flush=True)
+    print('PASS: corrected recipe with retained native ASDF producer; no build repeated', flush=True)
+    print('VERIFICATION:', retry/'verification.json', flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkout', type=Path, required=True)
@@ -33,6 +112,7 @@ def main():
     parser.add_argument('--asdf-python', type=Path, required=True)
     parser.add_argument('--reuse-probe', type=Path, help='Retained df562fe native-ASDF probe; build only the corrected CLI')
     parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
+    parser.add_argument('--resume-linearity-candidate', type=Path, help='Recheck only the recipe using the unchanged e7c4664 producer')
     args = parser.parse_args()
     require(platform.system()=='Darwin' and platform.node().split('.')[0]=='MC02VV0HPHTDG', 'Wrong qualification host')
     require(platform.machine()=='x86_64', 'Expected retained Intel environment')
@@ -54,6 +134,9 @@ def main():
     require(entries['CMAKE_BUILD_TYPE']=='Release' and entries['MEFPP_C_STANDARD']=='17', 'Unexpected build profile')
     require((prefix/'include/asdf/file.h').is_file() and (prefix/'lib/libasdf.dylib').is_file(), 'Retained libasdf unavailable')
     require(args.asdf_python.is_file(), 'Retained ASDF reader unavailable')
+    if args.resume_linearity_candidate:
+        resume_linearity_candidate(args, build, git)
+        return
     reused_probe = None
     if args.reuse_probe:
         reused_probe = args.reuse_probe.resolve(strict=True)
