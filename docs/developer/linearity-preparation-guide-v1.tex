@@ -172,4 +172,54 @@ resource refusals, source preservation, ASDF roundtrip and relocation without
 native files. Focused file-adapter allocation controls and the unchanged
 singleton command check shared interfaces. None is scientific acceptance of
 observational calibration or a general dependency memory-safety claim.
+\newpage
+\section*{Combined detector characterization}
+The combined recipe uses these entry points:\par
+\texttt{pycavi\_bpm\_linearity\_plan.admit}\par
+\texttt{pycavi\_bpm\_linearity\_recipe.execute}\par
+One TOML references the
+project roots, qualified native executables, detector/processing TOMLs and each
+detector's preserved sample/master dependencies. BPM acquisition limits, output
+mode and named reference ROIs are explicit; the coordinator supplies no new
+scientific defaults. The source configuration and coordinator implementation
+hashes are retained in the joined manifest.
+
+All dependency metadata is admitted before image processing. Each detector is
+processed serially: native linearity preparation first, then native BPM
+characterization. Both use the admitted prior mask and master. The newly derived
+BPM remains a candidate; it is never fed back into the same measurements.
+The native routines retain their estimators, masks, populations and array
+arithmetic. The coordinator performs no pixel computation or ASDF writing.
+Native product companions remain together; process console logs use the project
+log root. Execution requires niceness at least 10.
+
+\texttt{BatchInputs} fingerprints each unique image once before and once after
+the batch. Individual stages check file identity, size, modification time and
+mode against that frozen baseline. The final byte digest is checked even when
+those metadata fields are unchanged. This avoids rehashing shared multi-extension
+raw files for every detector. Child receipts explicitly defer batch preservation;
+the completed parent manifest resolves that check. Native source/binary and
+configuration identities are checked independently.
+
+The existing input-plane ceiling is checked for the BPM stage from the declared
+raw geometry, flat count and two active calibration planes. This is a loaded-input
+budget, not an RSS claim or a new bound on the existing kernel's scratch owners.
+One native operation and one detector are active at a time; the coordinator holds
+no detector cubes. The linearity service retains its existing working-pixel limits.
+
+The manifest is published exclusively after source verification. Its scope is
+\texttt{detector\_characterization}, with scientific acceptance false and final
+MEF state \texttt{not\_assembled}. It joins native BPM FITS/ASDF products and
+saved linearity measurements; it does not assert a final multi-detector
+calibration. The bias assembler handles one image extension per detector;
+BPM's additional diagnostic HDUs require a subsequent assembly integration.
+
+\texttt{read\_manifest} verifies joined ASDF hashes and source/detector mapping
+and exposes saved diagnostics after relocation. It neither opens FITS pixels
+nor runs native commands; FITS integrity rechecking is explicitly false for this
+metadata reader. A separate acceptance comparison remains necessary for image
+products. The synthetic coordinator case covers metadata-first refusal, preserved
+prior/reference populations, exact saved ROI values, two image hashes per batch,
+immutable outputs and saved reading with raw inputs hidden. Native ASDF and
+actual observational acceptance remain separate qualification gates.
 \end{document}

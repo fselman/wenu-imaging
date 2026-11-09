@@ -296,49 +296,51 @@ def image_fingerprint(path):
     return dict(sha256=h.hexdigest(), stat=stat(after))
 
 
-def preparation_layout(dependencies, directory, *, raw, orchestration, reduced,
-                       calibration=None, work=None, logs=None):
-    """Admit the recipe's directories before writing controls or opening images."""
-    roots = {name: Path(path).resolve(strict=True) for name, path in
-             [('raw', raw), ('orchestration', orchestration), ('reduced', reduced)]}
+def validate_preparation_inputs(dependencies, layout):
+    """Reuse the directory and immutable-input contract without creating a run."""
+    roots = {name: Path(layout[name]).resolve(strict=True) for name in ('raw', 'orchestration', 'reduced')}
     require(all(path.is_dir() for path in roots.values()), 'Recipe roots must be directories')
     for name, path in roots.items():
         require(all(not path.is_relative_to(other) and not other.is_relative_to(path)
                     for key, other in roots.items() if key != name),
                 'Raw, orchestration and reduced directories must be separate')
-    run = Path(directory).resolve(strict=True)
-    require(run != roots['reduced'] and run.is_relative_to(roots['reduced']),
-            'Run directory must be below reduced')
-    auxiliary = dict(calibration=Path(calibration or roots['reduced']/'cal').resolve(strict=True),
-                     work=Path(work or roots['reduced']).resolve(strict=True),
-                     logs=Path(logs or roots['reduced']).resolve(strict=True))
-    for name, path in auxiliary.items():
-        require(path.is_dir() and path.is_relative_to(roots['reduced']),
+    for name, default in [('calibration', roots['reduced']/'cal'), ('work', roots['reduced']), ('logs', roots['reduced'])]:
+        roots[name] = Path(layout.get(name) or default).resolve(strict=True)
+        require(roots[name].is_dir() and roots[name].is_relative_to(roots['reduced']),
                 'Project '+name+' root must be under reduced')
-    require(auxiliary['calibration'].is_relative_to(roots['reduced']/'cal'),
-            'Project calibration root must be under reduced/cal')
-    d = dependencies
-    observations = [b['path'] for b in d['biases']] + [f['path'] for f in d['selection']['flat']]
-    calibrations = [d['master']['product'], d['selection']['bpm']['path']]
-    for name in observations:
-        require(Path(name).resolve(strict=True).is_relative_to(roots['raw']),
-                'Observation outside raw directory: '+name)
-    for name in calibrations:
-        require(Path(name).resolve(strict=True).is_relative_to(auxiliary['calibration']),
-                'Calibration outside reduced/cal: '+name)
-    controls = roots['orchestration'] / run.name
-    require(not controls.exists(), 'Recipe control directory already exists')
-    private = auxiliary['work']/run.name if work is not None else run
-    run_logs = auxiliary['logs']/run.name if logs is not None else run
-    for path in {private, run_logs} - {run}:
-        require(not path.exists() and not run.is_relative_to(path) and not path.is_relative_to(run),
-                'Private work/log directory conflicts with the product run')
-    return dict(roots, controls=controls, calibration=auxiliary['calibration'],
-                private_work=private, run_logs=run_logs)
+    require(roots['calibration'].is_relative_to(roots['reduced']/'cal'), 'Project calibration root must be under reduced/cal')
+    observations = dependencies['biases'] + dependencies['selection']['flat']
+    for row in observations:
+        require(Path(row['path']).resolve(strict=True).is_relative_to(roots['raw']), 'Observation outside raw: '+row['path'])
+    for name in (dependencies['master']['product'], dependencies['selection']['bpm']['path']):
+        require(Path(name).resolve(strict=True).is_relative_to(roots['calibration']), 'Calibration outside reduced/cal: '+name)
+    return roots
+
+
+def preparation_layout(dependencies, directory, *, raw, orchestration, reduced,
+                       calibration=None, work=None, logs=None, run_key=None):
+    """Admit paths before writes; an optional batch key isolates detector stages."""
+    roots = validate_preparation_inputs(dependencies, dict(raw=raw, orchestration=orchestration,
+        reduced=reduced, calibration=calibration, work=work, logs=logs))
+    run = Path(directory).resolve(strict=True)
+    require(run != roots['reduced'] and run.is_relative_to(roots['reduced']), 'Run directory must be below reduced')
+    key = Path(run_key or run.name)
+    require(not key.is_absolute() and all(p not in ('.', '..') for p in key.parts), 'Relative batch key required')
+    controls = (roots['orchestration']/key).resolve()
+    private = (roots['work']/key).resolve() if work is not None else run
+    run_logs = (roots['logs']/key).resolve() if logs is not None else run
+    require(controls.is_relative_to(roots['orchestration']) and not controls.exists(), 'Recipe control directory exists or escapes orchestration')
+    for path, root in ((private, roots['work']), (run_logs, roots['logs'])):
+        require(path.is_relative_to(root), 'Private directory escapes project root')
+        if path != run:
+            require(not path.exists() and not run.is_relative_to(path) and not path.is_relative_to(run),
+                    'Private work/log directory conflicts with product run')
+    return dict(raw=roots['raw'], orchestration=roots['orchestration'], reduced=roots['reduced'],
+                controls=controls, calibration=roots['calibration'], private_work=private, run_logs=run_logs)
 
 
 def prepare_detector(dependencies, executable, directory, *, resolved, source_revision,
-                     assessment_id, created_at, layout=None, configuration_sources=None, publication="python"):
+                     assessment_id, created_at, layout=None, configuration_sources=None, publication="python", preservation=None):
     """Run the native preparation and publish one immutable ASDF product.
 
     Dependencies are the result of preparation_dependencies. The command reads
@@ -365,6 +367,7 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
     if paths:
         report['directories'] = {name: str(path) for name, path in paths.items()}
     report['configuration_sources'] = configuration_sources or {}
+    fingerprint = preservation.observe if preservation is not None else image_fingerprint
     binary_digest = archive.pair.sha(executable.read_bytes())
     def metadata_preserved():
         return all(archive.pair.sha(archive.pair.small(Path(p)))==digest
@@ -372,12 +375,12 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
     try:
         require(metadata_preserved(), 'Preparation metadata changed')
         for path, digest in d['baseline'].items():
-            before[path] = image_fingerprint(path)
+            before[path] = fingerprint(path)
             require(before[path]['sha256']==digest, 'Input differs from preserved archive: '+path)
         if paths:
-            controls.mkdir()
+            controls.mkdir(parents=True)
             for path in {paths['private_work'], paths['run_logs']} - {directory}:
-                path.mkdir()
+                path.mkdir(parents=True)
         for name, text in [('native.toml',d['configuration']), ('plan.tsv',d['transport']['plan']),
                            ('rois.toml',d['transport']['rois']), ('sites.toml',d['transport']['sites'])]:
             (controls/name).write_text(text)
@@ -405,7 +408,8 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
             context = native_archive.prepare_context(d, resolved, output, controls,
                 source_revision=source_revision, evidence=dict(native_directory=str(native),
                     handoff=d['handoff'], metadata_sha256=d['metadata_sha256'], images=before,
-                    native_binary_sha256=binary_digest, configuration_sources=configuration_sources or {}))
+                    native_binary_sha256=binary_digest, configuration_sources=configuration_sources or {},
+                    batch_preservation=preservation.reference if preservation is not None else None))
             timestamp = datetime.fromisoformat(created_at.replace('Z', '+00:00')).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
             argv += ['--native-asdf', str(output/'linearity-preparation.asdf'), timestamp,
                      str((paths['run_logs'] if paths else directory)/'native.log'), '--context', str(context)]
@@ -415,7 +419,7 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         with log_path.open('x') as log:
             subprocess.run(argv, cwd=paths['orchestration'] if paths else controls,
                            stdout=log, stderr=subprocess.STDOUT, check=True)
-        after = {p:image_fingerprint(p) for p in before}
+        after = {p:fingerprint(p) for p in before}
         require(before==after and metadata_preserved() and
                 archive.pair.sha(executable.read_bytes())==binary_digest, 'Preparation source preservation failed')
         if publication == 'native':
@@ -428,8 +432,9 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
                 dependency_evidence=dict(handoff=d['handoff'],metadata_sha256=d['metadata_sha256'],
                                          images=before,native_binary_sha256=binary_digest))
         require(metadata_preserved(), 'Metadata changed during publication')
-        report.update(status='complete_for_owner_inspection',product=product,
-                      inputs=before,after_inputs=after,source_preservation=True)
+        report.update(status='complete_for_owner_inspection' if preservation is None else 'complete_pending_batch_preservation',
+                      product=product, inputs=before, after_inputs=after, source_preservation=preservation is None,
+                      batch_preservation=preservation.reference if preservation is not None else None)
         return report
     except Exception as error:
         report['error']=repr(error);raise

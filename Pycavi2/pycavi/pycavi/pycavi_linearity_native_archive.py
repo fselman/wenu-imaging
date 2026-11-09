@@ -10,10 +10,12 @@ from pathlib import Path
 import shutil
 try:
     from . import pycavi_linearity_preparation_qc as previous
+    from . import pycavi_native_product_qc as native_qc
 except ImportError:
     import pycavi_linearity_preparation_qc as previous
+    import pycavi_native_product_qc as native_qc
 qc, pair, recipe = previous.qc, previous.pair, previous.recipe
-SCHEMA = Path(__file__).resolve().parents[3]/'mefpp2/ins/mef/config/qc-product-schema-2.0.0.json'
+SCHEMA = native_qc.SCHEMA
 
 
 def prepare_context(dependencies, resolved, directory, controls, *, source_revision, evidence):
@@ -43,14 +45,7 @@ def prepare_context(dependencies, resolved, directory, controls, *, source_revis
 def read_product(path):
     """Reconstruct saved diagnostics without native execution or original images."""
     path = Path(path).resolve(strict=True)
-    asdf = qc._asdf()
-    schema_bytes = SCHEMA.read_bytes()
-    schema_id = json.loads(schema_bytes)['id']
-    with asdf.config_context() as configuration:
-        configuration.add_resource_mapping({schema_id: schema_bytes})
-        with asdf.open(path, custom_schema=schema_id, lazy_load=False, memmap=False) as archive:
-            archive.validate()
-            q = dict(archive.tree['qc'])
+    q = native_qc.read(path)
     qc.require(q['extensions']['record_scope'] == 'one_final_table_product' and
                q['extensions']['table_name'] == 'linearity_preparation' and
                q['provenance']['operation'] == 'linearity.prepare', 'Wrong native preparation product')

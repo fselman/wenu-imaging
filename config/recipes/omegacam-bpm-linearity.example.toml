@@ -1,21 +1,34 @@
-# Preparation only: reuses preserved masters and extracts corrected measurements.
-# Copy into orchestration; set these paths to the admitted inputs and executable.
-# Run is relative to the project output root; other references are recipe-relative.
-# Run from orchestration: python /path/to/tools/prepare-linearity.py --config bpm-linearity.toml --execute
-# Create a fresh empty reduced run directory before execution. Never reuse a run name.
-linearity_recipe_schema_version = 1
-
-# Directory roots are resolved by the shared project TOML reader.
-# The project TOML lives in orchestration; output/work/logs are under reduced,
-# and calibration is under reduced/cal. No roots are repeated in this recipe.
+# Serial detector-characterization stage; final MEF assembly remains separate.
+# Copy into orchestration and fill the explicit admitted dependency paths.
+# Run there: python /path/to/tools/run-bpm-linearity.py --config bpm-linearity.toml
+# Add --execute only after reviewing the metadata plan. The reduced run must be
+# a fresh empty directory. Existing inputs and prior masks remain read-only.
+bpm_linearity_recipe_schema_version = 1
 project = "project.toml"
+run = "cal/bpm-linearity/run-001"
+
+[native]
+bpm = "/path/to/qualified/mefpp_m5"
+preparation = "/path/to/qualified/mefpp_linearity_prepare_command"
+source_revision = "REPLACE_WITH_QUALIFIED_NATIVE_SOURCE_REVISION"
 
 [preparation]
-publication = "native"
 detector_toml = "omegacam-1x1.toml"
 processing_toml = "omegacam-characterization.toml"
-source_samples = "../reduced/cal/bpm-linearity/prior/samples.asdf"
-handoff = "../reduced/cal/bias/prior/handoff.json"
-native = "/path/to/qualified/mefpp_linearity_prepare_command"
-run = "cal/bpm-linearity/run-001"
-source_revision = "REPLACE_WITH_QUALIFIED_SOURCE_REVISION"
+
+# Illustrative authoring values: use the reviewed acquisition limits for the
+# selected data. There are no implicit scientific defaults in the coordinator.
+[bpm]
+acquisition = "quick"
+output_mode = "new"
+upper_fraction = 0.85
+minimum_span_fraction = 0.15
+maximum_pair_difference = 0.02
+
+# Repeat in detector-TOML catalogue order. Only bindings/configuration change
+# between OmegaCAM and WFI; no instrument-specific recipe implementation.
+[[detectors]]
+detector_id = "ESO_CCD_#65"
+source_samples = "../reduced/cal/bpm-linearity/prior/CCD65/samples.asdf"
+handoff = "../reduced/cal/bias/prior/CCD65/handoff.json"
+reference_rois = ["REPLACE_WITH_REVIEWED_REFERENCE_ROI_ID"]

@@ -13,11 +13,16 @@ ecf41ea347a20058c7eab435eb9d6fb10b5be02f (PRs #300/#301/#303), binary SHA256
 Both WFI/OCAM launchers select main-bias-jk_5noln/mefpp_bias_recipe under the
 retained mac-standalone-bias-SP3Cgdhb build root, with full QC and MAD off.
 Preserve the previous 36381892 executable/cache and the b833aca7 backup.
-BPM/linearity is being aligned with the bias recipe lifecycle, readable source,
-native product/QC publication and directory contract; reuse its numerical services.
+Native BPM and linearity preparation publish through the shared C ASDF writer.
+The serial coordinator joins detector characterization products; final BPM MEF
+assembly and observational/viewer acceptance remain pending. Reuse the existing
+numerical services and recipe directory contract.
 CCD68/90 residual investigation and the viewer Update service remain deferred.
 Linearity characterization is measurement only for now; do not apply a linearity
-correction. Cross-talk characterization and correction remain deferred.
+correction. Cross-talk characterization and correction remain deferred. Keep the admitted
+prior mask fixed while characterizing a candidate BPM. Hash shared image inputs
+at batch boundaries, with per-stage identity checks; do not repeat full-MEF
+image hashing for every detector. Real batch execution uses niceness >=10.
 Work summaries and completed changes are recorded in GitHub issues and PRs.
 
 ## Human-readable implementation

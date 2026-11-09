@@ -70,18 +70,36 @@ def resume_linearity_candidate(args, build, git):
     for path in sources:
         name = path.relative_to(previous)
         (validation/name).write_bytes(git('show', args.revision+':'+name.as_posix()))
+    additional = ['Pycavi2/pycavi/pycavi/pycavi_native_product_qc.py']
+    if args.combined:
+        additional += ['tools/run-bpm-linearity.py', 'Pycavi2/tests/bpm_linearity_recipe_contract.py']
+        additional += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
+            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native')]
+    for name in additional:
+        path = validation/name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(git('show', args.revision+':'+name))
     import sys
-    log = retry/'linearity-native-recipe-checks.log'
+    label = 'bpm-linearity-coordinator-checks' if args.combined else 'linearity-native-recipe-checks'
+    log = retry/(label+'.log')
     print('REUSING NATIVE:', command, '| SHA256:', sha(command), flush=True)
-    print('RUNNING: linearity-native-recipe-checks | LOG:', log, flush=True)
+    print('RUNNING:', label, '| LOG:', log, flush=True)
     environment = dict(os.environ, OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1',
                        MKL_NUM_THREADS='1', PYTHONDONTWRITEBYTECODE='1')
     try:
         with log.open('xb') as stream:
-            process = subprocess.Popen([str(args.asdf_python),
-                str(validation/'Pycavi2/tests/linearity_native_recipe_contract.py'),
-                '--native-command', str(command), '--source-revision', native_revision,
-                '--work-parent', str(candidate/'reduced')], cwd=candidate/'orchestration',
+            if args.combined:
+                bpm = candidate/'mefpp_m5'
+                require(bpm.is_file(), 'Retained BPM producer unavailable')
+                guards[str(bpm)] = sha(bpm)
+                arguments = [args.asdf_python, validation/'Pycavi2/tests/bpm_linearity_recipe_contract.py',
+                    '--bpm', bpm, '--preparation', command, '--source-revision', native_revision,
+                    '--work-parent', candidate/'reduced']
+            else:
+                arguments = [args.asdf_python, validation/'Pycavi2/tests/linearity_native_recipe_contract.py',
+                    '--native-command', command, '--source-revision', native_revision,
+                    '--work-parent', candidate/'reduced']
+            process = subprocess.Popen(list(map(str, arguments)), cwd=candidate/'orchestration',
                 env=environment, stdout=stream, stderr=subprocess.STDOUT)
             try:
                 while True:
@@ -89,7 +107,7 @@ def resume_linearity_candidate(args, build, git):
                         code = process.wait(timeout=30)
                         break
                     except subprocess.TimeoutExpired:
-                        print('linearity-native-recipe-checks: still running', flush=True)
+                        print(label+': still running', flush=True)
             except BaseException:
                 process.terminate(); process.wait(); raise
     finally:
@@ -97,10 +115,10 @@ def resume_linearity_candidate(args, build, git):
     require(code == 0, 'Recipe check failed; inspect '+str(log))
     report = dict(successful=True, native_source_revision=native_revision,
         verification_source_revision=args.revision, native_binary_sha256=sha(command),
-        original_failure_receipt=str(receipts[0]), protected_files=guards, log=str(log))
+        original_failure_receipt=str(receipts[0]), check=label, protected_files=guards, log=str(log))
     (retry/'verification.json').write_text(json.dumps(report, indent=2)+'\n')
     print(log.read_text(), end='', flush=True)
-    print('PASS: corrected recipe with retained native ASDF producer; no build repeated', flush=True)
+    print('PASS:', label, 'with retained native producers; no build repeated', flush=True)
     print('VERIFICATION:', retry/'verification.json', flush=True)
 
 
@@ -113,7 +131,9 @@ def main():
     parser.add_argument('--reuse-probe', type=Path, help='Retained df562fe native-ASDF probe; build only the corrected CLI')
     parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
     parser.add_argument('--resume-linearity-candidate', type=Path, help='Recheck only the recipe using the unchanged e7c4664 producer')
+    parser.add_argument('--combined', action='store_true', help='Recheck the combined detector coordinator using retained native producers')
     args = parser.parse_args()
+    require(not args.combined or args.resume_linearity_candidate is not None, 'Combined check requires a retained candidate')
     require(platform.system()=='Darwin' and platform.node().split('.')[0]=='MC02VV0HPHTDG', 'Wrong qualification host')
     require(platform.machine()=='x86_64', 'Expected retained Intel environment')
     require(len(args.revision)==40 and set(args.revision)<=set('0123456789abcdef'), 'Exact revision required')
@@ -281,7 +301,7 @@ def main():
             'docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml']
         required += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
             'pycavi_qc','pycavi_pair_qc','pycavi_sample_qc','pycavi_linearity_config',
-            'pycavi_linearity_recipe','pycavi_linearity_preparation_qc','pycavi_linearity_native_archive',
+            'pycavi_linearity_recipe','pycavi_linearity_preparation_qc','pycavi_linearity_native_archive','pycavi_native_product_qc',
             'pycavi_configuration')]
     for name in required:
         path=validation/name; path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(blob(args.revision,name))
