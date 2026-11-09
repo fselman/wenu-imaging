@@ -24,9 +24,11 @@ def main():
     parser.add_argument('--work-parent', type=Path, required=True)
     parser.add_argument('--asdf-python', type=Path)
     parser.add_argument('--adapter', type=Path)
+    parser.add_argument('--legacy-adapter', type=Path, help='Exercise existing handoff CLI without libasdf')
     parser.add_argument('--source-revision', default='0000000000000000000000000000000000000000')
     args = parser.parse_args()
     root = args.source_root.resolve(strict=True)
+    assert not (args.adapter and args.legacy_adapter), 'Select one CLI mode'
     assert not args.adapter or args.asdf_python, 'Native CLI verification requires the independent ASDF reader'
     environment = dict(os.environ, MEFPP_TEST_REVISION=args.source_revision)
     run = Path(tempfile.mkdtemp(prefix='bpm-native-qc-', dir=args.work_parent)).resolve()
@@ -112,13 +114,13 @@ print('PASS: native ASDF schema, original input/HDU mapping and complete operati
                                      cwd=controls, capture_output=True, text=True, timeout=60)
             assert checked.returncode == 0, checked.stdout+checked.stderr
             print(checked.stdout.strip(), flush=True)
-        if args.adapter:
+        if args.adapter or args.legacy_adapter:
             listing, roi = controls/'flats.tsv', controls/'roi.txt'
             listing.write_text(''.join(f'{raw}/flat-{i}.fits\t{2 if i%2 else 0}\t{i//2}\n' for i in range(count)))
             roi.write_text('1 4 1 4\n3 6 1 4\n')
             native = output/'native-cli'
             native.mkdir()
-            argv = [str(args.adapter), 'cal', 'bpm', '--pafname', str(config),
+            argv = [str(args.adapter or args.legacy_adapter), 'cal', 'bpm', '--pafname', str(config),
                 '--flats', str(listing), '--detector-id', 'D', '--config-detector', '2',
                 '--readout-id', 'readout:test', '--bin-x', '1', '--bin-y', '1',
                 '--master-bias', str(calibrations/'bias.fits'), '--bias-hdu', '0',
@@ -131,27 +133,38 @@ print('PASS: native ASDF schema, original input/HDU mapping and complete operati
                 '--output-mode', 'new' if kind>=3 else 'combined',
                 '--created-at', '2026-11-02T19:00:00Z', '--output', str(native/'product.fits'),
                 '--work-dir', str(native), '--log-path', str(native/'native.log'),
-                '--config-record', str(native/'configuration.json'), '--native-asdf', str(native/'product.asdf')]
+                '--config-record', str(native/'configuration.json')]
+            argv += ['--native-asdf', str(native/'product.asdf')] if args.adapter else ['--qc-record', str(native/'handoff.json')]
             if kind:
                 argv += ['--bpm-hdu', '0', '--bpm-coordinates', 'active' if kind in (1,3) else 'raw']
                 argv += ['--bpm-good-value', '0' if kind==3 else '1'] if kind>=3 else ['--bpm-registry', 'WENU_BPM_V1']
             completed = subprocess.run(argv, cwd=controls, capture_output=True, text=True, timeout=60)
             (native/'command.log').write_text(completed.stdout+completed.stderr)
             assert completed.returncode == 0, completed.stdout+completed.stderr
-            assert not (native/'handoff.json').exists()
-            assert 'BPM_ASDF_WRITTEN' in (native/'native.log').read_text()
+            assert 'free requested on unallocated pointer' not in completed.stderr, completed.stderr
+            assert not any('free requested on NULL pointer' in line and 'mefpp_bpm_adapter.c' in line
+                           for line in completed.stderr.splitlines()), completed.stderr
+            if args.adapter:
+                assert not (native/'handoff.json').exists()
+                assert 'BPM_ASDF_WRITTEN' in (native/'native.log').read_text()
+            else:
+                actual = json.loads((native/'handoff.json').read_text())
+                reference = dict(handoff, output=str(native/'product.fits'), source_revision=actual['source_revision'])
+                assert actual == reference
             with fits.open(native/'product.fits') as actual, fits.open(output/'product.fits') as reference:
                 assert len(actual)==len(reference)
                 for actual_hdu, reference_hdu in zip(actual, reference):
                     assert np.array_equal(actual_hdu.data, reference_hdu.data)
-            checked = subprocess.run([str(args.asdf_python), '-c', check, str(native), str(root), str(output)],
-                                     cwd=controls, capture_output=True, text=True, timeout=60)
-            assert checked.returncode == 0, checked.stdout+checked.stderr
+            if args.adapter:
+                checked = subprocess.run([str(args.asdf_python), '-c', check, str(native), str(root), str(output)],
+                                         cwd=controls, capture_output=True, text=True, timeout=60)
+                assert checked.returncode == 0, checked.stdout+checked.stderr
             saved = {str(path):digest(path) for path in native.iterdir() if path.is_file()}
             repeated = subprocess.run(argv, cwd=controls, capture_output=True, text=True, timeout=60)
             assert repeated.returncode != 0
             assert saved == {str(path):digest(path) for path in native.iterdir() if path.is_file()}
-            print('PASS: production native CLI, exact FITS arrays, native ASDF, no Python handoff and no-clobber', flush=True)
+            print('PASS: production CLI, exact FITS arrays/context, allocator ownership and no-clobber; mode='+
+                  ('native-ASDF' if args.adapter else 'legacy-handoff'), flush=True)
         assert before == {str(path): digest(path) for path in inputs}
         assert len(list(raw.iterdir())) == count
         assert not list(controls.glob('*.fits'))

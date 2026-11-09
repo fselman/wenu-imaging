@@ -31,6 +31,7 @@ def main():
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--revision', required=True)
     parser.add_argument('--asdf-python', type=Path, required=True)
+    parser.add_argument('--reuse-probe', type=Path, help='Retained df562fe native-ASDF probe; build only the corrected CLI')
     args = parser.parse_args()
     require(platform.system()=='Darwin' and platform.node().split('.')[0]=='MC02VV0HPHTDG', 'Wrong qualification host')
     require(platform.machine()=='x86_64', 'Expected retained Intel environment')
@@ -52,6 +53,15 @@ def main():
     require(entries['CMAKE_BUILD_TYPE']=='Release' and entries['MEFPP_C_STANDARD']=='17', 'Unexpected build profile')
     require((prefix/'include/asdf/file.h').is_file() and (prefix/'lib/libasdf.dylib').is_file(), 'Retained libasdf unavailable')
     require(args.asdf_python.is_file(), 'Retained ASDF reader unavailable')
+    reused_probe = None
+    if args.reuse_probe:
+        reused_probe = args.reuse_probe.resolve(strict=True)
+        require(reused_probe.is_file() and reused_probe.name=='bpm_native_asdf_probe', 'Invalid retained probe')
+        changed = set(git('diff','--name-only','df562fe6ac68569a1cd729ec727bd5bce89ac363',args.revision).decode().splitlines())
+        allowed = {'mefpp2/ins/mef/recipes/mefpp_bpm_adapter.c',
+                   'mefpp2/tests/bpm_native_qc_contract.py', 'tools/qualify-bpm-native-qc-mac.py'}
+        require(changed <= allowed, 'Retained probe dependencies changed; full build required')
+        reused_digest = sha(reused_probe)
     cmake = Path('/opt/local/bin/cmake')
     require(cmake.is_file(), 'Retained CMake unavailable')
     original_revision = entries['MEFPP_SOURCE_REVISION']
@@ -120,10 +130,14 @@ def main():
                 path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(content)
         run([cmake,'-S',source,'-B',build,'-DMEFPP_BUILD_BIAS_RECIPE=ON',
              '-DMEFPP_SOURCE_REVISION='+args.revision], 'candidate-configure',checkout)
-        run([cmake,'--build',build,'--parallel','2','--target','mefpp_m5','bpm_native_asdf_probe'],
-            'candidate-build',checkout)
-        for name in ('mefpp_m5','bpm_native_asdf_probe'):
-            shutil.copy2(build/'mefpp2'/name,candidate/name)
+        targets=['mefpp_m5'] if reused_probe else ['mefpp_m5','bpm_native_asdf_probe']
+        run([cmake,'--build',build,'--parallel','2','--target',*targets], 'candidate-build',checkout)
+        shutil.copy2(build/'mefpp2/mefpp_m5',candidate/'mefpp_m5')
+        if reused_probe:
+            require(sha(reused_probe)==reused_digest, 'Retained probe changed during qualification')
+            shutil.copy2(reused_probe,candidate/'bpm_native_asdf_probe')
+        else:
+            shutil.copy2(build/'mefpp2/bpm_native_asdf_probe',candidate/'bpm_native_asdf_probe')
     finally:
         for name, content in originals.items():
             path=source/name
@@ -161,6 +175,9 @@ def main():
     receipt=dict(source_revision=args.revision,successful=True,observations_opened=False,
         binaries={name:dict(path=str(candidate/name),sha256=sha(candidate/name))
                   for name in ('mefpp_m5','bpm_native_asdf_probe')},protected_files=guards)
+    if reused_probe:
+        receipt['reused_probe']=dict(path=str(reused_probe),sha256=reused_digest,
+            build_revision='df562fe6ac68569a1cd729ec727bd5bce89ac363')
     (candidate/'candidate.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print('PASS: native BPM FITS/ASDF, independent schema/value checks and production CLI',flush=True)
     print('CANDIDATE DIRECTORY:',candidate,flush=True)

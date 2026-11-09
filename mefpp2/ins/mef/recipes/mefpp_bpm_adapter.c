@@ -227,7 +227,12 @@ int mef_bpm_command(int argc,char **argv) {
     o.pair_ids=pairs; o.rois=(const int (*)[4])rois; o.roi_count=nroi;
     if (v[HANDOFF]) {record=fresh(v[HANDOFF]); if(!record) goto done;}
     if (v[NATIVEASDF]) {
-        native_log=fresh(v[LOG]); if(!native_log) goto done;
+        /* The adapter already reserved this log before configuration admission. */
+        native_log=fopen(v[LOG],"a");
+        if(!native_log) {
+            fprintf(stderr,"Cannot append native BPM log %s: %s\n",v[LOG],strerror(errno));
+            goto done;
+        }
         fputs("BPM_NATIVE_START\n",native_log);
     }
     if(mef_bpm_from_files(context,(const mef_layout_map *const *)maps,count,v[DET],bias,prior,&o,&result,&error)!=MEF_OK ||
@@ -261,7 +266,9 @@ done:
     if(f) fclose(f);
     if(record) fclose(record);
     if(native_log) {fputs("BPM_NATIVE_FAILED; retain partial evidence\n",native_log);finish(native_log,1);}
-    free(line); for(k=0;k<MAX_FLATS;++k) { free(paths[k]); mef_layout_map_destroy(maps[k]); }
+    /* getline owns a libc buffer; parsed paths use Eclipse's strdup/free pair. */
+    (free)(line);
+    for(k=0;k<count;++k) { free(paths[k]); mef_layout_map_destroy(maps[k]); }
     mef_layout_map_destroy(bias); mef_layout_map_destroy(prior); mef_bpm_files_result_destroy(result);
     mef_context_destroy(context); mef_request_destroy(request); mef_config_destroy(config);
     mef_config_document_destroy(document); mef_bb_del(legacy); mef_error_destroy(error);
