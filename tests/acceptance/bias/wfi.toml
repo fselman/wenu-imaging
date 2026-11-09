@@ -1,0 +1,86 @@
+# Owner-accepted Mac case; historical compatibility and current policy are distinct.
+case_version = 1
+case_id = "bias-wfi-normal-1x1-average"
+status = "owner_accepted"
+operation = "cal.bias"
+instrument = "WFI"
+detector_count = 8
+input_count = 10
+
+[host]
+system = "Darwin"
+machine = "x86_64"
+hostname_short = "MC02VV0HPHTDG"
+repository = "/Users/fselman/Developer/wenu-imaging"
+orchestration = "/Users/fselman/Pictures/WFI/test_recipes/orchestration"
+product_parent = "/Users/fselman/Pictures/WFI/test_recipes/reduced/cal/bias"
+
+[configuration]
+recipe = "bias-recipe.toml"
+recipe_sha256 = "6398882d995f17a08cbe28515c85179aa4e46dddffa77ce1974e1df31f2bb124"
+settings = "bias.toml"
+settings_sha256 = "ad8028ee625d3841958c3c2ce165427ef050ec88ee88bf6f5eceb569b8d63f5f"
+input_list = "bias.list"
+input_list_sha256 = "27785d09b85d00a007990f8ddc41e543f130ba36c348cad7ecbb0ea708aa07bd"
+paf = "wfi.paf"
+paf_sha256 = "7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c"
+raw_directory = "/Users/fselman/Pictures/WFI/bpm_2003-03-30"
+raw_size_bytes_each = 141549120
+input_bpm = "/Users/fselman/Software/build/wenu-imaging/wfi-first-bias-retry-pKBFGzsm/WFI_BPM_header_copy.fits"
+bpm_coordinates = "active"
+bpm_good_value = 1
+# The retained mask copy repairs missing FITS header fields; raw mask is preserved.
+# Ordered input identity is fixed above; raw content fingerprints remain open.
+
+[policy]
+median_even_handling = "average"
+bpm_encoding = "binary"
+bpm_bad_when = "zero"
+ron_pair = [0, 1]
+ron_clip_enabled = true
+ron_clip_low = 5.0
+ron_clip_high = 5.0
+ron_clip_max_iterations = 10
+mad = true
+high_sigma = 5.0
+readout_id = "WFI:normal:1x1"
+bin_x = 1
+bin_y = 1
+
+[mapping]
+detector_ids = ["WIN1.CHIP1.OUT1", "WIN1.CHIP2.OUT1", "WIN1.CHIP3.OUT1", "WIN1.CHIP4.OUT1", "WIN1.CHIP8.OUT1", "WIN1.CHIP7.OUT1", "WIN1.CHIP6.OUT1", "WIN1.CHIP5.OUT2"]
+configuration_detectors = [0, 1, 2, 3, 4, 5, 6, 7]
+raw_hdus = [1, 2, 3, 4, 5, 6, 7, 8]
+bpm_hdus = [1, 2, 3, 4, 5, 6, 7, 8]
+output_hdus = [1, 2, 3, 4, 5, 6, 7, 8]
+output_width = 2044
+output_height = 4097
+output_bitpix = -32
+
+[candidate]
+executable = "/Users/fselman/Software/build/wenu-imaging/mac-standalone-bias-SP3Cgdhb/scalar-qc-qualification-c17/build/mefpp2/mefpp_bias_recipe"
+sha256 = "822bbadd11c5d82c799163b3f384b344706b57ccd73ee542bf7c283af9b72e49"
+producer_revision = "36381892f4f768c3a2c7450114f96021fd5c76d7"
+fits = "/Users/fselman/Pictures/WFI/test_recipes/reduced/cal/bias/acceptance-pr5rXt/CMDP.2026-11-09T00:25:49.085Z.001.fits"
+command_exit_status = 0
+completion_marker = "BIAS_RECIPE_COMPLETE"
+asdf_schema_validated = true
+exact_recipe_snapshot_matches = true
+ordered_inputs_match = true
+fits_qc_mapping_verified = true
+# Viewer supported by tools/view-bias-qc.py; owner accepted after launch instructions.
+# No separate automated browser inspection result was supplied.
+
+[historical_compatibility]
+reference_fits = "/Users/fselman/Software/build/wenu-imaging/wfi-bias-mosaic-IkxQQ7Uz/WFI_MB_1x1.fits"
+reference_asdf = "/Users/fselman/Software/build/wenu-imaging/wfi-bias-mosaic-IkxQQ7Uz/QC/WFI_MB_1x1.asdf"
+diagnostic_recipe = "bias-recipe-lower-check.toml"
+diagnostic_fits = "/Users/fselman/Pictures/WFI/test_recipes/reduced/cal/bias/median-lower-check-zpq8089t/CMDP.2026-11-09T00:31:54.731Z.001.fits"
+only_recipe_change = 'median_even_handling: "average" to "lower"'
+diagnostic_exit_status = 0
+pixel_policy = "exact"
+differing_pixels_by_detector = [0, 0, 0, 0, 0, 0, 0, 0]
+historical_qc_equivalence_checked = false
+# Retained ASDF has older provenance without a configuration snapshot.
+# All average-versus-retained pixel differences were reproduced by the median change.
+# Do not use this lower-median master as an exact average-median reference.
