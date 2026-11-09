@@ -26,7 +26,7 @@ typedef struct {
 typedef struct {
     const char *paf_path, *toml_path, *bias_list_path, *output_path, *output_directory,
         *reference_detector_id, *mad_option, *ron_first_option, *ron_second_option,
-        *high_sigma_option;
+        *high_sigma_option, *qc_option;
     detector_plan *detectors;
     size_t detector_count;
 } bias_recipe_arguments;

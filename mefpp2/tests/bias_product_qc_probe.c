@@ -96,6 +96,43 @@ static void profile(const char *paf,int masked,int mad,int pair)
         assert(mef_cal_bias_measurements(context,&input,&options,&result,NULL)==MEF_OK);
         assert(mef_config_bias_settings(config,d,&settings)==MEF_OK);
         m=mef_bias_result_measurements(result); legacy=mef_bias_result_qc(result);
+        if (d == 0) {
+            mef_bias_measurement_options minimal_options = options;
+            mef_bias_result *minimal = NULL;
+            mef_bias_product_qc *minimal_archive;
+            const mef_product_qc *minimal_view;
+            const mef_qc_measurement *measurement;
+            qfits_header *minimal_header = NULL;
+            minimal_options.legacy_qc = 1;
+            minimal_options.with_mad = 0;
+            minimal_options.ron_pair_set = 0;
+            minimal_options.ron_clip_enabled = 0;
+            assert(mef_cal_bias_measurements(context, &input, &minimal_options,
+                &minimal, NULL) == MEF_OK);
+            minimal_archive = mef_bias_product_qc_new(config, &output,
+                "2026-11-06T16:00:00.123Z", MEFPP_CANDIDATE_REVISION, paths, 4, 1);
+            assert(minimal_archive != NULL);
+            assert(mef_bias_product_qc_add(minimal_archive, 0, ids[d], "L",
+                "synthetic", d, 1, 1, minimal, &minimal_options, &settings, 4,
+                masked ? "/synthetic/bpm.fits" : NULL, (int)d+1, 1));
+            assert(!mef_bias_product_qc_check(minimal_archive, message, sizeof(message)));
+            minimal_view = mef_bias_product_qc_view(minimal_archive);
+            assert(!strcmp(minimal_view->qc_profile, "legacy"));
+            measurement = find(minimal_view->detectors[0].measurements,
+                minimal_view->detectors[0].measurement_count, "master.mean");
+            assert(measurement->state == MEF_QC_UNAVAILABLE);
+            assert(!strcmp(measurement->reason, "disabled_by_legacy_qc"));
+            measurement = find(minimal_view->detectors[0].measurements,
+                minimal_view->detectors[0].measurement_count, "legacy.product_median");
+            assert(measurement->state == MEF_QC_MEASURED);
+            assert(measurement->values[0] == legacy->product_median);
+            assert(!mef_bias_qc_fits_header(minimal_view, 0, &minimal_header,
+                message, sizeof(message)));
+            assert(qfits_header_getstr(minimal_header, "HIERARCH ESO MPP QC PROFILE") != NULL);
+            qfits_header_destroy(minimal_header);
+            mef_bias_product_qc_destroy(minimal_archive);
+            mef_bias_result_destroy(minimal);
+        }
         {
             const image_t *signal=mef_bias_result_signal(result);
             for(int row=0;row<4;++row)for(int col=0;col<3;++col)

@@ -348,6 +348,39 @@ For scan samples $100,101,102,103,200$ and one rank rejected at each end,
 the correction is 102. Raw samples 110 and 112 become 8 and 10.
 
 \newpage
+\section{QC calculation profiles}
+The standalone recipe accepts \texttt{--qc full} or \texttt{--qc legacy}.
+The TOML equivalent is \texttt{[bias] qc = "full"} or
+\texttt{qc = "legacy"}. An explicit command-line choice overrides the TOML
+choice; omission preserves \code{full}. Unknown or duplicate command-line
+choices fail before processing.
+
+Full QC retains the existing measurements and optional MAD choice.
+Legacy QC retains the row-correction median/scatter and scan parameters,
+frame-admission summaries and master median/scatter already produced by the
+reduction. It skips the added raw-active, corrected-active and scan-region
+sample statistics, raw-pair RON, clipped RON, MAD and high-offset diagnostics.
+Expanded records remain present with null values and the reason
+\code{disabled_by_legacy_qc}; they are not measured zeros. Cheap
+configuration provenance remains available. The profile takes precedence
+over MAD/RON measurement requests.
+
+This is a measurement choice, not a pixel-processing preset. Input validation,
+configured detector BPM use in frame admission, correction geometry,
+rejection rules, temporal median convention and the existing master summary
+estimators remain unchanged. In particular, requesting legacy QC does not
+silently replace current masked frame means with the historical unmasked
+means or select the lower temporal median. Comparisons with a historical
+executable still require explicit matching settings and pixel checks.
+
+Legacy products record \texttt{provenance.qc\_profile = "legacy"} in ASDF
+and \texttt{ESO MPP QC PROFILE} in FITS. Absence of this optional field means
+full QC for compatibility with existing products. Both modes retain FITS,
+ASDF and log publication, membership/provenance and mandatory validation;
+the switch allows numerical-QC comparisons within the same processing and
+publication pipeline. Skipped diagnostics also reduce their associated
+serialization work.
+
 \section{Checked sample statistics and MAD}
 A statistic defines its rectangle, processing stage, mask and nonfinite policy.
 Within that rectangle, BPM-excluded pixels are counted first; among remaining

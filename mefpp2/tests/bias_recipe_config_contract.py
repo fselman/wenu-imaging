@@ -48,6 +48,22 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(self.ids(self.invoke()),['A','B'])
         self.assertEqual(self.ids(self.invoke(selection='all')),['A','B'])
         self.assertEqual(self.ids(self.invoke(BASE.replace('mad = true','detectors = "all"\nmad = true'))),['A','B'])
+    def test_qc_profiles(self):
+        self.assertNotIn('--qc', self.invoke())
+        for profile in ('legacy', 'full'):
+            out = self.invoke(extra=('--qc', profile))
+            self.assertEqual(out[out.index('--qc')+1], profile)
+            text = BASE.replace('mad = true', 'qc = "'+profile+'"\nmad = true')
+            out = self.invoke(text)
+            self.assertEqual(out[out.index('--qc')+1], profile)
+            out = self.invoke(text, extra=('--qc', 'full'))
+            self.assertEqual(out.count('--qc'), 1)
+            self.assertEqual(out[out.index('--qc')+1], 'full')
+        for value in ('"off"', 'true', '1'):
+            self.invoke(BASE.replace('mad = true', 'qc = '+value+'\nmad = true'), success=False)
+        self.invoke(extra=('--qc', 'off'), success=False)
+        self.invoke(extra=('--qc', 'full', '--qc', 'legacy'), success=False)
+
     def test_median_even_handling(self):
         self.assertIn("MEDIAN_EVEN=default",self.invoke())
         for mode in ("average","lower"):

@@ -108,7 +108,8 @@ static mef_status validate_bias_inputs(mef_context *context, const mef_bias_inpu
         }
     }
     if (options != NULL &&
-        ((options->with_mad != 0 && options->with_mad != 1) ||
+        ((options->legacy_qc != 0 && options->legacy_qc != 1) ||
+            (options->with_mad != 0 && options->with_mad != 1) ||
             (options->ron_pair_set != 0 && options->ron_pair_set != 1) ||
             (options->bpm_active_only != 0 && options->bpm_active_only != 1) ||
             (options->bpm_active_only && options->bpm == NULL) ||
@@ -317,7 +318,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
          * Raw-pair noise is independent of later scan correction and admission.
          */
 
-        if (options->ron_pair_set) {
+        if (!options->legacy_qc && options->ron_pair_set) {
             detector_measurements->ron_first = options->ron_first;
             detector_measurements->ron_second = options->ron_second;
             if (image_pair_stats_checked(input->frames[options->ron_first],
@@ -382,7 +383,7 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
         if (corrected_frames->plane[frame_index] == NULL) {
             goto cleanup;
         }
-        if (options != NULL) {
+        if (options != NULL && !options->legacy_qc) {
             frame_measurements =
                 (mef_bias_frame_measurements *)pending_result->measurements.frames + frame_index;
             if (image_getstats_masked_checked(input->frames[frame_index], raw_bpm,
@@ -418,7 +419,8 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
         }
         image_del(corrected_frames->plane[frame_index]);
         corrected_frames->plane[frame_index] = corrected_frame;
-        if (options != NULL && image_getstats_masked_checked(corrected_frame, active_bpm, NULL,
+        if (options != NULL && !options->legacy_qc &&
+            image_getstats_masked_checked(corrected_frame, active_bpm, NULL,
                                    options->with_mad, &frame_measurements->active_corrected) != 0) {
             goto cleanup;
         }
@@ -462,7 +464,16 @@ mef_status mef_cal_bias_measurements(mef_context *context, const mef_bias_input 
      * Characterize the completed master; high-offset flags do not replace pixels.
      */
 
-    if (options != NULL) {
+    if (options != NULL && options->legacy_qc) {
+        /* Geometry is known even when expanded sample statistics are skipped. */
+        pending_result->measurements.master.zone[0] = 1;
+        pending_result->measurements.master.zone[1] = pending_result->signal->lx;
+        pending_result->measurements.master.zone[2] = 1;
+        pending_result->measurements.master.zone[3] = pending_result->signal->ly;
+        pending_result->measurements.master.region_pixels =
+            (size_t)pending_result->signal->lx * (size_t)pending_result->signal->ly;
+    }
+    if (options != NULL && !options->legacy_qc) {
         pixelmap *flags;
         detector_measurements = &pending_result->measurements;
         if (image_getstats_masked_checked(pending_result->signal, active_bpm, NULL,

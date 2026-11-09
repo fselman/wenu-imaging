@@ -231,6 +231,7 @@ static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
     if(okay)okay=string(provenance,"operation",p->recipe_name)&&count(provenance,"operation_version",p->recipe_version)&&
         string(provenance,"recipe_start",p->recipe_start)&&count(provenance,"product_sequence",p->product_sequence)&&
         string(provenance,"log_path",p->log_path);
+    if(okay&&p->qc_profile)okay=string(provenance,"qc_profile",p->qc_profile);
     if(okay)okay=header_provenance(f,provenance,p);
     if(okay){okay=map(root,"provenance",provenance);provenance=NULL;}
     for(i=0;okay && i<p->detector_count;++i)okay=append(detectors,detector(f,p->detectors+i));

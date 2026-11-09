@@ -37,6 +37,9 @@
         "provenance": {
           "type": "object",
           "properties": {
+            "qc_profile": {
+              "enum": ["full", "legacy"]
+            },
             "producer": {
               "type": "object",
               "properties": {

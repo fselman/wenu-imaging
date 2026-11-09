@@ -91,6 +91,13 @@ static int parse_recipe_arguments(int argc, char **argv, bias_recipe_arguments *
             }
             continue;
         }
+        if (!strcmp(key, "--qc")) {
+            if (!set_option_once(&arguments->qc_option, option_value) ||
+                (strcmp(option_value, "legacy") && strcmp(option_value, "full"))) {
+                return 0;
+            }
+            continue;
+        }
         if (!strcmp(key, "--mad")) {
             if (!set_option_once(&arguments->mad_option, option_value)) {
                 return 0;
@@ -182,6 +189,8 @@ int mef_bias_recipe_prepare(mef_bias_recipe *recipe, int argc, char **argv)
             recipe->arguments.output_path, "CMDP")) {
         return 0;
     }
+    recipe->options.legacy_qc = recipe->arguments.qc_option &&
+                                !strcmp(recipe->arguments.qc_option, "legacy");
     recipe->options.with_mad = !strcmp(recipe->arguments.mad_option, "yes");
     recipe->options.high_sigma = 5;
     if (recipe->arguments.high_sigma_option) {
@@ -251,10 +260,16 @@ int mef_bias_recipe_prepare(mef_bias_recipe *recipe, int argc, char **argv)
         recipe->options.ron_clip.sigma_low = policy->ron_clip_low;
         recipe->options.ron_clip.sigma_high = policy->ron_clip_high;
         recipe->options.ron_clip.max_iterations = policy->ron_clip_max_iterations;
-        if (recipe->options.ron_clip_enabled && !recipe->options.ron_pair_set) {
+        if (!recipe->options.legacy_qc && recipe->options.ron_clip_enabled &&
+            !recipe->options.ron_pair_set) {
             strcpy(recipe->run->message, "Clipped RON requires an explicit raw pair");
             return 0;
         }
+    }
+    if (recipe->options.legacy_qc) {
+        recipe->options.with_mad = 0;
+        recipe->options.ron_pair_set = 0;
+        recipe->options.ron_clip_enabled = 0;
     }
     mef_bb_del(recipe->legacy);
     recipe->legacy = NULL;
@@ -276,9 +291,9 @@ void mef_bias_recipe_usage(void)
 {
     fprintf(stderr,
         "Short form: cal bias --config RECIPE.toml --bias ABS_LIST (--output-dir DIR|--output "
-        "FITS) [--detectors all|ID,ID]\n");
+        "FITS) [--detectors all|ID,ID] [--qc legacy|full]\n");
     fprintf(stderr,
-        "Standalone candidate: cal bias (--pafname PAF|--config TOML) --bias ABS_LIST "
+        "Standalone candidate: cal bias [--qc legacy|full] (--pafname PAF|--config TOML) --bias ABS_LIST "
         "(--output-dir DIR|--output FITS) --reference-detector ID --mad (yes|no) [--ron-first "
         "INDEX --ron-second INDEX] [--high-sigma K]\n"
         "Repeat detector blocks: --detector-id EXTNAME --config-detector ZERO_BASED --readout-id "

@@ -236,7 +236,7 @@ int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
         "bias_recipe_schema_version", "settings", "bias", "detector", "provenance"};
     static const char *bias_keys[] = {"detectors", "reference_detector", "mad", "ron_pair",
         "high_sigma", "readout_id", "bin_x", "bin_y", "input_bpm", "bpm_hdu", "bpm_good_value",
-        "bpm_coordinates", "bpm_expected_extname", "amplifier_id", "median_even_handling"};
+        "bpm_coordinates", "bpm_expected_extname", "amplifier_id", "median_even_handling", "qc"};
     static const char *det_keys[] = {"id", "configuration_detector", "hdus", "expected_extname",
         "readout_id", "bin_x", "bin_y", "input_bpm", "bpm_hdu", "bpm_good_value", "bpm_coordinates",
         "bpm_expected_extname", "amplifier_id"};
@@ -246,7 +246,8 @@ int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
     static const char *field_args[] = {"--readout-id", "--bin-x", "--bin-y", "--input-bpm",
         "--bpm-hdu", "--bpm-good-value", "--bpm-coordinates", "--bpm-expected-extname",
         "--amplifier-id"};
-    const char *path = NULL, *override = NULL, *reason = "Invalid bias recipe TOML envelope";
+    const char *path = NULL, *override = NULL, *qc_override = NULL;
+    const char *reason = "Invalid bias recipe TOML envelope";
     mef_bias_recipe_config *recipe = NULL;
     FILE *f = NULL;
     struct stat st;
@@ -265,6 +266,12 @@ int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
                 return report_recipe_error(message, size, "Duplicate --config");
             }
             path = argv[i + 1];
+        }
+        if (!strcmp(argv[i], "--qc")) {
+            if (qc_override || (strcmp(argv[i + 1], "legacy") && strcmp(argv[i + 1], "full"))) {
+                return report_recipe_error(message, size, "--qc requires one legacy or full value");
+            }
+            qc_override = argv[i + 1];
         }
         if (!strcmp(argv[i], "--detectors")) {
             if (override) {
@@ -456,13 +463,23 @@ int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
             continue;
         }
         if (strcmp(argv[i], "--bias") && strcmp(argv[i], "--output") &&
-            strcmp(argv[i], "--output-dir")) {
+            strcmp(argv[i], "--output-dir") && strcmp(argv[i], "--qc")) {
             reason = "Recipe TOML owns detector/measurement choices; do not mix legacy CLI fields";
             goto done;
         }
         if (!append_option_value(recipe, argv[i], argv[i + 1])) {
             goto done;
         }
+    }
+    toml_datum_t qc = toml_get(bias, "qc");
+    const char *profile = qc.type == TOML_UNKNOWN ? NULL : toml_string_value(qc);
+    if (qc.type != TOML_UNKNOWN &&
+        (!profile || (strcmp(profile, "legacy") && strcmp(profile, "full")))) {
+        reason = "qc must be legacy or full";
+        goto done;
+    }
+    if (profile && !qc_override && !append_option_value(recipe, "--qc", profile)) {
+        goto done;
     }
     toml_datum_t mad = toml_get(bias, "mad"), ron = toml_get(bias, "ron_pair"),
                  sigma = toml_get(bias, "high_sigma");
