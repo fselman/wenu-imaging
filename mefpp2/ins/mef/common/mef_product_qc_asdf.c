@@ -492,8 +492,9 @@ done:
     return code;
 }
 
-/* All source documents stay alive until publication: detached copies can refer
- * to their document storage. Only product identity/HDU/source IDs are remapped;
+/* All imported nodes belong to the output document; source documents remain
+ * alive until their exact text evidence has been embedded. Only product identity,
+ * output HDUs and product-source IDs are remapped;
  * numeric values, definitions, populations and input HDUs are copied verbatim. */
 typedef struct {
     asdf_file_t *file;
@@ -507,15 +508,82 @@ static int equal_text(asdf_file_t *a, asdf_file_t *b, const char *path)
     return asdf_get_string0(a,path,&x)==ASDF_VALUE_OK &&
         asdf_get_string0(b,path,&y)==ASDF_VALUE_OK && !strcmp(x,y);
 }
-static asdf_mapping_t *mapping_copy_at(asdf_file_t *f,const char *path)
+/* libasdf copies remain owned by the source document. Import plain QC values
+ * using destination constructors instead; no foreign YAML nodes cross owners.
+ * These are metadata scalars/containers, not extension objects or image arrays. */
+static asdf_value_t *assembly_import(asdf_file_t *out,asdf_value_t *source,unsigned depth)
 {
-    asdf_mapping_t *view=recovery_mapping(f,path),*copy=NULL;
-    if(view) copy=asdf_mapping_copy(view);
+    const char *text=NULL;
+    size_t length=0;
+    int64_t signed_value;
+    uint64_t unsigned_value;
+    double real;
+    bool flag;
+    if(!source || depth>64) return NULL;
+    switch(asdf_value_get_type(source)) {
+    case ASDF_VALUE_MAPPING: {
+        asdf_mapping_t *view=NULL,*copy=asdf_mapping_create(out);
+        asdf_mapping_iter_t *iter=NULL;
+        if(!copy || asdf_value_as_mapping(source,&view)!=ASDF_VALUE_OK ||
+            !(iter=asdf_mapping_iter_init(view))) {asdf_mapping_destroy(copy);return NULL;}
+        while(asdf_mapping_iter_next(&iter)) {
+            asdf_value_t *child=assembly_import(out,iter->value,depth+1);
+            /* Generic setters consume the handle, including failed insertion. */
+            if(!child || asdf_mapping_set(copy,iter->key,child)!=ASDF_VALUE_OK) {
+                asdf_mapping_iter_destroy(iter);asdf_mapping_destroy(copy);return NULL;
+            }
+        }
+        return asdf_value_of_mapping(copy);
+    }
+    case ASDF_VALUE_SEQUENCE: {
+        asdf_sequence_t *view=NULL,*copy=asdf_sequence_create(out);
+        int i;
+        if(!copy || asdf_value_as_sequence(source,&view)!=ASDF_VALUE_OK) {
+            asdf_sequence_destroy(copy);return NULL;
+        }
+        for(i=0;i<asdf_sequence_size(view);++i) {
+            asdf_value_t *item=asdf_sequence_get(view,i),*child=assembly_import(out,item,depth+1);
+            asdf_value_destroy(item);
+            if(!child || asdf_sequence_append(copy,child)!=ASDF_VALUE_OK) {
+                asdf_sequence_destroy(copy);return NULL;
+            }
+        }
+        return asdf_value_of_sequence(copy);
+    }
+    case ASDF_VALUE_STRING:
+        if(asdf_value_as_string(source,&text,&length)==ASDF_VALUE_OK)
+            return asdf_value_of_string(out,text,length);
+        break;
+    case ASDF_VALUE_NULL: return asdf_value_of_null(out);
+    case ASDF_VALUE_BOOL:
+        if(asdf_value_as_bool(source,&flag)==ASDF_VALUE_OK) return asdf_value_of_bool(out,flag);
+        break;
+    case ASDF_VALUE_INT8: case ASDF_VALUE_INT16: case ASDF_VALUE_INT32: case ASDF_VALUE_INT64:
+        if(asdf_value_as_int64(source,&signed_value)==ASDF_VALUE_OK) return asdf_value_of_int64(out,signed_value);
+        break;
+    case ASDF_VALUE_UINT8: case ASDF_VALUE_UINT16: case ASDF_VALUE_UINT32: case ASDF_VALUE_UINT64:
+        if(asdf_value_as_uint64(source,&unsigned_value)==ASDF_VALUE_OK) return asdf_value_of_uint64(out,unsigned_value);
+        break;
+    case ASDF_VALUE_FLOAT: case ASDF_VALUE_DOUBLE:
+        if(asdf_value_as_double(source,&real)==ASDF_VALUE_OK) return asdf_value_of_double(out,real);
+        break;
+    default: break;
+    }
+    fprintf(stderr,"BPM_QC_IMPORT_FAILURE: %s at %s\n",
+        asdf_value_type_string(asdf_value_get_type(source)),
+        asdf_value_path(source)?asdf_value_path(source):"detached metadata");
+    return NULL;
+}
+static asdf_mapping_t *mapping_copy_at(asdf_file_t *out,asdf_file_t *source,const char *path)
+{
+    asdf_mapping_t *view=recovery_mapping(source,path),*copy=NULL;
+    asdf_value_t *value=view?assembly_import(out,asdf_value_of_mapping(view),0):NULL;
+    if(value && asdf_value_as_mapping(value,&copy)!=ASDF_VALUE_OK) asdf_value_destroy(value);
     asdf_mapping_destroy(view);
     return copy;
 }
-static int append_copy_at(asdf_sequence_t *sequence,asdf_file_t *f,const char *path)
-{ return append(sequence,mapping_copy_at(f,path)); }
+static int append_copy_at(asdf_file_t *out,asdf_sequence_t *sequence,asdf_file_t *source,const char *path)
+{ return append(sequence,mapping_copy_at(out,source,path)); }
 static int replace_sequence(asdf_file_t *f,const char *path,const char *key,asdf_sequence_t *values)
 {
     asdf_mapping_t *parent=recovery_mapping(f,path);
@@ -563,7 +631,7 @@ static int assembly_detectors(asdf_file_t *out,const mef_bpm_assembly_qc *r,asse
     size_t i;
     int okay=joined!=NULL;
     for(i=0;okay && i<r->detector_count;++i) {
-        asdf_mapping_t *detector=mapping_copy_at(docs[i].file,"qc/characterization/detectors/0");
+        asdf_mapping_t *detector=mapping_copy_at(out,docs[i].file,"qc/characterization/detectors/0");
         okay=detector && count(detector,"output_hdu",i+1) &&
             remap_product_sources(out,detector,r->detectors[i].path,r->fits_path);
         if(okay){okay=append(joined,detector);detector=NULL;}
@@ -584,15 +652,15 @@ static int assembly_inputs(asdf_file_t *out,const mef_bpm_assembly_qc *r,assembl
         asdf_mapping_t *membership=NULL,*record=NULL;
         asdf_sequence_t *decisions=asdf_sequence_create(out),*detectors=asdf_sequence_create(out);
         snprintf(base,sizeof(base),"qc/inputs/%d",i);
-        membership=mapping_copy_at(docs[0].file,base);
+        membership=mapping_copy_at(out,docs[0].file,base);
         snprintf(base,sizeof(base),"qc/embedded_input_records/%d",i);
-        record=mapping_copy_at(docs[0].file,base);
+        record=mapping_copy_at(out,docs[0].file,base);
         okay=membership && record && decisions && detectors;
         for(d=0;okay && d<r->detector_count;++d) {
             snprintf(path,sizeof(path),"qc/inputs/%d/participation_by_detector/0",i);
-            okay=append_copy_at(decisions,docs[d].file,path);
+            okay=append_copy_at(out,decisions,docs[d].file,path);
             snprintf(path,sizeof(path),"qc/embedded_input_records/%d/detectors/0",i);
-            okay=okay && append_copy_at(detectors,docs[d].file,path);
+            okay=okay && append_copy_at(out,detectors,docs[d].file,path);
         }
         if(okay){okay=seq(membership,"participation_by_detector",decisions);decisions=NULL;}
         if(okay){okay=seq(record,"detectors",detectors);detectors=NULL;}
@@ -617,11 +685,11 @@ static int assembly_calibrations(asdf_file_t *out,const mef_bpm_assembly_qc *r,a
         asdf_mapping_t *record;
         asdf_sequence_t *bindings=asdf_sequence_create(out);
         snprintf(path,sizeof(path),"qc/calibrations/%d",c);
-        record=mapping_copy_at(docs[0].file,path);
+        record=mapping_copy_at(out,docs[0].file,path);
         okay=record && bindings;
         for(d=0;okay && d<r->detector_count;++d) {
             snprintf(path,sizeof(path),"qc/calibrations/%d/detector_bindings/0",c);
-            okay=append_copy_at(bindings,docs[d].file,path);
+            okay=append_copy_at(out,bindings,docs[d].file,path);
         }
         if(okay){okay=seq(record,"detector_bindings",bindings);bindings=NULL;}
         if(okay){okay=append(joined,record);record=NULL;}
@@ -714,9 +782,17 @@ int mef_bpm_assembly_qc_write(const mef_bpm_assembly_qc *r,char *message,size_t 
     if(!docs || !assembly_admit(r,docs,&inputs,&calibrations)) goto done;
     detail="Cannot create assembled QC document";
     out=asdf_open_mem_ex(NULL,0,NULL);
-    root=mapping_copy_at(docs[0].file,"qc");
-    if(!out || !root || asdf_set_mapping(out,"qc",root)!=ASDF_VALUE_OK) goto done;
-    root=NULL;
+    if(!out) goto done;
+    root=mapping_copy_at(out,docs[0].file,"qc");
+    if(!root) goto done;
+    {
+        int code=asdf_set_mapping(out,"qc",root);
+        root=NULL;
+        if(code!=ASDF_VALUE_OK) {
+            fprintf(stderr,"BPM_QC_ROOT_INSERT_ERROR: %d\n",code);
+            goto done;
+        }
+    }
     root=recovery_mapping(out,"qc/file");
     if(!root || asdf_mapping_set_null(root,"sha256")!=ASDF_VALUE_OK ||
         !string(root,"integrity","not_content_verified")) goto done;
