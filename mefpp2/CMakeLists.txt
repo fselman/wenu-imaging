@@ -525,6 +525,19 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_link_libraries(measurement_stats_probe PRIVATE eclipse)
   target_compile_options(measurement_stats_probe PRIVATE -UNDEBUG -Wall -Wextra)
   add_executable(bias_service_probe tests/bias_service_probe.c tests/bias_legacy_reference.c)
+  # Redirect only the test copy of the kernel to observe stack release order.
+  add_library(bias_memory_kernel OBJECT ins/mef/common/mef_bias_kernel.c)
+  target_include_directories(bias_memory_kernel PRIVATE ins/mef/common src/include
+    qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(bias_memory_kernel PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    cube_del=mef_memory_cube_del image_getmedian_checked=mef_memory_master_stats)
+  add_executable(bias_memory_probe tests/bias_memory_probe.c
+    $<TARGET_OBJECTS:bias_memory_kernel>)
+  target_link_libraries(bias_memory_probe PRIVATE mefpp_config_snapshot)
+  target_compile_definitions(bias_memory_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_compile_options(bias_memory_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  set_target_properties(bias_memory_kernel bias_memory_probe PROPERTIES
+    C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_link_libraries(bias_service_probe PRIVATE mefpp_config_snapshot)
   target_compile_definitions(bias_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   add_executable(large_file_io_probe tests/large_file_io_probe.c)
@@ -843,6 +856,13 @@ if(BUILD_TESTING)
         --probe "$<TARGET_FILE:bias_service_probe>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_bias_service PROPERTIES TIMEOUT 300 LABELS "native;bias;ownership")
+    foreach(profile IN ITEMS legacy full)
+      add_test(NAME native_bias_stack_lifetime_${profile}
+        COMMAND bias_memory_probe "${CMAKE_CURRENT_SOURCE_DIR}/ins/mef/config/wfi.paf"
+          ${profile} small - 1)
+      set_tests_properties(native_bias_stack_lifetime_${profile} PROPERTIES
+        TIMEOUT 30 LABELS "native;bias;ownership;memory")
+    endforeach()
     add_test(NAME native_eclipse_allocation
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/eclipse_allocation_contract.py"
         --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."

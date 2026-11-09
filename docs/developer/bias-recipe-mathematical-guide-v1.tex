@@ -296,6 +296,17 @@ The BPM selects frame-mean and QC populations; it does not replace output
 pixels. The temporal median is evaluated at every active coordinate.
 \code{mef_bias_stack_masked_diagnostic} selects frames and consumes the private
 cube; \code{cube_avg_median_opts} implements the configured stack.
+The stack allocates an independent master image. Once stacking succeeds, the
+kernel releases the consumed corrected cube before master-statistics working
+arrays are allocated, and clears its cleanup pointer. This changes no
+estimator or numerical evaluation order; failures still release each owner
+once. Borrowed raw images remain owned by the file adapter/caller through the
+service call. Releasing the corrected cube removes its overlap with master
+statistics but cannot remove an earlier full-QC peak during per-frame
+measurements. Resident memory also includes allocator and mapped-file state;
+actual-host profiling remains necessary. The synthetic
+\code{bias_memory_probe} checks release order in both QC profiles and can
+capture compiler-local numerical snapshots for ten WFI-sized raw frames.
 QC retains original input IDs.
 
 For synthetic frame means $0,1,2,10$ with illustrative $\kappa=1$,

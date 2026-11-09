@@ -146,6 +146,12 @@ image_t *mef_bias_stack_masked_diagnostic(cube_t *cube, int minimum_frames, doub
     if (master_bias == NULL) {
         goto cleanup;
     }
+
+    /* The master owns its pixels; release the consumed stack before statistics
+     * allocate their master-sized working arrays. */
+
+    cube_del(cube);
+    cube = NULL;
     if (image_getmedian_checked(master_bias, &master_median) != 0) {
         image_del(master_bias);
         master_bias = NULL;
