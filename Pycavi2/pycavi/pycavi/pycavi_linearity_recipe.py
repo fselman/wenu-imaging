@@ -296,8 +296,34 @@ def image_fingerprint(path):
     return dict(sha256=h.hexdigest(), stat=stat(after))
 
 
+def preparation_layout(dependencies, directory, *, raw, orchestration, reduced):
+    """Admit the recipe's directories before writing controls or opening images."""
+    roots = {name: Path(path).resolve(strict=True) for name, path in
+             [('raw', raw), ('orchestration', orchestration), ('reduced', reduced)]}
+    require(all(path.is_dir() for path in roots.values()), 'Recipe roots must be directories')
+    for name, path in roots.items():
+        require(all(not path.is_relative_to(other) and not other.is_relative_to(path)
+                    for key, other in roots.items() if key != name),
+                'Raw, orchestration and reduced directories must be separate')
+    run = Path(directory).resolve(strict=True)
+    require(run != roots['reduced'] and run.is_relative_to(roots['reduced']),
+            'Run directory must be below reduced')
+    d = dependencies
+    observations = [b['path'] for b in d['biases']] + [f['path'] for f in d['selection']['flat']]
+    calibrations = [d['master']['product'], d['selection']['bpm']['path']]
+    for name in observations:
+        require(Path(name).resolve(strict=True).is_relative_to(roots['raw']),
+                'Observation outside raw directory: '+name)
+    for name in calibrations:
+        require(Path(name).resolve(strict=True).is_relative_to(roots['reduced'] / 'cal'),
+                'Calibration outside reduced/cal: '+name)
+    controls = roots['orchestration'] / run.name
+    require(not controls.exists(), 'Recipe control directory already exists')
+    return dict(roots, controls=controls)
+
+
 def prepare_detector(dependencies, executable, directory, *, resolved, source_revision,
-                     assessment_id, created_at):
+                     assessment_id, created_at, layout=None):
     """Run the native preparation and publish one immutable ASDF product.
 
     Dependencies are the result of preparation_dependencies. The command reads
@@ -317,7 +343,11 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
     admitted = preparation_dependencies(d['source_samples'], d['handoff_path'], resolved)
     require(canonical(d)==canonical(admitted),
             'Preparation dependencies changed after admission')
+    paths = preparation_layout(d, directory, **layout) if layout is not None else None
+    controls = paths['controls'] if paths else directory
     before = {}; report = dict(status='failed', fitted=False, scientific_acceptance=False)
+    if paths:
+        report['directories'] = {name: str(path) for name, path in paths.items()}
     binary_digest = archive.pair.sha(executable.read_bytes())
     def metadata_preserved():
         return all(archive.pair.sha(archive.pair.small(Path(p)))==digest
@@ -327,22 +357,25 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         for path, digest in d['baseline'].items():
             before[path] = image_fingerprint(path)
             require(before[path]['sha256']==digest, 'Input differs from preserved archive: '+path)
+        if paths:
+            controls.mkdir()
         for name, text in [('native.toml',d['configuration']), ('plan.tsv',d['transport']['plan']),
                            ('rois.toml',d['transport']['rois']), ('sites.toml',d['transport']['sites'])]:
-            (directory/name).write_text(text)
+            (controls/name).write_text(text)
         bias_text='input_index\thdu\tasset\tpath\taccepted\n'
         for b in d['biases']:
             cells=[str(b[k]) for k in ('index','hdu','asset','path','accepted')]
             require(all(not any(c in v for c in '\t\r\n\0') for v in cells), 'Invalid bias transport cell')
             bias_text+='\t'.join(cells)+'\n'
-        (directory/'biases.tsv').write_text(bias_text)
+        (controls/'biases.tsv').write_text(bias_text)
         native = directory/'native';native.mkdir()
-        argv = [str(executable),*[str(directory/n) for n in ('native.toml','rois.toml','sites.toml','plan.tsv')],
+        argv = [str(executable),*[str(controls/n) for n in ('native.toml','rois.toml','sites.toml','plan.tsv')],
                 d['master']['product'],str(d['master']['hdu']),d['master']['product'],
-                str(directory/'biases.tsv'),str(native)]
+                str(controls/'biases.tsv'),str(native)]
         report['argv']=argv;report['native_binary_sha256']=binary_digest
         with (directory/'native.log').open('x') as log:
-            subprocess.run(argv,stdout=log,stderr=subprocess.STDOUT,check=True)
+            subprocess.run(argv, cwd=paths['orchestration'] if paths else controls,
+                           stdout=log, stderr=subprocess.STDOUT, check=True)
         after = {p:image_fingerprint(p) for p in before}
         require(before==after and metadata_preserved() and
                 archive.pair.sha(executable.read_bytes())==binary_digest, 'Preparation source preservation failed')

@@ -38,6 +38,20 @@ file-integration fixtures use this same separation. Pure numerical unit checks
 may use in-memory arrays. The native linearity-preparation command case exercises
 this layout with preserved input fingerprints and unchanged analytical expectations.
 
+The preparation entry point accepts a recipe envelope through
+`tools/prepare-linearity.py --config bpm-linearity.toml --execute`.
+Copy [the example](../config/recipes/omegacam-bpm-linearity.example.toml) into
+orchestration and edit its paths to the preserved dependencies and qualified native
+executable. Paths are relative to the recipe file. The recipe validates separate
+raw/orchestration/reduced roots, observations under raw, calibrations under
+reduced/cal, and a fresh run below reduced. Generated native controls go in
+orchestration/<run-name>; the native subprocess runs from orchestration. Logs,
+intermediate measurements, ASDF and the execution receipt stay in the reduced run.
+Reusing either run or control directory is refused. This entry point still prepares
+one detector from an existing sample archive and master; it does not yet provide
+the complete native BPM/linearity characterization lifecycle. Legacy explicit
+arguments remain available for retained controllers during migration.
+
 ## When to run
 
 - A recipe change: affected recipe cases and dependent cases when appropriate.

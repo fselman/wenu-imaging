@@ -129,11 +129,14 @@ def source_archive(state):
     # Reuse the existing shared-ASDF test factory and serializer, replacing its
     # prior fixture table with independent analytic values for these tiny FITS.
     import test_sample_qc as existing
-    sample=existing.bridge;w=state['work'];_,old,_,_,_,origin=existing.fixture(w)
+    sample=existing.bridge
+    w=state['reduced']/'prior-metadata' if state['reduced'] != state['work'] else state['work']
+    w.mkdir(exist_ok=True)
+    _,old,_,_,_,origin=existing.fixture(w)
     entry=old['entry'];entry['selection']=state['selection'];entry['population']=state['sites']
     entry['active_pixels']=12;old['native_configuration']=state['snapshot']
     qc=sample.qc;masterdir=w/'fixture-master';masterdir.mkdir();members=[]
-    descriptors=state['biases']+[dict(path=str(w/'bpm.fits'),hdu=1,asset='bpm.fits',accepted=1)]
+    descriptors=state['biases']+[dict(state['selection']['bpm'],accepted=1)]
     for i,b in enumerate(descriptors):
         builder=qc.QcRecipe(file=dict(id=b['path'],filename=Path(b['path']).name,location=b['path'],
             kind='raw' if i<10 else 'product',sha256=None,observed_at=None,
@@ -150,7 +153,7 @@ def source_archive(state):
         participation='used' if accepted else 'rejected',reason=None if accepted else 'fixture_rejection')
     master=builder.seal();path=qc.write_record(master,masterdir)
     old['master_records']=[master]+[r for r,_,_ in members]
-    entry['master'].update(qc_product=str(path),recipe=dict(qc_record_digest=master.digest))
+    entry['master'].update(product=state['master'],qc_product=str(path),recipe=dict(qc_record_digest=master.digest))
     lines=['\t'.join(sample.COLUMNS)]
     for f,frame in enumerate(state['selection']['flat']):
         for i,point in enumerate(state['sites']):
@@ -169,6 +172,7 @@ def source_archive(state):
         configuration=state['snapshot'],configuration_record=str(w/'configuration.json'),
         inputs=[dict(path=b['path'],accepted=b['accepted']) for b in state['biases']])
     (w/'configuration.json').write_text(json.dumps(state['snapshot']))
+    state['handoff_path']=w/'handoff.json'
     (w/'handoff.json').write_text(json.dumps(state['handoff']))
     (w/'outer-execution.json').write_text(json.dumps(dict(status='complete_for_owner_inspection',
         detector=entry['detector'],product=state['master'],qc_product=str(path),

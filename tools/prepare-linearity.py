@@ -9,38 +9,77 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import sys
+import tomllib
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'Pycavi2/pycavi/pycavi'))
 import pycavi_linearity_config as config
 import pycavi_linearity_recipe as recipe
 
 
+def read_recipe(path):
+    """Resolve the execution envelope relative to its recipe file."""
+    path = path.resolve(strict=True)
+    data = tomllib.loads(path.read_text())
+    recipe.require(set(data) == {'linearity_recipe_schema_version', 'paths', 'preparation'} and
+                   type(data['linearity_recipe_schema_version']) is int and
+                   data['linearity_recipe_schema_version'] == 1, 'Unsupported recipe envelope')
+    paths, preparation = data['paths'], data['preparation']
+    recipe.require(isinstance(paths, dict) and set(paths) == {'raw', 'orchestration', 'reduced'},
+                   'Explicit raw, orchestration and reduced directories required')
+    fields = {'detector_toml', 'processing_toml', 'source_samples', 'handoff',
+              'native', 'run', 'source_revision'}
+    recipe.require(isinstance(preparation, dict) and set(preparation) == fields,
+                   'Incomplete or unknown preparation settings')
+    recipe.require(all(type(value) is str and value.strip() for value in
+                       [*paths.values(), *preparation.values()]), 'Nonempty recipe strings required')
+    resolve = lambda value: (path.parent / value).resolve()
+    layout = {name: resolve(value) for name, value in paths.items()}
+    recipe.require(path.is_relative_to(layout['orchestration']), 'Recipe must be in orchestration')
+    arguments = {name: resolve(value) if name != 'source_revision' else value
+                 for name, value in preparation.items()}
+    for name in ('detector_toml', 'processing_toml'):
+        recipe.require(arguments[name].is_relative_to(layout['orchestration']),
+                       'Configuration must be in orchestration')
+    return argparse.Namespace(**arguments), layout
+
+
 def main():
-    p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--detector-toml',type=Path,required=True)
-    p.add_argument('--processing-toml',type=Path,required=True)
-    p.add_argument('--source-samples',type=Path,required=True)
-    p.add_argument('--handoff',type=Path,required=True)
-    p.add_argument('--run',type=Path,required=True)
-    p.add_argument('--source-revision',required=True)
-    p.add_argument('--native',type=Path)
-    p.add_argument('--execute',action='store_true')
-    a=p.parse_args();work=a.run.resolve(strict=True)
-    recipe.require(work.is_dir() and not any(work.iterdir()),'Fresh empty retained directory required')
-    resolved=config.resolve_files(a.detector_toml,a.processing_toml)
-    dependencies=recipe.preparation_dependencies(a.source_samples,a.handoff,resolved)
-    if not a.execute:
-        report=dict(status='metadata_admitted',raw_FITS_opened=False,measurements_run=False,
-                    source_revision=a.source_revision,resolved=resolved,dependencies=dependencies)
-        (work/'plan.json').write_text(json.dumps(report,indent=2)+'\n')
-        print('LINEARITY PLAN: metadata_admitted',dependencies['selection']['detector'],flush=True)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--config', type=Path, help='BPM/linearity preparation recipe TOML')
+    for name in ('detector-toml', 'processing-toml', 'source-samples', 'handoff', 'run', 'native'):
+        parser.add_argument('--'+name, type=Path)
+    parser.add_argument('--source-revision')
+    parser.add_argument('--execute', action='store_true')
+    args = parser.parse_args()
+    execute = args.execute
+    layout = None
+    if args.config:
+        recipe.require(all(getattr(args, name) is None for name in
+                           ('detector_toml', 'processing_toml', 'source_samples', 'handoff',
+                            'run', 'native', 'source_revision')), 'Do not mix recipe and legacy arguments')
+        args, layout = read_recipe(args.config)
+    recipe.require(all(getattr(args, name) is not None for name in
+                       ('detector_toml', 'processing_toml', 'source_samples', 'handoff',
+                        'run', 'source_revision')), 'Explicit preparation inputs required')
+    work = args.run.resolve(strict=True)
+    recipe.require(work.is_dir() and not any(work.iterdir()), 'Fresh empty retained directory required')
+    resolved = config.resolve_files(args.detector_toml, args.processing_toml)
+    dependencies = recipe.preparation_dependencies(args.source_samples, args.handoff, resolved)
+    if layout:
+        recipe.preparation_layout(dependencies, work, **layout)
+    if not execute:
+        report = dict(status='metadata_admitted', raw_FITS_opened=False, measurements_run=False,
+                      source_revision=args.source_revision, resolved=resolved, dependencies=dependencies)
+        (work/'plan.json').write_text(json.dumps(report, indent=2)+'\n')
+        print('LINEARITY PLAN: metadata_admitted', dependencies['selection']['detector'], flush=True)
         return
-    recipe.require(a.native is not None,'Explicit qualified native executable required')
-    report=recipe.prepare_detector(dependencies,a.native,work,resolved=resolved,
-        source_revision=a.source_revision,assessment_id='linearity:'+work.name,
-        created_at=datetime.now(timezone.utc).isoformat().replace('+00:00','Z'))
-    print('LINEARITY PREPARATION:',report['status'],flush=True)
-    print('PRODUCT:',report['product']['path'],flush=True)
+    recipe.require(args.native is not None, 'Explicit qualified native executable required')
+    report = recipe.prepare_detector(dependencies, args.native, work, resolved=resolved,
+        source_revision=args.source_revision, assessment_id='linearity:'+work.name,
+        created_at=datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'), layout=layout)
+    print('LINEARITY PREPARATION:', report['status'], flush=True)
+    print('PRODUCT:', report['product']['path'], flush=True)
 
 
-if __name__=='__main__':main()
+if __name__ == '__main__':
+    main()

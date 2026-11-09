@@ -1,0 +1,19 @@
+# Preparation only: reuses preserved masters and extracts corrected measurements.
+# Copy into orchestration; set these paths to the admitted inputs and executable.
+# Run from orchestration: python /path/to/tools/prepare-linearity.py --config bpm-linearity.toml --execute
+# Create a fresh empty reduced run directory before execution. Never reuse a run name.
+linearity_recipe_schema_version = 1
+
+[paths]
+raw = "../../bpm"
+orchestration = "."
+reduced = "../reduced"
+
+[preparation]
+detector_toml = "omegacam-1x1.toml"
+processing_toml = "omegacam-characterization.toml"
+source_samples = "../reduced/cal/bpm-linearity/prior/samples.asdf"
+handoff = "../reduced/cal/bias/prior/handoff.json"
+native = "/path/to/qualified/mefpp_linearity_prepare_command"
+run = "../reduced/cal/bpm-linearity/run-001"
+source_revision = "REPLACE_WITH_QUALIFIED_SOURCE_REVISION"
