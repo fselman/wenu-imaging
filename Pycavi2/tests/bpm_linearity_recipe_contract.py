@@ -86,6 +86,8 @@ def main():
     parser.add_argument('--preparation', type=Path, required=True)
     parser.add_argument('--source-revision', required=True)
     parser.add_argument('--work-parent', type=Path, required=True)
+    parser.add_argument('--assembly', type=Path, help='Also publish the final BPM MEF with this native command')
+    parser.add_argument('--assembly-source-revision', help='Exact assembler source revision')
     parser.add_argument('--verify-saved', type=Path, help='Finish checks on an already processed synthetic case; no native execution')
     args = parser.parse_args()
     if args.verify_saved:
@@ -119,6 +121,10 @@ def main():
         source_revision=args.source_revision), preparation=dict(detector_toml='detector_toml.toml', processing_toml='processing_toml.toml'),
         bpm=dict(acquisition='quick', output_mode='new', upper_fraction=0.85,
                  minimum_span_fraction=0.001, maximum_pair_difference=0.02))
+    if args.assembly:
+        assert args.assembly_source_revision
+        sections['assembly'] = dict(executable=str(args.assembly.resolve(strict=True)),
+            source_revision=args.assembly_source_revision, reference_detector='ESO_CCD_#65')
     for key, value in sections.items():
         text += '\n['+key+']\n'+''.join(name+' = '+json.dumps(item)+'\n' for name, item in value.items())
     text += '\n[[detectors]]\ndetector_id = "ESO_CCD_#65"\nreference_rois = ["CCD65.R0"]\n'
@@ -155,8 +161,8 @@ def main():
         result = recipe.execute(plan)
     finally:
         recipe.preparation.image_fingerprint = original
-    assert result['status'] == 'detector_characterization_complete_for_owner_inspection'
-    assert result['input_preservation'] and result['final_mef_state'] == 'not_assembled'
+    assert result['status'] == ('complete_for_owner_inspection' if args.assembly else 'detector_characterization_complete_for_owner_inspection')
+    assert result['input_preservation'] and result['final_mef_state'] == ('assembled' if args.assembly else 'not_assembled')
     assert calls == Counter({name: 2 for name in plan['baseline']})
     member = result['detectors'][0]
     value = archive.read_product(member['preparation']['path'])
@@ -170,7 +176,8 @@ def main():
     print('RETAINED COMBINED CHARACTERIZATION:', work)
     print('PASS: metadata-first admission, explicit prior/reference populations, serial native stages and joined manifest')
     print('PASS: shared images hashed exactly once before/after; exact measurements, input preservation and no overwrite')
-    print('SCOPE: detector products only; final MEF assembly and observational acceptance remain pending')
+    print('SCOPE: final BPM MEF included' if args.assembly else 'SCOPE: detector products only')
+    print('Scientific/observational acceptance remains pending')
 
 
 if __name__ == '__main__':

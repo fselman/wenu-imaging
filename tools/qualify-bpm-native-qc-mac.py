@@ -79,7 +79,7 @@ def resume_linearity_candidate(args, build, git):
     if args.combined:
         additional += ['tools/run-bpm-linearity.py', 'Pycavi2/tests/bpm_linearity_recipe_contract.py']
         additional += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
-            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native')]
+            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_assembly')]
     for name in additional:
         path = validation/name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -132,6 +132,36 @@ def resume_linearity_candidate(args, build, git):
     print('VERIFICATION:', retry/'verification.json', flush=True)
 
 
+def qualify_assembly(args, candidate, case, blob, run, guards):
+    """Check new publication only, using unchanged completed detector products."""
+    validation = candidate/'validation-source'
+    names = ['mefpp2/tests/bpm_mef_assembly_contract.py', 'mefpp2/tests/mef_assembly_contract.py',
+             'mefpp2/tests/bpm_assembly_native_contract.py',
+             'mefpp2/ins/mef/config/qc-product-schema-2.0.0.json',
+             'Pycavi2/pycavi/pycavi/pycavi_qc.py', 'Pycavi2/pycavi/pycavi/pycavi_native_product_qc.py',
+             'Pycavi2/pycavi/pycavi/pycavi_bpm_linearity_assembly.py']
+    for name in names:
+        path = validation/name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(blob(args.revision, name))
+    controls, reduced = candidate/'orchestration', candidate/'reduced'
+    controls.mkdir(); reduced.mkdir()
+    run([args.asdf_python, validation/names[0], '--probe', candidate/'bpm_mef_assembly_probe',
+         '--work-parent', reduced], 'bpm-mef-byte-checks', controls)
+    run([args.asdf_python, validation/names[1], '--probe', candidate/'mef_assembly_probe',
+         '--work', reduced], 'existing-mef-assembly-checks', controls)
+    run([args.asdf_python, validation/names[2], '--command', candidate/'mefpp_bpm_assemble',
+         '--case', case, '--assembly-source-revision', args.revision, '--work-parent', reduced],
+        'native-bpm-assembly-checks', controls)
+    require({name: sha(Path(name)) for name in guards} == guards, 'Protected bias files changed')
+    report = dict(successful=True, source_revision=args.revision, retained_case=str(case),
+                  executable=str(candidate/'mefpp_bpm_assemble'), sha256=sha(candidate/'mefpp_bpm_assemble'),
+                  protected_files=guards, raw_images_read=False, characterization_repeated=False)
+    (candidate/'verification.json').write_text(json.dumps(report, indent=2)+'\n')
+    print('PASS: native BPM MEF/ASDF assembly; exact pixels/QC; saved detector products reused', flush=True)
+    print('VERIFICATION:', candidate/'verification.json', flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkout', type=Path, required=True)
@@ -142,8 +172,11 @@ def main():
     parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
     parser.add_argument('--resume-linearity-candidate', type=Path, help='Recheck only the recipe using the unchanged e7c4664 producer')
     parser.add_argument('--verify-combined-case', type=Path, help='Finish saved-case checks without repeating native processing')
+    parser.add_argument('--assembly-case', type=Path, help='Build only final assembly components; join an already qualified synthetic case')
     parser.add_argument('--combined', action='store_true', help='Recheck the combined detector coordinator using retained native producers')
     args = parser.parse_args()
+    require(not args.assembly_case or not (args.linearity or args.resume_linearity_candidate or args.reuse_probe),
+            'Assembly qualification reuses saved products; do not select another build mode')
     require(not args.verify_combined_case or args.combined, 'Saved-case check requires --combined')
     require(not args.combined or args.resume_linearity_candidate is not None, 'Combined check requires a retained candidate')
     require(platform.system()=='Darwin' and platform.node().split('.')[0]=='MC02VV0HPHTDG', 'Wrong qualification host')
@@ -169,6 +202,14 @@ def main():
     if args.resume_linearity_candidate:
         resume_linearity_candidate(args, build, git)
         return
+    if args.assembly_case:
+        case = args.assembly_case.resolve(strict=True)
+        retained = build.parent.parent/'bpm-native-qc-gopmq2yj'
+        require(case.parent == retained/'reduced' and case.name.startswith('combined-characterization-'), 'Expected retained synthetic case')
+        verification = json.loads((retained/'linearity-recipe-recheck-bnuubdyb/verification.json').read_text())
+        require(verification['successful'] and verification['saved_combined_case'] == str(case), 'Saved-case checks must have passed')
+        require({name: sha(Path(name)) for name in verification['protected_files']} == verification['protected_files'],
+                'Retained producer or selected configuration changed')
     reused_probe = None
     if args.reuse_probe:
         reused_probe = args.reuse_probe.resolve(strict=True)
@@ -244,6 +285,13 @@ def main():
             except BaseException:
                 process.terminate(); process.wait(); raise
         require(code==0,label+' failed; inspect '+str(log))
+    assembly_targets = ('mefpp_bpm_assemble', 'bpm_mef_assembly_probe', 'mef_assembly_probe')
+    assembly_before = {}
+    if args.assembly_case:
+        for name in assembly_targets:
+            path = build/'mefpp2'/name
+            require(not path.is_symlink(), 'Unexpected cached assembly symlink')
+            assembly_before[path] = (path.read_bytes(), path.stat().st_mode & 0o777) if path.exists() else None
     try:
         for name, content in replacements.items():
             path=source/name
@@ -253,19 +301,29 @@ def main():
                 path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(content)
         run([cmake,'-S',source,'-B',build,'-DMEFPP_BUILD_BIAS_RECIPE=ON',
              '-DMEFPP_SOURCE_REVISION='+args.revision], 'candidate-configure',checkout)
-        targets=['mefpp_m5'] if reused_probe else ['mefpp_m5','bpm_native_asdf_probe']
-        if args.linearity:
-            targets.append('mefpp_linearity_prepare_command')
-        run([cmake,'--build',build,'--parallel','2','--target',*targets], 'candidate-build',checkout)
-        shutil.copy2(build/'mefpp2/mefpp_m5',candidate/'mefpp_m5')
-        if args.linearity:
-            shutil.copy2(build/'mefpp2/mefpp_linearity_prepare_command',candidate/'mefpp_linearity_prepare_command')
-        if reused_probe:
-            require(sha(reused_probe)==reused_digest, 'Retained probe changed during qualification')
-            shutil.copy2(reused_probe,candidate/'bpm_native_asdf_probe')
+        if args.assembly_case:
+            run([cmake,'--build',build,'--parallel','2','--target',*assembly_targets], 'assembly-build',checkout)
+            for name in assembly_targets:
+                shutil.copy2(build/'mefpp2'/name,candidate/name)
         else:
-            shutil.copy2(build/'mefpp2/bpm_native_asdf_probe',candidate/'bpm_native_asdf_probe')
+            targets=['mefpp_m5'] if reused_probe else ['mefpp_m5','bpm_native_asdf_probe']
+            if args.linearity:
+                targets.append('mefpp_linearity_prepare_command')
+            run([cmake,'--build',build,'--parallel','2','--target',*targets], 'candidate-build',checkout)
+            shutil.copy2(build/'mefpp2/mefpp_m5',candidate/'mefpp_m5')
+            if args.linearity:
+                shutil.copy2(build/'mefpp2/mefpp_linearity_prepare_command',candidate/'mefpp_linearity_prepare_command')
+            if reused_probe:
+                require(sha(reused_probe)==reused_digest, 'Retained probe changed during qualification')
+                shutil.copy2(reused_probe,candidate/'bpm_native_asdf_probe')
+            else:
+                shutil.copy2(build/'mefpp2/bpm_native_asdf_probe',candidate/'bpm_native_asdf_probe')
     finally:
+        for path, before in assembly_before.items():
+            if before is None:
+                path.unlink(missing_ok=True)
+            else:
+                path.write_bytes(before[0]); path.chmod(before[1])
         for name, content in originals.items():
             path=source/name
             if content is None:
@@ -295,6 +353,9 @@ def main():
             require((linearity_command.read_bytes() if linearity_command.exists() else None)==linearity_before,
                     'Original preparation executable differs after restoration')
         print('PASS: cached source/cache/adapter and selected bias configuration preserved',flush=True)
+    if args.assembly_case:
+        qualify_assembly(args, candidate, case, blob, run, guards)
+        return
     validation = candidate/'validation-source'
     required = ['mefpp2/tests/bpm_native_qc_contract.py','mefpp2/tests/bpm_files_contract.py',
                 'mefpp2/ins/mef/config/wfi.paf','mefpp2/ins/mef/config/qc-product-schema-2.0.0.json']

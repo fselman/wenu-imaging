@@ -28,7 +28,7 @@ def admit(path):
     path = Path(path).resolve(strict=True)
     data = tomllib.loads(path.read_text())
     fields(data, ('bpm_linearity_recipe_schema_version', 'project', 'run', 'native',
-                  'preparation', 'bpm', 'detectors'), 'combined recipe')
+                  'preparation', 'bpm', 'detectors') + (('assembly',) if 'assembly' in data else ()), 'combined recipe')
     require(type(data['bpm_linearity_recipe_schema_version']) is int and
             data['bpm_linearity_recipe_schema_version'] == 1, 'Unsupported combined recipe')
     project_path = reference(path.parent, data['project'])
@@ -49,6 +49,12 @@ def admit(path):
             all(c in '0123456789abcdef' for c in revision), 'Exact native source revision required')
     binaries = {name: str(reference(path.parent, data['native'][name])) for name in ('bpm', 'preparation')}
     fields(data['preparation'], ('detector_toml', 'processing_toml'), 'preparation configuration')
+    assembly = data.get('assembly')
+    if assembly is not None:
+        fields(assembly, ('executable', 'source_revision', 'reference_detector'), 'assembly')
+        require(type(assembly['source_revision']) is str and len(assembly['source_revision']) == 40 and
+                all(c in '0123456789abcdef' for c in assembly['source_revision']), 'Exact assembly revision required')
+        binaries['assembly'] = str(reference(path.parent, assembly['executable']))
     controls = {name: reference(path.parent, value) for name, value in data['preparation'].items()}
     require(all(p.is_relative_to(project_path.parent) for p in controls.values()),
             'Detector/processing TOMLs must be in orchestration')
@@ -97,13 +103,21 @@ def admit(path):
         entries.append(dict(detector=detector, dependencies=dependencies, key=key, bpm_loaded_pixels=loaded_pixels,
             reference_rois=[[rois[name][k] for k in ('xmin', 'xmax', 'ymin', 'ymax')] for name in ids]))
     require(positions == sorted(set(positions)), 'Select unique detectors in detector-TOML catalogue order')
+    if assembly is not None:
+        require(assembly['reference_detector'] in [e['detector']['detector_id'] for e in entries], 'Explicit selected assembly reference required')
+        common = entries[0]['dependencies']['selection']
+        for entry in entries[1:]:
+            selected = entry['dependencies']['selection']
+            require([r['path'] for r in selected['flat']] == [r['path'] for r in common['flat']] and
+                    entry['dependencies']['master']['product'] == entries[0]['dependencies']['master']['product'] and
+                    selected['bpm']['path'] == common['bpm']['path'], 'Assembly requires common ordered flats, master and prior')
     sources = {item['path']: item['sha256'] for item in project['sources']}
     sources[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
     for name, item in resolved['sources'].items():
         sources[resolved['source_paths'][name]] = item['sha256']
     sources[project['catalog']['path']] = project['catalog']['sha256']
     code_paths = [Path(__file__).with_name(name+'.py') for name in ('pycavi_bpm_linearity_plan',
-        'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_linearity_recipe',
+        'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_assembly', 'pycavi_linearity_recipe',
         'pycavi_linearity_native_archive', 'pycavi_native_product_qc')]
     code_paths.append(ROOT/'tools/run-bpm-linearity.py')
     code_sources = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in code_paths}
@@ -114,5 +128,5 @@ def admit(path):
     # Reuse the same directory/input admission as the single-detector recipe.
     for entry in entries:
         preparation.validate_preparation_inputs(entry['dependencies'], layout)
-    return dict(run=str(run), layout=layout, resolved=resolved, native=binaries, source_revision=revision,
+    return dict(recipe_path=str(path), assembly=assembly, run=str(run), layout=layout, resolved=resolved, native=binaries, source_revision=revision,
                 bpm=policy, entries=entries, baseline=baseline, metadata=metadata, configuration_sources=sources, coordinator_sources=code_sources)

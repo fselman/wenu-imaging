@@ -119,7 +119,8 @@
                 },
                 "format": {
                   "enum": [
-                    "bias-recipe-toml/1"
+                    "bias-recipe-toml/1",
+                    "bpm-linearity-recipe-toml/1"
                   ]
                 },
                 "snapshot": {

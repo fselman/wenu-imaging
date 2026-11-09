@@ -1,7 +1,8 @@
 """Serial detector-characterization coordinator; native services own all pixels/QC.
 
 The manifest joins detector BPM candidates and linearity measurements. It does
-not claim final MEF assembly, scientific acceptance or correction adoption.
+not claim scientific acceptance or correction adoption. Final MEF publication
+is explicit in the recipe; older detector-only recipes remain supported.
 """
 from datetime import datetime, timezone
 import hashlib
@@ -11,9 +12,11 @@ from pathlib import Path
 try:
     from . import pycavi_linearity_recipe as preparation
     from . import pycavi_bpm_linearity_native as native
+    from . import pycavi_bpm_linearity_assembly as assembly
 except ImportError:
     import pycavi_linearity_recipe as preparation
     import pycavi_bpm_linearity_native as native
+    import pycavi_bpm_linearity_assembly as assembly
 require = preparation.require
 
 
@@ -97,10 +100,16 @@ def execute(plan):
                 configuration_detector=entry['detector']['configuration_detector'],
                 bpm_loaded_input_pixels=entry['bpm_loaded_pixels'], input_pixel_limit=entry['dependencies']['selection']['max_loaded_pixels'],
                 preparation=result['product'], bpm=bpm))
+        if plan['assembly'] is not None:
+            report['bpm_product'] = assembly.assemble_products(plan, report, controls)
+            report.update(scope='bpm_linearity', final_mef_state='assembled',
+                          assembly_source_revision=plan['assembly']['source_revision'])
         metadata_unchanged(plan['metadata'])
         require(all(digest(path) == binaries[name] for name, path in plan['native'].items()), 'Native producer changed')
         inputs.verify()
         report.update(status='detector_characterization_complete_for_owner_inspection', input_preservation=True)
+        if plan['assembly'] is not None:
+            report['status'] = 'complete_for_owner_inspection'
         # The parent receipt resolves the children’s explicitly pending batch check.
         partial = run/'manifest.json.partial'
         with partial.open('x') as stream:
@@ -129,10 +138,12 @@ def read_manifest(path):
         import pycavi_linearity_native_archive as archive
     path = Path(path).resolve(strict=True)
     report = json.loads(path.read_text())
-    require(report['schema_version'] == 1 and report['scope'] == 'detector_characterization' and
-            report['status'] == 'detector_characterization_complete_for_owner_inspection' and
+    states = [('detector_characterization', 'detector_characterization_complete_for_owner_inspection', 'not_assembled'),
+              ('bpm_linearity', 'complete_for_owner_inspection', 'assembled')]
+    require(report['schema_version'] == 1 and
+            (report['scope'], report['status'], report['final_mef_state']) in states and
             report['input_preservation'] is True and report['scientific_acceptance'] is False and
-            report['linearity_correction'] == 'not_applied' and report['final_mef_state'] == 'not_assembled',
+            report['linearity_correction'] == 'not_applied',
             'Incomplete or incompatible detector-characterization manifest')
     original = Path(report['product_root'])
     def local(name):
@@ -161,4 +172,12 @@ def read_manifest(path):
                 q['file']['location'] == bpm['fits'], 'Joined detector/product mapping differs')
         saved.append(dict(detector_id=entry['detector_id'], preparation=value, bpm=q))
     require(saved, 'Empty characterization manifest')
-    return dict(manifest=report, detectors=saved, FITS_integrity_rechecked=False)
+    product = None
+    if report['final_mef_state'] == 'assembled':
+        member = report['bpm_product']
+        require(digest(local(member['asdf'])) == member['sha256'][member['asdf']], 'Final BPM ASDF changed')
+        product = assembly.read_product(local(member['asdf']))
+        require(product['qc']['file']['location'] == member['fits'] and
+                product['qc']['provenance']['producer']['source_revision'] == report['assembly_source_revision'] and
+                product['detector_products'] == [item['bpm'] for item in saved], 'Final manifest/QC mapping differs')
+    return dict(manifest=report, detectors=saved, bpm_product=product, FITS_integrity_rechecked=False)

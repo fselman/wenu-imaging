@@ -2,7 +2,7 @@
 """Coordinate serial native detector characterization from one recipe TOML.
 
 Default: admit the complete metadata plan without opening FITS pixels. --execute
-retains detector products and a joined manifest. Final MEF assembly is separate.
+retains detector products and a joined manifest, with optional native final MEF publication.
 """
 import argparse
 import json
@@ -23,7 +23,7 @@ def main():
     plan = planner.admit(args.config)
     if not args.execute:
         print(json.dumps(dict(status='metadata_admitted', run=plan['run'], raw_FITS_opened=False,
-            final_mef_state='not_assembled', detectors=[e['detector']['detector_id'] for e in plan['entries']],
+            final_mef_state='planned' if plan['assembly'] else 'not_requested', detectors=[e['detector']['detector_id'] for e in plan['entries']],
             unique_image_files=len(plan['baseline']), bpm=plan['bpm'],
             bpm_loaded_input_pixels=[e['bpm_loaded_pixels'] for e in plan['entries']]), indent=2))
         return

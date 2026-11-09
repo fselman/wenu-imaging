@@ -207,12 +207,48 @@ budget, not an RSS claim or a new bound on the existing kernel's scratch owners.
 One native operation and one detector are active at a time; the coordinator holds
 no detector cubes. The linearity service retains its existing working-pixel limits.
 
-The manifest is published exclusively after source verification. Its scope is
-\texttt{detector\_characterization}, with scientific acceptance false and final
-MEF state \texttt{not\_assembled}. It joins native BPM FITS/ASDF products and
-saved linearity measurements; it does not assert a final multi-detector
-calibration. The bias assembler handles one image extension per detector;
-BPM's additional diagnostic HDUs require a subsequent assembly integration.
+The manifest is published exclusively after source verification. Without an
+assembly section its scope remains \texttt{detector\_characterization}, with
+final MEF state \texttt{not\_assembled}. With an explicit assembly executable,
+source revision and reference detector, the scope is \texttt{bpm\_linearity}
+and final MEF state is \texttt{assembled}. Scientific acceptance remains false.
+The native assembler requires common ordered flat inputs, master and prior mask;
+it does not merge incompatible calibration populations.
+
+\newpage
+\section*{Final BPM MEF and QC publication}
+The native entry point is \texttt{mefpp\_bpm\_assemble}. It consumes only the
+completed detector FITS/ASDF artifacts; it never reads raw frames or repeats
+characterization. The routine \texttt{mef\_bpm\_mef\_assemble} shares the bias
+assembler's bounded byte copier and exclusive sibling-file publication. The
+original bias one-extension contract remains separate.
+
+The final primary has no image data and retains the explicitly chosen reference
+detector's metadata. Detector masks occupy HDUs $1,\ldots,N$ in catalogue order.
+All diagnostic planes then follow in detector and original-HDU order: coverage,
+sample count, new flags, selection, and the available prior flags or selection.
+Each extension records \texttt{DETID} and \texttt{EXTVER}=configuration slot+1.
+Mask \texttt{EXTNAME} is the detector ID; diagnostic names retain their plane
+role. Pixel encodings, geometry and every padded data byte are copied unchanged.
+The final basename replaces \texttt{ORIGFILE}; stale header checksums are removed,
+while data checksums remain valid for unchanged image payloads.
+
+The routine \texttt{mef\_bpm\_assembly\_qc\_write} uses the qualified C ASDF
+mapping interface. It joins product measurements, input participation, per-input
+measurements and calibration HDU bindings, without recalculating any value.
+Only the final product identity, mask output HDUs and references to the source
+product ID are remapped. Each complete original detector ASDF is retained as
+text evidence, together with the explicit source/output image-plane map and the
+recipe snapshot. The final container is self-contained: the saved reader needs
+neither the source detector artifacts nor raw files. Metadata is bounded; there
+is no all-detector pixel cube. The existing 64 KiB copy buffer is reused.
+
+The independent reader entry point is\par
+\texttt{pycavi\_bpm\_linearity\_assembly.read\_product}.\par
+It validates the common schema and checks every joined measurement and binding
+against the embedded original records, including the permitted identity/HDU
+remapping. Native FITS readback checks layout before exclusive publication;
+a separate independent comparison checks every final padded image payload.
 
 \texttt{read\_manifest} verifies joined ASDF hashes and source/detector mapping
 and exposes saved diagnostics after relocation. It neither opens FITS pixels
@@ -220,6 +256,6 @@ nor runs native commands; FITS integrity rechecking is explicitly false for this
 metadata reader. A separate acceptance comparison remains necessary for image
 products. The synthetic coordinator case covers metadata-first refusal, preserved
 prior/reference populations, exact saved ROI values, two image hashes per batch,
-immutable outputs and saved reading with raw inputs hidden. Native ASDF and
-actual observational acceptance remain separate qualification gates.
+immutable outputs and saved reading with raw inputs hidden. The final native ASDF join requires its own Mac qualification. Actual
+observational acceptance and Viewer integration remain separate gates.
 \end{document}

@@ -14,8 +14,9 @@ Both WFI/OCAM launchers select main-bias-jk_5noln/mefpp_bias_recipe under the
 retained mac-standalone-bias-SP3Cgdhb build root, with full QC and MAD off.
 Preserve the previous 36381892 executable/cache and the b833aca7 backup.
 Native BPM and linearity preparation publish through the shared C ASDF writer.
-The serial coordinator joins detector characterization products; final BPM MEF
-assembly and observational/viewer acceptance remain pending. Reuse the existing
+The serial coordinator joins detector characterization products. An explicit
+assembly section publishes a native final BPM MEF and matching QC; its Mac gate
+and observational/viewer acceptance remain pending. Reuse the existing
 numerical services and recipe directory contract.
 CCD68/90 residual investigation and the viewer Update service remain deferred.
 Linearity characterization is measurement only for now; do not apply a linearity

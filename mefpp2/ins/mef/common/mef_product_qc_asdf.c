@@ -1,5 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #include "mef_product_qc.h"
+#include "mef_bpm_assembly_qc.h"
 #include <asdf/config.h>
 #ifdef MEF_ASDF_OMIT_FLOAT16
 #undef ASDF_HAVE_FLOAT16
@@ -489,4 +490,288 @@ done:
     if(message && size) snprintf(message,size,"%s%s",code?detail:"Native recovery staging written; independent verification/publication required",
         code && owned?"; staging retained":"");
     return code;
+}
+
+/* All source documents stay alive until publication: detached copies can refer
+ * to their document storage. Only product identity/HDU/source IDs are remapped;
+ * numeric values, definitions, populations and input HDUs are copied verbatim. */
+typedef struct {
+    asdf_file_t *file;
+    void *bytes;
+    size_t length;
+} assembly_document;
+
+static int equal_text(asdf_file_t *a, asdf_file_t *b, const char *path)
+{
+    const char *x, *y;
+    return asdf_get_string0(a,path,&x)==ASDF_VALUE_OK &&
+        asdf_get_string0(b,path,&y)==ASDF_VALUE_OK && !strcmp(x,y);
+}
+static asdf_mapping_t *mapping_copy_at(asdf_file_t *f,const char *path)
+{
+    asdf_mapping_t *view=recovery_mapping(f,path),*copy=NULL;
+    if(view) copy=asdf_mapping_copy(view);
+    asdf_mapping_destroy(view);
+    return copy;
+}
+static int append_copy_at(asdf_sequence_t *sequence,asdf_file_t *f,const char *path)
+{ return append(sequence,mapping_copy_at(f,path)); }
+static int replace_sequence(asdf_file_t *f,const char *path,const char *key,asdf_sequence_t *values)
+{
+    asdf_mapping_t *parent=recovery_mapping(f,path);
+    int okay=parent && values && asdf_mapping_set_sequence(parent,key,values)==ASDF_VALUE_OK;
+    if(!okay) asdf_sequence_destroy(values);
+    asdf_mapping_destroy(parent);
+    return okay;
+}
+static int remap_product_sources(asdf_file_t *f,asdf_mapping_t *detector,const char *old_id,const char *id)
+{
+    asdf_sequence_t *metrics=NULL;
+    asdf_value_t *value=asdf_mapping_get(detector,"measurements");
+    int i,j,okay=value && asdf_value_as_sequence(value,&metrics)==ASDF_VALUE_OK;
+    for(i=0;okay && i<asdf_sequence_size(metrics);++i) {
+        asdf_value_t *item=asdf_sequence_get(metrics,i),*old_sources=NULL;
+        asdf_mapping_t *metric=NULL;
+        asdf_sequence_t *old=NULL,*sources=asdf_sequence_create(f);
+        okay=item && sources && asdf_value_as_mapping(item,&metric)==ASDF_VALUE_OK;
+        if(okay) old_sources=asdf_mapping_get(metric,"sources");
+        okay=okay && old_sources && asdf_value_as_sequence(old_sources,&old)==ASDF_VALUE_OK;
+        for(j=0;okay && j<asdf_sequence_size(old);++j) {
+            asdf_value_t *v=asdf_sequence_get(old,j);
+            const char *text=NULL;
+            okay=v && asdf_value_as_string0(v,&text)==ASDF_VALUE_OK &&
+                asdf_sequence_append_string0(sources,!strcmp(text,old_id)?id:text)==ASDF_VALUE_OK;
+            asdf_value_destroy(v);
+        }
+        if(okay) {okay=asdf_mapping_set_sequence(metric,"sources",sources)==ASDF_VALUE_OK;if(okay)sources=NULL;}
+        asdf_sequence_destroy(sources);asdf_sequence_destroy(old);
+        asdf_value_destroy(old_sources);asdf_mapping_destroy(metric);asdf_value_destroy(item);
+    }
+    asdf_sequence_destroy(metrics);asdf_value_destroy(value);
+    return okay;
+}
+
+static int assembly_detectors(asdf_file_t *out,const mef_bpm_assembly_qc *r,assembly_document *docs)
+{
+    asdf_sequence_t *joined=asdf_sequence_create(out);
+    size_t i;
+    int okay=joined!=NULL;
+    for(i=0;okay && i<r->detector_count;++i) {
+        asdf_mapping_t *detector=mapping_copy_at(docs[i].file,"qc/characterization/detectors/0");
+        okay=detector && count(detector,"output_hdu",i+1) &&
+            remap_product_sources(out,detector,r->detectors[i].path,r->fits_path);
+        if(okay){okay=append(joined,detector);detector=NULL;}
+        asdf_mapping_destroy(detector);
+    }
+    if(okay){okay=replace_sequence(out,"qc/characterization","detectors",joined);joined=NULL;}
+    asdf_sequence_destroy(joined);
+    return okay;
+}
+
+static int assembly_inputs(asdf_file_t *out,const mef_bpm_assembly_qc *r,assembly_document *docs,int inputs)
+{
+    asdf_sequence_t *members=asdf_sequence_create(out),*embedded=asdf_sequence_create(out);
+    char path[256],base[160];
+    int i,okay=members && embedded;
+    size_t d;
+    for(i=0;okay && i<inputs;++i) {
+        asdf_mapping_t *membership=NULL,*record=NULL;
+        asdf_sequence_t *decisions=asdf_sequence_create(out),*detectors=asdf_sequence_create(out);
+        snprintf(base,sizeof(base),"qc/inputs/%d",i);
+        membership=mapping_copy_at(docs[0].file,base);
+        snprintf(base,sizeof(base),"qc/embedded_input_records/%d",i);
+        record=mapping_copy_at(docs[0].file,base);
+        okay=membership && record && decisions && detectors;
+        for(d=0;okay && d<r->detector_count;++d) {
+            snprintf(path,sizeof(path),"qc/inputs/%d/participation_by_detector/0",i);
+            okay=append_copy_at(decisions,docs[d].file,path);
+            snprintf(path,sizeof(path),"qc/embedded_input_records/%d/detectors/0",i);
+            okay=okay && append_copy_at(detectors,docs[d].file,path);
+        }
+        if(okay){okay=seq(membership,"participation_by_detector",decisions);decisions=NULL;}
+        if(okay){okay=seq(record,"detectors",detectors);detectors=NULL;}
+        if(okay){okay=append(members,membership);membership=NULL;}
+        if(okay){okay=append(embedded,record);record=NULL;}
+        asdf_mapping_destroy(membership);asdf_mapping_destroy(record);
+        asdf_sequence_destroy(decisions);asdf_sequence_destroy(detectors);
+    }
+    if(okay){okay=replace_sequence(out,"qc","inputs",members);members=NULL;}
+    if(okay){okay=replace_sequence(out,"qc","embedded_input_records",embedded);embedded=NULL;}
+    asdf_sequence_destroy(members);asdf_sequence_destroy(embedded);
+    return okay;
+}
+
+static int assembly_calibrations(asdf_file_t *out,const mef_bpm_assembly_qc *r,assembly_document *docs,int count_cal)
+{
+    asdf_sequence_t *joined=asdf_sequence_create(out);
+    char path[256];
+    int c,okay=joined!=NULL;
+    size_t d;
+    for(c=0;okay && c<count_cal;++c) {
+        asdf_mapping_t *record;
+        asdf_sequence_t *bindings=asdf_sequence_create(out);
+        snprintf(path,sizeof(path),"qc/calibrations/%d",c);
+        record=mapping_copy_at(docs[0].file,path);
+        okay=record && bindings;
+        for(d=0;okay && d<r->detector_count;++d) {
+            snprintf(path,sizeof(path),"qc/calibrations/%d/detector_bindings/0",c);
+            okay=append_copy_at(bindings,docs[d].file,path);
+        }
+        if(okay){okay=seq(record,"detector_bindings",bindings);bindings=NULL;}
+        if(okay){okay=append(joined,record);record=NULL;}
+        asdf_sequence_destroy(bindings);asdf_mapping_destroy(record);
+    }
+    if(okay){okay=replace_sequence(out,"qc","calibrations",joined);joined=NULL;}
+    asdf_sequence_destroy(joined);
+    return okay;
+}
+
+static int assembly_admit(const mef_bpm_assembly_qc *r,assembly_document *docs,int *inputs,int *calibrations)
+{
+    size_t d,total=0;
+    char path[256];
+    const char *text;
+    uint64_t slot,hdu;
+    int i;
+    for(d=0;d<r->detector_count;++d) {
+        asdf_file_t *f;
+        if(!recovery_read(r->sidecars[d],&docs[d].bytes,&docs[d].length) ||
+            docs[d].length>256u*1024u*1024u-total ||
+            memchr(docs[d].bytes,0,docs[d].length)) return 0;
+        total+=docs[d].length;
+        f=docs[d].file=asdf_open_mem_ex(docs[d].bytes,docs[d].length,NULL);
+        if(!f || asdf_get_string0(f,"qc/record/schema_version",&text)!=ASDF_VALUE_OK || strcmp(text,"2.0.0") ||
+            asdf_get_string0(f,"qc/file/id",&text)!=ASDF_VALUE_OK || strcmp(text,r->detectors[d].path) ||
+            asdf_get_string0(f,"qc/file/location",&text)!=ASDF_VALUE_OK || strcmp(text,r->detectors[d].path) ||
+            asdf_get_string0(f,"qc/provenance/operation",&text)!=ASDF_VALUE_OK || strcmp(text,"cal.bpm") ||
+            asdf_get_string0(f,"qc/provenance/producer/source_revision",&text)!=ASDF_VALUE_OK || strcmp(text,r->detector_source_revision) ||
+            asdf_get_string0(f,"qc/extensions/record_scope",&text)!=ASDF_VALUE_OK || strcmp(text,"one_final_primary_image_product") ||
+            recovery_count(f,"qc/characterization/detectors")!=1 ||
+            asdf_get_string0(f,"qc/characterization/detectors/0/detector_id",&text)!=ASDF_VALUE_OK || strcmp(text,r->detectors[d].detector_id) ||
+            asdf_get_uint64(f,"qc/characterization/detectors/0/configuration_detector",&slot)!=ASDF_VALUE_OK || slot!=r->detectors[d].configuration_detector ||
+            asdf_get_uint64(f,"qc/characterization/detectors/0/output_hdu",&hdu)!=ASDF_VALUE_OK || hdu!=0) return 0;
+        if(d==0) {
+            *inputs=recovery_count(f,"qc/embedded_input_records");
+            *calibrations=recovery_count(f,"qc/calibrations");
+            if(*inputs<1 || *inputs>100000 || *calibrations!=2) return 0;
+        }
+        if(recovery_count(f,"qc/embedded_input_records")!=*inputs || recovery_count(f,"qc/inputs")!=*inputs ||
+            recovery_count(f,"qc/calibrations")!=*calibrations ||
+            !equal_text(f,docs[0].file,"qc/provenance/configuration/snapshot") ||
+            !equal_text(f,docs[0].file,"qc/extensions/bpm_registry")) return 0;
+        for(i=0;i<*inputs;++i) {
+            const char *fields[]={"record_id","file/id","file/location"};size_t j;
+            for(j=0;j<3;++j) {
+                snprintf(path,sizeof(path),"qc/embedded_input_records/%d/%s",i,fields[j]);
+                if(!equal_text(f,docs[0].file,path)) return 0;
+            }
+            snprintf(path,sizeof(path),"qc/embedded_input_records/%d/detectors",i);
+            if(recovery_count(f,path)!=1) return 0;
+            snprintf(path,sizeof(path),"qc/inputs/%d/participation_by_detector",i);
+            if(recovery_count(f,path)!=1) return 0;
+        }
+        for(i=0;i<*calibrations;++i) {
+            snprintf(path,sizeof(path),"qc/calibrations/%d/file/id",i);
+            if(!equal_text(f,docs[0].file,path)) return 0;
+            snprintf(path,sizeof(path),"qc/calibrations/%d/role",i);
+            if(!equal_text(f,docs[0].file,path)) return 0;
+            snprintf(path,sizeof(path),"qc/calibrations/%d/detector_bindings",i);
+            if(recovery_count(f,path)!=1) return 0;
+        }
+    }
+    return 1;
+}
+
+int mef_bpm_assembly_qc_write(const mef_bpm_assembly_qc *r,char *message,size_t size)
+{
+    assembly_document *docs=NULL;
+    asdf_file_t *out=NULL,*saved=NULL;
+    asdf_mapping_t *root=NULL,*extensions=NULL,*item=NULL,*config=NULL;
+    asdf_sequence_t *evidence=NULL;
+    void *readback=NULL;size_t length=0,d;
+    char *temporary=NULL,name[80],expected[4096];
+    const char *text,*detail="Invalid BPM QC assembly request";
+    FILE *stream=NULL;struct stat st;int fd=-1,owned=0,status=-1,inputs=0,calibrations=0;
+    if(!r || !r->fits_path || !r->asdf_path || !r->detectors || !r->sidecars ||
+        !r->created_at || strlen(r->created_at)!=24 || !r->log_path || !r->recipe_path ||
+        !r->recipe_snapshot || !r->plane_map || !r->source_revision || !r->detector_source_revision ||
+        !r->detector_count || r->detector_count>4095 ||
+        strlen(r->source_revision)!=40 || strspn(r->source_revision,"0123456789abcdef")!=40 ||
+        stat(r->fits_path,&st) || !S_ISREG(st.st_mode) || st.st_size<=0 ||
+        lstat(r->asdf_path,&st)==0 || errno!=ENOENT) goto done;
+    length=strlen(r->fits_path);
+    if(length<6 || r->fits_path[0]!='/' || strcmp(r->fits_path+length-5,".fits") ||
+        snprintf(expected,sizeof(expected),"%.*s.asdf",(int)(length-5),r->fits_path)>=(int)sizeof(expected) ||
+        strcmp(expected,r->asdf_path)) goto done;
+    docs=calloc(r->detector_count,sizeof(*docs));
+    detail="Detector ASDF identities, configuration or common ordered inputs/calibrations differ";
+    if(!docs || !assembly_admit(r,docs,&inputs,&calibrations)) goto done;
+    out=asdf_open_mem_ex(NULL,0,NULL);
+    root=mapping_copy_at(docs[0].file,"qc");
+    if(!out || !root || asdf_set_mapping(out,"qc",root)!=ASDF_VALUE_OK) goto done;
+    root=NULL;
+    root=recovery_mapping(out,"qc/file");
+    if(!root || asdf_mapping_set_null(root,"sha256")!=ASDF_VALUE_OK ||
+        !string(root,"integrity","not_content_verified")) goto done;
+    asdf_mapping_destroy(root);root=NULL;
+    if(!recovery_set(out,"qc/file","id",r->fits_path) || !recovery_set(out,"qc/file","location",r->fits_path) ||
+        !recovery_set(out,"qc/file","filename",leaf(r->fits_path)) ||
+        !recovery_set(out,"qc/record","assessment_id",r->fits_path) || !recovery_set(out,"qc/record","created_at",r->created_at) ||
+        !recovery_set(out,"qc/provenance/producer","name","mefpp_bpm_assemble") ||
+        !recovery_set(out,"qc/provenance/producer","source_revision",r->source_revision) ||
+        !recovery_set(out,"qc/provenance","recipe_start",r->created_at) ||
+        !recovery_set(out,"qc/provenance","log_path",r->log_path) ||
+        !assembly_detectors(out,r,docs) || !assembly_inputs(out,r,docs,inputs) ||
+        !assembly_calibrations(out,r,docs,calibrations)) goto done;
+    config=asdf_mapping_create(out);
+    if(!config || !string(config,"path",r->recipe_path) || !string(config,"format","bpm-linearity-recipe-toml/1") ||
+        !string(config,"snapshot",r->recipe_snapshot)) goto done;
+    root=recovery_mapping(out,"qc/provenance");
+    if(!root || !map(root,"recipe_configuration",config)) {config=NULL;goto done;} config=NULL;
+    asdf_mapping_destroy(root);root=NULL;
+    extensions=asdf_mapping_create(out);evidence=asdf_sequence_create(out);
+    if(!extensions || !evidence || !string(extensions,"record_scope","one_final_MEF_product") ||
+        !string(extensions,"input_reference_policy","embedded_record_id") ||
+        !string(extensions,"measurement_policy","caller_supplied_values_only") ||
+        !string(extensions,"bpm_registry","WENU_BPM_V1")) goto done;
+    for(d=0;d<=r->detector_count;++d) {
+        item=asdf_mapping_create(out);
+        snprintf(name,sizeof(name),"detector-product-%04lu",(unsigned long)d);
+        if(!item || !string(item,"name",d<r->detector_count?name:"image-plane-map") ||
+            !string(item,"format",d<r->detector_count?"product-qc-asdf/2.0.0":"mef-bpm-plane-map/1") ||
+            (d<r->detector_count ? asdf_mapping_set_string(item,"text",docs[d].bytes,docs[d].length)!=ASDF_VALUE_OK :
+                !string(item,"text",r->plane_map))) goto done;
+        if(!append(evidence,item)){item=NULL;goto done;} item=NULL;
+    }
+    if(!seq(extensions,"native_evidence",evidence)){evidence=NULL;goto done;}evidence=NULL;
+    root=recovery_mapping(out,"qc");
+    if(!root || !map(root,"extensions",extensions)){extensions=NULL;goto done;}extensions=NULL;
+    asdf_mapping_destroy(root);root=NULL;
+    temporary=malloc(strlen(r->asdf_path)+32);
+    if(!temporary) goto done;
+    snprintf(temporary,strlen(r->asdf_path)+32,"%s.tmp-XXXXXX",r->asdf_path);
+    fd=mkstemp(temporary);if(fd<0)goto done;owned=1;
+    stream=fdopen(fd,"wb");if(!stream)goto done;fd=-1;
+    detail="Native assembled ASDF write/readback failed";
+    if(asdf_write_to_fp(out,stream) || fflush(stream) || fsync(fileno(stream)) || ferror(stream))goto done;
+    if(fclose(stream)){stream=NULL;goto done;}stream=NULL;
+    if(!recovery_read(temporary,&readback,&length) || !(saved=asdf_open_mem_ex(readback,length,NULL)) ||
+        asdf_get_string0(saved,"qc/file/id",&text)!=ASDF_VALUE_OK || strcmp(text,r->fits_path) ||
+        recovery_count(saved,"qc/characterization/detectors")!=(int)r->detector_count ||
+        recovery_count(saved,"qc/embedded_input_records")!=inputs) goto done;
+    detail="Cannot exclusively publish assembled native ASDF";
+    if(link(temporary,r->asdf_path))goto done;
+    status=0;
+done:
+    if(stream)fclose(stream);
+    if(fd>=0)close(fd);
+    asdf_mapping_destroy(root);asdf_mapping_destroy(extensions);asdf_mapping_destroy(item);asdf_mapping_destroy(config);
+    asdf_sequence_destroy(evidence);
+    if(saved)asdf_close(saved);
+    if(out)asdf_close(out);
+    if(docs)for(d=0;d<r->detector_count;++d){if(docs[d].file)asdf_close(docs[d].file);free(docs[d].bytes);}
+    if(owned)unlink(temporary);
+    free(docs);free(temporary);free(readback);
+    if(message && size)snprintf(message,size,"%s",status?detail:"");
+    return status;
 }
