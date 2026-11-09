@@ -275,6 +275,19 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
   target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
   add_library(mefpp_product_qc_records STATIC ins/mef/common/mef_product_qc_validate.c)
+  add_library(mefpp_linearity_archive STATIC ins/mef/common/mef_linearity_archive.c)
+  target_link_libraries(mefpp_linearity_archive PUBLIC mefpp_linearity_files mefpp_product_qc_records)
+  target_compile_options(mefpp_linearity_archive PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(mefpp_linearity_archive PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_link_libraries(mefpp_linearity_prepare_command PRIVATE mefpp_linearity_archive)
+  add_executable(linearity_archive_metadata_probe ins/mef/mefpp_linearity_prepare.c tests/linearity_archive_metadata.c)
+  target_link_libraries(linearity_archive_metadata_probe PRIVATE mefpp_linearity_archive mefpp_roi_config mefpp_config_toml)
+  target_include_directories(linearity_archive_metadata_probe PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(linearity_archive_metadata_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    MEFPP_NATIVE_PRODUCT_QC=1 MEFPP_CANDIDATE_REVISION="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+  target_compile_options(linearity_archive_metadata_probe PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(linearity_archive_metadata_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_compile_definitions(mefpp_linearity_prepare_command PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
   target_include_directories(mefpp_product_qc_records PUBLIC ins/mef/common)
   target_compile_options(mefpp_product_qc_records PRIVATE -Wall -Wextra -Werror -pedantic-errors)
   set_target_properties(mefpp_product_qc_records PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
@@ -341,6 +354,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       target_include_directories(mefpp_product_qc SYSTEM PRIVATE "${MEFPP_ASDF_PREFIX}/include")
       target_link_libraries(mefpp_product_qc PUBLIC "${MEFPP_ASDF_LIBRARY}" mefpp_recipe_run mefpp_product_qc_records)
       target_link_libraries(mefpp_m5 PRIVATE mefpp_bpm_product_qc mefpp_product_qc)
+      target_link_libraries(mefpp_linearity_prepare_command PRIVATE mefpp_product_qc)
+      set_target_properties(mefpp_linearity_prepare_command PROPERTIES BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
+      target_compile_definitions(mefpp_linearity_prepare_command PRIVATE MEFPP_NATIVE_PRODUCT_QC=1)
       target_compile_definitions(mefpp_m5 PRIVATE MEFPP_NATIVE_PRODUCT_QC=1)
       if(NOT APPLE)
         target_link_libraries(mefpp_product_qc PUBLIC m)
@@ -690,6 +706,11 @@ if(BUILD_TESTING)
         --command "$<TARGET_FILE:mefpp_linearity_prepare_command>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_linearity_preparation_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;overscan")
+    add_test(NAME native_linearity_preparation_archive_metadata
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_native_archive_contract.py"
+        --command "$<TARGET_FILE:linearity_archive_metadata_probe>" --metadata-only
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_linearity_preparation_archive_metadata PROPERTIES TIMEOUT 180 LABELS "native;linearity;qc;publication")
     add_test(NAME native_sample_command
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sample_command_contract.py"
         --command "$<TARGET_FILE:mefpp_sample_extract>"

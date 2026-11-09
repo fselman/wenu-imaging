@@ -83,31 +83,36 @@ def main():
 import asdf,json,sys
 from pathlib import Path
 output,root,reference_directory=map(Path,sys.argv[1:])
-with asdf.open(output/'product.asdf', custom_schema=(root/'mefpp2/ins/mef/config/qc-product-schema-2.0.0.json').as_uri(),lazy_load=False) as saved:
-    qc=saved.tree['qc']
-    assert qc['extensions']['record_scope']=='one_final_primary_image_product'
-    assert qc['provenance']['operation']=='cal.bpm'
-    native=json.loads(qc['extensions']['operation_context']['snapshot'])
-    reference=json.loads((reference_directory/'handoff.json').read_text())
-    reference['output']=str(output/'product.fits')
-    assert native==reference
-    assert qc['provenance']['producer']['source_revision']==native['source_revision']
-    detector=qc['characterization']['detectors'][0]
-    assert detector['output_hdu']==0
-    metrics={m['name']:m for m in detector['measurements']}
-    assert metrics['reason_histogram']['value']==native['reason_histogram']
-    assert metrics['fit_histogram']['value']==native['fit_histogram']
-    for i,(binding,record,source) in enumerate(zip(qc['inputs'],qc['embedded_input_records'],native['inputs'])):
-        assert record['file']['location']==source['file']['path']
-        assert record['record_id']==source['file']['asset_id']
-        assert record['original_index']==i
-        assert binding['participation_by_detector'][0]['status']==('used' if source['included'] else 'rejected')
-        values={m['name']:m for m in record['detectors'][0]['measurements']}
-        assert record['detectors'][0]['source_hdu']==source['file']['hdu']
-        assert values['integration_seconds']['value']==source['integration_seconds']
-        assert values['reference_level']['value']==source['reference_level']
-        assert values['reference_samples']['value']==source['reference_samples']
-    assert len(qc['embedded_input_records'])==len(native['inputs'])
+schema_bytes=(root/'mefpp2/ins/mef/config/qc-product-schema-2.0.0.json').read_bytes()
+schema_id=json.loads(schema_bytes)['id']
+with asdf.config_context() as configuration:
+    configuration.add_resource_mapping({schema_id:schema_bytes})
+    with asdf.open(output/'product.asdf',custom_schema=schema_id,lazy_load=False) as saved:
+        saved.validate()
+        qc=saved.tree['qc']
+        assert qc['extensions']['record_scope']=='one_final_primary_image_product'
+        assert qc['provenance']['operation']=='cal.bpm'
+        native=json.loads(qc['extensions']['operation_context']['snapshot'])
+        reference=json.loads((reference_directory/'handoff.json').read_text())
+        reference['output']=str(output/'product.fits')
+        assert native==reference
+        assert qc['provenance']['producer']['source_revision']==native['source_revision']
+        detector=qc['characterization']['detectors'][0]
+        assert detector['output_hdu']==0
+        metrics={m['name']:m for m in detector['measurements']}
+        assert metrics['reason_histogram']['value']==native['reason_histogram']
+        assert metrics['fit_histogram']['value']==native['fit_histogram']
+        for i,(binding,record,source) in enumerate(zip(qc['inputs'],qc['embedded_input_records'],native['inputs'])):
+            assert record['file']['location']==source['file']['path']
+            assert record['record_id']==source['file']['asset_id']
+            assert record['original_index']==i
+            assert binding['participation_by_detector'][0]['status']==('used' if source['included'] else 'rejected')
+            values={m['name']:m for m in record['detectors'][0]['measurements']}
+            assert record['detectors'][0]['source_hdu']==source['file']['hdu']
+            assert values['integration_seconds']['value']==source['integration_seconds']
+            assert values['reference_level']['value']==source['reference_level']
+            assert values['reference_samples']['value']==source['reference_samples']
+        assert len(qc['embedded_input_records'])==len(native['inputs'])
 print('PASS: native ASDF schema, original input/HDU mapping and complete operation context')
 '''
             checked = subprocess.run([str(args.asdf_python), '-c', check, str(output), str(root), str(output)],

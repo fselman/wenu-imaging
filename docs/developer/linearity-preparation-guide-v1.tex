@@ -6,7 +6,7 @@
 \emergencystretch=2em
 \title{Linearity preparation: row overscan\\Mathematics and implementation, version 1}
 \author{Wenu-imaging}
-\date{5 November 2026}
+\date{9 November 2026}
 \begin{document}
 \maketitle
 \section*{Scope and configuration}
@@ -126,21 +126,45 @@ reuses the existing master and never rebuilds it. Direct-pixel values are replay
 checks against the preserved archive, not substitutes for full ROI measurements.
 No separate singleton extraction campaign is required.
 
-\texttt{pycavi\_linearity\_preparation\_qc.publish} uses the unchanged common
-\texttt{QcRecipe}, writer, reader and traversal. Each per-detector product
-stores corrected individual-exposure means, sample variances, pair differences,
-original raw diagnostics/populations, ordered bias/flat traces, frozen native
-transports, both TOML texts and resolved settings, direct-site replay, and the
-copied source QC graph. Common measurements link to the actual flat inputs.
-HDU/ROI/exposure identities survive independently of pair iteration order.
-Original archives remain immutable; existing outputs cannot be overwritten.
+The recipe envelope references a project TOML in orchestration. That project
+owns the raw, calibration, output, work and log roots. Observations remain
+read-only in raw; existing calibrations are read-only dependencies below
+reduced/cal. Controls and metadata requests stay in orchestration, and all
+products, working files, logs and execution receipts stay below reduced.
 
-\texttt{read\_product} verifies values against embedded native transports and
-frozen relative QC links, so relocation does not require original raw images
-or native output directories. Later model experiments consume this saved
-boundary without repeating preparation. Absolute noise/covariance stays
-unavailable and physical fitting stays unperformed. The modelling accessor
-refuses to imply that missing uncertainty inputs are ready for a fit.
+With \texttt{publication = "native"}, the command retains only small ROI
+metadata between pairs. \texttt{mef\_linearity\_archive\_add\_pair} copies the
+already measured means and variances before the pair's image owners are
+released. \texttt{mef\_linearity\_archive\_table} restores original flat-list
+and configured ROI order and writes the exposure table exclusively. The
+shared \texttt{mef\_product\_qc\_write} validates and publishes ASDF using the
+same qualified C library as bias and BPM. This is an explicit table product:
+application schema 2.0.0, ASDF standard 1.6.0, no invented image HDU. Existing
+MEF and primary-image publication retain their separate layout checks.
+
+The native ASDF contains typed exposure measurements, input identities, original
+indices and source HDUs, calibration bindings and the exact native transports.
+Those transports preserve raw diagnostics, pair differences, populations,
+ordered row-correction traces and direct-site samples without repeating an
+estimator. All biases are used for scan traces; their separate accepted/rejected
+membership in the earlier master remains explicit in the source-binding and
+trace evidence. The native context declares unavailable absolute noise/covariance
+and an unperformed physical fit. No linearity or cross-talk correction is applied.
+
+Python admits and freezes existing dependency metadata, copies the preserved QC
+graph and verifies the completed native archive. It does not complete measurements
+or write the new ASDF. The former Python publisher remains available explicitly
+as a compatibility/reference path. Older recipe envelopes without a publication
+field retain that path; the new example selects native publication.
+
+\texttt{pycavi\_linearity\_native\_archive.read\_product} checks the local
+schema, producer, configuration, detector/input/calibration bindings, frozen
+relative dependency graph and equality of typed measurements with saved native
+transports. Relocation needs neither raw images nor the native working directory.
+The modelling accessor refuses to imply that missing uncertainty inputs are
+ready for a fit. Original archives remain immutable, and outputs cannot be
+reused or overwritten. Native preparation publication and its complete recipe
+envelope require the focused Mac gate; observational acceptance remains pending.
 
 Independent tiny FITS tests cover shuffled HDUs, known row ramps and ROI
 moments, all ten bias memberships, original direct-site values, duplicate and

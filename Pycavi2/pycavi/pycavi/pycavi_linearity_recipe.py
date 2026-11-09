@@ -338,7 +338,7 @@ def preparation_layout(dependencies, directory, *, raw, orchestration, reduced,
 
 
 def prepare_detector(dependencies, executable, directory, *, resolved, source_revision,
-                     assessment_id, created_at, layout=None, configuration_sources=None):
+                     assessment_id, created_at, layout=None, configuration_sources=None, publication="python"):
     """Run the native preparation and publish one immutable ASDF product.
 
     Dependencies are the result of preparation_dependencies. The command reads
@@ -350,6 +350,7 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         from . import pycavi_linearity_preparation_qc as archive
     except ImportError:
         import pycavi_linearity_preparation_qc as archive
+    require(publication in ('python', 'native'), 'Unknown preparation publication backend')
     directory = Path(directory).resolve(strict=True)
     require(not any(directory.iterdir()), 'Fresh empty preparation directory required')
     executable = Path(executable).resolve(strict=True)
@@ -391,6 +392,22 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         argv = [str(executable),*[str(controls/n) for n in ('native.toml','rois.toml','sites.toml','plan.tsv')],
                 d['master']['product'],str(d['master']['hdu']),d['master']['product'],
                 str(controls/'biases.tsv'),str(native)]
+        output = directory/'asdf'
+        if publication == 'native':
+            try:
+                from . import pycavi_linearity_native_archive as native_archive
+            except ImportError:
+                import pycavi_linearity_native_archive as native_archive
+            from datetime import datetime
+            output.mkdir()
+            context = native_archive.prepare_context(d, resolved, output, controls,
+                source_revision=source_revision, evidence=dict(native_directory=str(native),
+                    handoff=d['handoff'], metadata_sha256=d['metadata_sha256'], images=before,
+                    native_binary_sha256=binary_digest, configuration_sources=configuration_sources or {}))
+            timestamp = datetime.fromisoformat(created_at.replace('Z', '+00:00')).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+            argv += ['--native-asdf', str(output/'linearity-preparation.asdf'), timestamp,
+                     str((paths['run_logs'] if paths else directory)/'native.log'), '--context', str(context)]
+        report['publication'] = publication
         report['argv']=argv;report['native_binary_sha256']=binary_digest
         log_path = (paths['run_logs'] if paths else directory)/'native.log'
         with log_path.open('x') as log:
@@ -399,12 +416,15 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         after = {p:image_fingerprint(p) for p in before}
         require(before==after and metadata_preserved() and
                 archive.pair.sha(executable.read_bytes())==binary_digest, 'Preparation source preservation failed')
-        output = directory/'asdf';output.mkdir()
-        product = archive.publish(native,d['source_samples'],output,resolved=resolved,
-            selection=d['selection'],biases=d['biases'],master_snapshot=d['master_snapshot'],
-            assessment_id=assessment_id,created_at=created_at,source_revision=source_revision,
-            dependency_evidence=dict(handoff=d['handoff'],metadata_sha256=d['metadata_sha256'],
-                                     images=before,native_binary_sha256=binary_digest))
+        if publication == 'native':
+            product = verify_native_preparation(native_archive, archive, d, resolved, native, output)
+        else:
+            output.mkdir()
+            product = archive.publish(native,d['source_samples'],output,resolved=resolved,
+                selection=d['selection'],biases=d['biases'],master_snapshot=d['master_snapshot'],
+                assessment_id=assessment_id,created_at=created_at,source_revision=source_revision,
+                dependency_evidence=dict(handoff=d['handoff'],metadata_sha256=d['metadata_sha256'],
+                                         images=before,native_binary_sha256=binary_digest))
         require(metadata_preserved(), 'Metadata changed during publication')
         report.update(status='complete_for_owner_inspection',product=product,
                       inputs=before,after_inputs=after,source_preservation=True)
@@ -413,3 +433,17 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         report['error']=repr(error);raise
     finally:
         (directory/'execution.json').write_text(json.dumps(report,indent=2)+'\n')
+
+
+def verify_native_preparation(native_archive, archive, dependencies, resolved, native, output):
+    """Compare saved native values with unchanged transport decoding, no pixel math."""
+    d = dependencies
+    path = output/'linearity-preparation.asdf'
+    value = native_archive.read_product(path)
+    reference = archive.collect(native, resolved, d['selection'], d['biases'], d['expected_samples'],
+                                d['master_snapshot'], master_reference=d['master'])
+    require(canonical(value) == canonical(reference), 'Native ASDF/transport preparation differs')
+    return dict(path=str(path), sha256=archive.pair.sha(archive.pair.small(path)),
+        container_schema='2.0.0', detector=value['detector'], pairs=len(value['rows']),
+        exposures=len(value['exposure_rows']), sites=len(value['direct_site_replay']),
+        trace_frames=len(value['scan_traces']), noise_state='unavailable')

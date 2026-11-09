@@ -32,6 +32,7 @@ def main():
     parser.add_argument('--revision', required=True)
     parser.add_argument('--asdf-python', type=Path, required=True)
     parser.add_argument('--reuse-probe', type=Path, help='Retained df562fe native-ASDF probe; build only the corrected CLI')
+    parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
     args = parser.parse_args()
     require(platform.system()=='Darwin' and platform.node().split('.')[0]=='MC02VV0HPHTDG', 'Wrong qualification host')
     require(platform.machine()=='x86_64', 'Expected retained Intel environment')
@@ -91,6 +92,9 @@ def main():
     guards = {str(path):sha(path) for path in protected}
     adapter = build/'mefpp2/mefpp_m5'
     adapter_before = adapter.read_bytes() if adapter.exists() else None
+    linearity_command = build/'mefpp2/mefpp_linearity_prepare_command'
+    linearity_before = linearity_command.read_bytes() if args.linearity and linearity_command.exists() else None
+    linearity_mode = linearity_command.stat().st_mode & 0o777 if linearity_before is not None else 0o755
     adapter_mode = adapter.stat().st_mode & 0o777 if adapter.exists() else 0o755
     candidate = Path(tempfile.mkdtemp(prefix='bpm-native-qc-',dir=build.parent.parent))
     print('CANDIDATE DIRECTORY:',candidate,flush=True)
@@ -102,8 +106,12 @@ def main():
     (candidate/'original-cache.txt').write_bytes(cached)
     if adapter_before is not None:
         (candidate/'original-mefpp_m5').write_bytes(adapter_before)
+    if linearity_before is not None:
+        (candidate/'original-linearity-command').write_bytes(linearity_before)
     (candidate/'restore-manifest.json').write_text(json.dumps(dict(source=str(source),build=str(build),
-        files={name:dict(existed=value is not None,mode=modes[name]) for name,value in originals.items()}),indent=2)+'\n')
+        files={name:dict(existed=value is not None,mode=modes[name]) for name,value in originals.items()},
+        linearity_command=dict(enabled=args.linearity,path=str(linearity_command),
+            existed=linearity_before is not None,mode=linearity_mode)),indent=2)+'\n')
     def run(arguments, label, cwd):
         log=candidate/(label+'.log')
         print('RUNNING:',label,'| LOG:',log,flush=True)
@@ -131,8 +139,12 @@ def main():
         run([cmake,'-S',source,'-B',build,'-DMEFPP_BUILD_BIAS_RECIPE=ON',
              '-DMEFPP_SOURCE_REVISION='+args.revision], 'candidate-configure',checkout)
         targets=['mefpp_m5'] if reused_probe else ['mefpp_m5','bpm_native_asdf_probe']
+        if args.linearity:
+            targets.append('mefpp_linearity_prepare_command')
         run([cmake,'--build',build,'--parallel','2','--target',*targets], 'candidate-build',checkout)
         shutil.copy2(build/'mefpp2/mefpp_m5',candidate/'mefpp_m5')
+        if args.linearity:
+            shutil.copy2(build/'mefpp2/mefpp_linearity_prepare_command',candidate/'mefpp_linearity_prepare_command')
         if reused_probe:
             require(sha(reused_probe)==reused_digest, 'Retained probe changed during qualification')
             shutil.copy2(reused_probe,candidate/'bpm_native_asdf_probe')
@@ -149,6 +161,11 @@ def main():
             adapter.unlink(missing_ok=True)
         else:
             adapter.write_bytes(adapter_before); adapter.chmod(adapter_mode)
+        if args.linearity:
+            if linearity_before is None:
+                linearity_command.unlink(missing_ok=True)
+            else:
+                linearity_command.write_bytes(linearity_before); linearity_command.chmod(linearity_mode)
         try:
             run([cmake,'-S',source,'-B',build,'-DMEFPP_BUILD_BIAS_RECIPE='+entries['MEFPP_BUILD_BIAS_RECIPE'],
                  '-DMEFPP_SOURCE_REVISION='+original_revision], 'restore-configuration',checkout)
@@ -159,10 +176,30 @@ def main():
         require({name:sha(Path(name)) for name in guards}==guards, 'Protected producer/configuration changed')
         require(cache.read_bytes()==cached and (adapter.read_bytes() if adapter.exists() else None)==adapter_before,
                 'Cache/adapter restoration differs')
+        if args.linearity:
+            require((linearity_command.read_bytes() if linearity_command.exists() else None)==linearity_before,
+                    'Original preparation executable differs after restoration')
         print('PASS: cached source/cache/adapter and selected bias configuration preserved',flush=True)
     validation = candidate/'validation-source'
     required = ['mefpp2/tests/bpm_native_qc_contract.py','mefpp2/tests/bpm_files_contract.py',
                 'mefpp2/ins/mef/config/wfi.paf','mefpp2/ins/mef/config/qc-product-schema-2.0.0.json']
+    if args.linearity:
+        required += [
+            'mefpp2/tests/linearity_native_archive_contract.py',
+            'mefpp2/tests/linearity_files_contract.py', 'mefpp2/tests/layout_contract.py',
+            'mefpp2/tests/config_snapshot_contract.py',
+            'Pycavi2/tests/linearity_preparation_fixture.py', 'Pycavi2/tests/test_sample_qc.py',
+            'Pycavi2/tests/linearity_native_recipe_contract.py',
+            'Pycavi2/tools/run_ocam_linearity_samples.py', 'tools/prepare-linearity.py',
+            'Pycavi2/pycavi/config/qc-schema-1.1.0.json',
+            'docs/architecture/proposed/m1/effective-settings-baseline.json',
+            'docs/architecture/proposed/m2/project-contracts/validate_project.py',
+            'docs/architecture/proposed/m2/project-contracts/catalog.json',
+            'docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml']
+        required += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
+            'pycavi_qc','pycavi_pair_qc','pycavi_sample_qc','pycavi_linearity_config',
+            'pycavi_linearity_recipe','pycavi_linearity_preparation_qc','pycavi_linearity_native_archive',
+            'pycavi_configuration')]
     for name in required:
         path=validation/name; path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(blob(args.revision,name))
     orchestration, reduced = candidate/'orchestration', candidate/'reduced'
@@ -172,9 +209,20 @@ def main():
          '--probe',candidate/'bpm_native_asdf_probe','--adapter',candidate/'mefpp_m5',
          '--asdf-python',args.asdf_python,'--source-revision',args.revision,'--work-parent',reduced],
         'native-asdf-checks',orchestration)
+    if args.linearity:
+        run([sys.executable, validation/'mefpp2/tests/linearity_native_archive_contract.py',
+             '--command', candidate/'mefpp_linearity_prepare_command',
+             '--asdf-python',args.asdf_python,'--work-parent',reduced], 'linearity-native-asdf-checks',orchestration)
+        run([args.asdf_python, validation/'Pycavi2/tests/linearity_native_recipe_contract.py',
+             '--native-command', candidate/'mefpp_linearity_prepare_command',
+             '--source-revision',args.revision,'--work-parent',reduced], 'linearity-native-recipe-checks',orchestration)
     receipt=dict(source_revision=args.revision,successful=True,observations_opened=False,
         binaries={name:dict(path=str(candidate/name),sha256=sha(candidate/name))
                   for name in ('mefpp_m5','bpm_native_asdf_probe')},protected_files=guards)
+    if args.linearity:
+        receipt['linearity_preparation']=dict(successful=True,
+            path=str(candidate/'mefpp_linearity_prepare_command'),
+            sha256=sha(candidate/'mefpp_linearity_prepare_command'))
     if reused_probe:
         receipt['reused_probe']=dict(path=str(reused_probe),sha256=reused_digest,
             build_revision='df562fe6ac68569a1cd729ec727bd5bce89ac363')

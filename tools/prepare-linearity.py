@@ -35,13 +35,14 @@ def read_recipe(path):
     preparation = data['preparation']
     fields = {'detector_toml', 'processing_toml', 'source_samples', 'handoff',
               'native', 'run', 'source_revision'}
-    recipe.require(isinstance(preparation, dict) and set(preparation) == fields,
+    recipe.require(isinstance(preparation, dict) and fields <= set(preparation) <= fields | {'publication'},
                    'Incomplete or unknown preparation settings')
     recipe.require(all(type(value) is str and value.strip() for value in
                        preparation.values()), 'Nonempty recipe strings required')
+    recipe.require(preparation.get('publication', 'python') in ('native', 'python'), 'Unknown publication backend')
     resolve = lambda value: (path.parent / value).resolve()
     recipe.require(path.is_relative_to(Path(layout['orchestration'])), 'Recipe must be in orchestration')
-    arguments = {name: resolve(value) if name != 'source_revision' else value
+    arguments = {name: resolve(value) if name not in ('source_revision', 'publication') else value
                  for name, value in preparation.items()}
     for name in ('detector_toml', 'processing_toml'):
         recipe.require(arguments[name].is_relative_to(Path(layout['orchestration'])),
@@ -88,7 +89,7 @@ def main():
     recipe.require(args.native is not None, 'Explicit qualified native executable required')
     report = recipe.prepare_detector(dependencies, args.native, work, resolved=resolved,
         source_revision=args.source_revision, assessment_id='linearity:'+work.name,
-        created_at=datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'), layout=layout, configuration_sources=sources)
+        created_at=datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'), layout=layout, configuration_sources=sources, publication=getattr(args, 'publication', 'python'))
     print('LINEARITY PREPARATION:', report['status'], flush=True)
     print('PRODUCT:', report['product']['path'], flush=True)
 

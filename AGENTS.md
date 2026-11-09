@@ -16,6 +16,8 @@ Preserve the previous 36381892 executable/cache and the b833aca7 backup.
 BPM/linearity is being aligned with the bias recipe lifecycle, readable source,
 native product/QC publication and directory contract; reuse its numerical services.
 CCD68/90 residual investigation and the viewer Update service remain deferred.
+Linearity characterization is measurement only for now; do not apply a linearity
+correction. Cross-talk characterization and correction remain deferred.
 Work summaries and completed changes are recorded in GitHub issues and PRs.
 
 ## Human-readable implementation

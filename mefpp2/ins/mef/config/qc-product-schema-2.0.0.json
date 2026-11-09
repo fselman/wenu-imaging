@@ -274,7 +274,8 @@
             "record_scope": {
               "enum": [
                 "one_final_MEF_product",
-                "one_final_primary_image_product"
+                "one_final_primary_image_product",
+                "one_final_table_product"
               ]
             },
             "input_reference_policy": {
@@ -310,6 +311,38 @@
               "minLength": 1,
               "maxLength": 32,
               "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "table_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "native_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4096,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "format": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "name",
+                  "format",
+                  "text"
+                ],
+                "additionalProperties": false
+              }
             }
           },
           "required": [
@@ -403,6 +436,11 @@
                         "one_final_MEF_product"
                       ]
                     }
+                  },
+                  "not": {
+                    "required": [
+                      "table_name"
+                    ]
                   }
                 },
                 "characterization": {
@@ -413,7 +451,10 @@
                           "output_hdu": {
                             "minimum": 1
                           }
-                        }
+                        },
+                        "required": [
+                          "output_hdu"
+                        ]
                       }
                     }
                   }
@@ -429,6 +470,11 @@
                         "one_final_primary_image_product"
                       ]
                     }
+                  },
+                  "not": {
+                    "required": [
+                      "table_name"
+                    ]
                   }
                 },
                 "characterization": {
@@ -441,10 +487,44 @@
                               0
                             ]
                           }
-                        }
+                        },
+                        "required": [
+                          "output_hdu"
+                        ]
                       },
                       "minItems": 1,
                       "maxItems": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "extensions": {
+                  "properties": {
+                    "record_scope": {
+                      "enum": [
+                        "one_final_table_product"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "table_name"
+                  ]
+                },
+                "characterization": {
+                  "properties": {
+                    "detectors": {
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": {
+                        "not": {
+                          "required": [
+                            "output_hdu"
+                          ]
+                        }
+                      }
                     }
                   }
                 }
@@ -710,7 +790,6 @@
         "amplifier",
         "readout_id",
         "configuration_detector",
-        "output_hdu",
         "bin_x",
         "bin_y",
         "measurements"

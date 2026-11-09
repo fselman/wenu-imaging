@@ -99,12 +99,13 @@ static asdf_sequence_t *measurements(asdf_file_t *f,const mef_qc_measurement *q,
     for(i=0;i<n;++i) if(!append(s,measurement(f,q+i))){asdf_sequence_destroy(s);return NULL;}
     return s;
 }
-static asdf_mapping_t *detector(asdf_file_t *f,const mef_qc_detector_record *d)
+static asdf_mapping_t *detector(asdf_file_t *f,const mef_qc_detector_record *d,int table)
 {
     asdf_mapping_t *m=asdf_mapping_create(f);
     if(m==NULL)return NULL;
     if(!string(m,"detector_id",d->id)||!string(m,"amplifier",d->amplifier)||!string(m,"readout_id",d->readout_id)||
-        !count(m,"configuration_detector",d->configuration_detector)||!count(m,"output_hdu",(uint64_t)d->output_hdu)||
+        !count(m,"configuration_detector",d->configuration_detector)||
+        (!table && !count(m,"output_hdu",(uint64_t)d->output_hdu))||
         !count(m,"bin_x",(uint64_t)d->bin_x)||!count(m,"bin_y",(uint64_t)d->bin_y)||
         !seq(m,"measurements",measurements(f,d->measurements,d->measurement_count))) {
         asdf_mapping_destroy(m);return NULL;
@@ -234,7 +235,7 @@ static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
     if(okay&&p->qc_profile)okay=string(provenance,"qc_profile",p->qc_profile);
     if(okay)okay=header_provenance(f,provenance,p);
     if(okay){okay=map(root,"provenance",provenance);provenance=NULL;}
-    for(i=0;okay && i<p->detector_count;++i)okay=append(detectors,detector(f,p->detectors+i));
+    for(i=0;okay && i<p->detector_count;++i)okay=append(detectors,detector(f,p->detectors+i,p->table_name!=NULL));
     if(okay){okay=seq(characterization,"detectors",detectors);detectors=NULL;}
     if(okay){okay=map(root,"characterization",characterization);characterization=NULL;}
     for(i=0;okay && i<p->input_count;++i)okay=append(inputs,input_membership(f,p,i))&&append(embedded,input_record(f,p,i));
@@ -242,9 +243,23 @@ static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
     if(okay){okay=seq(root,"embedded_input_records",embedded);embedded=NULL;}
     for(i=0;okay && i<p->calibration_count;++i)okay=append(calibrations,calibration_record(f,p->calibrations+i));
     if(okay){okay=seq(root,"calibrations",calibrations);calibrations=NULL;}
-    if(okay)okay=string(extensions,"record_scope",p->primary_image?"one_final_primary_image_product":"one_final_MEF_product")&&
+    if(okay)okay=string(extensions,"record_scope",p->table_name?"one_final_table_product":p->primary_image?"one_final_primary_image_product":"one_final_MEF_product")&&
         string(extensions,"input_reference_policy","embedded_record_id")&&
         string(extensions,"measurement_policy","caller_supplied_values_only");
+    if(okay && p->table_name) okay=string(extensions,"table_name",p->table_name);
+    if(okay && p->evidence_count) {
+        asdf_sequence_t *evidence=asdf_sequence_create(f);
+        okay=evidence!=NULL;
+        for(i=0;okay && i<p->evidence_count;++i) {
+            const mef_qc_text_evidence *e=p->evidence+i;
+            asdf_mapping_t *item=asdf_mapping_create(f);
+            okay=item && string(item,"name",e->name) && string(item,"format",e->format) && string(item,"text",e->text);
+            if(okay) {okay=append(evidence,item);item=NULL;}
+            asdf_mapping_destroy(item);
+        }
+        if(okay) {okay=seq(extensions,"native_evidence",evidence);evidence=NULL;}
+        asdf_sequence_destroy(evidence);
+    }
     if(okay && p->bpm_registry) okay=string(extensions,"bpm_registry",p->bpm_registry);
     if(okay && p->operation_context_format) {
         asdf_mapping_t *context=asdf_mapping_create(f);
@@ -273,9 +288,9 @@ int mef_product_qc_write(const char *path,const mef_product_qc *p,char *message,
     const char *detail="Cannot construct native ASDF QC";
     if(mef_product_qc_validate(p,message,size)!=0)return -1;
     n=strlen(p->fits_path);
-    if(path==NULL || snprintf(expected,sizeof(expected),"%.*s.asdf",(int)(n-5),p->fits_path)>=(int)sizeof(expected)||
-        strcmp(path,expected)) {detail="ASDF must inherit the final FITS basename and directory";goto done;}
-    if(stat(p->fits_path,&st)!=0||!S_ISREG(st.st_mode)||st.st_size==0){detail="Final FITS product is missing or empty";goto done;}
+    if(path==NULL || snprintf(expected,sizeof(expected),"%.*s.asdf",(int)(n-(p->table_name?4:5)),p->fits_path)>=(int)sizeof(expected)||
+        strcmp(path,expected)) {detail="ASDF must inherit the final product basename and directory";goto done;}
+    if(stat(p->fits_path,&st)!=0||!S_ISREG(st.st_mode)||st.st_size==0){detail="Final product is missing or empty";goto done;}
     if(lstat(path,&st)==0||errno!=ENOENT){detail="ASDF destination exists or is inaccessible";goto done;}
     f=asdf_open_mem_ex(NULL,0,NULL);if(f==NULL)goto done;
     root=container(f,p);if(root==NULL)goto done;

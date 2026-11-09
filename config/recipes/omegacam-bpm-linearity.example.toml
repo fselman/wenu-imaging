@@ -11,6 +11,7 @@ linearity_recipe_schema_version = 1
 project = "project.toml"
 
 [preparation]
+publication = "native"
 detector_toml = "omegacam-1x1.toml"
 processing_toml = "omegacam-characterization.toml"
 source_samples = "../reduced/cal/bpm-linearity/prior/samples.asdf"
