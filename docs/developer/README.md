@@ -17,6 +17,12 @@ Read only the guide for the operation being changed. LaTeX sources accompany PDF
 - [Detector characterization design](detector-characterization-design-2026-11-02.pdf) ([source](detector-characterization-design-2026-11-02.tex)).
 - [Joint shutter/linearity interface](joint-shutter-linearity-interface-2026-11-03.pdf) ([source](joint-shutter-linearity-interface-2026-11-03.tex)).
 - [Linearity preparation](linearity-preparation-guide-v1.pdf) ([source](linearity-preparation-guide-v1.tex)).
+  Inspect completed recipe measurements with `tools/view-bpm-linearity-qc.py
+  --manifest RUN/manifest.json --detectors detector.toml
+  --processing processing.toml --run FRESH_REDUCED_VIEWER_DIRECTORY`.
+  Run from orchestration. The offline page reuses the QC plots and shows saved BPM
+  histograms; it opens no images or external TSV files and applies no correction.
+  Geometry/processing must match the executed recipe fingerprints.
 - [Saved linearity residuals](linearity-residual-asdf-guide-v2.pdf) ([source](linearity-residual-asdf-guide-v2.tex)).
 
 The [design directory](design/) contains the reviewed scientific/structural contracts.
