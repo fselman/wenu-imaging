@@ -35,6 +35,16 @@ at batch boundaries, with per-stage identity checks; do not repeat full-MEF
 image hashing for every detector. Real batch execution uses niceness >=10.
 Work summaries and completed changes are recorded in GitHub issues and PRs.
 
+The owner has superseded the current two-pass BPM/linearity execution: ingest and
+correct each detector image plane once into one owned processed cube; optionally
+create/publish its robust-fit BPM and measured QC; then measure linearity/ROIs
+from that same cube before release. Raw-only evidence is captured during ingestion.
+Downstream services borrow processed planes without input I/O or reprocessing.
+The migration is pending; see the required detector flow in
+docs/developer/design/common-recipe-coordinator-v1.md. Preserve stopped run
+native-32-wm3xnsso (26 completed detectors; CCD87 preparation saved). Do not relax
+pair-quality criteria or repeat completed detector work to bypass the failure.
+
 ## Human-readable implementation
 
 Write for a programmer who understands scientific data processing. Use meaningful
