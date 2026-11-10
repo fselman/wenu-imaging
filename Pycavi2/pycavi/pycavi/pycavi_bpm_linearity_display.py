@@ -27,7 +27,7 @@ class ManifestReader:
             path = self.local(member['preparation']['path'])
             self.inputs[str(path)] = member['preparation']['sha256']
             bpm_path = None
-            if member['bpm'].get('state') != 'skipped_input_bpm':
+            if member['bpm'].get('state') not in ('skipped_input_bpm','skipped_measurement_only'):
                 bpm_path = self.local(member['bpm']['asdf'])
                 self.inputs[str(bpm_path)] = member['bpm']['sha256'][member['bpm']['asdf']]
             value = decoded['preparation']
@@ -50,7 +50,7 @@ class ManifestReader:
             if q is None:
                 self.bpm[member['detector_id']] = dict(state='skipped_input_bpm',
                     supplied_mask=member['bpm']['input'], output_mode='SUPPLIED',
-                    selection_note='BPM creation skipped because an input BPM was supplied.',
+                    selection_note=('BPM creation disabled for measurement-only linearity.' if member['bpm'].get('state')=='skipped_measurement_only' else 'BPM creation skipped because an input BPM was supplied.'),
                     zero_meaning='Input mask retains its declared encoding and polarity')
                 continue
             metrics = q['characterization']['detectors'][0]['measurements']

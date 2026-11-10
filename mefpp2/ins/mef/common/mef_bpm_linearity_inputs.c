@@ -174,7 +174,7 @@ int mef_bpm_linearity_admit(mef_bpm_linearity *recipe)
             if(!strcmp(d->detector_id,recipe->reference_detector)) reference_creating=1;
         }
     }
-    if(creating && !reference_creating) return 0;
+    if(!recipe->measure_only && creating && !reference_creating) return 0;
     for (i=0; i<(size_t)directories.u.arr.size; ++i) {
         toml_datum_t value=directories.u.arr.elem[i];
         char *path=value.type==TOML_STRING?mef_bpm_linearity_expand(recipe,value.u.s):NULL;
@@ -195,7 +195,7 @@ int mef_bpm_linearity_admit(mef_bpm_linearity *recipe)
         for (j=0; j<i; ++j) {
             if (!strcmp(recipe->dependencies[i].path,recipe->dependencies[j].path)) return 0;
         }
-        if (i+1<recipe->dependency_count && !mef_bpm_linearity_dependency_check(recipe->dependencies+i,1)) {
+        if (i+1<recipe->dependency_count && !mef_bpm_linearity_dependency_check(recipe->dependencies+i,recipe->native_files?0:1)) {
             snprintf(recipe->run->message,sizeof(recipe->run->message),"Input SHA256 differs: %s",recipe->dependencies[i].path);
             return 0;
         }

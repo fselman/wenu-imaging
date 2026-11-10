@@ -7,7 +7,7 @@
 #include "mef_bpm_linearity.h"
 #include <string.h>
 
-int main(int argc, char **argv)
+int mef_bpm_linearity_command(int argc, char **argv)
 {
     mef_recipe_run run;
     mef_bpm_linearity recipe;
@@ -19,8 +19,10 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-    mef_recipe_run_initialize(&run, "cal.bpm-linearity", "BPM_LINEARITY",
-        "bpm-linearity", "BPM/linearity", MEFPP_CANDIDATE_REVISION);
+    int measurement_only = argc > 2 && !strcmp(argv[2], "linearity");
+    mef_recipe_run_initialize(&run, measurement_only ? "cal.linearity" : "cal.bpm-linearity",
+        measurement_only ? "LINEARITY" : "BPM_LINEARITY", "bpm-linearity",
+        measurement_only ? "Linearity" : "BPM/linearity", MEFPP_CANDIDATE_REVISION);
     mef_bpm_linearity_initialize(&recipe, &run);
 
     /* [BPM-LINEARITY-ADMISSION]
@@ -71,3 +73,10 @@ finish:
     mef_bpm_linearity_destroy(&recipe);
     return succeeded ? EXIT_SUCCESS : EXIT_FAILURE;
 }
+
+#ifndef MEFPP_RECIPE_ENTRY_LIBRARY
+int main(int argc, char **argv)
+{
+    return mef_bpm_linearity_command(argc, argv);
+}
+#endif

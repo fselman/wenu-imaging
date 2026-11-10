@@ -1,20 +1,15 @@
-# WFI: bind a reviewed paired-flat sample archive and master handoff before execution.
-# The May-2003 bias acceptance does not establish these linearity dependencies.
-# Native serial BPM/linearity recipe.
-# Copy into orchestration and fill the explicit admitted dependency paths.
-# Current native command, from orchestration:
-# nice -n 10 mefpp_bpm_linearity_recipe cal bpm-linearity \
-#   --config bpm-linearity.toml --bindings native-bindings.toml --qc false
-# Direct recipe-only admission is unfinished; this template is not standalone yet.
-# Use a fresh empty reduced run. Inputs and prior masks remain read-only.
-bpm_linearity_recipe_schema_version = 1
+# Native command from orchestration, after qualification and input review:
+# mefpp_recipe cal bpm-linearity --config bpm-linearity.toml --qc false
+# Project owns all roots; this template changes no active controls or data.
+# Use a fresh empty reduced run and a fresh control-directory basename.
+# WFI CHIP1: provisional two-level engineering test, not a full linearity sequence.
+# Fill the actual master SHA256 and reviewed bias membership before execution.
+# The center site below is a candidate requiring review.
+bpm_linearity_recipe_schema_version = 2
 project = "project.toml"
-run = "cal/bpm-linearity/wfi-001"
-qc = false # true enables optional QC; omitted defaults to true
-
-[native_recipe]
-executable = "/path/to/qualified/mefpp_bpm_linearity_recipe"
-source_revision = "REPLACE_WITH_QUALIFIED_NATIVE_RECIPE_SOURCE_REVISION"
+settings = "bias.toml"
+run = "cal/bpm-linearity/wfi-native-001"
+qc = false # omitted defaults to true; CLI overrides this value
 
 [assembly]
 reference_detector = "WIN1.CHIP1.OUT1"
@@ -22,32 +17,64 @@ reference_detector = "WIN1.CHIP1.OUT1"
 [preparation]
 detector_toml = "wfi-1x1.toml"
 processing_toml = "wfi-characterization.toml"
-# archived: reuse the historical input mask and skip BPM creation (default).
-# omitted: create a BPM with no current input mask; preserve archive/master lineage.
-input_bpm = "omitted"
 
-# Required acquisition controls; response limits below have the shown defaults.
 [bpm]
-acquisition = "quick"
+acquisition = "provisional"
 output_mode = "new"
 upper_fraction = 0.85
 minimum_span_fraction = 0.15
 maximum_pair_difference = 0.02
-response_low = 0.5
-response_high = 1.5
+response_low = 0.5 # default
+response_high = 1.5 # default
 
-# Repeat in detector-TOML catalogue order. Only bindings/configuration change
-# between OmegaCAM and WFI; no instrument-specific recipe implementation.
+[inputs]
+# Paths below are relative to the project raw root; order is significant.
+bias = [
+  "WFI.2003-05-30T19:14:54.578.fits",
+  "WFI.2003-05-30T19:16:06.007.fits",
+  "WFI.2003-05-30T19:17:09.628.fits",
+  "WFI.2003-05-30T19:18:13.925.fits",
+  "WFI.2003-05-30T19:19:16.887.fits",
+  "WFI.2003-05-30T19:20:23.198.fits",
+  "WFI.2003-05-30T19:21:28.322.fits",
+  "WFI.2003-05-30T19:22:32.402.fits",
+  "WFI.2003-05-30T19:23:39.607.fits",
+  "WFI.2003-05-30T19:24:43.425.fits",
+]
+
+[[inputs.flat]]
+path = "WFI.2003-05-30T20:29:31.182.fits"
+pair = 0
+
+[[inputs.flat]]
+path = "WFI.2003-05-30T20:30:38.833.fits"
+pair = 0
+
+[[inputs.flat]]
+path = "WFI.2003-05-30T20:39:52.692.fits"
+pair = 1
+
+[[inputs.flat]]
+path = "WFI.2003-05-30T20:42:00.041.fits"
+pair = 1
+
 [[detectors]]
 detector_id = "WIN1.CHIP1.OUT1"
-source_samples = "../reduced/cal/bpm-linearity/prior/CHIP1/samples.asdf"
-handoff = "../reduced/cal/bias/prior/CHIP1/handoff.json"
+configuration_detector = 0
+hdu = 1
+readout_id = "WFI:normal:1x1"
+# Calibration paths are relative to the project calibration root.
+master_bias = "bias/main-acceptance-3ug8nsjh/CMDP.2026-11-09T15:14:23.370Z.001.fits"
+master_hdu = 1
+master_sha256 = "REPLACE_WITH_ACTUAL_MASTER_SHA256"
+input_bpm = "omitted" # alternatively an explicit calibration path, with bpm_hdu
+# Replace this deliberately invalid placeholder with ten reviewed booleans.
+bias_accepted = ["REPLACE_WITH_REVIEWED_MASTER_MEMBERSHIP"]
 reference_rois = ["CHIP1.near_readout", "CHIP1.serial_far", "CHIP1.parallel_far", "CHIP1.far_corner", "CHIP1.center"]
+max_loaded_pixels = 60000000
+max_rows = 20
 
-# Optional historical calibration copy. path is relative to the project's
-# calibration root; source and SHA256 must match the unchanged source archive.
-# Prepare the byte-identical copy before metadata admission.
-# [[calibration_bindings]]
-# source = "/original/retained/WFI_MB_CHIP1_candidate.fits"
-# path = "imports/CHIP1/WFI_MB_CHIP1_candidate.fits"
-# sha256 = "REPLACE_WITH_PRESERVED_CALIBRATION_SHA256"
+[[detectors.sites]]
+roi = "CHIP1.center"
+x = 1022
+y = 2049

@@ -26,9 +26,10 @@ int mef_bpm_linearity_process(mef_bpm_linearity *recipe,size_t index)
 
     /* [BPM-LINEARITY-CANDIDATE] A supplied mask bypasses candidate creation. */
 
-    detector->bpm_skipped=cube.binary!=NULL || cube.flags!=NULL;
+    detector->bpm_skipped=recipe->measure_only || cube.binary!=NULL || cube.flags!=NULL;
     if(detector->bpm_skipped) {
-        fprintf(recipe->run->log,"BPM_CREATION_SKIPPED %s REASON input_bpm_supplied\n",detector->detector_id);
+        fprintf(recipe->run->log,"BPM_CREATION_SKIPPED %s REASON %s\n",detector->detector_id,
+            recipe->measure_only?"linearity_measurement_only":"input_bpm_supplied");
     } else if(mef_bpm_command_from_cube(detector->bpm_argc,detector->bpm_argv,&cube)) goto done;
     if(!mef_bpm_linearity_observe(recipe)) goto done;
 

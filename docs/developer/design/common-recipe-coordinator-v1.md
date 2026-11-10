@@ -7,8 +7,8 @@ the bias template. The native command reads the recipe, referenced project and
 settings, ordered observations, calibration bindings and detector mappings itself.
 No external preparation command or generated-bindings prerequisite is exposed to
 the user. Historical sample archives are comparison/provenance evidence; the
-current external archive-to-bindings compiler is not the final native interface.
-Do not disguise that dependency behind a renamed launcher.
+historical archive-to-bindings compiler remains compatibility only. Native schema 2
+admits ordinary explicit inputs without requiring that compiler.
 
 Help follows `mefpp --help`, `mefpp_recipe cal --help`, and operation-specific
 `mefpp_recipe cal OPERATION --help` for `bias`, `linearity` and `bpm-linearity`.
@@ -22,7 +22,8 @@ controls and inputs without redeclaring raw/reduced roots.
 The shared-cube source is owner-accepted. Its supplied-mask path has Mac ASDF
 and exact CCD65 comparison evidence; explicit archived-mask omission and new
 controls retain their separate qualification requirements. The standalone command
-interface remains unfinished.
+interface is implemented with local numerical checks; its native Mac ASDF and
+observational qualification remain pending.
 
 1. Admit ordered input identities, geometry, fixed calibrations and requested steps.
 2. Read each required detector image plane once. Capture requested raw-only QC,

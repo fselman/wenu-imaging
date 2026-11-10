@@ -8,6 +8,8 @@ import io
 import json
 from pathlib import Path
 import shutil
+import struct
+import tomllib
 try:
     from . import pycavi_linearity_preparation_qc as previous
     from . import pycavi_native_product_qc as native_qc
@@ -48,6 +50,54 @@ def prepare_context(dependencies, resolved, directory, controls, *, source_revis
     return path
 
 
+def native_context(saved, q, texts):
+    """Decode native authoring evidence; no original files or historical replay."""
+    resolved = recipe.configuration.resolve(saved['detector_profile'], saved['processing_profile'])
+    author = tomllib.loads(saved['recipe_source'])
+    qc.require(author['bpm_linearity_recipe_schema_version'] == 2 and
+               saved['historical_comparison'] == 'not_requested', 'Unexpected native authoring context')
+    row = next(r for r in author['detectors'] if r['detector_id'] == saved['detector'])
+    snapshot = json.loads(q['provenance']['configuration']['snapshot'])
+    native = tomllib.loads(saved['effective_settings_toml'])['native']
+    qc.require(set(native) == set(snapshot), 'Native effective configuration keys differ')
+    for key, value in native.items():
+        typed = snapshot[key]
+        actual = struct.pack('>f' if typed['type']=='float32-bits' else '>d', value).hex() if typed['type'].endswith('-bits') else value
+        qc.require(actual == typed['value'], 'Native effective configuration differs: '+key)
+    limits = {k: author['bpm'].get(k, v) for k,v in (('response_low',0.5),('response_high',1.5))}
+    qc.require(recipe.bpm_configuration_snapshot(snapshot, limits) == snapshot, 'Native response policy differs')
+    source_digest = saved['input_sha256'].get(saved['recipe'])
+    qc.require(pair.sha(saved['recipe_source'].encode()) == source_digest, 'Native recipe evidence digest differs')
+    raw, calibration = Path(saved['raw_root']), Path(saved['calibration_root'])
+    def location(root, name):
+        # Resolve lexical absolute paths without requiring original images.
+        return str((root/name).resolve())
+    flats=[]
+    for i, incoming in enumerate(author['inputs']['flat']):
+        path=location(raw,incoming['path'])
+        flats.append(dict(path=path,asset=incoming.get('asset',Path(path).name),
+            hdu=row.get('flat_hdus',[row['hdu']]*len(author['inputs']['flat']))[i],
+            index=incoming.get('input_index',i),pair=f"pair-{incoming['pair']:03d}"))
+    biases=[]
+    for i, incoming in enumerate(author['inputs']['bias']):
+        path=location(raw,incoming)
+        biases.append(dict(path=path,asset=Path(path).name,index=i,accepted=int(row['bias_accepted'][i]),
+            hdu=row.get('bias_hdus',[row['hdu']]*len(author['inputs']['bias']))[i]))
+    controls=resolved['controls']
+    mask=dict(encoding='omitted')
+    if row['input_bpm'] != 'omitted':
+        mask=dict(encoding=controls['mask_encoding'],path=location(calibration,row['input_bpm']),hdu=row['bpm_hdu'])
+    selection=dict(detector=row['detector_id'],flat=flats,bpm=mask,
+        readout_id=row['readout_id'],bin_x=1,bin_y=1)
+    master=dict(product=location(calibration,row['master_bias']),hdu=row['master_hdu'])
+    qc.require(saved['master_sha256']==row['master_sha256']==saved['input_sha256'][master['product']],
+               'Native master fingerprint differs')
+    return dict(resolved=resolved,selection=selection,biases=biases,master=master,
+        master_snapshot=snapshot,source_revision=saved['source_revision'],input_bpm_policy='archived',
+        dependency_evidence=dict(native_directory='native-evidence',qc_requested=saved['qc_requested']),
+        native_sites=row['sites'])
+
+
 def read_product(path):
     """Reconstruct saved diagnostics without native execution or original images."""
     path = Path(path).resolve(strict=True)
@@ -63,27 +113,34 @@ def read_product(path):
     items = q['extensions']['native_evidence']
     texts = {item['name']: item['text'] for item in items}
     qc.require(len(texts) == len(items), 'Duplicate native evidence')
-    context = json.loads(texts['preparation-context.json'])
-    qc.require(context['schema_version'] == 1 and
-               q['provenance']['producer']['source_revision'] == context['source_revision'] and
-               json.loads(q['provenance']['configuration']['snapshot']) == recipe.bpm_configuration_snapshot(
-                   context['master_snapshot'], context.get('bpm_response_limits')),
-               'Native producer/configuration differs from admitted dependencies')
-    graph = context['source_graph']
-    root = (path.parent/'inputs').resolve(strict=True)
-    for name, digest in graph['sha256'].items():
-        member = (root/name).resolve(strict=True)
-        qc.require(member.is_relative_to(root) and pair.sha(pair.small(member)) == digest,
-                   'Frozen dependency graph changed')
-    source = (root/graph['entry']).resolve(strict=True)
-    qc.require(source.is_relative_to(root), 'Source graph escapes archive')
-    if context.get('calibration_bindings') or 'input_bpm_policy' in context:
-        try:
-            from . import pycavi_calibration_bindings as calibrations
-        except ImportError:
-            import pycavi_calibration_bindings as calibrations
-        calibrations.verify_context(context, source)
-    expected = previous.sample.read_product(source)
+    saved_context = json.loads(texts['preparation-context.json'])
+    direct = saved_context.get('native_recipe_schema_version') == 2
+    if direct:
+        context = native_context(saved_context, q, texts)
+        expected = None
+        qc.require(q['provenance']['producer']['source_revision']==context['source_revision'], 'Native producer differs')
+    else:
+        context = json.loads(texts['preparation-context.json'])
+        qc.require(context['schema_version'] == 1 and
+                   q['provenance']['producer']['source_revision'] == context['source_revision'] and
+                   json.loads(q['provenance']['configuration']['snapshot']) == recipe.bpm_configuration_snapshot(
+                       context['master_snapshot'], context.get('bpm_response_limits')),
+                   'Native producer/configuration differs from admitted dependencies')
+        graph = context['source_graph']
+        root = (path.parent/'inputs').resolve(strict=True)
+        for name, digest in graph['sha256'].items():
+            member = (root/name).resolve(strict=True)
+            qc.require(member.is_relative_to(root) and pair.sha(pair.small(member)) == digest,
+                       'Frozen dependency graph changed')
+        source = (root/graph['entry']).resolve(strict=True)
+        qc.require(source.is_relative_to(root), 'Source graph escapes archive')
+        if context.get('calibration_bindings') or 'input_bpm_policy' in context:
+            try:
+                from . import pycavi_calibration_bindings as calibrations
+            except ImportError:
+                import pycavi_calibration_bindings as calibrations
+            calibrations.verify_context(context, source)
+        expected = previous.sample.read_product(source)
     names = {'configuration.json', 'master-reference.tsv', 'bias-traces.tsv', 'command.complete'}
     names.update(name for name in texts if name.startswith('pair-'))
     transports = {name: dict(text=texts[name], sha256=pair.sha(texts[name].encode())) for name in names}
@@ -93,6 +150,15 @@ def read_product(path):
         expected, context['master_snapshot'], master_reference=context['master'], transports=transports,
         input_bpm_policy=context.get('input_bpm_policy', 'archived'),
         bpm_response_limits=context.get('bpm_response_limits'))
+    if direct:
+        expected_sites={(r['asset'],r['index'],r['hdu'],site['roi'],site['x'],site['y'])
+            for r in context['selection']['flat'] for site in context['native_sites']}
+        actual_sites={(r['asset'],r['input_index'],r['hdu'],r['source_roi'],r['active_x'],r['active_y'])
+            for r in value['direct_site_replay']}
+        qc.require(actual_sites==expected_sites,'Native direct-site cohort differs from authoring')
+        value['historical_comparison']='not_requested'
+        value['configuration_sources']=saved_context['input_sha256']
+
     ordered = context['selection']['flat'] + context['biases']
     records = q['embedded_input_records']
     qc.require(len(records) == len(ordered), 'Incomplete native input cohort')
@@ -145,8 +211,9 @@ def read_product(path):
                metrics[-1]['status'] == 'unavailable' and metrics[-1]['value'] is None,
                'Noise model must remain unavailable')
     from copy import deepcopy
-    value['input_bpm_policy'] = context.get('input_bpm_policy', 'archived')
+    value['input_bpm_policy'] = ('omitted' if context['selection']['bpm']['encoding']=='omitted' else 'supplied') if direct else context.get('input_bpm_policy', 'archived')
     value['input_bpm'] = deepcopy(context['selection']['bpm'])
+    value['source_revision'] = context['source_revision']
     if 'qc_requested' in context['dependency_evidence']:
         enabled = context['dependency_evidence']['qc_requested']
         qc.require(type(enabled) is bool and 'qc_requested='+str(enabled).lower() in state.split('; '),

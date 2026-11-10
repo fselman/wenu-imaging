@@ -138,7 +138,7 @@ add_library(mefpp_common STATIC ins/mef/common/mefp_lib.c
   ins/mef/common/mef_bias_kernel.c ins/mef/common/mef_paths.c)
 target_include_directories(mefpp_common PUBLIC ins/mef/common)
 target_link_libraries(mefpp_common PUBLIC eclipse)
-add_executable(mefpp ins/mef/recipes/mefpp.c)
+add_executable(mefpp ins/mef/recipes/mefpp.c ins/mef/common/mef_recipe_help.c)
 target_link_libraries(mefpp PRIVATE mefpp_common)
 foreach(target IN ITEMS qfits eclipse mefpp_common mefpp)
   target_compile_definitions(${target} PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -429,6 +429,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       add_executable(mefpp_bpm_linearity_recipe
         ins/mef/recipes/mefpp_bpm_linearity.c
         ins/mef/common/mef_bpm_linearity_config.c
+        ins/mef/common/mef_bpm_linearity_compile.c
+        ins/mef/common/mef_bpm_linearity_project.c
         ins/mef/common/mef_bpm_linearity_inputs.c
         ins/mef/common/mef_bpm_linearity_bindings.c
         ins/mef/common/mef_bpm_linearity_hash.c
@@ -446,6 +448,22 @@ if(MEFPP_BUILD_CONFIG_PROBES)
         C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO
         BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
       target_compile_options(mefpp_bpm_linearity_recipe PRIVATE -Wall -Wextra -pedantic-errors)
+
+      # One native public executable; compatibility binaries keep their entry points.
+      get_target_property(bias_recipe_sources mefpp_bias_recipe SOURCES)
+      get_target_property(bpm_linearity_sources mefpp_bpm_linearity_recipe SOURCES)
+      add_executable(mefpp_recipe ins/mef/recipes/mefpp_recipe.c
+        ins/mef/common/mef_recipe_help.c ${bias_recipe_sources} ${bpm_linearity_sources})
+      target_include_directories(mefpp_recipe PRIVATE ../third_party/tomlc17)
+      target_link_libraries(mefpp_recipe PRIVATE mefpp_bias_product_qc
+        mefpp_recipe_run mefpp_bpm_product_qc mefpp_product_qc mefpp_config_toml
+        mefpp_mef_assembly mefpp_linearity_files mefpp_linearity_archive mefpp_roi_config)
+      target_compile_definitions(mefpp_recipe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+        MEFPP_RECIPE_ENTRY_LIBRARY=1 MEFPP_RECIPE_LIBRARY=1 MEFPP_NATIVE_PRODUCT_QC=1
+        MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
+      set_target_properties(mefpp_recipe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES
+        C_EXTENSIONS NO BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
+      target_compile_options(mefpp_recipe PRIVATE -Wall -Wextra -pedantic-errors)
 
       foreach(recipe_target IN ITEMS mefpp_product_qc mefpp_bias_product_qc mefpp_bias_recipe)
         set_target_properties(${recipe_target} PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)

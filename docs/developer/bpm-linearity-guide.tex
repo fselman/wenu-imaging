@@ -17,10 +17,9 @@ robust response BPM. Measure linearity ROIs, pairs and direct sites from that
 same cube, publish FITS/ASDF, then release it. Linearity is measurement only:
 no physical response correction, shutter solution or gain conversion is applied.
 
-\textbf{Interface status.} The shared-cube calculations exist. The unified command
-and direct native recipe admission below are the agreed interface, still awaiting
-implementation/qualification. Existing private control-file plumbing is not an
-additional public preparation step. The example TOMLs are not yet standalone tests.
+\textbf{Qualification status.} Native TOML admission and the unified command are
+implemented. Local synthetic numerical/help checks pass; Mac native-ASDF and
+observational qualification of this interface remain required before selection.
 
 \section*{Command and help}
 Run from orchestration; reference a project TOML and use a fresh empty reduced run.
@@ -34,7 +33,8 @@ mefpp_recipe cal bpm-linearity --help
 mefpp_recipe cal linearity --help
 mefpp_recipe cal bias --help
 \end{verbatim}
-Top-level help identifies commands, calibration help lists operations, and each
+Top-level help identifies commands; category help lists all recipes (including
+explicitly pending entries); each implemented
 operation reports its inputs, options, defaults and outputs. Help requires no
 configuration or observation files and performs no processing.
 
@@ -54,12 +54,12 @@ pairs/times, master-bias and optional BPM bindings, detector/HDU/configuration-s
 mappings, ROIs and direct sites. These identities are distinct; HDU order does not
 supply a detector mapping. No directory-based input discovery is implied.
 
-The current comparison path verifies master geometry, stage, scan/trim/stack
-settings and frozen lineage against an admitted archive/handoff. A supplied master
-is required on that path; an absent master is not replaced by zero. Imported
-calibrations must be byte-identical, explicitly bound to their original digest.
-WFI still needs reviewed linearity-sequence/archive bindings; bias acceptance
-alone does not establish a suitable paired-flat sequence.
+Native schema 2 reads ordinary recipe inputs directly; historical sample archives
+and handoffs are not prerequisites. A supplied master with its SHA256 and explicit
+bias membership is required; no zero substitute or automatic dependency reduction
+is used. Historical comparison remains a separate saved-data check. The WFI
+example is a provisional two-level engineering test; its fingerprint, membership
+and proposed site must be reviewed before execution.
 
 \newpage
 \section*{Recipe settings and defaults}
@@ -70,28 +70,37 @@ in detector-catalogue order after reviewing the actual bindings.
 
 \begin{tabular}{p{.40\linewidth}p{.53\linewidth}}
 \textbf{Field} & \textbf{Default / requirement}\\\hline
-\texttt{project}, \texttt{run} & Required project path; fresh run relative to reduced.\\
+\texttt{project}, \texttt{settings}, \texttt{run} & Required project/native settings; fresh run relative to reduced.\\
 \texttt{qc} & true; optional diagnostics enabled.\\
 \texttt{assembly.reference\_detector} & Required selected detector; among created BPMs if any.\\
 \texttt{preparation.detector\_toml} & Required detector identity/geometry file.\\
 \texttt{preparation.processing\_toml} & Required scan/trim/ROI and measurement controls.\\
-\texttt{preparation.input\_bpm} & \texttt{archived}; \texttt{omitted} creates a new candidate.\\
 \texttt{bpm.acquisition} & Required: \texttt{quick} or \texttt{provisional}.\\
 \texttt{bpm.output\_mode} & Required: \texttt{new} or \texttt{combined}.\\
 \texttt{bpm.response\_low/high} & 0.5 / 1.5; finite, $0<\mathrm{low}<\mathrm{high}$.\\
 \texttt{bpm.upper\_fraction} & Required, $(0,1]$; example 0.85.\\
 \texttt{bpm.minimum\_span\_fraction} & Required, $(0,1]$; example 0.15.\\
 \texttt{bpm.maximum\_pair\_difference} & Required, $\geq0$; example 0.02.\\
-\texttt{detectors} & Required IDs, sample/handoff evidence and reference ROI IDs.\\
-\texttt{calibration\_bindings} & Empty; optional source/path/SHA256 import bindings.\\
+\texttt{inputs.bias}, \texttt{inputs.flat} & Ordered bias paths; flat paths with integer pair IDs.\\
+\texttt{detectors} & Explicit detector/configuration/HDU/readout bindings.\\
 \end{tabular}
 
-The current development envelope also records a qualified executable and exact
-revision in \texttt{native\_recipe}; that is compatibility metadata for the current
-implementation, not a substitute for native recipe admission.
+Each detector declares \texttt{master\_bias}, \texttt{master\_hdu},
+\texttt{master\_sha256}, \texttt{bias\_accepted}, reference ROI IDs, direct
+\texttt{sites} (ROI, active x/y), and pixel/row bounds. \texttt{input\_bpm} is
+an explicit calibration path with \texttt{bpm\_hdu}, or \texttt{omitted}.
+Common \texttt{hdu} is required; optional \texttt{flat\_hdus}/\texttt{bias\_hdus}
+arrays override it per input. Raw paths use the project raw root; master/BPM paths
+use its calibration root. Omitted flat \texttt{input\_index} defaults to ordinal;
+\texttt{asset} defaults to basename.
+
+Optional \texttt{identity} defaults: \texttt{identity\_key=EXTNAME},
+\texttt{amplifier\_key=-} (unused), bin keys
+\texttt{HIERARCH ESO DET WIN1 BINX/BINY}, \texttt{exposure\_key=EXPTIME},
+\texttt{exposure\_hdu=0}. Current profiles require 1x1 binning.
 
 Processing TOML explicitly supplies scan switches, sampled scan rectangles,
-low/high rejection counts, retained rectangles, ROI/site coordinates, saturation,
+low/high rejection counts, retained rectangles, ROI rectangles, saturation,
 mask encoding/polarity/reject bits, pair-time tolerance, bias-admission/stack
 controls and \texttt{with\_mad}. These have no silent instrument defaults.
 OCAM examples use saturation 65534 ADU, rejection 10/10, bias range 0--1000 ADU,
@@ -224,7 +233,7 @@ Detector BPM FITS & Reason image; \texttt{COVERAGE}, \texttt{NSAMPLE},
 Detector ASDF & BPM QC, reason/coverage counts, settings, input/HDU mapping and
 calibrations; linearity measurement ASDF retains ROI/pair/site data and traces.\\
 Final BPM MEF/ASDF & Only newly created BPMs; none for an all-supplied-mask run.\\
-Logs and receipt & Stage/skip/failure messages, effective recipe, input preservation
+Logs and \texttt{native-recipe.toml} & Stage/skip/failure messages, effective recipe, input preservation
 and truthful completion. Failed work is retained.\\
 \end{tabular}
 
@@ -239,13 +248,13 @@ Physical correction and cross-talk remain deferred.
 
 \hypertarget{native-recipe}{}
 \section*{Source map}
-The short entry point is \path{mefpp2/ins/mef/recipes/mefpp_bpm_linearity.c},
-following the bias lifecycle. Helpers below are in \path{mefpp2/ins/mef/common/}.
+Entry point: \path{mefpp2/ins/mef/recipes/mefpp_bpm_linearity.c}.
+Helpers below are in \path{mefpp2/ins/mef/common/}.
 
 \begin{tabular}{p{.25\linewidth}p{.68\linewidth}}
 \textbf{Stage} & \textbf{Source / landmark}\\\hline
-Admission & \path{mef_bpm_linearity_config.c}, \path{mef_bpm_linearity_inputs.c},
-\path{mef_bpm_linearity_bindings.c}; \texttt{BPM-LINEARITY-ADMISSION}.\\
+Admission & \path{mef_bpm_linearity_compile.c}, \path{mef_bpm_linearity_project.c};
+config/inputs/bindings helpers; \texttt{BPM-LINEARITY-ADMISSION}.\\
 Detector/cube & \path{mef_bpm_linearity_process.c}, \path{mef_detector_cube.c};
 \texttt{BPM-LINEARITY-INGESTION}.\\
 BPM / measurements & \path{mef_cal_bpm.c}, \path{mef_linearity_pairs.c},
@@ -257,6 +266,5 @@ Publication & \path{mef_bpm_linearity_products.c}, shared native ASDF writer;
 Robust arithmetic: \path{mefpp2/src/iproc/detector_response.c} and
 \path{mefpp2/src/math/fit_curve.c}. Scan arithmetic:
 \texttt{mef\_overscan\_correction\_traced}; statistics:
-\texttt{image\_pair\_stats\_checked}. Source landmarks remain individually named
-in code. Reviewed detector flow: \path{docs/developer/design/common-recipe-coordinator-v1.md}.
+\texttt{image\_pair\_stats\_checked}.
 \end{document}

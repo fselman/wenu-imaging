@@ -130,30 +130,36 @@ def collect(native, resolved, selection, biases, expected_samples, master_snapsh
                     source_pair_directory=group.name,source_pair_row=index))
     qc.require(len(seen)==len(selection['flat']),'Flat coverage differs')
     def key(r):return (r['asset'],r['input_index'],r['hdu'],r['source_roi'],r['active_x'],r['active_y'])
-    expected=expected_samples['rows'];saved={key(r):r for r in samples}
-    qc.require(len(saved)==len(samples)==len(expected),'Duplicate/incomplete direct-site replay')
-    qc.require(input_bpm_policy in ('archived', 'omitted'), 'Unknown input BPM comparison policy')
-    replayed=deepcopy(expected)
+    saved={key(r):r for r in samples}
+    qc.require(len(saved)==len(samples),'Duplicate direct-site samples')
     comparison=None
-    if input_bpm_policy=='archived':
-        qc.require(all(saved.get(key(r))==r for r in expected),'Corrected direct-site replay differs from preserved archive')
+    if expected_samples is None:
+        replayed=deepcopy(samples)
     else:
-        qc.require(selection['bpm']['encoding']=='omitted' and set(saved)=={key(r) for r in expected},
-                   'Omitted-mask direct-site identity cohort differs')
-        newly_admitted=0
-        for old in expected:
-            current=saved[key(old)]
-            if old['signal_adu'] is not None:
-                qc.require(current==old, 'Previously admitted direct-site value changed')
-            else:
-                qc.require(set(current)==set(old) and all(current[k]==old[k] for k in old
-                           if k not in ('signal_adu', 'admission_state')),
-                           'Omitted-mask direct-site metadata changed')
-                newly_admitted+=current['signal_adu'] is not None
-        replayed=[deepcopy(saved[key(r)]) for r in expected]
-        comparison=dict(input_bpm_policy='omitted', exact_replay=replayed==expected,
-            previously_admitted=sum(r['signal_adu'] is not None for r in expected),
-            newly_admitted=newly_admitted, historical_archive_changed=False)
+        expected=expected_samples['rows'];saved={key(r):r for r in samples}
+        qc.require(len(saved)==len(samples)==len(expected),'Duplicate/incomplete direct-site replay')
+        qc.require(input_bpm_policy in ('archived', 'omitted'), 'Unknown input BPM comparison policy')
+        replayed=deepcopy(expected)
+        if input_bpm_policy=='archived':
+            qc.require(all(saved.get(key(r))==r for r in expected),'Corrected direct-site replay differs from preserved archive')
+        else:
+            qc.require(selection['bpm']['encoding']=='omitted' and set(saved)=={key(r) for r in expected},
+                       'Omitted-mask direct-site identity cohort differs')
+            newly_admitted=0
+            for old in expected:
+                current=saved[key(old)]
+                if old['signal_adu'] is not None:
+                    qc.require(current==old, 'Previously admitted direct-site value changed')
+                else:
+                    qc.require(set(current)==set(old) and all(current[k]==old[k] for k in old
+                               if k not in ('signal_adu', 'admission_state')),
+                               'Omitted-mask direct-site metadata changed')
+                    newly_admitted+=current['signal_adu'] is not None
+            replayed=[deepcopy(saved[key(r)]) for r in expected]
+            comparison=dict(input_bpm_policy='omitted', exact_replay=replayed==expected,
+                previously_admitted=sum(r['signal_adu'] is not None for r in expected),
+                newly_admitted=newly_admitted, historical_archive_changed=False)
+
 
     # Stable acquisition/ROI order, independent of the native pair processing order.
     order={r['index']:i for i,r in enumerate(selection['flat'])};roi_order={r['id']:i for i,r in enumerate(detector['rois'])}

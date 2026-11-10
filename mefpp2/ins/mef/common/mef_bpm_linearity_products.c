@@ -55,6 +55,8 @@ static int publish_receipt(mef_bpm_linearity *recipe)
         "linearity_correction = \"not_applied\"\ncreated_at = ",stream);
     quoted(stream,recipe->run->recipe_start);
     fputs("\nsource_revision = ",stream); quoted(stream,recipe->run->revision);
+    fputs("\noperation = ",stream); quoted(stream,recipe->run->operation);
+    fputs("\nproduct_root = ",stream); quoted(stream,recipe->output);
     fputs("\nbindings = ",stream); quoted(stream,recipe->bindings_path);
     fprintf(stream,"\nbindings_sha256 = \"%s\"\n",recipe->bindings_sha256);
     fputs("log = ",stream); quoted(stream,recipe->run->paths.log); fputc('\n',stream);
@@ -62,6 +64,12 @@ static int publish_receipt(mef_bpm_linearity *recipe)
         recipe->run->has_final_mef?"assembled":"not_requested");
     if (recipe->run->has_final_mef && (!receipt_file(stream,"fits",recipe->run->paths.fits) ||
         !receipt_file(stream,"asdf",recipe->run->paths.asdf))) goto done;
+    fputs("\n[directories]\nraw = ",stream); quoted(stream,recipe->raw);
+    fputs("\norchestration = ",stream); quoted(stream,recipe->orchestration);
+    fputs("\nreduced = ",stream); quoted(stream,recipe->reduced);
+    fputs("\ncalibration = ",stream); quoted(stream,recipe->calibration);
+    fputs("\nwork = ",stream); quoted(stream,recipe->work);
+    fputs("\nlogs = ",stream); quoted(stream,recipe->logs);fputc('\n',stream);
     for (i=0; i<recipe->detector_count; ++i) {
         mef_bpm_linearity_detector *detector=recipe->detectors+i;
         fputs("\n[[detectors]]\ndetector_id = ",stream); quoted(stream,detector->detector_id);
@@ -95,7 +103,7 @@ int mef_bpm_linearity_publish(mef_bpm_linearity *recipe)
     }
     recipe->run->has_final_mef=created!=0;
     if(!created) {
-        fprintf(recipe->run->log,"BPM_MEF_NOT_REQUESTED REASON input_bpm_supplied\n");
+        fprintf(recipe->run->log,"BPM_MEF_NOT_REQUESTED REASON %s\n",recipe->measure_only?"linearity_measurement_only":"input_bpm_supplied");
         goto preservation;
     }
     fprintf(recipe->run->log,"MEF_ASSEMBLY_START\n");

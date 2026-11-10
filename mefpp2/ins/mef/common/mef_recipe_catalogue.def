@@ -1,0 +1,13 @@
+/* Category, operation, native entry, ready, purpose. One catalogue for dispatch/help.
+ * Reserved entries provide a stable place, not a claim of implemented recipes.
+ */
+MEF_RECIPE("cal", "bias", mef_bias_command, 1, "Master bias and native QC")
+MEF_RECIPE("cal", "bpm-linearity", mef_bpm_linearity_command, 1, "Response BPM and linearity measurements")
+MEF_RECIPE("cal", "linearity", mef_bpm_linearity_command, 1, "Linearity measurements without BPM creation")
+MEF_RECIPE("cal", "bpm", 0, 0, "Standalone bad-pixel calibration")
+MEF_RECIPE("cal", "dark", 0, 0, "Dark-current calibration")
+MEF_RECIPE("cal", "fringes", 0, 0, "Fringe calibration")
+MEF_RECIPE("cal", "domeff", 0, 0, "Dome flat field")
+MEF_RECIPE("cal", "skyff", 0, 0, "Sky flat field")
+MEF_RECIPE("cal", "mff", 0, 0, "Master flat field")
+MEF_RECIPE("sci", "pp", 0, 0, "Science-frame preprocessing")

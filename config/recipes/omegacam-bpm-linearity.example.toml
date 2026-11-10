@@ -1,18 +1,13 @@
-# Native serial BPM/linearity recipe.
-# Copy into orchestration and fill the explicit admitted dependency paths.
-# Current native command, from orchestration:
-# nice -n 10 mefpp_bpm_linearity_recipe cal bpm-linearity \
-#   --config bpm-linearity.toml --bindings native-bindings.toml --qc false
-# Direct recipe-only admission is unfinished; this template is not standalone yet.
-# Use a fresh empty reduced run. Inputs and prior masks remain read-only.
-bpm_linearity_recipe_schema_version = 1
+# Native command from orchestration, after qualification and input review:
+# mefpp_recipe cal bpm-linearity --config bpm-linearity.toml --qc false
+# Project owns all roots; this template changes no active controls or data.
+# Use a fresh empty reduced run and a fresh control-directory basename.
+# OCAM CCD65: retained 20-flat sequence and reviewed direct sites.
+bpm_linearity_recipe_schema_version = 2
 project = "project.toml"
-run = "cal/bpm-linearity/ocam-001"
-qc = false # true enables optional QC; omitted defaults to true
-
-[native_recipe]
-executable = "/path/to/qualified/mefpp_bpm_linearity_recipe"
-source_revision = "REPLACE_WITH_QUALIFIED_NATIVE_RECIPE_SOURCE_REVISION"
+settings = "bias.toml"
+run = "cal/bpm-linearity/ocam-native-001"
+qc = false # omitted defaults to true; CLI overrides this value
 
 [assembly]
 reference_detector = "ESO_CCD_#65"
@@ -20,32 +15,147 @@ reference_detector = "ESO_CCD_#65"
 [preparation]
 detector_toml = "omegacam-1x1.toml"
 processing_toml = "omegacam-characterization.toml"
-# archived: reuse the historical input mask and skip BPM creation (default).
-# omitted: create a BPM with no current input mask; preserve archive/master lineage.
-input_bpm = "omitted"
 
-# Required acquisition controls; response limits below have the shown defaults.
 [bpm]
 acquisition = "quick"
 output_mode = "new"
 upper_fraction = 0.85
 minimum_span_fraction = 0.15
 maximum_pair_difference = 0.02
-response_low = 0.5
-response_high = 1.5
+response_low = 0.5 # default
+response_high = 1.5 # default
 
-# Repeat in detector-TOML catalogue order. Only bindings/configuration change
-# between OmegaCAM and WFI; no instrument-specific recipe implementation.
+[inputs]
+# Paths below are relative to the project raw root; order is significant.
+bias = [
+  "OMEGA.2017-03-13T09:50:05.624.fits",
+  "OMEGA.2017-03-13T09:50:48.373.fits",
+  "OMEGA.2017-03-13T09:51:31.403.fits",
+  "OMEGA.2017-03-13T09:52:14.404.fits",
+  "OMEGA.2017-03-13T09:52:57.394.fits",
+  "OMEGA.2017-03-13T09:53:40.384.fits",
+  "OMEGA.2017-03-13T09:54:23.384.fits",
+  "OMEGA.2017-03-13T09:55:06.394.fits",
+  "OMEGA.2017-03-13T09:55:49.384.fits",
+  "OMEGA.2017-03-13T09:56:31.804.fits",
+]
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:34:43.759.fits"
+pair = 0
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:35:30.570.fits"
+pair = 1
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:37:25.420.fits"
+pair = 2
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:38:50.390.fits"
+pair = 3
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:39:40.380.fits"
+pair = 4
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:40:35.390.fits"
+pair = 5
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:41:50.391.fits"
+pair = 6
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:42:55.391.fits"
+pair = 7
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:44:30.391.fits"
+pair = 8
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:46:16.391.fits"
+pair = 9
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:47:08.392.fits"
+pair = 9
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:48:00.392.fits"
+pair = 8
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:49:45.392.fits"
+pair = 7
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:51:20.392.fits"
+pair = 6
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:52:25.393.fits"
+pair = 5
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:53:40.483.fits"
+pair = 4
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:54:35.393.fits"
+pair = 3
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:55:25.563.fits"
+pair = 2
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:56:50.383.fits"
+pair = 1
+
+[[inputs.flat]]
+path = "OMEGA.2017-03-13T11:58:45.683.fits"
+pair = 0
+
 [[detectors]]
 detector_id = "ESO_CCD_#65"
-source_samples = "../reduced/cal/bpm-linearity/prior/CCD65/samples.asdf"
-handoff = "../reduced/cal/bias/prior/CCD65/handoff.json"
+configuration_detector = 0
+hdu = 1
+readout_id = "OMEGACAM:normal:ordered:1x1"
+# Calibration paths are relative to the project calibration root.
+master_bias = "characterization-3e8u07mf/OCAM_MB_CCD65_candidate.fits"
+master_hdu = 1
+master_sha256 = "b490d75568055fa5cc4a267f79e79e4768c26e220486e40cb6b2bccdcbb2a0c3"
+input_bpm = "omitted" # alternatively an explicit calibration path, with bpm_hdu
+bias_accepted = [true, true, true, true, true, true, true, true, true, true] # retained CCD65 master membership
 reference_rois = ["CCD65.near_readout", "CCD65.serial_far", "CCD65.parallel_far", "CCD65.far_corner", "CCD65.center"]
+max_loaded_pixels = 206467604
+max_rows = 100
 
-# Optional historical calibration copy. path is relative to the project's
-# calibration root; source and SHA256 must match the unchanged source archive.
-# Prepare the byte-identical copy before metadata admission.
-# [[calibration_bindings]]
-# source = "/original/retained/OCAM_MB_CCD65_candidate.fits"
-# path = "imports/CCD65/OCAM_MB_CCD65_candidate.fits"
-# sha256 = "REPLACE_WITH_PRESERVED_CALIBRATION_SHA256"
+[[detectors.sites]]
+roi = "CCD65.near_readout"
+x = 384
+y = 384
+
+[[detectors.sites]]
+roi = "CCD65.serial_far"
+x = 1660
+y = 384
+
+[[detectors.sites]]
+roi = "CCD65.parallel_far"
+x = 384
+y = 3707
+
+[[detectors.sites]]
+roi = "CCD65.far_corner"
+x = 1660
+y = 3707
+
+[[detectors.sites]]
+roi = "CCD65.center"
+x = 1022
+y = 2045

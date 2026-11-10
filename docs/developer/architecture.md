@@ -10,7 +10,7 @@ their own roles. Bundled qfits/Eclipse provide native FITS and image services.
 ## Command and configuration contract
 
 The public recipe executable is `mefpp_recipe`; its command shape is
-`mefpp_recipe cal OPERATION --config RECIPE.toml [options]`.
+`mefpp_recipe CATEGORY OPERATION --config RECIPE.toml [options]`.
 The native command reads the recipe and its referenced project/settings/input
 files. Internally derived requests are owned by the native implementation.
 Help is hierarchical, requires no data/configuration and performs no processing:
@@ -18,6 +18,7 @@ Help is hierarchical, requires no data/configuration and performs no processing:
 ```
 mefpp --help
 mefpp_recipe cal --help
+mefpp_recipe sci --help
 mefpp_recipe cal bpm-linearity --help
 mefpp_recipe cal linearity --help
 mefpp_recipe cal bias --help
@@ -29,6 +30,12 @@ Unix commands only, without `nice` or environment-specific wrapper commands.
 Existing executable aliases and stored producer identities remain compatibility
 contracts during migration; they do not define the new public interface.
 
+One native catalogue supplies command dispatch and help for all recipes.
+`cal` contains bias, BPM/linearity, linearity, BPM, dark, fringes, domeff, skyff
+and mff; `sci` contains pp. Entries still awaiting migration are explicitly
+pending and refuse execution. Register future recipes in this catalogue; keep
+their processing in their own readable entry points.
+
 Project TOML owns raw, calibration, reduced, work and log roots; its directory is
 orchestration. Recipes reference it without repeating roots. Raw observations
 and input calibrations are read-only; controls belong in orchestration and outputs,
@@ -36,6 +43,28 @@ private work and logs below reduced. Use fresh destinations and retain failures.
 Keep reduction purpose, ordered recipe and product/compliance profile distinct.
 Logical detector ID, input HDU, configuration slot and output ordinal are separate
 explicit bindings; do not infer them from array position.
+
+### Dependency checking: later development
+
+Implement and validate individual recipes first, starting with BPM/linearity.
+Each checks its direct inputs and reports absent prerequisites; it does not
+automatically launch other recipes. Implement the shared dependency checker
+after the individual recipes, using their established input/output contracts.
+
+The later checker applies the same rule to every required calibration: reuse an
+explicit compatible reduced product, or plan its construction from an explicit
+nonempty input list. Resolve the complete dependency chain before processing.
+Report all requirements for which neither a product nor a usable list exists.
+If the chain is complete but products need construction, announce every required
+additional reduction and request permission for that plan before starting it.
+Refusal or absent confirmation starts no additional reductions. Optional inputs
+remain governed by the individual recipe's declared policy.
+
+For MFF, resolve dome and sky independently: each may be a saved flat or a raw
+flat list. Reuse supplied products; build only missing components after permission,
+then combine them with the existing MFF algorithm. Validate detector/HDU, filter,
+binning, readout and geometry compatibility and preserve input lineage. These are
+target requirements; the checker and MFF execution are not implemented yet.
 
 ## Processing and publication
 
@@ -61,8 +90,9 @@ must not erase evidence or masquerade as scientific acceptance.
 ## Implementation status
 
 Bias is accepted. The BPM/linearity shared-cube processing has focused numerical
-and Mac evidence, but its public interface is incomplete: native recipe-only
-admission and the unified command/help hierarchy must replace the current binding
-compiler prerequisite before standalone acceptance. See the [roadmap](roadmap.md).
+and Mac evidence. Native schema-2 admission and the unified command/help catalogue
+are implemented with local synthetic numerical checks. Mac ASDF/ownership and
+observational qualification of this interface remain required before standalone
+selection; historical binding compilation is compatibility only. See the [roadmap](roadmap.md).
 Configuration resources under `docs/architecture/proposed/` retain their existing
 paths; their older designs do not override this architecture or current owner decisions.

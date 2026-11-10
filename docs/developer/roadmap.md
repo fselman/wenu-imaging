@@ -1,12 +1,14 @@
 # Current priorities
 
-1. Finish the standalone native BPM/linearity interface using the accepted bias
+1. Qualify the new standalone native BPM/linearity interface using the accepted bias
    template. `mefpp_recipe cal bpm-linearity --config RECIPE.toml` must admit its
    inputs and run without an external preparation stage or generated-bindings
    prerequisite. Preserve the shared processed cube and existing estimators.
-2. Implement hierarchical help: `mefpp --help`, `mefpp_recipe cal --help`, and
-   operation help for `bias`, `linearity` and `bpm-linearity`. Help requires no
-   observation/configuration and lists inputs, options, defaults and outputs.
+2. Qualify hierarchical help and the shared catalogue covering every recipe:
+   `mefpp --help`, `mefpp_recipe CATEGORY --help`, and operation help. Categories
+   include `cal` and `sci`; unmigrated entries are pending and refuse execution.
+   Help requires no observation/configuration and lists implemented inputs,
+   options, defaults and outputs. Keep migration separate from registration.
 3. Align the concise LaTeX/PDF guide and OCAM/WFI recipe TOMLs with that actual
    interface. Begin with an executive summary; show native commands without
    `nice`. Project TOML owns directory roots. Complete actual instrument bindings
@@ -18,9 +20,16 @@
 5. Complete the small recipe-based primary acceptance suite and operational
    OCAM/WFI workflows. Continue later recipes with the same readable template;
    add collective operations only where their scientific contracts require them.
+   Each individual recipe validates its direct inputs without automatically
+   launching another recipe.
+6. After the individual recipes are developed and validated, implement the
+   shared dependency checker. For every required calibration, resolve a saved
+   product or explicit input list. Report missing sources together; announce
+   all additional reductions and request permission before executing the plan.
+   MFF uses the same rule independently for its dome and sky components.
 
 Bias and the shared-cube source are owner-accepted; acceptance does not establish
-completion of the standalone BPM/linearity interface. Directory reorganization
+qualification of the new standalone BPM/linearity interface. Directory reorganization
 remains deferred until BPM/linearity development finishes. CCD68/90 residuals,
 the viewer Update service, physical linearity correction and cross-talk remain
 deferred. Noise/uncertainty and new fitting policies require scientific review.

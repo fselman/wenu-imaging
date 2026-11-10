@@ -16,10 +16,11 @@ Preserve the previous 36381892 executable/cache and the b833aca7 backup.
 Native BPM and linearity preparation publish through the shared C ASDF writer.
 The native BPM/linearity recipe mirrors the bias lifecycle and calls the
 existing preparation/BPM services in process, then joins their final MEF/QC.
-The feature branch currently admits historical metadata and compiles bindings
-outside the native command. This is an unfinished implementation, not the agreed
-architecture: replace that prerequisite with native recipe-only admission.
-Preserve historical evidence and compatibility during this correction. Native recipe selection
+The feature branch now implements direct native schema-2 TOML admission and the
+shared command catalogue. Historical schema-1 compatibility remains available;
+external binding compilation is not a prerequisite for the new public command.
+Local numerical/help checks do not qualify the Mac ASDF writer; keep the new
+producer unselected until its native Mac and observational gates pass. Native recipe selection
 requires its own Mac ASDF/ownership gate and comparison with the CCD65 pilot.
 An explicit assembly section selects the reference detector for final MEF/QC. Final assembly
 passed the synthetic Mac gate at 6f3eaaf. The per-stage CCD65 pilot passed exact
@@ -46,8 +47,9 @@ The supplied-mask shared-cube path passed its Mac ASDF and CCD65 checks;
 explicit archived-mask omission and new controls still require their affected gates. A supplied BPM skips creation and logs the reason. `--qc true/false`
 overrides the recipe boolean (default true); false suppresses optional BPM
 full-frame QC and MAD without disabling requested linearity measurements.
-Recipe `[preparation] input_bpm` defaults to `archived`; explicit `omitted`
-selects no current mask and enables BPM creation while preserving the historical
+Native schema 2 requires each detector to declare an input BPM calibration path
+or `omitted`. Historical schema 1 retains `[preparation] input_bpm=archived` or
+`omitted` compatibility. Omission enables BPM creation while preserving historical
 archive and master lineage. Previously admitted direct samples stay exact;
 newly admitted samples are reported separately. Do not rewrite archived QC or
 claim unchanged ROI populations after mask omission.
@@ -74,9 +76,9 @@ mefpp user documentation and usage messages describe native Unix commands only.
 A recipe must be runnable directly from its TOML, following the bias example;
 no external interpreter, orchestration package or generated-bindings prerequisite
 may be required of the user. Do not hide an implementation dependency by renaming
-its launcher or merely removing documentation. The current BPM/linearity binding
-compiler is an unfinished interface: native recipe-only admission must replace
-that prerequisite before acceptance. Keep orchestration-specific implementation
+its launcher or merely removing documentation. Native schema-2 admission reads
+the recipe directly; retain the historical binding compiler only for compatibility.
+Qualify the new native interface before acceptance. Keep orchestration-specific implementation
 and test details in their own component documentation.
 
 The public call is `mefpp_recipe cal bpm-linearity --config RECIPE.toml`.
@@ -87,6 +89,23 @@ Help must succeed without configuration or observations and describe supported
 options, defaults, inputs and outputs. Do not show `nice` in the guides. Preserve
 accepted executables/producer identities as compatibility aliases during migration;
 never present the unified interface as complete before it is implemented and tested.
+
+The shared command reserves a place for every existing recipe, including those
+not yet migrated. Its shape is `mefpp_recipe CATEGORY OPERATION`; categories
+currently include `cal` and `sci`. Maintain one native catalogue for dispatch and
+help, covering every operation in `mef_runtime.h`. Pending entries are labelled
+and refuse execution without processing. Adding a catalogue entry does not
+authorize porting that recipe or changing its science.
+
+Develop and validate the individual recipes before implementing the shared
+dependency checker. Finish BPM/linearity first; a catalogue entry does not
+authorize dependency orchestration. Individual recipes validate their direct
+inputs and report absent prerequisites without launching additional recipes.
+The later checker applies to every required calibration: reuse a compatible
+reduced product or plan its reduction from an explicit input list. Resolve all
+requirements, report all missing products/lists, and obtain permission for the
+complete additional reduction plan before execution. See the deferred dependency
+contract in docs/developer/architecture.md. The MFF entry remains pending.
 
 ## Human-readable implementation
 

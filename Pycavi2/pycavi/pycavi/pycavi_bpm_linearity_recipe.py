@@ -130,6 +130,60 @@ def execute(plan):
             stream.write('\n')
 
 
+def read_native_receipt(path):
+    """Read a completed native receipt and ASDFs; no control compiler or images."""
+    import tomllib
+    try:
+        from . import pycavi_linearity_native_archive as archive
+    except ImportError:
+        import pycavi_linearity_native_archive as archive
+    receipt=tomllib.loads(path.read_text())
+    require(receipt['native_recipe_receipt_schema_version']==1 and receipt['status']=='complete' and
+            receipt['input_preservation'] is True and receipt['scientific_acceptance'] is False and
+            receipt['linearity_correction']=='not_applied','Incomplete native receipt')
+    original=Path(receipt['product_root'])
+    def local(name):
+        member=(path.parent/Path(name).relative_to(original)).resolve(strict=True)
+        require(member.is_relative_to(path.parent),'Native receipt member escapes product root')
+        return member
+    saved=[];members=[];sources={};seen=set()
+    revision=receipt['source_revision']
+    for detector in receipt['detectors']:
+        ident=detector['detector_id']
+        require(ident not in seen,'Duplicate native detector');seen.add(ident)
+        require(digest(local(detector['prepared']))==detector['prepared_sha256'],'Native measurement ASDF changed')
+        value=archive.read_product(local(detector['prepared']))
+        require(value['detector']==ident and value['qc_requested'] is receipt['qc'] and
+                value['source_revision']==revision,'Native measurement identity/QC/producer differs')
+        sources.update(value.get('configuration_sources',{}))
+        prep=dict(path=detector['prepared'],sha256=detector['prepared_sha256'])
+        q=None
+        if detector['bpm_skipped']:
+            bpm=dict(state='skipped_measurement_only' if receipt['operation']=='cal.linearity' else 'skipped_input_bpm',
+                input=value['input_bpm'])
+        else:
+            require(digest(local(detector['asdf']))==detector['asdf_sha256'],'Native BPM ASDF changed')
+            q=native.native_qc.read(local(detector['asdf']))
+            definition=q['characterization']['detectors'][0]
+            require(q['provenance']['producer']['source_revision']==revision and definition['detector_id']==ident and
+                    definition['configuration_detector']==detector['configuration_detector'],'Native BPM mapping/producer differs')
+            bpm=dict(fits=detector['fits'],asdf=detector['asdf'],sha256={detector['asdf']:detector['asdf_sha256']})
+        members.append(dict(detector_id=ident,configuration_detector=detector['configuration_detector'],preparation=prep,bpm=bpm))
+        saved.append(dict(detector_id=ident,preparation=value,bpm=q))
+    require(saved,'Empty native receipt')
+    report=dict(schema_version=1,scope='bpm_linearity',status='complete_for_owner_inspection',
+        product_root=str(original),directories=receipt['directories'],created_at=receipt['created_at'],
+        native_source_revision=revision,assembly_source_revision=revision,configuration_sources=sources,
+        detectors=members,final_mef_state=receipt['final_mef_state'],scientific_acceptance=False)
+    product=None
+    if receipt['final_mef_state']=='assembled':
+        require(digest(local(receipt['asdf']))==receipt['asdf_sha256'],'Final native BPM ASDF changed')
+        product=assembly.read_product(local(receipt['asdf']))
+        require(product['detector_products']==[r['bpm'] for r in saved if r['bpm'] is not None], 'Native final detector/QC mapping differs')
+        report['bpm_product']=dict(fits=receipt['fits'],asdf=receipt['asdf'],sha256={receipt['asdf']:receipt['asdf_sha256']})
+    return dict(manifest=report,detectors=saved,bpm_product=product,FITS_integrity_rechecked=False)
+
+
 def read_manifest(path):
     """Verify the joined saved QC only; never open FITS or run an estimator."""
     try:
@@ -137,6 +191,8 @@ def read_manifest(path):
     except ImportError:
         import pycavi_linearity_native_archive as archive
     path = Path(path).resolve(strict=True)
+    if path.suffix=='.toml':
+        return read_native_receipt(path)
     report = json.loads(path.read_text())
     states = [('detector_characterization', 'detector_characterization_complete_for_owner_inspection', 'not_assembled'),
               ('bpm_linearity', 'complete_for_owner_inspection', 'assembled'),

@@ -112,7 +112,8 @@ static int project_roots(mef_bpm_linearity *recipe)
     int okay=0;
     if (!project_path) return 0;
     recipe->project_path=project_path;
-    recipe->project=toml_parse_file_ex(project_path);
+    char *origin=NULL;
+    if(!mef_bpm_linearity_project(project_path,&recipe->project,&origin,NULL,NULL)) return 0;
     free(recipe->orchestration);
     recipe->orchestration=strdup(project_path);
     if (!recipe->orchestration) return 0;
@@ -120,11 +121,13 @@ static int project_roots(mef_bpm_linearity *recipe)
     if (!recipe->project.ok) return 0;
     project=toml_get(recipe->project.toptab,"project");
     roots=toml_get(project,"roots");
-    recipe->raw=resolved(recipe->orchestration,mef_bpm_linearity_string(roots,"raw"));
-    recipe->reduced=resolved(recipe->orchestration,mef_bpm_linearity_string(roots,"output"));
-    recipe->calibration=resolved(recipe->orchestration,mef_bpm_linearity_string(roots,"calibration"));
-    recipe->work=resolved(recipe->orchestration,mef_bpm_linearity_string(roots,"work"));
-    recipe->logs=resolved(recipe->orchestration,mef_bpm_linearity_string(roots,"logs"));
+    *strrchr(origin,'/')=0;
+    recipe->raw=resolved(origin,mef_bpm_linearity_string(roots,"raw"));
+    recipe->reduced=resolved(origin,mef_bpm_linearity_string(roots,"output"));
+    recipe->calibration=resolved(origin,mef_bpm_linearity_string(roots,"calibration"));
+    recipe->work=resolved(origin,mef_bpm_linearity_string(roots,"work"));
+    recipe->logs=resolved(origin,mef_bpm_linearity_string(roots,"logs"));
+    free(origin);
     if (recipe->raw && recipe->reduced && recipe->calibration && recipe->work && recipe->logs) {
         okay=mef_bpm_linearity_below(recipe->calibration,recipe->reduced) &&
             mef_bpm_linearity_below(recipe->work,recipe->reduced) &&
@@ -154,14 +157,29 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
     long length;
     size_t i;
     recipe->diagnostic="Invalid native BPM/linearity recipe or bindings";
-    if ((argc!=7 && argc!=9) || strcmp(argv[1],"cal") || strcmp(argv[2],"bpm-linearity") ||
-        strcmp(argv[3],"--config") || strcmp(argv[5],"--bindings")) {
-        recipe->show_usage=1; return 0;
+    int qc_override=-1;
+    const char *config_path=NULL,*binding_path=NULL;
+    if (argc<5 || strcmp(argv[1],"cal") ||
+        (strcmp(argv[2],"bpm-linearity") && strcmp(argv[2],"linearity"))) {
+        recipe->show_usage=1;return 0;
     }
-    if(argc==9 && (strcmp(argv[7],"--qc") ||
-        (strcmp(argv[8],"true") && strcmp(argv[8],"false")))) {recipe->show_usage=1;return 0;}
-    recipe->recipe_path=resolved(recipe->run->invocation_directory,argv[4]);
-    recipe->bindings_path=resolved(recipe->run->invocation_directory,argv[6]);
+    recipe->measure_only=!strcmp(argv[2],"linearity");
+    for(int arg=3;arg<argc;arg+=2) {
+        if(arg+1==argc) {recipe->show_usage=1;return 0;}
+        if(!strcmp(argv[arg],"--config") && !config_path) config_path=argv[arg+1];
+        else if(!strcmp(argv[arg],"--bindings") && !binding_path) binding_path=argv[arg+1];
+        else if(!strcmp(argv[arg],"--qc") && qc_override<0 &&
+            (!strcmp(argv[arg+1],"true") || !strcmp(argv[arg+1],"false"))) qc_override=!strcmp(argv[arg+1],"true");
+        else {recipe->show_usage=1;return 0;}
+    }
+    recipe->recipe_path=resolved(recipe->run->invocation_directory,config_path);
+    if(!recipe->recipe_path) return 0;
+    if(binding_path) recipe->bindings_path=resolved(recipe->run->invocation_directory,binding_path);
+    else if(!mef_bpm_linearity_compile(recipe->recipe_path,recipe->run->revision,qc_override,
+        &recipe->bindings_path,&recipe->native_files,&recipe->native_file_count,
+        recipe->run->message,sizeof(recipe->run->message))) {
+        recipe->diagnostic=recipe->run->message;return 0;
+    }
     if (!recipe->recipe_path || !recipe->bindings_path) return 0;
     recipe->orchestration=strdup(recipe->recipe_path);
     if (!recipe->orchestration) return 0;
@@ -171,7 +189,7 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
     recipe->document=toml_parse_file_ex(recipe->recipe_path);
     recipe->bindings=toml_parse_file_ex(recipe->bindings_path);
     if (!recipe->document.ok || !recipe->bindings.ok ||
-        !keys(recipe->document.toptab,"|bpm_linearity_recipe_schema_version||project||run||assembly||preparation||bpm||detectors||calibration_bindings||native_recipe||qc|") ||
+        !keys(recipe->document.toptab,"|bpm_linearity_recipe_schema_version||project||run||assembly||preparation||bpm||detectors||calibration_bindings||native_recipe||qc||settings||inputs||identity|") ||
         !project_roots(recipe) ||
         !mef_bpm_linearity_below(recipe->recipe_path,recipe->orchestration) ||
         !mef_bpm_linearity_below(recipe->bindings_path,recipe->orchestration) ||
@@ -181,7 +199,7 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
         if(version.type!=TOML_BOOLEAN) return 0;
         recipe->qc=version.u.boolean;
     }
-    if(argc==9) recipe->qc=!strcmp(argv[8],"true");
+    if(qc_override>=0) recipe->qc=qc_override;
     version=toml_get(recipe->bindings.toptab,"bpm_linearity_bindings_schema_version");
     revision=mef_bpm_linearity_string(recipe->bindings.toptab,"source_revision");
     author_revision=mef_bpm_linearity_string(toml_get(recipe->document.toptab,"native_recipe"),"source_revision");
@@ -189,13 +207,15 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
         mef_bpm_linearity_string(recipe->bindings.toptab,"recipe"));
     i=binding_recipe && !strcmp(binding_recipe,recipe->recipe_path);
     free(binding_recipe);
+    toml_datum_t author_schema=toml_get(recipe->document.toptab,"bpm_linearity_recipe_schema_version");
+    if(author_schema.type==TOML_INT64 && author_schema.u.int64==2) author_revision=recipe->run->revision;
     if (!author_revision || strcmp(author_revision,recipe->run->revision) ||
         !i || version.type!=TOML_INT64 || version.u.int64!=1 || !revision ||
         strcmp(revision,recipe->run->revision) || !keys(recipe->bindings.toptab,
             "|bpm_linearity_bindings_schema_version||source_revision||recipe||dependencies||directories||copies||detectors|")) return 0;
     version=toml_get(recipe->document.toptab,"bpm_linearity_recipe_schema_version");
     relative=mef_bpm_linearity_string(recipe->document.toptab,"run");
-    if (version.type!=TOML_INT64 || version.u.int64!=1 || !relative || relative[0]=='/' ||
+    if (version.type!=TOML_INT64 || (version.u.int64!=1 && version.u.int64!=2) || !relative || relative[0]=='/' ||
         !(recipe->output=resolved(recipe->reduced,relative)) ||
         !mef_bpm_linearity_below(recipe->output,recipe->reduced)) return 0;
     recipe->reference_detector=mef_bpm_linearity_string(toml_get(recipe->document.toptab,"assembly"),"reference_detector");
@@ -240,6 +260,13 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
         dependency->sha256=mef_bpm_linearity_string(row,"sha256");
         if (!dependency->path || !dependency->sha256 || strlen(dependency->sha256)!=64 ||
             strspn(dependency->sha256,"0123456789abcdef")!=64) return 0;
+        if(recipe->native_files) {
+            size_t match;
+            for(match=0;match<recipe->native_file_count;++match)
+                if(!strcmp(recipe->native_files[match].path,dependency->path)) break;
+            if(match==recipe->native_file_count || strcmp(recipe->native_files[match].digest,dependency->sha256)) return 0;
+            dependency->identity=recipe->native_files[match].identity;
+        }
     }
     recipe->dependencies[recipe->dependency_count-1].path=strdup(recipe->bindings_path);
     recipe->dependencies[recipe->dependency_count-1].sha256=recipe->bindings_sha256;
@@ -252,12 +279,11 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
 
 void mef_bpm_linearity_usage(void)
 {
-    fputs("Usage: mefpp_bpm_linearity_recipe cal bpm-linearity --config RECIPE.toml --bindings NATIVE.toml [--qc true|false]\n"
+    fputs("Usage: mefpp_recipe cal bpm-linearity --config RECIPE.toml [--qc true|false]\n"
         "  --config     Required authoring recipe; references project.toml.\n"
-        "  --bindings   Required frozen native control file (current limitation).\n"
         "  --qc         Override recipe qc; default true when both are omitted.\n"
         "  --help       Show this message without processing.\n"
-        "Run from orchestration with niceness >=10 and a fresh empty reduced run.\n"
+        "Run from orchestration with a fresh empty reduced run.\n"
         "Recipe [preparation] input_bpm: archived (default) or omitted.\n"
         "Recipe [bpm] response_low=0.5, response_high=1.5; require 0 < low < high.\n"
         "Response at either limit is flagged; supplied BPM skips candidate creation.\n"
@@ -276,6 +302,8 @@ void mef_bpm_linearity_destroy(mef_bpm_linearity *recipe)
     }
     if (recipe->dependencies) for (i=0; i<recipe->dependency_count; ++i) free(recipe->dependencies[i].path);
     free(recipe->detectors); free(recipe->dependencies);
+    for(i=0;i<recipe->native_file_count;++i) free(recipe->native_files[i].path);
+    free(recipe->native_files);
     free(recipe->recipe_path); free(recipe->recipe_source); free(recipe->bindings_path); free(recipe->project_path);
     free(recipe->raw); free(recipe->orchestration); free(recipe->reduced);
     free(recipe->calibration); free(recipe->work); free(recipe->logs); free(recipe->output); free(recipe->receipt);

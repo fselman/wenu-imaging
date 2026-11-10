@@ -17,6 +17,12 @@ typedef struct {
 } mef_bpm_linearity_dependency;
 
 typedef struct {
+    char *path;
+    char digest[65];
+    struct stat identity;
+} mef_bpm_linearity_frozen;
+
+typedef struct {
     const char *detector_id;
     size_t configuration_detector;
     char **preparation_argv, **bpm_argv;
@@ -40,8 +46,15 @@ typedef struct {
     mef_bpm_linearity_detector *detectors;
     mef_bpm_linearity_dependency *dependencies;
     size_t detector_count, dependency_count;
-    int show_usage, qc;
+    mef_bpm_linearity_frozen *native_files;
+    size_t native_file_count;
+    int show_usage, qc, measure_only;
 } mef_bpm_linearity;
+
+int mef_bpm_linearity_project(const char *,toml_result_t *,char **,
+    int (*)(void *,const char *),void *);
+int mef_bpm_linearity_compile(const char *,const char *,int,char **,
+    mef_bpm_linearity_frozen **,size_t *,char *,size_t);
 
 void mef_bpm_linearity_initialize(mef_bpm_linearity *, mef_recipe_run *);
 int mef_bpm_linearity_prepare(mef_bpm_linearity *, int, char **);

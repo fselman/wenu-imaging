@@ -323,6 +323,68 @@ mef_status mef_config_dump(const mef_config *config, FILE *stream)
     return ferror(stream) ? MEF_ERR_IO : MEF_OK;
 }
 
+mef_status mef_config_response_toml(const mef_config *config,FILE *stream,double low,double high)
+{
+    int i,j;
+    char key[80];
+    const mef_detector_config *d;
+    const mef_processing_policy *p;
+    if(!config || !stream || !(low>0) || !(low<high) || high>FLT_MAX ||
+        !((float)low>0) || !((float)low<(float)high)) return MEF_ERR_CONFIG;
+    fputs("schema_version = 1\n[native]\n",stream);
+#define TOML_KEY(key) json_string(stream,key);fputs(" = ",stream);
+#define MEF_STRING(member,key) TOML_KEY(key) json_string(stream,config->member);fputc('\n',stream);
+#define MEF_INT(member,key) TOML_KEY(key) fprintf(stream,"%d\n",config->member);
+#define MEF_FLOAT(member,key) TOML_KEY(key) fprintf(stream,"%#.17g\n", \
+    !strcmp(key,"MEF.BPM.LGAINTHR")?(double)(float)low: \
+    !strcmp(key,"MEF.BPM.HGAINTHR")?(double)(float)high:(double)config->member);
+#define MEF_DOUBLE(member,key) TOML_KEY(key) fprintf(stream,"%#.17g\n",config->member);
+#include "mef_config_fields.def"
+#undef MEF_STRING
+#undef MEF_INT
+#undef MEF_FLOAT
+#undef MEF_DOUBLE
+    for(i=0;i<config->nchips;++i) {
+        d=config->detectors+i;
+        for(j=0;j<2;++j) {
+            sprintf(key,"MEF.PRESCAN.X.%s.CHIP%d",j?"MAX":"MIN",i+1);
+            TOML_KEY(key) fprintf(stream,"%d\n",d->prescan_x[j]);
+            sprintf(key,"MEF.OVERSCAN.X.%s.CHIP%d",j?"MAX":"MIN",i+1);
+            TOML_KEY(key) fprintf(stream,"%d\n",d->overscan_x[j]);
+        }
+        for(j=0;j<4;++j) {
+            sprintf(key,"MEF.CROP.%s.CHIP%d",j==0?"X.MIN":j==1?"X.MAX":j==2?"Y.MIN":"Y.MAX",i+1);
+            TOML_KEY(key) fprintf(stream,"%d\n",d->trimreg[j]);
+        }
+#define DET_TOML(member,name) sprintf(key,name ".CHIP%d",i+1);TOML_KEY(key) fprintf(stream,"%#.17g\n",(double)d->member);
+        DET_TOML(ron,"MEF.CCD.RON") DET_TOML(gain,"MEF.CCD.GAIN")
+        DET_TOML(crval1,"MEF.CRVAL1") DET_TOML(crval2,"MEF.CRVAL2")
+        DET_TOML(crpix1,"MEF.CRPIX1") DET_TOML(crpix2,"MEF.CRPIX2")
+#undef DET_TOML
+    }
+    p=&config->processing;
+    if(p->median_even_supplied) {
+        TOML_KEY("MEF.BIAS.MEDIAN.EVEN.HANDLING")
+        json_string(stream,p->median_even_handling==MEDIAN_EVEN_LOWER?"lower":"average");fputc('\n',stream);
+    }
+    if(p->bpm.supplied) {
+        TOML_KEY("BPM.ENCODING") json_string(stream,p->bpm.encoding==MEF_BPM_REASON8?"reason8":"binary");fputc('\n',stream);
+        TOML_KEY("BPM.BAD_WHEN") json_string(stream,p->bpm.bad_when_nonzero?"nonzero":"zero");fputc('\n',stream);
+        if(p->bpm.encoding==MEF_BPM_REASON8) {
+            TOML_KEY("BPM.REJECT_BITS") fprintf(stream,"%u\n",p->bpm.reject_bits);
+            TOML_KEY("BPM.REGISTRY") json_string(stream,p->bpm.registry);fputc('\n',stream);
+        }
+    }
+    if(p->ron_clip_supplied) {
+        TOML_KEY("QC.RON.CLIP.ENABLED") fprintf(stream,"%d\n",p->ron_clip_enabled);
+        TOML_KEY("QC.RON.CLIP.LOW") fprintf(stream,"%#.17g\n",p->ron_clip_low);
+        TOML_KEY("QC.RON.CLIP.HIGH") fprintf(stream,"%#.17g\n",p->ron_clip_high);
+        TOML_KEY("QC.RON.CLIP.MAX_ITERATIONS") fprintf(stream,"%d\n",p->ron_clip_max_iterations);
+    }
+#undef TOML_KEY
+    return ferror(stream)?MEF_ERR_IO:MEF_OK;
+}
+
 /* Copy only the settings required by the bias operation. */
 /* Selected-detector owned bridge for existing bias header helpers. Do not
  * construct a PAF or reload settings when the source is a TOML snapshot. */

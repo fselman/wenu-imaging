@@ -4,7 +4,7 @@
 
 #include "mef_bias.h"
 
-int main(int argc, char **argv)
+int mef_bias_command(int argc, char **argv)
 {
     mef_recipe_run run;
     mef_bias recipe;
@@ -58,3 +58,10 @@ finish:
     mef_bias_destroy(&recipe);
     return succeeded ? EXIT_SUCCESS : EXIT_FAILURE;
 }
+
+#ifndef MEFPP_RECIPE_ENTRY_LIBRARY
+int main(int argc, char **argv)
+{
+    return mef_bias_command(argc, argv);
+}
+#endif

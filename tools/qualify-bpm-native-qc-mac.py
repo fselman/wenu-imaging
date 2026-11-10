@@ -449,7 +449,7 @@ def main():
             require(not path.is_symlink(), 'Unexpected cached assembly symlink')
             assembly_before[path] = (path.read_bytes(), path.stat().st_mode & 0o777) if path.exists() else None
     if args.native_recipe:
-        for name in ('mefpp_bpm_linearity_recipe', 'recipe_file_hash_probe', 'bpm_service_probe'):
+        for name in ('mefpp_recipe', 'mefpp', 'mefpp_bpm_linearity_recipe', 'recipe_file_hash_probe', 'bpm_service_probe'):
             path = build/'mefpp2'/name
             assembly_before[path] = (path.read_bytes(), path.stat().st_mode & 0o777) if path.exists() else None
     try:
@@ -462,7 +462,9 @@ def main():
         run([cmake,'-S',source,'-B',build,'-DMEFPP_BUILD_BIAS_RECIPE=ON',
              '-DMEFPP_SOURCE_REVISION='+args.revision], 'candidate-configure',checkout)
         if args.native_recipe:
-            run([cmake,'--build',build,'--parallel','2','--target','mefpp_bpm_linearity_recipe','recipe_file_hash_probe','bpm_service_probe'], 'native-recipe-build',checkout)
+            run([cmake,'--build',build,'--parallel','2','--target','mefpp_recipe','mefpp','mefpp_bpm_linearity_recipe','recipe_file_hash_probe','bpm_service_probe'], 'native-recipe-build',checkout)
+            for name in ('mefpp_recipe', 'mefpp'):
+                shutil.copy2(build/'mefpp2'/name,candidate/name)
             shutil.copy2(build/'mefpp2/mefpp_bpm_linearity_recipe',candidate/'mefpp_bpm_linearity_recipe')
             shutil.copy2(build/'mefpp2/recipe_file_hash_probe',candidate/'recipe_file_hash_probe')
             shutil.copy2(build/'mefpp2/bpm_service_probe',candidate/'bpm_service_probe')
@@ -512,6 +514,9 @@ def main():
         require(all((source/name).read_bytes()==value if value is not None else not (source/name).exists()
                     for name,value in originals.items()), 'Source restoration differs')
         require({name:sha(Path(name)) for name in guards}==guards, 'Protected producer/configuration changed')
+        require(all((path.read_bytes()==before[0] and path.stat().st_mode & 0o777 == before[1])
+                    if before else not path.exists() for path,before in assembly_before.items()),
+                'Cached recipe/help/probe executable restoration differs')
         require(cache.read_bytes()==cached and (adapter.read_bytes() if adapter.exists() else None)==adapter_before,
                 'Cache/adapter restoration differs')
         if args.linearity:
@@ -542,7 +547,10 @@ def main():
             'pycavi_linearity_recipe','pycavi_linearity_preparation_qc','pycavi_linearity_native_archive','pycavi_native_product_qc',
             'pycavi_configuration','pycavi_calibration_bindings')]
     if args.native_recipe:
-        required += ['Pycavi2/tests/bpm_linearity_recipe_contract.py', 'tools/run-bpm-linearity.py',
+        required += ['Pycavi2/tests/bpm_linearity_recipe_contract.py',
+                     'Pycavi2/tests/bpm_linearity_native_contract.py',
+                     'mefpp2/ins/mef/common/mef_recipe_catalogue.def',
+                     'mefpp2/ins/mef/common/mef_runtime.h', 'tools/run-bpm-linearity.py',
                      'mefpp2/tests/recipe_file_hash_contract.py',
                      'mefpp2/tests/bpm_assembly_native_contract.py', 'mefpp2/tests/mef_assembly_contract.py']
         required += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
@@ -554,6 +562,10 @@ def main():
     orchestration.mkdir(); reduced.mkdir()
     import sys
     if args.native_recipe:
+        run([candidate/'mefpp', '--help'], 'top-level-help-check', orchestration)
+        run([args.asdf_python, validation/'Pycavi2/tests/bpm_linearity_native_contract.py',
+             '--command', candidate/'mefpp_recipe', '--source-revision', args.revision,
+             '--work-parent', reduced], 'native-toml-recipe-checks', orchestration)
         run([args.asdf_python, validation/'mefpp2/tests/recipe_file_hash_contract.py',
             '--probe', candidate/'recipe_file_hash_probe', '--work-parent', reduced],
             'recipe-file-identity-checks', orchestration)
@@ -573,8 +585,10 @@ def main():
         require({name:sha(Path(name)) for name in guards}==guards, 'Protected files changed')
         (candidate/'candidate.json').write_text(json.dumps(dict(successful=True,
             source_revision=args.revision, observations_opened=False,
-            executable=str(candidate/'mefpp_bpm_linearity_recipe'),
-            sha256=sha(candidate/'mefpp_bpm_linearity_recipe'), protected_files=guards),indent=2)+'\n')
+            executable=str(candidate/'mefpp_recipe'),
+            sha256=sha(candidate/'mefpp_recipe'),
+            compatibility_executable=str(candidate/'mefpp_bpm_linearity_recipe'),
+            protected_files=guards),indent=2)+'\n')
         print('PASS: shared cube, robust BPM kernel, supplied-mask skip, QC on/off and independent native ASDF readers',flush=True)
         print('CANDIDATE DIRECTORY:',candidate,flush=True)
         return
