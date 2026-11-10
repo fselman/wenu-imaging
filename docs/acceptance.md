@@ -38,28 +38,27 @@ file-integration fixtures use this same separation. Pure numerical unit checks
 may use in-memory arrays. The native linearity-preparation command case exercises
 this layout with preserved input fingerprints and unchanged analytical expectations.
 
-The preparation entry point accepts a recipe envelope through
-`tools/prepare-linearity.py --config bpm-linearity.toml --execute`.
-Copy [the example](../config/recipes/omegacam-bpm-linearity.example.toml) into
-orchestration and reference the existing project TOML there. The shared project
-reader owns includes, validation and relative root resolution. The recipe repeats
-no directory roots: project `raw` supplies observations, `calibration` supplies
-read-only dependencies under reduced/cal, and `output` is the reduced root.
-Project `work` and `logs` must lie below output. The project TOML's containing
-directory is orchestration. The recipe's `run` is relative to project output;
-its other file references are relative to the recipe. Generated native controls
-go in orchestration/<run-name>; the native subprocess runs from orchestration.
-Private measurements and logs go below the declared work/log roots, while the
-ASDF product and execution receipt stay in the output run. Project/include and
-recipe hashes are checked throughout execution and recorded in the receipt.
-Reusing either run or control directory is refused. This entry point still prepares
-one detector from an existing sample archive and master; it does not yet provide
-the complete native BPM/linearity characterization lifecycle. Legacy explicit
-arguments remain available for retained controllers during migration.
+The public BPM/linearity contract is
+`mefpp_recipe cal bpm-linearity --config RECIPE.toml [--qc true|false]`.
+The native command must admit the recipe/project/settings/ordered inputs directly,
+without a separate preparation command or generated-bindings prerequisite. The
+current feature branch does not yet meet that interface; do not describe the
+OCAM/WFI authoring templates as standalone runnable recipes before it does.
+Project TOML owns roots and relative resolution; its directory is orchestration.
+The recipe's `run` is relative to reduced. Controls remain in orchestration;
+products, receipts, work and logs stay below their declared reduced roots.
+
+Acceptance includes help with no files or processing: `mefpp --help`,
+`mefpp_recipe cal --help`, and operation help for `bias`, `linearity` and
+`bpm-linearity`. Help must identify inputs, options, defaults and outputs. Then
+check direct recipe execution from orchestration, fresh-output refusal, input
+preservation, supplied-mask skip, both QC modes, one ingest/correction per detector
+plane, and independent FITS/ASDF comparison. Reuse passed saved-product evidence;
+repeat numerical reductions only for affected behavior or unresolved differences.
 
 The existing native `cal bpm` adapter can publish through the same C ASDF writer
 as bias when built with the retained libasdf option. `--native-asdf` selects a
-sidecar sharing the final FITS basename and replaces the Python completion step;
+sidecar sharing the final FITS basename without downstream completion;
 `--qc-record` remains available for retained controllers. Its primary BPM image
 and diagnostic HDUs are preserved. Typed common QC retains original input/HDU
 order, participation and available/unavailable statistics; the complete existing
@@ -70,8 +69,9 @@ to one detector, while the MEF mapping contract remains unchanged.
 excluded frames, reason-bit/binary/omitted priors, MAD off and immutable inputs.
 The optional `bpm_native_asdf_probe` and `bpm_native_qc_contract.py --asdf-python
 ... --adapter ...` additionally exercise the existing library writer and production
-CLI with an independent reader. This library-backed gate is pending Mac execution;
-the linearity-preparation archive and complete combined recipe are not yet ported. The retained-cache Mac
+CLI with an independent reader. Focused native ASDF and supplied-mask CCD65
+checks have passed on Mac; standalone native admission and new controls still
+require their affected gates. The retained-cache Mac
 qualification helper is `tools/qualify-bpm-native-qc-mac.py`; it refuses unknown
 cached source edits, restores source/cache/adapter before testing private candidates,
 and leaves the selected bias producer and launchers unchanged.

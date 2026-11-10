@@ -39,5 +39,11 @@ support is explicit, limited to one detector, and does not relax MEF validation.
 
 Recipe entry-point filenames under `recipes/` and their specific C helper
 filenames, types and routines omit redundant `_recipe` (for example,
-`mefpp_bias.c`, `mef_bias_config.c` and `mef_bias_prepare()`). Existing executable
-names and producer identifiers remain compatibility contracts.
+`mefpp_bias.c`, `mef_bias_config.c` and `mef_bias_prepare()`). The public executable is `mefpp_recipe`, selecting `cal bias`, `cal linearity`
+or `cal bpm-linearity`. Retain existing executable aliases and stored producer
+identifiers during migration. Native recipe admission reads `--config RECIPE.toml`
+and referenced project/settings/input files directly; no external preparation or
+generated-bindings prerequisite is part of the user interface. Top-level,
+calibration and operation help must work without configuration or processing.
+Keep the guide concise, begin with an executive summary, and document native
+commands, options, defaults and outputs without `nice`.

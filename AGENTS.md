@@ -2,8 +2,8 @@
 
 ## Scope and current state
 
-Pycavi coordinates astronomical reduction; mefpp performs native processing with
-bundled qfits/Eclipse. Work in this monorepo, not the historical component repos.
+mefpp provides standalone native recipes with bundled qfits/Eclipse.
+Pycavi is an optional workflow client, not a recipe runtime dependency. Work in this monorepo, not the historical component repos.
 Use C17 for current native development. Intel Mac is the current qualification
 host; retain CentOS 7/Chapman compatibility. Do not upgrade dependencies implicitly.
 
@@ -16,9 +16,10 @@ Preserve the previous 36381892 executable/cache and the b833aca7 backup.
 Native BPM and linearity preparation publish through the shared C ASDF writer.
 The native BPM/linearity recipe mirrors the bias lifecycle and calls the
 existing preparation/BPM services in process, then joins their final MEF/QC.
-Pycavi admits historical metadata, authors frozen bindings, invokes one native
-recipe and independently reads its products. Select either the native_recipe
-TOML form or the retained per-stage form, never both. Native recipe selection
+The feature branch currently admits historical metadata and compiles bindings
+outside the native command. This is an unfinished implementation, not the agreed
+architecture: replace that prerequisite with native recipe-only admission.
+Preserve historical evidence and compatibility during this correction. Native recipe selection
 requires its own Mac ASDF/ownership gate and comparison with the CCD65 pilot.
 An explicit assembly section selects the reference detector for final MEF/QC. Final assembly
 passed the synthetic Mac gate at 6f3eaaf. The per-stage CCD65 pilot passed exact
@@ -41,8 +42,8 @@ correct each detector image plane once into one owned processed cube; optionally
 create/publish its robust-fit BPM and measured QC; then measure linearity/ROIs
 from that same cube before release. Raw-only evidence is captured during ingestion.
 Downstream services borrow processed planes without input I/O or reprocessing.
-The feature branch implements the shared-cube path; its selected-Mac ASDF gate
-is pending. A supplied BPM skips creation and logs the reason. `--qc true/false`
+The supplied-mask shared-cube path passed its Mac ASDF and CCD65 checks;
+explicit archived-mask omission and new controls still require their affected gates. A supplied BPM skips creation and logs the reason. `--qc true/false`
 overrides the recipe boolean (default true); false suppresses optional BPM
 full-frame QC and MAD without disabling requested linearity measurements.
 Recipe `[preparation] input_bpm` defaults to `archived`; explicit `omitted`
@@ -59,6 +60,14 @@ pair-quality criteria or repeat completed detector work to bypass the failure.
 Directory reorganization is deferred until BPM/linearity development is finished.
 Keep the current file locations during scientific/processing development.
 
+## Before proposing or changing work
+
+Read this file, docs/developer/architecture.md and docs/developer/roadmap.md before
+proposing or implementing a project change. Read the affected recipe's design and
+guide as well. Check these against the owner's decisions in the current session;
+resolve superseded/conflicting text explicitly rather than treating it as authority
+to change the agreed model. Update current documents together when decisions change.
+
 ## Native recipe interface
 
 mefpp user documentation and usage messages describe native Unix commands only.
@@ -69,6 +78,15 @@ its launcher or merely removing documentation. The current BPM/linearity binding
 compiler is an unfinished interface: native recipe-only admission must replace
 that prerequisite before acceptance. Keep orchestration-specific implementation
 and test details in their own component documentation.
+
+The public call is `mefpp_recipe cal bpm-linearity --config RECIPE.toml`.
+Use the same native command family for bias and linearity. Required help levels:
+`mefpp --help`, `mefpp_recipe cal --help`, and
+`mefpp_recipe cal OPERATION --help` for `bias`, `linearity` and `bpm-linearity`.
+Help must succeed without configuration or observations and describe supported
+options, defaults, inputs and outputs. Do not show `nice` in the guides. Preserve
+accepted executables/producer identities as compatibility aliases during migration;
+never present the unified interface as complete before it is implemented and tested.
 
 ## Human-readable implementation
 
@@ -123,8 +141,9 @@ synthetic from real-data checks, and prepared commands from observed success.
 Raw observations are read-only. Keep raw, orchestration and product directories
 separate; use fresh output directories and preserve accepted reference products.
 Project TOML owns shared directory roots; recipes reference it rather than
-redeclaring raw, calibration, output, work or log roots. Reuse the existing project
-composition reader and its relative-path rules. The project TOML resides in
+redeclaring raw, calibration, output, work or log roots. Native project admission
+must preserve the shared composition contract and its relative-path rules; an
+optional client must not be required to resolve the project first. The project TOML resides in
 orchestration, output maps to reduced, and calibration/work/logs remain below it.
 Run recipe tests with their working directory in orchestration. Keep configurations,
 lists and requests there, observational inputs in raw, and products, logs, private
