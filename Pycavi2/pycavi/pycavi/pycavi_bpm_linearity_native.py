@@ -12,7 +12,7 @@ except ImportError:
 require = preparation.require
 
 
-def characterize_bpm(plan, entry, destination, started, inputs):
+def bpm_request(plan, entry, destination, started, *, deferred_directories=None):
     d, detector = entry['dependencies'], entry['detector']
     selection, policy = d['selection'], plan['bpm']
     controls = Path(plan['layout']['orchestration'])/entry['key']/'bpm'
@@ -20,7 +20,10 @@ def characterize_bpm(plan, entry, destination, started, inputs):
     logs = Path(plan['layout']['logs'])/entry['key']/'bpm'
     products = destination/'bpm'
     for path in (controls, work, logs, products):
-        path.mkdir(parents=True)
+        if path == controls or deferred_directories is None:
+            path.mkdir(parents=True)
+        else:
+            deferred_directories.append(str(path))
     (controls/'native.toml').write_text(d['configuration'])
     pairs, lines = {}, []
     for row in selection['flat']:
@@ -52,6 +55,13 @@ def characterize_bpm(plan, entry, destination, started, inputs):
         argv += ['--bpm-good-value', str(bpm['good_value'])]
     else:
         argv += ['--bpm-registry', bpm['registry']]
+    return argv, fits, sidecar, log, logs
+
+
+def characterize_bpm(plan, entry, destination, started, inputs):
+    d = entry['dependencies']
+    products = destination/'bpm'
+    argv, fits, sidecar, log, logs = bpm_request(plan, entry, destination, started)
     receipt = dict(status='failed', argv=argv, batch_preservation=inputs.reference)
     try:
         for name in d['baseline']:
@@ -65,7 +75,7 @@ def characterize_bpm(plan, entry, destination, started, inputs):
         receipt.update(status='complete_pending_batch_preservation', files={
             str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in (fits, sidecar, log)})
         return dict(fits=str(fits), asdf=str(sidecar), log=str(log), sha256=receipt['files'],
-                    original_flat_indices=[row['index'] for row in selection['flat']])
+                    original_flat_indices=[row['index'] for row in d['selection']['flat']])
     except Exception as error:
         receipt['error'] = repr(error)
         raise

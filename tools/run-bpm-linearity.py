@@ -30,7 +30,11 @@ def main():
     current = os.getpriority(os.PRIO_PROCESS, 0)
     if current < 10:
         os.nice(10-current)
-    report = recipe.execute(plan)
+    if plan['native_recipe'] is not None:
+        from pycavi_bpm_linearity_native_recipe import execute
+        report = execute(plan)
+    else:
+        report = recipe.execute(plan)
     print('BPM_LINEARITY:', report['status'], flush=True)
     print('MANIFEST:', Path(plan['run'])/'manifest.json', flush=True)
 

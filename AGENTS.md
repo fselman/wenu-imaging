@@ -14,10 +14,16 @@ Both WFI/OCAM launchers select main-bias-jk_5noln/mefpp_bias_recipe under the
 retained mac-standalone-bias-SP3Cgdhb build root, with full QC and MAD off.
 Preserve the previous 36381892 executable/cache and the b833aca7 backup.
 Native BPM and linearity preparation publish through the shared C ASDF writer.
-The serial coordinator joins detector characterization products. An explicit
-assembly section publishes a native final BPM MEF and matching QC. That C path
-passed the synthetic Mac gate at 6f3eaaf; observational/viewer acceptance remains
-pending. Historical calibrations may be bound to byte-identical copies under
+The native BPM/linearity recipe mirrors the bias lifecycle and calls the
+existing preparation/BPM services in process, then joins their final MEF/QC.
+Pycavi admits historical metadata, authors frozen bindings, invokes one native
+recipe and independently reads its products. Select either the native_recipe
+TOML form or the retained per-stage form, never both. Native recipe selection
+requires its own Mac ASDF/ownership gate and comparison with the CCD65 pilot.
+An explicit assembly section selects the reference detector for final MEF/QC. Final assembly
+passed the synthetic Mac gate at 6f3eaaf. The per-stage CCD65 pilot passed exact
+saved-product checks and visual plot inspection; the new in-process recipe is
+not yet Mac-qualified or selected. Historical calibrations may be bound to byte-identical copies under
 reduced/cal through explicit recipe source/path/SHA256 entries. Preserve original
 ASDF/handoff records and verify copied bytes against their frozen fingerprints. Reuse the existing
 numerical services and recipe directory contract.

@@ -11,9 +11,10 @@
 \maketitle
 \section*{Scope and configuration}
 This guide describes the preparation kernels and their FITS/recipe/ASDF
-integration. The kernel passed its actual Mac gate. The new integration
-requires focused Mac qualification; real corrected ROI products and physical
-calibration acceptance remain pending. The reviewed design is
+integration. The numerical kernels and native publication passed their Mac gates. The CCD65
+pilot passed exact saved-payload/direct-sample checks and visual plot inspection.
+The new in-process recipe coordinator still requires its own focused Mac gate
+and an observational comparison; physical calibration acceptance is separate. The reviewed design is
 in the developer design directory:\par
 \texttt{linearity-preparation-overscan-asdf-v1.md}.
 
@@ -217,7 +218,8 @@ it does not merge incompatible calibration populations.
 
 \newpage
 \section*{Final BPM MEF and QC publication}
-The native entry point is \texttt{mefpp\_bpm\_assemble}. It consumes only the
+The standalone assembly command is \texttt{mefpp\_bpm\_assemble}; the native
+recipe reuses its shared C services in process. It consumes only the
 completed detector FITS/ASDF artifacts; it never reads raw frames or repeats
 characterization. The routine \texttt{mef\_bpm\_mef\_assemble} shares the bias
 assembler's bounded byte copier and exclusive sibling-file publication. The
@@ -265,5 +267,98 @@ reduction. A conflicting fingerprint is refused, never adopted as a new baseline
 after relocation, without FITS pixels or native commands. FITS integrity rechecking
 is explicitly false for this metadata reader; independent image comparison remains
 necessary. The C publication path passed its synthetic Mac gate at revision
-\texttt{6f3eaaf}. Observational acceptance and Viewer integration remain pending.
+\texttt{6f3eaaf}. The CCD65 saved-product inspection and Viewer plots have since passed owner
+inspection; extension to the full detector cohort remains pending.
+
+
+\newpage
+\hypertarget{native-recipe}{}
+\section*{Native recipe: structure and ownership}
+The native entry point is
+\texttt{mefpp2/ins/mef/recipes/mefpp\_bpm\_linearity\_recipe.c}.
+Like \texttt{mefpp\_bias\_recipe.c}, its visible order is initialize/start,
+prepare/admit/begin, serial detector loop, verify/publish/complete, and one
+failure/report/destruction path. Both use \texttt{mef\_recipe\_run}; the recipe
+owns no all-detector image cube. There are no new estimators or changed
+populations in this migration.
+
+The authoring TOML selects one \texttt{native\_recipe} executable and exact
+source revision. The assembly table selects the reference detector; child
+executables are not configured in this form. The original per-stage form remains
+supported for retained records. Mixing the two execution forms is refused.
+Project TOML remains the sole owner of shared directory roots.
+
+Pycavi admits historical ASDF dependencies, calibration-copy fingerprints,
+detector/processing controls and reference ROI names before processing. It
+freezes explicit native bindings in orchestration; staged archive metadata
+remains below reduced/work until C copies it into the final product tree. Those bindings contain the
+existing native argument contracts, metadata-copy declarations and unique
+source paths with SHA256 identities. They do not introduce alternative
+scientific settings. Native execution is one command:
+\begin{quote}\small\ttfamily
+mefpp\_bpm\_linearity\_recipe cal bpm-linearity\par
+--config RECIPE.toml --bindings NATIVE.toml
+\end{quote}
+Given admitted bindings, this command runs without Pycavi, Python or a shell.
+Historical archive-graph resolution remains a metadata-authoring step.
+
+\texttt{prepare} reads the authoring recipe/project/bindings and expands only the
+single captured start timestamp. The existing BPM handoff retains whole-second
+precision derived from that same instant; it samples no second clock. \texttt{admit} checks roots, detector order,
+master/prior consistency, fresh destinations, niceness and source fingerprints.
+\texttt{begin} creates output/work/log directories and copies frozen metadata,
+without copying raw images. \texttt{process} calls the existing native preparation
+and BPM functions in process. Each service releases its image owners before the
+next stage/detector. The same master and prior remain fixed. \texttt{verify}
+requires complete detector artifacts. \texttt{publish} reuses the final FITS
+copier and native QC join described above, then verifies source bytes again.
+No scientific result is recalculated during assembly or saved reading.
+
+Shared inputs are hashed once before and once after the complete batch; between
+stages only device/inode/size/mode/nanosecond-mtime identity is checked. The final
+content check also detects restored-timestamp edits. SHA256 uses the standard
+FIPS 180-4 construction with a 64 KiB read buffer. On macOS the system
+\href{https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/CC_SHA256_Update.3cc.html}{CommonCrypto incremental SHA256 API}
+is used; other hosts retain the portable implementation, with the same known-answer
+checks. This avoids replacing the Mac hash provider with a scalar C implementation. Exact output hashes are stored
+in \texttt{native-recipe.toml}. A successful receipt also records measurement-only
+state and input preservation; command success additionally requires zero exit.
+Failed work remains available. Pycavi independently reads native ASDF and checks
+its settings/bindings before writing the familiar combined manifest; it does not
+complete or publish QC.
+
+\newpage
+\section*{Native recipe source map}
+Stable comment landmarks connect the entry point and C helpers to this section.
+Helpers live under \path{mefpp2/ins/mef/common/}.
+\begin{enumerate}
+\item \texttt{BPM-LINEARITY-ADMISSION}.\par
+Sources: \path{mef_bpm_linearity_recipe_config.c},
+\path{mef_bpm_linearity_recipe_inputs.c} and
+\path{mef_bpm_linearity_recipe_bindings.c}. They admit roots, detector bindings,
+frozen dependencies and raw/calibration transport paths. Preparation and BPM
+must use the same ordered flat paths/HDUs and native configuration.
+\item \texttt{BPM-LINEARITY-DETECTOR-LOOP}.\par
+The entry point calls \path{mef_bpm_linearity_recipe_process.c} serially,
+keeping preparation before candidate characterization.
+\item \texttt{BPM-LINEARITY-MEASUREMENTS}.\par
+The process helper calls \path{mef_linearity_prepare_command}. Row correction
+and statistics remain in the preparation/files/pairs kernels mapped earlier.
+\item \texttt{BPM-LINEARITY-CANDIDATE}.\par
+The same helper calls \path{mef_bpm_command}. Fitting remains in
+\path{mef_cal_bpm.c} and \path{detector_response.c}.
+\item \texttt{BPM-LINEARITY-PUBLICATION}.\par
+The entry point calls \path{mef_bpm_linearity_recipe_products.c}:
+final MEF assembly and the unchanged native ASDF join.
+\item \texttt{BPM-LINEARITY-PRESERVATION}.\par
+The products helper and \path{mef_bpm_linearity_recipe_hash.c} check streaming
+identities and publish the exclusive completion receipt.
+\end{enumerate}
+The Python metadata/call boundary is
+\texttt{pycavi\_bpm\_linearity\_native\_recipe.py}; it contains no detector-stage
+execution loop. The focused Mac qualifier builds only the coordinator and runs
+one small synthetic complete recipe with independent ASDF/schema/value checks.
+Local numerical/FITS checks with a labelled test writer do not qualify native
+ASDF or observational behavior. Those gates remain mandatory before selection.
+
 \end{document}

@@ -1,4 +1,4 @@
-# Serial detector characterization with native final BPM MEF publication.
+# Native serial BPM/linearity recipe; Pycavi admits archived metadata only.
 # Copy into orchestration and fill the explicit admitted dependency paths.
 # Run there: python /path/to/tools/run-bpm-linearity.py --config bpm-linearity.toml
 # Add --execute only after reviewing the metadata plan. The reduced run must be
@@ -7,15 +7,11 @@ bpm_linearity_recipe_schema_version = 1
 project = "project.toml"
 run = "cal/bpm-linearity/run-001"
 
-[native]
-bpm = "/path/to/qualified/mefpp_m5"
-preparation = "/path/to/qualified/mefpp_linearity_prepare_command"
-source_revision = "REPLACE_WITH_QUALIFIED_NATIVE_SOURCE_REVISION"
+[native_recipe]
+executable = "/path/to/qualified/mefpp_bpm_linearity_recipe"
+source_revision = "REPLACE_WITH_QUALIFIED_NATIVE_RECIPE_SOURCE_REVISION"
 
-# The assembler can be qualified independently of the retained numeric engines.
 [assembly]
-executable = "/path/to/qualified/mefpp_bpm_assemble"
-source_revision = "REPLACE_WITH_QUALIFIED_ASSEMBLER_SOURCE_REVISION"
 reference_detector = "ESO_CCD_#65"
 
 [preparation]

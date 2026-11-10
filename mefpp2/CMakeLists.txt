@@ -301,6 +301,12 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_compile_definitions(mefpp_recipe_run PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   target_compile_options(mefpp_recipe_run PRIVATE -Wall -Wextra -Werror -pedantic-errors)
   set_target_properties(mefpp_recipe_run PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  add_executable(recipe_file_hash_probe tests/recipe_file_hash_probe.c
+    ins/mef/common/mef_bpm_linearity_recipe_hash.c)
+  target_include_directories(recipe_file_hash_probe PRIVATE ../third_party/tomlc17)
+  target_link_libraries(recipe_file_hash_probe PRIVATE mefpp_recipe_run)
+  target_compile_options(recipe_file_hash_probe PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(recipe_file_hash_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   add_executable(recipe_run_probe tests/recipe_run_probe.c)
   target_link_libraries(recipe_run_probe PRIVATE mefpp_recipe_run)
   target_compile_options(recipe_run_probe PRIVATE -UNDEBUG -Wall -Wextra -Werror -pedantic-errors)
@@ -357,6 +363,7 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       target_include_directories(mefpp_product_qc PUBLIC ins/mef/common)
       target_include_directories(mefpp_product_qc SYSTEM PRIVATE "${MEFPP_ASDF_PREFIX}/include")
       target_link_libraries(mefpp_product_qc PUBLIC "${MEFPP_ASDF_LIBRARY}" mefpp_recipe_run mefpp_product_qc_records)
+      target_sources(mefpp_mef_assembly PRIVATE ins/mef/common/mef_bpm_assembly_planes.c)
       add_executable(mefpp_bpm_assemble ins/mef/mefpp_bpm_assemble.c)
       target_link_libraries(mefpp_bpm_assemble PRIVATE mefpp_mef_assembly mefpp_product_qc)
       target_compile_definitions(mefpp_bpm_assemble PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
@@ -413,6 +420,27 @@ if(MEFPP_BUILD_CONFIG_PROBES)
         target_compile_options(native_warning_probe PRIVATE -UNDEBUG -Wall -Wextra -Werror -pedantic-errors)
         set_target_properties(native_warning_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
       endif()
+      add_executable(mefpp_bpm_linearity_recipe
+        ins/mef/recipes/mefpp_bpm_linearity_recipe.c
+        ins/mef/common/mef_bpm_linearity_recipe_config.c
+        ins/mef/common/mef_bpm_linearity_recipe_inputs.c
+        ins/mef/common/mef_bpm_linearity_recipe_bindings.c
+        ins/mef/common/mef_bpm_linearity_recipe_hash.c
+        ins/mef/common/mef_bpm_linearity_recipe_process.c
+        ins/mef/common/mef_bpm_linearity_recipe_products.c
+        ins/mef/mefpp_linearity_prepare.c ins/mef/recipes/mefpp_bpm_adapter.c)
+      target_include_directories(mefpp_bpm_linearity_recipe PRIVATE ../third_party/tomlc17)
+      target_link_libraries(mefpp_bpm_linearity_recipe PRIVATE
+        mefpp_recipe_run mefpp_bpm_product_qc mefpp_product_qc mefpp_config_toml
+        mefpp_mef_assembly mefpp_linearity_files mefpp_linearity_archive mefpp_roi_config)
+      target_compile_definitions(mefpp_bpm_linearity_recipe PRIVATE
+        ${MEFPP_FEATURE_DEFINITIONS} MEFPP_RECIPE_LIBRARY=1 MEFPP_NATIVE_PRODUCT_QC=1
+        MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
+      set_target_properties(mefpp_bpm_linearity_recipe PROPERTIES
+        C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO
+        BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
+      target_compile_options(mefpp_bpm_linearity_recipe PRIVATE -Wall -Wextra -pedantic-errors)
+
       foreach(recipe_target IN ITEMS mefpp_product_qc mefpp_bias_product_qc mefpp_bias_recipe)
         set_target_properties(${recipe_target} PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
         target_compile_definitions(${recipe_target} PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -646,6 +674,14 @@ endif()
 
 if(BUILD_TESTING)
   find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  if(TARGET recipe_file_hash_probe)
+    add_test(NAME native_recipe_file_identity
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/recipe_file_hash_contract.py"
+        --probe "$<TARGET_FILE:recipe_file_hash_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_recipe_file_identity PROPERTIES TIMEOUT 60 LABELS "native;recipe;ownership")
+  endif()
+
   add_test(NAME native_frontend_contract
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/frontend_contract.py"
       "${CMAKE_CURRENT_SOURCE_DIR}")

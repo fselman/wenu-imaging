@@ -33,4 +33,6 @@ typedef struct {
 } mef_bpm_assembly_detector;
 int mef_bpm_mef_assemble(const char *final_path, const char *reference_detector_id,
     const mef_bpm_assembly_detector *, size_t count, char *message, size_t size);
+/* Header-only final image-plane map. Returned libc text belongs to the caller. */
+char *mef_bpm_assembly_plane_map(const char *, const mef_bpm_assembly_detector *, size_t);
 #endif

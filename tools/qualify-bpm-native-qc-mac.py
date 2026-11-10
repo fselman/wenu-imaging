@@ -79,7 +79,7 @@ def resume_linearity_candidate(args, build, git):
     if args.combined:
         additional += ['tools/run-bpm-linearity.py', 'Pycavi2/tests/bpm_linearity_recipe_contract.py']
         additional += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
-            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_assembly', 'pycavi_calibration_bindings')]
+            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_native_recipe', 'pycavi_bpm_linearity_assembly', 'pycavi_calibration_bindings')]
     for name in additional:
         path = validation/name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -202,6 +202,7 @@ def prepare_observation_project(args, build, git):
     names += ['tools/prepare-bpm-linearity-project.py', 'tools/run-bpm-linearity.py',
               'Pycavi2/pycavi/pycavi/pycavi_calibration_bindings.py',
               'Pycavi2/pycavi/pycavi/pycavi_bpm_linearity_assembly.py',
+              'Pycavi2/pycavi/pycavi/pycavi_bpm_linearity_native_recipe.py',
               'config/detectors/omegacam-1x1.toml', 'config/processing/omegacam-characterization.toml']
     for name in set(names):
         path = source/name
@@ -257,6 +258,7 @@ def main():
     parser.add_argument('--revision', required=True)
     parser.add_argument('--asdf-python', type=Path, required=True)
     parser.add_argument('--reuse-probe', type=Path, help='Retained df562fe native-ASDF probe; build only the corrected CLI')
+    parser.add_argument('--native-recipe', action='store_true', help='Build only the native coordinator and qualify its synthetic complete recipe')
     parser.add_argument('--linearity', action='store_true', help='Also build and qualify native preparation publication and its recipe envelope')
     parser.add_argument('--resume-linearity-candidate', type=Path, help='Recheck only the recipe using the unchanged e7c4664 producer')
     parser.add_argument('--verify-combined-case', type=Path, help='Finish saved-case checks without repeating native processing')
@@ -268,6 +270,10 @@ def main():
     require(not args.prepare_project or not (args.assembly_case or args.resume_linearity_candidate or args.linearity or args.reuse_probe),
             'Project preparation does not build or qualify native code')
     require(not args.assembly_reference or args.assembly_case, 'Assembly reference requires a saved case')
+    if args.native_recipe:
+        args.linearity = True
+        require(not (args.assembly_case or args.resume_linearity_candidate or args.reuse_probe),
+                'Native recipe check is a separate focused mode')
     require(not args.assembly_case or not (args.linearity or args.resume_linearity_candidate or args.reuse_probe),
             'Assembly qualification reuses saved products; do not select another build mode')
     require(not args.verify_combined_case or args.combined, 'Saved-case check requires --combined')
@@ -412,6 +418,10 @@ def main():
             path = build/'mefpp2'/name
             require(not path.is_symlink(), 'Unexpected cached assembly symlink')
             assembly_before[path] = (path.read_bytes(), path.stat().st_mode & 0o777) if path.exists() else None
+    if args.native_recipe:
+        for name in ('mefpp_bpm_linearity_recipe', 'recipe_file_hash_probe'):
+            path = build/'mefpp2'/name
+            assembly_before[path] = (path.read_bytes(), path.stat().st_mode & 0o777) if path.exists() else None
     try:
         for name, content in replacements.items():
             path=source/name
@@ -421,7 +431,11 @@ def main():
                 path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(content)
         run([cmake,'-S',source,'-B',build,'-DMEFPP_BUILD_BIAS_RECIPE=ON',
              '-DMEFPP_SOURCE_REVISION='+args.revision], 'candidate-configure',checkout)
-        if args.assembly_case:
+        if args.native_recipe:
+            run([cmake,'--build',build,'--parallel','2','--target','mefpp_bpm_linearity_recipe','recipe_file_hash_probe'], 'native-recipe-build',checkout)
+            shutil.copy2(build/'mefpp2/mefpp_bpm_linearity_recipe',candidate/'mefpp_bpm_linearity_recipe')
+            shutil.copy2(build/'mefpp2/recipe_file_hash_probe',candidate/'recipe_file_hash_probe')
+        elif args.assembly_case:
             run([cmake,'--build',build,'--parallel','2','--target',*assembly_targets], 'assembly-build',checkout)
             for name in assembly_targets:
                 shutil.copy2(build/'mefpp2'/name,candidate/name)
@@ -496,11 +510,34 @@ def main():
             'pycavi_qc','pycavi_pair_qc','pycavi_sample_qc','pycavi_linearity_config',
             'pycavi_linearity_recipe','pycavi_linearity_preparation_qc','pycavi_linearity_native_archive','pycavi_native_product_qc',
             'pycavi_configuration','pycavi_calibration_bindings')]
+    if args.native_recipe:
+        required += ['Pycavi2/tests/bpm_linearity_recipe_contract.py', 'tools/run-bpm-linearity.py',
+                     'mefpp2/tests/recipe_file_hash_contract.py']
+        required += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
+            'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native',
+            'pycavi_bpm_linearity_native_recipe', 'pycavi_bpm_linearity_assembly')]
     for name in required:
         path=validation/name; path.parent.mkdir(parents=True,exist_ok=True); path.write_bytes(blob(args.revision,name))
     orchestration, reduced = candidate/'orchestration', candidate/'reduced'
     orchestration.mkdir(); reduced.mkdir()
     import sys
+    if args.native_recipe:
+        run([args.asdf_python, validation/'mefpp2/tests/recipe_file_hash_contract.py',
+            '--probe', candidate/'recipe_file_hash_probe', '--work-parent', reduced],
+            'recipe-file-identity-checks', orchestration)
+        run([args.asdf_python, validation/'Pycavi2/tests/bpm_linearity_recipe_contract.py',
+            '--source-revision', args.revision,
+            '--native-recipe', candidate/'mefpp_bpm_linearity_recipe',
+            '--native-recipe-source-revision', args.revision,
+            '--calibration-copies', '--work-parent', reduced], 'native-recipe-checks',orchestration)
+        require({name:sha(Path(name)) for name in guards}==guards, 'Protected files changed')
+        (candidate/'candidate.json').write_text(json.dumps(dict(successful=True,
+            source_revision=args.revision, observations_opened=False,
+            executable=str(candidate/'mefpp_bpm_linearity_recipe'),
+            sha256=sha(candidate/'mefpp_bpm_linearity_recipe'), protected_files=guards),indent=2)+'\n')
+        print('PASS: native recipe, exact synthetic measurements/planes and independent ASDF readers',flush=True)
+        print('CANDIDATE DIRECTORY:',candidate,flush=True)
+        return
     run([sys.executable,validation/required[0],'--source-root',validation,
          '--probe',candidate/'bpm_native_asdf_probe','--adapter',candidate/'mefpp_m5',
          '--asdf-python',args.asdf_python,'--source-revision',args.revision,'--work-parent',reduced],

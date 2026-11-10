@@ -37,10 +37,44 @@ For read-only product comparisons use
 [`compare-bias-products.py`](../tools/compare-bias-products.py) with its `--help`.
 The QC viewer reads saved ASDF; plotting does not recompute scientific results.
 
+## BPM / linearity
+
+The native entry point is
+[`mefpp_bpm_linearity_recipe.c`](../mefpp2/ins/mef/recipes/mefpp_bpm_linearity_recipe.c).
+It follows bias's admission, serial detector loop, verification, publication and
+cleanup phases. See the [guide](developer/linearity-preparation-guide-v1.pdf)
+and [recipe example](../config/recipes/omegacam-bpm-linearity.example.toml).
+
+The recipe TOML selects `[native_recipe]` with one executable and source revision,
+plus an assembly reference detector. Project TOML owns raw, orchestration and
+reduced/calibration/work/log roots. Pycavi validates the historical archive/master
+bindings and writes explicit frozen native bindings in orchestration; it invokes
+one C recipe, then checks saved products and writes the orchestration manifest.
+The native recipe calls preparation and BPM in process for each detector, then
+joins their final MEF/ASDF. It does not launch Python, a shell or child engines.
+Given the authored bindings, it can also run directly from orchestration:
+
+```sh
+nice -n 10 mefpp_bpm_linearity_recipe cal bpm-linearity \
+  --config bpm-linearity-recipe.toml --bindings RUN/native-bindings.toml
+```
+
+Bindings contain explicit native argument vectors and frozen file fingerprints;
+they are an admission transport, not a second set of editable scientific policies.
+Keep the TOML authoritative and regenerate bindings after changing it. The
+existing per-stage recipe form remains readable for retained runs; select either
+`native_recipe` or legacy `native`, never both. The new native coordinator needs
+its own Mac ASDF gate and observational comparison before selection.
+
+Linearity remains measurement only. Use the same admitted master/prior for both
+stages; never feed the candidate mask back into its characterization population.
+Native completion requires zero exit, final FITS/ASDF and an input-preservation
+receipt. Partial products stay available after failures. The saved QC viewer
+reads existing measurements and applies no physical correction.
+
 ## Other processing
 
-The legacy mefpp command and Pycavi workflows remain available. BPM, flat and
-science processing must retain their own calibration dependencies and collective
-operations. Their standalone interfaces and real-data acceptance cases must be
-qualified before being advertised as completed refactored recipes. Linearity
-work is currently paused; existing measurements/products remain the starting point.
+The legacy mefpp command and Pycavi workflows remain available. Flat and science
+processing retain their own dependencies and collective operations. Their
+standalone interfaces and real-data acceptance cases must be qualified before
+being advertised as completed refactored recipes. Cross-talk remains deferred.

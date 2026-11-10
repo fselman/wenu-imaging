@@ -62,24 +62,6 @@ done:
     free(line);
     return okay;
 }
-static char *plane_map(const char *path,const mef_bpm_assembly_detector *d,size_t n)
-{
-    char *text=NULL;size_t length=0,i,hdu=0;int pass,source,okay=1;
-    FILE *f=open_memstream(&text,&length);
-    if(!f) return NULL;
-    for(pass=0;pass<2 && okay;++pass)for(i=0;i<n && okay;++i) {
-        int count=qfits_query_n_ext((char *)d[i].path)+1;
-        for(source=pass?1:0;source<(pass?count:1);++source) {
-            qfits_header *h=qfits_header_readext((char *)path,(int)++hdu);
-            char *name=h?qfits_header_getstr(h,"EXTNAME"):NULL;
-            if(!name || fprintf(f,"%s\t%d\t%lu\t%s\n",d[i].detector_id,source,
-                (unsigned long)hdu,source?qfits_pretty_string(name):"BPM")<0) okay=0;
-            qfits_header_destroy(h);
-        }
-    }
-    if(fclose(f) || !okay){free(text);text=NULL;}
-    return text;
-}
 int main(int argc,char **argv)
 {
     mef_bpm_assembly_detector *detectors=NULL;
@@ -104,7 +86,7 @@ int main(int argc,char **argv)
     log=fopen(argv[4],"wx");if(!log)goto done;
     if(fprintf(log,"BPM_MEF_ASSEMBLY_START %lu\n",(unsigned long)count)<0 || fflush(log))goto done;
     if(mef_bpm_mef_assemble(argv[2],argv[3],detectors,count,message,sizeof(message)))goto done;
-    planes=plane_map(argv[2],detectors,count);
+    planes=mef_bpm_assembly_plane_map(argv[2],detectors,count);
     if(!planes){snprintf(message,sizeof(message),"Cannot inspect final BPM image-plane map");goto done;}
     {
         mef_bpm_assembly_qc request={.fits_path=argv[2],.asdf_path=asdf,.log_path=argv[4],

@@ -29,8 +29,8 @@ def reference(base, value):
 def admit(path):
     path = Path(path).resolve(strict=True)
     data = tomllib.loads(path.read_text())
-    fields(data, ('bpm_linearity_recipe_schema_version', 'project', 'run', 'native',
-                  'preparation', 'bpm', 'detectors') + tuple(k for k in ('assembly', 'calibration_bindings') if k in data), 'combined recipe')
+    fields(data, ('bpm_linearity_recipe_schema_version', 'project', 'run',
+                  'preparation', 'bpm', 'detectors') + tuple(k for k in ('native', 'assembly', 'calibration_bindings', 'native_recipe') if k in data), 'combined recipe')
     require(type(data['bpm_linearity_recipe_schema_version']) is int and
             data['bpm_linearity_recipe_schema_version'] == 1, 'Unsupported combined recipe')
     project_path = reference(path.parent, data['project'])
@@ -45,18 +45,29 @@ def admit(path):
     run = (Path(roots['output'])/run).resolve(strict=True)
     require(run.is_relative_to(Path(roots['output'])) and run != Path(roots['output']) and
             run.is_dir() and not any(run.iterdir()), 'Fresh empty reduced run directory required')
-    fields(data['native'], ('bpm', 'preparation', 'source_revision'), 'native producers')
-    revision = data['native']['source_revision']
-    require(type(revision) is str and len(revision) == 40 and
-            all(c in '0123456789abcdef' for c in revision), 'Exact native source revision required')
-    binaries = {name: str(reference(path.parent, data['native'][name])) for name in ('bpm', 'preparation')}
-    fields(data['preparation'], ('detector_toml', 'processing_toml'), 'preparation configuration')
+    native_recipe = data.get('native_recipe')
     assembly = data.get('assembly')
-    if assembly is not None:
-        fields(assembly, ('executable', 'source_revision', 'reference_detector'), 'assembly')
-        require(type(assembly['source_revision']) is str and len(assembly['source_revision']) == 40 and
-                all(c in '0123456789abcdef' for c in assembly['source_revision']), 'Exact assembly revision required')
-        binaries['assembly'] = str(reference(path.parent, assembly['executable']))
+    require(('native' in data) != (native_recipe is not None), 'Select one native recipe or legacy stage producers')
+    if native_recipe is not None:
+        fields(native_recipe, ('executable', 'source_revision'), 'native recipe')
+        native_recipe = dict(native_recipe)
+        native_recipe['executable'] = str(reference(path.parent, native_recipe['executable']))
+        revision = native_recipe['source_revision']
+        fields(assembly, ('reference_detector',), 'native assembly')
+        assembly = dict(assembly, executable=native_recipe['executable'], source_revision=revision)
+        binaries = dict(bpm=native_recipe['executable'], preparation=native_recipe['executable'], assembly=native_recipe['executable'])
+    else:
+        fields(data['native'], ('bpm', 'preparation', 'source_revision'), 'native producers')
+        revision = data['native']['source_revision']
+        binaries = {name: str(reference(path.parent, data['native'][name])) for name in ('bpm', 'preparation')}
+        if assembly is not None:
+            fields(assembly, ('executable', 'source_revision', 'reference_detector'), 'assembly')
+            require(type(assembly['source_revision']) is str and len(assembly['source_revision']) == 40 and
+                    set(assembly['source_revision']) <= set('0123456789abcdef'), 'Exact assembly revision required')
+            binaries['assembly'] = str(reference(path.parent, assembly['executable']))
+    require(type(revision) is str and len(revision) == 40 and
+            set(revision) <= set('0123456789abcdef'), 'Exact native source revision required')
+    fields(data['preparation'], ('detector_toml', 'processing_toml'), 'preparation configuration')
     controls = {name: reference(path.parent, value) for name, value in data['preparation'].items()}
     require(all(p.is_relative_to(project_path.parent) for p in controls.values()),
             'Detector/processing TOMLs must be in orchestration')
@@ -127,7 +138,8 @@ def admit(path):
     sources[project['catalog']['path']] = project['catalog']['sha256']
     code_paths = [Path(__file__).with_name(name+'.py') for name in ('pycavi_bpm_linearity_plan',
         'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native', 'pycavi_bpm_linearity_assembly', 'pycavi_linearity_recipe',
-        'pycavi_linearity_native_archive', 'pycavi_native_product_qc', 'pycavi_calibration_bindings')]
+        'pycavi_linearity_native_archive', 'pycavi_native_product_qc', 'pycavi_calibration_bindings',
+        'pycavi_bpm_linearity_native_recipe')]
     code_paths.append(ROOT/'tools/run-bpm-linearity.py')
     code_sources = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in code_paths}
     metadata.update(sources)
@@ -137,5 +149,5 @@ def admit(path):
     # Reuse the same directory/input admission as the single-detector recipe.
     for entry in entries:
         preparation.validate_preparation_inputs(entry['dependencies'], layout)
-    return dict(recipe_path=str(path), assembly=assembly, run=str(run), layout=layout, resolved=resolved, native=binaries, source_revision=revision,
+    return dict(recipe_path=str(path), native_recipe=native_recipe, assembly=assembly, run=str(run), layout=layout, resolved=resolved, native=binaries, source_revision=revision,
                 bpm=policy, entries=entries, baseline=baseline, metadata=metadata, configuration_sources=sources, coordinator_sources=code_sources)

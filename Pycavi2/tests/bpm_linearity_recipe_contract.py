@@ -82,10 +82,12 @@ def verify_saved_case(work):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--bpm', type=Path, required=True)
-    parser.add_argument('--preparation', type=Path, required=True)
+    parser.add_argument('--bpm', type=Path)
+    parser.add_argument('--preparation', type=Path)
     parser.add_argument('--source-revision', required=True)
     parser.add_argument('--work-parent', type=Path, required=True)
+    parser.add_argument('--native-recipe', type=Path, help='Execute all stages through the single native recipe')
+    parser.add_argument('--native-recipe-source-revision')
     parser.add_argument('--calibration-copies', action='store_true', help='Use byte-identical imported calibrations; preserve the original source graph')
     parser.add_argument('--assembly', type=Path, help='Also publish the final BPM MEF with this native command')
     parser.add_argument('--assembly-source-revision', help='Exact assembler source revision')
@@ -94,6 +96,10 @@ def main():
     if args.verify_saved:
         verify_saved_case(args.verify_saved.resolve(strict=True))
         return
+    if args.native_recipe:
+        args.bpm = args.preparation = args.assembly = args.native_recipe
+        args.assembly_source_revision = args.native_recipe_source_revision
+    assert args.bpm and args.preparation
     priority = os.getpriority(os.PRIO_PROCESS, 0)
     if priority < 10:
         os.nice(10-priority)
@@ -126,6 +132,12 @@ def main():
         assert args.assembly_source_revision
         sections['assembly'] = dict(executable=str(args.assembly.resolve(strict=True)),
             source_revision=args.assembly_source_revision, reference_detector='ESO_CCD_#65')
+    if args.native_recipe:
+        del sections['native']
+        sections['assembly'] = dict(reference_detector='ESO_CCD_#65')
+        assert args.assembly and args.native_recipe_source_revision
+        sections['native_recipe'] = dict(executable=str(args.native_recipe.resolve(strict=True)),
+            source_revision=args.native_recipe_source_revision)
     for key, value in sections.items():
         text += '\n['+key+']\n'+''.join(name+' = '+json.dumps(item)+'\n' for name, item in value.items())
     text += '\n[[detectors]]\ndetector_id = "ESO_CCD_#65"\nreference_rois = ["CCD65.R0"]\n'
@@ -180,12 +192,29 @@ def main():
         return original(name)
     recipe.preparation.image_fingerprint = counted
     try:
-        result = recipe.execute(plan)
+        if args.native_recipe:
+            from pycavi_bpm_linearity_native_recipe import execute
+            result = execute(plan)
+        else:
+            result = recipe.execute(plan)
     finally:
         recipe.preparation.image_fingerprint = original
     assert result['status'] == ('complete_for_owner_inspection' if args.assembly else 'detector_characterization_complete_for_owner_inspection')
     assert result['input_preservation'] and result['final_mef_state'] == ('assembled' if args.assembly else 'not_assembled')
-    assert calls == Counter({name: 2 for name in plan['baseline']})
+    assert calls == (Counter() if args.native_recipe else Counter({name: 2 for name in plan['baseline']}))
+    if args.native_recipe:
+        import tomllib
+        native_receipt = tomllib.loads((run/'native-recipe.toml').read_text())
+        assert native_receipt['input_preservation'] and native_receipt['status'] == 'complete'
+        assert native_receipt['source_revision'] == args.native_recipe_source_revision
+        from astropy.io import fits
+        import numpy as np
+        with fits.open(native_receipt['fits']) as product:
+            assert len(product) == 7
+            expected = dict(BPM=0, COVERAGE=1, NSAMPLE=20, NEWFLAGS=0, SELECTION=1, PRIORSEL=1)
+            for plane in product[1:]:
+                role = 'BPM' if plane.header['EXTNAME'] == 'ESO_CCD_#65' else plane.header['EXTNAME']
+                assert plane.data.shape == (2, 6) and np.all(plane.data == expected[role])
     member = result['detectors'][0]
     value = archive.read_product(member['preparation']['path'])
     assert len(value['exposure_rows']) == 100 and len(value['direct_site_replay']) == 100
@@ -197,7 +226,8 @@ def main():
     verify_saved_case(work)
     print('RETAINED COMBINED CHARACTERIZATION:', work)
     print('PASS: metadata-first admission, explicit prior/reference populations, serial native stages and joined manifest')
-    print('PASS: shared images hashed exactly once before/after; exact measurements, input preservation and no overwrite')
+    print('PASS: native boundary preservation with no Python image hashing' if args.native_recipe else
+          'PASS: shared images hashed exactly once before/after; exact measurements, input preservation and no overwrite')
     print('SCOPE: final BPM MEF included' if args.assembly else 'SCOPE: detector products only')
     print('Scientific/observational acceptance remains pending')
 

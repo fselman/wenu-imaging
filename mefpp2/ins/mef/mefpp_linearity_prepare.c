@@ -64,7 +64,7 @@ static int raw_table(const char *dir,const char *name,const mef_linearity_pairs_
 }
 static int same(const source *a,const source *b)
 {return a->hdu==b->hdu&&!strcmp(a->path,b->path)&&!strcmp(a->asset,b->asset);}
-int main(int argc,char **argv)
+int mef_linearity_prepare_command(int argc,char **argv)
 {
     int publish=(argc==14 || (argc==16 && !strcmp(argv[14],"--context"))) && !strcmp(argv[10],"--native-asdf");
 #ifndef MEFPP_NATIVE_PRODUCT_QC
@@ -254,3 +254,10 @@ done:
     for(int k=0;k<2;++k){mef_roi_config_destroy(regions[k]);(free)(rois[k]);}
     (free)(p.text);(free)(bias_owner);return code;
 }
+
+#ifndef MEFPP_RECIPE_LIBRARY
+int main(int argc, char **argv)
+{
+    return mef_linearity_prepare_command(argc, argv);
+}
+#endif
