@@ -5,6 +5,7 @@
  */
 
 #include "mef_bpm_linearity.h"
+#include <string.h>
 
 int main(int argc, char **argv)
 {
@@ -12,6 +13,11 @@ int main(int argc, char **argv)
     mef_bpm_linearity recipe;
     size_t detector_index;
     int succeeded = 0;
+
+    if (argc == 2 && !strcmp(argv[1], "--help")) {
+        mef_bpm_linearity_usage();
+        return EXIT_SUCCESS;
+    }
 
     mef_recipe_run_initialize(&run, "cal.bpm-linearity", "BPM_LINEARITY",
         "bpm-linearity", "BPM/linearity", MEFPP_CANDIDATE_REVISION);

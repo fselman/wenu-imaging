@@ -143,6 +143,8 @@ def main():
         sections['assembly'] = dict(executable=str(args.assembly.resolve(strict=True)),
             source_revision=args.assembly_source_revision, reference_detector='ESO_CCD_#65')
     if args.native_recipe:
+        if args.create_bpm:
+            sections['bpm'].update(response_low=0.6, response_high=1.4)
         del sections['native']
         sections['assembly'] = dict(reference_detector='ESO_CCD_#65')
         assert args.assembly and args.native_recipe_source_revision
@@ -177,6 +179,21 @@ def main():
     finally:
         recipe.preparation.image_fingerprint = original
     assert not list(run.iterdir()) and len(plan['entries']) == 1
+    if args.native_recipe:
+        from pycavi_linearity_recipe import bpm_configuration_snapshot
+        dependencies = plan['entries'][0]['dependencies']
+        limits = dependencies['bpm_response_limits']
+        expected_limits = dict(response_low=0.6, response_high=1.4) if args.create_bpm else dict(response_low=0.5, response_high=1.5)
+        assert limits == expected_limits
+        effective = bpm_configuration_snapshot(dependencies['master_snapshot'], limits)
+        assert {k for k in effective if effective[k] != dependencies['master_snapshot'][k]} <= {'MEF.BPM.LGAINTHR', 'MEF.BPM.HGAINTHR'}
+        for low, high in ((1.5, 0.5), (0, 1.5), (1, 1), (1e-100, 1.5)):
+            try:
+                bpm_configuration_snapshot(dependencies['master_snapshot'], dict(response_low=low, response_high=high))
+            except ValueError:
+                pass
+            else:
+                raise AssertionError('Invalid/native-collapsed response limits admitted')
     if args.omit_archived_bpm:
         dependencies=plan['entries'][0]['dependencies']
         assert dependencies['input_bpm_policy']=='omitted'

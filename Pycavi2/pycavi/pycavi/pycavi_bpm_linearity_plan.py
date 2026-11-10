@@ -81,7 +81,16 @@ def admit(path):
     resolved = configuration.resolve_files(controls['detector_toml'], controls['processing_toml'])
     policy = data['bpm']
     fields(policy, ('acquisition', 'output_mode', 'upper_fraction', 'minimum_span_fraction',
-                    'maximum_pair_difference'), 'BPM controls')
+                    'maximum_pair_difference') + tuple(k for k in ('response_low', 'response_high') if k in policy), 'BPM controls')
+    response_limits = None
+    if native_recipe is not None:
+        response_limits = {key: policy.get(key, default) for key, default in
+                           (('response_low', 0.5), ('response_high', 1.5))}
+        preparation.bpm_configuration_snapshot({}, response_limits)
+        policy.update(response_limits)
+    else:
+        require(not any(k in policy for k in ('response_low', 'response_high')),
+                'Response limits require the native shared-cube recipe')
     require(policy['acquisition'] in ('quick', 'provisional') and policy['output_mode'] in ('new', 'combined'),
             'Explicit supported BPM acquisition/output mode required')
     for key, positive in [('upper_fraction', True), ('minimum_span_fraction', True), ('maximum_pair_difference', False)]:
@@ -103,6 +112,10 @@ def admit(path):
         dependencies = preparation.preparation_dependencies(reference(path.parent, entry['source_samples']),
             reference(path.parent, entry['handoff']), resolved, input_bpm=input_bpm)
         dependencies = calibrations.bind(dependencies, resolved, bindings, roots['calibration'])
+        if response_limits is not None:
+            dependencies['bpm_response_limits'] = response_limits
+            effective = preparation.bpm_configuration_snapshot(dependencies['master_snapshot'], response_limits)
+            dependencies['configuration'] = preparation.native_configuration(resolved, effective)
         used_bindings.update(r['source'] for r in dependencies.get('calibration_bindings', []))
         require(dependencies['selection']['detector'] == entry['detector_id'], 'Detector dependency differs')
         ids = entry['reference_rois']

@@ -37,6 +37,8 @@ def prepare_context(dependencies, resolved, directory, controls, *, source_revis
         biases=dependencies['biases'], master=dependencies['master'],
         master_snapshot=dependencies['master_snapshot'], source_revision=source_revision,
         source_graph=dict(entry=source.name, sha256=hashes), dependency_evidence=evidence)
+    if dependencies.get('bpm_response_limits') is not None:
+        context['bpm_response_limits'] = dependencies['bpm_response_limits']
     if dependencies.get('calibration_bindings'):
         context['calibration_bindings'] = dependencies['calibration_bindings']
         context['calibration_root'] = dependencies['calibration_root']
@@ -64,7 +66,8 @@ def read_product(path):
     context = json.loads(texts['preparation-context.json'])
     qc.require(context['schema_version'] == 1 and
                q['provenance']['producer']['source_revision'] == context['source_revision'] and
-               json.loads(q['provenance']['configuration']['snapshot']) == context['master_snapshot'],
+               json.loads(q['provenance']['configuration']['snapshot']) == recipe.bpm_configuration_snapshot(
+                   context['master_snapshot'], context.get('bpm_response_limits')),
                'Native producer/configuration differs from admitted dependencies')
     graph = context['source_graph']
     root = (path.parent/'inputs').resolve(strict=True)
@@ -88,7 +91,8 @@ def read_product(path):
     native = context['dependency_evidence']['native_directory']
     value = previous.collect(native, context['resolved'], context['selection'], context['biases'],
         expected, context['master_snapshot'], master_reference=context['master'], transports=transports,
-        input_bpm_policy=context.get('input_bpm_policy', 'archived'))
+        input_bpm_policy=context.get('input_bpm_policy', 'archived'),
+        bpm_response_limits=context.get('bpm_response_limits'))
     ordered = context['selection']['flat'] + context['biases']
     records = q['embedded_input_records']
     qc.require(len(records) == len(ordered), 'Incomplete native input cohort')

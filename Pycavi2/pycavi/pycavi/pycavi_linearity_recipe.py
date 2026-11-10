@@ -26,6 +26,27 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, allow_nan=False, separators=(',', ':'))
 
 
+def bpm_configuration_snapshot(master_snapshot, limits=None):
+    """Apply current response policy without rewriting the master's lineage."""
+    snapshot = deepcopy(master_snapshot)
+    if limits is not None:
+        require(set(limits) == {'response_low', 'response_high'}, 'Incomplete response limits')
+        low, high = limits['response_low'], limits['response_high']
+        require(all(type(v) in (int, float) and math.isfinite(v) for v in (low, high)) and
+                0 < low < high, 'Response limits require 0 < low < high')
+        for name, value in (('LGAINTHR', low), ('HGAINTHR', high)):
+            # The existing native BPM configuration stores these settings as float32.
+            try:
+                bits = struct.pack('>f', value)
+            except (OverflowError, struct.error):
+                raise ValueError('Response limit exceeds native float32 range') from None
+            snapshot['MEF.BPM.'+name] = dict(type='float32-bits', value=bits.hex())
+        rounded = [struct.unpack('>f', bytes.fromhex(snapshot['MEF.BPM.'+name]['value']))[0]
+                   for name in ('LGAINTHR', 'HGAINTHR')]
+        require(0 < rounded[0] < rounded[1], 'Response limits collapse in native float32')
+    return snapshot
+
+
 def native_configuration(resolved, master_snapshot):
     """Generate the native compatibility TOML from validated, agreeing settings.
 

@@ -72,7 +72,7 @@ def traces(data, frames, height, role):
                  raw_row_start=1,correction_adu=groups[r['index']]) for r in frames]
 
 
-def collect(native, resolved, selection, biases, expected_samples, master_snapshot, *, master_reference, transports=None, input_bpm_policy="archived"):
+def collect(native, resolved, selection, biases, expected_samples, master_snapshot, *, master_reference, transports=None, input_bpm_policy="archived", bpm_response_limits=None):
     """Read native transport only. No raw FITS or source remeasurement."""
     native=Path(native);frozen={};texts={}
     def read(path):
@@ -90,7 +90,7 @@ def collect(native, resolved, selection, biases, expected_samples, master_snapsh
     qc.require(len(master_rows)==1 and pair.unescape(master_rows[0]['path'])==master_reference['product'] and
                natural(master_rows[0]['hdu'])==master_reference['hdu'],'Native master path/HDU differs from frozen dependency')
     snapshot=json.loads(read(native/'configuration.json'))
-    qc.require(snapshot==master_snapshot,'Native configuration differs from verified master/TOML transport')
+    qc.require(snapshot==recipe.bpm_configuration_snapshot(master_snapshot, bpm_response_limits),'Native configuration differs from verified master/TOML transport')
     recipe.native_configuration(resolved, snapshot)
     detector=next(d for d in resolved['detectors'] if d['detector_id']==selection['detector'])
     height=detector['raw_size'][1];groups=traces(read(native/'bias-traces.tsv'),biases,height,'bias')

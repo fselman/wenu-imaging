@@ -17,9 +17,9 @@ import pycavi_bpm_linearity_recipe as recipe
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--config', type=Path, required=True)
-    parser.add_argument('--execute', action='store_true')
-    parser.add_argument('--qc', choices=('true', 'false'), help='Override optional QC; science ROI measurements remain enabled')
+    parser.add_argument('--config', type=Path, required=True, help='Recipe TOML under orchestration; references project.toml')
+    parser.add_argument('--execute', action='store_true', help='Process and publish; default is metadata admission only')
+    parser.add_argument('--qc', choices=('true', 'false'), help='Override recipe qc (default true); false skips optional full-frame QC and MAD, retaining ROI measurements')
     args = parser.parse_args()
     plan = planner.admit(args.config)
     if args.qc is not None:

@@ -1,6 +1,7 @@
 """Explicit BPM command construction and native-QC verification; no pixel math."""
 import hashlib
 import json
+import struct
 from pathlib import Path
 import subprocess
 try:
@@ -104,8 +105,12 @@ def verify_bpm(path, plan, entry, fits):
     require(context['mode'] == {'quick': 2, 'provisional': 1}[policy['acquisition']] and
             context['output_mode'] == {'new': 1, 'combined': 2}[policy['output_mode']] and
             context['rois'] == entry['reference_rois'], 'BPM acquisition/reference/output settings differ')
-    for field in ('upper_fraction', 'minimum_span_fraction', 'maximum_pair_difference'):
-        require(context['parameters'][field] == policy[field], 'BPM admission parameter differs')
+    for field in ('upper_fraction', 'minimum_span_fraction', 'maximum_pair_difference') + tuple(
+            key for key in ('response_low', 'response_high') if key in policy):
+        wanted = policy[field]
+        if field in ('response_low', 'response_high'):
+            wanted = struct.unpack('>f', struct.pack('>f', wanted))[0]
+        require(context['parameters'][field] == wanted, 'BPM admission parameter differs')
     references = {row['role']: row['file'] for row in context['calibrations']}
     expected = [('bias', d['master']['product'], d['master']['hdu'])]
     if d['selection']['bpm']['encoding'] != 'omitted':

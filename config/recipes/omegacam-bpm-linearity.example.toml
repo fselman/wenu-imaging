@@ -5,7 +5,8 @@
 # a fresh empty directory. Existing inputs and prior masks remain read-only.
 bpm_linearity_recipe_schema_version = 1
 project = "project.toml"
-run = "cal/bpm-linearity/run-001"
+run = "cal/bpm-linearity/ocam-001"
+qc = false # true enables optional QC; omitted defaults to true
 
 [native_recipe]
 executable = "/path/to/qualified/mefpp_bpm_linearity_recipe"
@@ -19,16 +20,17 @@ detector_toml = "omegacam-1x1.toml"
 processing_toml = "omegacam-characterization.toml"
 # archived: reuse the historical input mask and skip BPM creation (default).
 # omitted: create a BPM with no current input mask; preserve archive/master lineage.
-# input_bpm = "omitted"
+input_bpm = "omitted"
 
-# Illustrative authoring values: use the reviewed acquisition limits for the
-# selected data. There are no implicit scientific defaults in the coordinator.
+# Required acquisition controls; response limits below have the shown defaults.
 [bpm]
 acquisition = "quick"
 output_mode = "new"
 upper_fraction = 0.85
 minimum_span_fraction = 0.15
 maximum_pair_difference = 0.02
+response_low = 0.5
+response_high = 1.5
 
 # Repeat in detector-TOML catalogue order. Only bindings/configuration change
 # between OmegaCAM and WFI; no instrument-specific recipe implementation.
@@ -36,7 +38,7 @@ maximum_pair_difference = 0.02
 detector_id = "ESO_CCD_#65"
 source_samples = "../reduced/cal/bpm-linearity/prior/CCD65/samples.asdf"
 handoff = "../reduced/cal/bias/prior/CCD65/handoff.json"
-reference_rois = ["REPLACE_WITH_REVIEWED_REFERENCE_ROI_ID"]
+reference_rois = ["CCD65.near_readout", "CCD65.serial_far", "CCD65.parallel_far", "CCD65.far_corner", "CCD65.center"]
 
 # Optional historical calibration copy. path is relative to the project's
 # calibration root; source and SHA256 must match the unchanged source archive.

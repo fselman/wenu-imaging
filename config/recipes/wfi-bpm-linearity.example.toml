@@ -1,0 +1,51 @@
+# WFI: bind a reviewed paired-flat sample archive and master handoff before execution.
+# The May-2003 bias acceptance does not establish these linearity dependencies.
+# Native serial BPM/linearity recipe; Pycavi admits archived metadata only.
+# Copy into orchestration and fill the explicit admitted dependency paths.
+# Run there: python /path/to/tools/run-bpm-linearity.py --config bpm-linearity.toml
+# Add --execute only after reviewing the metadata plan. The reduced run must be
+# a fresh empty directory. Existing inputs and prior masks remain read-only.
+bpm_linearity_recipe_schema_version = 1
+project = "project.toml"
+run = "cal/bpm-linearity/wfi-001"
+qc = false # true enables optional QC; omitted defaults to true
+
+[native_recipe]
+executable = "/path/to/qualified/mefpp_bpm_linearity_recipe"
+source_revision = "REPLACE_WITH_QUALIFIED_NATIVE_RECIPE_SOURCE_REVISION"
+
+[assembly]
+reference_detector = "WIN1.CHIP1.OUT1"
+
+[preparation]
+detector_toml = "wfi-1x1.toml"
+processing_toml = "wfi-characterization.toml"
+# archived: reuse the historical input mask and skip BPM creation (default).
+# omitted: create a BPM with no current input mask; preserve archive/master lineage.
+input_bpm = "omitted"
+
+# Required acquisition controls; response limits below have the shown defaults.
+[bpm]
+acquisition = "quick"
+output_mode = "new"
+upper_fraction = 0.85
+minimum_span_fraction = 0.15
+maximum_pair_difference = 0.02
+response_low = 0.5
+response_high = 1.5
+
+# Repeat in detector-TOML catalogue order. Only bindings/configuration change
+# between OmegaCAM and WFI; no instrument-specific recipe implementation.
+[[detectors]]
+detector_id = "WIN1.CHIP1.OUT1"
+source_samples = "../reduced/cal/bpm-linearity/prior/CHIP1/samples.asdf"
+handoff = "../reduced/cal/bias/prior/CHIP1/handoff.json"
+reference_rois = ["CHIP1.near_readout", "CHIP1.serial_far", "CHIP1.parallel_far", "CHIP1.far_corner", "CHIP1.center"]
+
+# Optional historical calibration copy. path is relative to the project's
+# calibration root; source and SHA256 must match the unchanged source archive.
+# Prepare the byte-identical copy before metadata admission.
+# [[calibration_bindings]]
+# source = "/original/retained/WFI_MB_CHIP1_candidate.fits"
+# path = "imports/CHIP1/WFI_MB_CHIP1_candidate.fits"
+# sha256 = "REPLACE_WITH_PRESERVED_CALIBRATION_SHA256"

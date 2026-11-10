@@ -48,6 +48,36 @@ const char *mef_bpm_linearity_option(const mef_bpm_linearity_detector *detector,
     return result;
 }
 
+/* Check recipe response limits against the shared native transport. Both
+ * numerical consumers use that same frozen configuration (binding SHA check).
+ */
+static int response_matches(const mef_bpm_linearity_detector *detector, toml_datum_t policy)
+{
+    const char *path=mef_bpm_linearity_option(detector,"--config");
+    const char *names[2]={"response_low","response_high"};
+    const char *keys[2]={"MEF.BPM.LGAINTHR","MEF.BPM.HGAINTHR"};
+    const double defaults[2]={0.5,1.5};
+    double limits[2];
+    size_t i;
+    int okay=1;
+    if (!path) return 0;
+    toml_result_t configuration=toml_parse_file_ex(path);
+    if (!configuration.ok) { toml_free(configuration); return 0; }
+    toml_datum_t native=toml_get(configuration.toptab,"native");
+    for (i=0; i<2; ++i) {
+        toml_datum_t wanted=toml_get(policy,names[i]), bound=toml_get(native,keys[i]);
+        limits[i]=defaults[i];
+        if (wanted.type==TOML_FP64) limits[i]=wanted.u.fp64;
+        else if (wanted.type==TOML_INT64) limits[i]=(double)wanted.u.int64;
+        else if (wanted.type!=TOML_UNKNOWN) okay=0;
+        double value=bound.type==TOML_FP64?bound.u.fp64:
+            bound.type==TOML_INT64?(double)bound.u.int64:NAN;
+        if (!isfinite(limits[i]) || (float)value!=(float)limits[i]) okay=0;
+    }
+    toml_free(configuration);
+    return okay && isfinite((float)limits[1]) && (float)limits[0]>0 && (float)limits[0]<(float)limits[1];
+}
+
 static int policy_matches(const mef_bpm_linearity_detector *detector, toml_datum_t policy)
 {
     const char *fields[3]={"upper_fraction","minimum_span_fraction","maximum_pair_difference"};
@@ -67,7 +97,7 @@ static int policy_matches(const mef_bpm_linearity_detector *detector, toml_datum
         errno=0; bound=strtod(text,&end);
         if (errno || end==text || *end || !isfinite(bound) || bound!=wanted) return 0;
     }
-    return 1;
+    return response_matches(detector,policy);
 }
 
 int mef_bpm_linearity_has_dependency(const mef_bpm_linearity *recipe, const char *path)
