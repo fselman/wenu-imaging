@@ -29,6 +29,7 @@ response_high = 1.5 # default
 
 [inputs]
 # Paths below are relative to the project raw root; order is significant.
+# Bias indices are 0..9; explicit flat indices start at 10 and remain unique.
 bias = [
   "WFI.2003-05-30T19:14:54.578.fits",
   "WFI.2003-05-30T19:16:06.007.fits",
@@ -43,18 +44,22 @@ bias = [
 ]
 
 [[inputs.flat]]
+input_index = 10
 path = "WFI.2003-05-30T20:29:31.182.fits"
 pair = 0
 
 [[inputs.flat]]
+input_index = 11
 path = "WFI.2003-05-30T20:30:38.833.fits"
 pair = 0
 
 [[inputs.flat]]
+input_index = 12
 path = "WFI.2003-05-30T20:39:52.692.fits"
 pair = 1
 
 [[inputs.flat]]
+input_index = 13
 path = "WFI.2003-05-30T20:42:00.041.fits"
 pair = 1
 

@@ -91,8 +91,9 @@ Each detector declares \texttt{master\_bias}, \texttt{master\_hdu},
 an explicit calibration path with \texttt{bpm\_hdu}, or \texttt{omitted}.
 Common \texttt{hdu} is required; optional \texttt{flat\_hdus}/\texttt{bias\_hdus}
 arrays override it per input. Raw paths use the project raw root; master/BPM paths
-use its calibration root. Omitted flat \texttt{input\_index} defaults to ordinal;
-\texttt{asset} defaults to basename.
+use its calibration root. Bias indices are 0 to $N_{\rm bias}-1$; omitted flat \texttt{input\_index}
+defaults to $N_{\rm bias}$ plus flat ordinal. Explicit indices must be globally
+unique; \texttt{asset} defaults to basename.
 
 Optional \texttt{identity} defaults: \texttt{identity\_key=EXTNAME},
 \texttt{amplifier\_key=-} (unused), bin keys

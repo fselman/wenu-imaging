@@ -61,7 +61,10 @@ for qc, supplied, operation in ((True, True, 'bpm-linearity'), (True, False, 'bp
     pairs = {}
     for f in state['selection']['flat']:
         pair = pairs.setdefault(f['pair'], len(pairs))
-        text += '\n[[inputs.flat]]\n' + ''.join((k + ' = ' + json.dumps(v) + '\n' for k, v in dict(path=f['path'], pair=pair, input_index=f['index']).items()))
+        incoming = dict(path=f['path'], pair=pair, input_index=f['index'])
+        if qc and supplied:
+            incoming.pop('input_index')
+        text += '\n[[inputs.flat]]\n' + ''.join((k + ' = ' + json.dumps(v) + '\n' for k, v in incoming.items()))
     d = dict(detector_id='ESO_CCD_#65', configuration_detector=0, hdu=0, flat_hdus=[f['hdu'] for f in state['selection']['flat']], readout_id=state['selection']['readout_id'], master_bias=state['master'], master_hdu=1, master_sha256=hashlib.sha256(Path(state['master']).read_bytes()).hexdigest(), input_bpm=state['selection']['bpm']['path'] if supplied else 'omitted', bpm_hdu=1, bias_accepted=[bool(b['accepted']) for b in state['biases']], reference_rois=['CCD65.R0'], sites=[dict(roi=f'CCD65.R{i}', x=i + 1, y=1) for i in range(5)], max_loaded_pixels=10000, max_rows=50)
     text += '\n[[detectors]]\n'
     for k, v in d.items():
@@ -125,7 +128,11 @@ for qc, supplied, operation in ((True, True, 'bpm-linearity'), (True, False, 'bp
     repeated = subprocess.run(argv, cwd=orch, capture_output=True, text=True)
     assert repeated.returncode != 0, 'Completed run was overwritten'
     print('PASS', operation, qc, supplied, receipt['detectors'][0]['image_loads'], receipt['detectors'][0]['corrections'], 'native context, analytical signals, 50/100/30/100 measurements')
-for label, old, new in (('identity-type', 'exposure_hdu = 0', 'exposure_hdu = "zero"'), ('unknown-site-field', 'x = 1\n', 'x = 1\nunknown_coordinate = 9\n'), ('missing-master', 'master_sha256 = "' + d['master_sha256'] + '"', 'master_sha256 = "' + '0' * 64 + '"'), ('combined-without-prior', 'output_mode = "new"', 'output_mode = "combined"')):
+for label, old, new in (('identity-type', 'exposure_hdu = 0', 'exposure_hdu = "zero"'), ('unknown-site-field', 'x = 1\n', 'x = 1\nunknown_coordinate = 9\n'), ('missing-master', 'master_sha256 = "' + d['master_sha256'] + '"', 'master_sha256 = "' + '0' * 64 + '"'), ('combined-without-prior', 'output_mode = "new"', 'output_mode = "combined"'),
+    ('bias-flat-index-collision', 'input_index = 10', 'input_index = 0'),
+    ('flat-index-collision', 'input_index = 11', 'input_index = 10'),
+    ('index-type', 'input_index = 10', 'input_index = "ten"'),
+    ('bias-flat-asset-collision', '\n[[inputs.flat]]\n', '\n[[inputs.flat]]\nasset = '+json.dumps(Path(state['biases'][0]['path']).name)+'\n')):
     out = Path(tempfile.mkdtemp(prefix='invalid-', dir=reduced / 'cal'))
     invalid = text.replace(old, new).replace(str(Path(receipt['product_root']).relative_to(reduced)), str(out.relative_to(reduced)))
     assert invalid != text

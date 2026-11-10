@@ -77,7 +77,7 @@ def native_context(saved, q, texts):
         path=location(raw,incoming['path'])
         flats.append(dict(path=path,asset=incoming.get('asset',Path(path).name),
             hdu=row.get('flat_hdus',[row['hdu']]*len(author['inputs']['flat']))[i],
-            index=incoming.get('input_index',i),pair=f"pair-{incoming['pair']:03d}"))
+            index=incoming.get('input_index',len(author['inputs']['bias'])+i),pair=f"pair-{incoming['pair']:03d}"))
     biases=[]
     for i, incoming in enumerate(author['inputs']['bias']):
         path=location(raw,incoming)

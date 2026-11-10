@@ -7,6 +7,7 @@
 #include "mef_config_toml.h"
 #include "mef_bias_settings.h"
 #include <errno.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -386,6 +387,69 @@ done:
     return okay;
 }
 
+/* Original indices share one namespace across the product's flat/bias records.
+ * Admit identifiers before image hashing or cube ingestion, including defaults.
+ */
+static int input_identities(compilation *c, toml_datum_t flats, toml_datum_t biases)
+{
+    char *names[128] = {0};
+    long indices[64];
+    int okay = 0, count = 0;
+    for (int group = 0; group < 2; ++group) {
+        toml_datum_t cohort = group ? flats : biases;
+        for (int i = 0; i < cohort.u.arr.size; ++i) {
+            toml_datum_t row = cohort.u.arr.elem[i];
+            const char *incoming = group                     ? string(row, "path")
+                                   : row.type == TOML_STRING ? row.u.s
+                                                             : NULL;
+            char *file = path(c->raw, incoming);
+            if (!file) {
+                goto done;
+            }
+            const char *asset = group ? string(row, "asset") : NULL;
+            if (group && toml_get(row, "asset").type != TOML_UNKNOWN && !asset) {
+                free(file);
+                goto done;
+            }
+            if (!asset) {
+                asset = strrchr(file, '/') + 1;
+            }
+            names[count] = strlen(asset) <= 127 ? strdup(asset) : NULL;
+            free(file);
+            if (!names[count]) {
+                goto done;
+            }
+            for (int j = 0; j < count; ++j) {
+                if (!strcmp(names[j], names[count])) {
+                    goto done;
+                }
+            }
+            ++count;
+            if (group) {
+                toml_datum_t declared = toml_get(row, "input_index");
+                long index = declared.type == TOML_UNKNOWN ? biases.u.arr.size + i
+                             : declared.type == TOML_INT64 ? declared.u.int64
+                                                           : -1;
+                if (index < biases.u.arr.size || index > INT_MAX) {
+                    goto done;
+                }
+                for (int j = 0; j < i; ++j) {
+                    if (indices[j] == index) {
+                        goto done;
+                    }
+                }
+                indices[i] = index;
+            }
+        }
+    }
+    okay = 1;
+done:
+    for (size_t i = 0; i < 128; ++i) {
+        free(names[i]);
+    }
+    return okay;
+}
+
 static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char *settings)
 {
     const char *id = string(row, "detector_id"), *readout = string(row, "readout_id");
@@ -438,6 +502,10 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
         mad.type != TOML_BOOLEAN || !encoding || !isfinite(saturation) || saturation <= 0 ||
         !isfinite(tolerance) || tolerance < 0 || pixels <= 0 || rows <= 0 || good < 0 || good > 1 ||
         reject < 0 || reject > 255) {
+        goto done;
+    }
+    if (!input_identities(c, flats, biases)) {
+        fprintf(stderr, "Detector %s: invalid or overlapping input identities/indices\n", id);
         goto done;
     }
     for (int i = 0; i < 2; ++i) {
@@ -577,7 +645,8 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
             free(input);
             goto done;
         }
-        long ihdu = input_hdu(row, "flat_hdus", i, hdu), index = integer(item, "input_index", i);
+        long ihdu = input_hdu(row, "flat_hdus", i, hdu),
+             index = integer(item, "input_index", biases.u.arr.size + i);
         const char *asset = string(item, "asset");
         if (!asset) {
             asset = strrchr(input, '/') + 1;
