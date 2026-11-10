@@ -419,7 +419,7 @@ def main():
             require(not path.is_symlink(), 'Unexpected cached assembly symlink')
             assembly_before[path] = (path.read_bytes(), path.stat().st_mode & 0o777) if path.exists() else None
     if args.native_recipe:
-        for name in ('mefpp_bpm_linearity_recipe', 'recipe_file_hash_probe'):
+        for name in ('mefpp_bpm_linearity_recipe', 'recipe_file_hash_probe', 'mefpp_bpm_assemble'):
             path = build/'mefpp2'/name
             assembly_before[path] = (path.read_bytes(), path.stat().st_mode & 0o777) if path.exists() else None
     try:
@@ -432,9 +432,10 @@ def main():
         run([cmake,'-S',source,'-B',build,'-DMEFPP_BUILD_BIAS_RECIPE=ON',
              '-DMEFPP_SOURCE_REVISION='+args.revision], 'candidate-configure',checkout)
         if args.native_recipe:
-            run([cmake,'--build',build,'--parallel','2','--target','mefpp_bpm_linearity_recipe','recipe_file_hash_probe'], 'native-recipe-build',checkout)
+            run([cmake,'--build',build,'--parallel','2','--target','mefpp_bpm_linearity_recipe','recipe_file_hash_probe','mefpp_bpm_assemble'], 'native-recipe-build',checkout)
             shutil.copy2(build/'mefpp2/mefpp_bpm_linearity_recipe',candidate/'mefpp_bpm_linearity_recipe')
             shutil.copy2(build/'mefpp2/recipe_file_hash_probe',candidate/'recipe_file_hash_probe')
+            shutil.copy2(build/'mefpp2/mefpp_bpm_assemble',candidate/'mefpp_bpm_assemble')
         elif args.assembly_case:
             run([cmake,'--build',build,'--parallel','2','--target',*assembly_targets], 'assembly-build',checkout)
             for name in assembly_targets:
@@ -512,7 +513,8 @@ def main():
             'pycavi_configuration','pycavi_calibration_bindings')]
     if args.native_recipe:
         required += ['Pycavi2/tests/bpm_linearity_recipe_contract.py', 'tools/run-bpm-linearity.py',
-                     'mefpp2/tests/recipe_file_hash_contract.py']
+                     'mefpp2/tests/recipe_file_hash_contract.py',
+                     'mefpp2/tests/bpm_assembly_native_contract.py', 'mefpp2/tests/mef_assembly_contract.py']
         required += ['Pycavi2/pycavi/pycavi/'+name+'.py' for name in (
             'pycavi_bpm_linearity_plan', 'pycavi_bpm_linearity_recipe', 'pycavi_bpm_linearity_native',
             'pycavi_bpm_linearity_native_recipe', 'pycavi_bpm_linearity_assembly')]
@@ -530,6 +532,12 @@ def main():
             '--native-recipe', candidate/'mefpp_bpm_linearity_recipe',
             '--native-recipe-source-revision', args.revision,
             '--calibration-copies', '--work-parent', reduced], 'native-recipe-checks',orchestration)
+        cases=list(reduced.glob('combined-characterization-*'))
+        require(len(cases)==1, 'Expected one retained native recipe case')
+        run([args.asdf_python, validation/'mefpp2/tests/bpm_assembly_native_contract.py',
+            '--case', cases[0], '--command', candidate/'mefpp_bpm_assemble',
+            '--assembly-source-revision', args.revision, '--work-parent', reduced],
+            'detector-calibration-assembly-checks', orchestration)
         require({name:sha(Path(name)) for name in guards}==guards, 'Protected files changed')
         (candidate/'candidate.json').write_text(json.dumps(dict(successful=True,
             source_revision=args.revision, observations_opened=False,

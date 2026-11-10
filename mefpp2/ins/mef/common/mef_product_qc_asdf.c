@@ -675,28 +675,78 @@ static int assembly_inputs(asdf_file_t *out,const mef_bpm_assembly_qc *r,assembl
     return okay;
 }
 
+typedef struct {
+    const char *id;
+    size_t detector;
+    int calibration;
+} assembly_calibration;
+
+static int calibration_metadata_equal(asdf_file_t *a,asdf_file_t *b,int index)
+{
+    const char *fields[]={"record_id","role","qc_location","file/id","file/filename",
+        "file/location","file/kind","file/sha256","file/integrity"};
+    size_t i;
+    for(i=0;i<sizeof(fields)/sizeof(*fields);++i) {
+        char path[256];
+        asdf_value_t *x,*y;
+        const char *left=NULL,*right=NULL;
+        int okay;
+        snprintf(path,sizeof(path),"qc/calibrations/%d/%s",index,fields[i]);
+        x=asdf_get_value(a,path); y=asdf_get_value(b,path);
+        okay=x && y && asdf_value_get_type(x)==asdf_value_get_type(y) &&
+            ((asdf_value_get_type(x)==ASDF_VALUE_NULL) ||
+             (asdf_value_as_string0(x,&left)==ASDF_VALUE_OK &&
+              asdf_value_as_string0(y,&right)==ASDF_VALUE_OK && !strcmp(left,right)));
+        asdf_value_destroy(x); asdf_value_destroy(y);
+        if(!okay) return 0;
+    }
+    return 1;
+}
+
 static int assembly_calibrations(asdf_file_t *out,const mef_bpm_assembly_qc *r,assembly_document *docs,int count_cal)
 {
     asdf_sequence_t *joined=asdf_sequence_create(out);
+    assembly_calibration *groups=calloc(r->detector_count*(size_t)count_cal,sizeof(*groups));
     char path[256];
-    int c,okay=joined!=NULL;
-    size_t d;
-    for(c=0;okay && c<count_cal;++c) {
+    int c,okay=joined && groups;
+    size_t d,g,group_count=0;
+
+    /* Preserve first-encounter order and original IDs. Only identical calibration
+     * records share a joined binding list; detector-local masters remain distinct.
+     */
+
+    for(d=0;okay && d<r->detector_count;++d) for(c=0;okay && c<count_cal;++c) {
+        const char *id=NULL;
+        snprintf(path,sizeof(path),"qc/calibrations/%d/file/id",c);
+        okay=asdf_get_string0(docs[d].file,path,&id)==ASDF_VALUE_OK;
+        if(!okay) break;
+        for(g=0;g<group_count && strcmp(id,groups[g].id);++g) {}
+        if(g==group_count) groups[group_count++]=(assembly_calibration){id,d,c};
+        else okay=groups[g].calibration==c && groups[g].detector!=d &&
+            calibration_metadata_equal(docs[d].file,docs[groups[g].detector].file,c);
+    }
+    for(g=0;okay && g<group_count;++g) {
         asdf_mapping_t *record;
         asdf_sequence_t *bindings=asdf_sequence_create(out);
+        c=groups[g].calibration;
         snprintf(path,sizeof(path),"qc/calibrations/%d",c);
-        record=mapping_copy_at(out,docs[0].file,path);
+        record=mapping_copy_at(out,docs[groups[g].detector].file,path);
         okay=record && bindings;
         for(d=0;okay && d<r->detector_count;++d) {
-            snprintf(path,sizeof(path),"qc/calibrations/%d/detector_bindings/0",c);
-            okay=append_copy_at(out,bindings,docs[d].file,path);
+            const char *id=NULL;
+            snprintf(path,sizeof(path),"qc/calibrations/%d/file/id",c);
+            okay=asdf_get_string0(docs[d].file,path,&id)==ASDF_VALUE_OK;
+            if(okay && !strcmp(id,groups[g].id)) {
+                snprintf(path,sizeof(path),"qc/calibrations/%d/detector_bindings/0",c);
+                okay=append_copy_at(out,bindings,docs[d].file,path);
+            }
         }
         if(okay){okay=seq(record,"detector_bindings",bindings);bindings=NULL;}
         if(okay){okay=append(joined,record);record=NULL;}
         asdf_sequence_destroy(bindings);asdf_mapping_destroy(record);
     }
     if(okay){okay=replace_sequence(out,"qc","calibrations",joined);joined=NULL;}
-    asdf_sequence_destroy(joined);
+    free(groups);asdf_sequence_destroy(joined);
     return okay;
 }
 
@@ -745,8 +795,6 @@ static int assembly_admit(const mef_bpm_assembly_qc *r,assembly_document *docs,i
             if(recovery_count(f,path)!=1) return 0;
         }
         for(i=0;i<*calibrations;++i) {
-            snprintf(path,sizeof(path),"qc/calibrations/%d/file/id",i);
-            if(!equal_text(f,docs[0].file,path)) return 0;
             snprintf(path,sizeof(path),"qc/calibrations/%d/role",i);
             if(!equal_text(f,docs[0].file,path)) return 0;
             snprintf(path,sizeof(path),"qc/calibrations/%d/detector_bindings",i);
@@ -778,7 +826,7 @@ int mef_bpm_assembly_qc_write(const mef_bpm_assembly_qc *r,char *message,size_t 
         snprintf(expected,sizeof(expected),"%.*s.asdf",(int)(length-5),r->fits_path)>=(int)sizeof(expected) ||
         strcmp(expected,r->asdf_path)) goto done;
     docs=calloc(r->detector_count,sizeof(*docs));
-    detail="Detector ASDF identities, configuration or common ordered inputs/calibrations differ";
+    detail="Detector ASDF identities, configuration or common ordered inputs differ";
     if(!docs || !assembly_admit(r,docs,&inputs,&calibrations)) goto done;
     detail="Cannot create assembled QC document";
     out=asdf_open_mem_ex(NULL,0,NULL);

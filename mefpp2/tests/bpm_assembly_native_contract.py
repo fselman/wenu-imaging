@@ -24,19 +24,19 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def mapping_fixture(member, folder):
+def mapping_fixture(member, folder, separate_master=False):
     """Second detector identity exercises cross-document joins without a rerun.
 
     Its pixels are copied from the completed native product. Python writes only
     this explicitly labelled synthetic input metadata; final publication is C.
     """
     original_id = member['detector_id']
-    detector_id = 'SYNTHETIC_MAPPING_DETECTOR'
-    output = folder/'mapping-fixture.fits'
+    detector_id = 'SYNTHETIC_LOCAL_MASTER' if separate_master else 'SYNTHETIC_MAPPING_DETECTOR'
+    output = folder/('local-master-fixture.fits' if separate_master else 'mapping-fixture.fits')
     sidecar = output.with_suffix('.asdf')
     q = deepcopy(native_qc.read(member['bpm']['asdf']))
     old_path = q['file']['id']
-    slot = member['configuration_detector']+100
+    slot = member['configuration_detector']+(200 if separate_master else 100)
     def remap(value):
         if isinstance(value, dict):
             return {k: slot if k == 'configuration_detector' else remap(v) for k, v in value.items()}
@@ -46,6 +46,15 @@ def mapping_fixture(member, folder):
             return detector_id if value == original_id else str(output) if value == old_path else value
         return value
     q = remap(q)
+    if separate_master:
+        master = next(c for c in q['calibrations'] if c['role'] == 'bias')
+        old_master = master['file']['id']
+        new_master = old_master+':synthetic-local'
+        master['record_id'] = master['file']['id'] = new_master
+        master['file']['location'] = str(folder/'synthetic-master.fits')
+        master['file']['filename'] = 'synthetic-master.fits'
+        for metric in q['characterization']['detectors'][0]['measurements']:
+            metric['sources'] = [new_master if v == old_master else v for v in metric['sources']]
     q['file']['filename'] = output.name
     q['provenance']['producer']['name'] = 'synthetic_mapping_fixture_from_retained_native_product'
     data = bytearray(Path(member['bpm']['fits']).read_bytes())
@@ -72,7 +81,8 @@ def main():
     parent = args.case.resolve(strict=True)
     source_manifest = parent/'reduced/cal/bpm-linearity/combined/manifest.json'
     report = json.loads(source_manifest.read_text())
-    assert report['status'] == 'detector_characterization_complete_for_owner_inspection' and report['input_preservation']
+    assert report['status'] in ('detector_characterization_complete_for_owner_inspection',
+                                'complete_for_owner_inspection') and report['input_preservation']
     members = deepcopy(report['detectors'])
     work = Path(tempfile.mkdtemp(prefix='native-bpm-assembly-', dir=args.work_parent)).resolve()
     controls, reduced = work/'orchestration', work/'reduced'
@@ -83,7 +93,10 @@ def main():
     if priority < 10:
         os.nice(10-priority)
     recipe = controls/'bpm-linearity.toml'
-    recipe.write_bytes((parent/'orchestration/bpm-linearity.toml').read_bytes())
+    source_recipe = next(p for p in report['configuration_sources']
+                         if Path(p).parent == parent/'orchestration' and
+                         'bpm_linearity_recipe_schema_version' in Path(p).read_text())
+    recipe.write_bytes(Path(source_recipe).read_bytes())
     paths = [Path(m['bpm'][key]) for m in members for key in ('fits', 'asdf', 'log')]
     for member in members:
         for name, digest in member['bpm']['sha256'].items():
@@ -92,6 +105,7 @@ def main():
     fixture_folder = reduced/'cal'
     fixture_folder.mkdir()
     members.append(mapping_fixture(members[0], fixture_folder))
+    members.append(mapping_fixture(members[0], fixture_folder, separate_master=True))
     manifest = controls/'assembly.tsv'
     manifest.write_text(''.join('\t'.join([m['detector_id'], str(m['configuration_detector']),
         m['bpm']['fits'], m['bpm']['asdf']])+'\n' for m in members))
@@ -109,6 +123,10 @@ def main():
     assert q['provenance']['producer']['source_revision'] == args.assembly_source_revision
     assert q['provenance']['recipe_configuration']['snapshot'] == recipe.read_text()
     assert saved['detector_products'] == [native_qc.read(m['bpm']['asdf']) for m in members]
+    masters = [c for c in q['calibrations'] if c['role'] == 'bias']
+    priors = [c for c in q['calibrations'] if c['role'] == 'bpm']
+    assert len(masters) == 2 and [len(c['detector_bindings']) for c in masters] == [2, 1]
+    assert len(priors) == 1 and len(priors[0]['detector_bindings']) == 3
     actual = hdus(output)
     assert actual[0][1]['NAXIS'] == '0' and actual[0][1]['DETID'] == members[-1]['detector_id']
     assert int(actual[0][1]['NEXTEND']) == len(actual)-1 == len(saved['image_planes'])
@@ -144,7 +162,21 @@ def main():
         pass
     else:
         raise AssertionError('Changed joined measurement escaped original-record comparison')
+    # Equal identity with a different declared location must not be silently joined.
+    conflict = deepcopy(native_qc.read(members[1]['bpm']['asdf']))
+    conflict['calibrations'][0]['file']['location'] += '.conflict'
+    bad_source = fixture_folder/'conflicting-calibration.asdf'
+    native_qc.qc._asdf().AsdfFile(dict(qc=conflict)).write_to(bad_source)
+    conflict_manifest = controls/'conflicting-assembly.tsv'
+    conflict_manifest.write_text(manifest.read_text().replace(members[1]['bpm']['asdf'], str(bad_source)))
+    conflict_argv = list(argv)
+    conflict_argv[1] = str(conflict_manifest)
+    conflict_argv[2] = str(reduced/'conflicting-calibration.fits')
+    conflict_argv[4] = str(reduced/'conflicting-calibration.log')
+    assert subprocess.run(conflict_argv, capture_output=True).returncode != 0
+    assert not (reduced/'conflicting-calibration.asdf').exists()
     assert frozen == {p: sha(p) for p in paths}
+    print('PASS: shared and detector-local calibration bindings; conflicting shared metadata refused')
     print('PASS: native final MEF/ASDF; every padded pixel payload and all stored QC values/mappings preserved')
     print('PASS: original detector provenance, recipe snapshot, exclusive publication and self-contained relocated reader')
     print('COVERAGE: real native ASDF assembly across retained native QC and an explicit synthetic detector-mapping fixture')

@@ -126,9 +126,8 @@ def admit(path):
         common = entries[0]['dependencies']['selection']
         for entry in entries[1:]:
             selected = entry['dependencies']['selection']
-            require([r['path'] for r in selected['flat']] == [r['path'] for r in common['flat']] and
-                    entry['dependencies']['master']['product'] == entries[0]['dependencies']['master']['product'] and
-                    selected['bpm']['path'] == common['bpm']['path'], 'Assembly requires common ordered flats, master and prior')
+            require([r['path'] for r in selected['flat']] == [r['path'] for r in common['flat']],
+                    'Assembly requires common ordered flat inputs')
     sources = {item['path']: item['sha256'] for item in project['sources']}
     sources[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
     native_reference = Path(project['native_configuration'])

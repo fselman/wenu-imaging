@@ -37,8 +37,7 @@ def read_product(path):
             metric['sources'] = [q['file']['id'] if v == child['file']['id'] else v for v in metric['sources']]
         require(detector == q['characterization']['detectors'][index], 'Assembled product QC values or mapping differ')
         require(child['provenance']['configuration'] == q['provenance']['configuration'], 'Detector configuration differs')
-    for name, field in [('inputs', 'participation_by_detector'), ('embedded_input_records', 'detectors'),
-                        ('calibrations', 'detector_bindings')]:
+    for name, field in [('inputs', 'participation_by_detector'), ('embedded_input_records', 'detectors')]:
         expected = deepcopy(children[0][name])
         for i, row in enumerate(expected):
             row[field] = []
@@ -49,6 +48,24 @@ def read_product(path):
                 row[field].extend(source[field])
         require(q[name] == expected and all(len(c[name]) == len(expected) for c in children),
                 'Assembled input/calibration records differ')
+    # Calibration identity, rather than list position, determines sharing.
+    # A detector-local master stays distinct; a shared mask gathers its bindings.
+    calibrations = {}
+    for child in children:
+        child_ids = set()
+        for source in child['calibrations']:
+            key = source['file']['id']
+            require(key not in child_ids, 'Duplicate detector calibration identity')
+            child_ids.add(key)
+            if key not in calibrations:
+                calibrations[key] = deepcopy(source)
+            else:
+                row = calibrations[key]
+                require({k: v for k, v in row.items() if k != 'detector_bindings'} ==
+                        {k: v for k, v in source.items() if k != 'detector_bindings'},
+                        'Conflicting shared calibration metadata')
+                row['detector_bindings'].extend(deepcopy(source['detector_bindings']))
+    require(q['calibrations'] == list(calibrations.values()), 'Assembled calibration bindings differ')
     for line in maps[0].splitlines():
         detector, source_hdu, output_hdu, role = line.split('\t')
         planes.append(dict(detector_id=detector, source_hdu=int(source_hdu), output_hdu=int(output_hdu), role=role))
