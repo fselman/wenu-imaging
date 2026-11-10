@@ -49,6 +49,20 @@ ingest/correction per input, compare cube values and measurements with reference
 and cover BPM requested/omitted and unsuitable-pair cases. Preserve the 26 completed
 detector products and CCD87 preparation from the stopped 32-detector run.
 
+Recipe `[preparation] input_bpm` explicitly selects `archived` (default) or
+`omitted`. The latter omits only the current input mask and triggers candidate
+creation, without modifying the archived samples, master or its historical mask
+lineage. The processing TOML's mask encoding describes supplied masks; explicit
+recipe omission does not alter other processing settings. Drop unused mask-copy
+bindings from that recipe. Exclude the omitted mask from current payload loads
+and integrity dependencies, while retaining the frozen historical QC graph.
+
+Saved reading validates the effective selection against that graph and declared
+policy. With omission, ROI populations can change; do not claim exact historical
+ROI replay. Previously admitted direct-site values must remain exact. Newly
+admitted sites are decoded from current native transports and reported separately,
+never replaced with old unavailable values. Source archives remain unchanged.
+
 The `qc` recipe boolean defaults to true; trailing `--qc true/false` overrides it.
 False disables optional BPM full-frame diagnostics and MAD, while preserving
 requested ROI means/variances, pair/direct-site measurements and provenance.

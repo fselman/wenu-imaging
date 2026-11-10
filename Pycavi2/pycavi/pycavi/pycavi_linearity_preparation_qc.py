@@ -72,7 +72,7 @@ def traces(data, frames, height, role):
                  raw_row_start=1,correction_adu=groups[r['index']]) for r in frames]
 
 
-def collect(native, resolved, selection, biases, expected_samples, master_snapshot, *, master_reference, transports=None):
+def collect(native, resolved, selection, biases, expected_samples, master_snapshot, *, master_reference, transports=None, input_bpm_policy="archived"):
     """Read native transport only. No raw FITS or source remeasurement."""
     native=Path(native);frozen={};texts={}
     def read(path):
@@ -132,18 +132,43 @@ def collect(native, resolved, selection, biases, expected_samples, master_snapsh
     def key(r):return (r['asset'],r['input_index'],r['hdu'],r['source_roi'],r['active_x'],r['active_y'])
     expected=expected_samples['rows'];saved={key(r):r for r in samples}
     qc.require(len(saved)==len(samples)==len(expected),'Duplicate/incomplete direct-site replay')
-    qc.require(all(saved.get(key(r))==r for r in expected),'Corrected direct-site replay differs from preserved archive')
+    qc.require(input_bpm_policy in ('archived', 'omitted'), 'Unknown input BPM comparison policy')
+    replayed=deepcopy(expected)
+    comparison=None
+    if input_bpm_policy=='archived':
+        qc.require(all(saved.get(key(r))==r for r in expected),'Corrected direct-site replay differs from preserved archive')
+    else:
+        qc.require(selection['bpm']['encoding']=='omitted' and set(saved)=={key(r) for r in expected},
+                   'Omitted-mask direct-site identity cohort differs')
+        newly_admitted=0
+        for old in expected:
+            current=saved[key(old)]
+            if old['signal_adu'] is not None:
+                qc.require(current==old, 'Previously admitted direct-site value changed')
+            else:
+                qc.require(set(current)==set(old) and all(current[k]==old[k] for k in old
+                           if k not in ('signal_adu', 'admission_state')),
+                           'Omitted-mask direct-site metadata changed')
+                newly_admitted+=current['signal_adu'] is not None
+        replayed=[deepcopy(saved[key(r)]) for r in expected]
+        comparison=dict(input_bpm_policy='omitted', exact_replay=replayed==expected,
+            previously_admitted=sum(r['signal_adu'] is not None for r in expected),
+            newly_admitted=newly_admitted, historical_archive_changed=False)
+
     # Stable acquisition/ROI order, independent of the native pair processing order.
     order={r['index']:i for i,r in enumerate(selection['flat'])};roi_order={r['id']:i for i,r in enumerate(detector['rois'])}
     exposures.sort(key=lambda r:(order[r['input_index']],roi_order[r['roi']]))
     if transports is None:
         qc.require(all(pair.sha(pair.small(Path(p)))==digest for p,digest in frozen.items()),'Native evidence changed during reading')
     else:qc.require(set(texts)==set(transports),'Unexpected frozen native transport')
-    return dict(schema_version=1,measurement_stage=STAGE,detector=detector['detector_id'],
-        rows=rows,exposure_rows=exposures,scan_traces=groups,direct_site_replay=deepcopy(expected),
+    result=dict(schema_version=1,measurement_stage=STAGE,detector=detector['detector_id'],
+        rows=rows,exposure_rows=exposures,scan_traces=groups,direct_site_replay=replayed,
         raw_bias_diagnostics=raw_bias,native_sha256=frozen,native_transports=texts,noise_state='unavailable',
         covariance=None,fit_state='not_performed',scientific_acceptance=False,
         units=dict(signal='ADU',variance='ADU2',trace='ADU',exposure='s',coordinates='FITS-1-based-inclusive'))
+    if comparison is not None:
+        result['historical_sample_comparison']=comparison
+    return result
 
 
 def graph(path):

@@ -88,6 +88,7 @@ def main():
     parser.add_argument('--work-parent', type=Path, required=True)
     parser.add_argument('--native-recipe', type=Path, help='Execute all stages through the single native recipe')
     parser.add_argument('--native-recipe-source-revision')
+    parser.add_argument('--omit-archived-bpm', action='store_true')
     parser.add_argument('--create-bpm', action='store_true')
     parser.add_argument('--unsuitable-coverage', action='store_true')
     parser.add_argument('--qc', choices=('true', 'false'), default='true')
@@ -107,7 +108,9 @@ def main():
     if priority < 10:
         os.nice(10-priority)
     work = Path(tempfile.mkdtemp(prefix='combined-characterization-', dir=args.work_parent)).resolve()
-    state = fixture(work, separated=True, supplied_bpm=not args.create_bpm)
+    assert not args.omit_archived_bpm or (args.native_recipe and args.create_bpm)
+    state = fixture(work, separated=True, supplied_bpm=not args.create_bpm or args.omit_archived_bpm,
+                    masked_site=args.omit_archived_bpm)
     source = source_archive(state)
     guard = state['raw']/'preservation-guard.bin'
     guard.write_bytes(b'original')
@@ -133,6 +136,8 @@ def main():
         source_revision=args.source_revision), preparation=dict(detector_toml='detector_toml.toml', processing_toml='processing_toml.toml'),
         bpm=dict(acquisition='quick', output_mode='new', upper_fraction=0.85,
                  minimum_span_fraction=0.99 if args.unsuitable_coverage else 0.001, maximum_pair_difference=0.02))
+    if args.omit_archived_bpm:
+        sections['preparation']['input_bpm']='omitted'
     if args.assembly:
         assert args.assembly_source_revision
         sections['assembly'] = dict(executable=str(args.assembly.resolve(strict=True)),
@@ -159,7 +164,8 @@ def main():
                 path='imported/'+original.name, sha256=hashlib.sha256(original.read_bytes()).hexdigest()).items())
     path = controls/'bpm-linearity.toml'
     path.write_text(text)
-    protected = [*state['raw'].glob('*.fits'), Path(state['master'])]+([] if args.create_bpm else [Path(state['selection']['bpm']['path'])])
+    protected = [*state['raw'].glob('*.fits'), Path(state['master'])]+(
+        [] if state['selection']['bpm']['encoding']=='omitted' else [Path(state['selection']['bpm']['path'])])
     for member in protected:
         member.chmod(0o444)
     state['raw'].chmod(0o555)
@@ -171,6 +177,13 @@ def main():
     finally:
         recipe.preparation.image_fingerprint = original
     assert not list(run.iterdir()) and len(plan['entries']) == 1
+    if args.omit_archived_bpm:
+        dependencies=plan['entries'][0]['dependencies']
+        assert dependencies['input_bpm_policy']=='omitted'
+        assert dependencies['selection']['bpm']==dict(encoding='omitted')
+        assert state['selection']['bpm']['path'] not in plan['baseline']
+        assert dependencies['expected_samples']['rows'][0]['signal_adu'] is None
+
     invalid = controls/'invalid.toml'
     invalid.write_text(text.replace('reference_rois = ["CCD65.R0"]', 'reference_rois = ["unknown"]'))
     try:
@@ -237,6 +250,11 @@ def main():
                 assert plane.data.shape==(2,6) and np.all(plane.data==expected.get(plane.header['EXTNAME'],0))
     value = archive.read_product(member['preparation']['path'])
     assert len(value['exposure_rows']) == 100 and len(value['direct_site_replay']) == 100
+    if args.omit_archived_bpm:
+        assert value['input_bpm_policy']=='omitted' and value['input_bpm']==dict(encoding='omitted')
+        comparison=value['historical_sample_comparison']
+        assert not comparison['exact_replay'] and comparison['previously_admitted']==80 and comparison['newly_admitted']==20
+        assert value['direct_site_replay'][0]['signal_adu']==200
     assert value['exposure_rows'][0]['signal_adu'] == 205.5 and value['scan_traces'][3]['master_accepted'] == 0
     if args.native_recipe and not args.create_bpm:
         assert member['bpm']['state'] == 'skipped_input_bpm'

@@ -47,7 +47,7 @@ def bind(dependencies, resolved, rows, calibration):
         if source == original['selection']['bpm'].get('path'):
             value['selection']['bpm']['path'] = str(path)
     value['transport'] = preparation.native_plan(resolved, value['selection'],
-        original_population(original))
+        original_population(original), input_bpm=original.get("input_bpm_policy", "archived"))
     value['calibration_bindings'] = selected
     value['calibration_root'] = str(root)
     return value
@@ -66,7 +66,9 @@ def original_population(dependencies):
 def verify_context(context, source):
     """Verify relocated calibration declarations against the embedded original graph."""
     rows = context.get('calibration_bindings', [])
-    if not rows:
+    policy = context.get('input_bpm_policy', 'archived')
+    require(policy in ('archived', 'omitted'), 'Unknown archived input BPM policy')
+    if not rows and 'input_bpm_policy' not in context:
         return
     try:
         from . import pycavi_linearity_preparation_qc as archive
@@ -84,7 +86,7 @@ def verify_context(context, source):
             require(file['location'] not in baseline or baseline[file['location']] == file['sha256'],
                     'Conflicting preserved mask fingerprint')
             baseline[file['location']] = file['sha256']
-    allowed = {master['product'], selection['bpm'].get('path')}
+    allowed = {master['product']} if policy=='omitted' else {master['product'], selection['bpm'].get('path')}
     require(len({r['source'] for r in rows}) == len(rows), 'Duplicate archived calibration binding')
     for row in rows:
         require(set(row) == {'source', 'path', 'sha256'} and row['source'] in allowed and
@@ -94,5 +96,7 @@ def verify_context(context, source):
             master['product'] = row['path']
         if row['source'] == entry['selection']['bpm'].get('path'):
             selection['bpm']['path'] = row['path']
+    if policy=='omitted':
+        selection['bpm'] = dict(encoding='omitted')
     require(context['master'] == master and context['selection'] == selection,
-            'Native context changed more than the declared calibration locations')
+            'Native context differs from the declared calibration locations/input BPM policy')

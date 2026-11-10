@@ -95,7 +95,7 @@ def region_toml(regions):
         json.dumps(k)+' = '+json.dumps(v)+'\n' for k,v in region.items()) for region in regions)
 
 
-def native_plan(resolved, selection, sites):
+def native_plan(resolved, selection, sites, *, input_bpm="archived"):
     """Explicit dataset binding -> native transport; no pixel/EXPTIME reads."""
     s = deepcopy(selection); c = resolved['controls']
     ds = [d for d in resolved['detectors'] if d['detector_id'] == s['detector']]
@@ -104,7 +104,10 @@ def native_plan(resolved, selection, sites):
     for old,new in [('raw_saturation_adu','raw_saturation_adu'),('pair_time_tolerance_s','pair_time_tolerance_s'),
                     ('with_mad','with_mad'),('reject_bits','reject_bits')]:
         require(s[old] == c[new], 'Archived selection conflicts with processing TOML: '+old)
-    bpm = s['bpm']; require(bpm['encoding']==c['mask_encoding'], 'BPM encoding conflict')
+    require(input_bpm in ('archived', 'omitted'), 'Unknown recipe input BPM policy')
+    bpm = s['bpm']
+    require(bpm['encoding']=='omitted' if input_bpm=='omitted' else bpm['encoding']==c['mask_encoding'],
+            'BPM encoding conflicts with the explicit input policy')
     if bpm['encoding']=='binary':require(bpm['good_value']==c['binary_good_value'], 'BPM polarity conflict')
     require(len(s['bias'])==2 and 2<=len(s['flat'])<=64 and len(s['flat'])%2==0, 'Explicit flat pairs/two raw RON biases required')
     require(type(s['max_loaded_pixels']) is int and s['max_loaded_pixels']>0 and
@@ -205,7 +208,7 @@ def bias_receipt_fingerprints(handoff_path, bias_paths, master, detector):
     return dict(path=str(path),sha256=hashlib.sha256(payload).hexdigest(),inputs=digests)
 
 
-def preparation_dependencies(source_samples, handoff_path, resolved):
+def preparation_dependencies(source_samples, handoff_path, resolved, *, input_bpm="archived"):
     """Admit preserved inputs without opening FITS or rebuilding a calibration."""
     try:
         from . import pycavi_linearity_preparation_qc as archive
@@ -279,7 +282,15 @@ def preparation_dependencies(source_samples, handoff_path, resolved):
     frozen[str(config_path)] = pair.sha(config_bytes)
     require(all(Path(p).is_absolute() and type(d) is str and len(d)==64 for p,d in baseline.items()),
             'Invalid preserved image baseline')
-    return dict(source_samples=str(source_samples), handoff_path=str(handoff_path), selection=selection, biases=biases,
+    require(input_bpm in ('archived', 'omitted'), 'Unknown recipe input BPM policy')
+    if input_bpm == 'omitted':
+        # The original master and archived QC retain their mask lineage. Only
+        # the current run's input selection and payload dependencies change.
+        if selection['bpm']['encoding'] != 'omitted':
+            baseline.pop(selection['bpm']['path'])
+        selection['bpm'] = dict(encoding='omitted')
+        transport = native_plan(resolved, selection, entry['population'], input_bpm=input_bpm)
+    return dict(input_bpm_policy=input_bpm, source_samples=str(source_samples), handoff_path=str(handoff_path), selection=selection, biases=biases,
                 master=master, master_snapshot=snapshot, configuration=native, transport=transport,
                 baseline=baseline, metadata_sha256={str(p):d for p,d in frozen.items()},
                 expected_samples=table, handoff=handoff)

@@ -42,7 +42,9 @@ class ManifestReader:
                 pairs=[deepcopy(row['raw']) for row in value['rows']], bias=deepcopy(bias),
                 provenance=dict(measurement_stage=value['measurement_stage'],
                     raw_diagnostic_stage=measurements.RAW,
-                    selection='Preserved native ASDF populations; admitted prior mask retained',
+                    selection=('Input BPM explicitly omitted; historical archive unchanged'
+                        if value.get('input_bpm_policy')=='omitted' else
+                        'Preserved native ASDF populations; admitted prior mask retained'),
                     native_receipt=dict(operation='linearity.prepare', path=str(path)),
                     serializer=dict(source_revision=self.manifest['native_source_revision'])))
             if q is None:
@@ -60,7 +62,10 @@ class ManifestReader:
                 acquisition_coverage=context['coverage'],
                 prior_mask=context['calibrations'], source=str(bpm_path),
                 selection_count=None,
-                selection_note='Selection also applies the prior mask. Its count is not stored in this QC; inspect the saved SELECTION plane separately.',
+                selection_note=('Selection also applies the prior mask.' if any(
+                    c['role']=='bpm' for c in context['calibrations']) else
+                    'No input BPM supplied; selection requires a usable fit and accepted reason bits.')+
+                    ' Inspect the saved SELECTION plane for its count.',
                 zero_meaning='No detected reasons; not certification',
                 reason_codes={'0': 'No detected reasons', '4': 'Low normalized response',
                               '8': 'High normalized response'},

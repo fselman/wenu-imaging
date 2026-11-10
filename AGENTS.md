@@ -22,8 +22,9 @@ TOML form or the retained per-stage form, never both. Native recipe selection
 requires its own Mac ASDF/ownership gate and comparison with the CCD65 pilot.
 An explicit assembly section selects the reference detector for final MEF/QC. Final assembly
 passed the synthetic Mac gate at 6f3eaaf. The per-stage CCD65 pilot passed exact
-saved-product checks and visual plot inspection; the new in-process recipe is
-not yet Mac-qualified or selected. Historical calibrations may be bound to byte-identical copies under
+saved-product checks and visual plot inspection. The shared-cube supplied-mask
+path passed the Mac ASDF gates and exact CCD65 checks; explicit archive-mask
+omission still needs its Mac gate. The new coordinator is not selected. Historical calibrations may be bound to byte-identical copies under
 reduced/cal through explicit recipe source/path/SHA256 entries. Preserve original
 ASDF/handoff records and verify copied bytes against their frozen fingerprints. Reuse the existing
 numerical services and recipe directory contract.
@@ -44,11 +45,19 @@ The feature branch implements the shared-cube path; its selected-Mac ASDF gate
 is pending. A supplied BPM skips creation and logs the reason. `--qc true/false`
 overrides the recipe boolean (default true); false suppresses optional BPM
 full-frame QC and MAD without disabling requested linearity measurements.
+Recipe `[preparation] input_bpm` defaults to `archived`; explicit `omitted`
+selects no current mask and enables BPM creation while preserving the historical
+archive and master lineage. Previously admitted direct samples stay exact;
+newly admitted samples are reported separately. Do not rewrite archived QC or
+claim unchanged ROI populations after mask omission.
 Full-file preservation hashing still reads shared inputs before and after the
 batch; do not claim total read-once disk I/O. See the detector flow in
 docs/developer/design/common-recipe-coordinator-v1.md. Preserve stopped run
 native-32-wm3xnsso (26 completed detectors; CCD87 preparation saved). Do not relax
 pair-quality criteria or repeat completed detector work to bypass the failure.
+
+Directory reorganization is deferred until BPM/linearity development is finished.
+Keep the current file locations during scientific/processing development.
 
 ## Human-readable implementation
 

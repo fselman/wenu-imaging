@@ -568,7 +568,7 @@ def main():
         run([args.asdf_python, validation/'Pycavi2/tests/bpm_linearity_recipe_contract.py',
             '--source-revision', args.revision,
             '--native-recipe', candidate/'mefpp_bpm_linearity_recipe',
-            '--native-recipe-source-revision', args.revision, '--create-bpm', '--unsuitable-coverage',
+            '--native-recipe-source-revision', args.revision, '--create-bpm', '--omit-archived-bpm', '--unsuitable-coverage',
             '--calibration-copies', '--work-parent', reduced], 'shared-cube-created-bpm-checks',orchestration)
         require({name:sha(Path(name)) for name in guards}==guards, 'Protected files changed')
         (candidate/'candidate.json').write_text(json.dumps(dict(successful=True,

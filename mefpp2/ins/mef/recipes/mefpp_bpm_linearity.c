@@ -30,8 +30,8 @@ int main(int argc, char **argv)
     }
 
     /* [BPM-LINEARITY-DETECTOR-LOOP]
-     * Prepare measurements, then characterize the candidate with the same
-     * admitted master and prior mask. Never feed the candidate back as a prior.
+     * Ingest once, optionally create a BPM, then measure linearity from the
+     * shared cube. Never feed the candidate back as an input mask.
      */
 
     for (detector_index = 0; detector_index < recipe.detector_count; ++detector_index) {

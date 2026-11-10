@@ -32,7 +32,8 @@ def prepare_context(dependencies, resolved, directory, controls, *, source_revis
         shutil.copyfile(path, out)
         qc.require(pair.sha(pair.small(out)) == digest, 'Frozen source graph changed')
         hashes[relative.as_posix()] = digest
-    context = dict(schema_version=1, resolved=resolved, selection=dependencies['selection'],
+    context = dict(schema_version=1, input_bpm_policy=dependencies.get('input_bpm_policy', 'archived'),
+        resolved=resolved, selection=dependencies['selection'],
         biases=dependencies['biases'], master=dependencies['master'],
         master_snapshot=dependencies['master_snapshot'], source_revision=source_revision,
         source_graph=dict(entry=source.name, sha256=hashes), dependency_evidence=evidence)
@@ -73,7 +74,7 @@ def read_product(path):
                    'Frozen dependency graph changed')
     source = (root/graph['entry']).resolve(strict=True)
     qc.require(source.is_relative_to(root), 'Source graph escapes archive')
-    if context.get('calibration_bindings'):
+    if context.get('calibration_bindings') or 'input_bpm_policy' in context:
         try:
             from . import pycavi_calibration_bindings as calibrations
         except ImportError:
@@ -86,7 +87,8 @@ def read_product(path):
     # collect only decodes saved native transports; it never repeats an estimator.
     native = context['dependency_evidence']['native_directory']
     value = previous.collect(native, context['resolved'], context['selection'], context['biases'],
-        expected, context['master_snapshot'], master_reference=context['master'], transports=transports)
+        expected, context['master_snapshot'], master_reference=context['master'], transports=transports,
+        input_bpm_policy=context.get('input_bpm_policy', 'archived'))
     ordered = context['selection']['flat'] + context['biases']
     records = q['embedded_input_records']
     qc.require(len(records) == len(ordered), 'Incomplete native input cohort')
@@ -139,6 +141,7 @@ def read_product(path):
                metrics[-1]['status'] == 'unavailable' and metrics[-1]['value'] is None,
                'Noise model must remain unavailable')
     from copy import deepcopy
+    value['input_bpm_policy'] = context.get('input_bpm_policy', 'archived')
     value['input_bpm'] = deepcopy(context['selection']['bpm'])
     if 'qc_requested' in context['dependency_evidence']:
         enabled = context['dependency_evidence']['qc_requested']

@@ -98,6 +98,10 @@ int mef_bpm_linearity_admit(mef_bpm_linearity *recipe)
         !mef_bpm_linearity_has_dependency(recipe,recipe->project_path)) return 0;
     if (!mef_bpm_linearity_hash(recipe->bindings_path,recipe->bindings_sha256) ||
         stat(recipe->bindings_path,&recipe->dependencies[recipe->dependency_count-1].identity)) return 0;
+    toml_datum_t input_policy=toml_get(toml_get(recipe->document.toptab,"preparation"),"input_bpm");
+    const char *mask_policy=input_policy.type==TOML_UNKNOWN?"archived":
+        mef_bpm_linearity_string(toml_get(recipe->document.toptab,"preparation"),"input_bpm");
+    if(!mask_policy || (strcmp(mask_policy,"archived") && strcmp(mask_policy,"omitted"))) return 0;
     for (i=0; i<recipe->detector_count; ++i) {
         mef_bpm_linearity_detector *d=recipe->detectors+i;
         const char *id=mef_bpm_linearity_string(declared.u.arr.elem[i],"detector_id");
@@ -106,7 +110,8 @@ int mef_bpm_linearity_admit(mef_bpm_linearity *recipe)
         const char *bound_id=mef_bpm_linearity_option(d,"--detector-id");
         char slot[32];
         snprintf(slot,sizeof(slot),"%lu",(unsigned long)d->configuration_detector);
-        if (!policy_matches(d,toml_get(recipe->document.toptab,"bpm")) ||
+        if ((!strcmp(mask_policy,"omitted") && (!prior || strcmp(prior,"omitted"))) ||
+            !policy_matches(d,toml_get(recipe->document.toptab,"bpm")) ||
             !id || strcmp(id,d->detector_id) || !bound_id || strcmp(bound_id,id) ||
             !mef_bpm_linearity_option(d,"--config-detector") || strcmp(mef_bpm_linearity_option(d,"--config-detector"),slot) ||
             d->preparation_argc!=16 || strcmp(d->preparation_argv[10],"--native-asdf") ||

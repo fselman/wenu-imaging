@@ -145,8 +145,11 @@ def saved_manifest(plan, receipt):
                 sha256={p: coordinator.digest(p) for p in (detector['fits'], detector['asdf'], log)},
                 original_flat_indices=[row['index'] for row in entry['dependencies']['selection']['flat']])
         prepared = dict(path=detector['prepared'], sha256=detector['prepared_sha256'], container_schema='2.0.0',
-            detector=value['detector'], pairs=len(value['rows']), exposures=len(value['exposure_rows']),
+            detector=value['detector'], input_bpm_policy=value.get('input_bpm_policy', 'archived'),
+            pairs=len(value['rows']), exposures=len(value['exposure_rows']),
             sites=len(value['direct_site_replay']), trace_frames=len(value['scan_traces']), noise_state='unavailable')
+        if 'historical_sample_comparison' in value:
+            prepared['historical_sample_comparison']=value['historical_sample_comparison']
         report['detectors'].append(dict(detector_id=detector['detector_id'],
             configuration_detector=detector['configuration_detector'], preparation=prepared, bpm=product,
             ingestion=dict(image_loads=detector['image_loads'], corrections=detector['corrections']),

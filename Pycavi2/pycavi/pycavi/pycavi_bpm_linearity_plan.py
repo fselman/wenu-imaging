@@ -69,8 +69,13 @@ def admit(path):
             binaries['assembly'] = str(reference(path.parent, assembly['executable']))
     require(type(revision) is str and len(revision) == 40 and
             set(revision) <= set('0123456789abcdef'), 'Exact native source revision required')
-    fields(data['preparation'], ('detector_toml', 'processing_toml'), 'preparation configuration')
-    controls = {name: reference(path.parent, value) for name, value in data['preparation'].items()}
+    fields(data['preparation'], ('detector_toml', 'processing_toml') +
+           (('input_bpm',) if 'input_bpm' in data['preparation'] else ()), 'preparation configuration')
+    input_bpm = data['preparation'].get('input_bpm', 'archived')
+    require(input_bpm in ('archived', 'omitted'), 'input_bpm must be archived or omitted')
+    require(native_recipe is not None or input_bpm=='archived', 'Explicit BPM omission requires the native recipe')
+    controls = {name: reference(path.parent, data['preparation'][name])
+                for name in ('detector_toml', 'processing_toml')}
     require(all(p.is_relative_to(project_path.parent) for p in controls.values()),
             'Detector/processing TOMLs must be in orchestration')
     resolved = configuration.resolve_files(controls['detector_toml'], controls['processing_toml'])
@@ -96,7 +101,7 @@ def admit(path):
         position, detector = catalogue[entry['detector_id']]
         positions.append(position)
         dependencies = preparation.preparation_dependencies(reference(path.parent, entry['source_samples']),
-            reference(path.parent, entry['handoff']), resolved)
+            reference(path.parent, entry['handoff']), resolved, input_bpm=input_bpm)
         dependencies = calibrations.bind(dependencies, resolved, bindings, roots['calibration'])
         used_bindings.update(r['source'] for r in dependencies.get('calibration_bindings', []))
         require(dependencies['selection']['detector'] == entry['detector_id'], 'Detector dependency differs')

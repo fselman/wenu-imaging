@@ -160,6 +160,11 @@ def read_manifest(path):
         prep_path = local(prepared['path'])
         require(digest(prep_path) == prepared['sha256'], 'Saved preparation ASDF changed')
         value = archive.read_product(prep_path)
+        if 'input_bpm_policy' in prepared:
+            require(prepared['input_bpm_policy']==value['input_bpm_policy'], 'Saved input BPM policy differs')
+        if 'historical_sample_comparison' in prepared:
+            require(prepared['historical_sample_comparison']==value.get('historical_sample_comparison'),
+                    'Saved historical sample comparison differs')
         bpm = entry['bpm']
         if bpm.get('state') == 'skipped_input_bpm':
             require(value['detector'] == entry['detector_id'] and value.get('input_bpm') == bpm['input'] and

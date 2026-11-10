@@ -16,7 +16,7 @@ import pycavi_linearity_config as config
 import pycavi_linearity_recipe as recipe
 
 
-def fixture(work, *, separated=False, supplied_bpm=True):
+def fixture(work, *, separated=False, supplied_bpm=True, masked_site=False):
     work=Path(work);work.mkdir(parents=True,exist_ok=True);name='ESO_CCD_#65'
     raw = work / 'raw' if separated else work
     orchestration = work / 'orchestration' if separated else work
@@ -102,7 +102,7 @@ overscan_sample=[8,8,1,4]
         biases.append(dict(path=str(path),hdu=0,asset=path.name,index=f,accepted=int(f!=3)))
     empty=header([('SIMPLE','T'),('BITPIX','8'),('NAXIS','0'),('EXTEND','T')])
     master=bias_directory/'master.fits';master.write_bytes(empty+plane([3]*12,6,2,primary=False,detector=name,amplifier='L'))
-    bpm=bpm_directory/'bpm.fits';bpm.write_bytes(empty+plane([1]*12,6,2,primary=False,byte=True,mask=True,detector=name,amplifier='L'))
+    bpm=bpm_directory/'bpm.fits';bpm.write_bytes(empty+plane([0 if masked_site and i==0 else 1 for i in range(12)],6,2,primary=False,byte=True,mask=True,detector=name,amplifier='L'))
     selection=dict(selection_schema_version=1,detector=name,readout_id='OMEGACAM:normal:ordered:1x1',bin_x=1,bin_y=1,
         raw_saturation_adu=65534.,pair_time_tolerance_s=0.,max_loaded_pixels=10000,max_rows=50,with_mad=True,reject_bits=255,
         exposure_hdu=0,header_keys=dict(identity='DETID',amplifier='AMPID',bin_x='XBINNING',bin_y='YBINNING',exposure='EXPTIME'),
@@ -119,7 +119,7 @@ overscan_sample=[8,8,1,4]
     (orchestration/'biases.tsv').write_text('input_index\thdu\tasset\tpath\taccepted\n'+''.join(
         f"{b['index']}\t{b['hdu']}\t{b['asset']}\t{b['path']}\t{b['accepted']}\n" for b in biases))
     return dict(work=orchestration,raw=raw,reduced=reduced,resolved=resolved,
-                selection=selection,sites=sites,biases=biases,master=str(master),snapshot=snapshot)
+                selection=selection,sites=sites,biases=biases,master=str(master),snapshot=snapshot,masked_site=masked_site)
 
 
 def native_argv(state,command,out):
@@ -161,11 +161,12 @@ def source_archive(state):
     for f,frame in enumerate(state['selection']['flat']):
         for i,point in enumerate(state['sites']):
             lines.append('\t'.join(map(str,[1,entry['detector'],'L',0,point['source_roi'],i+1,1,i+2,2,
-                frame['asset'],frame['index'],frame['hdu'],frame['pair'],2+min(f,19-f),'admitted',
-                100*(2+min(f,19-f))+i,'unavailable'])))
+                frame['asset'],frame['index'],frame['hdu'],frame['pair'],2+min(f,19-f),
+                'not_admitted' if state.get('masked_site') and i==0 else 'admitted',
+                '' if state.get('masked_site') and i==0 else 100*(2+min(f,19-f))+i,'unavailable'])))
     old['table']=sample.parse(('\n'.join(lines)+'\n').encode())
     old['population']=sample.parse_population(('input_index\toutside_selected_sites\tbpm_excluded\tsample_excluded\tnonfinite\tsaturated\tadmitted\n'+
-        ''.join(f'{10+i}\t7\t0\t0\t0\t0\t5\n' for i in range(20))).encode())
+        ''.join(f'{10+i}\t7\t{int(state.get("masked_site", False))}\t0\t0\t0\t{4 if state.get("masked_site") else 5}\n' for i in range(20))).encode())
     for source in state['selection']['flat']+([] if state['selection']['bpm']['encoding']=='omitted' else [state['selection']['bpm']])+[dict(path=state['master'])]:
         origin['image_fingerprints'][source['path']]=dict(sha256=hashlib.sha256(Path(source['path']).read_bytes()).hexdigest(),stat=[1,2,3,4,5,6])
     target=w/'prior-samples';target.mkdir()

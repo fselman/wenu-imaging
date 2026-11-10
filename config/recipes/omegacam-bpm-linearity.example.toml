@@ -17,6 +17,9 @@ reference_detector = "ESO_CCD_#65"
 [preparation]
 detector_toml = "omegacam-1x1.toml"
 processing_toml = "omegacam-characterization.toml"
+# archived: reuse the historical input mask and skip BPM creation (default).
+# omitted: create a BPM with no current input mask; preserve archive/master lineage.
+# input_bpm = "omitted"
 
 # Illustrative authoring values: use the reviewed acquisition limits for the
 # selected data. There are no implicit scientific defaults in the coordinator.
