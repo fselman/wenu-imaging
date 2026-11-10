@@ -1,7 +1,7 @@
 /* File-identity boundary, not an image or ASDF test. The optional flag mutates
  * only the disposable fixture supplied by recipe_file_hash_contract.py. */
 #define _POSIX_C_SOURCE 200809L
-#include "mef_bpm_linearity_recipe.h"
+#include "mef_bpm_linearity.h"
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>

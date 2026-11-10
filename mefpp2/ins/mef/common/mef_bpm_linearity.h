@@ -1,8 +1,8 @@
 /* Native coordinator owners and phases. Measurement-only scientific contract:
  * docs/developer/linearity-preparation-guide-v1.tex, Native recipe.
  */
-#ifndef MEF_BPM_LINEARITY_RECIPE_H
-#define MEF_BPM_LINEARITY_RECIPE_H
+#ifndef MEF_BPM_LINEARITY_H
+#define MEF_BPM_LINEARITY_H
 #include "mef_recipe_run.h"
 #include "mef_bpm_assembly_qc.h"
 #include "tomlc17.h"
@@ -38,29 +38,29 @@ typedef struct {
     mef_bpm_linearity_dependency *dependencies;
     size_t detector_count, dependency_count;
     int show_usage;
-} mef_bpm_linearity_recipe;
+} mef_bpm_linearity;
 
-void mef_bpm_linearity_recipe_initialize(mef_bpm_linearity_recipe *, mef_recipe_run *);
-int mef_bpm_linearity_recipe_prepare(mef_bpm_linearity_recipe *, int, char **);
-int mef_bpm_linearity_recipe_admit(mef_bpm_linearity_recipe *);
-int mef_bpm_linearity_recipe_begin(mef_bpm_linearity_recipe *);
-int mef_bpm_linearity_recipe_process(mef_bpm_linearity_recipe *, size_t);
-int mef_bpm_linearity_recipe_verify(mef_bpm_linearity_recipe *);
-int mef_bpm_linearity_recipe_publish(mef_bpm_linearity_recipe *);
-void mef_bpm_linearity_recipe_usage(void);
-void mef_bpm_linearity_recipe_destroy(mef_bpm_linearity_recipe *);
+void mef_bpm_linearity_initialize(mef_bpm_linearity *, mef_recipe_run *);
+int mef_bpm_linearity_prepare(mef_bpm_linearity *, int, char **);
+int mef_bpm_linearity_admit(mef_bpm_linearity *);
+int mef_bpm_linearity_begin(mef_bpm_linearity *);
+int mef_bpm_linearity_process(mef_bpm_linearity *, size_t);
+int mef_bpm_linearity_verify(mef_bpm_linearity *);
+int mef_bpm_linearity_publish(mef_bpm_linearity *);
+void mef_bpm_linearity_usage(void);
+void mef_bpm_linearity_destroy(mef_bpm_linearity *);
 
 /* Shared mechanics, not science. Paths expand only the captured start token. */
-char *mef_bpm_linearity_expand(const mef_bpm_linearity_recipe *, const char *);
+char *mef_bpm_linearity_expand(const mef_bpm_linearity *, const char *);
 int mef_bpm_linearity_below(const char *, const char *);
-int mef_bpm_linearity_observe(mef_bpm_linearity_recipe *);
+int mef_bpm_linearity_observe(mef_bpm_linearity *);
 int mef_bpm_linearity_hash(const char *, char [65]);
 int mef_bpm_linearity_dependency_check(mef_bpm_linearity_dependency *, int);
 const char *mef_bpm_linearity_string(toml_datum_t, const char *);
 int mef_bpm_linearity_directory(const char *);
 const char *mef_bpm_linearity_option(const mef_bpm_linearity_detector *, const char *);
-int mef_bpm_linearity_has_dependency(const mef_bpm_linearity_recipe *, const char *);
-int mef_bpm_linearity_bindings_admit(mef_bpm_linearity_recipe *, const mef_bpm_linearity_detector *);
+int mef_bpm_linearity_has_dependency(const mef_bpm_linearity *, const char *);
+int mef_bpm_linearity_bindings_admit(mef_bpm_linearity *, const mef_bpm_linearity_detector *);
 int mef_linearity_prepare_command(int, char **);
 int mef_bpm_command(int, char **);
 #endif

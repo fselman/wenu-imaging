@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bpm_linearity_recipe.h"
+#include "mef_bpm_linearity.h"
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -29,7 +29,7 @@ static int absent(const char *path)
     return lstat(path,&st)<0 && errno==ENOENT;
 }
 
-static int output_path(const mef_bpm_linearity_recipe *recipe, const char *path)
+static int output_path(const mef_bpm_linearity *recipe, const char *path)
 {
     return mef_bpm_linearity_below(path,recipe->output) ||
         mef_bpm_linearity_below(path,recipe->work) || mef_bpm_linearity_below(path,recipe->logs);
@@ -70,7 +70,7 @@ static int policy_matches(const mef_bpm_linearity_detector *detector, toml_datum
     return 1;
 }
 
-int mef_bpm_linearity_has_dependency(const mef_bpm_linearity_recipe *recipe, const char *path)
+int mef_bpm_linearity_has_dependency(const mef_bpm_linearity *recipe, const char *path)
 {
     size_t i;
     for (i=0; i<recipe->dependency_count; ++i) {
@@ -79,7 +79,7 @@ int mef_bpm_linearity_has_dependency(const mef_bpm_linearity_recipe *recipe, con
     return 0;
 }
 
-int mef_bpm_linearity_recipe_admit(mef_bpm_linearity_recipe *recipe)
+int mef_bpm_linearity_admit(mef_bpm_linearity *recipe)
 {
     toml_datum_t declared=toml_get(recipe->document.toptab,"detectors");
     toml_datum_t directories=toml_get(recipe->bindings.toptab,"directories");
@@ -156,7 +156,7 @@ int mef_bpm_linearity_recipe_admit(mef_bpm_linearity_recipe *recipe)
     return 1;
 }
 
-static int make_directory(const mef_bpm_linearity_recipe *recipe, const char *path)
+static int make_directory(const mef_bpm_linearity *recipe, const char *path)
 {
     char *prefix=strdup(path), canonical[MEF_PRODUCT_PATH_SIZE];
     size_t i, n=strlen(path);
@@ -196,7 +196,7 @@ done:
     return okay;
 }
 
-int mef_bpm_linearity_recipe_begin(mef_bpm_linearity_recipe *recipe)
+int mef_bpm_linearity_begin(mef_bpm_linearity *recipe)
 {
     toml_datum_t directories=toml_get(recipe->bindings.toptab,"directories");
     toml_datum_t copies=toml_get(recipe->bindings.toptab,"copies");

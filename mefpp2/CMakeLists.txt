@@ -302,7 +302,7 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_compile_options(mefpp_recipe_run PRIVATE -Wall -Wextra -Werror -pedantic-errors)
   set_target_properties(mefpp_recipe_run PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   add_executable(recipe_file_hash_probe tests/recipe_file_hash_probe.c
-    ins/mef/common/mef_bpm_linearity_recipe_hash.c)
+    ins/mef/common/mef_bpm_linearity_hash.c)
   target_include_directories(recipe_file_hash_probe PRIVATE ../third_party/tomlc17)
   target_link_libraries(recipe_file_hash_probe PRIVATE mefpp_recipe_run)
   target_compile_definitions(recipe_file_hash_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -388,10 +388,10 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       add_library(mefpp_bias_product_qc STATIC ins/mef/common/mef_bias_product_qc.c
         ins/mef/common/mef_bias_qc_fits.c)
       target_link_libraries(mefpp_bias_product_qc PUBLIC mefpp_bias_files mefpp_product_qc)
-      add_executable(mefpp_bias_recipe ins/mef/recipes/mefpp_bias_recipe.c
-        ins/mef/common/mef_bias_recipe_config.c
-        ins/mef/common/mef_bias_recipe_prepare.c ins/mef/common/mef_bias_recipe_inputs.c
-        ins/mef/common/mef_bias_recipe_process.c ins/mef/common/mef_bias_recipe_products.c)
+      add_executable(mefpp_bias_recipe ins/mef/recipes/mefpp_bias.c
+        ins/mef/common/mef_bias_config.c
+        ins/mef/common/mef_bias_prepare.c ins/mef/common/mef_bias_inputs.c
+        ins/mef/common/mef_bias_process.c ins/mef/common/mef_bias_products.c)
       target_include_directories(mefpp_bias_recipe PRIVATE ../third_party/tomlc17)
       target_link_libraries(mefpp_bias_recipe PRIVATE mefpp_bias_product_qc mefpp_config_toml mefpp_mef_assembly)
       target_compile_definitions(mefpp_bias_recipe PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
@@ -422,13 +422,13 @@ if(MEFPP_BUILD_CONFIG_PROBES)
         set_target_properties(native_warning_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
       endif()
       add_executable(mefpp_bpm_linearity_recipe
-        ins/mef/recipes/mefpp_bpm_linearity_recipe.c
-        ins/mef/common/mef_bpm_linearity_recipe_config.c
-        ins/mef/common/mef_bpm_linearity_recipe_inputs.c
-        ins/mef/common/mef_bpm_linearity_recipe_bindings.c
-        ins/mef/common/mef_bpm_linearity_recipe_hash.c
-        ins/mef/common/mef_bpm_linearity_recipe_process.c
-        ins/mef/common/mef_bpm_linearity_recipe_products.c
+        ins/mef/recipes/mefpp_bpm_linearity.c
+        ins/mef/common/mef_bpm_linearity_config.c
+        ins/mef/common/mef_bpm_linearity_inputs.c
+        ins/mef/common/mef_bpm_linearity_bindings.c
+        ins/mef/common/mef_bpm_linearity_hash.c
+        ins/mef/common/mef_bpm_linearity_process.c
+        ins/mef/common/mef_bpm_linearity_products.c
         ins/mef/mefpp_linearity_prepare.c ins/mef/recipes/mefpp_bpm_adapter.c)
       target_include_directories(mefpp_bpm_linearity_recipe PRIVATE ../third_party/tomlc17)
       target_link_libraries(mefpp_bpm_linearity_recipe PRIVATE

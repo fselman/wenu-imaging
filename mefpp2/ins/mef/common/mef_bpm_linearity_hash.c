@@ -3,7 +3,7 @@
  * portable construction below. Bounded streaming only; this code does not handle credentials or image math.
  */
 #define _POSIX_C_SOURCE 200809L
-#include "mef_bpm_linearity_recipe.h"
+#include "mef_bpm_linearity.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -130,7 +130,7 @@ int mef_bpm_linearity_dependency_check(mef_bpm_linearity_dependency *dependency,
     return 1;
 }
 
-int mef_bpm_linearity_observe(mef_bpm_linearity_recipe *recipe)
+int mef_bpm_linearity_observe(mef_bpm_linearity *recipe)
 {
     size_t i;
     for (i=0; i<recipe->dependency_count; ++i) {

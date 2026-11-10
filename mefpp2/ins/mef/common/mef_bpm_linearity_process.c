@@ -1,7 +1,7 @@
-#include "mef_bpm_linearity_recipe.h"
+#include "mef_bpm_linearity.h"
 #include <stdio.h>
 
-int mef_bpm_linearity_recipe_process(mef_bpm_linearity_recipe *recipe, size_t index)
+int mef_bpm_linearity_process(mef_bpm_linearity *recipe, size_t index)
 {
     mef_bpm_linearity_detector *detector=recipe->detectors+index;
     recipe->diagnostic="Native detector preparation or BPM characterization failed";

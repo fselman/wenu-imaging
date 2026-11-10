@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bias_recipe.h"
+#include "mef_bias.h"
 #include "mef_bias_qc_fits.h"
 #include <errno.h>
 #include <limits.h>
@@ -17,10 +17,10 @@ static int bind_detector_inputs(detector_plan *detector, mef_layout *const *layo
     size_t i;
     int configured;
     const mef_bpm_policy *policy = &mef_config_processing(config)->bpm;
-    if (!mef_bias_recipe_parse_nonnegative_int(detector->option_values[CFG], &configured) ||
-        !mef_bias_recipe_parse_nonnegative_int(detector->option_values[BINX], &detector->bin_x) ||
+    if (!mef_bias_parse_nonnegative_int(detector->option_values[CFG], &configured) ||
+        !mef_bias_parse_nonnegative_int(detector->option_values[BINX], &detector->bin_x) ||
         detector->bin_x == 0 ||
-        !mef_bias_recipe_parse_nonnegative_int(detector->option_values[BINY], &detector->bin_y) ||
+        !mef_bias_parse_nonnegative_int(detector->option_values[BINY], &detector->bin_y) ||
         detector->bin_y == 0 || !detector->option_values[READOUT] ||
         !detector->option_values[AMP] || !detector->option_values[BPM] ||
         (detector->hdu_count != 1 && detector->hdu_count != frame_count)) {
@@ -86,7 +86,7 @@ static int bind_detector_inputs(detector_plan *detector, mef_layout *const *layo
         mef_layout *layout = NULL;
         mef_status status;
         const mef_bound_detector *raw, *mask;
-        if (!mef_bias_recipe_parse_nonnegative_int(
+        if (!mef_bias_parse_nonnegative_int(
                 detector->option_values[BPM_HDU], &detector->bpm_hdu) ||
             !detector->option_values[COORDS] ||
             (strcmp(detector->option_values[COORDS], "raw") &&
@@ -98,13 +98,13 @@ static int bind_detector_inputs(detector_plan *detector, mef_layout *const *layo
             if (detector->option_values[GOOD]) {
                 int legacy_good;
                 if (policy->encoding != MEF_BPM_BINARY ||
-                    !mef_bias_recipe_parse_nonnegative_int(
+                    !mef_bias_parse_nonnegative_int(
                         detector->option_values[GOOD], &legacy_good) ||
                     legacy_good != detector->bpm_good_value) {
                     return 0;
                 }
             }
-        } else if (!mef_bias_recipe_parse_nonnegative_int(
+        } else if (!mef_bias_parse_nonnegative_int(
                        detector->option_values[GOOD], &detector->bpm_good_value) ||
                    detector->bpm_good_value > 1) {
             return 0;
@@ -145,7 +145,7 @@ static int bind_detector_inputs(detector_plan *detector, mef_layout *const *layo
     return 1;
 }
 
-int mef_bias_recipe_admit(mef_bias_recipe *recipe)
+int mef_bias_admit(mef_bias *recipe)
 {
     size_t i, j;
     int reference_found = 0;

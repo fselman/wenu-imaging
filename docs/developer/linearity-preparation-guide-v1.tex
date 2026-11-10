@@ -4,17 +4,40 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
 \emergencystretch=2em
-\title{Linearity preparation: row overscan\\Mathematics and implementation, version 1}
+\title{BPM and linearity characterization\\Mathematics and implementation, version 1}
 \author{Wenu-imaging}
-\date{9 November 2026}
+\date{10 November 2026}
 \begin{document}
 \maketitle
+\section*{Executive summary}
+This recipe measures detector response and produces a candidate bad-pixel mask
+from paired flat exposures, an existing master bias and an admitted prior mask.
+Linearity characterization is measurement only: it does not correct science
+images or change the gain. Cross-talk is outside its present scope.
+
+For each detector, native C services perform row scan correction, master-bias
+subtraction, trimming and ROI/direct-site measurements, then characterize the
+candidate BPM using the same fixed calibrations. Detectors run serially. Final
+MEF assembly preserves the detector image payloads and joins their native ASDF
+measurements, input identities and calibration HDU bindings.
+
+Project TOML defines the directory roots. Raw observations remain read-only;
+recipe controls belong in orchestration; products, logs and work belong below
+reduced. Separate detector masters retain their own provenance. Shared
+calibrations collect detector bindings only when their metadata agree.
+
+The final products are FITS, ASDF and a log, with frozen configuration and
+input-preservation evidence. A zero mask value means no detected reason, not
+certification. Mac qualification and exact CCD65 comparison passed for the
+single-detector native coordinator; the extension for separate calibration
+files requires its focused Mac check before the full 32-detector run.
+\newpage
 \section*{Scope and configuration}
 This guide describes the preparation kernels and their FITS/recipe/ASDF
 integration. The numerical kernels and native publication passed their Mac gates. The CCD65
 pilot passed exact saved-payload/direct-sample checks and visual plot inspection.
-The new in-process recipe coordinator still requires its own focused Mac gate
-and an observational comparison; physical calibration acceptance is separate. The reviewed design is
+The native coordinator passed its focused Mac gate and exact CCD65 comparison;
+physical calibration acceptance is separate. The reviewed design is
 in the developer design directory:\par
 \texttt{linearity-preparation-overscan-asdf-v1.md}.
 
@@ -336,13 +359,13 @@ Stable comment landmarks connect the entry point and C helpers to this section.
 Helpers live under \path{mefpp2/ins/mef/common/}.
 \begin{enumerate}
 \item \texttt{BPM-LINEARITY-ADMISSION}.\par
-Sources: \path{mef_bpm_linearity_recipe_config.c},
-\path{mef_bpm_linearity_recipe_inputs.c} and
-\path{mef_bpm_linearity_recipe_bindings.c}. They admit roots, detector bindings,
+Sources: \path{mef_bpm_linearity_config.c},
+\path{mef_bpm_linearity_inputs.c} and
+\path{mef_bpm_linearity_bindings.c}. They admit roots, detector bindings,
 frozen dependencies and raw/calibration transport paths. Preparation and BPM
 must use the same ordered flat paths/HDUs and native configuration.
 \item \texttt{BPM-LINEARITY-DETECTOR-LOOP}.\par
-The entry point calls \path{mef_bpm_linearity_recipe_process.c} serially,
+The entry point calls \path{mef_bpm_linearity_process.c} serially,
 keeping preparation before candidate characterization.
 \item \texttt{BPM-LINEARITY-MEASUREMENTS}.\par
 The process helper calls \path{mef_linearity_prepare_command}. Row correction
@@ -351,10 +374,10 @@ and statistics remain in the preparation/files/pairs kernels mapped earlier.
 The same helper calls \path{mef_bpm_command}. Fitting remains in
 \path{mef_cal_bpm.c} and \path{detector_response.c}.
 \item \texttt{BPM-LINEARITY-PUBLICATION}.\par
-The entry point calls \path{mef_bpm_linearity_recipe_products.c}:
+The entry point calls \path{mef_bpm_linearity_products.c}:
 final MEF assembly and the unchanged native ASDF join.
 \item \texttt{BPM-LINEARITY-PRESERVATION}.\par
-The products helper and \path{mef_bpm_linearity_recipe_hash.c} check streaming
+The products helper and \path{mef_bpm_linearity_hash.c} check streaming
 identities and publish the exclusive completion receipt.
 \end{enumerate}
 The Python metadata/call boundary is

@@ -85,19 +85,19 @@ Landmark and purpose & Source file and routine \\
 \endhead
 \code{[BIAS-RECIPE-ADMISSION]}\newline
 Configuration, input identities and all detector bindings &
-\code{recipes/mefpp_bias_recipe.c}\newline
+\code{recipes/mefpp_bias.c}\newline
 \code{main} \\[4pt]
 \code{[BIAS-DETECTOR-LOOP]}\newline
 Independent detector calibration, no mosaic balancing &
-\code{recipes/mefpp_bias_recipe.c}\newline
+\code{recipes/mefpp_bias.c}\newline
 \code{main} \\[4pt]
 \code{[BIAS-PRODUCT-PUBLICATION]}\newline
 Complete-detector barrier, final MEF then ASDF &
-\code{recipes/mefpp_bias_recipe.c}\newline
+\code{recipes/mefpp_bias.c}\newline
 \code{main} \\[4pt]
 \code{[BIAS-DETECTOR-CALIBRATION]}\newline
 One detector's service call and result ownership &
-\code{common/mef_bias_recipe_process.c}\newline
+\code{common/mef_bias_process.c}\newline
 \code{process_bias_detector} \\[4pt]
 \code{[BIAS-INPUT-LOADING]}\newline
 Load explicit bound detector HDUs &
@@ -153,7 +153,7 @@ Staged detector MEF and exclusive publication &
 \normalsize
 
 \paragraph{Supporting routines.}
-\code{common/mef_bias_recipe_config.c}, \code{mef_bias_recipe_expand},
+\code{common/mef_bias_config.c}, \code{mef_bias_expand},
 handles the TOML envelope and detector selection.
 \code{common/mef_bias_product_qc.c}, \code{mef_bias_product_qc_add},
 copies measured values, masks and provenance into the common archive.
@@ -672,7 +672,7 @@ actual source, while names identify the relevant calculation boundary.
 \code{ins/mef/common/mef_operation_template.c} & Operation lifetime and cleanup \\
 \code{ins/mef/common/mef_mef_assemble.c} & Native MEF assembly and header budget \\
 \code{ins/mef/common/mef_product_qc_asdf.c} & Native ASDF writing, readback and explicit recovery \\
-\code{ins/mef/recipes/mefpp_bias_recipe.c} & Standalone serial coordinator \\
+\code{ins/mef/recipes/mefpp_bias.c} & Standalone serial coordinator \\
 \bottomrule
 \end{tabular}\end{center}
 

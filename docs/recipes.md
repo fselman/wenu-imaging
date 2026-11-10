@@ -16,7 +16,7 @@ mefpp_bias_recipe cal bias --config /path/to/bias-recipe.toml \
 
 The TOML must explicitly define settings, detector/configuration/HDU bindings,
 readout/binning/amplifier identity, BPM selection and measurement choices. See
-[the recipe configuration reader](../mefpp2/ins/mef/common/mef_bias_recipe_config.c)
+[the recipe configuration reader](../mefpp2/ins/mef/common/mef_bias_config.c)
 and [scientific guide](developer/bias-recipe-mathematical-guide-v1.pdf) for the
 supported contract. A complete `--output FITS` may replace `--output-dir`; supplying
 both is refused. Input lists, configuration and outputs resolve explicitly; the
@@ -40,7 +40,7 @@ The QC viewer reads saved ASDF; plotting does not recompute scientific results.
 ## BPM / linearity
 
 The native entry point is
-[`mefpp_bpm_linearity_recipe.c`](../mefpp2/ins/mef/recipes/mefpp_bpm_linearity_recipe.c).
+[`mefpp_bpm_linearity.c`](../mefpp2/ins/mef/recipes/mefpp_bpm_linearity.c).
 It follows bias's admission, serial detector loop, verification, publication and
 cleanup phases. See the [guide](developer/linearity-preparation-guide-v1.pdf)
 and [recipe example](../config/recipes/omegacam-bpm-linearity.example.toml).

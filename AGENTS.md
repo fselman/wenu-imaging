@@ -45,6 +45,8 @@ whole long recipe in one opaque helper. Put blank lines around standalone
 explanatory comments. Use few comments: explain intent, contracts and scientific
 choices rather than restating code. Keep a few stable scientific-stage landmarks,
 unique in source and mapped by file/routine/ID in the mathematical guide.
+Recipe-specific C filenames, helper symbols and types omit redundant `_recipe`.
+Mathematical guides begin with a concise executive summary before technical detail.
 
 Source must not cite temporary development steps or build-stage documents.
 Use technical explanations, immutable design revisions or GitHub issues. Preserve

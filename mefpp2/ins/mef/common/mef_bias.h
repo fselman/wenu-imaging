@@ -1,9 +1,9 @@
 /* Internal bias coordinator owners and explicit phases. See GitHub issue #292. */
 
-#ifndef MEF_BIAS_RECIPE_H
-#define MEF_BIAS_RECIPE_H
+#ifndef MEF_BIAS_H
+#define MEF_BIAS_H
 #include "mef_bias_product_qc.h"
-#include "mef_bias_recipe_config.h"
+#include "mef_bias_config.h"
 #include "mef_config_toml.h"
 #include "mef_mef_assemble.h"
 #include "mefp_lib.h"
@@ -37,7 +37,7 @@ typedef struct {
 typedef struct {
     mef_recipe_run *run;
     bias_recipe_arguments arguments;
-    mef_bias_recipe_config *recipe_document;
+    mef_bias_config *recipe_document;
     char *config_path, *listing_path, **raw_paths;
     mef_config *config;
     mef_config_document *document;
@@ -51,16 +51,16 @@ typedef struct {
     const char *diagnostic;
     size_t frame_count;
     int show_usage;
-} mef_bias_recipe;
+} mef_bias;
 
-int mef_bias_recipe_parse_nonnegative_int(const char *, int *);
-void mef_bias_recipe_initialize(mef_bias_recipe *, mef_recipe_run *);
-int mef_bias_recipe_prepare(mef_bias_recipe *, int, char **);
-int mef_bias_recipe_admit(mef_bias_recipe *);
-int mef_bias_recipe_begin(mef_bias_recipe *);
-int mef_bias_recipe_process(mef_bias_recipe *, size_t);
-int mef_bias_recipe_verify(mef_bias_recipe *);
-int mef_bias_recipe_publish(mef_bias_recipe *);
-void mef_bias_recipe_usage(void);
-void mef_bias_recipe_destroy(mef_bias_recipe *);
+int mef_bias_parse_nonnegative_int(const char *, int *);
+void mef_bias_initialize(mef_bias *, mef_recipe_run *);
+int mef_bias_prepare(mef_bias *, int, char **);
+int mef_bias_admit(mef_bias *);
+int mef_bias_begin(mef_bias *);
+int mef_bias_process(mef_bias *, size_t);
+int mef_bias_verify(mef_bias *);
+int mef_bias_publish_products(mef_bias *);
+void mef_bias_usage(void);
+void mef_bias_destroy(mef_bias *);
 #endif

@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bias_recipe.h"
+#include "mef_bias.h"
 #include "mef_bias_qc_fits.h"
 #include <errno.h>
 #include <limits.h>
@@ -10,7 +10,7 @@
 #undef realloc
 #undef free
 
-int mef_bias_recipe_parse_nonnegative_int(const char *text, int *parsed_value)
+int mef_bias_parse_nonnegative_int(const char *text, int *parsed_value)
 {
     char *end;
     long parsed_number;
@@ -135,7 +135,7 @@ static int parse_recipe_arguments(int argc, char **argv, bias_recipe_arguments *
         }
         if (!strcmp(key, "--hdu")) {
             int frame_count, *next;
-            if (!mef_bias_recipe_parse_nonnegative_int(option_value, &frame_count)) {
+            if (!mef_bias_parse_nonnegative_int(option_value, &frame_count)) {
                 return 0;
             }
             next = realloc(detector->hdus, (detector->hdu_count + 1) * sizeof(*next));
@@ -169,18 +169,18 @@ static int parse_recipe_arguments(int argc, char **argv, bias_recipe_arguments *
     return 1;
 }
 
-void mef_bias_recipe_initialize(mef_bias_recipe *recipe, mef_recipe_run *run)
+void mef_bias_initialize(mef_bias *recipe, mef_recipe_run *run)
 {
     memset(recipe, 0, sizeof(*recipe));
     recipe->run = run;
 }
 
-int mef_bias_recipe_prepare(mef_bias_recipe *recipe, int argc, char **argv)
+int mef_bias_prepare(mef_bias *recipe, int argc, char **argv)
 {
     int expanded_argc = argc, first, second;
     char **expanded_argv = argv, *end;
     mef_status status;
-    if (!mef_bias_recipe_expand(argc, argv, &expanded_argc, &expanded_argv,
+    if (!mef_bias_expand(argc, argv, &expanded_argc, &expanded_argv,
             &recipe->recipe_document, recipe->run->message, sizeof(recipe->run->message))) {
         return 0;
     }
@@ -206,8 +206,8 @@ int mef_bias_recipe_prepare(mef_bias_recipe *recipe, int argc, char **argv)
         }
     }
     if (recipe->arguments.ron_first_option) {
-        if (!mef_bias_recipe_parse_nonnegative_int(recipe->arguments.ron_first_option, &first) ||
-            !mef_bias_recipe_parse_nonnegative_int(recipe->arguments.ron_second_option, &second) ||
+        if (!mef_bias_parse_nonnegative_int(recipe->arguments.ron_first_option, &first) ||
+            !mef_bias_parse_nonnegative_int(recipe->arguments.ron_second_option, &second) ||
             first == second) {
             recipe->show_usage = 1;
             return 0;
@@ -246,7 +246,7 @@ int mef_bias_recipe_prepare(mef_bias_recipe *recipe, int argc, char **argv)
     }
     {
         const mef_processing_policy *policy = mef_config_processing(recipe->config);
-        const char *requested = mef_bias_recipe_median_even_handling(recipe->recipe_document);
+        const char *requested = mef_bias_median_even_handling(recipe->recipe_document);
         if (requested) {
             mef_processing_policy effective = *policy;
             int mode = !strcmp(requested, "lower") ? MEDIAN_EVEN_LOWER : MEDIAN_EVEN_AVERAGE;
@@ -290,7 +290,7 @@ int mef_bias_recipe_prepare(mef_bias_recipe *recipe, int argc, char **argv)
     return 1;
 }
 
-void mef_bias_recipe_usage(void)
+void mef_bias_usage(void)
 {
     fprintf(stderr,
         "Short form: cal bias --config RECIPE.toml --bias ABS_LIST (--output-dir DIR|--output "
@@ -307,7 +307,7 @@ void mef_bias_recipe_usage(void)
         "Output parent must exist; no overwrite.\n");
 }
 
-void mef_bias_recipe_destroy(mef_bias_recipe *recipe)
+void mef_bias_destroy(mef_bias *recipe)
 {
     size_t i, j;
     mef_bias_product_qc_destroy(recipe->archive);
@@ -341,5 +341,5 @@ void mef_bias_recipe_destroy(mef_bias_recipe *recipe)
     mef_config_destroy(recipe->config);
     mef_config_document_destroy(recipe->document);
     mef_bb_del(recipe->legacy);
-    mef_bias_recipe_config_destroy(recipe->recipe_document);
+    mef_bias_config_destroy(recipe->recipe_document);
 }

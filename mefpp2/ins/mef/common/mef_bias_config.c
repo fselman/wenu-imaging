@@ -6,7 +6,7 @@
 
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bias_recipe_config.h"
+#include "mef_bias_config.h"
 #include "tomlc17.h"
 #include <ctype.h>
 #include <errno.h>
@@ -17,7 +17,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-struct mef_bias_recipe_config {
+struct mef_bias_config {
     toml_result_t parsed;
     char *path, *source, **argv;
     int argc, capacity;
@@ -34,7 +34,7 @@ static int report_recipe_error(char *message, size_t count, const char *text)
     return 0;
 }
 
-void mef_bias_recipe_config_destroy(mef_bias_recipe_config *recipe)
+void mef_bias_config_destroy(mef_bias_config *recipe)
 {
     if (!recipe) {
         return;
@@ -49,24 +49,24 @@ void mef_bias_recipe_config_destroy(mef_bias_recipe_config *recipe)
     free(recipe);
 }
 
-const char *mef_bias_recipe_source(const mef_bias_recipe_config *recipe)
+const char *mef_bias_source(const mef_bias_config *recipe)
 {
     return recipe ? recipe->source : NULL;
 }
 
-const char *mef_bias_recipe_path(const mef_bias_recipe_config *recipe)
+const char *mef_bias_path(const mef_bias_config *recipe)
 {
     return recipe ? recipe->path : NULL;
 }
 
-const char *const *mef_bias_recipe_primary_keys(const mef_bias_recipe_config *recipe, size_t *count)
+const char *const *mef_bias_primary_keys(const mef_bias_config *recipe, size_t *count)
 {
     *count = recipe ? recipe->primary_count : 0;
     return recipe ? recipe->primary : NULL;
 }
 
-const char *const *mef_bias_recipe_detector_keys(
-    const mef_bias_recipe_config *recipe, size_t *count)
+const char *const *mef_bias_detector_keys(
+    const mef_bias_config *recipe, size_t *count)
 {
     *count = recipe ? recipe->detector_count : 0;
     return recipe ? recipe->detector : NULL;
@@ -104,7 +104,7 @@ static int table_has_only_keys(toml_datum_t t, const char *const *names, size_t 
 
 #define TABLE(t, names) table_has_only_keys(t, names, sizeof(names) / sizeof(*(names)))
 
-static int append_argument(mef_bias_recipe_config *recipe, const char *text)
+static int append_argument(mef_bias_config *recipe, const char *text)
 {
     if (recipe->argc >= 1000000 || !text || !*text) {
         return 0;
@@ -126,7 +126,7 @@ static int append_argument(mef_bias_recipe_config *recipe, const char *text)
     return 1;
 }
 
-static int append_option_value(mef_bias_recipe_config *recipe, const char *key, const char *value)
+static int append_option_value(mef_bias_config *recipe, const char *key, const char *value)
 {
     return append_argument(recipe, key) && append_argument(recipe, value);
 }
@@ -141,7 +141,7 @@ static int toml_nonnegative_integer(toml_datum_t value, int *count)
 }
 
 static int append_integer_option(
-    mef_bias_recipe_config *recipe, const char *key, toml_datum_t value)
+    mef_bias_config *recipe, const char *key, toml_datum_t value)
 {
     char text[32];
     int count;
@@ -152,7 +152,7 @@ static int append_integer_option(
     return append_option_value(recipe, key, text);
 }
 
-static char *resolve_recipe_path(const mef_bias_recipe_config *recipe, const char *text)
+static char *resolve_recipe_path(const mef_bias_config *recipe, const char *text)
 {
     char *name, *resolved;
     size_t length;
@@ -229,8 +229,8 @@ static int is_valid_detector_id(const char *text)
     return 1;
 }
 
-int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
-    mef_bias_recipe_config **owner, char *message, size_t size)
+int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
+    mef_bias_config **owner, char *message, size_t size)
 {
     static const char *root_keys[] = {
         "bias_recipe_schema_version", "settings", "bias", "detector", "provenance"};
@@ -248,7 +248,7 @@ int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
         "--amplifier-id"};
     const char *path = NULL, *override = NULL, *qc_override = NULL;
     const char *reason = "Invalid bias recipe TOML envelope";
-    mef_bias_recipe_config *recipe = NULL;
+    mef_bias_config *recipe = NULL;
     FILE *f = NULL;
     struct stat st;
     long length;
@@ -321,7 +321,7 @@ int mef_bias_recipe_expand(int argc, char **argv, int *outc, char ***outv,
             reason = "--detectors requires bias_recipe_schema_version=1";
             goto done;
         }
-        mef_bias_recipe_config_destroy(recipe);
+        mef_bias_config_destroy(recipe);
         return 1;
     }
     if (length > 1024 * 1024 || !TABLE(root, root_keys)) {
@@ -577,11 +577,11 @@ done:
     report_recipe_error(message, size, reason);
     free(settings);
     free(csv);
-    mef_bias_recipe_config_destroy(recipe);
+    mef_bias_config_destroy(recipe);
     return 0;
 }
 
-const char *mef_bias_recipe_median_even_handling(const mef_bias_recipe_config *recipe)
+const char *mef_bias_median_even_handling(const mef_bias_config *recipe)
 {
     return recipe ? recipe->median_even_handling : NULL;
 }

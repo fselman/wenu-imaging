@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bpm_linearity_recipe.h"
+#include "mef_bpm_linearity.h"
 #include "qfits.h"
 #include <dirent.h>
 #include <errno.h>
@@ -58,7 +58,7 @@ static char *resolved(const char *base, const char *path)
     return strdup(canonical);
 }
 
-char *mef_bpm_linearity_expand(const mef_bpm_linearity_recipe *recipe, const char *text)
+char *mef_bpm_linearity_expand(const mef_bpm_linearity *recipe, const char *text)
 {
     char buffer[MEF_PRODUCT_PATH_SIZE], seconds[21];
     size_t used=0;
@@ -82,7 +82,7 @@ char *mef_bpm_linearity_expand(const mef_bpm_linearity_recipe *recipe, const cha
     return strdup(buffer);
 }
 
-static char **arguments(mef_bpm_linearity_recipe *recipe, toml_datum_t table,
+static char **arguments(mef_bpm_linearity *recipe, toml_datum_t table,
     const char *key, int *count)
 {
     toml_datum_t values=toml_get(table,key);
@@ -104,7 +104,7 @@ static char **arguments(mef_bpm_linearity_recipe *recipe, toml_datum_t table,
     return argv;
 }
 
-static int project_roots(mef_bpm_linearity_recipe *recipe)
+static int project_roots(mef_bpm_linearity *recipe)
 {
     char *project_path=resolved(recipe->orchestration,
         mef_bpm_linearity_string(recipe->document.toptab,"project"));
@@ -138,13 +138,13 @@ static int project_roots(mef_bpm_linearity_recipe *recipe)
     return okay;
 }
 
-void mef_bpm_linearity_recipe_initialize(mef_bpm_linearity_recipe *recipe, mef_recipe_run *run)
+void mef_bpm_linearity_initialize(mef_bpm_linearity *recipe, mef_recipe_run *run)
 {
     memset(recipe,0,sizeof(*recipe));
     recipe->run=run;
 }
 
-int mef_bpm_linearity_recipe_prepare(mef_bpm_linearity_recipe *recipe, int argc, char **argv)
+int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
 {
     char *slash, *binding_recipe;
     toml_datum_t version, rows, dependencies;
@@ -242,12 +242,12 @@ int mef_bpm_linearity_recipe_prepare(mef_bpm_linearity_recipe *recipe, int argc,
     return 1;
 }
 
-void mef_bpm_linearity_recipe_usage(void)
+void mef_bpm_linearity_usage(void)
 {
     fputs("Usage: mefpp_bpm_linearity_recipe cal bpm-linearity --config RECIPE.toml --bindings NATIVE.toml\n",stderr);
 }
 
-void mef_bpm_linearity_recipe_destroy(mef_bpm_linearity_recipe *recipe)
+void mef_bpm_linearity_destroy(mef_bpm_linearity *recipe)
 {
     size_t i;
     if (recipe->detectors) for (i=0; i<recipe->detector_count; ++i) {

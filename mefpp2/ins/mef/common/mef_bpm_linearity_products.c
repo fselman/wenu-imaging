@@ -1,5 +1,5 @@
 #define _POSIX_C_SOURCE 200809L
-#include "mef_bpm_linearity_recipe.h"
+#include "mef_bpm_linearity.h"
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -10,7 +10,7 @@ static int product_exists(const char *path)
     return !stat(path,&st) && S_ISREG(st.st_mode) && st.st_size>0;
 }
 
-int mef_bpm_linearity_recipe_verify(mef_bpm_linearity_recipe *recipe)
+int mef_bpm_linearity_verify(mef_bpm_linearity *recipe)
 {
     size_t i;
     recipe->diagnostic="Incomplete detector coverage or changed dependencies";
@@ -44,7 +44,7 @@ static int receipt_file(FILE *stream, const char *key, const char *path)
     return !ferror(stream);
 }
 
-static int publish_receipt(mef_bpm_linearity_recipe *recipe)
+static int publish_receipt(mef_bpm_linearity *recipe)
 {
     FILE *stream=fopen(recipe->receipt,"wx");
     size_t i;
@@ -73,7 +73,7 @@ done:
     return okay;
 }
 
-int mef_bpm_linearity_recipe_publish(mef_bpm_linearity_recipe *recipe)
+int mef_bpm_linearity_publish(mef_bpm_linearity *recipe)
 {
     mef_bpm_assembly_detector *detectors=calloc(recipe->detector_count,sizeof(*detectors));
     const char **sidecars=calloc(recipe->detector_count,sizeof(*sidecars));

@@ -2,7 +2,7 @@
  * The service parsers retain their own complete grammar/geometry validation.
  */
 #define _POSIX_C_SOURCE 200809L
-#include "mef_bpm_linearity_recipe.h"
+#include "mef_bpm_linearity.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -20,7 +20,7 @@ static int fields(char *line, char **values, int capacity)
     return next?-1:count;
 }
 
-static int source_path(const mef_bpm_linearity_recipe *recipe, const char *path, int calibration)
+static int source_path(const mef_bpm_linearity *recipe, const char *path, int calibration)
 {
     return mef_bpm_linearity_has_dependency(recipe,path) &&
         mef_bpm_linearity_below(path,calibration?recipe->calibration:recipe->raw);
@@ -44,7 +44,7 @@ static int header_matches(const mef_bpm_linearity_detector *detector, const char
     return 1;
 }
 
-int mef_bpm_linearity_bindings_admit(mef_bpm_linearity_recipe *recipe,
+int mef_bpm_linearity_bindings_admit(mef_bpm_linearity *recipe,
     const mef_bpm_linearity_detector *detector)
 {
     flat_binding flats[64]={{0}};

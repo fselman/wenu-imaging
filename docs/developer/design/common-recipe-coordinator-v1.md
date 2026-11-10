@@ -76,8 +76,8 @@ LaTeX/PDF guide's file/routine/identifier references synchronized during extract
 ## Implementation/review boundary
 
 The outer bias command now implements these phases in 60 readable lines, with
-support in `mef_bias_recipe_prepare.c`, `mef_bias_recipe_inputs.c`,
-`mef_bias_recipe_process.c` and `mef_bias_recipe_products.c`. Shared run mechanics
+support in `mef_bias_prepare.c`, `mef_bias_inputs.c`,
+`mef_bias_process.c` and `mef_bias_products.c`. Shared run mechanics
 live in `mef_recipe_run.h/.c`. Final owner source review and bounded selected-Mac
 qualification remain pending. Preserve b833aca7 and existing products/evidence.
 No observational rerun, installation or resumption of linearity is authorized.
@@ -88,7 +88,7 @@ The owner conditionally approved proceeding and requires seeing the finished
 source before final acceptance. The outer coordinator calls prepare, admit,
 begin, per-detector processing, verify, publish, complete, and finish directly.
 `mef_recipe_run` owns only shared paths, start time, log and private workspace;
-`mef_bias_recipe` owns bias configuration, input bindings, assembly and QC.
+`mef_bias` owns bias configuration, input bindings, assembly and QC.
 Focused prepare/input/process/product modules implement those phases. The inner
 operation runner and scientific service remain unchanged. No new dispatcher or
 scientific policy is introduced. The draft stays unmerged.

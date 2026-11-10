@@ -3,7 +3,7 @@
 A high-level recipe should normally fit two readable pages, at most three. It
 shows the processing order with meaningful calls; supporting modules expose the
 mechanics. Do not compress statements or hide the entire program in one helper.
-The [bias coordinator](../../mefpp2/ins/mef/recipes/mefpp_bias_recipe.c) is the first
+The [bias coordinator](../../mefpp2/ins/mef/recipes/mefpp_bias.c) is the first
 implementation of this structure.
 
 1. Initialize safely destructible owners and capture the start time once.
@@ -36,3 +36,8 @@ populate typed records; they do not create another serializer. Bias supplies MEF
 extension bindings. The BPM adapter supplies its existing primary-image binding
 and preserves diagnostic HDUs plus the versioned operation context. Primary-image
 support is explicit, limited to one detector, and does not relax MEF validation.
+
+Recipe entry-point filenames under `recipes/` and their specific C helper
+filenames, types and routines omit redundant `_recipe` (for example,
+`mefpp_bias.c`, `mef_bias_config.c` and `mef_bias_prepare()`). Existing executable
+names and producer identifiers remain compatibility contracts.

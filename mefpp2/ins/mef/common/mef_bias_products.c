@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bias_recipe.h"
+#include "mef_bias.h"
 #include "mef_bias_qc_fits.h"
 #include <errno.h>
 #include <limits.h>
@@ -10,7 +10,7 @@
 #undef realloc
 #undef free
 
-int mef_bias_recipe_begin(mef_bias_recipe *recipe)
+int mef_bias_begin(mef_bias *recipe)
 {
     recipe->archive = mef_bias_product_qc_new(recipe->config, &recipe->run->paths,
         recipe->run->recipe_start, MEFPP_CANDIDATE_REVISION, (const char *const *)recipe->raw_paths,
@@ -22,7 +22,7 @@ int mef_bias_recipe_begin(mef_bias_recipe *recipe)
         (const char *const *)recipe->raw_paths, recipe->frame_count);
 }
 
-int mef_bias_recipe_verify(mef_bias_recipe *recipe)
+int mef_bias_verify(mef_bias *recipe)
 {
     if (mef_bias_product_qc_check(
             recipe->archive, recipe->run->message, sizeof(recipe->run->message))) {
@@ -31,7 +31,7 @@ int mef_bias_recipe_verify(mef_bias_recipe *recipe)
     return 1;
 }
 
-int mef_bias_recipe_publish(mef_bias_recipe *recipe)
+int mef_bias_publish_products(mef_bias *recipe)
 {
     size_t i;
     fprintf(recipe->run->log, "MEF_ASSEMBLY_START\n");
@@ -54,12 +54,12 @@ int mef_bias_recipe_publish(mef_bias_recipe *recipe)
     if (recipe->recipe_document) {
         size_t primary_count, detector_count;
         const char *const *primary_keys =
-            mef_bias_recipe_primary_keys(recipe->recipe_document, &primary_count);
+            mef_bias_primary_keys(recipe->recipe_document, &primary_count);
         const char *const *detector_keys =
-            mef_bias_recipe_detector_keys(recipe->recipe_document, &detector_count);
+            mef_bias_detector_keys(recipe->recipe_document, &detector_count);
         if (mef_bias_product_qc_headers(recipe->archive, primary_keys, primary_count, detector_keys,
-                detector_count, mef_bias_recipe_path(recipe->recipe_document),
-                mef_bias_recipe_source(recipe->recipe_document), recipe->run->message,
+                detector_count, mef_bias_path(recipe->recipe_document),
+                mef_bias_source(recipe->recipe_document), recipe->run->message,
                 sizeof(recipe->run->message))) {
             return 0;
         }
