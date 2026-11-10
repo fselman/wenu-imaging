@@ -49,8 +49,21 @@ def canonical_records(value, context, collection):
     by_asset, by_index, pairs, directories, _ = identities(context)
 
     def convert(item, key=None):
+        # A column's unit annotation is not an input identity, even when the
+        # column is named bias1_asset or input_index. Keep the complete map.
+        if key=='units':
+            return item
         if isinstance(item, dict):
-            return {k: convert(v, k) for k, v in item.items()}
+            envelope = {'native_tsv_text', 'native_tsv_sha256'}
+            present = envelope.intersection(item)
+            if present:
+                require(present==envelope and isinstance(item.get('rows'), list) and
+                        isinstance(item.get('columns'), list), 'Incomplete decoded table envelope')
+                require(hashlib.sha256(item['native_tsv_text'].encode()).hexdigest()==item['native_tsv_sha256'],
+                        'Decoded table transport digest differs')
+            # Existing saved readers decode these frozen transports. Compare
+            # every decoded field; labels also occur in the original text/hash.
+            return {k: convert(v, k) for k, v in item.items() if k not in envelope}
         if isinstance(item, list):
             return [convert(v) for v in item]
         if key in ASSET_FIELDS:
@@ -159,6 +172,7 @@ def compare_paths(current, reference, expected_producer=None):
     return dict(status='exact_saved_measurements', current=str(current), reference=str(reference),
                 producer=saved[0]['manifest']['native_source_revision'], detectors=summaries,
                 ingestion=ingestion, normalized_labels=['input indices', 'asset labels', 'pair labels/directories'],
+                transport_integrity_checked=True, schemas_and_units_compared=True,
                 files_sha256={str(p): sha for p, sha in protected.items()},
                 raw_images_opened=False, native_commands_started=False, remeasured=False,
                 products_unchanged=True, scientific_acceptance=False)
