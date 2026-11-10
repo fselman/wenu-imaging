@@ -33,7 +33,7 @@ class ManifestReader:
             require(all(d['table']['rows'] == bias for d in value['raw_bias_diagnostics']),
                     'Raw bias diagnostics differ across pairs')
             q = decoded['bpm']
-            identity = dict(digest=self.inputs[str(path)], digest_kind='file_sha256')
+            identity = dict(digest=None, sha256=self.inputs[str(path)])
             self.identities[path] = identity
             self.records[path] = dict(kind='preparation', stage=measurements.CORRECTED,
                 identity=identity, signals=measurements.preparation_rows(value),
