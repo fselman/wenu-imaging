@@ -19,11 +19,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
     parser.add_argument('--execute', action='store_true')
+    parser.add_argument('--qc', choices=('true', 'false'), help='Override optional QC; science ROI measurements remain enabled')
     args = parser.parse_args()
     plan = planner.admit(args.config)
+    if args.qc is not None:
+        if plan['native_recipe'] is None:
+            parser.error('--qc requires the native shared-cube recipe')
+        plan['qc'] = args.qc == 'true'
     if not args.execute:
-        print(json.dumps(dict(status='metadata_admitted', run=plan['run'], raw_FITS_opened=False,
-            final_mef_state='planned' if plan['assembly'] else 'not_requested', detectors=[e['detector']['detector_id'] for e in plan['entries']],
+        print(json.dumps(dict(qc=plan['qc'], status='metadata_admitted', run=plan['run'], raw_FITS_opened=False,
+            final_mef_state='planned' if plan['assembly'] and (plan['native_recipe'] is None or
+                any(e['dependencies']['selection']['bpm']['encoding']=='omitted' for e in plan['entries'])) else 'not_requested', detectors=[e['detector']['detector_id'] for e in plan['entries']],
             unique_image_files=len(plan['baseline']), bpm=plan['bpm'],
             bpm_loaded_input_pixels=[e['bpm_loaded_pixels'] for e in plan['entries']]), indent=2))
         return

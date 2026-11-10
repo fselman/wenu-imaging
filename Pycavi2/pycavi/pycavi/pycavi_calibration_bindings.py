@@ -32,7 +32,7 @@ def bind(dependencies, resolved, rows, calibration):
     """Rebind only the two calibration locations, never pixels or scientific settings."""
     original = dependencies
     root = Path(calibration).resolve(strict=True)
-    allowed = {original['master']['product'], original['selection']['bpm']['path']}
+    allowed = {original['master']['product'], original['selection']['bpm'].get('path')}
     selected = [row for row in rows if row['source'] in allowed]
     if not selected:
         return original
@@ -44,7 +44,7 @@ def bind(dependencies, resolved, rows, calibration):
         value['baseline'][str(path)] = value['baseline'].pop(source)
         if source == original['master']['product']:
             value['master']['product'] = str(path)
-        if source == original['selection']['bpm']['path']:
+        if source == original['selection']['bpm'].get('path'):
             value['selection']['bpm']['path'] = str(path)
     value['transport'] = preparation.native_plan(resolved, value['selection'],
         original_population(original))
@@ -80,11 +80,11 @@ def verify_context(context, source):
     baseline = {master['product']: origin['master_fingerprint']['sha256']}
     for member in archive.qc.traverse_records(source, qc_root=source.parent):
         file = member.as_dict()['file']
-        if file['location'] == selection['bpm']['path'] and file['sha256'] is not None:
+        if file['location'] == selection['bpm'].get('path') and file['sha256'] is not None:
             require(file['location'] not in baseline or baseline[file['location']] == file['sha256'],
                     'Conflicting preserved mask fingerprint')
             baseline[file['location']] = file['sha256']
-    allowed = {master['product'], selection['bpm']['path']}
+    allowed = {master['product'], selection['bpm'].get('path')}
     require(len({r['source'] for r in rows}) == len(rows), 'Duplicate archived calibration binding')
     for row in rows:
         require(set(row) == {'source', 'path', 'sha256'} and row['source'] in allowed and
@@ -92,7 +92,7 @@ def verify_context(context, source):
                 Path(row['path']).is_relative_to(context['calibration_root']), 'Archived calibration-copy proof differs')
         if row['source'] == entry['master']['product']:
             master['product'] = row['path']
-        if row['source'] == entry['selection']['bpm']['path']:
+        if row['source'] == entry['selection']['bpm'].get('path'):
             selection['bpm']['path'] = row['path']
     require(context['master'] == master and context['selection'] == selection,
             'Native context changed more than the declared calibration locations')

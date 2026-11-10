@@ -64,7 +64,7 @@ static int raw_table(const char *dir,const char *name,const mef_linearity_pairs_
 }
 static int same(const source *a,const source *b)
 {return a->hdu==b->hdu&&!strcmp(a->path,b->path)&&!strcmp(a->asset,b->asset);}
-int mef_linearity_prepare_command(int argc,char **argv)
+int mef_linearity_prepare_from_cube(int argc,char **argv,const mef_detector_cube *cube)
 {
     int publish=(argc==14 || (argc==16 && !strcmp(argv[14],"--context"))) && !strcmp(argv[10],"--native-asdf");
 #ifndef MEFPP_NATIVE_PRODUCT_QC
@@ -140,6 +140,7 @@ int mef_linearity_prepare_command(int argc,char **argv)
             (!strcmp(biases[i].input.path,p.flat[j].path)&&biases[i].input.hdu==p.flat[j].hdu))goto done;
     }
     if(accepted<g.minimum_frames)goto done;
+    if(cube && !cube->qc) mad=0;
     for(int j=0;j<2;++j){int found=0;for(int i=0;i<nbias;++i)if(same(&p.bias[j],&biases[i].input))++found;if(found!=1)goto done;}
     if(publish) {
         size_t n=strlen(argv[11]);
@@ -163,11 +164,17 @@ int mef_linearity_prepare_command(int argc,char **argv)
             .master=&archive_master,.bpm=p.has_bpm?&archive_bpm:NULL,.configuration=config};
         archive=mef_linearity_archive_new(&options);
         if(!archive) goto done;
+        if(cube) mef_linearity_archive_qc_mode(archive,cube->qc);
     }
     /* All geometry/header/time admission precedes raw-plane measurement. */
     f=new_output(argv[9],"bias-traces.tsv");if(!f)goto done;
     fputs("role\tinput_index\tmaster_accepted\traw_row\tcorrection_adu\n",f);
     for(int i=0;i<nbias;++i){
+        if(cube) {
+            const mef_detector_plane *plane=mef_detector_cube_bound(cube,biases[i].input.map,p.value[0]);
+            if(!plane || !trace(f,"bias",biases[i].input.index,biases[i].accepted,plane->trace,plane->rows))goto done;
+            continue;
+        }
         if(mef_layout_load(biases[i].input.map,p.value[0],&bias_plane,NULL)!=MEF_OK)goto done;
         mef_linearity_prepare_frame_input b={bias_plane,NULL,g,MEF_PREPARE_BIAS,budget};
         if(mef_linearity_prepare_frame(&b,NULL,&bias_result)!=MEF_OK||
@@ -190,7 +197,7 @@ int mef_linearity_prepare_command(int argc,char **argv)
         in.prepare_pairs=1;in.preparation_roi=rois[0];in.preparation_rois=(int)bound[0];in.max_working_pixels=budget;
         if(p.has_bpm){in.bpm_map=p.bpm.map;in.bpm_reference=&bpm_ref;}
         for(int j=0;j<2;++j){bias_ref[j]=reference(&p.bias[j],p.value[0]);in.raw_bias_map[j]=p.bias[j].map;in.raw_bias_reference[j]=&bias_ref[j];}
-        mef_status status=mef_linearity_from_files(&in,NULL,&result);
+        mef_status status=cube?mef_linearity_from_cube(&in,cube,NULL,&result):mef_linearity_from_files(&in,NULL,&result);
         if(status!=MEF_OK){fprintf(stderr,"Pair %d preparation status %d\n",pair,(int)status);goto done;}
         if(archive && !mef_linearity_archive_add_pair(archive,result)) goto done;
         char directory[4096];if(snprintf(directory,sizeof directory,"%s/pair-%04d",argv[9],pair)>=(int)sizeof directory||mkdir(directory,0700))goto done;
@@ -254,6 +261,9 @@ done:
     for(int k=0;k<2;++k){mef_roi_config_destroy(regions[k]);(free)(rois[k]);}
     (free)(p.text);(free)(bias_owner);return code;
 }
+
+int mef_linearity_prepare_command(int argc,char **argv)
+{ return mef_linearity_prepare_from_cube(argc,argv,NULL); }
 
 #ifndef MEFPP_RECIPE_LIBRARY
 int main(int argc, char **argv)

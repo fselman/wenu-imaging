@@ -8,6 +8,9 @@ typedef struct {
     detector_joint_amplifier identity;
     int amplifier_index, frames, rois, with_mad;
     const image_t *const *raw;
+    const image_t *const *processed; /* borrowed active flats; NULL retains legacy preparation */
+    const pixelvalue *const *processed_traces;
+    const pixelvalue *bias_traces[2];
     const mef_linearity_frame *frame;
     const image_t *raw_bias[2]; /* same RAW geometry/readout; NEVER overscan corrected */
     const char *raw_bias_asset[2];

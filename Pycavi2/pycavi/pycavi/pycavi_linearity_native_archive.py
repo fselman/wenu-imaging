@@ -104,10 +104,12 @@ def read_product(path):
                [detector['bin_x'], detector['bin_y']] == [context['selection']['bin_x'], context['selection']['bin_y']],
                'Native detector binding differs')
     calibrations = {c['role']: c for c in q['calibrations']}
-    qc.require(set(calibrations) == {'master_bias', 'bpm'} and len(q['calibrations']) == 2,
+    expected = [('master_bias', dict(path=context['master']['product'], hdu=context['master']['hdu']))]
+    if context['selection']['bpm']['encoding'] != 'omitted':
+        expected.append(('bpm', context['selection']['bpm']))
+    qc.require(set(calibrations) == {role for role, _ in expected} and len(q['calibrations']) == len(expected),
                'Native preparation calibration cohort differs')
-    for role, original in [('master_bias', dict(path=context['master']['product'], hdu=context['master']['hdu'])),
-                           ('bpm', context['selection']['bpm'])]:
+    for role, original in expected:
         calibration = calibrations[role]
         qc.require(calibration['file']['location'] == original['path'] and
                    calibration['detector_bindings'] == [dict(detector_id=value['detector'], source_hdu=original['hdu'])],
@@ -136,6 +138,13 @@ def read_product(path):
     qc.require(metrics[-1]['name'] == 'absolute_noise_covariance' and
                metrics[-1]['status'] == 'unavailable' and metrics[-1]['value'] is None,
                'Noise model must remain unavailable')
+    from copy import deepcopy
+    value['input_bpm'] = deepcopy(context['selection']['bpm'])
+    if 'qc_requested' in context['dependency_evidence']:
+        enabled = context['dependency_evidence']['qc_requested']
+        qc.require(type(enabled) is bool and 'qc_requested='+str(enabled).lower() in state.split('; '),
+                   'Native QC execution differs from frozen request')
+        value['qc_requested'] = enabled
     return value
 
 

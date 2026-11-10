@@ -112,10 +112,11 @@ int mef_bpm_linearity_admit(mef_bpm_linearity *recipe)
             d->preparation_argc!=16 || strcmp(d->preparation_argv[10],"--native-asdf") ||
             strcmp(d->preparation_argv[14],"--context") || strcmp(d->preparation_argv[11],d->prepared) ||
             strcmp(d->preparation_argv[13],recipe->run->paths.log) ||
-            !bias || !prior || !mef_bpm_linearity_has_dependency(recipe,bias) || !mef_bpm_linearity_has_dependency(recipe,prior) ||
+            !bias || !prior || !mef_bpm_linearity_has_dependency(recipe,bias) ||
+            (strcmp(prior,"omitted") && !mef_bpm_linearity_has_dependency(recipe,prior)) ||
             strcmp(bias,d->preparation_argv[5]) || !fits || strcmp(fits,d->fits) || !asdf || strcmp(asdf,d->asdf) ||
             !mef_bpm_linearity_below(bias,recipe->calibration) ||
-            !mef_bpm_linearity_below(prior,recipe->calibration) ||
+            (strcmp(prior,"omitted") && !mef_bpm_linearity_below(prior,recipe->calibration)) ||
             !mef_bpm_linearity_below(d->fits,recipe->output) ||
             !mef_bpm_linearity_below(d->asdf,recipe->output) ||
             !mef_bpm_linearity_below(d->prepared,recipe->output) ||
@@ -128,6 +129,17 @@ int mef_bpm_linearity_admit(mef_bpm_linearity *recipe)
         if (!strcmp(d->detector_id,recipe->reference_detector)) found_reference=1;
     }
     if (!found_reference) return 0;
+    /* A mixed batch needs an explicit assembly reference among created BPMs. */
+    int creating=0, reference_creating=0;
+    for(i=0;i<recipe->detector_count;++i) {
+        const mef_bpm_linearity_detector *d=recipe->detectors+i;
+        const char *prior=mef_bpm_linearity_option(d,"--input-bpm");
+        if(prior && !strcmp(prior,"omitted")) {
+            creating=1;
+            if(!strcmp(d->detector_id,recipe->reference_detector)) reference_creating=1;
+        }
+    }
+    if(creating && !reference_creating) return 0;
     for (i=0; i<(size_t)directories.u.arr.size; ++i) {
         toml_datum_t value=directories.u.arr.elem[i];
         char *path=value.type==TOML_STRING?mef_bpm_linearity_expand(recipe,value.u.s):NULL;

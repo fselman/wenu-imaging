@@ -66,7 +66,7 @@ int mef_bpm_linearity_bindings_admit(mef_bpm_linearity *recipe,
             !strcmp(recipe->dependencies[i].path,mef_bpm_linearity_option(detector,"--config"))) bpm_hash=recipe->dependencies[i].sha256;
     }
     if (!preparation_hash || !bpm_hash || strcmp(preparation_hash,bpm_hash)) goto done;
-    if (!prior || !prior_hdu || !bias_hdu || strcmp(bias_hdu,detector->preparation_argv[6])) goto done;
+    if (!prior || (strcmp(prior,"omitted") && !prior_hdu) || !bias_hdu || strcmp(bias_hdu,detector->preparation_argv[6])) goto done;
     for (i=0; i<6; ++i) {
         if (!mef_bpm_linearity_has_dependency(recipe,detector->preparation_argv[preparation_files[i]])) goto done;
     }
@@ -89,7 +89,7 @@ int mef_bpm_linearity_bindings_admit(mef_bpm_linearity *recipe,
                 if (!flats[count-1].path || !flats[count-1].hdu) goto done;
             }
         } else if (!strcmp(values[0],"bpm")) {
-            if (n!=4 || !source_path(recipe,values[1],1) || strcmp(values[1],prior) ||
+            if (n!=4 || !prior_hdu || !source_path(recipe,values[1],1) || strcmp(values[1],prior) ||
                 strcmp(values[2],prior_hdu)) goto done;
         }
     }

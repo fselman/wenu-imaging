@@ -42,7 +42,7 @@ def bpm_request(plan, entry, destination, started, *, deferred_directories=None)
         '--config-detector', str(detector['configuration_detector']), '--readout-id', selection['readout_id'],
         '--bin-x', str(selection['bin_x']), '--bin-y', str(selection['bin_y']),
         '--master-bias', d['master']['product'], '--bias-hdu', str(d['master']['hdu']),
-        '--input-bpm', bpm['path'], '--bpm-hdu', str(bpm['hdu']), '--bpm-coordinates', 'active',
+        '--input-bpm', bpm.get('path', 'omitted') if bpm['encoding'] != 'omitted' else 'omitted',
         '--bpm-encoding', bpm['encoding'], '--reject-bits', str(controls_policy['reject_bits']),
         '--acquisition', policy['acquisition'], '--exposure-key', selection['header_keys']['exposure'],
         '--exposure-hdu', str(selection['exposure_hdu']), '--saturation', str(controls_policy['raw_saturation_adu']),
@@ -51,9 +51,11 @@ def bpm_request(plan, entry, destination, started, *, deferred_directories=None)
         '--mad', 'yes' if controls_policy['with_mad'] else 'no', '--output-mode', policy['output_mode'],
         '--created-at', started[:19]+'Z', '--output', str(fits), '--native-asdf', str(sidecar),
         '--work-dir', str(work), '--log-path', str(log), '--config-record', str(work/'configuration.json')]
+    if bpm['encoding'] != 'omitted':
+        argv += ['--bpm-hdu', str(bpm['hdu']), '--bpm-coordinates', 'active']
     if bpm['encoding'] == 'binary':
         argv += ['--bpm-good-value', str(bpm['good_value'])]
-    else:
+    elif bpm['encoding'] == 'reason8':
         argv += ['--bpm-registry', bpm['registry']]
     return argv, fits, sidecar, log, logs
 
@@ -105,8 +107,10 @@ def verify_bpm(path, plan, entry, fits):
     for field in ('upper_fraction', 'minimum_span_fraction', 'maximum_pair_difference'):
         require(context['parameters'][field] == policy[field], 'BPM admission parameter differs')
     references = {row['role']: row['file'] for row in context['calibrations']}
-    for role, path, hdu in [('bias', d['master']['product'], d['master']['hdu']),
-                           ('bpm', d['selection']['bpm']['path'], d['selection']['bpm']['hdu'])]:
+    expected = [('bias', d['master']['product'], d['master']['hdu'])]
+    if d['selection']['bpm']['encoding'] != 'omitted':
+        expected.append(('bpm', d['selection']['bpm']['path'], d['selection']['bpm']['hdu']))
+    for role, path, hdu in expected:
         require(references[role]['path'] == path and references[role]['hdu'] == hdu, 'BPM calibration binding differs')
     metrics = {m['name']: m for m in saved[0]['measurements']}
     require(metrics['reason_histogram']['value'] == context['reason_histogram'] and

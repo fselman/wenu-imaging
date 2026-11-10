@@ -17,8 +17,8 @@ int mef_bpm_linearity_verify(mef_bpm_linearity *recipe)
     if (!mef_bpm_linearity_observe(recipe)) return 0;
     for (i=0; i<recipe->detector_count; ++i) {
         const mef_bpm_linearity_detector *detector=recipe->detectors+i;
-        if (!product_exists(detector->fits) || !product_exists(detector->asdf) ||
-            !product_exists(detector->prepared)) return 0;
+        if (!product_exists(detector->prepared) || (!detector->bpm_skipped &&
+            (!product_exists(detector->fits) || !product_exists(detector->asdf)))) return 0;
     }
     return 1;
 }
@@ -58,14 +58,19 @@ static int publish_receipt(mef_bpm_linearity *recipe)
     fputs("\nbindings = ",stream); quoted(stream,recipe->bindings_path);
     fprintf(stream,"\nbindings_sha256 = \"%s\"\n",recipe->bindings_sha256);
     fputs("log = ",stream); quoted(stream,recipe->run->paths.log); fputc('\n',stream);
-    if (!receipt_file(stream,"fits",recipe->run->paths.fits) ||
-        !receipt_file(stream,"asdf",recipe->run->paths.asdf)) goto done;
+    fprintf(stream,"qc = %s\nfinal_mef_state = \"%s\"\n",recipe->qc?"true":"false",
+        recipe->run->has_final_mef?"assembled":"not_requested");
+    if (recipe->run->has_final_mef && (!receipt_file(stream,"fits",recipe->run->paths.fits) ||
+        !receipt_file(stream,"asdf",recipe->run->paths.asdf))) goto done;
     for (i=0; i<recipe->detector_count; ++i) {
         mef_bpm_linearity_detector *detector=recipe->detectors+i;
         fputs("\n[[detectors]]\ndetector_id = ",stream); quoted(stream,detector->detector_id);
         fprintf(stream,"\nconfiguration_detector = %lu\n",(unsigned long)detector->configuration_detector);
-        if (!receipt_file(stream,"fits",detector->fits) || !receipt_file(stream,"asdf",detector->asdf) ||
-            !receipt_file(stream,"prepared",detector->prepared)) goto done;
+        fprintf(stream,"bpm_skipped = %s\nimage_loads = %lu\ncorrections = %lu\n",
+            detector->bpm_skipped?"true":"false",(unsigned long)detector->image_loads,
+            (unsigned long)detector->corrections);
+        if ((!detector->bpm_skipped && (!receipt_file(stream,"fits",detector->fits) ||
+            !receipt_file(stream,"asdf",detector->asdf))) || !receipt_file(stream,"prepared",detector->prepared)) goto done;
     }
     okay=!ferror(stream) && !fflush(stream) && !fsync(fileno(stream));
 done:
@@ -78,27 +83,33 @@ int mef_bpm_linearity_publish(mef_bpm_linearity *recipe)
     mef_bpm_assembly_detector *detectors=calloc(recipe->detector_count,sizeof(*detectors));
     const char **sidecars=calloc(recipe->detector_count,sizeof(*sidecars));
     char *planes=NULL;
-    size_t i;
+    size_t i,created=0;
     int okay=0;
     recipe->diagnostic="Final BPM MEF/ASDF publication or input preservation failed";
     if (!detectors || !sidecars) goto done;
     for (i=0; i<recipe->detector_count; ++i) {
         const mef_bpm_linearity_detector *d=recipe->detectors+i;
-        detectors[i]=(mef_bpm_assembly_detector){d->fits,d->detector_id,d->configuration_detector};
-        sidecars[i]=d->asdf;
+        if(d->bpm_skipped) continue;
+        detectors[created]=(mef_bpm_assembly_detector){d->fits,d->detector_id,d->configuration_detector};
+        sidecars[created++]=d->asdf;
+    }
+    recipe->run->has_final_mef=created!=0;
+    if(!created) {
+        fprintf(recipe->run->log,"BPM_MEF_NOT_REQUESTED REASON input_bpm_supplied\n");
+        goto preservation;
     }
     fprintf(recipe->run->log,"MEF_ASSEMBLY_START\n");
     if (fflush(recipe->run->log) || mef_bpm_mef_assemble(recipe->run->paths.fits,
-        recipe->reference_detector,detectors,recipe->detector_count,
+        recipe->reference_detector,detectors,created,
         recipe->run->message,sizeof(recipe->run->message))) goto done;
-    planes=mef_bpm_assembly_plane_map(recipe->run->paths.fits,detectors,recipe->detector_count);
+    planes=mef_bpm_assembly_plane_map(recipe->run->paths.fits,detectors,created);
     if (!planes) goto done;
     {
         mef_bpm_assembly_qc request={.fits_path=recipe->run->paths.fits,.asdf_path=recipe->run->paths.asdf,
             .log_path=recipe->run->paths.log,.created_at=recipe->run->recipe_start,
             .source_revision=recipe->run->revision,.detector_source_revision=recipe->run->revision,
             .recipe_path=recipe->recipe_path,.recipe_snapshot=recipe->recipe_source,
-            .detectors=detectors,.sidecars=sidecars,.detector_count=recipe->detector_count,.plane_map=planes};
+            .detectors=detectors,.sidecars=sidecars,.detector_count=created,.plane_map=planes};
         fprintf(recipe->run->log,"NATIVE_ASDF_START\n");
         if (fflush(recipe->run->log) || mef_bpm_assembly_qc_write(&request,
             recipe->run->message,sizeof(recipe->run->message))) goto done;
@@ -109,6 +120,7 @@ int mef_bpm_linearity_publish(mef_bpm_linearity *recipe)
      * A failed check retains products but publishes no successful receipt.
      */
 
+preservation:
     for (i=0; i<recipe->dependency_count; ++i) {
         if (!mef_bpm_linearity_dependency_check(recipe->dependencies+i,1)) goto done;
     }

@@ -16,7 +16,7 @@ import pycavi_linearity_config as config
 import pycavi_linearity_recipe as recipe
 
 
-def fixture(work, *, separated=False):
+def fixture(work, *, separated=False, supplied_bpm=True):
     work=Path(work);work.mkdir(parents=True,exist_ok=True);name='ESO_CCD_#65'
     raw = work / 'raw' if separated else work
     orchestration = work / 'orchestration' if separated else work
@@ -108,6 +108,9 @@ overscan_sample=[8,8,1,4]
         exposure_hdu=0,header_keys=dict(identity='DETID',amplifier='AMPID',bin_x='XBINNING',bin_y='YBINNING',exposure='EXPTIME'),
         flat=flats,bias=[{k:b[k] for k in ('path','hdu','asset')} for b in biases[:2]],
         bpm=dict(path=str(bpm),hdu=1,asset=bpm.name,encoding='binary',good_value=1))
+    if not supplied_bpm:
+        selection['bpm'] = dict(encoding='omitted')
+        resolved = config.resolve(detector, processing.replace('mask_encoding="binary"', 'mask_encoding="omitted"'))
     sites=[dict(detector=name,amplifier='L',configuration_detector=0,source_roi=f'CCD65.R{i}',
                 active_pixel=[i+1,1],raw_pixel=[i+2,2]) for i in range(5)]
     prepared=recipe.native_plan(resolved,selection,sites)
@@ -136,7 +139,7 @@ def source_archive(state):
     entry=old['entry'];entry['selection']=state['selection'];entry['population']=state['sites']
     entry['active_pixels']=12;old['native_configuration']=state['snapshot']
     qc=sample.qc;masterdir=w/'fixture-master';masterdir.mkdir();members=[]
-    descriptors=state['biases']+[dict(state['selection']['bpm'],accepted=1)]
+    descriptors=state['biases']+([] if state['selection']['bpm']['encoding']=='omitted' else [dict(state['selection']['bpm'],accepted=1)])
     for i,b in enumerate(descriptors):
         builder=qc.QcRecipe(file=dict(id=b['path'],filename=Path(b['path']).name,location=b['path'],
             kind='raw' if i<10 else 'product',sha256=None,observed_at=None,
@@ -163,7 +166,7 @@ def source_archive(state):
     old['table']=sample.parse(('\n'.join(lines)+'\n').encode())
     old['population']=sample.parse_population(('input_index\toutside_selected_sites\tbpm_excluded\tsample_excluded\tnonfinite\tsaturated\tadmitted\n'+
         ''.join(f'{10+i}\t7\t0\t0\t0\t0\t5\n' for i in range(20))).encode())
-    for source in state['selection']['flat']+[state['selection']['bpm']]+[dict(path=state['master'])]:
+    for source in state['selection']['flat']+([] if state['selection']['bpm']['encoding']=='omitted' else [state['selection']['bpm']])+[dict(path=state['master'])]:
         origin['image_fingerprints'][source['path']]=dict(sha256=hashlib.sha256(Path(source['path']).read_bytes()).hexdigest(),stat=[1,2,3,4,5,6])
     target=w/'prior-samples';target.mkdir()
     state['master_qc']=master

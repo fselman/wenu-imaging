@@ -39,11 +39,13 @@ static int add_pixels(const mef_bound_detector *d,size_t *total,size_t limit)
     if(n>limit||*total>limit-n)return 0;
     *total+=n;return 1;
 }
-mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
+static mef_status from_inputs(const mef_linearity_files_input *p,const mef_detector_cube *cube,
     const mef_allocator *allocator,mef_linearity_files_result **out)
 {
     mef_allocator a={NULL,allocate_default,release_default};mef_status status=MEF_ERR_INPUT;
     mef_linearity_files_result *r=NULL;image_t **raw=NULL,*bias=NULL,*raw_bias[2]={NULL,NULL};pixelmap *binary=NULL;
+    const image_t *processed[MAX_IMAGE_NUMBER];
+    const pixelvalue *traces[MAX_IMAGE_NUMBER],*bias_traces[2]={NULL,NULL};
     unsigned char *flags=NULL;mef_linearity_frame *frames=NULL;mef_bias_settings g;
     const mef_bound_detector *first,*cal,*d;size_t total=0;int count,width,height;
     if(!p||!out||*out||(allocator&&(!allocator->allocate||!allocator->release)))return status;
@@ -160,16 +162,36 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
         if(!r->raw_bias_path[j])goto done;
         r->raw_bias_binding[j]=*mef_layout_find(p->raw_bias_map[j],detector);
     }
+    if(cube) {
+        for(int i=0;i<count;++i) {
+            const mef_detector_plane *plane=mef_detector_cube_bound(cube,p->input[i].map,detector);
+            if(!plane || !plane->raw || !plane->active) {status=MEF_ERR_INPUT;goto done;}
+            raw[i]=plane->raw;processed[i]=plane->active;traces[i]=plane->trace;
+        }
+        bias=cube->master;binary=cube->binary;flags=cube->flags;
+    } else {
     for(int i=0;i<count;++i){status=mef_layout_load(p->input[i].map,detector,raw+i,NULL);if(status!=MEF_OK)goto done;}
     status=mef_layout_load(p->bias_map,detector,&bias,NULL);if(status!=MEF_OK)goto done;
     if(p->mask_encoding==MEF_LINEARITY_MASK_BINARY){status=mef_layout_load_bpm(p->bpm_map,detector,p->binary_good_value,&binary,NULL);if(status!=MEF_OK)goto done;}
     if(p->mask_encoding==MEF_LINEARITY_MASK_REASON8){int w,h;
         if(pixelmap_flags8_load_checked(r->bpm_path,r->bpm_binding.image.hdu_index,p->mask_registry,&flags,&w,&h)||w!=width||h!=height){status=MEF_ERR_INPUT;goto done;}}
+    }
     if(p->measure_pairs){
-        for(int j=0;j<2;++j){status=mef_layout_load(p->raw_bias_map[j],detector,raw_bias+j,NULL);if(status!=MEF_OK)goto done;}
+        for(int j=0;j<2;++j) {
+            if(cube) {
+                const mef_detector_plane *plane=mef_detector_cube_bound(cube,p->raw_bias_map[j],detector);
+                if(!plane || !plane->raw) {status=MEF_ERR_INPUT;goto done;}
+                raw_bias[j]=plane->raw;bias_traces[j]=plane->trace;
+            } else {
+                status=mef_layout_load(p->raw_bias_map[j],detector,raw_bias+j,NULL);
+                if(status!=MEF_OK)goto done;
+            }
+        }
         mef_linearity_pairs_input m;memset(&m,0,sizeof m);
         m.configuration=s->configuration;m.configuration_detector=s->configuration_detector;m.identity=s->identity;
         m.amplifier_index=s->amplifier_index;m.frames=count;m.rois=s->rois;m.roi=s->roi;
+        m.processed=cube?processed:NULL;m.processed_traces=cube?traces:NULL;
+        m.bias_traces[0]=bias_traces[0];m.bias_traces[1]=bias_traces[1];
         m.raw=(const image_t *const *)raw;m.frame=frames;m.with_mad=p->pair_with_mad;
         m.bpm_flags=flags;m.bpm_count=flags?(size_t)width*(size_t)height:0;m.bpm_binary=binary;
         m.reject_bits=s->reject_bits;m.saturation_raw=s->saturation_raw;m.pair_time_tolerance=p->pair_time_tolerance;m.max_rows=p->max_pair_rows;
@@ -181,11 +203,23 @@ mef_status mef_linearity_from_files(const mef_linearity_files_input *p,
         if(status!=MEF_OK)goto done;
     }
     mef_linearity_sample_input input=*s;input.raw=(const image_t *const *)raw;input.frame=frames;input.master_bias=bias;
+    input.processed=cube?processed:NULL;
     input.bpm_flags=flags;input.bpm_count=flags?(size_t)width*(size_t)height:0;input.bpm_binary=binary;
     status=mef_linearity_samples(&input,&a,&r->samples);if(status!=MEF_OK)goto done;
     *out=r;r=NULL;
 done:
-    if(raw){for(int i=0;i<count;++i)image_del(raw[i]);release(&a,raw);}
-    for(int j=0;j<2;++j)image_del(raw_bias[j]);
-    image_del(bias);pixelmap_del(binary);if(flags)free(flags);release(&a,frames);mef_linearity_files_destroy(r);return status;
+    if(raw){if(!cube)for(int i=0;i<count;++i)image_del(raw[i]);release(&a,raw);}
+    if(!cube) {
+        for(int j=0;j<2;++j)image_del(raw_bias[j]);
+        image_del(bias);pixelmap_del(binary);if(flags)free(flags);
+    }
+    release(&a,frames);mef_linearity_files_destroy(r);return status;
 }
+
+mef_status mef_linearity_from_files(const mef_linearity_files_input *input,
+    const mef_allocator *allocator,mef_linearity_files_result **out)
+{ return from_inputs(input,NULL,allocator,out); }
+
+mef_status mef_linearity_from_cube(const mef_linearity_files_input *input,
+    const mef_detector_cube *cube,const mef_allocator *allocator,mef_linearity_files_result **out)
+{ return cube?from_inputs(input,cube,allocator,out):MEF_ERR_INPUT; }

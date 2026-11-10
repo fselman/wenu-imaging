@@ -10,27 +10,36 @@
 \begin{document}
 \maketitle
 \section*{Executive summary}
-This recipe measures detector response and produces a candidate bad-pixel mask
-from paired flat exposures, an existing master bias and an admitted prior mask.
-Linearity characterization is measurement only: it does not correct science
-images or change the gain. Cross-talk is outside its present scope.
+For each detector the native coordinator reads its input image planes and supplied
+calibrations once into an owned cube. It applies row scan correction, supplied
+master-bias subtraction and trimming once, preserving the existing arithmetic.
+BPM fitting and linearity measurements borrow the same corrected planes.
 
-For each detector, native C services perform row scan correction, master-bias
-subtraction, trimming and ROI/direct-site measurements, then characterize the
-candidate BPM using the same fixed calibrations. Detectors run serially. Final
-MEF assembly preserves the detector image payloads and joins their native ASDF
-measurements, input identities and calibration HDU bindings.
+A supplied input BPM skips candidate BPM creation, with an explicit log entry.
+Otherwise the existing robust response fitter creates a candidate BPM and its
+native FITS/ASDF products before linearity ROI and direct-site measurements.
+The admitted mask stays fixed for measurement populations. Pair consistency
+and signal coverage are reported suitability assessments; failure does not
+suppress the remaining measurements or certify the candidate.
 
-Project TOML defines the directory roots. Raw observations remain read-only;
-recipe controls belong in orchestration; products, logs and work belong below
-reduced. Separate detector masters retain their own provenance. Shared
-calibrations collect detector bindings only when their metadata agree.
+The recipe and command accept \texttt{qc = true/false} and
+\texttt{--qc true/false}. QC defaults to true. False suppresses optional full-frame
+BPM QC and MAD calculations; requested ROI signals, variances, populations,
+traces and provenance remain available. It does not bypass structural validation.
+Linearity characterization is measurement only: no correction or gain conversion
+is applied. Cross-talk remains outside scope.
 
-The final products are FITS, ASDF and a log, with frozen configuration and
-input-preservation evidence. A zero mask value means no detected reason, not
-certification. Mac qualification and exact CCD65 comparison passed for the
-single-detector native coordinator; the extension for separate calibration
-files requires its focused Mac check before the full 32-detector run.
+Project TOML owns raw, orchestration and reduced roots. Raw observations and
+calibrations remain unchanged. Products and working evidence reside below
+reduced. Per-detector measurement ASDFs are always published; final BPM MEF/ASDF
+assembly includes only newly created BPMs. An all-supplied-mask run has no new
+BPM MEF. A zero reason byte is not certification.
+
+Linux checks cover shared-buffer ownership, exact measurements, both QC modes
+and counted image loads/corrections. Native ASDF qualification on the selected
+Mac remains pending for this refactor. Full-file SHA256 preservation passes
+still read shared inputs before and after the batch: the numerical stages are
+read-once; total integrity I/O is not yet fused with ingestion.
 \newpage
 \section*{Scope and configuration}
 This guide describes the preparation kernels and their FITS/recipe/ASDF
@@ -115,8 +124,9 @@ each estimate before QC median sorting, preserving physical row order.
 The legacy interfaces pass a null trace and keep their numerical behavior.
 The result owns the active image, trace and settings copy.
 
-\texttt{mef\_linearity\_prepare\_pairs} corrects the two biases for trace evidence
-and two flats at a time, reusing raw-pair admission and the existing masked
+\texttt{mef\_linearity\_prepare\_pairs} borrows corrected flats and saved bias/flat
+traces from the detector cube in the combined recipe. Its standalone compatibility
+path corrects two biases and two flats at a time. Both reuse raw-pair admission and the existing masked
 single-image and difference statistics. Results own copied identities, raw
 diagnostics, corrected ROI statistics and traces. Borrowed inputs stay unchanged;
 occupied outputs, invalid settings, resource limits and failures do not expose
@@ -301,8 +311,8 @@ inspection; extension to the full detector cohort remains pending.
 \hypertarget{native-recipe}{}
 \section*{Native recipe: structure and ownership}
 The native entry point is
-\texttt{mefpp2/ins/mef/recipes/mefpp\_bpm\_linearity\_recipe.c}.
-Like \texttt{mefpp\_bias\_recipe.c}, its visible order is initialize/start,
+\path{mefpp2/ins/mef/recipes/mefpp_bpm_linearity.c}.
+Like \path{mefpp_bias.c}, its visible order is initialize/start,
 prepare/admit/begin, serial detector loop, verify/publish/complete, and one
 failure/report/destruction path. Both use \texttt{mef\_recipe\_run}; the recipe
 owns no all-detector image cube. There are no new estimators or changed
@@ -314,31 +324,41 @@ executables are not configured in this form. The original per-stage form remains
 supported for retained records. Mixing the two execution forms is refused.
 Project TOML remains the sole owner of shared directory roots.
 
-Pycavi admits historical ASDF dependencies, calibration-copy fingerprints,
-detector/processing controls and reference ROI names before processing. It
-freezes explicit native bindings in orchestration; staged archive metadata
-remains below reduced/work until C copies it into the final product tree. Those bindings contain the
-existing native argument contracts, metadata-copy declarations and unique
-source paths with SHA256 identities. They do not introduce alternative
-scientific settings. Native execution is one command:
+Pycavi admits archived dependencies, copied-calibration fingerprints and detector
+controls, then freezes native bindings in orchestration. C copies the frozen
+metadata into the product tree. Bindings declare ordered paths, HDUs and SHA256
+identities; they do not introduce alternative scientific settings. Native execution is one command:
 \begin{quote}\small\ttfamily
 mefpp\_bpm\_linearity\_recipe cal bpm-linearity\par
---config RECIPE.toml --bindings NATIVE.toml
+--config RECIPE.toml --bindings NATIVE.toml --qc false
 \end{quote}
 Given admitted bindings, this command runs without Pycavi, Python or a shell.
 Historical archive-graph resolution remains a metadata-authoring step.
 
 \texttt{prepare} reads the authoring recipe/project/bindings and expands only the
-single captured start timestamp. The existing BPM handoff retains whole-second
-precision derived from that same instant; it samples no second clock. \texttt{admit} checks roots, detector order,
-master/prior consistency, fresh destinations, niceness and source fingerprints.
+single captured start timestamp. The BPM handoff derives its whole-second
+precision from that same instant. \texttt{admit} checks roots, detector order,
+calibration consistency, fresh destinations and source fingerprints.
 \texttt{begin} creates output/work/log directories and copies frozen metadata,
-without copying raw images. \texttt{process} calls the existing native preparation
-and BPM functions in process. Each service releases its image owners before the
-next stage/detector. The same master and prior remain fixed. \texttt{verify}
-requires complete detector artifacts. \texttt{publish} reuses the final FITS
-copier and native QC join described above, then verifies source bytes again.
-No scientific result is recalculated during assembly or saved reading.
+without copying raw images. \texttt{process} ingests calibrations and frames once,
+creates a BPM only when no prior BPM is supplied, then measures linearity from
+the same cube. The detector owner releases its buffers after both consumers.
+Raw flat buffers and two reference biases remain available for the established
+four-plane populations and physical saturation checks; other bias image buffers
+are released after their row traces are captured. The supplied master is loaded
+once and never scan-corrected again. The current historical-archive admission
+contract requires a verified existing master; bias-free archive admission is
+not introduced by this refactor.
+
+\texttt{verify} requires a preparation ASDF for every detector and BPM FITS/ASDF
+only for created masks. \texttt{publish} assembles newly created BPMs; an explicit
+reference must belong to that subset. An all-supplied-mask run records
+\texttt{final\_mef\_state=not\_requested}. The receipt records effective QC mode,
+per-detector skip decisions and ingestion/correction counters. Shared-cube BPM
+ASDF context stores pair-consistency and coverage assessments without changing
+their thresholds or fitting population. Numerical/structural failures still fail
+the command and retain available evidence. No scientific result is recalculated
+during final assembly or saved reading.
 
 Shared inputs are hashed once before and once after the complete batch; between
 stages only device/inode/size/mode/nanosecond-mtime identity is checked. The final
@@ -366,13 +386,17 @@ frozen dependencies and raw/calibration transport paths. Preparation and BPM
 must use the same ordered flat paths/HDUs and native configuration.
 \item \texttt{BPM-LINEARITY-DETECTOR-LOOP}.\par
 The entry point calls \path{mef_bpm_linearity_process.c} serially,
-keeping preparation before candidate characterization.
-\item \texttt{BPM-LINEARITY-MEASUREMENTS}.\par
-The process helper calls \path{mef_linearity_prepare_command}. Row correction
-and statistics remain in the preparation/files/pairs kernels mapped earlier.
+owning ingestion, optional candidate creation, then linearity measurements.
+\item \texttt{BPM-LINEARITY-INGESTION}.\par
+\path{mef_detector_cube.c} owns calibration loads, unique path/HDU image planes,
+active images and physical row traces. Consumers never destroy borrowed planes.
 \item \texttt{BPM-LINEARITY-CANDIDATE}.\par
-The same helper calls \path{mef_bpm_command}. Fitting remains in
+The same helper calls \path{mef_bpm_command_from_cube} unless a mask was supplied. Fitting remains in
 \path{mef_cal_bpm.c} and \path{detector_response.c}.
+\item \texttt{BPM-LINEARITY-MEASUREMENTS}.\par
+The process helper calls \path{mef_linearity_prepare_from_cube}. Statistics
+remain in the preparation/files/pairs kernels mapped earlier; correction is
+performed only during ingestion.
 \item \texttt{BPM-LINEARITY-PUBLICATION}.\par
 The entry point calls \path{mef_bpm_linearity_products.c}:
 final MEF assembly and the unchanged native ASDF join.
@@ -382,8 +406,8 @@ identities and publish the exclusive completion receipt.
 \end{enumerate}
 The Python metadata/call boundary is
 \texttt{pycavi\_bpm\_linearity\_native\_recipe.py}; it contains no detector-stage
-execution loop. The focused Mac qualifier builds only the coordinator and runs
-one small synthetic complete recipe with independent ASDF/schema/value checks.
+execution loop. The focused Mac qualifier builds the coordinator and affected BPM probe, then
+checks supplied-mask QC modes and candidate creation with independent ASDF readers.
 Local numerical/FITS checks with a labelled test writer do not qualify native
 ASDF or observational behavior. Those gates remain mandatory before selection.
 

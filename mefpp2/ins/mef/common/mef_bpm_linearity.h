@@ -6,6 +6,7 @@
 #include "mef_recipe_run.h"
 #include "mef_bpm_assembly_qc.h"
 #include "tomlc17.h"
+typedef struct mef_detector_cube mef_detector_cube;
 #include <stdlib.h>
 #include <sys/stat.h>
 
@@ -21,6 +22,8 @@ typedef struct {
     char **preparation_argv, **bpm_argv;
     int preparation_argc, bpm_argc;
     char *fits, *asdf, *prepared;
+    int bpm_skipped;
+    size_t image_loads, corrections;
 } mef_bpm_linearity_detector;
 
 /* All text/arrays are owned until destroy; initialized owners may be destroyed
@@ -37,7 +40,7 @@ typedef struct {
     mef_bpm_linearity_detector *detectors;
     mef_bpm_linearity_dependency *dependencies;
     size_t detector_count, dependency_count;
-    int show_usage;
+    int show_usage, qc;
 } mef_bpm_linearity;
 
 void mef_bpm_linearity_initialize(mef_bpm_linearity *, mef_recipe_run *);
@@ -62,5 +65,7 @@ const char *mef_bpm_linearity_option(const mef_bpm_linearity_detector *, const c
 int mef_bpm_linearity_has_dependency(const mef_bpm_linearity *, const char *);
 int mef_bpm_linearity_bindings_admit(mef_bpm_linearity *, const mef_bpm_linearity_detector *);
 int mef_linearity_prepare_command(int, char **);
+int mef_linearity_prepare_from_cube(int,char **,const mef_detector_cube *);
+int mef_bpm_command_from_cube(int,char **,const mef_detector_cube *);
 int mef_bpm_command(int, char **);
 #endif

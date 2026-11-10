@@ -225,6 +225,9 @@ mef_status mef_bpm_write_handoff(FILE *f,const mef_bpm_files_result *result,
     fprintf(f,",\"exposure_hdu\":%d",qc->exposure_hdu);
     fprintf(f,",\"output_mode\":%d,\"shape\":[%d,%d],\"mode\":%d,\"mask_encoding\":%d,\"prior_active_only\":%d,\"binary_good_value\":%d,\"reject_bits\":%u,",
         o->mode,response->valid->ly,response->valid->lx,qc->mode,qc->mask_encoding,qc->prior_active_only,qc->binary_good_value,qc->reject_bits);
+    if(qc->shared_cube) fprintf(f,"\"execution\":{\"image_source\":\"shared_processed_cube\",\"qc_requested\":%s},"
+        "\"suitability\":{\"pair_consistency_passed\":%s,\"coverage_passed\":%s,\"scientific_acceptance\":false},",
+        qc->qc_requested?"true":"false",qc->pair_consistency_passed?"true":"false",qc->coverage_passed?"true":"false");
     fprintf(f,"\"parameters\":{\"saturation_raw\":%.17g,\"upper_fraction\":%.17g,\"minimum_span_fraction\":%.17g,\"maximum_pair_difference\":%.17g,\"response_low\":%.17g,\"response_high\":%.17g,\"proportional\":%d},",
         qc->saturation_raw,qc->upper_fraction,qc->minimum_span_fraction,qc->maximum_pair_difference,settings.low,settings.high,response->proportional);
     fprintf(f,"\"coverage\":{\"usable_pairs\":%lu,\"distinct_times\":%lu,\"paired_levels\":%lu,\"span_fraction\":%.17g},\"rois\":[",

@@ -36,6 +36,7 @@ struct mef_linearity_archive {
     size_t rows, evidence_bytes;
     mef_qc_text_evidence evidence[256];
     char *configuration, *source_table;
+    char execution[768];
     const char **sources;
     char (*names)[80];
 };
@@ -224,4 +225,12 @@ void mef_linearity_archive_destroy(mef_linearity_archive *a)
     }
     free(a->configuration);free(a->source_table);free(a->sources);free(a->input);
     free(a->binding);free(a->input_metric);free(a->input_index);free(a->row);free(a->metric);free(a->names);free(a);
+}
+
+void mef_linearity_archive_qc_mode(mef_linearity_archive *archive,int qc)
+{
+    if(!archive) return;
+    snprintf(archive->execution,sizeof(archive->execution),"%s; qc_requested=%s; image_source=shared_processed_cube",
+        archive->product.operation_context_snapshot,qc?"true":"false");
+    archive->product.operation_context_snapshot=archive->execution;
 }

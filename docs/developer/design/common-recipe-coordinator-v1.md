@@ -3,7 +3,7 @@
 ## Required BPM/linearity detector flow
 
 The owner's current direction supersedes the two-pass preparation/BPM order.
-This is the required target; the current executable does not yet implement it.
+The feature branch implements the shared-cube path; selected-Mac native ASDF qualification remains pending.
 
 1. Admit ordered input identities, geometry, fixed calibrations and requested steps.
 2. Read each required detector image plane once. Capture requested raw-only QC,
@@ -11,7 +11,8 @@ This is the required target; the current executable does not yet implement it.
    correction, bias subtraction when applicable and trimming exactly once, with
    the existing arithmetic and rounding. Store the active images in one owned
    processed cube, retaining original frame/pair/HDU mappings.
-3. If requested, borrow the cube for robust response fitting and candidate BPM
+3. If an input BPM is supplied, skip BPM creation and log `input_bpm_supplied`.
+   Otherwise borrow the cube for robust response fitting and candidate BPM
    creation. Publish the detector BPM FITS and measured QC ASDF.
 4. Borrow that same unmodified cube for linearity curves, ROI, pair-difference
    and direct-site measurements. Publish their native ASDF and provenance.
@@ -24,11 +25,14 @@ is not a substitute for sharing the cube. Load calibrations once per detector;
 do not reload reference biases per flat pair. Reusing the existing file adapters
 unchanged cannot satisfy this contract.
 
-Raw-only evidence must be captured before it is lost. Preserve the established
+Raw-only evidence must be retained before it is lost. The implementation keeps raw
+flats and two reference biases until pair measurements finish; other bias planes
+are released after their traces are captured. Preserve the established
 common raw four-plane population for pair statistics and the distinct direct-site
-population. Do not silently drop raw QC or change its membership. Fingerprinting
-must share ingestion reads; any additional integrity-related image-payload reads
-must be identified before claiming read-once qualification.
+population. Do not silently drop raw QC or change its membership. Fingerprinting should eventually share ingestion reads. Currently one full-file
+SHA256 pass before and after the batch remains for content-preservation evidence.
+Therefore only numerical image ingestion/correction is read-once qualified;
+total disk I/O is not. Do not remove preservation checks or claim otherwise.
 
 Pair consistency, signal span and scientific suitability are recorded analysis
 assessments. They must not erase measured evidence or stop the remaining detector
@@ -44,6 +48,13 @@ Qualification must count actual selected-plane loads and corrections, prove one
 ingest/correction per input, compare cube values and measurements with references,
 and cover BPM requested/omitted and unsuitable-pair cases. Preserve the 26 completed
 detector products and CCD87 preparation from the stopped 32-detector run.
+
+The `qc` recipe boolean defaults to true; trailing `--qc true/false` overrides it.
+False disables optional BPM full-frame diagnostics and MAD, while preserving
+requested ROI means/variances, pair/direct-site measurements and provenance.
+Supplied calibrations remain fixed. The historical archive admission currently
+requires a verified master bias; absence is not replaced with an invented zero
+calibration. All-supplied-mask runs publish measurement ASDFs and no BPM MEF.
 
 Owner direction, 8 November 2026, within issue #292: the short bias recipe must
 come from the common recipe template so that subsequent recipes share its

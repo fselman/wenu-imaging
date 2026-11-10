@@ -40,7 +40,12 @@ correct each detector image plane once into one owned processed cube; optionally
 create/publish its robust-fit BPM and measured QC; then measure linearity/ROIs
 from that same cube before release. Raw-only evidence is captured during ingestion.
 Downstream services borrow processed planes without input I/O or reprocessing.
-The migration is pending; see the required detector flow in
+The feature branch implements the shared-cube path; its selected-Mac ASDF gate
+is pending. A supplied BPM skips creation and logs the reason. `--qc true/false`
+overrides the recipe boolean (default true); false suppresses optional BPM
+full-frame QC and MAD without disabling requested linearity measurements.
+Full-file preservation hashing still reads shared inputs before and after the
+batch; do not claim total read-once disk I/O. See the detector flow in
 docs/developer/design/common-recipe-coordinator-v1.md. Preserve stopped run
 native-32-wm3xnsso (26 completed detectors; CCD87 preparation saved). Do not relax
 pair-quality criteria or repeat completed detector work to bypass the failure.

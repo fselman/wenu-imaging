@@ -74,7 +74,7 @@ static int publish_native_qc(const mef_bpm_files_result *result, const char *fit
 }
 #endif
 
-int mef_bpm_command(int argc,char **argv) {
+int mef_bpm_command_from_cube(int argc,char **argv,const mef_detector_cube *cube) {
     enum {PAF,CONFIG,FLATS,DET,SLOT,READOUT,BX,BY,BIAS,BIASHDU,PRIOR,PRIORHDU,
         ENCODING,GOOD,COORD,REGISTRY,REJECT,MODE,EXPOSUREKEY,EXPOSUREHDU,SAT,UPPER,
         SPAN,PAIRDIFF,ROI,MAD,OUTPUTMODE,DATE,OUTPUT,WORK,LOG,CONFIGREC,HANDOFF,NATIVEASDF,NKEYS};
@@ -235,8 +235,16 @@ int mef_bpm_command(int argc,char **argv) {
         }
         fputs("BPM_NATIVE_START\n",native_log);
     }
-    if(mef_bpm_from_files(context,(const mef_layout_map *const *)maps,count,v[DET],bias,prior,&o,&result,&error)!=MEF_OK ||
+    if(cube && !cube->qc) o.with_mad=0;
+    status=cube?mef_bpm_from_cube(context,(const mef_layout_map *const *)maps,count,v[DET],bias,prior,&o,cube,&result,&error):
+        mef_bpm_from_files(context,(const mef_layout_map *const *)maps,count,v[DET],bias,prior,&o,&result,&error);
+    if(status!=MEF_OK ||
        mef_bpm_publish(result,v[OUTPUT],&publication,&error)!=MEF_OK) goto done;
+    if(cube && native_log) {
+        const mef_bpm_files_qc *assessment=mef_bpm_files_result_qc(result);
+        fprintf(native_log,"BPM_SUITABILITY PAIR_CONSISTENCY %s COVERAGE %s SCIENTIFIC_ACCEPTANCE false\n",
+            assessment->pair_consistency_passed?"pass":"fail",assessment->coverage_passed?"pass":"fail");
+    }
     if (record) {
         status=mef_bpm_write_handoff(record,result,v[OUTPUT],&publication,&error);
         if(!finish(record,status==MEF_OK)) { record=NULL; goto done; } record=NULL;
@@ -274,3 +282,6 @@ done:
     mef_config_document_destroy(document); mef_bb_del(legacy); mef_error_destroy(error);
     return exit_status;
 }
+
+int mef_bpm_command(int argc,char **argv)
+{ return mef_bpm_command_from_cube(argc,argv,NULL); }

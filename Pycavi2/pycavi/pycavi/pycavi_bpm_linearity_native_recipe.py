@@ -51,7 +51,7 @@ def preparation_binding(plan, entry, destination, controls, directories, copies)
     frozen.mkdir(parents=True)
     images = {p: dict(sha256=digest, stat=coordinator.stat_identity(p)) for p, digest in d['baseline'].items()}
     context = preparation.prepare_context(d, plan['resolved'], frozen, controls,
-        source_revision=plan['source_revision'], evidence=dict(native_directory=str(native),
+        source_revision=plan['source_revision'], evidence=dict(qc_requested=plan['qc'], native_directory=str(native),
             handoff=d['handoff'], metadata_sha256=d['metadata_sha256'], images=images,
             native_binary_sha256=coordinator.digest(plan['native_recipe']['executable']),
             configuration_sources=plan['configuration_sources'], batch_preservation=None))
@@ -114,11 +114,11 @@ def compile_bindings(plan):
 def saved_manifest(plan, receipt):
     """Independent saved readers check native products before the Python index."""
     require(receipt['status'] == 'complete' and receipt['input_preservation'] is True and
-            receipt['source_revision'] == plan['source_revision'] and
+            receipt['source_revision'] == plan['source_revision'] and receipt['qc'] is plan['qc'] and
             receipt['scientific_acceptance'] is False and receipt['linearity_correction'] == 'not_applied',
             'Native recipe did not complete preserved measurement-only processing')
     report = dict(schema_version=1, scope='bpm_linearity', status='complete_for_owner_inspection',
-        scientific_acceptance=False, final_mef_state='assembled', linearity_correction='not_applied',
+        scientific_acceptance=False, qc=receipt['qc'], final_mef_state=receipt['final_mef_state'], linearity_correction='not_applied',
         created_at=receipt['created_at'], native_source_revision=plan['source_revision'],
         assembly_source_revision=plan['source_revision'], product_root=plan['run'], directories=plan['layout'],
         configuration_sources=plan['configuration_sources'], coordinator_sources=plan['coordinator_sources'],
@@ -128,27 +128,36 @@ def saved_manifest(plan, receipt):
         require(detector['detector_id'] == entry['detector']['detector_id'] and
                 detector['configuration_detector'] == entry['detector']['configuration_detector'],
                 'Native detector order/mapping differs')
-        for key in ('fits', 'asdf', 'prepared'):
+        for key in (('prepared',) if detector['bpm_skipped'] else ('fits', 'asdf', 'prepared')):
             require(Path(detector[key]).resolve(strict=True).is_relative_to(Path(plan['run'])) and
                     coordinator.digest(detector[key]) == detector[key+'_sha256'], 'Native output integrity differs')
         value = preparation.read_product(detector['prepared'])
-        bpm.verify_bpm(detector['asdf'], plan, entry, Path(detector['fits']))
-        log = str(Path(detector['fits']).with_suffix('.log'))
-        product = dict(fits=detector['fits'], asdf=detector['asdf'], log=log,
-            sha256={p: coordinator.digest(p) for p in (detector['fits'], detector['asdf'], log)},
-            original_flat_indices=[row['index'] for row in entry['dependencies']['selection']['flat']])
+        require(value.get('qc_requested') is plan['qc'], 'Native QC mode differs')
+        supplied = entry['dependencies']['selection']['bpm']['encoding'] != 'omitted'
+        require(detector['bpm_skipped'] is supplied, 'Native supplied-mask decision differs')
+        if detector['bpm_skipped']:
+            require(value['input_bpm'] == entry['dependencies']['selection']['bpm'], 'Supplied BPM differs')
+            product = dict(state='skipped_input_bpm', input=entry['dependencies']['selection']['bpm'])
+        else:
+            bpm.verify_bpm(detector['asdf'], plan, entry, Path(detector['fits']))
+            log = str(Path(detector['fits']).with_suffix('.log'))
+            product = dict(fits=detector['fits'], asdf=detector['asdf'], log=log,
+                sha256={p: coordinator.digest(p) for p in (detector['fits'], detector['asdf'], log)},
+                original_flat_indices=[row['index'] for row in entry['dependencies']['selection']['flat']])
         prepared = dict(path=detector['prepared'], sha256=detector['prepared_sha256'], container_schema='2.0.0',
             detector=value['detector'], pairs=len(value['rows']), exposures=len(value['exposure_rows']),
             sites=len(value['direct_site_replay']), trace_frames=len(value['scan_traces']), noise_state='unavailable')
         report['detectors'].append(dict(detector_id=detector['detector_id'],
             configuration_detector=detector['configuration_detector'], preparation=prepared, bpm=product,
+            ingestion=dict(image_loads=detector['image_loads'], corrections=detector['corrections']),
             bpm_loaded_input_pixels=entry['bpm_loaded_pixels'], input_pixel_limit=entry['dependencies']['selection']['max_loaded_pixels']))
-    product = {key: receipt[key] for key in ('fits', 'asdf', 'log')}
-    product['sha256'] = {p: coordinator.digest(p) for p in product.values()}
-    for key in ('fits', 'asdf'):
-        require(product['sha256'][receipt[key]] == receipt[key+'_sha256'], 'Native final product changed')
-    coordinator.assembly.read_product(receipt['asdf'])
-    report['bpm_product'] = product
+    if receipt['final_mef_state'] == 'assembled':
+        product = {key: receipt[key] for key in ('fits', 'asdf', 'log')}
+        product['sha256'] = {p: coordinator.digest(p) for p in product.values()}
+        for key in ('fits', 'asdf'):
+            require(product['sha256'][receipt[key]] == receipt[key+'_sha256'], 'Native final product changed')
+        coordinator.assembly.read_product(receipt['asdf'])
+        report['bpm_product'] = product
     path = Path(plan['run'])/'native-recipe.toml'
     report['batch_inputs'] = dict(path=str(path), sha256=coordinator.digest(path))
     return report
@@ -165,7 +174,7 @@ def execute(admitted):
     logs.mkdir()
     with (logs/'native-recipe-command.log').open('x') as stream:
         result = subprocess.run([executable, 'cal', 'bpm-linearity', '--config', plan['recipe_path'],
-            '--bindings', str(bindings)], cwd=plan['layout']['orchestration'], stdout=stream, stderr=subprocess.STDOUT)
+            '--bindings', str(bindings), '--qc', 'true' if plan['qc'] else 'false'], cwd=plan['layout']['orchestration'], stdout=stream, stderr=subprocess.STDOUT)
     require(result.returncode == 0, 'Native recipe failed; retain command log and partial products')
     coordinator.metadata_unchanged(plan['metadata'])
     require(coordinator.digest(executable) == binary_digest, 'Native recipe executable changed')

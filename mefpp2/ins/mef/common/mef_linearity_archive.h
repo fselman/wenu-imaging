@@ -30,5 +30,6 @@ int mef_linearity_archive_add_evidence(mef_linearity_archive *, const char *name
  * The caller then sends view() to the shared ASDF writer. No noise model/fit. */
 int mef_linearity_archive_table(mef_linearity_archive *);
 const mef_product_qc *mef_linearity_archive_view(const mef_linearity_archive *);
+void mef_linearity_archive_qc_mode(mef_linearity_archive *,int);
 void mef_linearity_archive_destroy(mef_linearity_archive *);
 #endif

@@ -243,7 +243,7 @@ def preparation_dependencies(source_samples, handoff_path, resolved):
             mt['provenance']['producer'] == handoff['producer'], 'Master QC configuration/producer mismatch')
     members = handoff['inputs']
     require(len(members) >= resolved['controls']['bias_min_frames'] and
-            len(mt['inputs']) == len(members)+1, 'Incomplete master memberships')
+            len(mt['inputs']) == len(members)+(selection['bpm']['encoding'] != 'omitted'), 'Incomplete master memberships')
     biases = []
     baseline = {master['product']: origin['master_fingerprint']['sha256']}
     leaves = {r.digest:r.as_dict() for r in records}
@@ -266,7 +266,7 @@ def preparation_dependencies(source_samples, handoff_path, resolved):
         receipt = bias_receipt_fingerprints(handoff_path,bias_paths,master,entry['detector'])
         frozen[receipt['path']] = receipt['sha256']
         bias_baseline = receipt['inputs']
-    for path in [r['path'] for r in selection['flat']]+[selection['bpm']['path']]+[b['path'] for b in biases]:
+    for path in [r['path'] for r in selection['flat']]+([] if selection['bpm']['encoding']=='omitted' else [selection['bpm']['path']])+[b['path'] for b in biases]:
         matches = [r['file']['sha256'] for r in leaves.values()
                    if r['file']['location']==path and r['file']['sha256'] is not None]
         if path in bias_baseline:matches.append(bias_baseline[path])
@@ -312,7 +312,10 @@ def validate_preparation_inputs(dependencies, layout):
     observations = dependencies['biases'] + dependencies['selection']['flat']
     for row in observations:
         require(Path(row['path']).resolve(strict=True).is_relative_to(roots['raw']), 'Observation outside raw: '+row['path'])
-    for name in (dependencies['master']['product'], dependencies['selection']['bpm']['path']):
+    calibrations = [dependencies['master']['product']]
+    if dependencies['selection']['bpm']['encoding'] != 'omitted':
+        calibrations.append(dependencies['selection']['bpm']['path'])
+    for name in calibrations:
         require(Path(name).resolve(strict=True).is_relative_to(roots['calibration']), 'Calibration outside reduced/cal: '+name)
     return roots
 

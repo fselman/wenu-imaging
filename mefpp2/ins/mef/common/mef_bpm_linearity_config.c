@@ -141,7 +141,7 @@ static int project_roots(mef_bpm_linearity *recipe)
 void mef_bpm_linearity_initialize(mef_bpm_linearity *recipe, mef_recipe_run *run)
 {
     memset(recipe,0,sizeof(*recipe));
-    recipe->run=run;
+    recipe->run=run;recipe->qc=1;
 }
 
 int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
@@ -154,10 +154,12 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
     long length;
     size_t i;
     recipe->diagnostic="Invalid native BPM/linearity recipe or bindings";
-    if (argc!=7 || strcmp(argv[1],"cal") || strcmp(argv[2],"bpm-linearity") ||
+    if ((argc!=7 && argc!=9) || strcmp(argv[1],"cal") || strcmp(argv[2],"bpm-linearity") ||
         strcmp(argv[3],"--config") || strcmp(argv[5],"--bindings")) {
         recipe->show_usage=1; return 0;
     }
+    if(argc==9 && (strcmp(argv[7],"--qc") ||
+        (strcmp(argv[8],"true") && strcmp(argv[8],"false")))) {recipe->show_usage=1;return 0;}
     recipe->recipe_path=resolved(recipe->run->invocation_directory,argv[4]);
     recipe->bindings_path=resolved(recipe->run->invocation_directory,argv[6]);
     if (!recipe->recipe_path || !recipe->bindings_path) return 0;
@@ -169,11 +171,17 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
     recipe->document=toml_parse_file_ex(recipe->recipe_path);
     recipe->bindings=toml_parse_file_ex(recipe->bindings_path);
     if (!recipe->document.ok || !recipe->bindings.ok ||
-        !keys(recipe->document.toptab,"|bpm_linearity_recipe_schema_version||project||run||assembly||preparation||bpm||detectors||calibration_bindings||native_recipe|") ||
+        !keys(recipe->document.toptab,"|bpm_linearity_recipe_schema_version||project||run||assembly||preparation||bpm||detectors||calibration_bindings||native_recipe||qc|") ||
         !project_roots(recipe) ||
         !mef_bpm_linearity_below(recipe->recipe_path,recipe->orchestration) ||
         !mef_bpm_linearity_below(recipe->bindings_path,recipe->orchestration) ||
         strcmp(recipe->orchestration,recipe->run->invocation_directory)) return 0;
+    version=toml_get(recipe->document.toptab,"qc");
+    if(version.type!=TOML_UNKNOWN) {
+        if(version.type!=TOML_BOOLEAN) return 0;
+        recipe->qc=version.u.boolean;
+    }
+    if(argc==9) recipe->qc=!strcmp(argv[8],"true");
     version=toml_get(recipe->bindings.toptab,"bpm_linearity_bindings_schema_version");
     revision=mef_bpm_linearity_string(recipe->bindings.toptab,"source_revision");
     author_revision=mef_bpm_linearity_string(toml_get(recipe->document.toptab,"native_recipe"),"source_revision");
@@ -244,7 +252,7 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
 
 void mef_bpm_linearity_usage(void)
 {
-    fputs("Usage: mefpp_bpm_linearity_recipe cal bpm-linearity --config RECIPE.toml --bindings NATIVE.toml\n",stderr);
+    fputs("Usage: mefpp_bpm_linearity_recipe cal bpm-linearity --config RECIPE.toml --bindings NATIVE.toml [--qc true|false]\n",stderr);
 }
 
 void mef_bpm_linearity_destroy(mef_bpm_linearity *recipe)

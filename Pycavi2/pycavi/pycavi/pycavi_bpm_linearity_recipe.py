@@ -139,7 +139,8 @@ def read_manifest(path):
     path = Path(path).resolve(strict=True)
     report = json.loads(path.read_text())
     states = [('detector_characterization', 'detector_characterization_complete_for_owner_inspection', 'not_assembled'),
-              ('bpm_linearity', 'complete_for_owner_inspection', 'assembled')]
+              ('bpm_linearity', 'complete_for_owner_inspection', 'assembled'),
+              ('bpm_linearity', 'complete_for_owner_inspection', 'not_requested')]
     require(report['schema_version'] == 1 and
             (report['scope'], report['status'], report['final_mef_state']) in states and
             report['input_preservation'] is True and report['scientific_acceptance'] is False and
@@ -160,16 +161,21 @@ def read_manifest(path):
         require(digest(prep_path) == prepared['sha256'], 'Saved preparation ASDF changed')
         value = archive.read_product(prep_path)
         bpm = entry['bpm']
-        bpm_path = local(bpm['asdf'])
-        require(digest(bpm_path) == bpm['sha256'][bpm['asdf']], 'Saved BPM ASDF changed')
-        q = native.native_qc.read(bpm_path)
-        detector = q['characterization']['detectors'][0]
-        require(q['provenance']['operation'] == 'cal.bpm' and
-                q['extensions']['record_scope'] == 'one_final_primary_image_product' and
-                value['detector'] == detector['detector_id'] == entry['detector_id'] and
-                detector['configuration_detector'] == entry['configuration_detector'] and
-                q['provenance']['producer']['source_revision'] == report['native_source_revision'] and
-                q['file']['location'] == bpm['fits'], 'Joined detector/product mapping differs')
+        if bpm.get('state') == 'skipped_input_bpm':
+            require(value['detector'] == entry['detector_id'] and value.get('input_bpm') == bpm['input'] and
+                    bpm['input']['encoding'] != 'omitted', 'Preparation detector or supplied mask differs')
+            q = None
+        else:
+            bpm_path = local(bpm['asdf'])
+            require(digest(bpm_path) == bpm['sha256'][bpm['asdf']], 'Saved BPM ASDF changed')
+            q = native.native_qc.read(bpm_path)
+            detector = q['characterization']['detectors'][0]
+            require(q['provenance']['operation'] == 'cal.bpm' and
+                    q['extensions']['record_scope'] == 'one_final_primary_image_product' and
+                    value['detector'] == detector['detector_id'] == entry['detector_id'] and
+                    detector['configuration_detector'] == entry['configuration_detector'] and
+                    q['provenance']['producer']['source_revision'] == report['native_source_revision'] and
+                    q['file']['location'] == bpm['fits'], 'Joined detector/product mapping differs')
         saved.append(dict(detector_id=entry['detector_id'], preparation=value, bpm=q))
     require(saved, 'Empty characterization manifest')
     product = None
@@ -179,5 +185,5 @@ def read_manifest(path):
         product = assembly.read_product(local(member['asdf']))
         require(product['qc']['file']['location'] == member['fits'] and
                 product['qc']['provenance']['producer']['source_revision'] == report['assembly_source_revision'] and
-                product['detector_products'] == [item['bpm'] for item in saved], 'Final manifest/QC mapping differs')
+                product['detector_products'] == [item['bpm'] for item in saved if item['bpm'] is not None], 'Final manifest/QC mapping differs')
     return dict(manifest=report, detectors=saved, bpm_product=product, FITS_integrity_rechecked=False)

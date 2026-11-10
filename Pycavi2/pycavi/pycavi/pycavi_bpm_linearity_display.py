@@ -26,8 +26,10 @@ class ManifestReader:
         for member, decoded in zip(self.manifest['detectors'], saved['detectors']):
             path = self.local(member['preparation']['path'])
             self.inputs[str(path)] = member['preparation']['sha256']
-            bpm_path = self.local(member['bpm']['asdf'])
-            self.inputs[str(bpm_path)] = member['bpm']['sha256'][member['bpm']['asdf']]
+            bpm_path = None
+            if member['bpm'].get('state') != 'skipped_input_bpm':
+                bpm_path = self.local(member['bpm']['asdf'])
+                self.inputs[str(bpm_path)] = member['bpm']['sha256'][member['bpm']['asdf']]
             value = decoded['preparation']
             bias = value['raw_bias_diagnostics'][0]['table']['rows']
             require(all(d['table']['rows'] == bias for d in value['raw_bias_diagnostics']),
@@ -43,6 +45,12 @@ class ManifestReader:
                     selection='Preserved native ASDF populations; admitted prior mask retained',
                     native_receipt=dict(operation='linearity.prepare', path=str(path)),
                     serializer=dict(source_revision=self.manifest['native_source_revision'])))
+            if q is None:
+                self.bpm[member['detector_id']] = dict(state='skipped_input_bpm',
+                    supplied_mask=member['bpm']['input'], output_mode='SUPPLIED',
+                    selection_note='BPM creation skipped because an input BPM was supplied.',
+                    zero_meaning='Input mask retains its declared encoding and polarity')
+                continue
             metrics = q['characterization']['detectors'][0]['measurements']
             context = json.loads(q['extensions']['operation_context']['snapshot'])
             require(context['output_mode'] in (1, 2), 'Unknown BPM output mode')

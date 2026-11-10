@@ -30,7 +30,7 @@ def admit(path):
     path = Path(path).resolve(strict=True)
     data = tomllib.loads(path.read_text())
     fields(data, ('bpm_linearity_recipe_schema_version', 'project', 'run',
-                  'preparation', 'bpm', 'detectors') + tuple(k for k in ('native', 'assembly', 'calibration_bindings', 'native_recipe') if k in data), 'combined recipe')
+                  'preparation', 'bpm', 'detectors') + tuple(k for k in ('native', 'assembly', 'calibration_bindings', 'native_recipe', 'qc') if k in data), 'combined recipe')
     require(type(data['bpm_linearity_recipe_schema_version']) is int and
             data['bpm_linearity_recipe_schema_version'] == 1, 'Unsupported combined recipe')
     project_path = reference(path.parent, data['project'])
@@ -45,7 +45,9 @@ def admit(path):
     run = (Path(roots['output'])/run).resolve(strict=True)
     require(run.is_relative_to(Path(roots['output'])) and run != Path(roots['output']) and
             run.is_dir() and not any(run.iterdir()), 'Fresh empty reduced run directory required')
+    require(type(data.get('qc', True)) is bool, 'qc must be true or false')
     native_recipe = data.get('native_recipe')
+    require(native_recipe is not None or data.get('qc', True), 'QC-off requires the native shared-cube recipe')
     assembly = data.get('assembly')
     require(('native' in data) != (native_recipe is not None), 'Select one native recipe or legacy stage producers')
     if native_recipe is not None:
@@ -103,11 +105,12 @@ def admit(path):
         require(isinstance(ids, list) and ids and all(type(v) is str and v in rois for v in ids) and
                 len(set(ids)) == len(ids), 'Explicit unique BPM reference ROI names required')
         selection = dependencies['selection']
-        require(selection['bpm']['encoding'] in ('binary', 'reason8'), 'Admitted prior mask required for the combined stage')
-        if policy['output_mode'] == 'combined':
+        require(selection['bpm']['encoding'] in ('binary', 'reason8', 'omitted'), 'Explicit prior-mask policy required')
+        creating = native_recipe is None or selection['bpm']['encoding'] == 'omitted'
+        if creating and policy['output_mode'] == 'combined':
             require(selection['bpm']['encoding'] == 'reason8', 'Combined BPM requires known prior reason bits')
         pairs = {row['pair'] for row in selection['flat']}
-        require(policy['acquisition'] != 'quick' or len(pairs) >= 5, 'Quick BPM requires at least five pairs')
+        require(not creating or policy['acquisition'] != 'quick' or len(pairs) >= 5, 'Quick BPM requires at least five pairs')
         for target, incoming in ((baseline, dependencies['baseline']), (metadata, dependencies['metadata_sha256'])):
             for name, digest in incoming.items():
                 require(name not in target or target[name] == digest, 'Conflicting shared input digest: '+name)
@@ -148,5 +151,5 @@ def admit(path):
     # Reuse the same directory/input admission as the single-detector recipe.
     for entry in entries:
         preparation.validate_preparation_inputs(entry['dependencies'], layout)
-    return dict(recipe_path=str(path), native_recipe=native_recipe, assembly=assembly, run=str(run), layout=layout, resolved=resolved, native=binaries, source_revision=revision,
+    return dict(recipe_path=str(path), qc=data.get('qc', True), native_recipe=native_recipe, assembly=assembly, run=str(run), layout=layout, resolved=resolved, native=binaries, source_revision=revision,
                 bpm=policy, entries=entries, baseline=baseline, metadata=metadata, configuration_sources=sources, coordinator_sources=code_sources)

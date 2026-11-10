@@ -58,6 +58,7 @@ function bpmDetail(p){
   const b=p.bpm;$('bpm-summary').hidden=!b;
   if(!b)return;
   $('bpm-note').textContent=b.output_mode+' mask · '+b.zero_meaning+'. '+b.selection_note;
+  if(b.state==='skipped_input_bpm'){table('bpm-reasons',[],[['code','Reason code'],['meaning','Meaning'],['count','Pixels']]);table('bpm-coverage',[],[['state','Fit coverage'],['count','Pixels']]);$('bpm-context').textContent=JSON.stringify(b,null,2);return;}
   const metric=name=>b.measurements.find(m=>m.name===name).value;
   table('bpm-reasons',metric('reason_histogram').map((count,code)=>({r:{code,meaning:b.reason_codes[code]||'Combined reason bits / retained prior reasons',count}})).filter(v=>v.r.count),[['code','Reason code'],['meaning','Meaning'],['count','Pixels']]);
   table('bpm-coverage',metric('fit_histogram').map((count,i)=>({r:{state:b.fit_states[i],count}})),[['state','Fit coverage'],['count','Pixels']]);

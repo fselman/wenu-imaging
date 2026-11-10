@@ -88,6 +88,9 @@ def main():
     parser.add_argument('--work-parent', type=Path, required=True)
     parser.add_argument('--native-recipe', type=Path, help='Execute all stages through the single native recipe')
     parser.add_argument('--native-recipe-source-revision')
+    parser.add_argument('--create-bpm', action='store_true')
+    parser.add_argument('--unsuitable-coverage', action='store_true')
+    parser.add_argument('--qc', choices=('true', 'false'), default='true')
     parser.add_argument('--calibration-copies', action='store_true', help='Use byte-identical imported calibrations; preserve the original source graph')
     parser.add_argument('--assembly', type=Path, help='Also publish the final BPM MEF with this native command')
     parser.add_argument('--assembly-source-revision', help='Exact assembler source revision')
@@ -104,7 +107,7 @@ def main():
     if priority < 10:
         os.nice(10-priority)
     work = Path(tempfile.mkdtemp(prefix='combined-characterization-', dir=args.work_parent)).resolve()
-    state = fixture(work, separated=True)
+    state = fixture(work, separated=True, supplied_bpm=not args.create_bpm)
     source = source_archive(state)
     guard = state['raw']/'preservation-guard.bin'
     guard.write_bytes(b'original')
@@ -124,10 +127,12 @@ def main():
     project = project.replace('"../../examples/omegacam/full.toml"', json.dumps(str(controls/'native.toml')))
     (controls/'project.toml').write_text(project)
     text = 'bpm_linearity_recipe_schema_version = 1\nproject = "project.toml"\nrun = "cal/bpm-linearity/combined"\n'
+    if args.native_recipe:
+        text += 'qc = '+args.qc+'\n'
     sections = dict(native=dict(bpm=str(args.bpm.resolve(strict=True)), preparation=str(args.preparation.resolve(strict=True)),
         source_revision=args.source_revision), preparation=dict(detector_toml='detector_toml.toml', processing_toml='processing_toml.toml'),
         bpm=dict(acquisition='quick', output_mode='new', upper_fraction=0.85,
-                 minimum_span_fraction=0.001, maximum_pair_difference=0.02))
+                 minimum_span_fraction=0.99 if args.unsuitable_coverage else 0.001, maximum_pair_difference=0.02))
     if args.assembly:
         assert args.assembly_source_revision
         sections['assembly'] = dict(executable=str(args.assembly.resolve(strict=True)),
@@ -145,7 +150,7 @@ def main():
     if args.calibration_copies:
         imported = reduced/'cal/imported'
         imported.mkdir()
-        for original in (Path(state['master']), Path(state['selection']['bpm']['path'])):
+        for original in ([Path(state['master'])]+([] if args.create_bpm else [Path(state['selection']['bpm']['path'])])):
             copied = imported/original.name
             shutil.copyfile(original, copied)
             copied.chmod(0o444)
@@ -154,7 +159,7 @@ def main():
                 path='imported/'+original.name, sha256=hashlib.sha256(original.read_bytes()).hexdigest()).items())
     path = controls/'bpm-linearity.toml'
     path.write_text(text)
-    protected = [*state['raw'].glob('*.fits'), Path(state['master']), Path(state['selection']['bpm']['path'])]
+    protected = [*state['raw'].glob('*.fits'), Path(state['master'])]+([] if args.create_bpm else [Path(state['selection']['bpm']['path'])])
     for member in protected:
         member.chmod(0o444)
     state['raw'].chmod(0o555)
@@ -175,7 +180,7 @@ def main():
     else:
         raise AssertionError('Unknown reference ROI admitted')
     assert not list(run.iterdir())
-    if args.calibration_copies:
+    if args.calibration_copies and not args.create_bpm:
         bad = controls/'wrong-calibration-digest.toml'
         expected = hashlib.sha256(Path(state['selection']['bpm']['path']).read_bytes()).hexdigest()
         bad.write_text(text.replace(expected, '0'*64, 1))
@@ -200,26 +205,44 @@ def main():
     finally:
         recipe.preparation.image_fingerprint = original
     assert result['status'] == ('complete_for_owner_inspection' if args.assembly else 'detector_characterization_complete_for_owner_inspection')
-    assert result['input_preservation'] and result['final_mef_state'] == ('assembled' if args.assembly else 'not_assembled')
+    assert result['input_preservation'] and result['final_mef_state'] == (
+        'not_requested' if args.native_recipe and not args.create_bpm else 'assembled' if args.assembly else 'not_assembled')
     assert calls == (Counter() if args.native_recipe else Counter({name: 2 for name in plan['baseline']}))
     if args.native_recipe:
         import tomllib
         native_receipt = tomllib.loads((run/'native-recipe.toml').read_text())
         assert native_receipt['input_preservation'] and native_receipt['status'] == 'complete'
         assert native_receipt['source_revision'] == args.native_recipe_source_revision
+        assert native_receipt['qc'] is (args.qc == 'true')
+        detector = native_receipt['detectors'][0]
+        assert detector['bpm_skipped'] is (not args.create_bpm)
+        assert detector['image_loads'] == (31 if args.create_bpm else 32) and detector['corrections'] == 30
+        if not args.create_bpm:
+            assert not list(run.rglob('*.fits')), 'Supplied BPM must bypass creation and assembly'
+            log = Path(native_receipt['log']).read_text()
+            assert 'BPM_CREATION_SKIPPED ESO_CCD_#65 REASON input_bpm_supplied' in log
+    member = result['detectors'][0]
+    if args.create_bpm:
+        from pycavi_native_product_qc import read as read_qc
+        context = json.loads(read_qc(member['bpm']['asdf'])['extensions']['operation_context']['snapshot'])
+        assert context['execution']['qc_requested'] is (args.qc == 'true')
+        assert context['suitability']['coverage_passed'] is (not args.unsuitable_coverage)
+        assert context['suitability']['scientific_acceptance'] is False
         from astropy.io import fits
         import numpy as np
-        with fits.open(native_receipt['fits']) as product:
-            assert len(product) == 7
-            expected = dict(BPM=0, COVERAGE=1, NSAMPLE=20, NEWFLAGS=0, SELECTION=1, PRIORSEL=1)
+        with fits.open(result['bpm_product']['fits']) as product:
+            assert len(product)==6
+            expected=dict(COVERAGE=1,NSAMPLE=20,NEWFLAGS=0,SELECTION=1)
             for plane in product[1:]:
-                role = 'BPM' if plane.header['EXTNAME'] == 'ESO_CCD_#65' else plane.header['EXTNAME']
-                assert plane.data.shape == (2, 6) and np.all(plane.data == expected[role])
-    member = result['detectors'][0]
+                assert plane.data.shape==(2,6) and np.all(plane.data==expected.get(plane.header['EXTNAME'],0))
     value = archive.read_product(member['preparation']['path'])
     assert len(value['exposure_rows']) == 100 and len(value['direct_site_replay']) == 100
     assert value['exposure_rows'][0]['signal_adu'] == 205.5 and value['scan_traces'][3]['master_accepted'] == 0
-    assert member['bpm']['original_flat_indices'] == [r['index'] for r in state['selection']['flat']]
+    if args.native_recipe and not args.create_bpm:
+        assert member['bpm']['state'] == 'skipped_input_bpm'
+        assert result['qc'] is (args.qc == 'true')
+    else:
+        assert member['bpm']['original_flat_indices'] == [r['index'] for r in state['selection']['flat']]
     with (run/'manifest.json').open() as stream:
         assert json.load(stream) == result
     assert before == {str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in before}
