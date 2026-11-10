@@ -89,10 +89,13 @@ def characterize_bpm(plan, entry, destination, started, inputs):
 def verify_bpm(path, plan, entry, fits):
     q = native_qc.read(path)
     d, detector = entry['dependencies'], entry['detector']
+    expected_configuration = preparation.bpm_configuration_snapshot(
+        d['master_snapshot'], d.get('bpm_response_limits'))
     require(q['file']['location'] == str(fits) and q['provenance']['operation'] == 'cal.bpm' and
             q['extensions']['record_scope'] == 'one_final_primary_image_product' and
-            q['provenance']['producer']['source_revision'] == plan['source_revision'] and
-            json.loads(q['provenance']['configuration']['snapshot']) == d['master_snapshot'], 'BPM product context differs')
+            q['provenance']['producer']['source_revision'] == plan['source_revision'], 'BPM product context differs')
+    require(json.loads(q['provenance']['configuration']['snapshot']) == expected_configuration,
+            'BPM effective configuration differs from declared response policy')
     saved = q['characterization']['detectors']
     require(len(saved) == 1 and saved[0]['detector_id'] == detector['detector_id'] and
             saved[0]['configuration_detector'] == detector['configuration_detector'], 'BPM detector mapping differs')
