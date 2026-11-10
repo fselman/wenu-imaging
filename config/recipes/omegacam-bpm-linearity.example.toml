@@ -1,8 +1,10 @@
-# Native serial BPM/linearity recipe; Pycavi admits archived metadata only.
+# Native serial BPM/linearity recipe.
 # Copy into orchestration and fill the explicit admitted dependency paths.
-# Run there: python /path/to/tools/run-bpm-linearity.py --config bpm-linearity.toml
-# Add --execute only after reviewing the metadata plan. The reduced run must be
-# a fresh empty directory. Existing inputs and prior masks remain read-only.
+# Current native command, from orchestration:
+# nice -n 10 mefpp_bpm_linearity_recipe cal bpm-linearity \
+#   --config bpm-linearity.toml --bindings native-bindings.toml --qc false
+# Direct recipe-only admission is unfinished; this template is not standalone yet.
+# Use a fresh empty reduced run. Inputs and prior masks remain read-only.
 bpm_linearity_recipe_schema_version = 1
 project = "project.toml"
 run = "cal/bpm-linearity/ocam-001"

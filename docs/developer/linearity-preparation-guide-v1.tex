@@ -17,16 +17,9 @@ ROIs and direct sites from the same cube. Release it before the next detector.
 Linearity is measurement only; no response correction or gain conversion is applied.
 
 \section*{Terminal usage}
-Run from orchestration. The launcher admits metadata by default; add
-\texttt{--execute} to process. It generates frozen native bindings and sets
-niceness to at least 10. Project TOML supplies raw, calibration, reduced, work
-and log roots. Use a fresh empty directory for the recipe's \texttt{run}.
-\begin{verbatim}
-python /path/to/tools/run-bpm-linearity.py --config RECIPE.toml
-python /path/to/tools/run-bpm-linearity.py --config RECIPE.toml \
-    --execute --qc false
-\end{verbatim}
-The underlying native command takes already generated bindings:
+Run from orchestration with niceness at least 10. Project TOML supplies raw,
+calibration, reduced, work and log roots. Use a fresh empty directory for the
+recipe's \texttt{run}. The current native interface is:
 \begin{verbatim}
 nice -n 10 mefpp_bpm_linearity_recipe cal bpm-linearity \
     --config RECIPE.toml --bindings NATIVE.toml [--qc true|false]
@@ -34,9 +27,8 @@ mefpp_bpm_linearity_recipe --help
 \end{verbatim}
 \begin{tabular}{p{.25\linewidth}p{.68\linewidth}}
 \textbf{CLI option} & \textbf{Meaning / default}\\\hline
-\texttt{--config FILE} & Required recipe TOML (launcher and native command).\\
-\texttt{--execute} & Launcher only; absent means metadata admission, no reduction.\\
-\texttt{--bindings FILE} & Native only; required frozen bindings from the launcher.\\
+\texttt{--config FILE} & Required recipe TOML.\\
+\texttt{--bindings FILE} & Required frozen native control file (current limitation).\\
 \texttt{--qc true|false} & Optional override; CLI $>$ recipe \texttt{qc} $>$ true.\\
 \texttt{--help} & Usage, no processing.\\
 \end{tabular}
@@ -148,10 +140,12 @@ and \path{mef_linearity_prepare.c}; row arithmetic uses
 \end{enumerate}
 C helper files above reside under \path{mefpp2/ins/mef/common}, except the
 image statistics/fitting kernels under \path{mefpp2/src/iproc}.
-Pycavi's \path{pycavi_bpm_linearity_native_recipe.py} admits metadata,
-invokes one native command and independently reads saved products. It contains
-no detector processing loop. No Python pixel reduction or ASDF writer substitutes
-for the native producer.
+The shared C services perform processing and native ASDF publication.
+
+\textbf{Unfinished interface:} this implementation still requires a separate
+frozen control file. The agreed public interface must accept the recipe TOML
+directly, as the bias command does. Recipe-only native admission is not yet
+implemented; this extra prerequisite must be removed before acceptance.
 
 \section*{Products and verification}
 Each detector retains preparation ASDF with input/HDU identities, native
@@ -166,12 +160,10 @@ still read inputs before and after the batch. Saved readers require neither
 raw pixels nor native execution. A zero native exit, completion receipt and
 independent saved-product checks are required before acceptance.
 
-Qualification uses tiny analytical scan/ROI fixtures, borrowed-cube ownership
-checks, exact saved-product comparison and independent native-ASDF readers.
-The supplied-mask CCD65 path passed Mac comparison. New recipe controls and
-explicit archived-mask omission require their Mac gate before engine selection.
-The stopped 32-detector run is preserved. Physical linearity correction,
-cross-talk and uncertainty modeling remain deferred. Scientific design:\par
+Qualification combines analytical fixtures, ownership checks, saved-product
+comparison and independent native-ASDF readers. Recipe-only native admission
+and the new controls still require qualification before selection.
+Scientific design:\par
 \path{docs/developer/design/linearity-preparation-overscan-asdf-v1.md}.\par
 Coordinator design: \path{docs/developer/design/common-recipe-coordinator-v1.md}.
 \end{document}

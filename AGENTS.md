@@ -59,6 +59,17 @@ pair-quality criteria or repeat completed detector work to bypass the failure.
 Directory reorganization is deferred until BPM/linearity development is finished.
 Keep the current file locations during scientific/processing development.
 
+## Native recipe interface
+
+mefpp user documentation and usage messages describe native Unix commands only.
+A recipe must be runnable directly from its TOML, following the bias example;
+no external interpreter, orchestration package or generated-bindings prerequisite
+may be required of the user. Do not hide an implementation dependency by renaming
+its launcher or merely removing documentation. The current BPM/linearity binding
+compiler is an unfinished interface: native recipe-only admission must replace
+that prerequisite before acceptance. Keep orchestration-specific implementation
+and test details in their own component documentation.
+
 ## Human-readable implementation
 
 Write for a programmer who understands scientific data processing. Use meaningful
