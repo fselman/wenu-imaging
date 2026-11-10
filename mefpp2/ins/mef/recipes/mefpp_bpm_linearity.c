@@ -1,7 +1,7 @@
 /* BPM/linearity coordinator. Read these phases in execution order.
  * Supporting modules expose the mechanics; the typed services own the science.
- * Guide: docs/developer/linearity-preparation-guide-v1.pdf#nameddest=native-recipe
- * Source: docs/developer/linearity-preparation-guide-v1.tex, Native recipe.
+ * Guide: docs/developer/bpm-linearity-guide.pdf#nameddest=native-recipe
+ * Source: docs/developer/bpm-linearity-guide.tex, Native recipe.
  */
 
 #include "mef_bpm_linearity.h"

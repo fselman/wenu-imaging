@@ -39,38 +39,21 @@ The QC viewer reads saved ASDF; plotting does not recompute scientific results.
 
 ## BPM / linearity
 
-The native entry point is
-[`mefpp_bpm_linearity.c`](../mefpp2/ins/mef/recipes/mefpp_bpm_linearity.c).
-It follows bias's admission, serial detector loop, verification, publication and
-cleanup phases. See the [guide](developer/linearity-preparation-guide-v1.pdf)
-and [recipe example](../config/recipes/omegacam-bpm-linearity.example.toml).
-
-The recipe TOML selects `[native_recipe]` with one executable and source revision,
-plus an assembly reference detector. Project TOML owns raw, orchestration and
-reduced/calibration/work/log roots. Pycavi validates the historical archive/master
-bindings and writes explicit frozen native bindings in orchestration; it invokes
-one C recipe, then checks saved products and writes the orchestration manifest.
-The native recipe calls preparation and BPM in process for each detector, then
-joins their final MEF/ASDF. It does not launch Python, a shell or child engines.
-Given the authored bindings, it can also run directly from orchestration:
+The single [BPM/linearity guide](developer/bpm-linearity-guide.pdf)
+([source](developer/bpm-linearity-guide.tex)) covers the recipe's command,
+settings/defaults, detector flow, robust response BPM, measurements, FITS/ASDF
+products and QC. The public command contract is:
 
 ```sh
-nice -n 10 mefpp_bpm_linearity_recipe cal bpm-linearity \
-  --config bpm-linearity-recipe.toml --bindings RUN/native-bindings.toml
+mefpp_recipe cal bpm-linearity --config RECIPE.toml --qc false
 ```
 
-Bindings contain explicit native argument vectors and frozen file fingerprints;
-they are an admission transport, not a second set of editable scientific policies.
-Keep the TOML authoritative and regenerate bindings after changing it. The
-existing per-stage recipe form remains readable for retained runs; select either
-`native_recipe` or legacy `native`, never both. The new native coordinator needs
-its own Mac ASDF gate and observational comparison before selection.
-
-Linearity remains measurement only. Use the same admitted master/prior for both
-stages; never feed the candidate mask back into its characterization population.
-Native completion requires zero exit, final FITS/ASDF and an input-preservation
-receipt. Partial products stay available after failures. The saved QC viewer
-reads existing measurements and applies no physical correction.
+The unified command and direct native recipe admission are unfinished on the
+feature branch; this is the agreed interface, not a qualified execution example.
+OCAM/WFI TOMLs remain authoring templates until actual bindings and the native
+interface are qualified. Project TOML owns roots. The recipe shares one processed
+cube per detector, skips BPM creation when a mask is supplied, and records
+measurement-only linearity diagnostics. It applies no physical linearity correction.
 
 ## Other processing
 

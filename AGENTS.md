@@ -114,7 +114,11 @@ including equations, nontrivial references and source mapping. Preserve accepted
 estimators, populations, units, masks, geometry and evaluation order unless a
 scientific change is explicitly approved. Bias/QC measurements remain in ADU.
 
-Keep very few concise permanent documents. Maintain current guides, not a diary.
+Maintain one concise canonical guide per recipe, named after the recipe:
+`docs/developer/bpm-linearity-guide.tex` and matching PDF for `cal bpm-linearity`.
+Keep current recipe explanations there. Existing saved-data analysis and future
+model guides remain separate for now; their eventual consolidation is deferred. Keep the documentation index and source
+links aligned. Keep very few permanent documents; maintain current guides, not a diary.
 Use issue/PR summaries for the problem, decision, correction and validation.
 Do not add dated work reports, per-attempt documents, handoffs or log collections
 to docs. Remove obsolete material; complete historical reconstruction is not a

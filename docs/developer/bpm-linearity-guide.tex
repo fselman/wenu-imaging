@@ -1,0 +1,262 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=22mm]{geometry}
+\usepackage{amsmath,hyperref,array}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\emergencystretch=2em
+\title{bpm-linearity guide}
+\author{Wenu-imaging}
+\date{10 November 2026}
+\begin{document}
+\maketitle
+\section*{Executive summary}
+For each detector, load calibrations and raw planes once, capture raw evidence,
+scan-correct, trim, subtract the supplied active master from flats and retain one
+processed cube. If an input BPM is supplied, log the skip; otherwise create a
+robust response BPM. Measure linearity ROIs, pairs and direct sites from that
+same cube, publish FITS/ASDF, then release it. Linearity is measurement only:
+no physical response correction, shutter solution or gain conversion is applied.
+
+\textbf{Interface status.} The shared-cube calculations exist. The unified command
+and direct native recipe admission below are the agreed interface, still awaiting
+implementation/qualification. Existing private control-file plumbing is not an
+additional public preparation step. The example TOMLs are not yet standalone tests.
+
+\section*{Command and help}
+Run from orchestration; reference a project TOML and use a fresh empty reduced run.
+The recipe command processes and publishes the requested products:
+\begin{verbatim}
+mefpp_recipe cal bpm-linearity --config RECIPE.toml --qc false
+
+mefpp --help
+mefpp_recipe cal --help
+mefpp_recipe cal bpm-linearity --help
+mefpp_recipe cal linearity --help
+mefpp_recipe cal bias --help
+\end{verbatim}
+Top-level help identifies commands, calibration help lists operations, and each
+operation reports its inputs, options, defaults and outputs. Help requires no
+configuration or observation files and performs no processing.
+
+\begin{tabular}{p{.26\linewidth}p{.67\linewidth}}
+\textbf{Public option} & \textbf{Meaning / default}\\\hline
+\texttt{--config FILE} & Required recipe TOML; references project/settings/inputs.\\
+\texttt{--qc true|false} & Optional override; CLI $>$ recipe \texttt{qc} $>$ true.\\
+\texttt{--help} & Context-specific help; successful exit, no processing.\\
+\end{tabular}
+
+\section*{Inputs and directory contract}
+Project TOML defines raw, calibration, reduced, work and log roots; its containing
+directory is orchestration. Raw observations and input calibrations are read-only.
+Lists/TOMLs belong in orchestration; products, private work, logs and receipts
+belong below reduced. The recipe selects ordered flats and bias evidence, explicit
+pairs/times, master-bias and optional BPM bindings, detector/HDU/configuration-slot
+mappings, ROIs and direct sites. These identities are distinct; HDU order does not
+supply a detector mapping. No directory-based input discovery is implied.
+
+The current comparison path verifies master geometry, stage, scan/trim/stack
+settings and frozen lineage against an admitted archive/handoff. A supplied master
+is required on that path; an absent master is not replaced by zero. Imported
+calibrations must be byte-identical, explicitly bound to their original digest.
+WFI still needs reviewed linearity-sequence/archive bindings; bias acceptance
+alone does not establish a suitable paired-flat sequence.
+
+\newpage
+\section*{Recipe settings and defaults}
+Templates under \path{config/recipes/}:\par
+\path{omegacam-bpm-linearity.example.toml},
+\path{wfi-bpm-linearity.example.toml}. They initially select one detector; extend
+in detector-catalogue order after reviewing the actual bindings.
+
+\begin{tabular}{p{.40\linewidth}p{.53\linewidth}}
+\textbf{Field} & \textbf{Default / requirement}\\\hline
+\texttt{project}, \texttt{run} & Required project path; fresh run relative to reduced.\\
+\texttt{qc} & true; optional diagnostics enabled.\\
+\texttt{assembly.reference\_detector} & Required selected detector; among created BPMs if any.\\
+\texttt{preparation.detector\_toml} & Required detector identity/geometry file.\\
+\texttt{preparation.processing\_toml} & Required scan/trim/ROI and measurement controls.\\
+\texttt{preparation.input\_bpm} & \texttt{archived}; \texttt{omitted} creates a new candidate.\\
+\texttt{bpm.acquisition} & Required: \texttt{quick} or \texttt{provisional}.\\
+\texttt{bpm.output\_mode} & Required: \texttt{new} or \texttt{combined}.\\
+\texttt{bpm.response\_low/high} & 0.5 / 1.5; finite, $0<\mathrm{low}<\mathrm{high}$.\\
+\texttt{bpm.upper\_fraction} & Required, $(0,1]$; example 0.85.\\
+\texttt{bpm.minimum\_span\_fraction} & Required, $(0,1]$; example 0.15.\\
+\texttt{bpm.maximum\_pair\_difference} & Required, $\geq0$; example 0.02.\\
+\texttt{detectors} & Required IDs, sample/handoff evidence and reference ROI IDs.\\
+\texttt{calibration\_bindings} & Empty; optional source/path/SHA256 import bindings.\\
+\end{tabular}
+
+The current development envelope also records a qualified executable and exact
+revision in \texttt{native\_recipe}; that is compatibility metadata for the current
+implementation, not a substitute for native recipe admission.
+
+Processing TOML explicitly supplies scan switches, sampled scan rectangles,
+low/high rejection counts, retained rectangles, ROI/site coordinates, saturation,
+mask encoding/polarity/reject bits, pair-time tolerance, bias-admission/stack
+controls and \texttt{with\_mad}. These have no silent instrument defaults.
+OCAM examples use saturation 65534 ADU, rejection 10/10, bias range 0--1000 ADU,
+stack kappa 2, minimum 3 frames, binary good value 1 and exact pair-time matching.
+These are configured values, not universal detector properties.
+
+\texttt{qc=false} skips optional BPM full-frame QC and MAD, retaining requested
+ROI means, variances, populations, pair/direct-site data, traces and provenance.
+\texttt{qc=true} respects the explicit \texttt{with\_mad} setting. Disabling MAD
+does not disable medians required by the robust response algorithm. Unrequested
+or unavailable statistics are marked unavailable, never filled with zero.
+
+\section*{Per-detector processing and mask policy}
+\begin{enumerate}
+\item Validate ordered identities and geometry; load the supplied master and
+optional input BPM once. Capture raw-only evidence during ingestion.
+\item Correct each raw flat/bias plane once and retain corrected active images,
+required raw planes/validity, identities and row traces in one owned detector cube.
+\item If a BPM is supplied, skip creation and log \texttt{input\_bpm\_supplied}.
+Otherwise fit a candidate from borrowed corrected flats and publish its FITS/QC.
+\item Measure ROI, pair and direct-site data from that same cube. Release it
+before proceeding to the next detector; assemble newly created BPMs afterward.
+\end{enumerate}
+The admitted input mask stays fixed; a generated candidate never feeds back into
+this run's measurement populations. Explicit omission removes only the current
+mask, preserving historical master/archive lineage. ROI populations can increase;
+previously admitted direct values must remain exact and newly admitted sites are
+reported separately. Whole-file preservation hashing still reads inputs before
+and after the batch; numerical ingestion/correction alone is read-once.
+
+\newpage
+\section*{Correction and measured quantities}
+For frame $f$, row $y$, sorted enabled scan reads $v_{f,y,(k)}$, and rejection
+counts $l,h$, the existing arithmetic is
+\begin{align}
+O_f(y)&=\operatorname{pix}\left[\frac{\sum_{k=l+1}^{n-h}v_{f,y,(k)}}{n-l-h}\right],\\
+U_f(x,y)&=\operatorname{pix}[D_f(x,y)-O_f(y)], &
+S_f(p)&=\operatorname{pix}[U_f(p)-B(p)]\quad\text{(flats only)}.
+\end{align}
+Scan summation/division use double precision; $\operatorname{pix}$ converts to
+native \texttt{pixelvalue}. Preserve the separate subtraction roundings. Trim is
+FITS 1-based inclusive; active row $j$ maps to raw row $j+y_{\min}-1$. Each raw row
+uses its own scan reads, without smoothing or fitting. The master is already
+scan-corrected/active and receives no further scan correction. Bias-role frames
+have no master subtraction. Active BPMs do not mask electronic scan reads.
+
+For each ROI, the common population $\mathcal P$ passes the fixed mask and
+finite/raw-saturation checks in both flats and both reference biases. Each member
+retains its own exposure time, identity and measurement. For $N=|\mathcal P|$:
+\begin{align}
+\bar S_i&=N^{-1}\sum_{p\in\mathcal P}S_{ip}, &
+s_i^2&=\frac{\sum_{p\in\mathcal P}(S_{ip}-\bar S_i)^2}{N-1},\\
+d_p&=\operatorname{pix}[S_{1p}-S_{2p}], &
+s_d^2&=\frac{\sum_{p\in\mathcal P}(d_p-\bar d)^2}{N-1}.
+\end{align}
+Corrected counts must match admitted raw counts. For $N<2$, sample scatter is
+unavailable. Save member variances, difference variance and $s_d^2/2$ distinctly.
+Spatial variance is not automatically a noise weight or conversion-gain estimate.
+Direct sites retain physical pixel values; ROI means do not replace them in a
+nonlinear pixel model. Units remain ADU, ADU$^2$ and seconds.
+
+Raw-pair diagnostics keep their original stage and common populations:
+\begin{align}
+\mathrm{RON}_{\rm ADU}&=\sqrt{v(B_1-B_2)/2},\\
+\mathrm{RON}_{\rm MAD}&=\frac{1.4826}{\sqrt2}
+ \operatorname{median}|\Delta B-\operatorname{median}\Delta B|,\\
+g&=\frac{\bar F_1+\bar F_2-\bar B_1-\bar B_2}
+{v(F_1-F_2)-v(B_1-B_2)}\quad[\mathrm{electrons/ADU}].
+\end{align}
+Here $v$ is ordinary sample variance on the declared raw population; MAD is
+optional. Gain requires a positive denominator and suitable flat pairs; it is
+a recorded diagnostic, not a conversion applied to the cube. Corrected
+pair-difference variance must not be passed through this formula with a second
+bias subtraction. Shared-master variance/covariance are unavailable; no physical
+fit weights or uncertainties are invented from spatial scatter.
+
+\section*{Robust response BPM}
+For corrected flat $j$, the reference level $x_j$ is the existing native median
+of finite eligible pixels in the union of reference ROIs. Prior-mask selection
+controls the reference population, not whether a pixel is evaluated for defects.
+Per-pixel valid/unsaturated samples fit the existing Eclipse robust line:
+\begin{align}
+S_{pj}&\simeq\alpha_p+\beta_px_j, &
+A_p&=N_p^{-1}\sum_j|S_{pj}-\alpha_p-\beta_px_j|,\\
+R_p&=\operatorname{pix}\left[\beta_p/
+ \operatorname{mean}_{q\in G}\beta_q\right].
+\end{align}
+$G$ contains valid reference slopes. Preserve the fitter's median conventions,
+native rounding and flagged least-squares fallback. $A_p$ is mean absolute
+residual, not MAD. Unavailable fits have separate coverage states.
+
+\newpage
+\section*{Flags, suitability and products}
+Recipe \texttt{response\_low/high} set the current native float32 thresholds:
+$R_p\leq\mathrm{low}$ sets bit value 4; $R_p\geq\mathrm{high}$ sets value 8.
+The unflagged interval is strictly inside 0.5--1.5 by default. These are
+\emph{dimensionless relative-response limits}, not electrons/ADU. The input
+master's original configuration remains unchanged; save the current effective
+thresholds separately in provenance.
+
+The unsigned-byte registry defines the following meanings; the current response
+fitter creates only values 4/8. Other tests require their own reviewed criteria.
+\begin{center}
+\begin{tabular}{r l r l}
+\textbf{Value} & \textbf{Meaning} & \textbf{Value} & \textbf{Meaning}\\\hline
+1 & Bias offset & 16 & Nonlinear response\\
+2 & Dark current & 32 & Temporal noise\\
+4 & Low/dead response & 64 & Instability\\
+8 & Excess response & 128 & Premature saturation\\
+\end{tabular}
+\end{center}
+Bits combine by OR. Zero means no detected reason, not certification. Coverage
+is separate: 0 unavailable, 1 fitted, 2 flagged fallback. \texttt{new} output
+contains newly measured reasons; \texttt{combined} requires a known reason-mask
+prior. A binary prior cannot supply unknown historical reason bits.
+
+Raw saturation and \texttt{upper\_fraction} limit usable samples; the upper
+margin and minimum signal span are different controls. Quick mode requires at
+least five usable pairs with five distinct times/paired levels; provisional mode
+requires two levels. Save sample counts, signal coverage and pair mismatch.
+For positive pair reference levels $x_1,x_2$, the saved mismatch is
+$|x_1-x_2|/[(x_1+x_2)/2]$; compare it with
+\texttt{maximum\_pair\_difference}. The shared-cube path records failed suitability and continues measuring; it does
+not relax thresholds, erase evidence or declare a scientifically accepted BPM.
+
+\begin{tabular}{p{.27\linewidth}p{.66\linewidth}}
+\textbf{Product} & \textbf{Contents}\\\hline
+Detector BPM FITS & Reason image; \texttt{COVERAGE}, \texttt{NSAMPLE},
+\texttt{NEWFLAGS}, \texttt{SELECTION}, optional \texttt{PRIORSEL}.\\
+Detector ASDF & BPM QC, reason/coverage counts, settings, input/HDU mapping and
+calibrations; linearity measurement ASDF retains ROI/pair/site data and traces.\\
+Final BPM MEF/ASDF & Only newly created BPMs; none for an all-supplied-mask run.\\
+Logs and receipt & Stage/skip/failure messages, effective recipe, input preservation
+and truthful completion. Failed work is retained.\\
+\end{tabular}
+
+BPM image products use \texttt{CMDP.<recipe-start>.001.fits} with matching ASDF/log names;
+existing destinations are refused. A zero exit, completion receipt and independent
+saved-product checks are required. Saved readers and viewers use measured ASDF
+values without raw-pixel access or refitting. Separate exploratory residual
+analysis and future shutter/linearity model specifications remain in their
+separate guides linked from \path{docs/developer/README.md}; their eventual
+consolidation is deferred. They are not steps in this measurement-only recipe.
+Physical correction and cross-talk remain deferred.
+
+\hypertarget{native-recipe}{}
+\section*{Source map}
+The short entry point is \path{mefpp2/ins/mef/recipes/mefpp_bpm_linearity.c},
+following the bias lifecycle. Helpers below are in \path{mefpp2/ins/mef/common/}.
+
+\begin{tabular}{p{.25\linewidth}p{.68\linewidth}}
+\textbf{Stage} & \textbf{Source / landmark}\\\hline
+Admission & \path{mef_bpm_linearity_config.c}, \path{mef_bpm_linearity_inputs.c},
+\path{mef_bpm_linearity_bindings.c}; \texttt{BPM-LINEARITY-ADMISSION}.\\
+Detector/cube & \path{mef_bpm_linearity_process.c}, \path{mef_detector_cube.c};
+\texttt{BPM-LINEARITY-INGESTION}.\\
+BPM / measurements & \path{mef_cal_bpm.c}, \path{mef_linearity_pairs.c},
+\path{mef_linearity_prepare.c}; \path{BPM-LINEARITY-CANDIDATE}, \path{BPM-LINEARITY-MEASUREMENTS}.\\
+Publication & \path{mef_bpm_linearity_products.c}, shared native ASDF writer;
+\path{BPM-LINEARITY-PUBLICATION}, \path{BPM-LINEARITY-PRESERVATION}.\\
+\end{tabular}
+
+Robust arithmetic: \path{mefpp2/src/iproc/detector_response.c} and
+\path{mefpp2/src/math/fit_curve.c}. Scan arithmetic:
+\texttt{mef\_overscan\_correction\_traced}; statistics:
+\texttt{image\_pair\_stats\_checked}. Source landmarks remain individually named
+in code. Reviewed detector flow: \path{docs/developer/design/common-recipe-coordinator-v1.md}.
+\end{document}

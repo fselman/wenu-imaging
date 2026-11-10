@@ -14,16 +14,28 @@ Read only the guide for the operation being changed. LaTeX sources accompany PDF
 - [Bias recipe](bias-recipe-mathematical-guide-v1.pdf) ([source](bias-recipe-mathematical-guide-v1.tex)).
 - [Bias clipped RON](mathematics/mefpp/bias-clipped-ron.pdf) ([source](mathematics/mefpp/bias-clipped-ron.tex)).
 - [Temporal median convention](mathematics/mefpp/bias-median-even-handling.pdf) ([source](mathematics/mefpp/bias-median-even-handling.tex)).
-- [Detector characterization design](detector-characterization-design-2026-11-02.pdf) ([source](detector-characterization-design-2026-11-02.tex)).
-- [Joint shutter/linearity interface](joint-shutter-linearity-interface-2026-11-03.pdf) ([source](joint-shutter-linearity-interface-2026-11-03.tex)).
-- [Linearity preparation](linearity-preparation-guide-v1.pdf) ([source](linearity-preparation-guide-v1.tex)).
-  Inspect completed recipe measurements with `tools/view-bpm-linearity-qc.py
-  --manifest RUN/manifest.json --detectors detector.toml
-  --processing processing.toml --run FRESH_REDUCED_VIEWER_DIRECTORY`.
-  Run from orchestration. The offline page reuses the QC plots and shows saved BPM
-  histograms; it opens no images or external TSV files and applies no correction.
-  Geometry/processing must match the executed recipe fingerprints.
-- [Saved linearity residuals](linearity-residual-asdf-guide-v2.pdf) ([source](linearity-residual-asdf-guide-v2.tex)).
+- [BPM/linearity recipe](bpm-linearity-guide.pdf) ([source](bpm-linearity-guide.tex)):
+  the single guide for `cal bpm-linearity`, including usage, settings, processing,
+  BPM creation, measurements, products and QC.
+
+The other guides remain separate for now; their eventual consolidation is deferred.
+
+## Separate saved-data analysis
+
+[ROI residual diagnostics](linearity-residual-asdf-guide-v2.pdf)
+([source](linearity-residual-asdf-guide-v2.tex)) describes analysis and display of
+already saved measurements. It is not another reduction recipe or a prerequisite
+for executing BPM/linearity.
+
+## Deferred model designs
+
+These retain the reviewed model specifications, not instructions for the current
+measurement-only recipe:
+
+- [Detector characterization model](detector-characterization-design-2026-11-02.pdf)
+  ([source](detector-characterization-design-2026-11-02.tex)).
+- [Joint shutter/linearity numerical model](joint-shutter-linearity-interface-2026-11-03.pdf)
+  ([source](joint-shutter-linearity-interface-2026-11-03.tex)).
 
 The [design directory](design/) contains the reviewed scientific/structural contracts.
 Some guides describe scoped or pending capabilities; consult the current issue

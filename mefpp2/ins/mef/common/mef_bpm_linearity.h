@@ -1,5 +1,5 @@
 /* Native coordinator owners and phases. Measurement-only scientific contract:
- * docs/developer/linearity-preparation-guide-v1.tex, Native recipe.
+ * docs/developer/bpm-linearity-guide.tex, Native recipe.
  */
 #ifndef MEF_BPM_LINEARITY_H
 #define MEF_BPM_LINEARITY_H
