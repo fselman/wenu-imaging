@@ -146,7 +146,9 @@ def qualify_assembly(args, candidate, case, blob, run, guards):
         path.write_bytes(blob(args.revision, name))
     controls, reduced = candidate/'orchestration', candidate/'reduced'
     controls.mkdir(); reduced.mkdir()
-    if args.assembly_reference:
+    if args.saved_detector_products:
+        print('REUSING COMPLETED DETECTOR PRODUCTS:', case, flush=True)
+    elif args.assembly_reference:
         print('REUSING PASSED FITS CHECKS:', args.assembly_reference, flush=True)
     else:
         run([args.asdf_python, validation/names[0], '--probe', candidate/'bpm_mef_assembly_probe',
@@ -154,7 +156,8 @@ def qualify_assembly(args, candidate, case, blob, run, guards):
         run([args.asdf_python, validation/names[1], '--probe', candidate/'mef_assembly_probe',
              '--work', reduced], 'existing-mef-assembly-checks', controls)
     run([args.asdf_python, validation/names[2], '--command', candidate/'mefpp_bpm_assemble',
-         '--case', case, '--assembly-source-revision', args.revision, '--work-parent', reduced],
+         '--case', case, '--assembly-source-revision', args.revision, '--work-parent', reduced,
+         *(['--saved-detector-products'] if args.saved_detector_products else [])],
         'native-bpm-assembly-checks', controls)
     require({name: sha(Path(name)) for name in guards} == guards, 'Protected bias files changed')
     report = dict(successful=True, source_revision=args.revision, retained_case=str(case),
@@ -264,9 +267,12 @@ def main():
     parser.add_argument('--verify-combined-case', type=Path, help='Finish saved-case checks without repeating native processing')
     parser.add_argument('--prepare-project', type=Path, help='Author the OmegaCAM pilot project and calibration-copy bindings; no build or reduction')
     parser.add_argument('--assembly-reference', type=Path, help='Reuse passed 4c8702c FITS assembly checks; rebuild only the corrected QC publisher')
+    parser.add_argument('--saved-detector-products', action='store_true', help='Recheck final joining from an unfinished synthetic case; retain prior numerical gates')
     parser.add_argument('--assembly-case', type=Path, help='Build only final assembly components; join an already qualified synthetic case')
     parser.add_argument('--combined', action='store_true', help='Recheck the combined detector coordinator using retained native producers')
     args = parser.parse_args()
+    require(not args.saved_detector_products or (args.assembly_case and not args.assembly_reference),
+            'Saved detector joining requires --assembly-case only')
     require(not args.prepare_project or not (args.assembly_case or args.resume_linearity_candidate or args.linearity or args.reuse_probe),
             'Project preparation does not build or qualify native code')
     require(not args.assembly_reference or args.assembly_case, 'Assembly reference requires a saved case')
@@ -304,7 +310,31 @@ def main():
     if args.resume_linearity_candidate:
         resume_linearity_candidate(args, build, git)
         return
-    if args.assembly_case:
+    saved_guards = []
+    if args.saved_detector_products:
+        import tomllib
+        case = args.assembly_case.resolve(strict=True)
+        retained = case.parent.parent
+        previous_revision = '6936cb98086c973c00a0e29a9d83ffea58146650'
+        require(retained.parent == build.parent.parent and retained.name.startswith('bpm-native-qc-') and
+                case.parent.name == 'reduced' and case.name.startswith('combined-characterization-'),
+                'Expected retained private synthetic case')
+        require(not (case/'reduced/cal/bpm-linearity/combined/manifest.json').exists(), 'Expected unfinished final join')
+        changed = set(git('diff','--name-only',previous_revision,args.revision,'--','mefpp2').decode().splitlines())
+        require(changed <= {'mefpp2/ins/mef/common/mef_product_qc_asdf.c',
+                           'mefpp2/tests/bpm_assembly_native_contract.py'}, 'Numerical code changed; saved gates cannot qualify it')
+        for label in ('recipe-file-identity-checks', 'shared-cube-bpm-kernel-checks',
+                      'shared-cube-qc-true-checks', 'shared-cube-qc-false-checks'):
+            passed = retained/(label+'.log')
+            require(passed.is_file() and 'PASS:' in passed.read_text(), 'Missing passed gate: '+label)
+            saved_guards.append(passed)
+        bindings = case/'orchestration/combined/native-bindings.toml'
+        bound = tomllib.loads(bindings.read_text())
+        producer = retained/'mefpp_bpm_linearity_recipe'
+        digest = [r['sha256'] for r in bound['dependencies'] if r['path']==str(producer)]
+        require(len(digest)==1 and sha(producer)==digest[0], 'Retained producer changed')
+        saved_guards += [producer, bindings]
+    elif args.assembly_case:
         case = args.assembly_case.resolve(strict=True)
         retained = build.parent.parent/'bpm-native-qc-gopmq2yj'
         require(case.parent == retained/'reduced' and case.name.startswith('combined-characterization-'), 'Expected retained synthetic case')
@@ -361,7 +391,7 @@ def main():
         replacements[name] = blob(args.revision,name)
     selected = build.parent.parent/'main-bias-jk_5noln/mefpp_bias_recipe'
     require(selected.is_file() and sha(selected)=='3c28e637a07cfa05ec83e18d238115c73e1b77b305b4ed0bf62d2d033e7cdacd', 'Selected bias producer differs')
-    protected = [selected, build/'mefpp2/mefpp_bias_recipe']
+    protected = [selected, build/'mefpp2/mefpp_bias_recipe', *saved_guards]
     for instrument in ('WFI','OCAM'):
         folder = Path('/Users/fselman/Pictures')/instrument/'test_recipes/orchestration'
         protected += [folder/'run-bias.sh', folder/'bias-recipe.toml']
@@ -410,7 +440,7 @@ def main():
             except BaseException:
                 process.terminate(); process.wait(); raise
         require(code==0,label+' failed; inspect '+str(log))
-    assembly_targets = ('mefpp_bpm_assemble',) if args.assembly_reference else (
+    assembly_targets = ('mefpp_bpm_assemble', 'mefpp_bpm_linearity_recipe') if args.saved_detector_products else ('mefpp_bpm_assemble',) if args.assembly_reference else (
         'mefpp_bpm_assemble', 'bpm_mef_assembly_probe', 'mef_assembly_probe')
     assembly_before = {}
     if args.assembly_case:

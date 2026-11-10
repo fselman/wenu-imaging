@@ -777,7 +777,7 @@ static int assembly_admit(const mef_bpm_assembly_qc *r,assembly_document *docs,i
         if(d==0) {
             *inputs=recovery_count(f,"qc/embedded_input_records");
             *calibrations=recovery_count(f,"qc/calibrations");
-            if(*inputs<1 || *inputs>100000 || *calibrations!=2) return 0;
+            if(*inputs<1 || *inputs>100000 || *calibrations<1 || *calibrations>2) return 0;
         }
         if(recovery_count(f,"qc/embedded_input_records")!=*inputs || recovery_count(f,"qc/inputs")!=*inputs ||
             recovery_count(f,"qc/calibrations")!=*calibrations ||
@@ -796,7 +796,8 @@ static int assembly_admit(const mef_bpm_assembly_qc *r,assembly_document *docs,i
         }
         for(i=0;i<*calibrations;++i) {
             snprintf(path,sizeof(path),"qc/calibrations/%d/role",i);
-            if(!equal_text(f,docs[0].file,path)) return 0;
+            if(asdf_get_string0(f,path,&text)!=ASDF_VALUE_OK ||
+                strcmp(text,i==0?"bias":"bpm") || !equal_text(f,docs[0].file,path)) return 0;
             snprintf(path,sizeof(path),"qc/calibrations/%d/detector_bindings",i);
             if(recovery_count(f,path)!=1) return 0;
         }

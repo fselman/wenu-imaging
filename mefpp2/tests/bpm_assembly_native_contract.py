@@ -77,12 +77,41 @@ def main():
     parser.add_argument('--command', type=Path, required=True)
     parser.add_argument('--assembly-source-revision', required=True)
     parser.add_argument('--work-parent', type=Path, required=True)
+    parser.add_argument('--saved-detector-products', action='store_true', help='Join completed detector products from a failed final publication; no processing replay')
     args = parser.parse_args()
     parent = args.case.resolve(strict=True)
     source_manifest = parent/'reduced/cal/bpm-linearity/combined/manifest.json'
-    report = json.loads(source_manifest.read_text())
-    assert report['status'] in ('detector_characterization_complete_for_owner_inspection',
-                                'complete_for_owner_inspection') and report['input_preservation']
+    if args.saved_detector_products:
+        assert not source_manifest.exists(), 'Expected an unfinished final publication'
+        source_recipe = parent/'orchestration/bpm-linearity.toml'
+        run = source_manifest.parent
+        logs = list(run.glob('CMDP.*.001.log'))
+        assert len(logs)==1 and not logs[0].with_suffix('.asdf').exists()
+        started = logs[0].name[5:-8]
+        assert len(started)==24
+        members, revisions = [], set()
+        for sidecar in sorted(run.glob('detector-*/bpm/*.asdf')):
+            q = native_qc.read(sidecar)
+            detector = q['characterization']['detectors'][0]
+            fits = Path(q['file']['location'])
+            log = fits.with_suffix('.log')
+            assert fits == sidecar.with_suffix('.fits') and log.is_file()
+            revisions.add(q['provenance']['producer']['source_revision'])
+            paths = [fits, sidecar, log]
+            members.append(dict(detector_id=detector['detector_id'],
+                configuration_detector=detector['configuration_detector'],
+                bpm=dict(fits=str(fits), asdf=str(sidecar), log=str(log),
+                    sha256={str(p): sha(p) for p in paths})))
+        import tomllib
+        declared = tomllib.loads(source_recipe.read_text())
+        assert members and len(revisions)==1 and next(iter(revisions))==declared['native_recipe']['source_revision']
+        assert [m['detector_id'] for m in members]==[d['detector_id'] for d in declared['detectors']]
+        report = dict(status='complete_for_owner_inspection', input_preservation=False,
+            created_at=started, native_source_revision=next(iter(revisions)), detectors=members)
+    else:
+        report = json.loads(source_manifest.read_text())
+        assert report['status'] in ('detector_characterization_complete_for_owner_inspection',
+                                    'complete_for_owner_inspection') and report['input_preservation']
     members = deepcopy(report['detectors'])
     work = Path(tempfile.mkdtemp(prefix='native-bpm-assembly-', dir=args.work_parent)).resolve()
     controls, reduced = work/'orchestration', work/'reduced'
@@ -93,9 +122,10 @@ def main():
     if priority < 10:
         os.nice(10-priority)
     recipe = controls/'bpm-linearity.toml'
-    source_recipe = next(p for p in report['configuration_sources']
-                         if Path(p).parent == parent/'orchestration' and
-                         'bpm_linearity_recipe_schema_version' in Path(p).read_text())
+    if not args.saved_detector_products:
+        source_recipe = next(p for p in report['configuration_sources']
+                             if Path(p).parent == parent/'orchestration' and
+                             'bpm_linearity_recipe_schema_version' in Path(p).read_text())
     recipe.write_bytes(Path(source_recipe).read_bytes())
     paths = [Path(m['bpm'][key]) for m in members for key in ('fits', 'asdf', 'log')]
     for member in members:
@@ -126,7 +156,10 @@ def main():
     masters = [c for c in q['calibrations'] if c['role'] == 'bias']
     priors = [c for c in q['calibrations'] if c['role'] == 'bpm']
     assert len(masters) == 2 and [len(c['detector_bindings']) for c in masters] == [2, 1]
-    assert len(priors) == 1 and len(priors[0]['detector_bindings']) == 3
+    expected_priors = [c for c in native_qc.read(members[0]['bpm']['asdf'])['calibrations'] if c['role']=='bpm']
+    assert len(priors)==len(expected_priors)
+    if priors:
+        assert len(priors[0]['detector_bindings'])==3
     actual = hdus(output)
     assert actual[0][1]['NAXIS'] == '0' and actual[0][1]['DETID'] == members[-1]['detector_id']
     assert int(actual[0][1]['NEXTEND']) == len(actual)-1 == len(saved['image_planes'])
