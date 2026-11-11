@@ -111,7 +111,11 @@ int mef_bpm_linearity_publish(mef_bpm_linearity *recipe)
         recipe->reference_detector,detectors,created,
         recipe->run->message,sizeof(recipe->run->message))) goto done;
     planes=mef_bpm_assembly_plane_map(recipe->run->paths.fits,detectors,created);
-    if (!planes) goto done;
+    if (!planes) {
+        snprintf(recipe->run->message, sizeof(recipe->run->message),
+            "Cannot inspect final BPM image-plane map");
+        goto done;
+    }
     {
         mef_bpm_assembly_qc request={.fits_path=recipe->run->paths.fits,.asdf_path=recipe->run->paths.asdf,
             .log_path=recipe->run->paths.log,.created_at=recipe->run->recipe_start,

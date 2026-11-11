@@ -60,6 +60,27 @@ def main():
     assert subprocess.run(wrong, capture_output=True).returncode != 0 and not Path(wrong[1]).exists()
     assert frozen == {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
     print('PASS: two detectors, all padded payload bytes, mask/diagnostic HDUs, reference identity and exclusive publication')
+    # Keep each image tiny while crossing the ordinary qfits 128-HDU limit.
+    mosaic_sources = []
+    detector_ids = [f'CCD-{slot:02d}' for slot in range(32)]
+    for slot, detector in enumerate(detector_ids):
+        source = reduced/'cal'/f'mosaic-{slot:02d}.fits'
+        fixture(source, detector, 'PRIORSEL')
+        mosaic_sources.extend((str(source), detector, str(slot)))
+    mosaic = reduced/'CMDP.2026-11-09T20:00:00.000Z.002.fits'
+    result = subprocess.run([str(args.probe.resolve()), str(mosaic), detector_ids[0],
+                             *mosaic_sources], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    expected = [(detector, 0, 'BPM') for detector in detector_ids]
+    expected.extend((detector, hdu, role) for detector in detector_ids
+                    for hdu, role in enumerate(
+                        ('COVERAGE', 'NSAMPLE', 'NEWFLAGS', 'SELECTION', 'PRIORSEL'), 1))
+    assert len(hdus(mosaic)) == len(expected) + 1 == 193
+    assert result.stdout.splitlines() == [
+        f'{detector}\t{source}\t{target}\t{role}'
+        for target, (detector, source, role) in enumerate(expected, 1)
+    ]
+    print('PASS: 32-detector mosaic, 193 HDUs and exact final plane map')
     print('RETAINED BPM ASSEMBLY:', work)
 
 

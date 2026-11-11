@@ -1,4 +1,4 @@
-/* Exercise only the native byte-copy boundary; no QC fixture serialization. */
+/* Exercise the native byte-copy and final plane-map boundaries; no QC fixture serialization. */
 #include "mef_mef_assemble.h"
 #include <errno.h>
 #include <stdio.h>
@@ -18,5 +18,15 @@ int main(int argc,char **argv)
     }
     status=mef_bpm_mef_assemble(argv[1],argv[2],d,n,message,sizeof(message));
     if(*message)fprintf(stderr,"%s\n",message);
+    if (!status) {
+        char *map = mef_bpm_assembly_plane_map(argv[1], d, n);
+        if (map) {
+            fputs(map, stdout);
+            free(map);
+        } else {
+            fputs("Cannot read final BPM plane map\n", stderr);
+            status = -1;
+        }
+    }
     free(d);return status?1:0;
 }
