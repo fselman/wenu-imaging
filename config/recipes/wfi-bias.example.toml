@@ -5,7 +5,8 @@ settings = "bias.toml"
 run = "cal/bias/wfi-native-001"
 
 [inputs]
-list = "wfi-bias.list"
+# Replace with the absolute path to your processing list.
+list = "/absolute/path/to/wfi-bias.list"
 
 [bias]
 detectors = "all"

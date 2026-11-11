@@ -30,6 +30,7 @@ int mef_recipe_inputs_read(const char *name, const char *raw, int legacy, mef_re
     char *line = NULL;
     size_t length = 0, number = 0;
     int okay = 0;
+    const char *requirement = "require path and DPR.TYPE, unique existing files";
     if (!stream || !list || list->rows) {
         goto done;
     }
@@ -65,6 +66,10 @@ int mef_recipe_inputs_read(const char *name, const char *raw, int legacy, mef_re
             }
         }
         if ((!*type && !legacy) || strpbrk(type, "\t\r\n ") || list->count == 100000) {
+            goto done;
+        }
+        if (!legacy && start[0] != '/') {
+            requirement = "observation path must be absolute";
             goto done;
         }
         char absolute[4096];
@@ -115,9 +120,7 @@ done:
     if (!okay) {
         if (error && capacity) {
             snprintf(error, capacity,
-                "Invalid observation list %s at line %zu: require path and DPR.TYPE, unique "
-                "existing files",
-                name, number);
+                "Invalid observation list %s at line %zu: %s", name, number, requirement);
         }
         mef_recipe_inputs_destroy(list);
     }

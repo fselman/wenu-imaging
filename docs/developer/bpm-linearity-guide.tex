@@ -44,14 +44,15 @@ reports inputs, options, defaults and outputs.
 \section*{Inputs and directory contract}
 Project TOML defines raw, calibration, reduced, work and log roots; its containing
 directory is orchestration. Raw observations and input calibrations are read-only.
-Lists/TOMLs belong in orchestration; products, work and logs belong below reduced.
-Recipe \texttt{inputs.list} references a separate ordered text file:
+TOMLs belong in orchestration. Products, work and logs belong below reduced.
+Recipe \texttt{inputs.list} takes the absolute path of an ordered text list.
+The list directory is configurable.
 \begin{verbatim}
-OMEGA.frame1.fits  FLAT,DOME
-OMEGA.frame2.fits  FLAT,DOME
+/data/raw/OMEGA.frame1.fits  FLAT,DOME
+/data/raw/OMEGA.frame2.fits  FLAT,DOME
 \end{verbatim}
 Each row is path plus \texttt{DPR.TYPE}; tabs permit spaces in paths. Comments and
-blank lines are ignored. Image/list paths use the raw/recipe roots respectively.
+blank lines are ignored. Use absolute FITS paths under the project raw directory.
 Invalid or duplicate inputs fail. Save order, classifications and bindings.
 
 Supply a reduced master bias and optional BPM; dependency-list reduction is
@@ -80,7 +81,7 @@ in detector-catalogue order after reviewing the actual bindings.
 \texttt{bpm.upper\_fraction} & Required, $(0,1]$; example 0.85.\\
 \texttt{bpm.minimum\_span\_fraction} & Required, $(0,1]$; example 0.15.\\
 \texttt{bpm.maximum\_pair\_difference} & Required, $\geq0$; example 0.02.\\
-\texttt{inputs.list} & Classified observation list; no inline paths or pair IDs.\\
+\texttt{inputs.list} & Absolute path to the classified observation list.\\
 \texttt{detectors} & Explicit detector/configuration/HDU/readout bindings.\\
 \end{tabular}
 

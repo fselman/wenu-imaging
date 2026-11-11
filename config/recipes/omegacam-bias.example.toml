@@ -6,7 +6,8 @@ project = "project.toml"
 run = "cal/bias/ocam-native-001"
 
 [inputs]
-list = "omegacam-bias.list"
+# Replace with the absolute path to your processing list.
+list = "/absolute/path/to/omegacam-bias.list"
 
 [bias]
 # Default: average the two central samples when an even number is retained.

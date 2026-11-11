@@ -226,9 +226,12 @@ static int prepare_project_inputs(mef_bias *recipe)
                 *strrchr(canonical, '/') = 0;
                 okay = !strcmp(invocation, canonical) &&
                        !strncmp(source, canonical, strlen(canonical)) &&
-                       source[strlen(canonical)] == '/' &&
-                       !strncmp(recipe->listing_path, canonical, strlen(canonical)) &&
-                       recipe->listing_path[strlen(canonical)] == '/';
+                       source[strlen(canonical)] == '/';
+                if (okay && !recipe->classified_input) {
+                    size_t n = strlen(canonical);
+                    okay = !strncmp(recipe->listing_path, canonical, n) &&
+                           recipe->listing_path[n] == '/';
+                }
             }
             if (okay) {
                 size_t n = strlen(reduced);
@@ -322,15 +325,19 @@ int mef_bias_prepare(mef_bias *recipe, int argc, char **argv)
     recipe->config_path = realpath(
         recipe->arguments.paf_path ? recipe->arguments.paf_path : recipe->arguments.toml_path,
         NULL);
-    recipe->listing_path = realpath(recipe->arguments.bias_list_path, NULL);
-    if (recipe->config_path == NULL || recipe->listing_path == NULL) {
-        strcpy(recipe->run->message, "Missing explicit configuration or bias list");
-        return 0;
-    }
     for (int i = 3; i + 1 < expanded_argc; i += 2) {
         if (!strcmp(expanded_argv[i], "--input")) {
             recipe->classified_input = 1;
         }
+    }
+    if (recipe->classified_input && recipe->arguments.bias_list_path[0] != '/') {
+        strcpy(recipe->run->message, "--input requires an absolute path");
+        return 0;
+    }
+    recipe->listing_path = realpath(recipe->arguments.bias_list_path, NULL);
+    if (recipe->config_path == NULL || recipe->listing_path == NULL) {
+        strcpy(recipe->run->message, "Missing explicit configuration or bias list");
+        return 0;
     }
     if (!prepare_project_inputs(recipe)) {
         return 0;

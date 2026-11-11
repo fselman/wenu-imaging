@@ -44,8 +44,9 @@ issues/PRs, not chronological additions to this roadmap.
 
 ## Shared processing-list contract
 
-BPM/linearity and bias use recipe `inputs.list`, referencing an ordered text list
-of `path<TAB>DPR.TYPE` observations. The recipe owns processing policy and explicit
+BPM/linearity and bias use an absolute path in recipe `inputs.list`. Each row
+contains an absolute FITS path and `DPR.TYPE`. The list directory is configurable.
+The recipe owns processing policy and explicit
 reduced calibration bindings, not observation filenames or pair assignments.
 Project TOML owns roots. Native admission derives flat pairs from classification
 and header exposure times; missing/ambiguous groups are refused. Dependencies

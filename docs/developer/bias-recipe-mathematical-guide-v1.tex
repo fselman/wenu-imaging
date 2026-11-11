@@ -28,9 +28,10 @@ inputs, corrections and master; it does not silently modify the result.
 
 \textbf{Shared input contract.} Run \texttt{mefpp\_recipe cal bias --config RECIPE.toml}
 from orchestration. The recipe references \code{project.toml}, numerical settings,
-\code{inputs.list} and a fresh reduced \code{run}. Each processing-list row is
-\code{path<TAB>DPR.TYPE}; bias accepts \code{BIAS} only. Image paths are relative
-to the project raw root; calibration paths use its reduced calibration root.
+an absolute \code{inputs.list} path and a fresh reduced \code{run}. Each list row
+contains an absolute FITS path under the project raw root and a \code{BIAS}
+classification. The list directory is configurable. Calibration paths use the
+project calibration root.
 Optional BPMs are already reduced products. Dependency-list reduction is deferred.
 The native archive preserves the classified list. Legacy \code{--bias} lists
 remain compatible; new recipes use the same list contract as BPM/linearity.

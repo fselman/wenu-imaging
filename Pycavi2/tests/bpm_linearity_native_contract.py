@@ -79,12 +79,12 @@ for qc, supplied, operation, listed, include_bias in cases:
     if not qc and supplied:
         text = text.replace('qc = false\n', 'qc = true\n')
     if listed:
-        listing=orch/(out.name+'.list')
+        listing=state['raw']/(out.name+'.list')
         records=([(b['path'],'BIAS') for b in state['biases']] if include_bias else [])
         records += [(f['path'],'FLAT,LAMP') for f in state['selection']['flat']]
         listing.write_text(''.join(path+'\t'+kind+'\n' for path,kind in records))
         start=text.index('\n[inputs]'); end=text.index('\n[[detectors]]',start)
-        text=text[:start]+'\n[inputs]\nlist = '+json.dumps(listing.name)+'\n'+text[end:]
+        text=text[:start]+'\n[inputs]\nlist = '+json.dumps(str(listing))+'\n'+text[end:]
         if listed:
             text='\n'.join(line for line in text.splitlines() if not line.startswith('bias_accepted ='))+'\n'
         assert '[[inputs.flat]]' not in text
@@ -165,17 +165,24 @@ extra=state['raw']/'third-same-exposure.fits'
 shutil.copyfile(state['selection']['flat'][0]['path'],extra)
 flats=[r['path'] for r in state['selection']['flat']]
 for label, members in [('missing-partner',flats[:-1]),('ambiguous-partner',[*flats,str(extra)]),
-                       ('duplicate-list-entry',[*flats,flats[0]])]:
+                       ('duplicate-list-entry',[*flats,flats[0]]),
+                       ('relative-fits',[Path(flats[0]).name,*flats[1:]]),
+                       ('relative-list',flats)]:
     out=Path(tempfile.mkdtemp(prefix=label+'-',dir=reduced/'cal'))
     listing=orch/(out.name+'.list')
     listing.write_text(''.join(name+'\tFLAT,LAMP\n' for name in members))
     start=text.index('\n[inputs]');end=text.index('\n[[detectors]]',start)
-    authored=text[:start]+'\n[inputs]\nlist = '+json.dumps(listing.name)+'\n'+text[end:]
+    list_path = listing.name if label == 'relative-list' else str(listing)
+    authored=text[:start]+'\n[inputs]\nlist = '+json.dumps(list_path)+'\n'+text[end:]
     authored='\n'.join(line for line in authored.splitlines() if not line.startswith('bias_accepted ='))+'\n'
     authored=authored.replace(str(Path(receipt['product_root']).relative_to(reduced)),str(out.relative_to(reduced)))
     file=orch/(out.name+'.toml');file.write_text(authored)
     result=subprocess.run([str(command),'cal','bpm-linearity','--config',str(file)],cwd=orch,capture_output=True,text=True)
     assert result.returncode!=0 and not list(out.rglob('*.fits')),label
     if args.capture_writer:assert 'loads=0 unique=0' in result.stderr,(label,result.stderr)
-print('PASS: classified-list duplicate, incomplete and ambiguous pairing refused before image loads')
+    if label == 'relative-list':
+        assert 'inputs.list requires an absolute path' in result.stderr, result.stderr
+    if label == 'relative-fits':
+        assert 'observation path must be absolute' in result.stderr, result.stderr
+print('PASS: duplicate entries, incomplete or ambiguous pairs, and relative paths refused before image loads')
 print('RETAINED', work)

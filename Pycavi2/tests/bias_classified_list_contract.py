@@ -23,13 +23,18 @@ for k,v in dict(raw=s['raw'],calibration=reduced/'cal',output=reduced,work=reduc
 proj=proj.replace('"../../examples/omegacam/full.toml"',json.dumps(str(orch/'native.toml')))
 (orch/'project.toml').write_text(proj)
 (reduced/'cal/bias/new').mkdir()
-(orch/'bias.list').write_text(''.join(Path(b['path']).name+'\tBIAS\n' for b in s['biases']))
+list_dir = reduced/'cal/sof'
+list_dir.mkdir()
+listing = list_dir/'bias.list'
+paths = [b['path'] for b in s['biases']]
+rows = [path+'\tBIAS\n' for path in paths]
+listing.write_text(''.join(rows))
 text='''bias_recipe_schema_version=1
 project="project.toml"
 settings="native.toml"
 run="cal/bias/new"
 [inputs]
-list="bias.list"
+list=LIST_PATH
 [bias]
 median_even_handling="average"
 qc="legacy"
@@ -44,7 +49,7 @@ id="ESO_CCD_#65"
 configuration_detector=0
 hdus=[0]
 '''
-(orch/'bias.toml').write_text(text)
+(orch/'bias.toml').write_text(text.replace('LIST_PATH', json.dumps(str(listing))))
 def execute(recipe, *extra):
     return subprocess.run([str(a.command.resolve()),'cal','bias','--config',str(recipe),*extra],cwd=orch,text=True,capture_output=True)
 
@@ -78,14 +83,28 @@ old='\n'.join(line for line in text.splitlines() if not line.startswith(('projec
 result=execute(orch/'legacy.toml','--bias',str(orch/'old.list'),'--output-dir',str(legacy))
 assert result.returncode==0,result.stdout+result.stderr
 assert image_payloads(next(legacy.glob('*.fits')))==planes
-for label,listing in [('wrong-class',Path(s['biases'][0]['path']).name+'\tFLAT,LAMP\n'),
-                       ('duplicate',Path(s['biases'][0]['path']).name+'\tBIAS\n'+Path(s['biases'][0]['path']).name+'\tBIAS\n'),
-                       ('missing-class',Path(s['biases'][0]['path']).name+'\n')]:
-    target=reduced/('cal/bias/'+label);target.mkdir()
-    (orch/(label+'.list')).write_text(listing)
-    (orch/(label+'.toml')).write_text(text.replace('cal/bias/new','cal/bias/'+label).replace('list="bias.list"','list="'+label+'.list"'))
-    result=execute(orch/(label+'.toml'))
-    assert result.returncode!=0 and not list(target.rglob('*.fits')),label
+cases = [
+    ('wrong-class', [paths[0]+'\tFLAT,LAMP\n', *rows[1:]], False, 'DPR.TYPE BIAS only'),
+    ('duplicate', [*rows, rows[0]], False, 'Invalid observation list'),
+    ('missing-class', [paths[0]+'\n', *rows[1:]], False, 'Invalid observation list'),
+    ('relative-fits', [Path(paths[0]).name+'\tBIAS\n', *rows[1:]], False, 'observation path must be absolute'),
+    ('relative-list', rows, True, 'inputs.list requires an absolute path'),
+]
+for label, members, relative, message in cases:
+    target = reduced/('cal/bias/'+label)
+    target.mkdir()
+    case_list = orch/(label+'.list')
+    case_list.write_text(''.join(members))
+    list_path = case_list.name if relative else str(case_list)
+    config = orch/(label+'.toml')
+    config.write_text(text.replace('cal/bias/new', 'cal/bias/'+label)
+                      .replace('LIST_PATH', json.dumps(list_path)))
+    result = execute(config)
+    assert result.returncode != 0 and message in result.stderr, (label, result.stderr)
+    assert not list(target.rglob('*.fits')), label
+(orch/'classified-cli.list').write_text(''.join(rows))
+result = execute(orch/'legacy.toml', '--input', 'classified-cli.list', '--output-dir', str(legacy))
+assert result.returncode != 0 and '--input requires an absolute path' in result.stderr, result.stderr
 assert before=={name:hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in before}
-print('PASS: classified and legacy bias lists, exact 7.5 ADU master pixels; malformed/duplicate/wrong-class refused; inputs unchanged')
+print('PASS: classified and legacy bias lists, exact 7.5 ADU master pixels; malformed/duplicate/wrong-class/relative paths refused; inputs unchanged')
 print('RETAINED',work)

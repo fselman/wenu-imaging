@@ -172,8 +172,8 @@ redeclaring raw, calibration, output, work or log roots. Native project admissio
 must preserve the shared composition contract and its relative-path rules; an
 optional client must not be required to resolve the project first. The project TOML resides in
 orchestration, output maps to reduced, and calibration/work/logs remain below it.
-Run recipe tests with their working directory in orchestration. Keep configurations,
-lists and requests there, observational inputs in raw, and products, logs, private
+Run recipe tests with their working directory in orchestration. Keep configurations and requests there, observational inputs in raw, and
+products, logs, private
 working files and execution receipts under reduced. Existing calibrations are
 read-only dependencies under reduced/cal. Apply the same layout to synthetic
 file-integration fixtures; pure in-memory numerical checks need no directory tree.
@@ -199,8 +199,9 @@ before continuing dependent work. Do not claim unsupported platform/science stat
 
 ## Shared processing-list contract
 
-BPM/linearity and bias use recipe `inputs.list`, referencing an ordered text list
-of `path<TAB>DPR.TYPE` observations. The recipe owns processing policy and explicit
+BPM/linearity and bias use an absolute path in recipe `inputs.list`. Each row
+contains an absolute FITS path and `DPR.TYPE`. The list directory is configurable.
+The recipe owns processing policy and explicit
 reduced calibration bindings, not observation filenames or pair assignments.
 Project TOML owns roots. Native admission derives flat pairs from classification
 and header exposure times; missing/ambiguous groups are refused. Dependencies

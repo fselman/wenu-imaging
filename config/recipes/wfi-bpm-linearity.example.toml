@@ -28,7 +28,8 @@ response_low = 0.5 # default
 response_high = 1.5 # default
 
 [inputs]
-list = "wfi-linearity.list"
+# Replace with the absolute path to your processing list.
+list = "/absolute/path/to/wfi-linearity.list"
 
 [[detectors]]
 detector_id = "WIN1.CHIP1.OUT1"

@@ -400,6 +400,10 @@ static int observation_inputs(compilation *c)
     if (!name) {
         return toml_get(inputs, "list").type == TOML_UNKNOWN;
     }
+    if (name[0] != '/') {
+        fputs("Observation admission: inputs.list requires an absolute path\n", stderr);
+        return 0;
+    }
     char error[512] = "Invalid classified input-list reference";
     c->input_list = path(c->orchestration, name);
     toml_datum_t identity = toml_get(c->recipe.toptab, "identity");

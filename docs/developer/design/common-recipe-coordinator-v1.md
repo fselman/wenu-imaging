@@ -21,7 +21,8 @@ controls and inputs without redeclaring raw/reduced roots.
 
 All recipes process an ordered external observation list. Each non-comment row is
 `path<TAB>DPR.TYPE` (whitespace separation also allowed for paths without spaces).
-Relative observation paths use the project raw root; list paths use orchestration.
+Use an absolute path for the list and for every observation in it. Observations
+reside under the project raw root. The list may live in any directory.
 The recipe contains list references and processing policy, never inline observation
 filenames or pair assignments. Preserve the list bytes, classification, order and
 resolved identities in provenance. Duplicate/malformed/unsupported rows fail admission.

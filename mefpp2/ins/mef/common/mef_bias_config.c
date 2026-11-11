@@ -339,7 +339,13 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     if (input_table.type!=TOML_UNKNOWN) {
         static const char *input_keys[]={"list"};
         input_list=toml_string_value(toml_get(input_table,"list"));
-        if(!TABLE(input_table,input_keys) || !input_list || !recipe->project || !recipe->run) goto done;
+        if (!TABLE(input_table, input_keys) || !input_list || !recipe->project || !recipe->run) {
+            goto done;
+        }
+        if (input_list[0] != '/') {
+            reason = "inputs.list requires an absolute path";
+            goto done;
+        }
     }
     bias = toml_get(root, "bias");
     entries = toml_get(root, "detector");
@@ -465,11 +471,8 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
         !append_option_value(recipe, "--reference-detector", reference)) {
         goto done;
     }
-    if(input_list) {
-        char *resolved=resolve_recipe_path(recipe,input_list);
-        int supplied=resolved && append_option_value(recipe,"--input",resolved);
-        free(resolved);
-        if(!supplied) goto done;
+    if (input_list && !append_option_value(recipe, "--input", input_list)) {
+        goto done;
     }
     for (int i = 3; i < argc; i += 2) {
         if (i + 1 >= argc) {
