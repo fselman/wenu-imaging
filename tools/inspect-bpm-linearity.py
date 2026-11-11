@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+import tomllib
 
 
 def digest(path):
@@ -28,6 +29,23 @@ def equal_payload(left, right, source, target):
         remaining -= count
 
 
+def completion_document(path):
+    return tomllib.loads(path.read_text()) if path.suffix == '.toml' else json.loads(path.read_text())
+
+
+def receipt_fingerprints(document):
+    """Native receipts bind both images and ASDFs, including measurement products."""
+    if 'native_recipe_receipt_schema_version' not in document:
+        return {}
+    result = {}
+    for row in [document, *document['detectors']]:
+        for key in ('fits', 'asdf', 'prepared'):
+            if key in row:
+                assert key+'_sha256' in row, ('Missing output fingerprint', key)
+                result[row[key]] = row[key+'_sha256']
+    return result
+
+
 def inspect(manifest, source_root):
     sys.path.insert(0, str(source_root/'Pycavi2/pycavi/pycavi'))
     import numpy as np
@@ -43,13 +61,28 @@ def inspect(manifest, source_root):
         path = (manifest.parent/Path(name).relative_to(report['product_root'])).resolve(strict=True)
         assert path.is_relative_to(manifest.parent), 'Product escapes manifest root'
         return path
-    protected = {}
+    document = completion_document(manifest)
+    protected = {manifest: digest(manifest)}
+    protected.update({local(p): sha for p, sha in receipt_fingerprints(document).items()})
     for item in report['detectors']:
         protected.update({local(p): sha for p, sha in item['bpm']['sha256'].items()})
         protected[local(item['preparation']['path'])] = item['preparation']['sha256']
     protected.update({local(p): sha for p, sha in report['bpm_product']['sha256'].items()})
     for path, expected in protected.items():
         assert digest(path) == expected, ('Published file changed', path)
+    # Only published FITS members may be opened; never fall back to raw inputs
+    # or external native transports during saved-product inspection.
+    allowed_images = {p for p in protected if p.suffix.lower() == '.fits'}
+    def offline(event, values):
+        if event.startswith(('subprocess.', 'socket.')) or event == 'os.system':
+            raise RuntimeError('Saved inspection cannot execute commands or use the network')
+        if event == 'open' and isinstance(values[0], (str, bytes)):
+            name = Path(values[0].decode() if isinstance(values[0], bytes) else values[0])
+            suffix = str(name).lower()
+            if suffix.endswith('.tsv') or (suffix.endswith(('.fits', '.fit', '.fts', '.fits.gz', '.fits.fz'))
+                                         and name.resolve() not in allowed_images):
+                raise RuntimeError('Saved inspection cannot open raw images or native transports')
+    sys.addaudithook(offline)
     summaries = []
     final = local(report['bpm_product']['fits'])
     with fits.open(final, memmap=True, do_not_scale_image_data=True) as assembled, Path(final).open('rb') as target:
@@ -61,12 +94,19 @@ def inspect(manifest, source_root):
             prepared_qc = native_qc.read(local(member['preparation']['path']))
             evidence = {e['name']: e['text'] for e in prepared_qc['extensions']['native_evidence']}
             context = json.loads(evidence['preparation-context.json'])
-            # Only the embedded frozen archive is required; original image locations are not opened.
-            original = local(member['preparation']['path']).parent/'inputs'/context['source_graph']['entry']
-            expected = previous.sample.read_product(original)['rows']
-            assert preparation['direct_site_replay'] == expected
+            # Direct native recipes embed their authoring context; historical
+            # comparisons remain available only when a source archive is present.
+            expected = None
+            if context.get('native_recipe_schema_version') == 2:
+                import pycavi_linearity_native_archive as archive
+                context = archive.native_context(context, prepared_qc, evidence)
+            else:
+                original = local(member['preparation']['path']).parent/'inputs'/context['source_graph']['entry']
+                expected = previous.sample.read_product(original)['rows']
+                assert preparation['direct_site_replay'] == expected
             rows = preparation['exposure_rows']
-            assert len(rows) == len(context['selection']['flat'])*len(next(d['rois'] for d in context['resolved']['detectors'] if d['detector_id'] == detector))
+            rois = next(d['rois'] for d in context['resolved']['detectors'] if d['detector_id'] == detector)
+            assert len(rows) == len(context['selection']['flat'])*len(rois)
             input_file = local(member['bpm']['fits'])
             planes = [p for p in saved['bpm_product']['image_planes'] if p['detector_id'] == detector]
             metrics = {m['name']: m for m in decoded['bpm']['characterization']['detectors'][0]['measurements']}
@@ -92,7 +132,8 @@ def inspect(manifest, source_root):
                 assert set(np.unique(selection)) <= {0, 1}
                 assert set(np.unique(coverage)) <= {0, 1, 2}
                 summary = dict(detector=detector, shape=list(flags.shape), pixels=int(flags.size),
-                    exact_payload_planes=len(planes), direct_samples_exact=len(expected), pair_roi_records=len(preparation['rows']),
+                    exact_payload_planes=len(planes), direct_samples_exact=len(expected) if expected is not None else None,
+                    direct_site_records=len(preparation['direct_site_replay']), pair_roi_records=len(preparation['rows']),
                     exposure_roi_records=len(rows), trace_frames=len(preparation['scan_traces']),
                     reason_histogram={str(i): int(n) for i, n in enumerate(histogram) if n},
                     fit_states=dict(zip(('unavailable', 'fit', 'legacy_ls_fallback'), fits_histogram)),
@@ -114,7 +155,9 @@ def inspect(manifest, source_root):
         assert digest(path) == expected, ('Published file changed during inspection', path)
     return dict(status='saved_product_checks_passed', manifest=str(manifest), detectors=summaries,
         raw_images_opened=False, reduction_repeated=False, published_files_unchanged=True,
-        scientific_acceptance=False, linearity_correction='not_applied', qc_viewer='pending')
+        scientific_acceptance=False, linearity_correction='not_applied', qc_viewer='pending',
+        ingestion=[{k: d[k] for k in ('detector_id', 'bpm_skipped', 'image_loads', 'corrections')}
+                   for d in document['detectors']] if manifest.suffix == '.toml' else None)
 
 
 def main():
@@ -124,20 +167,23 @@ def main():
     args = parser.parse_args()
     manifest = args.manifest.resolve(strict=True)
     result = inspect(manifest, args.source_root.resolve(strict=True))
-    parent = json.loads(manifest.read_text())
+    parent = completion_document(manifest)
     directory = Path(tempfile.mkdtemp(prefix=manifest.parent.name+'-inspection-', dir=parent['directories']['logs']))
     with (directory/'inspection.json').open('x') as stream:
         json.dump(result, stream, indent=2, allow_nan=False); stream.write('\n')
     for d in result['detectors']:
         print(d['detector'], 'shape', d['shape'], '| exact pixel/padding planes:', d['exact_payload_planes'])
-        print('EXACT retained direct samples:', d['direct_samples_exact'])
+        if d['direct_samples_exact'] is not None:
+            print('EXACT retained direct samples:', d['direct_samples_exact'])
+        else:
+            print('DIRECT SITE RECORDS:', d['direct_site_records'], '(no historical equality asserted)')
         print('PAIR/EXPOSURE ROI RECORDS:', d['pair_roi_records'], d['exposure_roi_records'])
         print('REASON CODES:', d['reason_histogram'])
         print('COVERAGE:', d['fit_states'], '| SELECTED:', d['selected_pixels'], '/', d['pixels'])
         print('BPM OUTPUT MODE:', d['output_mode'], '| zero means no detected reasons, not certification')
         for row in d['roi_summary']:
             print('ROI:', row['roi'], '| ADU range:', row['signal_adu_range'], '| spatial variance ADU2 range:', row['spatial_variance_adu2_range'])
-    print('PASS: saved schema/QC/bindings, exact retained direct samples and final pixel payloads; published files unchanged')
+    print('PASS: saved schema/QC/bindings and exact detector/final pixel payloads; published files unchanged')
     print('REPORT:', directory/'inspection.json')
     print('Scientific inspection and QC Viewer acceptance remain pending.')
 
