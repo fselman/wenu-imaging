@@ -16,7 +16,7 @@ typedef struct {
     int *hdus;
     size_t hdu_count, configuration_index;
     int bin_x, bin_y, bpm_hdu, bpm_good_value, bpm_active_only;
-    char *bpm_path;
+    char *bpm_path, *dependency_path;
     mef_bias_settings settings;
     mef_layout_map **raw_layouts, *mask_map;
     char temporary_path[MEF_PRODUCT_PATH_SIZE];
@@ -51,6 +51,8 @@ typedef struct {
     const char *diagnostic;
     size_t frame_count;
     int show_usage;
+    char *project_raw, *project_output, *project_calibration;
+    int classified_input;
 } mef_bias;
 
 int mef_bias_parse_nonnegative_int(const char *, int *);

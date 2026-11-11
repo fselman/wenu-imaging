@@ -114,7 +114,7 @@ mef_status mef_linearity_prepare_pairs(const mef_linearity_pairs_input *p,
     mask=pixelmap_new(aw,ah);if(!mask)goto done;
     mef_linearity_prepare_frame_input in;
     memset(&in,0,sizeof in);in.settings=*g;in.max_working_pixels=max_working_pixels;
-    for(int b=0;b<2;++b){
+    for(int b=0;b<(p->raw_bias[0]?2:0);++b){
         if(p->processed) {
             if(!p->bias_traces[b]) {status=MEF_ERR_INPUT;goto done;}
             memcpy(r->row_correction+((size_t)p->frames+b)*h,p->bias_traces[b],(size_t)h*sizeof(pixelvalue));
@@ -149,7 +149,7 @@ mef_status mef_linearity_prepare_pairs(const mef_linearity_pairs_input *p,
             size_t k=(size_t)y*aw+x,raw=(size_t)(y+g->trim[2]-1)*w+x+g->trim[0]-1;
             int good=p->bpm_flags?!(p->bpm_flags[k]&p->reject_bits):!p->bpm_binary||p->bpm_binary->data[k]==1;
             const image_t *planes4[]={p->raw[members[0]],p->raw[members[1]],p->raw_bias[0],p->raw_bias[1]};
-            for(int j=0;j<4;++j)if(!isfinite(planes4[j]->data[raw])||planes4[j]->data[raw]>=p->saturation_raw)good=0;
+            for(int j=0;j<(p->raw_bias[0]?4:2);++j)if(!isfinite(planes4[j]->data[raw])||planes4[j]->data[raw]>=p->saturation_raw)good=0;
             mask->data[k]=(binpix)good;
             /* Per-ROI count equality below rejects any corrected nonfinite on
              * an admitted measured site without imposing a new outside-ROI cut. */

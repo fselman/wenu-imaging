@@ -2,6 +2,11 @@
 # Copy beside the already qualified native bias.toml; do not replace that file.
 bias_recipe_schema_version = 1
 settings = "bias.toml"
+project = "project.toml"
+run = "cal/bias/ocam-native-001"
+
+[inputs]
+list = "omegacam-bias.list"
 
 [bias]
 # Default: average the two central samples when an even number is retained.
@@ -16,7 +21,7 @@ readout_id = "OMEGACAM:normal:ordered:1x1"
 bin_x = 1
 bin_y = 1
 # Retained structural BPM for this project; change explicitly for another project.
-input_bpm = "/Users/fselman/Pictures/OCAM/wenu-imaging/legacy-bpm-structure-b1h9egzp/prepared/OCAM_BPM_1x1_structural.fits"
+input_bpm = "characterization-3e8u07mf/OCAM_BPM_1x1_structural.fits"
 bpm_good_value = 1
 bpm_coordinates = "active"
 amplifier_id = "explicit-whole-detector"

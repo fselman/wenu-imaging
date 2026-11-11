@@ -549,6 +549,7 @@ def main():
     if args.native_recipe:
         required += ['Pycavi2/tests/bpm_linearity_recipe_contract.py',
                      'Pycavi2/tests/bpm_linearity_native_contract.py',
+                     'Pycavi2/tests/bias_classified_list_contract.py',
                      'Pycavi2/tests/bpm_saved_context_contract.py',
                      'mefpp2/ins/mef/common/mef_recipe_catalogue.def',
                      'mefpp2/ins/mef/common/mef_runtime.h', 'tools/run-bpm-linearity.py',
@@ -569,6 +570,9 @@ def main():
         run([args.asdf_python, validation/'Pycavi2/tests/bpm_linearity_native_contract.py',
              '--command', candidate/'mefpp_recipe', '--source-revision', args.revision,
              '--work-parent', reduced], 'native-toml-recipe-checks', orchestration)
+        run([args.asdf_python, validation/'Pycavi2/tests/bias_classified_list_contract.py',
+             '--command', candidate/'mefpp_recipe', '--work-parent', reduced],
+            'bias-classified-list-checks', orchestration)
         run([args.asdf_python, validation/'mefpp2/tests/recipe_file_hash_contract.py',
             '--probe', candidate/'recipe_file_hash_probe', '--work-parent', reduced],
             'recipe-file-identity-checks', orchestration)

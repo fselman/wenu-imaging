@@ -26,120 +26,7 @@ response_low = 0.5 # default
 response_high = 1.5 # default
 
 [inputs]
-# Paths below are relative to the project raw root; order is significant.
-# Bias indices are 0..9; explicit flat indices start at 10 and remain unique.
-bias = [
-  "OMEGA.2017-03-13T09:50:05.624.fits",
-  "OMEGA.2017-03-13T09:50:48.373.fits",
-  "OMEGA.2017-03-13T09:51:31.403.fits",
-  "OMEGA.2017-03-13T09:52:14.404.fits",
-  "OMEGA.2017-03-13T09:52:57.394.fits",
-  "OMEGA.2017-03-13T09:53:40.384.fits",
-  "OMEGA.2017-03-13T09:54:23.384.fits",
-  "OMEGA.2017-03-13T09:55:06.394.fits",
-  "OMEGA.2017-03-13T09:55:49.384.fits",
-  "OMEGA.2017-03-13T09:56:31.804.fits",
-]
-
-[[inputs.flat]]
-input_index = 10
-path = "OMEGA.2017-03-13T11:34:43.759.fits"
-pair = 0
-
-[[inputs.flat]]
-input_index = 11
-path = "OMEGA.2017-03-13T11:35:30.570.fits"
-pair = 1
-
-[[inputs.flat]]
-input_index = 12
-path = "OMEGA.2017-03-13T11:37:25.420.fits"
-pair = 2
-
-[[inputs.flat]]
-input_index = 13
-path = "OMEGA.2017-03-13T11:38:50.390.fits"
-pair = 3
-
-[[inputs.flat]]
-input_index = 14
-path = "OMEGA.2017-03-13T11:39:40.380.fits"
-pair = 4
-
-[[inputs.flat]]
-input_index = 15
-path = "OMEGA.2017-03-13T11:40:35.390.fits"
-pair = 5
-
-[[inputs.flat]]
-input_index = 16
-path = "OMEGA.2017-03-13T11:41:50.391.fits"
-pair = 6
-
-[[inputs.flat]]
-input_index = 17
-path = "OMEGA.2017-03-13T11:42:55.391.fits"
-pair = 7
-
-[[inputs.flat]]
-input_index = 18
-path = "OMEGA.2017-03-13T11:44:30.391.fits"
-pair = 8
-
-[[inputs.flat]]
-input_index = 19
-path = "OMEGA.2017-03-13T11:46:16.391.fits"
-pair = 9
-
-[[inputs.flat]]
-input_index = 20
-path = "OMEGA.2017-03-13T11:47:08.392.fits"
-pair = 9
-
-[[inputs.flat]]
-input_index = 21
-path = "OMEGA.2017-03-13T11:48:00.392.fits"
-pair = 8
-
-[[inputs.flat]]
-input_index = 22
-path = "OMEGA.2017-03-13T11:49:45.392.fits"
-pair = 7
-
-[[inputs.flat]]
-input_index = 23
-path = "OMEGA.2017-03-13T11:51:20.392.fits"
-pair = 6
-
-[[inputs.flat]]
-input_index = 24
-path = "OMEGA.2017-03-13T11:52:25.393.fits"
-pair = 5
-
-[[inputs.flat]]
-input_index = 25
-path = "OMEGA.2017-03-13T11:53:40.483.fits"
-pair = 4
-
-[[inputs.flat]]
-input_index = 26
-path = "OMEGA.2017-03-13T11:54:35.393.fits"
-pair = 3
-
-[[inputs.flat]]
-input_index = 27
-path = "OMEGA.2017-03-13T11:55:25.563.fits"
-pair = 2
-
-[[inputs.flat]]
-input_index = 28
-path = "OMEGA.2017-03-13T11:56:50.383.fits"
-pair = 1
-
-[[inputs.flat]]
-input_index = 29
-path = "OMEGA.2017-03-13T11:58:45.683.fits"
-pair = 0
+list = "omegacam-linearity.list"
 
 [[detectors]]
 detector_id = "ESO_CCD_#65"
@@ -151,11 +38,11 @@ master_bias = "characterization-3e8u07mf/OCAM_MB_CCD65_candidate.fits"
 master_hdu = 1
 master_sha256 = "b490d75568055fa5cc4a267f79e79e4768c26e220486e40cb6b2bccdcbb2a0c3"
 input_bpm = "omitted" # alternatively an explicit calibration path, with bpm_hdu
-bias_accepted = [true, true, true, true, true, true, true, true, true, true] # retained CCD65 master membership
 reference_rois = ["CCD65.near_readout", "CCD65.serial_far", "CCD65.parallel_far", "CCD65.far_corner", "CCD65.center"]
 max_loaded_pixels = 206467604
 max_rows = 100
 
+# Direct pixel sites; these do not define the rectangular measurement ROIs.
 [[detectors.sites]]
 roi = "CCD65.near_readout"
 x = 384

@@ -51,8 +51,6 @@ typedef struct {
     int show_usage, qc, measure_only;
 } mef_bpm_linearity;
 
-int mef_bpm_linearity_project(const char *,toml_result_t *,char **,
-    int (*)(void *,const char *),void *);
 int mef_bpm_linearity_compile(const char *,const char *,int,char **,
     mef_bpm_linearity_frozen **,size_t *,char *,size_t);
 

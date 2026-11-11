@@ -6,7 +6,7 @@
 \emergencystretch=2em
 \title{bpm-linearity guide}
 \author{Wenu-imaging}
-\date{11 November 2026}
+\date{10 November 2026}
 \begin{document}
 \maketitle
 \section*{Executive summary}
@@ -17,12 +17,11 @@ robust response BPM. Measure linearity ROIs, pairs and direct sites from that
 same cube, publish FITS/ASDF, then release it. Linearity is measurement only:
 no physical response correction, shutter solution or gain conversion is applied.
 
-\textbf{Qualification.} Synthetic Mac checks and supplied-mask CCD65 comparison
-passed. Observational BPM creation, WFI and full-mosaic tests remain pending.
+\textbf{Qualification.} Earlier CCD65 saved-product checks passed. The classified-list
+interface still requires Mac qualification; WFI and full-mosaic review are pending.
 
 \section*{Command and help}
-Run from orchestration; reference a project TOML and use a fresh empty reduced run.
-The recipe command processes and publishes the requested products:
+Run from orchestration with a fresh empty reduced run:
 \begin{verbatim}
 mefpp_recipe cal bpm-linearity --config RECIPE.toml --qc false
 
@@ -32,10 +31,8 @@ mefpp_recipe cal bpm-linearity --help
 mefpp_recipe cal linearity --help
 mefpp_recipe cal bias --help
 \end{verbatim}
-Top-level help identifies commands; category help lists all recipes (including
-explicitly pending entries); each implemented
-operation reports its inputs, options, defaults and outputs. Help requires no
-configuration or observation files and performs no processing.
+Help is data-free: categories list recipes and pending entries; operation help
+reports inputs, options, defaults and outputs.
 
 \begin{tabular}{p{.26\linewidth}p{.67\linewidth}}
 \textbf{Public option} & \textbf{Meaning / default}\\\hline
@@ -47,18 +44,21 @@ configuration or observation files and performs no processing.
 \section*{Inputs and directory contract}
 Project TOML defines raw, calibration, reduced, work and log roots; its containing
 directory is orchestration. Raw observations and input calibrations are read-only.
-Lists/TOMLs belong in orchestration; products, private work, logs and receipts
-belong below reduced. The recipe selects ordered flats and bias evidence, explicit
-pairs/times, master-bias and optional BPM bindings, detector/HDU/configuration-slot
-mappings, ROIs and direct sites. These identities are distinct; HDU order does not
-supply a detector mapping. No directory-based input discovery is implied.
+Lists/TOMLs belong in orchestration; products, work and logs belong below reduced.
+Recipe \texttt{inputs.list} references a separate ordered text file:
+\begin{verbatim}
+OMEGA.frame1.fits  FLAT,DOME
+OMEGA.frame2.fits  FLAT,DOME
+\end{verbatim}
+Each row is path plus \texttt{DPR.TYPE}; tabs permit spaces in paths. Comments and
+blank lines are ignored. Image/list paths use the raw/recipe roots respectively.
+Invalid or duplicate inputs fail. Save order, classifications and bindings.
 
-Native schema 2 reads ordinary recipe inputs directly; historical sample archives
-and handoffs are not prerequisites. A supplied master with its SHA256 and explicit
-bias membership is required; no zero substitute or automatic dependency reduction
-is used. Historical comparison remains a separate saved-data check. The WFI
-example is a provisional two-level engineering test; its fingerprint, membership
-and proposed site must be reviewed before execution.
+Supply a reduced master bias and optional BPM; dependency-list reduction is
+deferred. Optional BIAS rows provide diagnostics, never master construction.
+Flat pairs derive from classification and header exposure times: exactly two
+members per group within the profile tolerance; missing/ambiguous partners fail.
+Review calibration, timing tolerance and site before using the WFI example.
 
 \newpage
 \section*{Recipe settings and defaults}
@@ -80,19 +80,19 @@ in detector-catalogue order after reviewing the actual bindings.
 \texttt{bpm.upper\_fraction} & Required, $(0,1]$; example 0.85.\\
 \texttt{bpm.minimum\_span\_fraction} & Required, $(0,1]$; example 0.15.\\
 \texttt{bpm.maximum\_pair\_difference} & Required, $\geq0$; example 0.02.\\
-\texttt{inputs.bias}, \texttt{inputs.flat} & Ordered bias paths; flat paths with integer pair IDs.\\
+\texttt{inputs.list} & Classified observation list; no inline paths or pair IDs.\\
 \texttt{detectors} & Explicit detector/configuration/HDU/readout bindings.\\
 \end{tabular}
 
 Each detector declares \texttt{master\_bias}, \texttt{master\_hdu},
-\texttt{master\_sha256}, \texttt{bias\_accepted}, reference ROI IDs, direct
+\texttt{master\_sha256}, reference ROI IDs, direct
 \texttt{sites} (ROI, active x/y), and pixel/row bounds. \texttt{input\_bpm} is
 an explicit calibration path with \texttt{bpm\_hdu}, or \texttt{omitted}.
 Common \texttt{hdu} is required; optional \texttt{flat\_hdus}/\texttt{bias\_hdus}
-arrays override it per input. Raw paths use the project raw root; master/BPM paths
-use its calibration root. Bias indices are 0 to $N_{\rm bias}-1$; omitted flat \texttt{input\_index}
-defaults to $N_{\rm bias}$ plus flat ordinal. Explicit indices must be globally
-unique; \texttt{asset} defaults to basename.
+arrays override it per input. Raw paths use the raw root; master/BPM paths use
+its calibration root. Original indices are list-row ordinals. Rectangular ROIs
+are defined in the processing profile (\texttt{xmin/xmax/ymin/ymax}); named direct
+sites use single-pixel \texttt{x/y}. The two are distinct measurements.
 
 Optional \texttt{identity} defaults: \texttt{identity\_key=EXTNAME},
 \texttt{amplifier\_key=-} (unused), bin keys
@@ -148,7 +148,7 @@ scan-corrected/active and receives no further scan correction. Bias-role frames
 have no master subtraction. Active BPMs do not mask electronic scan reads.
 
 For each ROI, the common population $\mathcal P$ passes the fixed mask and
-finite/raw-saturation checks in both flats and both reference biases. Each member
+finite/raw-saturation checks in both flats and, when supplied, both raw reference biases. Each member
 retains its own exposure time, identity and measurement. For $N=|\mathcal P|$:
 \begin{align}
 \bar S_i&=N^{-1}\sum_{p\in\mathcal P}S_{ip}, &
@@ -162,7 +162,7 @@ Spatial variance is not automatically a noise weight or conversion-gain estimate
 Direct sites retain physical pixel values; ROI means do not replace them in a
 nonlinear pixel model. Units remain ADU, ADU$^2$ and seconds.
 
-Raw-pair diagnostics keep their original stage and common populations:
+With raw BIAS evidence, raw-pair diagnostics retain their original stage and populations:
 \begin{align}
 \mathrm{RON}_{\rm ADU}&=\sqrt{v(B_1-B_2)/2},\\
 \mathrm{RON}_{\rm MAD}&=\frac{1.4826}{\sqrt2}
@@ -170,6 +170,8 @@ Raw-pair diagnostics keep their original stage and common populations:
 g&=\frac{\bar F_1+\bar F_2-\bar B_1-\bar B_2}
 {v(F_1-F_2)-v(B_1-B_2)}\quad[\mathrm{electrons/ADU}].
 \end{align}
+Without raw BIAS evidence, RON/gain diagnostics are explicitly unavailable;
+corrected ROI/pair/site measurements continue on the two-flat population.
 Here $v$ is ordinary sample variance on the declared raw population; MAD is
 optional. Gain requires a positive denominator and suitable flat pairs; it is
 a recorded diagnostic, not a conversion applied to the cube. Corrected
@@ -253,7 +255,7 @@ Helpers below are in \path{mefpp2/ins/mef/common/}.
 
 \begin{tabular}{p{.25\linewidth}p{.68\linewidth}}
 \textbf{Stage} & \textbf{Source / landmark}\\\hline
-Admission & \path{mef_bpm_linearity_compile.c}, \path{mef_bpm_linearity_project.c};
+Admission & \path{mef_bpm_linearity_compile.c}, \path{mef_project.c};
 config/inputs/bindings helpers; \texttt{BPM-LINEARITY-ADMISSION}.\\
 Detector/cube & \path{mef_bpm_linearity_process.c}, \path{mef_detector_cube.c};
 \texttt{BPM-LINEARITY-INGESTION}.\\

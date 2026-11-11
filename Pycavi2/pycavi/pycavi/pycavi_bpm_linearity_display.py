@@ -31,7 +31,7 @@ class ManifestReader:
                 bpm_path = self.local(member['bpm']['asdf'])
                 self.inputs[str(bpm_path)] = member['bpm']['sha256'][member['bpm']['asdf']]
             value = decoded['preparation']
-            bias = value['raw_bias_diagnostics'][0]['table']['rows']
+            bias = value['raw_bias_diagnostics'][0]['table']['rows'] if value['raw_bias_diagnostics'] else []
             require(all(d['table']['rows'] == bias for d in value['raw_bias_diagnostics']),
                     'Raw bias diagnostics differ across pairs')
             q = decoded['bpm']

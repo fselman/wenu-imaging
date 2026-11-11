@@ -1,0 +1,72 @@
+# Classified observation-list contract; dependencies are reduced products.
+bias_recipe_schema_version = 1
+project = "project.toml"
+settings = "bias.toml"
+run = "cal/bias/wfi-native-001"
+
+[inputs]
+list = "wfi-bias.list"
+
+[bias]
+detectors = "all"
+median_even_handling = "average"
+mad = false
+ron_pair = [0, 1]
+high_sigma = 5.0
+readout_id = "WFI:normal:1x1"
+bin_x = 1
+bin_y = 1
+input_bpm = "omitted"
+amplifier_id = "explicit-whole-detector"
+
+[provenance]
+primary = ["MJD-OBS", "DATE-OBS", "TIMESYS", "EXPTIME", "INSTRUME"]
+detector = ["EXTNAME", "EXTVER"]
+
+[[detector]]
+id = "WIN1.CHIP1.OUT1"
+configuration_detector = 0
+hdus = [1]
+expected_extname = "WIN1.CHIP1.OUT1"
+
+[[detector]]
+id = "WIN1.CHIP2.OUT1"
+configuration_detector = 1
+hdus = [2]
+expected_extname = "WIN1.CHIP2.OUT1"
+
+[[detector]]
+id = "WIN1.CHIP3.OUT1"
+configuration_detector = 2
+hdus = [3]
+expected_extname = "WIN1.CHIP3.OUT1"
+
+[[detector]]
+id = "WIN1.CHIP4.OUT1"
+configuration_detector = 3
+hdus = [4]
+expected_extname = "WIN1.CHIP4.OUT1"
+
+[[detector]]
+id = "WIN1.CHIP8.OUT1"
+configuration_detector = 4
+hdus = [5]
+expected_extname = "WIN1.CHIP8.OUT1"
+
+[[detector]]
+id = "WIN1.CHIP7.OUT1"
+configuration_detector = 5
+hdus = [6]
+expected_extname = "WIN1.CHIP7.OUT1"
+
+[[detector]]
+id = "WIN1.CHIP6.OUT1"
+configuration_detector = 6
+hdus = [7]
+expected_extname = "WIN1.CHIP6.OUT1"
+
+[[detector]]
+id = "WIN1.CHIP5.OUT2"
+configuration_detector = 7
+hdus = [8]
+expected_extname = "WIN1.CHIP5.OUT2"

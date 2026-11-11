@@ -93,8 +93,23 @@ Bias is accepted. The BPM/linearity shared-cube processing has focused numerical
 and Mac evidence. Native schema-2 admission and the unified command/help catalogue
 are implemented and passed the complete synthetic Mac gate. A bounded
 supplied-mask/QC-off CCD65 direct CLI run reproduces the saved reference
-measurements. Observational BPM creation without an input mask, WFI and
-full-mosaic qualification remain pending; the new command is not selected.
+measurements. Earlier no-mask CCD65 saved-product and Viewer checks passed. The revised
+classified-list interface, WFI and full-mosaic qualification remain pending; the new command is not selected.
 Historical binding compilation is compatibility only. See the [roadmap](roadmap.md).
 Configuration resources under `docs/architecture/proposed/` retain their existing
 paths; their older designs do not override this architecture or current owner decisions.
+
+## Shared processing-list contract
+
+BPM/linearity and bias use recipe `inputs.list`, referencing an ordered text list
+of `path<TAB>DPR.TYPE` observations. The recipe owns processing policy and explicit
+reduced calibration bindings, not observation filenames or pair assignments.
+Project TOML owns roots. Native admission derives flat pairs from classification
+and header exposure times; missing/ambiguous groups are refused. Dependencies
+are reduced products only; reducing dependency lists is deferred. Optional raw
+BIAS rows are diagnostic processing inputs, never a request to construct a master.
+With a flats-only list, bias-pair RON/gain are unavailable; ROI/pair/site measurements
+continue. Rectangular ROIs belong to the processing profile; direct sites are
+named individual pixels. Preserve list/classification/order/bindings in ASDF.
+Old inline recipes and unclassified bias lists are compatibility only. The new
+classified-list interface needs Mac qualification before selection/acceptance.

@@ -17,13 +17,34 @@ defaults and outputs. Guides contain concise native Unix commands without `nice`
 Project TOML owns directory roots. Recipes reference it and select operations,
 controls and inputs without redeclaring raw/reduced roots.
 
+## Shared observation/dependency input contract
+
+All recipes process an ordered external observation list. Each non-comment row is
+`path<TAB>DPR.TYPE` (whitespace separation also allowed for paths without spaces).
+Relative observation paths use the project raw root; list paths use orchestration.
+The recipe contains list references and processing policy, never inline observation
+filenames or pair assignments. Preserve the list bytes, classification, order and
+resolved identities in provenance. Duplicate/malformed/unsupported rows fail admission.
+
+Dependencies are explicit already reduced products (bias, BPM, dark, flat, etc.).
+No dependency list starts another reduction. Dependency planning remains deferred.
+BPM/linearity pairs flat inputs by classification and header exposure time within
+the configured tolerance; every group must have exactly two unambiguous members.
+Optional BIAS observations in the same list are raw diagnostic evidence only,
+never a request to rebuild the supplied master. With no raw bias pair, RON/gain
+and bias-pair diagnostics are unavailable; flat ROI/pair/site measurements remain.
+The generated BPM never changes the measurement mask/population in the same run.
+Rectangular ROIs live in the processing profile; direct sites are explicitly named
+single pixels. Existing inline-input recipes and unclassified bias lists remain
+legacy compatibility only; new examples use the shared classified-list contract.
+
 ## Required BPM/linearity detector flow
 
 The shared-cube source is owner-accepted. The complete synthetic Mac gate covers
 native admission/default indices, both QC modes, supplied-mask reuse and
 omitted-mask creation/publication. A bounded supplied-mask/QC-off CCD65 direct
-CLI run reproduces all five saved measurement groups. Observational creation
-without a mask, WFI and full-mosaic qualification remain pending; the staged
+CLI run reproduces all five saved measurement groups. Earlier no-mask CCD65 saved-product and Viewer checks passed; the revised
+classified-list interface, WFI and full-mosaic qualification remain pending; the staged
 command is not selected.
 
 1. Admit ordered input identities, geometry, fixed calibrations and requested steps.

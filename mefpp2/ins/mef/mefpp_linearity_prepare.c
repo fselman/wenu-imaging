@@ -23,14 +23,14 @@ static int bias_list(const char *path,bias_source *items,int *count,char **owner
         char *v[5];if(fields(line,v,5)!=5)return 0;
         bias_source *b=items+*count;
         if(!int_number(v[0],INT_MAX,&b->input.index)||!int_number(v[1],127,&b->input.hdu)||
-           !int_number(v[4],1,&b->accepted)||strlen(v[2])>127||v[3][0]!='/')return 0;
+           (!strcmp(v[4],"-1")?(b->accepted=-1,0):!int_number(v[4],1,&b->accepted))||strlen(v[2])>127||v[3][0]!='/')return 0;
         b->input.asset=v[2];b->input.path=v[3];
         for(int j=0;j<*count;++j)if(b->input.index==items[j].input.index||
             !strcmp(b->input.asset,items[j].input.asset)||
             (!strcmp(b->input.path,items[j].input.path)&&b->input.hdu==items[j].input.hdu))return 0;
         ++*count;line=next;
     }
-    return *count>=3;
+    return *count==0 || *count>=2;
 }
 static int trace(FILE *f,const char *role,int index,int accepted,const pixelvalue *values,size_t rows)
 {
@@ -132,16 +132,19 @@ int mef_linearity_prepare_from_cube(int argc,char **argv,const mef_detector_cube
         if(!seen){first[pairs]=i;for(int j=i+1;j<p.flats;++j)if(!strcmp(p.flat[i].pair,p.flat[j].pair))second[pairs]=j;++pairs;}}
     if(!bind_master(&master,&p,&g,slot,bx,by))goto done;
     if(p.has_bpm&&!bind_source(&p.bpm,&p,&g,slot,bx,by,1,rw,rh))goto done;
-    for(int j=0;j<2;++j)if(!bind_source(&p.bias[j],&p,&g,slot,bx,by,0,rw,rh))goto done;
+    for(int j=0;j<p.biases;++j)if(!bind_source(&p.bias[j],&p,&g,slot,bx,by,0,rw,rh))goto done;
     int accepted=0;
     for(int i=0;i<nbias;++i){accepted+=biases[i].accepted;
         if(!bind_source(&biases[i].input,&p,&g,slot,bx,by,0,rw,rh))goto done;
         for(int j=0;j<p.flats;++j)if(!strcmp(biases[i].input.asset,p.flat[j].asset)||
             (!strcmp(biases[i].input.path,p.flat[j].path)&&biases[i].input.hdu==p.flat[j].hdu))goto done;
     }
-    if(accepted<g.minimum_frames)goto done;
+    /* A supplied master is never rebuilt; listed biases are diagnostic evidence. */
+    if(nbias && nbias<2)goto done;
+    if(!strcmp(p.value[21],"raw-pair-plan-v1") && accepted<g.minimum_frames)goto done;
+    (void)accepted;
     if(cube && !cube->qc) mad=0;
-    for(int j=0;j<2;++j){int found=0;for(int i=0;i<nbias;++i)if(same(&p.bias[j],&biases[i].input))++found;if(found!=1)goto done;}
+    for(int j=0;j<p.biases;++j){int found=0;for(int i=0;i<nbias;++i)if(same(&p.bias[j],&biases[i].input))++found;if(found!=1)goto done;}
     if(publish) {
         size_t n=strlen(argv[11]);
         struct stat st;
@@ -196,7 +199,7 @@ int mef_linearity_prepare_from_cube(int argc,char **argv,const mef_detector_cube
         in.measure_pairs=1;in.pair_with_mad=mad;in.max_pair_rows=rows;
         in.prepare_pairs=1;in.preparation_roi=rois[0];in.preparation_rois=(int)bound[0];in.max_working_pixels=budget;
         if(p.has_bpm){in.bpm_map=p.bpm.map;in.bpm_reference=&bpm_ref;}
-        for(int j=0;j<2;++j){bias_ref[j]=reference(&p.bias[j],p.value[0]);in.raw_bias_map[j]=p.bias[j].map;in.raw_bias_reference[j]=&bias_ref[j];}
+        for(int j=0;j<p.biases;++j){bias_ref[j]=reference(&p.bias[j],p.value[0]);in.raw_bias_map[j]=p.bias[j].map;in.raw_bias_reference[j]=&bias_ref[j];}
         mef_status status=cube?mef_linearity_from_cube(&in,cube,NULL,&result):mef_linearity_from_files(&in,NULL,&result);
         if(status!=MEF_OK){fprintf(stderr,"Pair %d preparation status %d\n",pair,(int)status);goto done;}
         if(archive && !mef_linearity_archive_add_pair(archive,result)) goto done;

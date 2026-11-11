@@ -3,7 +3,7 @@
 # Project owns all roots; this template changes no active controls or data.
 # Use a fresh empty reduced run and a fresh control-directory basename.
 # WFI CHIP1: provisional two-level engineering test, not a full linearity sequence.
-# Fill the actual master SHA256 and reviewed bias membership before execution.
+# Rectangular ROIs are in the processing profile; sites below are individual pixels.
 # The center site below is a candidate requiring review.
 bpm_linearity_recipe_schema_version = 2
 project = "project.toml"
@@ -28,40 +28,7 @@ response_low = 0.5 # default
 response_high = 1.5 # default
 
 [inputs]
-# Paths below are relative to the project raw root; order is significant.
-# Bias indices are 0..9; explicit flat indices start at 10 and remain unique.
-bias = [
-  "WFI.2003-05-30T19:14:54.578.fits",
-  "WFI.2003-05-30T19:16:06.007.fits",
-  "WFI.2003-05-30T19:17:09.628.fits",
-  "WFI.2003-05-30T19:18:13.925.fits",
-  "WFI.2003-05-30T19:19:16.887.fits",
-  "WFI.2003-05-30T19:20:23.198.fits",
-  "WFI.2003-05-30T19:21:28.322.fits",
-  "WFI.2003-05-30T19:22:32.402.fits",
-  "WFI.2003-05-30T19:23:39.607.fits",
-  "WFI.2003-05-30T19:24:43.425.fits",
-]
-
-[[inputs.flat]]
-input_index = 10
-path = "WFI.2003-05-30T20:29:31.182.fits"
-pair = 0
-
-[[inputs.flat]]
-input_index = 11
-path = "WFI.2003-05-30T20:30:38.833.fits"
-pair = 0
-
-[[inputs.flat]]
-input_index = 12
-path = "WFI.2003-05-30T20:39:52.692.fits"
-pair = 1
-
-[[inputs.flat]]
-input_index = 13
-path = "WFI.2003-05-30T20:42:00.041.fits"
-pair = 1
+list = "wfi-linearity.list"
 
 [[detectors]]
 detector_id = "WIN1.CHIP1.OUT1"
@@ -73,8 +40,6 @@ master_bias = "bias/main-acceptance-3ug8nsjh/CMDP.2026-11-09T15:14:23.370Z.001.f
 master_hdu = 1
 master_sha256 = "REPLACE_WITH_ACTUAL_MASTER_SHA256"
 input_bpm = "omitted" # alternatively an explicit calibration path, with bpm_hdu
-# Replace this deliberately invalid placeholder with ten reviewed booleans.
-bias_accepted = ["REPLACE_WITH_REVIEWED_MASTER_MEMBERSHIP"]
 reference_rois = ["CHIP1.near_readout", "CHIP1.serial_far", "CHIP1.parallel_far", "CHIP1.far_corner", "CHIP1.center"]
 max_loaded_pixels = 60000000
 max_rows = 20

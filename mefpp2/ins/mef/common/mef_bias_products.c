@@ -18,6 +18,10 @@ int mef_bias_begin(mef_bias *recipe)
     if (recipe->archive == NULL) {
         return 0;
     }
+    if (recipe->classified_input &&
+        !mef_bias_product_qc_input_list(recipe->archive, recipe->listing_path)) {
+        return 0;
+    }
     return mef_recipe_run_begin(recipe->run, recipe->config_path, recipe->listing_path,
         (const char *const *)recipe->raw_paths, recipe->frame_count);
 }

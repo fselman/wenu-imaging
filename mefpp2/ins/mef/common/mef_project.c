@@ -3,7 +3,8 @@
  */
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bpm_linearity.h"
+#include "mef_project.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -183,7 +184,7 @@ static int visit(project_composition *c, const char *name, int depth)
     return 1;
 }
 
-int mef_bpm_linearity_project(const char *path, toml_result_t *out, char **origin,
+int mef_project_read(const char *path, toml_result_t *out, char **origin,
     int (*freeze)(void *, const char *), void *user)
 {
     project_composition *c = calloc(1, sizeof(*c));

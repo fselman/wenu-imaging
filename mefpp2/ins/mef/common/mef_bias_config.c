@@ -20,6 +20,7 @@
 struct mef_bias_config {
     toml_result_t parsed;
     char *path, *source, **argv;
+    const char *project, *run;
     int argc, capacity;
     const char *primary[16], *detector[16];
     size_t primary_count, detector_count;
@@ -233,7 +234,7 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     mef_bias_config **owner, char *message, size_t size)
 {
     static const char *root_keys[] = {
-        "bias_recipe_schema_version", "settings", "bias", "detector", "provenance"};
+        "bias_recipe_schema_version", "settings", "bias", "detector", "provenance", "inputs", "project", "run"};
     static const char *bias_keys[] = {"detectors", "reference_detector", "mad", "ron_pair",
         "high_sigma", "readout_id", "bin_x", "bin_y", "input_bpm", "bpm_hdu", "bpm_good_value",
         "bpm_coordinates", "bpm_expected_extname", "amplifier_id", "median_even_handling", "qc"};
@@ -330,6 +331,15 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     toml_datum_t version = toml_get(root, "bias_recipe_schema_version");
     if (version.type != TOML_INT64 || version.u.int64 != 1) {
         goto done;
+    }
+    recipe->project=toml_string_value(toml_get(root,"project"));
+    recipe->run=toml_string_value(toml_get(root,"run"));
+    toml_datum_t input_table=toml_get(root,"inputs");
+    const char *input_list=NULL;
+    if (input_table.type!=TOML_UNKNOWN) {
+        static const char *input_keys[]={"list"};
+        input_list=toml_string_value(toml_get(input_table,"list"));
+        if(!TABLE(input_table,input_keys) || !input_list || !recipe->project || !recipe->run) goto done;
     }
     bias = toml_get(root, "bias");
     entries = toml_get(root, "detector");
@@ -455,6 +465,12 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
         !append_option_value(recipe, "--reference-detector", reference)) {
         goto done;
     }
+    if(input_list) {
+        char *resolved=resolve_recipe_path(recipe,input_list);
+        int supplied=resolved && append_option_value(recipe,"--input",resolved);
+        free(resolved);
+        if(!supplied) goto done;
+    }
     for (int i = 3; i < argc; i += 2) {
         if (i + 1 >= argc) {
             goto done;
@@ -462,7 +478,10 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
         if (!strcmp(argv[i], "--config") || !strcmp(argv[i], "--detectors")) {
             continue;
         }
-        if (strcmp(argv[i], "--bias") && strcmp(argv[i], "--output") &&
+        if (input_list && (!strcmp(argv[i],"--bias") || !strcmp(argv[i],"--input"))) {
+            reason="Specify one processing list, in recipe inputs.list or CLI"; goto done;
+        }
+        if (strcmp(argv[i], "--input") && strcmp(argv[i], "--bias") && strcmp(argv[i], "--output") &&
             strcmp(argv[i], "--output-dir") && strcmp(argv[i], "--qc")) {
             reason = "Recipe TOML owns detector/measurement choices; do not mix legacy CLI fields";
             goto done;
@@ -552,7 +571,7 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
                 } else {
                     const char *text = toml_string_value(value);
                     char *absolute = NULL;
-                    if (j == 3 && strcmp(mask, "omitted")) {
+                    if (j == 3 && strcmp(mask, "omitted") && !recipe->project) {
                         text = absolute = resolve_recipe_path(recipe, mask);
                     }
                     int okay = text && append_option_value(recipe, field_args[j], text);
@@ -585,3 +604,6 @@ const char *mef_bias_median_even_handling(const mef_bias_config *recipe)
 {
     return recipe ? recipe->median_even_handling : NULL;
 }
+
+const char *mef_bias_project(const mef_bias_config *p) { return p?p->project:NULL; }
+const char *mef_bias_run(const mef_bias_config *p) { return p?p->run:NULL; }

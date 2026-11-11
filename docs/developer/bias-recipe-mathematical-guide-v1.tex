@@ -17,14 +17,23 @@
 \newcommand{\Var}{\operatorname{Var}}\newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\ind}{\mathbf{1}}
 \title{\vspace{-10mm}Bias recipe\\Mathematics and implementation\\\large Version 1 --- review copy}
-\author{Wenu-imaging}\date{8 November 2026; human source-review edition}
+\author{Wenu-imaging}\date{10 November 2026; human source-review edition}
 \begin{document}\maketitle\vspace{-6mm}
-\section{Purpose and authority}
+\section{Executive summary and authority}
 The recipe estimates a master bias \emph{signal} by correcting the electronic
 scan level separately in every input row, trimming the active rectangle,
 rejecting entire frames by their corrected active-area means, and stacking the
 retained frames with the existing Eclipse pixel median. QC describes the
 inputs, corrections and master; it does not silently modify the result.
+
+\textbf{Shared input contract.} Run \texttt{mefpp\_recipe cal bias --config RECIPE.toml}
+from orchestration. The recipe references \code{project.toml}, numerical settings,
+\code{inputs.list} and a fresh reduced \code{run}. Each processing-list row is
+\code{path<TAB>DPR.TYPE}; bias accepts \code{BIAS} only. Image paths are relative
+to the project raw root; calibration paths use its reduced calibration root.
+Optional BPMs are already reduced products. Dependency-list reduction is deferred.
+The native archive preserves the classified list. Legacy \code{--bias} lists
+remain compatible; new recipes use the same list contract as BPM/linearity.
 
 This guide explains the implemented estimators and their source mapping.
 Sparse source landmarks identify scientific stages without depending on line
@@ -610,8 +619,8 @@ units, state and definitions, not merely collect numeric keyword values.
 
 \subsection*{Version domains}
 The retained native library version 0.3.0, ASDF file/core 1.6, application schema
-2.0.0, mapping identifier \code{bias-scalar/1}, and Python ASDF 6 runtime refer
-to different version domains. They must not be compared as though they were
+2.0.0 and mapping identifier \code{bias-scalar/1} refer to different version
+domains. They must not be compared as though they were
 one software version. The native interface includes the qualified memory-backed
 readback path for the relevant library limitation.
 

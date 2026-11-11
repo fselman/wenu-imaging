@@ -25,8 +25,8 @@ identity guards, shared-cube ownership, both QC modes, supplied-mask skip,
 robust BPM creation, native ASDF and independent saved readers. The earlier
 cec9626 supplied-mask/QC-off direct CLI CCD65 run matches the retained reference
 in all five decoded measurement groups, with 32 image loads/30 corrections.
-Observational creation without an input mask, WFI and full-mosaic qualification
-remain pending. The new command is staged, not selected. Keep the accepted bias
+The earlier no-mask CCD65 run passed saved-product checks and owner Viewer inspection.
+The revised classified-list interface, WFI and full-mosaic qualification remain pending. The new command is staged, not selected. Keep the accepted bias
 producer and active controls unchanged. Evidence and exact artifact locations
 are recorded in PR #305.
 An explicit assembly section selects the reference detector for final MEF/QC.
@@ -47,7 +47,8 @@ create/publish its robust-fit BPM and measured QC; then measure linearity/ROIs
 from that same cube before release. Raw-only evidence is captured during ingestion.
 Downstream services borrow processed planes without input I/O or reprocessing.
 Supplied-mask and omitted-mask synthetic paths passed native Mac ASDF checks;
-only the supplied-mask path has the bounded observational comparison. A supplied BPM skips creation and logs the reason. `--qc true/false`
+the earlier no-mask CCD65 path also passed independent saved-product and Viewer checks.
+The revised classified-list interface still needs its Mac gate. A supplied BPM skips creation and logs the reason. `--qc true/false`
 overrides the recipe boolean (default true); false suppresses optional BPM
 full-frame QC and MAD without disabling requested linearity measurements.
 Native schema 2 requires each detector to declare an input BPM calibration path
@@ -195,3 +196,18 @@ commands; when actual-host state is missing, give read-only preflight first.
 Do not alter scientific inputs/results, approved baselines or comparison tolerances
 as a way to make a failing test pass. Investigate unexpected numerical differences
 before continuing dependent work. Do not claim unsupported platform/science status.
+
+## Shared processing-list contract
+
+BPM/linearity and bias use recipe `inputs.list`, referencing an ordered text list
+of `path<TAB>DPR.TYPE` observations. The recipe owns processing policy and explicit
+reduced calibration bindings, not observation filenames or pair assignments.
+Project TOML owns roots. Native admission derives flat pairs from classification
+and header exposure times; missing/ambiguous groups are refused. Dependencies
+are reduced products only; reducing dependency lists is deferred. Optional raw
+BIAS rows are diagnostic processing inputs, never a request to construct a master.
+With a flats-only list, bias-pair RON/gain are unavailable; ROI/pair/site measurements
+continue. Rectangular ROIs belong to the processing profile; direct sites are
+named individual pixels. Preserve list/classification/order/bindings in ASDF.
+Old inline recipes and unclassified bias lists are compatibility only. The new
+classified-list interface needs Mac qualification before selection/acceptance.

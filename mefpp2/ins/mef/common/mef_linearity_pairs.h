@@ -12,7 +12,7 @@ typedef struct {
     const pixelvalue *const *processed_traces;
     const pixelvalue *bias_traces[2];
     const mef_linearity_frame *frame;
-    const image_t *raw_bias[2]; /* same RAW geometry/readout; NEVER overscan corrected */
+    const image_t *raw_bias[2]; /* Optional pair: both present or both NULL. RAW geometry, never scan corrected. */
     const char *raw_bias_asset[2];
     int raw_bias_hdu[2];
     const detector_roi *roi; /* bound active rectangles, selected amplifier only */
@@ -54,7 +54,9 @@ typedef struct {
     double saturation_raw, pair_time_tolerance;
 } mef_linearity_pairs_result;
 /* Measurement-only pass: reuse detector_gain_pair_checked and raw difference
- * stats on common four-plane populations. ROIs translate to RAW zones; no scan
+ * stats on common four-plane populations when raw bias evidence is supplied.
+ * Without that evidence use the two-flat population and report bias/gain/RON
+ * unavailable; the reduced master is not a substitute for raw bias noise. ROIs translate to RAW zones; no scan
  * correction, trimming, master subtraction, lamp normalization or new clipping.
  * Explicit two-member pairs need not be adjacent. All exact times/IDs retained.
  * Source raw-bias identities are shared across rows, never independent repeats.

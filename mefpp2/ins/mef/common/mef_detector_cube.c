@@ -55,7 +55,7 @@ static int ingest_plane(mef_detector_cube *cube,source *input,const plan *p,
     else {
         image_del(plane->active);plane->active=NULL;
         int reference=0;
-        for(int j=0;j<2;++j) if(input->hdu==p->bias[j].hdu && !strcmp(input->path,p->bias[j].path)) reference=1;
+        for(int j=0;j<p->biases;++j) if(input->hdu==p->bias[j].hdu && !strcmp(input->path,p->bias[j].path)) reference=1;
         if(!reference) {image_del(plane->raw);plane->raw=NULL;}
     }
     return 1;

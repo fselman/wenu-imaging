@@ -68,7 +68,7 @@ def traces(data, frames, height, role):
         groups[index].append(value)
     qc.require(all(len(v)==height for v in groups.values()),'Incomplete scan trace')
     return [dict(role=role,input_index=r['index'],asset=r['asset'],hdu=r['hdu'],
-                 master_accepted=None if role=='flat' else r['accepted'],
+                 master_accepted=None if role=='flat' or r['accepted']<0 else r['accepted'],
                  raw_row_start=1,correction_adu=groups[r['index']]) for r in frames]
 
 
@@ -113,8 +113,12 @@ def collect(native, resolved, selection, biases, expected_samples, master_snapsh
         # Preserve counters as evidence without pretending singleton and pair
         # populations are identical. Their selections have different definitions.
         population=sample.parse_population(read(group/'population.tsv'))
-        bias=pair.parse_table(read(group/'bias-ron.tsv'),'bias-ron')
-        raw_bias.append(dict(pair_directory=group.name,table=bias,population=population))
+        bias_data=read(group/'bias-ron.tsv')
+        if biases:
+            bias=pair.parse_table(bias_data,'bias-ron')
+            raw_bias.append(dict(pair_directory=group.name,table=bias,population=population))
+        else:
+            qc.require(not table(bias_data,pair.BIAS_COLUMNS),'Unexpected bias measurements without input evidence')
         for index,(r,v) in enumerate(zip(raw,c)):
             qc.require(r['detector']==detector['detector_id'] and r['amplifier']==detector['amplifier_id'] and
                        r['configuration_detector']==detector['configuration_detector'],'Native detector mismatch')

@@ -51,7 +51,9 @@ for k, v in dict(raw=state['raw'], calibration=reduced / 'cal', output=reduced, 
 project = project.replace('"../../examples/omegacam/full.toml"', json.dumps(str(orch / 'native.toml')))
 (orch / 'project-base.toml').write_text(project)
 (orch / 'project.toml').write_text('project_schema_version = 2\ninclude = ["project-base.toml"]\n')
-for qc, supplied, operation in ((True, True, 'bpm-linearity'), (True, False, 'bpm-linearity'), (False, True, 'bpm-linearity'), (False, False, 'bpm-linearity'), (False, False, 'linearity')):
+cases=[(False,False,'bpm-linearity',True,False),(False,True,'bpm-linearity',True,True),
+       *[(a,b,c,False,True) for a,b,c in ((True,True,'bpm-linearity'),(True,False,'bpm-linearity'),(False,True,'bpm-linearity'),(False,False,'bpm-linearity'),(False,False,'linearity'))]]
+for qc, supplied, operation, listed, include_bias in cases:
     out = Path(tempfile.mkdtemp(prefix='native-', dir=reduced / 'cal'))
     text = 'bpm_linearity_recipe_schema_version = 2\nproject = "project.toml"\nsettings = "native.toml"\nrun = ' + json.dumps(str(out.relative_to(reduced))) + '\nqc = ' + str(qc).lower() + '\n'
     sections = dict(assembly=dict(reference_detector='ESO_CCD_#65'), preparation=dict(detector_toml='detector_toml.toml', processing_toml='processing_toml.toml'), bpm=dict(acquisition='quick', output_mode='new', upper_fraction=0.85, minimum_span_fraction=0.99, maximum_pair_difference=0.02, response_low=0.6, response_high=1.4), identity=dict(identity_key='DETID', amplifier_key='AMPID', bin_x_key='XBINNING', bin_y_key='YBINNING', exposure_key='EXPTIME', exposure_hdu=0))
@@ -76,6 +78,16 @@ for qc, supplied, operation in ((True, True, 'bpm-linearity'), (True, False, 'bp
         text = text.replace('qc = true\n', '')
     if not qc and supplied:
         text = text.replace('qc = false\n', 'qc = true\n')
+    if listed:
+        listing=orch/(out.name+'.list')
+        records=([(b['path'],'BIAS') for b in state['biases']] if include_bias else [])
+        records += [(f['path'],'FLAT,LAMP') for f in state['selection']['flat']]
+        listing.write_text(''.join(path+'\t'+kind+'\n' for path,kind in records))
+        start=text.index('\n[inputs]'); end=text.index('\n[[detectors]]',start)
+        text=text[:start]+'\n[inputs]\nlist = '+json.dumps(listing.name)+'\n'+text[end:]
+        if listed:
+            text='\n'.join(line for line in text.splitlines() if not line.startswith('bias_accepted ='))+'\n'
+        assert '[[inputs.flat]]' not in text
     file = orch / (out.name + '.toml')
     file.write_text(text)
     argv = [str(command), 'cal', operation, '--config', str(file)]
@@ -95,14 +107,17 @@ for qc, supplied, operation in ((True, True, 'bpm-linearity'), (True, False, 'bp
     q = dict(provenance=dict(configuration=dict(snapshot=(native / 'configuration.json').read_text())))
     context = archive.native_context(saved, q, {})
     value = reader.collect(native, context['resolved'], context['selection'], context['biases'], None, context['master_snapshot'], master_reference=context['master'])
-    assert len(value['rows']) == 50 and len(value['exposure_rows']) == 100 and (len(value['scan_traces']) == 30) and (len(value['direct_site_replay']) == 100)
+    assert len(value['rows']) == 50 and len(value['exposure_rows']) == 100 and (len(value['scan_traces']) == (30 if include_bias else 20)) and (len(value['direct_site_replay']) == 100)
     assert value['exposure_rows'][0]['signal_adu'] == 205.5
-    assert all((r['signal_adu'] == 200 + (r['active_x'] - 1) for r in value['direct_site_replay'] if r['input_index'] == 10))
+    assert all((r['signal_adu'] == 200 + (r['active_x'] - 1) for r in value['direct_site_replay'] if r['input_index'] == (10 if include_bias else 0)))
     assert receipt['qc'] == qc
     assert receipt['detectors'][0]['bpm_skipped'] == (supplied or operation == 'linearity')
     assert receipt['source_revision'] == args.source_revision
-    assert receipt['detectors'][0]['image_loads'] == (32 if supplied else 31)
-    assert receipt['detectors'][0]['corrections'] == 30
+    assert receipt['detectors'][0]['image_loads'] == (20+(10 if include_bias else 0)+1+int(supplied))
+    assert receipt['detectors'][0]['corrections'] == (30 if include_bias else 20)
+    if not include_bias:
+        assert not value['raw_bias_diagnostics']
+        assert all(r['raw']['gain_state']=='bias_evidence_unavailable' and r['raw']['matched_ron_available']==0 for r in value['rows'])
     if not args.capture_writer:
         import pycavi_bpm_linearity_recipe as saved_reader
         decoded = saved_reader.read_manifest(out / 'native-recipe.toml')
@@ -127,7 +142,7 @@ for qc, supplied, operation in ((True, True, 'bpm-linearity'), (True, False, 'bp
         assert before == {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in out.rglob('*') if p.is_file()}
     repeated = subprocess.run(argv, cwd=orch, capture_output=True, text=True)
     assert repeated.returncode != 0, 'Completed run was overwritten'
-    print('PASS', operation, qc, supplied, receipt['detectors'][0]['image_loads'], receipt['detectors'][0]['corrections'], 'native context, analytical signals, 50/100/30/100 measurements')
+    print('PASS', operation, qc, supplied, receipt['detectors'][0]['image_loads'], receipt['detectors'][0]['corrections'], 'classified-list' if listed else 'inline-compatibility', 'analytical signals; pair/exposure/direct-site counts 50/100/100')
 for label, old, new in (('identity-type', 'exposure_hdu = 0', 'exposure_hdu = "zero"'), ('unknown-site-field', 'x = 1\n', 'x = 1\nunknown_coordinate = 9\n'), ('missing-master', 'master_sha256 = "' + d['master_sha256'] + '"', 'master_sha256 = "' + '0' * 64 + '"'), ('combined-without-prior', 'output_mode = "new"', 'output_mode = "combined"'),
     ('bias-flat-index-collision', 'input_index = 10', 'input_index = 0'),
     ('flat-index-collision', 'input_index = 11', 'input_index = 10'),
@@ -144,4 +159,23 @@ for label, old, new in (('identity-type', 'exposure_hdu = 0', 'exposure_hdu = "z
     if args.capture_writer:
         assert 'loads=0 unique=0' in result.stderr, (label, result.stderr)
 print('PASS: project includes, non-clobber and invalid-input admission before image loading')
+# Header-derived pairing must reject incomplete and ambiguous cohorts, before pixels.
+import shutil
+extra=state['raw']/'third-same-exposure.fits'
+shutil.copyfile(state['selection']['flat'][0]['path'],extra)
+flats=[r['path'] for r in state['selection']['flat']]
+for label, members in [('missing-partner',flats[:-1]),('ambiguous-partner',[*flats,str(extra)]),
+                       ('duplicate-list-entry',[*flats,flats[0]])]:
+    out=Path(tempfile.mkdtemp(prefix=label+'-',dir=reduced/'cal'))
+    listing=orch/(out.name+'.list')
+    listing.write_text(''.join(name+'\tFLAT,LAMP\n' for name in members))
+    start=text.index('\n[inputs]');end=text.index('\n[[detectors]]',start)
+    authored=text[:start]+'\n[inputs]\nlist = '+json.dumps(listing.name)+'\n'+text[end:]
+    authored='\n'.join(line for line in authored.splitlines() if not line.startswith('bias_accepted ='))+'\n'
+    authored=authored.replace(str(Path(receipt['product_root']).relative_to(reduced)),str(out.relative_to(reduced)))
+    file=orch/(out.name+'.toml');file.write_text(authored)
+    result=subprocess.run([str(command),'cal','bpm-linearity','--config',str(file)],cwd=orch,capture_output=True,text=True)
+    assert result.returncode!=0 and not list(out.rglob('*.fits')),label
+    if args.capture_writer:assert 'loads=0 unique=0' in result.stderr,(label,result.stderr)
+print('PASS: classified-list duplicate, incomplete and ambiguous pairing refused before image loads')
 print('RETAINED', work)

@@ -13,7 +13,7 @@ int main(int argc,char **argv)
     plan p;memset(&p,0,sizeof p);source master;memset(&master,0,sizeof master);
     mef_config *config=NULL;mef_roi_config *regions=NULL;detector_roi *rois=NULL;
     mef_bb *bb=NULL;mef_linearity_files_result *result=NULL;int code=1;
-    if(!read_plan(argv[3],&p)||!empty_directory(argv[9]))goto done;
+    if(!read_plan(argv[3],&p)||p.biases!=2||!empty_directory(argv[9]))goto done;
     size_t slot,budget,max_sites,max_observations;int bx,by,good,reject,rw,rh,exphdu;
     double saturation,tolerance;
     master.path=argv[4];master.asset=argv[6];

@@ -280,8 +280,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_link_libraries(linearity_files_probe PRIVATE mefpp_linearity_files)
   target_compile_options(linearity_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c
-    ins/mef/common/mef_toml_bundle.c)
-  target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
+    ins/mef/common/mef_toml_bundle.c ins/mef/common/mef_project.c)
+  target_include_directories(mefpp_config_toml PUBLIC ../third_party/tomlc17 PRIVATE ins/mef/common)
   target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
   add_library(mefpp_product_qc_records STATIC ins/mef/common/mef_product_qc_validate.c)
   add_library(mefpp_linearity_archive STATIC ins/mef/common/mef_linearity_archive.c)
@@ -301,7 +301,7 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_compile_options(mefpp_product_qc_records PRIVATE -Wall -Wextra -Werror -pedantic-errors)
   set_target_properties(mefpp_product_qc_records PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   add_library(mefpp_recipe_run STATIC ins/mef/common/mef_recipe_run.c
-    ins/mef/common/mef_product_paths.c)
+    ins/mef/common/mef_product_paths.c ins/mef/common/mef_recipe_inputs.c)
   target_link_libraries(mefpp_recipe_run PUBLIC mefpp_config_snapshot)
   target_compile_definitions(mefpp_recipe_run PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   target_compile_options(mefpp_recipe_run PRIVATE -Wall -Wextra -Werror -pedantic-errors)
@@ -430,7 +430,6 @@ if(MEFPP_BUILD_CONFIG_PROBES)
         ins/mef/recipes/mefpp_bpm_linearity.c
         ins/mef/common/mef_bpm_linearity_config.c
         ins/mef/common/mef_bpm_linearity_compile.c
-        ins/mef/common/mef_bpm_linearity_project.c
         ins/mef/common/mef_bpm_linearity_inputs.c
         ins/mef/common/mef_bpm_linearity_bindings.c
         ins/mef/common/mef_bpm_linearity_hash.c

@@ -54,9 +54,11 @@ static mef_status from_inputs(const mef_linearity_files_input *p,const mef_detec
        (p->prepare_pairs?(!p->measure_pairs||!p->preparation_roi||p->preparation_rois<1||!p->max_working_pixels):
         (p->preparation_roi||p->preparation_rois||p->max_working_pixels)))return status;
     if((p->measure_pairs!=0&&p->measure_pairs!=1)||(p->pair_with_mad!=0&&p->pair_with_mad!=1))return status;
-    for(int j=0;j<2;++j)if(p->measure_pairs?
-        (!p->max_pair_rows||!p->raw_bias_map[j]||!ref_valid(p->raw_bias_reference[j])):
-        (p->max_pair_rows||p->pair_with_mad||p->raw_bias_map[j]||p->raw_bias_reference[j]))return status;
+    int has_bias=p->raw_bias_map[0]!=NULL;
+    if ((p->raw_bias_map[1]!=NULL)!=has_bias || (p->raw_bias_reference[0]!=NULL)!=has_bias ||
+        (p->raw_bias_reference[1]!=NULL)!=has_bias || (p->measure_pairs && !p->max_pair_rows)) return status;
+    if(!p->measure_pairs && (p->max_pair_rows || p->pair_with_mad || has_bias)) return status;
+    for(int j=0;j<2;++j) if(has_bias && !ref_valid(p->raw_bias_reference[j])) return status;
     const mef_linearity_sample_input *s=&p->sample;
     if(s->frames<2||s->frames>MAX_IMAGE_NUMBER||s->frames%2||s->raw||s->frame||s->master_bias||s->bpm_flags||
        s->bpm_binary||s->bpm_count||s->samples||!s->configuration||!p->input||!p->bias_map||!ref_valid(p->bias_reference)||
@@ -114,7 +116,7 @@ static mef_status from_inputs(const mef_linearity_files_input *p,const mef_detec
     }
     if(p->bpm_map&&(!strcmp(p->bias_reference->asset_record_id,p->bpm_reference->asset_record_id)||
        (!strcmp(p->bias_reference->resolved_path,p->bpm_reference->resolved_path)&&p->bias_reference->hdu_index==p->bpm_reference->hdu_index)))return status;
-    if(p->measure_pairs)for(int i=0;i<2;++i){
+    if(p->measure_pairs && has_bias)for(int i=0;i<2;++i){
         const mef_image_ref *ref=p->raw_bias_reference[i];
         if(!binding_matches(p->raw_bias_map[i],detector,ref,"ADU",s->configuration_detector)||
            mef_layout_compatible(p->input[0].map,p->raw_bias_map[i],"ADU","ADU",NULL,NULL)!=MEF_OK)return status;
@@ -157,7 +159,7 @@ static mef_status from_inputs(const mef_linearity_files_input *p,const mef_detec
     if(!r->bias_path||!r->bias_asset_id)goto done;
     if(p->bpm_map){r->bpm_path=copy_text(&a,p->bpm_reference->resolved_path);r->bpm_asset_id=copy_text(&a,p->bpm_reference->asset_record_id);
         r->bpm_binding=*mef_layout_find(p->bpm_map,detector);if(!r->bpm_path||!r->bpm_asset_id)goto done;}
-    if(p->measure_pairs)for(int j=0;j<2;++j){
+    if(p->measure_pairs && has_bias)for(int j=0;j<2;++j){
         r->raw_bias_path[j]=copy_text(&a,p->raw_bias_reference[j]->resolved_path);
         if(!r->raw_bias_path[j])goto done;
         r->raw_bias_binding[j]=*mef_layout_find(p->raw_bias_map[j],detector);
@@ -177,7 +179,7 @@ static mef_status from_inputs(const mef_linearity_files_input *p,const mef_detec
         if(pixelmap_flags8_load_checked(r->bpm_path,r->bpm_binding.image.hdu_index,p->mask_registry,&flags,&w,&h)||w!=width||h!=height){status=MEF_ERR_INPUT;goto done;}}
     }
     if(p->measure_pairs){
-        for(int j=0;j<2;++j) {
+        for(int j=0;j<(has_bias?2:0);++j) {
             if(cube) {
                 const mef_detector_plane *plane=mef_detector_cube_bound(cube,p->raw_bias_map[j],detector);
                 if(!plane || !plane->raw) {status=MEF_ERR_INPUT;goto done;}
@@ -195,7 +197,7 @@ static mef_status from_inputs(const mef_linearity_files_input *p,const mef_detec
         m.raw=(const image_t *const *)raw;m.frame=frames;m.with_mad=p->pair_with_mad;
         m.bpm_flags=flags;m.bpm_count=flags?(size_t)width*(size_t)height:0;m.bpm_binary=binary;
         m.reject_bits=s->reject_bits;m.saturation_raw=s->saturation_raw;m.pair_time_tolerance=p->pair_time_tolerance;m.max_rows=p->max_pair_rows;
-        for(int j=0;j<2;++j){m.raw_bias[j]=raw_bias[j];m.raw_bias_asset[j]=p->raw_bias_reference[j]->asset_record_id;
+        for(int j=0;j<(has_bias?2:0);++j){m.raw_bias[j]=raw_bias[j];m.raw_bias_asset[j]=p->raw_bias_reference[j]->asset_record_id;
             m.raw_bias_hdu[j]=p->raw_bias_reference[j]->hdu_index;}
         if(p->prepare_pairs){m.roi=p->preparation_roi;m.rois=p->preparation_rois;
             status=mef_linearity_prepare_pairs(&m,bias,p->max_working_pixels,&a,&r->prepared);

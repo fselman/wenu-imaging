@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_bpm_linearity.h"
+#include "mef_project.h"
 #include "qfits.h"
 #include <dirent.h>
 #include <errno.h>
@@ -113,7 +114,7 @@ static int project_roots(mef_bpm_linearity *recipe)
     if (!project_path) return 0;
     recipe->project_path=project_path;
     char *origin=NULL;
-    if(!mef_bpm_linearity_project(project_path,&recipe->project,&origin,NULL,NULL)) return 0;
+    if(!mef_project_read(project_path,&recipe->project,&origin,NULL,NULL)) return 0;
     free(recipe->orchestration);
     recipe->orchestration=strdup(project_path);
     if (!recipe->orchestration) return 0;

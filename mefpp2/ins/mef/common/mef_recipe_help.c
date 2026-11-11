@@ -84,17 +84,21 @@ void mef_recipe_operation_help(FILE *out, const char *category, const char *oper
         }
     }
     if (!strcmp(operation, "bias")) {
-        fputs("Inputs: recipe/settings TOMLs and ordered bias list; optional input BPM.\n"
-              "  --bias FILE          Required ordered absolute input list\n"
-              "  --output-dir DIR     Required existing output directory, or --output FITS\n"
+        fputs("Inputs: recipe/project/settings TOMLs and classified processing list; reduced dependencies.\n"
+              "  --input FILE         Processing list: path and DPR.TYPE (BIAS only)\n"
+              "  Recipe inputs.list and run select the processing list and reduced destination.\n"
+              "  --bias FILE          Legacy unclassified-list compatibility\n"
+              "  --output-dir DIR     Legacy output override, or --output FITS\n"
               "  --detectors all|IDs  Override recipe detector selection; default all\n"
               "  --qc full|legacy     QC profile; default full\n"
               "Recipe bias.mad defaults to false; explicit true opts in.\n"
               "Outputs: master-bias MEF FITS, matching ASDF QC and log.\n",
             out);
     } else {
-        fputs("Inputs: recipe/project/settings TOMLs, ordered paired flats, bias evidence,\n"
-              "supplied master bias, explicit detector/HDU/ROI/site bindings; optional BPM.\n"
+        fputs("Inputs: recipe/project/settings TOMLs, inputs.list with path and DPR.TYPE,\n"
+              "reduced master bias and optional BPM; explicit detector/HDU/ROI/site bindings.\n"
+              "Flat pairs derive from header exposure times; missing/ambiguous pairs fail.\n"
+              "Raw BIAS rows are optional diagnostic evidence; dependencies are never reduced.\n"
               "  --qc true|false      Override recipe qc; default true\n"
               "Recipe response_low=0.5, response_high=1.5; boundary values are flagged.\n"
               "QC false skips optional full-frame QC and MAD, retaining ROI measurements.\n",

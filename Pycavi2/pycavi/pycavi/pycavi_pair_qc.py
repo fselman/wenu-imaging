@@ -31,7 +31,7 @@ BIAS_OPTIONAL = {'difference_mean_adu':'level_available','difference_median_adu'
 FLOAT = {'saturation_raw_adu','pair_time_tolerance_s','first_seconds','second_seconds',
          *PAIR_OPTIONAL,*BIAS_OPTIONAL}
 COUNTS = ('region_pixels','bpm_excluded','nonfinite_excluded','saturated','valid_pixels')
-STATES = {'arithmetic_available','too_few_pixels','nonpositive_signal','nonpositive_variance'}
+STATES = {'arithmetic_available','too_few_pixels','nonpositive_signal','nonpositive_variance','bias_evidence_unavailable'}
 KINDS = {'pairs':(PAIR_COLUMNS,PAIR_OPTIONAL),'bias-ron':(BIAS_COLUMNS,BIAS_OPTIONAL)}
 
 
@@ -85,10 +85,11 @@ def parse_table(data,kind):
     rows=[]
     for fields in reader:
         qc.require(len(fields)==len(columns),'Malformed native TSV row')
+        raw=dict(zip(columns,fields))
         row={}
         for key,value in zip(columns,fields):
             if key in TEXT:
-                qc.require(bool(value),'Empty native identity/state');row[key]=unescape(value)
+                qc.require(bool(value) or (key in ('bias1_asset','bias2_asset') and raw.get('gain_state')=='bias_evidence_unavailable'),'Empty native identity/state');row[key]=unescape(value)
             elif key in FLOAT:
                 qc.require(bool(value) or key in optional,'Missing required numeric value')
                 row[key]=float(value) if value else None

@@ -4,8 +4,9 @@
    template. `mefpp_recipe cal bpm-linearity --config RECIPE.toml` must admit its
    inputs and run without an external preparation stage or generated-bindings
    prerequisite. The complete synthetic Mac gate and bounded supplied-mask CCD65
-   comparison passed. Next: CCD65 creation without an input mask, then reviewed
-   broader detector/instrument coverage. Preserve the cube and existing estimators.
+   comparison and earlier no-mask saved-product/Viewer checks passed. Next:
+   qualify the shared classified-list interface on the Mac, then review broader
+   detector/instrument coverage. Preserve the cube and existing estimators.
 2. Preserve validated hierarchical help and the shared catalogue for every recipe:
    `mefpp --help`, `mefpp_recipe CATEGORY --help`, and operation help. Categories
    include `cal` and `sci`; unmigrated entries are pending and refuse execution.
@@ -40,3 +41,18 @@ Mac Intel is the current development/reference host. Preserve CentOS 7/Chapman
 compatibility; Apple Silicon and Ubuntu coverage remain future work. Phase 3 is
 a product-profile requirement. Work details and unresolved defects belong in
 issues/PRs, not chronological additions to this roadmap.
+
+## Shared processing-list contract
+
+BPM/linearity and bias use recipe `inputs.list`, referencing an ordered text list
+of `path<TAB>DPR.TYPE` observations. The recipe owns processing policy and explicit
+reduced calibration bindings, not observation filenames or pair assignments.
+Project TOML owns roots. Native admission derives flat pairs from classification
+and header exposure times; missing/ambiguous groups are refused. Dependencies
+are reduced products only; reducing dependency lists is deferred. Optional raw
+BIAS rows are diagnostic processing inputs, never a request to construct a master.
+With a flats-only list, bias-pair RON/gain are unavailable; ROI/pair/site measurements
+continue. Rectangular ROIs belong to the processing profile; direct sites are
+named individual pixels. Preserve list/classification/order/bindings in ASDF.
+Old inline recipes and unclassified bias lists are compatibility only. The new
+classified-list interface needs Mac qualification before selection/acceptance.

@@ -6,6 +6,8 @@
 #include "mef_bpm_linearity.h"
 #include "mef_config_toml.h"
 #include "mef_bias_settings.h"
+#include "mef_recipe_inputs.h"
+#include "mef_project.h"
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -20,7 +22,9 @@
 typedef mef_bpm_linearity_frozen frozen_file;
 
 typedef struct {
-    toml_result_t recipe, project, geometry, processing;
+    toml_result_t recipe, project, geometry, processing, inputs;
+    mef_recipe_inputs observations;
+    char *input_list, *resolved_inputs;
     frozen_file *files;
     size_t count;
     char *controls, *output, *raw, *calibration, *work, *logs, *orchestration;
@@ -387,6 +391,74 @@ done:
     return okay;
 }
 
+/* Classified processing inputs are external to the recipe. Pair discovery reads
+ * headers only; the detector cube remains the sole image-payload owner. */
+static int observation_inputs(compilation *c)
+{
+    toml_datum_t inputs = toml_get(c->recipe.toptab, "inputs");
+    const char *name = string(inputs, "list");
+    if (!name) {
+        return toml_get(inputs, "list").type == TOML_UNKNOWN;
+    }
+    char error[512] = "Invalid classified input-list reference";
+    c->input_list = path(c->orchestration, name);
+    toml_datum_t identity = toml_get(c->recipe.toptab, "identity");
+    toml_datum_t controls = toml_get(c->processing.toptab, "linearity_preparation");
+    const char *key = string(identity, "exposure_key");
+    if (!fields(inputs, "|list|") || !c->input_list || !freeze(c, c->input_list) ||
+        !mef_recipe_inputs_read(c->input_list, c->raw, 0, &c->observations, error, sizeof(error)) ||
+        c->observations.count > 128 ||
+        !mef_recipe_inputs_pair(&c->observations, key ? key : "EXPTIME",
+            (int)integer(identity, "exposure_hdu", 0), real(controls, "pair_time_tolerance_s", NAN),
+            error, sizeof(error))) {
+        fprintf(stderr, "Observation admission: %s\n", error);
+        return 0;
+    }
+    FILE *out = control(c, c->controls, "resolved-inputs.toml", &c->resolved_inputs);
+    if (!out) {
+        return 0;
+    }
+    fputs("[inputs]\nbias = [", out);
+    int biases = 0, flats = 0;
+    for (size_t i = 0; i < c->observations.count; ++i) {
+        mef_recipe_input *row = c->observations.rows + i;
+        if (!strcmp(row->dpr_type, "BIAS")) {
+            if (biases++) {
+                fputc(',', out);
+            }
+            quoted(out, row->path);
+        } else if (!strncmp(row->dpr_type, "FLAT", 4) &&
+                   (!row->dpr_type[4] || row->dpr_type[4] == ',')) {
+            ++flats;
+        } else {
+            fclose(out);
+            return 0;
+        }
+    }
+    fputs("]\nbias_indices = [", out);
+    int emitted = 0;
+    for (size_t i = 0; i < c->observations.count; ++i) {
+        if (!strcmp(c->observations.rows[i].dpr_type, "BIAS")) {
+            fprintf(out, "%s%zu", emitted++ ? "," : "", i);
+        }
+    }
+    fputs("]\n", out);
+    for (size_t i = 0; i < c->observations.count; ++i) {
+        mef_recipe_input *row = c->observations.rows + i;
+        if (row->seconds <= 0) {
+            continue;
+        }
+        fputs("[[inputs.flat]]\npath = ", out);
+        quoted(out, row->path);
+        fprintf(out, "\ninput_index = %zu\npair = %d\n", i, row->pair);
+    }
+    if (!finish_file(c, out, c->resolved_inputs) || flats < 2 || (biases && biases < 2)) {
+        return 0;
+    }
+    c->inputs = document(c, c->resolved_inputs);
+    return c->inputs.ok;
+}
+
 /* Original indices share one namespace across the product's flat/bias records.
  * Admit identifiers before image hashing or cube ingestion, including defaults.
  */
@@ -430,7 +502,7 @@ static int input_identities(compilation *c, toml_datum_t flats, toml_datum_t bia
                 long index = declared.type == TOML_UNKNOWN ? biases.u.arr.size + i
                              : declared.type == TOML_INT64 ? declared.u.int64
                                                            : -1;
-                if (index < biases.u.arr.size || index > INT_MAX) {
+                if (index < (c->inputs.ok ? 0 : biases.u.arr.size) || index > INT_MAX) {
                     goto done;
                 }
                 for (int j = 0; j < i; ++j) {
@@ -457,7 +529,7 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
     toml_datum_t trim = find(toml_get(c->processing.toptab, "trim"), "detector", id ? id : "");
     toml_datum_t controls = toml_get(c->processing.toptab, "linearity_preparation");
     toml_datum_t policy = toml_get(c->recipe.toptab, "bpm"),
-                 inputs = toml_get(c->recipe.toptab, "inputs");
+                 inputs = toml_get(c->inputs.ok ? c->inputs.toptab : c->recipe.toptab, "inputs");
     toml_datum_t flats = toml_get(inputs, "flat"), biases = toml_get(inputs, "bias"),
                  accepted = toml_get(row, "bias_accepted");
     toml_datum_t size = toml_get(geometry, "raw_size"),
@@ -497,11 +569,13 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
         size.type != TOML_ARRAY || size.u.arr.size != 2 ||
         !rectangle(toml_get(trim, "retained"), crop) || flats.type != TOML_ARRAY ||
         flats.u.arr.size < 2 || flats.u.arr.size > 64 || flats.u.arr.size % 2 ||
-        biases.type != TOML_ARRAY || biases.u.arr.size < 3 || biases.u.arr.size > 64 ||
-        accepted.type != TOML_ARRAY || accepted.u.arr.size != biases.u.arr.size ||
-        mad.type != TOML_BOOLEAN || !encoding || !isfinite(saturation) || saturation <= 0 ||
-        !isfinite(tolerance) || tolerance < 0 || pixels <= 0 || rows <= 0 || good < 0 || good > 1 ||
-        reject < 0 || reject > 255) {
+        biases.type != TOML_ARRAY || (biases.u.arr.size < 3 && !c->inputs.ok) ||
+        biases.u.arr.size > 64 ||
+        (accepted.type != TOML_UNKNOWN &&
+            (accepted.type != TOML_ARRAY || accepted.u.arr.size != biases.u.arr.size)) ||
+        (!c->inputs.ok && accepted.type == TOML_UNKNOWN) || mad.type != TOML_BOOLEAN || !encoding ||
+        !isfinite(saturation) || saturation <= 0 || !isfinite(tolerance) || tolerance < 0 ||
+        pixels <= 0 || rows <= 0 || good < 0 || good > 1 || reject < 0 || reject > 255) {
         goto done;
     }
     if (!input_identities(c, flats, biases)) {
@@ -627,11 +701,12 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
         reject);
     fprintf(plan,
         "saturation\t%.17g\ntolerance\t%.17g\nmax_pixels\t%ld\nmax_rows\t%ld\nexposure_key\t%"
-        "s\nexposure_hdu\t%ld\nwith_mad\t%d\nschema\traw-pair-plan-v1\ncrop\t%d,%d,%d,%d\nraw_"
+        "s\nexposure_hdu\t%ld\nwith_mad\t%d\nschema\t%s\ncrop\t%d,%d,%d,%d\nraw_"
         "width\t%d\nraw_height\t%d\n",
         saturation, tolerance, pixels, rows,
         string(identity, "exposure_key") ? string(identity, "exposure_key") : "EXPTIME",
-        integer(identity, "exposure_hdu", 0), mad.u.boolean, crop[0], crop[1], crop[2], crop[3],
+        integer(identity, "exposure_hdu", 0), mad.u.boolean,
+        c->inputs.ok ? "raw-pair-plan-v2" : "raw-pair-plan-v1", crop[0], crop[1], crop[2], crop[3],
         raw[0], raw[1]);
     for (int i = 0; i < flats.u.arr.size; ++i) {
         toml_datum_t item = flats.u.arr.elem[i];
@@ -661,7 +736,10 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
     }
     fputs("input_index\thdu\tasset\tpath\taccepted\n", bias);
     for (int i = 0; i < biases.u.arr.size; ++i) {
-        toml_datum_t item = biases.u.arr.elem[i], yes = accepted.u.arr.elem[i];
+        toml_datum_t item = biases.u.arr.elem[i],
+                     yes = accepted.type == TOML_ARRAY
+                               ? accepted.u.arr.elem[i]
+                               : (toml_datum_t){.type = TOML_BOOLEAN, .u.boolean = 0};
         char *input = item.type == TOML_STRING ? path(c->raw, item.u.s) : NULL;
         if (!input || yes.type != TOML_BOOLEAN || !mef_bpm_linearity_below(input, c->raw) ||
             !freeze(c, input)) {
@@ -674,7 +752,10 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
             free(input);
             goto done;
         }
-        fprintf(bias, "%d\t%ld\t%s\t%s\t%d\n", i, ihdu, asset, input, yes.u.boolean);
+        long original_index =
+            c->inputs.ok ? toml_get(inputs, "bias_indices").u.arr.elem[i].u.int64 : i;
+        fprintf(bias, "%ld\t%ld\t%s\t%s\t%d\n", original_index, ihdu, asset, input,
+            accepted.type == TOML_UNKNOWN ? -1 : yes.u.boolean);
         if (i < 2) {
             fprintf(plan, "bias\t%s\t%ld\t%s\n", input, ihdu, asset);
         }
@@ -722,6 +803,14 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
                    context_text(f, "detector_profile", geometry_source) &&
                    context_text(f, "processing_profile", processing_source) &&
                    context_text(f, "effective_settings_toml", native);
+    if (complete && c->inputs.ok) {
+        fputs(",\"input_list_path\":", f);
+        quoted(f, c->input_list);
+        fputs(",\"resolved_inputs_path\":", f);
+        quoted(f, c->resolved_inputs);
+        complete = context_text(f, "input_list_source", c->input_list) &&
+                   context_text(f, "resolved_inputs_toml", c->resolved_inputs);
+    }
     free(geometry_source);
     free(processing_source);
     if (!complete) {
@@ -904,7 +993,7 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     if (!fields(toml_get(c.recipe.toptab, "bpm"),
             "|acquisition|output_mode|upper_fraction|minimum_span_fraction|maximum_pair_difference|"
             "response_low|response_high|") ||
-        !fields(toml_get(c.recipe.toptab, "inputs"), "|flat|bias|") ||
+        !fields(toml_get(c.recipe.toptab, "inputs"), "|flat|bias|list|") ||
         !fields(toml_get(c.recipe.toptab, "preparation"), "|detector_toml|processing_toml|") ||
         !fields(toml_get(c.recipe.toptab, "assembly"), "|reference_detector|")) {
         goto done;
@@ -935,7 +1024,7 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     *slash = 0;
     project = path(c.orchestration, string(c.recipe.toptab, "project"));
     char *origin = NULL;
-    if (!project || !mef_bpm_linearity_project(project, &c.project, &origin, project_freeze, &c)) {
+    if (!project || !mef_project_read(project, &c.project, &origin, project_freeze, &c)) {
         goto done;
     }
     toml_datum_t roots = toml_get(toml_get(c.project.toptab, "project"), "roots");
@@ -1003,6 +1092,9 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
         binning.type != TOML_ARRAY || binning.u.arr.size != 2 ||
         binning.u.arr.elem[0].type != TOML_INT64 || binning.u.arr.elem[0].u.int64 != 1 ||
         binning.u.arr.elem[1].type != TOML_INT64 || binning.u.arr.elem[1].u.int64 != 1) {
+        goto done;
+    }
+    if (!observation_inputs(&c)) {
         goto done;
     }
     toml_datum_t selected = toml_get(c.recipe.toptab, "detectors"),
@@ -1101,6 +1193,10 @@ done:
     free(settings);
     free(binding);
     free(body_text);
+    mef_recipe_inputs_destroy(&c.observations);
+    free(c.input_list);
+    free(c.resolved_inputs);
+    toml_free(c.inputs);
     toml_free(c.recipe);
     toml_free(c.project);
     toml_free(c.geometry);

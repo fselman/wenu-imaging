@@ -56,6 +56,12 @@ def native_context(saved, q, texts):
     author = tomllib.loads(saved['recipe_source'])
     qc.require(author['bpm_linearity_recipe_schema_version'] == 2 and
                saved['historical_comparison'] == 'not_requested', 'Unexpected native authoring context')
+    if 'resolved_inputs_toml' in saved:
+        qc.require(pair.sha(saved['input_list_source'].encode())==saved['input_sha256'][saved['input_list_path']],
+                   'Frozen classified input list differs')
+        qc.require(pair.sha(saved['resolved_inputs_toml'].encode())==saved['input_sha256'][saved['resolved_inputs_path']],
+                   'Frozen resolved observation identities differ')
+        author['inputs']=tomllib.loads(saved['resolved_inputs_toml'])['inputs']
     row = next(r for r in author['detectors'] if r['detector_id'] == saved['detector'])
     snapshot = json.loads(q['provenance']['configuration']['snapshot'])
     native = tomllib.loads(saved['effective_settings_toml'])['native']
@@ -81,7 +87,7 @@ def native_context(saved, q, texts):
     biases=[]
     for i, incoming in enumerate(author['inputs']['bias']):
         path=location(raw,incoming)
-        biases.append(dict(path=path,asset=Path(path).name,index=i,accepted=int(row['bias_accepted'][i]),
+        biases.append(dict(path=path,asset=Path(path).name,index=author['inputs'].get('bias_indices',list(range(len(author['inputs']['bias']))))[i],accepted=int(row.get('bias_accepted',[-1]*len(author['inputs']['bias']))[i]),
             hdu=row.get('bias_hdus',[row['hdu']]*len(author['inputs']['bias']))[i]))
     controls=resolved['controls']
     mask=dict(encoding='omitted')

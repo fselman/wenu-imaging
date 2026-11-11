@@ -57,7 +57,7 @@ static mef_qc_measurement metric(const char *name,const char *unit,const double 
 }
 mef_linearity_archive *mef_linearity_archive_new(const mef_linearity_archive_options *o)
 {
-    if(!o || !o->input || !o->flat_count || o->flat_count>64 || o->input_count>128 || o->flat_count>=o->input_count ||
+    if(!o || !o->input || !o->flat_count || o->flat_count>64 || o->input_count>128 || o->flat_count>o->input_count ||
         !o->max_roi_rows || o->max_roi_rows>24999 || !o->master || !o->configuration)
         return NULL;
     mef_linearity_archive *a=calloc(1,sizeof(*a));

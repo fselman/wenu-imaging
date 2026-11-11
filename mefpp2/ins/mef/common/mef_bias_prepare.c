@@ -2,6 +2,8 @@
 #define _XOPEN_SOURCE 700
 #include "mef_bias.h"
 #include "mef_bias_qc_fits.h"
+#include "mef_recipe_inputs.h"
+#include "mef_project.h"
 #include <errno.h>
 #include <limits.h>
 #include <unistd.h>
@@ -67,7 +69,7 @@ static int parse_recipe_arguments(int argc, char **argv, bias_recipe_arguments *
             }
             continue;
         }
-        if (!strcmp(key, "--bias")) {
+        if (!strcmp(key, "--bias") || !strcmp(key, "--input")) {
             if (!set_option_once(&arguments->bias_list_path, option_value)) {
                 return 0;
             }
@@ -175,25 +177,126 @@ void mef_bias_initialize(mef_bias *recipe, mef_recipe_run *run)
     recipe->run = run;
 }
 
+/* Project roots govern processing observations and immutable calibrations. */
+static int prepare_project_inputs(mef_bias *recipe)
+{
+    if (mef_bias_project(recipe->recipe_document)) {
+        char project_name[4096], raw_name[4096], output_name[4096];
+        const char *source = mef_bias_path(recipe->recipe_document);
+        const char *reference = mef_bias_project(recipe->recipe_document);
+        const char *slash = strrchr(source, '/');
+        if (snprintf(project_name, sizeof(project_name), "%.*s%s%s",
+                reference[0] == '/' ? 0 : (int)(slash - source), source,
+                reference[0] == '/' ? "" : "/", reference) >= (int)sizeof(project_name)) {
+            return 0;
+        }
+        toml_result_t project = {0};
+        char *origin = NULL;
+        if (!mef_project_read(project_name, &project, &origin, NULL, NULL)) {
+            return 0;
+        }
+        *strrchr(origin, '/') = 0;
+        toml_datum_t roots = toml_get(toml_get(project.toptab, "project"), "roots");
+        toml_datum_t raw = toml_get(roots, "raw"), output = toml_get(roots, "output"),
+                     calibration = toml_get(roots, "calibration");
+        const char *run = mef_bias_run(recipe->recipe_document);
+        int okay = raw.type == TOML_STRING && output.type == TOML_STRING &&
+                   calibration.type == TOML_STRING && run && run[0] != '/' && !strstr(run, "..");
+        if (okay) {
+            snprintf(raw_name, sizeof(raw_name), "%s%s%s", raw.u.s[0] == '/' ? "" : origin,
+                raw.u.s[0] == '/' ? "" : "/", raw.u.s);
+            snprintf(output_name, sizeof(output_name), "%s%s%s/%s",
+                output.u.s[0] == '/' ? "" : origin, output.u.s[0] == '/' ? "" : "/", output.u.s,
+                run);
+            recipe->project_raw = realpath(raw_name, NULL);
+            recipe->project_output = realpath(output_name, NULL);
+            char calibration_name[4096], invocation[4096],
+                *canonical = realpath(project_name, NULL);
+            snprintf(calibration_name, sizeof(calibration_name), "%s%s%s",
+                calibration.u.s[0] == '/' ? "" : origin, calibration.u.s[0] == '/' ? "" : "/",
+                calibration.u.s);
+            recipe->project_calibration = realpath(calibration_name, NULL);
+            char reduced_name[4096];
+            snprintf(reduced_name, sizeof(reduced_name), "%s%s%s",
+                output.u.s[0] == '/' ? "" : origin, output.u.s[0] == '/' ? "" : "/", output.u.s);
+            char *reduced = realpath(reduced_name, NULL);
+            okay = recipe->project_raw && recipe->project_output && recipe->project_calibration &&
+                   reduced && canonical && getcwd(invocation, sizeof(invocation));
+            if (okay) {
+                *strrchr(canonical, '/') = 0;
+                okay = !strcmp(invocation, canonical) &&
+                       !strncmp(source, canonical, strlen(canonical)) &&
+                       source[strlen(canonical)] == '/' &&
+                       !strncmp(recipe->listing_path, canonical, strlen(canonical)) &&
+                       recipe->listing_path[strlen(canonical)] == '/';
+            }
+            if (okay) {
+                size_t n = strlen(reduced);
+                okay = !strncmp(recipe->project_output, reduced, n) &&
+                       recipe->project_output[n] == '/' &&
+                       !strncmp(recipe->project_calibration, reduced, n) &&
+                       recipe->project_calibration[n] == '/' &&
+                       strncmp(recipe->project_raw, reduced, n) != 0;
+                if (recipe->arguments.output_directory) {
+                    char *explicit_output = realpath(recipe->arguments.output_directory, NULL);
+                    okay =
+                        okay && explicit_output && !strcmp(explicit_output, recipe->project_output);
+                    free(explicit_output);
+                }
+                if (recipe->arguments.output_path) {
+                    okay = 0;
+                }
+            }
+            free(reduced);
+            free(canonical);
+            if (okay) {
+                for (size_t i = 0; i < recipe->arguments.detector_count; ++i) {
+                    detector_plan *detector = recipe->arguments.detectors + i;
+                    const char *mask = detector->option_values[BPM];
+                    if (mask && strcmp(mask, "omitted")) {
+                        snprintf(calibration_name, sizeof(calibration_name), "%s%s%s",
+                            mask[0] == '/' ? "" : recipe->project_calibration,
+                            mask[0] == '/' ? "" : "/", mask);
+                        detector->dependency_path = realpath(calibration_name, NULL);
+                        if (!detector->dependency_path ||
+                            strncmp(detector->dependency_path, recipe->project_calibration,
+                                strlen(recipe->project_calibration)) ||
+                            detector->dependency_path[strlen(recipe->project_calibration)] != '/') {
+                            okay = 0;
+                            break;
+                        }
+                        detector->option_values[BPM] = detector->dependency_path;
+                    }
+                }
+            }
+        }
+        toml_free(project);
+        free(origin);
+        if (!okay) {
+            return 0;
+        }
+        if (!recipe->arguments.output_directory && !recipe->arguments.output_path) {
+            recipe->arguments.output_directory = recipe->project_output;
+        }
+    }
+    return 1;
+}
+
 int mef_bias_prepare(mef_bias *recipe, int argc, char **argv)
 {
     int expanded_argc = argc, first, second;
     char **expanded_argv = argv, *end;
     mef_status status;
-    if (!mef_bias_expand(argc, argv, &expanded_argc, &expanded_argv,
-            &recipe->recipe_document, recipe->run->message, sizeof(recipe->run->message))) {
+    if (!mef_bias_expand(argc, argv, &expanded_argc, &expanded_argv, &recipe->recipe_document,
+            recipe->run->message, sizeof(recipe->run->message))) {
         return 0;
     }
     if (!parse_recipe_arguments(expanded_argc, expanded_argv, &recipe->arguments)) {
         recipe->show_usage = 1;
         return 0;
     }
-    if (!mef_recipe_run_paths(recipe->run, recipe->arguments.output_directory,
-            recipe->arguments.output_path, "CMDP")) {
-        return 0;
-    }
-    recipe->options.legacy_qc = recipe->arguments.qc_option &&
-                                !strcmp(recipe->arguments.qc_option, "legacy");
+    recipe->options.legacy_qc =
+        recipe->arguments.qc_option && !strcmp(recipe->arguments.qc_option, "legacy");
     recipe->options.with_mad = !strcmp(recipe->arguments.mad_option, "yes");
     recipe->options.high_sigma = 5;
     if (recipe->arguments.high_sigma_option) {
@@ -222,6 +325,18 @@ int mef_bias_prepare(mef_bias *recipe, int argc, char **argv)
     recipe->listing_path = realpath(recipe->arguments.bias_list_path, NULL);
     if (recipe->config_path == NULL || recipe->listing_path == NULL) {
         strcpy(recipe->run->message, "Missing explicit configuration or bias list");
+        return 0;
+    }
+    for (int i = 3; i + 1 < expanded_argc; i += 2) {
+        if (!strcmp(expanded_argv[i], "--input")) {
+            recipe->classified_input = 1;
+        }
+    }
+    if (!prepare_project_inputs(recipe)) {
+        return 0;
+    }
+    if (!mef_recipe_run_paths(recipe->run, recipe->arguments.output_directory,
+            recipe->arguments.output_path, "CMDP")) {
         return 0;
     }
     eclipse_init();
@@ -276,7 +391,33 @@ int mef_bias_prepare(mef_bias *recipe, int argc, char **argv)
     }
     mef_bb_del(recipe->legacy);
     recipe->legacy = NULL;
-    recipe->frames = framelist_load(recipe->listing_path);
+    mef_recipe_inputs inputs = {0};
+    char current[4096];
+    const char *raw = recipe->project_raw ? recipe->project_raw : getcwd(current, sizeof(current));
+    if (!raw || !mef_recipe_inputs_read(recipe->listing_path, raw, !recipe->classified_input,
+                    &inputs, recipe->run->message, sizeof(recipe->run->message))) {
+        return 0;
+    }
+    recipe->frames = framelist_new((int)inputs.count);
+    if (recipe->frames) {
+        for (size_t i = 0; i < inputs.count; ++i) {
+            if (strcmp(inputs.rows[i].dpr_type, "BIAS")) {
+                strcpy(recipe->run->message, "Bias processing list accepts DPR.TYPE BIAS only");
+                mef_recipe_inputs_destroy(&inputs);
+                return 0;
+            }
+            if (recipe->project_raw &&
+                (strncmp(inputs.rows[i].path, recipe->project_raw, strlen(recipe->project_raw)) ||
+                    inputs.rows[i].path[strlen(recipe->project_raw)] != '/')) {
+                strcpy(recipe->run->message, "Processing input escapes project raw root");
+                mef_recipe_inputs_destroy(&inputs);
+                return 0;
+            }
+            recipe->frames->name[i] = strdup(inputs.rows[i].path);
+            recipe->frames->type[i] = strdup(inputs.rows[i].dpr_type);
+        }
+    }
+    mef_recipe_inputs_destroy(&inputs);
     if (recipe->frames == NULL || recipe->frames->n < 3 || recipe->frames->n > 100000) {
         strcpy(recipe->run->message, "Require an explicit list of at least three bias inputs");
         return 0;
@@ -296,7 +437,8 @@ void mef_bias_usage(void)
         "Short form: cal bias --config RECIPE.toml --bias ABS_LIST (--output-dir DIR|--output "
         "FITS) [--detectors all|ID,ID] [--qc legacy|full]\n");
     fprintf(stderr,
-        "Standalone candidate: cal bias [--qc legacy|full] (--pafname PAF|--config TOML) --bias ABS_LIST "
+        "Standalone candidate: cal bias [--qc legacy|full] (--pafname PAF|--config TOML) --bias "
+        "ABS_LIST "
         "(--output-dir DIR|--output FITS) --reference-detector ID [--mad (yes|no)] [--ron-first "
         "INDEX --ron-second INDEX] [--high-sigma K]\n"
         "Repeat detector blocks: --detector-id EXTNAME --config-detector ZERO_BASED --readout-id "
@@ -322,6 +464,7 @@ void mef_bias_destroy(mef_bias *recipe)
         free(recipe->arguments.detectors[i].raw_layouts);
         free(recipe->arguments.detectors[i].hdus);
         free(recipe->arguments.detectors[i].bpm_path);
+        free(recipe->arguments.detectors[i].dependency_path);
     }
     for (i = 0; i < recipe->frame_count; ++i) {
         if (recipe->layouts) {
@@ -342,4 +485,7 @@ void mef_bias_destroy(mef_bias *recipe)
     mef_config_document_destroy(recipe->document);
     mef_bb_del(recipe->legacy);
     mef_bias_config_destroy(recipe->recipe_document);
+    free(recipe->project_raw);
+    free(recipe->project_output);
+    free(recipe->project_calibration);
 }
