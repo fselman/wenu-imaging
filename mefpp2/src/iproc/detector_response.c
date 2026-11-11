@@ -127,7 +127,8 @@ int cube_response_checked(const cube_t *c, const detector_response_options *o,
     pixelmap_updatecount(r->valid);
     *out=r; r=NULL; status=0;
 done:
-    free(fit); free(buffer); free(reference); free(line.x); free(line.y);
+    if (fit) free(fit);
+    free(buffer); free(reference); free(line.x); free(line.y);
     detector_response_result_del(r);
     return status;
 }
