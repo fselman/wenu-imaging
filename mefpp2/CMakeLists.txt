@@ -281,7 +281,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_link_libraries(linearity_files_probe PRIVATE mefpp_linearity_files)
   target_compile_options(linearity_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c
-    ins/mef/common/mef_toml_bundle.c ins/mef/common/mef_project.c)
+    ins/mef/common/mef_toml_bundle.c ins/mef/common/mef_toml_file.c
+    ins/mef/common/mef_project.c)
   target_include_directories(mefpp_config_toml PUBLIC ../third_party/tomlc17 PRIVATE ins/mef/common)
   target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
   add_library(mefpp_product_qc_records STATIC ins/mef/common/mef_product_qc_validate.c)

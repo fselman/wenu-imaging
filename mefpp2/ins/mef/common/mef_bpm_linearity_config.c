@@ -2,6 +2,7 @@
 #define _XOPEN_SOURCE 700
 #include "mef_bpm_linearity.h"
 #include "mef_project.h"
+#include "mef_toml_file.h"
 #include "qfits.h"
 #include <dirent.h>
 #include <errno.h>
@@ -153,9 +154,6 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
     char *slash, *binding_recipe;
     toml_datum_t version, rows, dependencies;
     const char *revision, *relative, *author_revision;
-    FILE *f;
-    struct stat binding_info;
-    long length;
     size_t i;
     recipe->diagnostic="Invalid native BPM/linearity recipe or bindings";
     int qc_override=-1;
@@ -185,10 +183,15 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
     recipe->orchestration=strdup(recipe->recipe_path);
     if (!recipe->orchestration) return 0;
     slash=strrchr(recipe->orchestration,'/'); *slash=0;
-    if (stat(recipe->bindings_path,&binding_info) || !S_ISREG(binding_info.st_mode) ||
-        binding_info.st_size<1 || binding_info.st_size>16*1024*1024) return 0;
-    recipe->document=toml_parse_file_ex(recipe->recipe_path);
-    recipe->bindings=toml_parse_file_ex(recipe->bindings_path);
+    mef_toml_file authored = mef_toml_file_read(recipe->recipe_path, 1024 * 1024);
+    recipe->document = authored.parsed;
+    recipe->recipe_source = authored.source;
+    free(authored.path);
+
+    mef_toml_file bindings = mef_toml_file_read(recipe->bindings_path, 16 * 1024 * 1024);
+    recipe->bindings = bindings.parsed;
+    bindings.parsed = (toml_result_t){0};
+    mef_toml_file_destroy(&bindings);
     if (!recipe->document.ok || !recipe->bindings.ok ||
         !keys(recipe->document.toptab,"|bpm_linearity_recipe_schema_version||project||run||assembly||preparation||bpm||detectors||calibration_bindings||native_recipe||qc||settings||inputs||identity|") ||
         !project_roots(recipe) ||
@@ -221,14 +224,6 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
         !mef_bpm_linearity_below(recipe->output,recipe->reduced)) return 0;
     recipe->reference_detector=mef_bpm_linearity_string(toml_get(recipe->document.toptab,"assembly"),"reference_detector");
     if (!recipe->reference_detector || !mef_recipe_run_paths(recipe->run,recipe->output,NULL,"CMDP")) return 0;
-    f=fopen(recipe->recipe_path,"rb");
-    if (!f) return 0;
-    if (fseek(f,0,SEEK_END) || (length=ftell(f))<1 || length>1024*1024 || fseek(f,0,SEEK_SET)) {
-        fclose(f); return 0;
-    }
-    recipe->recipe_source=calloc((size_t)length+1,1);
-    i=recipe->recipe_source && fread(recipe->recipe_source,1,(size_t)length,f)==(size_t)length;
-    if (fclose(f) || !i || memchr(recipe->recipe_source,0,(size_t)length)) return 0;
     rows=toml_get(recipe->bindings.toptab,"detectors");
     dependencies=toml_get(recipe->bindings.toptab,"dependencies");
     if (rows.type!=TOML_ARRAY || rows.u.arr.size<1 || rows.u.arr.size>4095 ||

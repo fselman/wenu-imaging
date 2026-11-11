@@ -4,6 +4,7 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_project.h"
+#include "mef_toml_file.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -110,8 +111,10 @@ static int visit(project_composition *c, const char *name, int depth)
         return 0;
     }
     index = c->count++;
-    c->names[index] = strdup(name);
-    c->documents[index] = toml_parse_file_ex(name);
+    mef_toml_file file = mef_toml_file_read(name, 0);
+    c->names[index] = file.path;
+    c->documents[index] = file.parsed;
+    free(file.source);
     if (!c->names[index] || !c->documents[index].ok) {
         return 0;
     }

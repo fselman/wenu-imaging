@@ -8,6 +8,7 @@
 #include "mef_bias_settings.h"
 #include "mef_recipe_inputs.h"
 #include "mef_project.h"
+#include "mef_toml_file.h"
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -144,7 +145,10 @@ static toml_result_t document(compilation *c, const char *name)
 {
     toml_result_t result = {0};
     if (name && freeze(c, name)) {
-        result = toml_parse_file_ex(name);
+        mef_toml_file file = mef_toml_file_read(name, 0);
+        result = file.parsed;
+        file.parsed = (toml_result_t){0};
+        mef_toml_file_destroy(&file);
     }
     return result;
 }

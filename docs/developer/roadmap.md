@@ -42,6 +42,27 @@ compatibility; Apple Silicon and Ubuntu coverage remain future work. Phase 3 is
 a product-profile requirement. Work details and unresolved defects belong in
 issues/PRs, not chronological additions to this roadmap.
 
+## Shared configuration migration for bias and BPM/linearity
+
+1. **Share TOML loading.** The caller supplies each path. The shared loader
+   returns a typed document and its source path. Project and recipe readers
+   interpret the fields and build named C structures for their callers.
+   Preserve project composition, existing input formats, and provenance.
+   Compare effective requests before changing the file layout.
+2. **Share detector-profile reading.** Read the duplicated bias detector
+   bindings from the agreed instrument profiles. Keep detector selection and
+   calibration bindings with the recipe. Retain support for the existing bias
+   recipe and legacy PAF-style settings during the transition.
+3. **Qualify the migration.** Compare detector identities, configuration slots,
+   FITS HDUs, calibration bindings, and effective settings against the qualified
+   bias and BPM/linearity cases. Verify numerical equivalence. The owner will
+   inspect all C files added or changed by the migration. Use descriptive names,
+   consistent spacing, blank lines between logical steps, and properly hyphenated
+   comments that explain intent, ownership, and scientific choices.
+
+Add ASDF configuration loading when a concrete input requires it. The
+reduction-profile selector and dependency checker remain later work.
+
 ## Shared processing-list contract
 
 BPM/linearity and bias use an absolute path in recipe `inputs.list`. Each row

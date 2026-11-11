@@ -7,7 +7,7 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_bias_config.h"
-#include "tomlc17.h"
+#include "mef_toml_file.h"
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
@@ -15,11 +15,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 
 struct mef_bias_config {
-    toml_result_t parsed;
-    char *path, *source, **argv;
+    mef_toml_file document;
+    char **argv;
     const char *project, *run;
     int argc, capacity;
     const char *primary[16], *detector[16];
@@ -44,20 +43,18 @@ void mef_bias_config_destroy(mef_bias_config *recipe)
         free(recipe->argv[i]);
     }
     free(recipe->argv);
-    toml_free(recipe->parsed);
-    free(recipe->source);
-    free(recipe->path);
+    mef_toml_file_destroy(&recipe->document);
     free(recipe);
 }
 
 const char *mef_bias_source(const mef_bias_config *recipe)
 {
-    return recipe ? recipe->source : NULL;
+    return recipe ? recipe->document.source : NULL;
 }
 
 const char *mef_bias_path(const mef_bias_config *recipe)
 {
-    return recipe ? recipe->path : NULL;
+    return recipe ? recipe->document.path : NULL;
 }
 
 const char *const *mef_bias_primary_keys(const mef_bias_config *recipe, size_t *count)
@@ -163,12 +160,12 @@ static char *resolve_recipe_path(const mef_bias_config *recipe, const char *text
     if (text[0] == '/') {
         return realpath(text, NULL);
     }
-    length = (size_t)(strrchr(recipe->path, '/') - recipe->path) + 1;
+    length = (size_t)(strrchr(recipe->document.path, '/') - recipe->document.path) + 1;
     name = malloc(length + strlen(text) + 1);
     if (!name) {
         return NULL;
     }
-    memcpy(name, recipe->path, length);
+    memcpy(name, recipe->document.path, length);
     strcpy(name + length, text);
     resolved = realpath(name, NULL);
     free(name);
@@ -250,9 +247,6 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     const char *path = NULL, *override = NULL, *qc_override = NULL;
     const char *reason = "Invalid bias recipe TOML envelope";
     mef_bias_config *recipe = NULL;
-    FILE *f = NULL;
-    struct stat st;
-    long length;
     toml_datum_t root, bias, entries, selection, provenance;
     char *settings = NULL, *csv = NULL;
     const char *ids[4096], *requested[4096], *reference = NULL;
@@ -289,34 +283,17 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     if (!recipe) {
         goto done;
     }
-    recipe->path = realpath(path, NULL);
-    if (!recipe->path) {
+    char *resolved_path = realpath(path, NULL);
+    if (!resolved_path) {
         goto done;
     }
-    f = fopen(recipe->path, "rb");
-    if (!f || fstat(fileno(f), &st) || !S_ISREG(st.st_mode) || fseek(f, 0, SEEK_END) ||
-        (length = ftell(f)) < 0 || length > 4 * 1024 * 1024 || fseek(f, 0, SEEK_SET)) {
+    recipe->document = mef_toml_file_read(resolved_path, 4 * 1024 * 1024);
+    free(resolved_path);
+    if (!recipe->document.parsed.ok) {
+        reason = recipe->document.parsed.errmsg;
         goto done;
     }
-    recipe->source = malloc((size_t)length + 1);
-    if (!recipe->source) {
-        goto done;
-    }
-    if (fread(recipe->source, 1, (size_t)length, f) != (size_t)length) {
-        goto done;
-    }
-    recipe->source[length] = 0;
-    if (memchr(recipe->source, 0, (size_t)length)) {
-        goto done;
-    }
-    fclose(f);
-    f = NULL;
-    recipe->parsed = toml_parse(recipe->source, (int)length);
-    if (!recipe->parsed.ok) {
-        reason = recipe->parsed.errmsg;
-        goto done;
-    }
-    root = recipe->parsed.toptab;
+    root = recipe->document.parsed.toptab;
     if (toml_get(root, "bias_recipe_schema_version").type == TOML_UNKNOWN) {
         if (override) {
             reason = "--detectors requires bias_recipe_schema_version=1";
@@ -325,7 +302,7 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
         mef_bias_config_destroy(recipe);
         return 1;
     }
-    if (length > 1024 * 1024 || !TABLE(root, root_keys)) {
+    if (recipe->document.length > 1024 * 1024 || !TABLE(root, root_keys)) {
         goto done;
     }
     toml_datum_t version = toml_get(root, "bias_recipe_schema_version");
@@ -593,9 +570,6 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     *owner = recipe;
     return 1;
 done:
-    if (f) {
-        fclose(f);
-    }
     report_recipe_error(message, size, reason);
     free(settings);
     free(csv);

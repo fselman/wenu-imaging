@@ -62,7 +62,7 @@ def resume_linearity_candidate(args, build, git):
     protected = [selected, command, build/'CMakeCache.txt', build/'mefpp2/mefpp_bias_recipe']
     for instrument in ('WFI', 'OCAM'):
         folder = Path('/Users/fselman/Pictures')/instrument/'test_recipes/orchestration'
-        protected += [folder/'run-bias.sh', folder/'bias-recipe.toml']
+        protected += [folder/'run-bias.sh', folder/(instrument.lower()+'-bias.toml')]
     guards = {str(path): sha(path) for path in protected}
     retry = Path(tempfile.mkdtemp(prefix='linearity-recipe-recheck-', dir=candidate))
     validation = retry/'validation-source'
@@ -197,7 +197,7 @@ def prepare_observation_project(args, build, git):
                  build.parent.parent/'main-bias-jk_5noln/mefpp_bias_recipe', *engines]
     for instrument in ('WFI', 'OCAM'):
         folder = Path('/Users/fselman/Pictures')/instrument/'test_recipes/orchestration'
-        protected += [folder/'run-bias.sh', folder/'bias-recipe.toml']
+        protected += [folder/'run-bias.sh', folder/(instrument.lower()+'-bias.toml')]
     guards = {str(p): sha(p) for p in protected}
     work = Path(tempfile.mkdtemp(prefix='bpm-linearity-project-', dir=build.parent.parent))
     source = work/'source'
@@ -394,7 +394,7 @@ def main():
     protected = [selected, build/'mefpp2/mefpp_bias_recipe', *saved_guards]
     for instrument in ('WFI','OCAM'):
         folder = Path('/Users/fselman/Pictures')/instrument/'test_recipes/orchestration'
-        protected += [folder/'run-bias.sh', folder/'bias-recipe.toml']
+        protected += [folder/'run-bias.sh', folder/(instrument.lower()+'-bias.toml')]
     if args.assembly_reference:
         for name in ('mefpp_bpm_assemble', 'bpm_mef_assembly_probe', 'mef_assembly_probe'):
             member = reference/name
