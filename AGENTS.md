@@ -19,17 +19,20 @@ existing preparation/BPM services in process, then joins their final MEF/QC.
 The feature branch now implements direct native schema-2 TOML admission and the
 shared command catalogue. Historical schema-1 compatibility remains available;
 external binding compilation is not a prerequisite for the new public command.
-Local numerical/help checks do not qualify the Mac ASDF writer; keep the new
-producer unselected until its native Mac and observational gates pass. Native recipe selection
-requires its own Mac ASDF/ownership gate and comparison with the CCD65 pilot.
-An explicit assembly section selects the reference detector for final MEF/QC. Final assembly
-passed the synthetic Mac gate at 6f3eaaf. The per-stage CCD65 pilot passed exact
-saved-product checks and visual plot inspection. The shared-cube supplied-mask
-path passed the Mac ASDF gates and exact CCD65 checks; explicit archive-mask
-omission still needs its Mac gate. The new coordinator is not selected. Historical calibrations may be bound to byte-identical copies under
-reduced/cal through explicit recipe source/path/SHA256 entries. Preserve original
-ASDF/handoff records and verify copied bytes against their frozen fingerprints. Reuse the existing
-numerical services and recipe directory contract.
+The complete synthetic Mac gate passed for native producer
+61b95c1ebdbdef988bf202ed33bd8403455a398a: direct TOML admission/default indices,
+identity guards, shared-cube ownership, both QC modes, supplied-mask skip,
+robust BPM creation, native ASDF and independent saved readers. The earlier
+cec9626 supplied-mask/QC-off direct CLI CCD65 run matches the retained reference
+in all five decoded measurement groups, with 32 image loads/30 corrections.
+Observational creation without an input mask, WFI and full-mosaic qualification
+remain pending. The new command is staged, not selected. Keep the accepted bias
+producer and active controls unchanged. Evidence and exact artifact locations
+are recorded in PR #305.
+An explicit assembly section selects the reference detector for final MEF/QC.
+Historical calibrations may be bound to byte-identical copies under reduced/cal;
+preserve original ASDF/handoff lineage and verify copied bytes against frozen
+fingerprints. Reuse the existing numerical services and directory contract.
 CCD68/90 residual investigation and the viewer Update service remain deferred.
 Linearity characterization is measurement only for now; do not apply a linearity
 correction. Cross-talk characterization and correction remain deferred. Keep the admitted
@@ -43,8 +46,8 @@ correct each detector image plane once into one owned processed cube; optionally
 create/publish its robust-fit BPM and measured QC; then measure linearity/ROIs
 from that same cube before release. Raw-only evidence is captured during ingestion.
 Downstream services borrow processed planes without input I/O or reprocessing.
-The supplied-mask shared-cube path passed its Mac ASDF and CCD65 checks;
-explicit archived-mask omission and new controls still require their affected gates. A supplied BPM skips creation and logs the reason. `--qc true/false`
+Supplied-mask and omitted-mask synthetic paths passed native Mac ASDF checks;
+only the supplied-mask path has the bounded observational comparison. A supplied BPM skips creation and logs the reason. `--qc true/false`
 overrides the recipe boolean (default true); false suppresses optional BPM
 full-frame QC and MAD without disabling requested linearity measurements.
 Native schema 2 requires each detector to declare an input BPM calibration path

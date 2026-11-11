@@ -19,11 +19,12 @@ controls and inputs without redeclaring raw/reduced roots.
 
 ## Required BPM/linearity detector flow
 
-The shared-cube source is owner-accepted. Its supplied-mask path has Mac ASDF
-and exact CCD65 comparison evidence; explicit archived-mask omission and new
-controls retain their separate qualification requirements. The standalone command
-interface is implemented with local numerical checks; its native Mac ASDF and
-observational qualification remain pending.
+The shared-cube source is owner-accepted. The complete synthetic Mac gate covers
+native admission/default indices, both QC modes, supplied-mask reuse and
+omitted-mask creation/publication. A bounded supplied-mask/QC-off CCD65 direct
+CLI run reproduces all five saved measurement groups. Observational creation
+without a mask, WFI and full-mosaic qualification remain pending; the staged
+command is not selected.
 
 1. Admit ordered input identities, geometry, fixed calibrations and requested steps.
 2. Read each required detector image plane once. Capture requested raw-only QC,

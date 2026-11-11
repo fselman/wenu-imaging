@@ -6,7 +6,7 @@
 \emergencystretch=2em
 \title{bpm-linearity guide}
 \author{Wenu-imaging}
-\date{10 November 2026}
+\date{11 November 2026}
 \begin{document}
 \maketitle
 \section*{Executive summary}
@@ -17,9 +17,8 @@ robust response BPM. Measure linearity ROIs, pairs and direct sites from that
 same cube, publish FITS/ASDF, then release it. Linearity is measurement only:
 no physical response correction, shutter solution or gain conversion is applied.
 
-\textbf{Qualification status.} Native TOML admission and the unified command are
-implemented. Local synthetic numerical/help checks pass; Mac native-ASDF and
-observational qualification of this interface remain required before selection.
+\textbf{Qualification.} Synthetic Mac checks and supplied-mask CCD65 comparison
+passed. Observational BPM creation, WFI and full-mosaic tests remain pending.
 
 \section*{Command and help}
 Run from orchestration; reference a project TOML and use a fresh empty reduced run.

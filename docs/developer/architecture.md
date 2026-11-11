@@ -91,8 +91,10 @@ must not erase evidence or masquerade as scientific acceptance.
 
 Bias is accepted. The BPM/linearity shared-cube processing has focused numerical
 and Mac evidence. Native schema-2 admission and the unified command/help catalogue
-are implemented with local synthetic numerical checks. Mac ASDF/ownership and
-observational qualification of this interface remain required before standalone
-selection; historical binding compilation is compatibility only. See the [roadmap](roadmap.md).
+are implemented and passed the complete synthetic Mac gate. A bounded
+supplied-mask/QC-off CCD65 direct CLI run reproduces the saved reference
+measurements. Observational BPM creation without an input mask, WFI and
+full-mosaic qualification remain pending; the new command is not selected.
+Historical binding compilation is compatibility only. See the [roadmap](roadmap.md).
 Configuration resources under `docs/architecture/proposed/` retain their existing
 paths; their older designs do not override this architecture or current owner decisions.

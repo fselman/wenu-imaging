@@ -1,10 +1,12 @@
 # Current priorities
 
-1. Qualify the new standalone native BPM/linearity interface using the accepted bias
+1. Complete observational BPM/linearity qualification using the accepted bias
    template. `mefpp_recipe cal bpm-linearity --config RECIPE.toml` must admit its
    inputs and run without an external preparation stage or generated-bindings
-   prerequisite. Preserve the shared processed cube and existing estimators.
-2. Qualify hierarchical help and the shared catalogue covering every recipe:
+   prerequisite. The complete synthetic Mac gate and bounded supplied-mask CCD65
+   comparison passed. Next: CCD65 creation without an input mask, then reviewed
+   broader detector/instrument coverage. Preserve the cube and existing estimators.
+2. Preserve validated hierarchical help and the shared catalogue for every recipe:
    `mefpp --help`, `mefpp_recipe CATEGORY --help`, and operation help. Categories
    include `cal` and `sci`; unmigrated entries are pending and refuse execution.
    Help requires no observation/configuration and lists implemented inputs,
