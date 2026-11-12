@@ -278,7 +278,9 @@ static mef_status calculate(void *opaque,mef_error **error) {
     if(lo==DBL_MAX || hi==-DBL_MAX) goto bad;
     q->minimum_reference_fraction=lo; q->maximum_reference_fraction=hi; q->span_fraction=hi-lo;
     q->distinct_levels=distinct; q->usable_pairs=pairs; q->distinct_times=distinct_times; q->paired_levels=paired_levels;
-    free(pair_times);
+    if (pair_times) {
+        free(pair_times);
+    }
     if(hi-lo<q->minimum_span_fraction || distinct<(q->mode==MEF_BPM_QUICK?5:2) ||
         (q->mode==MEF_BPM_QUICK && (pairs<5 || distinct_times<5 || paired_levels<5))) {
         q->coverage_passed=0;
@@ -286,7 +288,10 @@ static mef_status calculate(void *opaque,mef_error **error) {
     }
     return MEF_OK;
 bad:
-    free(pair_times); return MEF_ERR_COMPUTATION;
+    if (pair_times) {
+        free(pair_times);
+    }
+    return MEF_ERR_COMPUTATION;
 }
 static void cleanup(void *opaque) {
     file_state *s=opaque;

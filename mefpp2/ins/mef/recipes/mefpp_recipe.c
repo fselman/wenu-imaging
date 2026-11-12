@@ -7,6 +7,7 @@
 
 int mef_bias_command(int, char **);
 int mef_bpm_linearity_command(int, char **);
+int mef_project_init_command(int, char **);
 typedef int (*recipe_entry)(int, char **);
 
 typedef struct {
@@ -46,6 +47,9 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Recipe %s %s is pending; no processing performed.\n", c->category,
                     c->operation);
                 return EXIT_FAILURE;
+            }
+            if (!strcmp(c->category, "project")) {
+                return c->entry(argc, argv);
             }
             errno = 0;
             if (getpriority(PRIO_PROCESS, 0) < 10 && !errno && setpriority(PRIO_PROCESS, 0, 10)) {

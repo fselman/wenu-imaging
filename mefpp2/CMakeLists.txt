@@ -452,7 +452,7 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       # One native public executable; compatibility binaries keep their entry points.
       get_target_property(bias_recipe_sources mefpp_bias_recipe SOURCES)
       get_target_property(bpm_linearity_sources mefpp_bpm_linearity_recipe SOURCES)
-      add_executable(mefpp_recipe ins/mef/recipes/mefpp_recipe.c
+      add_executable(mefpp_recipe ins/mef/recipes/mefpp_recipe.c ins/mef/recipes/mefpp_project_init.c
         ins/mef/common/mef_recipe_help.c ${bias_recipe_sources} ${bpm_linearity_sources})
       target_include_directories(mefpp_recipe PRIVATE ../third_party/tomlc17)
       target_link_libraries(mefpp_recipe PRIVATE mefpp_bias_product_qc

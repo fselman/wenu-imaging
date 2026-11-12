@@ -19,6 +19,7 @@ void mef_recipe_top_help(FILE *out, const char *program)
         fputs("Usage: mefpp [legacy options]\n", out);
     }
     fputs("Usage: mefpp_recipe CATEGORY OPERATION --config RECIPE.toml [options]\n", out);
+    fputs("       mefpp_recipe project init [options]\n", out);
     for (i = 0; i < sizeof(catalogue) / sizeof(*catalogue); ++i) {
         for (j = 0; j < i; ++j) {
             if (!strcmp(catalogue[j].category, catalogue[i].category)) {
@@ -26,7 +27,7 @@ void mef_recipe_top_help(FILE *out, const char *program)
             }
         }
         if (j == i) {
-            fprintf(out, "  mefpp_recipe %s --help     List %s recipes\n", catalogue[i].category,
+            fprintf(out, "  mefpp_recipe %s --help     List %s commands\n", catalogue[i].category,
                 catalogue[i].category);
         }
     }
@@ -37,12 +38,13 @@ int mef_recipe_category_help(FILE *out, const char *category)
 {
     size_t i;
     int found = 0;
+    int project = !strcmp(category, "project");
     for (i = 0; i < sizeof(catalogue) / sizeof(*catalogue); ++i) {
         if (!strcmp(category, catalogue[i].category)) {
             if (!found) {
                 fprintf(out,
-                    "Usage: mefpp_recipe %s OPERATION --config RECIPE.toml [options]\nRecipes:\n",
-                    category);
+                    "Usage: mefpp_recipe %s OPERATION%s [options]\nCommands:\n",
+                    category, project ? "" : " --config RECIPE.toml");
             }
             fprintf(out, "  %-14s %-8s %s\n", catalogue[i].name,
                 catalogue[i].ready ? "native" : "pending", catalogue[i].purpose);
@@ -50,16 +52,26 @@ int mef_recipe_category_help(FILE *out, const char *category)
         }
     }
     if (found) {
-        fputs("Operation --help lists inputs, options, defaults and outputs.\n"
-              "Pending entries reserve the command; execution is not implemented.\n"
-              "Help requires no configuration or observations and performs no processing.\n",
-            out);
+        fputs("Operation --help lists inputs, options, defaults and outputs.\n", out);
+        if (!project) {
+            fputs("Pending entries reserve the command; execution is not implemented.\n", out);
+        }
+        fputs("Help requires no configuration or observations and performs no processing.\n", out);
     }
     return found;
 }
 
 void mef_recipe_operation_help(FILE *out, const char *category, const char *operation)
 {
+    if (!strcmp(category, "project") && !strcmp(operation, "init")) {
+        fputs("Usage: mefpp_recipe project init --name NAME --orchestration DIR --raw DIR --reduced DIR\n"
+              "All options are required. The raw directory and destination parents must exist.\n"
+              "Creates fresh orchestration and reduced directories, including project.toml\n"
+              "and reduced subdirectories cal, work and logs. The roots must be disjoint.\n"
+              "Orchestration may have any name. Existing destinations are refused.\n"
+              "  --help   Show this help\n", out);
+        return;
+    }
     fprintf(out, "Usage: mefpp_recipe %s %s --config RECIPE.toml [options]\n", category, operation);
     {
         size_t i;

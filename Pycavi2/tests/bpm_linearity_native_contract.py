@@ -36,6 +36,46 @@ with tempfile.TemporaryDirectory(prefix='recipe-help-', dir=args.work_parent) as
             assert 'pending; no processing performed' in check.stderr
         assert not list(Path(empty).iterdir()), arguments
     print('PASS: complete catalogue, data-free hierarchical help and pending execution refusal')
+
+with tempfile.TemporaryDirectory(prefix='project-init-', dir=args.work_parent) as temporary:
+    root = Path(temporary).resolve()
+    raw = root / 'raw'
+    raw.mkdir()
+    observation = raw / 'observation.fits'
+    observation.write_bytes(b'raw input sentinel')
+
+    def initialize(orchestration, reduced, name='Test "project"'):
+        return subprocess.run([str(command), 'project', 'init', '--name', name,
+                               '--orchestration', str(orchestration), '--raw', str(raw),
+                               '--reduced', str(reduced)], cwd=root, capture_output=True, text=True)
+
+    for orchestration, reduced in (('WFI controls', 'WFI output'), ('ocam-candidate', 'ocam-reduced')):
+        result = initialize(orchestration, reduced)
+        assert result.returncode == 0, result.stderr
+        controls = root / orchestration
+        output = root / reduced
+        project = controls / 'project.toml'
+        original = project.read_bytes()
+        assert tomllib.loads(original.decode()) == {
+            'project_schema_version': 2,
+            'project': {'schema_version': 1, 'id': 'Test "project"', 'name': 'Test "project"',
+                        'roots': {'raw': str(raw), 'calibration': str(output / 'cal'),
+                                  'output': str(output), 'work': str(output / 'work'),
+                                  'logs': str(output / 'logs')}},
+        }
+        assert {p.name for p in output.iterdir()} == {'cal', 'work', 'logs'}
+        assert all(p.is_dir() for p in output.iterdir())
+        assert {p.name for p in controls.iterdir()} == {'project.toml'}
+        assert initialize(orchestration, reduced).returncode != 0
+        assert project.read_bytes() == original
+    assert initialize('unused controls', 'WFI output').returncode != 0
+    assert not (root / 'unused controls').exists()
+    assert initialize('raw/controls', 'unused output').returncode != 0
+    assert initialize('same', 'same').returncode != 0
+    assert not (root / 'unused output').exists() and not (root / 'same').exists()
+    assert list(raw.iterdir()) == [observation] and observation.read_bytes() == b'raw input sentinel'
+    print('PASS: isolated named projects, minimal TOML, read-only raw and overwrite refusal')
+
 from linearity_preparation_fixture import fixture
 from astropy.io import fits
 
@@ -68,6 +108,8 @@ for qc, supplied, operation, listed, include_bias in cases:
     text = 'bpm_linearity_recipe_schema_version = 2\nproject = "project.toml"\nsettings = "native.toml"\nrun = ' + json.dumps(str(out.relative_to(reduced))) + '\nqc = ' + str(qc).lower() + '\n'
     sections = dict(assembly=dict(reference_detector='ESO_CCD_#65'), preparation=dict(detector_toml='detector_toml.toml', processing_toml='processing_toml.toml'), bpm=dict(acquisition='quick', output_mode='new', upper_fraction=0.85, minimum_span_fraction=0.99, maximum_pair_difference=0.02, response_low=0.6, response_high=1.4), identity=dict(identity_key='DETID', amplifier_key='AMPID', bin_x_key='XBINNING', bin_y_key='YBINNING', exposure_key='EXPTIME', exposure_hdu=0))
     for key, value in sections.items():
+        if key == 'bpm' and listed and not supplied:
+            value['acquisition'] = 'provisional'
         text += '\n[' + key + ']\n' + ''.join((k + ' = ' + json.dumps(v) + '\n' for k, v in value.items()))
     text += '\n[inputs]\nbias = ' + json.dumps([b['path'] for b in state['biases']]) + '\n'
     pairs = {}
@@ -108,6 +150,9 @@ for qc, supplied, operation, listed, include_bias in cases:
         print('FAILED', file)
         print(result.stdout, result.stderr)
         raise SystemExit(result.returncode)
+    if listed and not supplied:
+        assert not any('free requested on NULL pointer' in line and 'mef_bpm_files.c' in line
+                       for line in result.stderr.splitlines()), result.stderr
     receipt = tomllib.loads((out / 'native-recipe.toml').read_text())
     controls = orch / out.name / 'detector-000'
     native = Path(tomllib.loads((orch / out.name / 'native-bindings.toml').read_text())['detectors'][0]['preparation'][9])
