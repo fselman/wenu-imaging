@@ -52,7 +52,9 @@ def prepare_context(dependencies, resolved, directory, controls, *, source_revis
 
 def native_context(saved, q, texts):
     """Decode native authoring evidence; no original files or historical replay."""
-    resolved = recipe.configuration.resolve(saved['detector_profile'], saved['processing_profile'])
+    resolved = recipe.configuration.resolve(
+        saved['detector_profile'], saved['processing_profile'], detector_id=saved['detector']
+    )
     author = tomllib.loads(saved['recipe_source'])
     qc.require(author['bpm_linearity_recipe_schema_version'] == 2 and
                saved['historical_comparison'] == 'not_requested', 'Unexpected native authoring context')

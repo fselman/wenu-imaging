@@ -21,7 +21,7 @@ struct mef_bias_config {
     mef_toml_file document, detector_profile;
     char **argv;
     const char *project, *run;
-    int argc, capacity;
+    int argc, capacity, embedded_settings;
     const char *primary[16], *detector[16];
     size_t primary_count, detector_count;
     const char *median_even_handling;
@@ -47,6 +47,16 @@ void mef_bias_config_destroy(mef_bias_config *recipe)
     mef_toml_file_destroy(&recipe->document);
     mef_toml_file_destroy(&recipe->detector_profile);
     free(recipe);
+}
+
+mef_status mef_bias_config_settings(const mef_bias_config *recipe, const char *path,
+    mef_config_document **out, char *diagnostic, size_t capacity)
+{
+    if (recipe && recipe->embedded_settings) {
+        return mef_config_document_from_domains(&recipe->document, &recipe->detector_profile,
+            out, diagnostic, capacity);
+    }
+    return mef_config_document_from_toml(path, NULL, out, diagnostic, capacity);
 }
 
 const char *mef_bias_source(const mef_bias_config *recipe)
@@ -233,7 +243,7 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     mef_bias_config **owner, char *message, size_t size)
 {
     static const char *root_keys[] = {
-        "bias_recipe_schema_version", "settings", "bias", "detector", "detector_toml",
+        "bias_recipe_schema_version", "settings", "native", "bias", "detector", "detector_toml",
         "provenance", "inputs", "project", "run"};
     static const char *bias_keys[] = {"detectors", "reference_detector", "mad", "ron_pair",
         "high_sigma", "readout_id", "bin_x", "bin_y", "input_bpm", "bpm_hdu", "bpm_good_value",
@@ -501,7 +511,21 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
         reason = "Reference detector is outside the selected set";
         goto done;
     }
-    settings = resolve_recipe_path(recipe, toml_string_value(toml_get(root, "settings")));
+    toml_datum_t settings_reference = toml_get(root, "settings");
+    recipe->embedded_settings = settings_reference.type == TOML_UNKNOWN;
+    if (recipe->embedded_settings) {
+        if (!shared || !input_list || toml_get(root, "native").type != TOML_TABLE) {
+            reason = "Embedded bias settings require detector_toml, inputs.list and [native] domains";
+            goto done;
+        }
+        settings = strdup(recipe->document.path);
+    } else {
+        if (toml_get(root, "native").type != TOML_UNKNOWN) {
+            reason = "Choose embedded native domains or a legacy settings file";
+            goto done;
+        }
+        settings = resolve_recipe_path(recipe, toml_string_value(settings_reference));
+    }
     if (!settings) {
         goto done;
     }

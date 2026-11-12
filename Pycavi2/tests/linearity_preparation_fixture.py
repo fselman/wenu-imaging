@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import struct
 import sys
+import tomllib
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'mefpp2/tests'))
 sys.path.insert(0,str(ROOT/'Pycavi2/pycavi/pycavi'))
@@ -14,6 +15,34 @@ from layout_contract import header
 from config_snapshot_contract import expected_values
 import pycavi_linearity_config as config
 import pycavi_linearity_recipe as recipe
+
+
+def embedded_native_domains(legacy_settings):
+    """Express the fixture's exact flat values using the native domain registry."""
+    native = tomllib.loads(legacy_settings)['native']
+    catalogue = (ROOT / 'mefpp2/ins/mef/common/mef_config_domains.def').read_text()
+    domains = {name: [] for name in ('instrument', 'processing', 'product')}
+    detector_count = native['MEF.NCHIPS']
+    for key, path, unit in re.findall(
+            r'MEF_DOMAIN\("([^"]+)", "([^"]+)", "[^"]+", "([^"]+)",', catalogue):
+        slots = range(1, detector_count + 1) if '%d' in key else [None]
+        for slot in slots:
+            native_key = key % slot if slot is not None else key
+            domain_path = path % slot if slot is not None else path
+            if native_key not in native:
+                continue
+            table, field = domain_path.rsplit('.', 1)
+            domains.setdefault(table, []).append(
+                f'{field} = {{ value = {json.dumps(native.pop(native_key), ensure_ascii=False)}, '
+                f'unit = "{unit}" }}\n'
+            )
+    assert not native, native
+    instrument, recipe = [], []
+    for table, fields in domains.items():
+        owner = instrument if table.startswith('instrument') else recipe
+        version = 'schema_version = 1\n' if '.' not in table else ''
+        owner.append(f'\n[native.{table}]\n' + version + ''.join(fields))
+    return ''.join(instrument), ''.join(recipe)
 
 
 def fixture(work, *, separated=False, supplied_bpm=True, masked_site=False):

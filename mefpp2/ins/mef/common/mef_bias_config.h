@@ -1,5 +1,6 @@
 #ifndef MEF_BIAS_CONFIG_H
 #define MEF_BIAS_CONFIG_H
+#include "mef_config_toml.h"
 #include <stddef.h>
 typedef struct mef_bias_config mef_bias_config;
 /* Expand only the small recipe envelope; numerical settings keep their reader.
@@ -13,5 +14,7 @@ const char *const *mef_bias_detector_keys(const mef_bias_config *, size_t *);
 const char *mef_bias_median_even_handling(const mef_bias_config *);
 const char *mef_bias_project(const mef_bias_config *);
 const char *mef_bias_run(const mef_bias_config *);
+mef_status mef_bias_config_settings(const mef_bias_config *, const char *path,
+    mef_config_document **out, char *diagnostic, size_t capacity);
 void mef_bias_config_destroy(mef_bias_config *);
 #endif

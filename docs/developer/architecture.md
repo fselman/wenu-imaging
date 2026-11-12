@@ -59,8 +59,10 @@ explicit bindings; do not infer them from array position.
 
 Raw observations and explicitly selected calibration FITS products are data inputs.
 The four-file contract requires no separate native settings or processing-profile
-TOML. During migration, move settings according to their ownership and preserve
-effective values. Legacy formats remain compatibility inputs.
+TOML. The detector TOML owns `[native.instrument]` and the applied trim and scan
+rectangles. Each recipe owns `[native.processing]` and `[native.product]`.
+BPM/linearity also owns its `[preparation]` controls and ROI rectangles.
+Legacy formats remain compatibility inputs.
 
 The shared TOML loader takes an explicit path and returns an owned, typed
 document with its source path and bytes. It preserves the TOML values as

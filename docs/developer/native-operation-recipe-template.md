@@ -50,8 +50,8 @@ is `mefpp_recipe CATEGORY OPERATION`. Register every recipe in the common native
 catalogue, which supplies dispatch and help for `cal` and `sci`. Pending recipes
 have named entries and refuse execution until migrated. Retain existing executable aliases and stored producer
 identifiers during migration. Native recipe admission reads `--config RECIPE.toml`
-and referenced project/settings/input files directly; no external preparation or
-generated-bindings prerequisite is part of the user interface. Top-level,
+and referenced project TOML, detector TOML and classified list directly. External preparation or
+generated bindings are internal to the native workflow. Top-level,
 calibration and operation help must work without configuration or processing.
 Keep the guide concise, begin with an executive summary, and document native
 commands, options, defaults and outputs without `nice`.

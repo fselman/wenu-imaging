@@ -96,7 +96,7 @@ void mef_recipe_operation_help(FILE *out, const char *category, const char *oper
         }
     }
     if (!strcmp(operation, "bias")) {
-        fputs("Inputs: recipe/project/settings TOMLs and classified processing list; reduced dependencies.\n"
+        fputs("Inputs: recipe, project and detector TOMLs, classified processing list and reduced dependencies.\n"
               "  --input ABS_LIST     Processing list: absolute FITS path and DPR.TYPE (BIAS only)\n"
               "  Recipe inputs.list takes an absolute path; run selects the reduced destination.\n"
               "  --bias FILE          Legacy unclassified-list compatibility\n"
@@ -107,8 +107,8 @@ void mef_recipe_operation_help(FILE *out, const char *category, const char *oper
               "Outputs: master-bias MEF FITS, matching ASDF QC and log.\n",
             out);
     } else {
-        fputs("Inputs: recipe/project/settings TOMLs, absolute inputs.list path with absolute FITS paths and DPR.TYPE,\n"
-              "reduced master bias and optional BPM; explicit detector/HDU/ROI/site bindings.\n"
+        fputs("Inputs: recipe, project and detector TOMLs, absolute inputs.list path with absolute FITS paths and DPR.TYPE,\n"
+              "reduced master bias and optional BPM; detector selection and explicit ROI/site definitions.\n"
               "Flat pairs derive from header exposure times; missing/ambiguous pairs fail.\n"
               "Raw BIAS rows are optional diagnostic evidence; dependencies are never reduced.\n"
               "  --qc true|false      Override recipe qc; default true\n"

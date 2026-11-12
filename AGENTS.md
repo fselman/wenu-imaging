@@ -27,9 +27,10 @@ cec9626 supplied-mask/QC-off direct CLI CCD65 run matches the retained reference
 in all five decoded measurement groups, with 32 image loads/30 corrections.
 The earlier no-mask CCD65 run passed saved-product checks and owner Viewer inspection.
 The classified-list and fresh-project workflows passed for WFI and OCAM on
-Mac. The four-file configuration migration remains open. Keep the accepted
-bias producer and active controls unchanged until selection. Record comparison
-summaries in PR #305.
+Mac. The four-file configuration is implemented for bias and BPM/linearity
+and has passed local synthetic checks. Its Mac qualification remains open.
+Keep the accepted bias producer and active controls unchanged until selection.
+Record comparison summaries in PR #305.
 An explicit assembly section selects the reference detector for final MEF/QC.
 Historical calibrations may be bound to byte-identical copies under reduced/cal;
 preserve original ASDF/handoff lineage and verify copied bytes against frozen

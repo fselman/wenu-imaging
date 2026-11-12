@@ -6,7 +6,7 @@ covers numerical integration only, never the production serializer.
 """
 from pathlib import Path
 import sys, json, tempfile, subprocess, hashlib, tomllib
-import argparse, os, re
+import argparse, os, re, struct
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'Pycavi2/tests'), str(ROOT / 'Pycavi2/pycavi/pycavi')]
 parser = argparse.ArgumentParser(description='Tiny standalone native recipe contract; no archived inputs or observations')
@@ -76,7 +76,7 @@ with tempfile.TemporaryDirectory(prefix='project-init-', dir=args.work_parent) a
     assert list(raw.iterdir()) == [observation] and observation.read_bytes() == b'raw input sentinel'
     print('PASS: isolated named projects, minimal TOML, read-only raw and overwrite refusal')
 
-from linearity_preparation_fixture import fixture
+from linearity_preparation_fixture import embedded_native_domains, fixture
 from astropy.io import fits
 
 work = Path(tempfile.mkdtemp(prefix='native-admission-', dir=args.work_parent.resolve(strict=True)))
@@ -107,6 +107,20 @@ for k, v in dict(raw=state['raw'], calibration=reduced / 'cal', output=reduced, 
 project = project.replace('"../../examples/omegacam/full.toml"', json.dumps(str(orch / 'native.toml')))
 (orch / 'project-base.toml').write_text(project)
 (orch / 'project.toml').write_text('project_schema_version = 2\ninclude = ["project-base.toml"]\n')
+(orch / 'project-four-file.toml').write_text(project.split('\n[association]', 1)[0])
+geometry, native_recipe = embedded_native_domains((orch / 'native.toml').read_text())
+processing_profile = (orch / 'processing_toml.toml').read_text()
+trim_start = processing_profile.index('[[trim]]')
+roi_start = processing_profile.index('[[roi]]')
+embedded_preparation = (
+    '\n[preparation]\n'
+    + processing_profile[:trim_start].replace('[linearity_preparation]', '[preparation.linearity_preparation]')
+    + processing_profile[roi_start:].replace('[[roi]]', '[[preparation.roi]]')
+)
+(orch / 'four-file-detector.toml').write_text(
+    (orch / 'detector_toml.toml').read_text() + '\n'
+    + processing_profile[trim_start:roi_start] + geometry
+)
 cases=[(False,False,'bpm-linearity',True,False),(False,True,'bpm-linearity',True,True),
        *[(a,b,c,False,True) for a,b,c in ((True,True,'bpm-linearity'),(True,False,'bpm-linearity'),(False,True,'bpm-linearity'),(False,False,'bpm-linearity'),(False,False,'linearity'))]]
 for qc, supplied, operation, listed, include_bias in cases:
@@ -149,12 +163,29 @@ for qc, supplied, operation, listed, include_bias in cases:
         if listed:
             text='\n'.join(line for line in text.splitlines() if not line.startswith('bias_accepted ='))+'\n'
         assert '[[inputs.flat]]' not in text
+    if listed:
+        text = (text.replace('settings = "native.toml"', 'detector_toml = "four-file-detector.toml"')
+                .replace('project = "project.toml"', 'project = "project-four-file.toml"'))
+        text = text.replace(
+            '\n[preparation]\ndetector_toml = "detector_toml.toml"\nprocessing_toml = "processing_toml.toml"\n',
+            '',
+        )
+        text += embedded_preparation + native_recipe
     file = orch / (out.name + '.toml')
     file.write_text(text)
     argv = [str(command), 'cal', operation, '--config', str(file)]
     if not qc and supplied:
         argv += ['--qc', 'false']
-    result = subprocess.run(argv, cwd=orch, capture_output=True, text=True)
+    hidden = []
+    if listed:
+        for name in ('native.toml', 'processing_toml.toml'):
+            path = orch / name
+            hidden.append((path.rename(orch / (name + '.hidden')), path))
+    try:
+        result = subprocess.run(argv, cwd=orch, capture_output=True, text=True)
+    finally:
+        for parked, path in hidden:
+            parked.rename(path)
     if result.returncode:
         print('FAILED', file)
         print(result.stdout, result.stderr)
@@ -168,6 +199,13 @@ for qc, supplied, operation, listed, include_bias in cases:
     import pycavi_linearity_native_archive as archive
     import pycavi_linearity_preparation_qc as reader
     saved = json.loads((controls / 'context.json').read_text())
+    if listed:
+        expected_settings = tomllib.loads((orch / 'native.toml').read_text())['native']
+        for key, value in (('MEF.BPM.LGAINTHR', 0.6), ('MEF.BPM.HGAINTHR', 1.4)):
+            expected_settings[key], = struct.unpack('>f', struct.pack('>f', value))
+        assert tomllib.loads(saved['effective_settings_toml'])['native'] == expected_settings
+        assert saved['recipe_source'] == saved['processing_profile'] == text
+        assert saved['detector_profile'] == (orch / 'four-file-detector.toml').read_text()
     q = dict(provenance=dict(configuration=dict(snapshot=(native / 'configuration.json').read_text())))
     context = archive.native_context(saved, q, {})
     value = reader.collect(native, context['resolved'], context['selection'], context['biases'], None, context['master_snapshot'], master_reference=context['master'])
@@ -206,7 +244,7 @@ for qc, supplied, operation, listed, include_bias in cases:
         assert before == {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in out.rglob('*') if p.is_file()}
     repeated = subprocess.run(argv, cwd=orch, capture_output=True, text=True)
     assert repeated.returncode != 0, 'Completed run was overwritten'
-    print('PASS', operation, qc, supplied, receipt['detectors'][0]['image_loads'], receipt['detectors'][0]['corrections'], 'classified-list' if listed else 'inline-compatibility', 'analytical signals; pair/exposure/direct-site counts 50/100/100')
+    print('PASS', operation, qc, supplied, receipt['detectors'][0]['image_loads'], receipt['detectors'][0]['corrections'], 'four-file' if listed else 'inline-compatibility', 'analytical signals; pair/exposure/direct-site counts 50/100/100')
 for label, old, new in (('identity-type', 'exposure_hdu = 0', 'exposure_hdu = "zero"'), ('unknown-site-field', 'x = 1\n', 'x = 1\nunknown_coordinate = 9\n'), ('missing-master', 'master_sha256 = "' + d['master_sha256'] + '"', 'master_sha256 = "' + '0' * 64 + '"'), ('combined-without-prior', 'output_mode = "new"', 'output_mode = "combined"'),
     ('bias-flat-index-collision', 'input_index = 10', 'input_index = 0'),
     ('flat-index-collision', 'input_index = 11', 'input_index = 10'),

@@ -36,11 +36,20 @@ CONTROL_FIELDS = {
 }
 
 
-def resolve(detector_text, processing_text):
+def resolve(detector_text, processing_text, *, detector_id=None):
     """Validate explicit schemas/values; keep reference and applied regions apart."""
     require(type(detector_text) is str and type(processing_text) is str,
             'Explicit UTF-8 TOML text required')
     d, p = tomllib.loads(detector_text), tomllib.loads(processing_text)
+    embedded = 'bpm_linearity_recipe_schema_version' in p and 'detector_toml' in p
+    if embedded:
+        selected = {row['detector_id'] for row in p['detectors']}
+        if detector_id is not None:
+            require(detector_id in selected, 'Detector missing from the recipe')
+            selected = {detector_id}
+        catalogued = {row['id'] for row in d['detector'] if row.get('enabled', True) is True}
+        require(selected and selected <= catalogued, 'Unknown or disabled detector selection')
+        p = {**p['preparation'], 'trim': d['trim']}
     require(type(d.get('footprint_schema_version')) is int and d['footprint_schema_version'] == 1,
             'Unsupported detector geometry schema')
     require(type(p.get('processing_footprint_schema_version')) is int and
@@ -76,6 +85,11 @@ def resolve(detector_text, processing_text):
     detectors, trims, rois = d.get('detector'), p.get('trim'), p.get('roi')
     require(isinstance(detectors, list) and detectors and isinstance(trims, list) and
             isinstance(rois, list) and rois, 'Detector, processing and ROI entries required')
+    if embedded:
+        # A recipe supplies measurement regions only for its selected detectors.
+        detectors = [row for row in detectors if row['id'] in selected]
+        trims = [row for row in trims if row['detector'] in selected]
+        rois = [row for row in rois if row['detector'] in selected]
     require(all(isinstance(v, dict) and {'id','amplifier','raw_size','illuminated','prescan','overscan','native_paf_chip'} <= set(v)
                 for v in detectors), 'Incomplete detector entry')
     require(all(isinstance(v, dict) and {'detector','retained','prescan_sample','overscan_sample'} <= set(v)
@@ -88,8 +102,9 @@ def resolve(detector_text, processing_text):
             'Each detector requires exactly one processing entry')
     by_id = {v['detector']: v for v in trims}
     slots = [v['native_paf_chip'] for v in detectors]
-    require(all(type(v) is int for v in slots) and sorted(slots) == list(range(1, len(detectors)+1)),
-            'Require unique explicit native configuration slots; not HDU ordinals')
+    require(all(type(v) is int and v >= 1 for v in slots) and len(set(slots)) == len(slots)
+            and (embedded or sorted(slots) == list(range(1, len(detectors)+1))),
+            'Require unique explicit native configuration slots')
     names = set()
     for r in rois:
         require(type(r['id']) is str and r['id'] and r['id'] not in names and

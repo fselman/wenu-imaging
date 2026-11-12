@@ -7,7 +7,7 @@
 /* Owns the supplied path, source bytes, and typed values. A reader that
  * transfers a member clears it before destroying the file owner.
  */
-typedef struct {
+typedef struct mef_toml_file {
     char *path;
     char *source;
     size_t length;

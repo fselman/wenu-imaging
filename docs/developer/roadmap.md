@@ -64,6 +64,12 @@ issues/PRs, not chronological additions to this roadmap.
    consistent spacing, blank lines between logical steps, and properly hyphenated
    comments that explain intent, ownership, and scientific choices.
 
+The four-file form is implemented for bias and BPM/linearity. Local checks
+compare the complete effective settings of both WFI and OmegaCAM examples with
+their checked-in baselines. Synthetic workflow checks cover compatibility and
+execution with standalone settings files absent. Intel Mac production ASDF
+and real-input qualification of the four-file form remain open.
+
 Add ASDF configuration loading when a concrete input requires it. The
 reduction-profile selector and dependency checker remain later work.
 

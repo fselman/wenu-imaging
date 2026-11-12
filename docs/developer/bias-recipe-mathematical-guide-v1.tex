@@ -27,8 +27,10 @@ retained frames with the existing Eclipse pixel median. QC describes the
 inputs, corrections and master; it does not silently modify the result.
 
 \textbf{Shared input contract.} Run \texttt{mefpp\_recipe cal bias --config RECIPE.toml}
-from orchestration. The recipe references \code{project.toml}, numerical settings,
-an absolute \code{inputs.list} path and a fresh reduced \code{run}. Each list row
+from orchestration. The recipe references \code{project.toml}, a detector TOML,
+an absolute \code{inputs.list} path and a fresh reduced \code{run}. The detector
+TOML owns instrument settings; the recipe owns processing and product settings.
+Each list row
 contains an absolute FITS path under the project raw root and a \code{BIAS}
 classification. The list directory is configurable. Calibration paths use the
 project calibration root.

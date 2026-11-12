@@ -193,7 +193,7 @@ int mef_bpm_linearity_prepare(mef_bpm_linearity *recipe, int argc, char **argv)
     bindings.parsed = (toml_result_t){0};
     mef_toml_file_destroy(&bindings);
     if (!recipe->document.ok || !recipe->bindings.ok ||
-        !keys(recipe->document.toptab,"|bpm_linearity_recipe_schema_version||project||run||assembly||preparation||bpm||detectors||calibration_bindings||native_recipe||qc||settings||inputs||identity|") ||
+        !keys(recipe->document.toptab,"|bpm_linearity_recipe_schema_version||project||run||assembly||preparation||bpm||detectors||calibration_bindings||native_recipe||qc||settings||native||detector_toml||inputs||identity|") ||
         !project_roots(recipe) ||
         !mef_bpm_linearity_below(recipe->recipe_path,recipe->orchestration) ||
         !mef_bpm_linearity_below(recipe->bindings_path,recipe->orchestration) ||

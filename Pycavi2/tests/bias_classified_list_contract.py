@@ -8,7 +8,7 @@ p.add_argument('--work-parent',type=Path,required=True)
 a=p.parse_args()
 root=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(root/'Pycavi2/tests'),str(root/'Pycavi2/pycavi/pycavi')]
-from linearity_preparation_fixture import fixture
+from linearity_preparation_fixture import embedded_native_domains, fixture
 work=Path(tempfile.mkdtemp(prefix='bias-list-contract-',dir=a.work_parent))
 s=fixture(work,separated=True)
 from linearity_files_contract import plane
@@ -112,6 +112,28 @@ assert image_payloads(next(shared.glob("*.fits"))) == planes
 result = execute(shared_config, "--detectors", "ESO_CCD_#66")
 assert result.returncode != 0 and "disabled" in result.stderr, result.stderr
 print("PASS: shared detector defaults preserve pixels and exclude disabled detectors")
+
+# The four-file form succeeds with the old settings file physically absent.
+geometry, processing = embedded_native_domains((orch / 'native.toml').read_text())
+profile = orch / 'detector.toml'
+profile.write_text(profile.read_text() + geometry)
+embedded_config = orch / 'four-file.toml'
+embedded_dir = reduced / 'cal/bias/four-file'
+embedded_dir.mkdir()
+(orch / 'project-four-file.toml').write_text(proj.split('\n[association]', 1)[0])
+embedded_text = (shared_config.read_text().replace('settings="native.toml"\n', '')
+                 .replace('project="project.toml"', 'project="project-four-file.toml"'))
+embedded_config.write_text(embedded_text.replace('cal/bias/shared', 'cal/bias/four-file') + processing)
+legacy_settings = orch / 'native.toml'
+hidden_settings = legacy_settings.rename(orch / 'legacy-settings.hidden')
+try:
+    result = execute(embedded_config)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert image_payloads(next(embedded_dir.glob('*.fits'))) == planes
+finally:
+    hidden_settings.rename(legacy_settings)
+print("PASS: four-file bias matches legacy image bytes with no standalone settings")
+
 
 legacy=reduced/'cal/bias/legacy';legacy.mkdir()
 (orch/'old.list').write_text(''.join(b['path']+'\n' for b in s['biases']))

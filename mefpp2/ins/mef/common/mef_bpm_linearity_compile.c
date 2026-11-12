@@ -24,13 +24,16 @@
 typedef mef_bpm_linearity_frozen frozen_file;
 
 typedef struct {
-    toml_result_t recipe, project, geometry, processing, inputs;
+    mef_toml_file recipe, geometry, processing_file;
+    toml_result_t project, inputs;
+    toml_datum_t processing, trims;
+    mef_config_document *embedded_settings;
     mef_recipe_inputs observations;
     char *input_list, *resolved_inputs;
     frozen_file *files;
     size_t count;
     char *controls, *output, *raw, *calibration, *work, *logs, *orchestration;
-    const char *source, *revision;
+    const char *source, *revision, *processing_text;
     FILE *bindings;
     int qc;
 } compilation;
@@ -142,15 +145,20 @@ static int project_freeze(void *user, const char *name)
     return freeze(user, name);
 }
 
+static mef_toml_file frozen_document(compilation *c, const char *name)
+{
+    if (name && freeze(c, name)) {
+        return mef_toml_file_read(name, 0);
+    }
+    return (mef_toml_file){0};
+}
+
 static toml_result_t document(compilation *c, const char *name)
 {
-    toml_result_t result = {0};
-    if (name && freeze(c, name)) {
-        mef_toml_file file = mef_toml_file_read(name, 0);
-        result = file.parsed;
-        file.parsed = (toml_result_t){0};
-        mef_toml_file_destroy(&file);
-    }
+    mef_toml_file file = frozen_document(c, name);
+    toml_result_t result = file.parsed;
+    file.parsed = (toml_result_t){0};
+    mef_toml_file_destroy(&file);
     return result;
 }
 
@@ -264,7 +272,7 @@ static int regions(compilation *c, const char *dir, const char *id, const char *
 {
     char *names[3] = {NULL, NULL, NULL};
     FILE *streams[3] = {NULL, NULL, NULL};
-    toml_datum_t rois = toml_get(c->processing.toptab, "roi");
+    toml_datum_t rois = toml_get(c->processing, "roi");
     size_t count = 0, reference_count = 0;
     int okay = 0;
     if (rois.type != TOML_ARRAY || references.type != TOML_ARRAY || !references.u.arr.size ||
@@ -369,6 +377,18 @@ static long input_hdu(toml_datum_t detector, const char *key, int index, long fa
     return value >= 0 && value <= 127 ? value : -1;
 }
 
+static int context_field(FILE *f, const char *key, const char *text)
+{
+    if (!text) {
+        return 0;
+    }
+    fputc(',', f);
+    quoted(f, key);
+    fputc(':', f);
+    quoted(f, text);
+    return !ferror(f);
+}
+
 static int context_text(FILE *f, const char *key, const char *filename)
 {
     char *text = malloc(1024 * 1024 + 1);
@@ -383,11 +403,7 @@ static int context_text(FILE *f, const char *key, const char *filename)
         goto done;
     }
     text[n] = 0;
-    fputc(',', f);
-    quoted(f, key);
-    fputc(':', f);
-    quoted(f, text);
-    okay = !ferror(f);
+    okay = context_field(f, key, text);
 done:
     if (input) {
         fclose(input);
@@ -400,7 +416,7 @@ done:
  * headers only; the detector cube remains the sole image-payload owner. */
 static int observation_inputs(compilation *c)
 {
-    toml_datum_t inputs = toml_get(c->recipe.toptab, "inputs");
+    toml_datum_t inputs = toml_get(c->recipe.parsed.toptab, "inputs");
     const char *name = string(inputs, "list");
     if (!name) {
         return toml_get(inputs, "list").type == TOML_UNKNOWN;
@@ -411,8 +427,8 @@ static int observation_inputs(compilation *c)
     }
     char error[512] = "Invalid classified input-list reference";
     c->input_list = path(c->orchestration, name);
-    toml_datum_t identity = toml_get(c->recipe.toptab, "identity");
-    toml_datum_t controls = toml_get(c->processing.toptab, "linearity_preparation");
+    toml_datum_t identity = toml_get(c->recipe.parsed.toptab, "identity");
+    toml_datum_t controls = toml_get(c->processing, "linearity_preparation");
     const char *key = string(identity, "exposure_key");
     if (!fields(inputs, "|list|") || !c->input_list || !freeze(c, c->input_list) ||
         !mef_recipe_inputs_read(c->input_list, c->raw, 0, &c->observations, error, sizeof(error)) ||
@@ -535,23 +551,23 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
 {
     const char *id = string(row, "detector_id");
     mef_detector_definition definition;
-    if (!mef_detector_catalogue_find(c->geometry.toptab, id, &definition) || !definition.enabled) {
+    if (!mef_detector_catalogue_find(c->geometry.parsed.toptab, id, &definition) || !definition.enabled) {
         fprintf(stderr, "Unknown or disabled BPM/linearity detector: %s\n", id ? id : "(missing)");
         return 0;
     }
     const char *readout = string(row, "readout_id");
     if (toml_get(row, "readout_id").type == TOML_UNKNOWN) {
-        readout = string(c->geometry.toptab, "readout_id");
+        readout = string(c->geometry.parsed.toptab, "readout_id");
     }
     toml_datum_t geometry = definition.definition;
-    toml_datum_t trim = find(toml_get(c->processing.toptab, "trim"), "detector", id ? id : "");
-    toml_datum_t controls = toml_get(c->processing.toptab, "linearity_preparation");
-    toml_datum_t policy = toml_get(c->recipe.toptab, "bpm"),
-                 inputs = toml_get(c->inputs.ok ? c->inputs.toptab : c->recipe.toptab, "inputs");
+    toml_datum_t trim = find(c->trims, "detector", id);
+    toml_datum_t controls = toml_get(c->processing, "linearity_preparation");
+    toml_datum_t policy = toml_get(c->recipe.parsed.toptab, "bpm"),
+                 inputs = toml_get(c->inputs.ok ? c->inputs.toptab : c->recipe.parsed.toptab, "inputs");
     toml_datum_t flats = toml_get(inputs, "flat"), biases = toml_get(inputs, "bias"),
                  accepted = toml_get(row, "bias_accepted");
     toml_datum_t size = toml_get(geometry, "raw_size"),
-                 identity = toml_get(c->recipe.toptab, "identity");
+                 identity = toml_get(c->recipe.parsed.toptab, "identity");
     const char *amplifier = string(geometry, "amplifier"),
                *encoding = string(controls, "mask_encoding");
     long slot = toml_get(row, "configuration_detector").type == TOML_UNKNOWN
@@ -571,7 +587,8 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
          *product = NULL, *prepared = NULL;
     char *fits = NULL, *sidecar = NULL, *log = NULL;
     FILE *plan = NULL, *bias = NULL, *flat = NULL, *f = NULL;
-    mef_config *configuration = NULL;
+    mef_config *legacy_configuration = NULL;
+    const mef_config *configuration = mef_config_document_settings(c->embedded_settings);
     mef_bias_settings g;
     char diagnostic[256], number[128];
     int okay = 0, crop[4], raw[2], n;
@@ -655,11 +672,14 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
     if (!f) {
         goto done;
     }
-    mef_config_toml_initialize();
-    if (mef_config_from_toml(settings, NULL, &configuration, diagnostic, sizeof(diagnostic)) !=
-        MEF_OK) {
-        fprintf(stderr, "Native settings: %s\n", diagnostic);
-        goto done;
+    if (!configuration) {
+        mef_config_toml_initialize();
+        if (mef_config_from_toml(settings, NULL, &legacy_configuration, diagnostic,
+                sizeof(diagnostic)) != MEF_OK) {
+            fprintf(stderr, "Native settings: %s\n", diagnostic);
+            goto done;
+        }
+        configuration = legacy_configuration;
     }
     if (mef_config_response_toml(configuration, f, real(policy, "response_low", 0.5),
             real(policy, "response_high", 1.5)) != MEF_OK ||
@@ -679,10 +699,10 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
         real(controls, "bias_mean_max_adu", NAN) != 1000) {
         goto done;
     }
-    if (g.use_prescan != integer(c->processing.toptab, "use_prescan", -1) ||
-        g.use_overscan != integer(c->processing.toptab, "use_overscan", -1) ||
-        g.rejection[0] != integer(c->processing.toptab, "scan_reject_low", -1) ||
-        g.rejection[1] != integer(c->processing.toptab, "scan_reject_high", -1)) {
+    if (g.use_prescan != integer(c->processing, "use_prescan", -1) ||
+        g.use_overscan != integer(c->processing, "use_overscan", -1) ||
+        g.rejection[0] != integer(c->processing, "scan_reject_low", -1) ||
+        g.rejection[1] != integer(c->processing, "scan_reject_high", -1)) {
         goto done;
     }
     for (int band = 0; band < 2; ++band) {
@@ -817,12 +837,9 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
     quoted(f, c->raw);
     fputs(",\"calibration_root\":", f);
     quoted(f, c->calibration);
-    toml_datum_t prep = toml_get(c->recipe.toptab, "preparation");
-    char *geometry_source = path(c->orchestration, string(prep, "detector_toml"));
-    char *processing_source = path(c->orchestration, string(prep, "processing_toml"));
-    int complete = context_text(f, "recipe_source", c->source) &&
-                   context_text(f, "detector_profile", geometry_source) &&
-                   context_text(f, "processing_profile", processing_source) &&
+    int complete = context_field(f, "recipe_source", c->recipe.source) &&
+                   context_field(f, "detector_profile", c->geometry.source) &&
+                   context_field(f, "processing_profile", c->processing_text) &&
                    context_text(f, "effective_settings_toml", native);
     if (complete && c->inputs.ok) {
         fputs(",\"input_list_path\":", f);
@@ -832,8 +849,6 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
         complete = context_text(f, "input_list_source", c->input_list) &&
                    context_text(f, "resolved_inputs_toml", c->resolved_inputs);
     }
-    free(geometry_source);
-    free(processing_source);
     if (!complete) {
         goto done;
     }
@@ -965,7 +980,7 @@ done:
     if (flat) {
         fclose(flat);
     }
-    mef_config_destroy(configuration);
+    mef_config_destroy(legacy_configuration);
     free(dir);
     free(plan_path);
     free(bias_path);
@@ -998,28 +1013,30 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     int okay = 0;
     c.source = source;
     c.revision = revision;
+    if (diagnostic && capacity) {
+        diagnostic[0] = '\0';
+    }
     c.files = calloc(MAX_FILES, sizeof(*c.files));
     if (!c.files) {
         goto done;
     }
-    c.recipe = document(&c, source);
-    if (!c.recipe.ok) {
+    c.recipe = frozen_document(&c, source);
+    if (!c.recipe.parsed.ok || c.recipe.length > 1024 * 1024) {
         goto done;
     }
-    if (integer(c.recipe.toptab, "bpm_linearity_recipe_schema_version", 0) != 2 ||
-        !fields(c.recipe.toptab, "|bpm_linearity_recipe_schema_version|project|settings|run|qc|"
+    if (integer(c.recipe.parsed.toptab, "bpm_linearity_recipe_schema_version", 0) != 2 ||
+        !fields(c.recipe.parsed.toptab, "|bpm_linearity_recipe_schema_version|project|settings|native|detector_toml|run|qc|"
                                  "assembly|preparation|bpm|inputs|identity|detectors|")) {
         goto done;
     }
-    if (!fields(toml_get(c.recipe.toptab, "bpm"),
+    if (!fields(toml_get(c.recipe.parsed.toptab, "bpm"),
             "|acquisition|output_mode|upper_fraction|minimum_span_fraction|maximum_pair_difference|"
             "response_low|response_high|") ||
-        !fields(toml_get(c.recipe.toptab, "inputs"), "|flat|bias|list|") ||
-        !fields(toml_get(c.recipe.toptab, "preparation"), "|detector_toml|processing_toml|") ||
-        !fields(toml_get(c.recipe.toptab, "assembly"), "|reference_detector|")) {
+        !fields(toml_get(c.recipe.parsed.toptab, "inputs"), "|flat|bias|list|") ||
+        !fields(toml_get(c.recipe.parsed.toptab, "assembly"), "|reference_detector|")) {
         goto done;
     }
-    toml_datum_t identity = toml_get(c.recipe.toptab, "identity");
+    toml_datum_t identity = toml_get(c.recipe.parsed.toptab, "identity");
     if (identity.type != TOML_UNKNOWN) {
         if (!fields(identity,
                 "|identity_key|amplifier_key|bin_x_key|bin_y_key|exposure_key|exposure_hdu|")) {
@@ -1043,7 +1060,7 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     }
     slash = strrchr(c.orchestration, '/');
     *slash = 0;
-    project = path(c.orchestration, string(c.recipe.toptab, "project"));
+    project = path(c.orchestration, string(c.recipe.parsed.toptab, "project"));
     char *origin = NULL;
     if (!project || !mef_project_read(project, &c.project, &origin, project_freeze, &c)) {
         goto done;
@@ -1058,7 +1075,7 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     c.work = path(project_base, string(roots, "work"));
     c.logs = path(project_base, string(roots, "logs"));
     free(project_base);
-    const char *run = string(c.recipe.toptab, "run");
+    const char *run = string(c.recipe.parsed.toptab, "run");
     if (!c.raw || !c.calibration || !reduced || !c.work || !c.logs || !run || run[0] == '/' ||
         strstr(run, "..")) {
         free(reduced);
@@ -1095,21 +1112,51 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     if (!c.controls || mkdir(c.controls, 0700)) {
         goto done;
     }
-    toml_datum_t prep = toml_get(c.recipe.toptab, "preparation");
-    geometry = path(c.orchestration, string(prep, "detector_toml"));
-    processing = path(c.orchestration, string(prep, "processing_toml"));
-    settings = path(c.orchestration, string(c.recipe.toptab, "settings"));
-    c.geometry = document(&c, geometry);
-    c.processing = document(&c, processing);
-    if (!c.geometry.ok || !c.processing.ok || !settings || !settings_sources(&c, settings, 0)) {
+    toml_datum_t prep = toml_get(c.recipe.parsed.toptab, "preparation");
+    toml_datum_t settings_reference = toml_get(c.recipe.parsed.toptab, "settings");
+    int embedded = settings_reference.type == TOML_UNKNOWN;
+    if (embedded) {
+        if (!fields(prep, "|processing_footprint_schema_version|linearity_preparation_schema_version|"
+                "instrument|roi_schema_version|roi_coordinates|profile_status|source_paf|source_paf_sha256|"
+                "use_prescan|use_overscan|scan_reject_low|scan_reject_high|linearity_preparation|roi|") ||
+            !string(toml_get(c.recipe.parsed.toptab, "inputs"), "list")) {
+            goto done;
+        }
+        geometry = path(c.orchestration, string(c.recipe.parsed.toptab, "detector_toml"));
+        c.processing = prep;
+        c.processing_text = c.recipe.source;
+    } else {
+        if (!fields(prep, "|detector_toml|processing_toml|") ||
+            toml_get(c.recipe.parsed.toptab, "detector_toml").type != TOML_UNKNOWN ||
+            toml_get(c.recipe.parsed.toptab, "native").type != TOML_UNKNOWN) {
+            goto done;
+        }
+        geometry = path(c.orchestration, string(prep, "detector_toml"));
+        processing = path(c.orchestration, string(prep, "processing_toml"));
+        settings = path(c.orchestration, string(c.recipe.parsed.toptab, "settings"));
+        c.processing_file = frozen_document(&c, processing);
+        if (!c.processing_file.parsed.ok || c.processing_file.length > 1024 * 1024 ||
+            !settings || !settings_sources(&c, settings, 0)) {
+            goto done;
+        }
+        c.processing = c.processing_file.parsed.toptab;
+        c.processing_text = c.processing_file.source;
+    }
+    c.geometry = frozen_document(&c, geometry);
+    if (!c.geometry.parsed.ok || c.geometry.length > 1024 * 1024) {
         goto done;
     }
-    const char *instrument = string(c.geometry.toptab, "instrument"),
-               *processed = string(c.processing.toptab, "instrument");
-    toml_datum_t binning = toml_get(c.geometry.toptab, "binning");
+    c.trims = toml_get(embedded ? c.geometry.parsed.toptab : c.processing, "trim");
+    if (embedded && mef_config_document_from_domains(&c.recipe, &c.geometry,
+            &c.embedded_settings, diagnostic, capacity) != MEF_OK) {
+        goto done;
+    }
+    const char *instrument = string(c.geometry.parsed.toptab, "instrument"),
+               *processed = string(c.processing, "instrument");
+    toml_datum_t binning = toml_get(c.geometry.parsed.toptab, "binning");
     if (!instrument || !processed || strcmp(instrument, processed) ||
-        !mef_detector_catalogue_valid(c.geometry.toptab) ||
-        integer(c.processing.toptab, "linearity_preparation_schema_version", 0) != 1 ||
+        !mef_detector_catalogue_valid(c.geometry.parsed.toptab) ||
+        integer(c.processing, "linearity_preparation_schema_version", 0) != 1 ||
         binning.type != TOML_ARRAY || binning.u.arr.size != 2 ||
         binning.u.arr.elem[0].type != TOML_INT64 || binning.u.arr.elem[0].u.int64 != 1 ||
         binning.u.arr.elem[1].type != TOML_INT64 || binning.u.arr.elem[1].u.int64 != 1) {
@@ -1118,8 +1165,8 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     if (!observation_inputs(&c)) {
         goto done;
     }
-    toml_datum_t selected = toml_get(c.recipe.toptab, "detectors"),
-                 qc = toml_get(c.recipe.toptab, "qc");
+    toml_datum_t selected = toml_get(c.recipe.parsed.toptab, "detectors"),
+                 qc = toml_get(c.recipe.parsed.toptab, "qc");
     if (selected.type != TOML_ARRAY || selected.u.arr.size < 1 || selected.u.arr.size > 4095 ||
         (qc.type != TOML_UNKNOWN && qc.type != TOML_BOOLEAN)) {
         goto done;
@@ -1189,7 +1236,7 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
     c.count = 0;
     okay = 1;
 done:
-    if (!okay && diagnostic && capacity) {
+    if (!okay && diagnostic && capacity && !diagnostic[0]) {
         snprintf(diagnostic, capacity,
             "Native recipe admission failed; retain control evidence%s%s", c.controls ? ": " : "",
             c.controls ? c.controls : "");
@@ -1218,9 +1265,10 @@ done:
     free(c.input_list);
     free(c.resolved_inputs);
     toml_free(c.inputs);
-    toml_free(c.recipe);
+    mef_toml_file_destroy(&c.recipe);
     toml_free(c.project);
-    toml_free(c.geometry);
-    toml_free(c.processing);
+    mef_toml_file_destroy(&c.geometry);
+    mef_toml_file_destroy(&c.processing_file);
+    mef_config_document_destroy(c.embedded_settings);
     return okay;
 }

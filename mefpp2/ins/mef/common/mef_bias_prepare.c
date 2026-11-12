@@ -356,7 +356,7 @@ int mef_bias_prepare(mef_bias *recipe, int argc, char **argv)
         status = mef_config_from_legacy(recipe->legacy, NULL, &recipe->config, &recipe->diagnostic);
     } else {
         mef_config_toml_initialize();
-        status = mef_config_document_from_toml(recipe->config_path, NULL, &recipe->document,
+        status = mef_bias_config_settings(recipe->recipe_document, recipe->config_path, &recipe->document,
             recipe->run->message, sizeof(recipe->run->message));
         if (status == MEF_OK) {
             status = mef_config_clone(mef_config_document_settings(recipe->document), NULL,
