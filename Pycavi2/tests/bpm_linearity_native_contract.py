@@ -37,8 +37,18 @@ with tempfile.TemporaryDirectory(prefix='recipe-help-', dir=args.work_parent) as
         assert not list(Path(empty).iterdir()), arguments
     print('PASS: complete catalogue, data-free hierarchical help and pending execution refusal')
 from linearity_preparation_fixture import fixture
+from astropy.io import fits
+
 work = Path(tempfile.mkdtemp(prefix='native-admission-', dir=args.work_parent.resolve(strict=True)))
 state = fixture(work, separated=True, supplied_bpm=True)
+# Model the WFI master: individual headers are below 1 MiB, but the
+# complete file exceeds that old cumulative limit. Keep the fixture pixels.
+with fits.open(state['master'], mode='update', do_not_scale_image_data=True) as master:
+    for hdu in master:
+        hdu.header.extend([('COMMENT', 'Retained master-bias QC fixture')] * 7200)
+with fits.open(state['master']) as master:
+    sizes = [hdu.fileinfo()['datLoc'] - hdu.fileinfo()['hdrLoc'] for hdu in master]
+    assert max(sizes) < 1024**2 < sum(sizes)
 orch = state['work']
 reduced = state['reduced']
 for p in ('work', 'logs'):
