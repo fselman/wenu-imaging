@@ -62,6 +62,13 @@ The four-file contract requires no separate native settings or processing-profil
 TOML. During migration, move settings according to their ownership and preserve
 effective values. Legacy formats remain compatibility inputs.
 
+The shared TOML loader takes an explicit path and returns an owned, typed
+document with its source path and bytes. It preserves the TOML values as
+written. Field names, required keys, defaults, units, path resolution and
+processing choices are interpreted by the recipe or by the project and detector
+adapters it calls. Those adapters convert the document into the domain-specific
+C structures used by the processing services.
+
 ### Dependency checking: later development
 
 Implement and validate individual recipes first, starting with BPM/linearity.

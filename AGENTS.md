@@ -208,6 +208,10 @@ detectors in the catalogue. Recipe detector sections hold recipe-specific
 parameters and calibration overrides. Migrate separate settings and processing
 profiles into their owning files without changing effective settings.
 
+Keep the shared TOML loader schema-agnostic. It takes an explicit path and
+returns an owned, typed document. Recipe admission and its project and detector
+adapters interpret names, requirements, defaults, units and paths.
+
 The recipe references an absolute path in `inputs.list`. Each `.list` row has an
 absolute FITS path, a tab, and `DPR.TYPE`. The list directory is configurable.
 The recipe owns processing policy and explicit
