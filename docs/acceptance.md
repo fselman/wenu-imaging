@@ -117,9 +117,11 @@ not an average-median or historical-QC reference. Its older provenance lacks the
 configuration snapshot needed by the current full comparator. Content
 fingerprints and historical WFI QC equivalence remain open.
 
-Use issue/PR summaries for results: what ran, which executable/configuration,
-pass/fail and material differences. Routine build logs, per-attempt receipts and
-historical replay scripts do not belong in permanent documentation.
+Keep the designated legacy reductions as comparison references. Retain fresh
+outputs and logs only through verification or active diagnosis, then remove
+superseded test workspaces. Record a concise comparison summary in the PR with
+what ran, the executable and configuration, the reference, and any material
+differences. Test workspace archives are unnecessary.
 
 New bias recipes default to MAD off. Explicit `mad = true` remains an opt-in;
 the archived acceptance configurations retain their recorded measurement policy.

@@ -35,8 +35,9 @@ Optional BIAS observations in the same list are raw diagnostic evidence only,
 never a request to rebuild the supplied master. With no raw bias pair, RON/gain
 and bias-pair diagnostics are unavailable; flat ROI/pair/site measurements remain.
 The generated BPM never changes the measurement mask/population in the same run.
-Rectangular ROIs live in the processing profile; direct sites are explicitly named
-single pixels. Existing inline-input recipes and unclassified bias lists remain
+The four-file architecture places recipe-specific rectangular ROIs and named
+single-pixel sites in the recipe TOML. Shared detector geometry and disabled
+status belong in the detector catalogue. Existing inline-input recipes and unclassified bias lists remain
 legacy compatibility only; new examples use the shared classified-list contract.
 
 ## Required BPM/linearity detector flow
@@ -44,9 +45,9 @@ legacy compatibility only; new examples use the shared classified-list contract.
 The shared-cube source is owner-accepted. The complete synthetic Mac gate covers
 native admission/default indices, both QC modes, supplied-mask reuse and
 omitted-mask creation/publication. A bounded supplied-mask/QC-off CCD65 direct
-CLI run reproduces all five saved measurement groups. Earlier no-mask CCD65 saved-product and Viewer checks passed; the revised
-classified-list interface, WFI and full-mosaic qualification remain pending; the staged
-command is not selected.
+CLI run reproduces all five saved measurement groups. Earlier no-mask CCD65 saved-product and Viewer checks passed. The classified-list
+and fresh-project workflows passed for WFI and OCAM on Mac. The four-file
+configuration migration and command selection remain open.
 
 1. Admit ordered input identities, geometry, fixed calibrations and requested steps.
 2. Read each required detector image plane once. Capture requested raw-only QC,
@@ -129,9 +130,6 @@ through external commands. The inner calculations, fixed prior populations,
 rounding, masks and native ASDF writer remain unchanged during interface work.
 Bias needs no cross-detector balancing; later collective recipes may need it.
 
-The generated-bindings requirement and operation-specific executable names in
-the feature branch are implementation gaps. Complete native recipe-only admission
-and the public command/help hierarchy before standalone OCAM/WFI acceptance.
-Keep accepted installations and compatibility identities intact. Source review,
-focused numerical/ownership/ASDF checks and the owner's terminal-run acceptance
-are distinct gates. Directory reorganization remains deferred.
+Keep accepted installations and compatibility identities intact during the
+four-file configuration migration. Source review, focused numerical, ownership
+and ASDF checks, and the owner's terminal-run acceptance are distinct gates.

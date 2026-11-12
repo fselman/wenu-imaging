@@ -4,9 +4,9 @@
    template. `mefpp_recipe cal bpm-linearity --config RECIPE.toml` must admit its
    inputs and run without an external preparation stage or generated-bindings
    prerequisite. The complete synthetic Mac gate and bounded supplied-mask CCD65
-   comparison and earlier no-mask saved-product/Viewer checks passed. Next:
-   qualify the shared classified-list interface on the Mac, then review broader
-   detector/instrument coverage. Preserve the cube and existing estimators.
+   comparison and earlier no-mask saved-product/Viewer checks passed. The shared
+   classified-list workflows passed on the Mac for WFI and OCAM. Next, complete
+   the four-file configuration migration. Preserve the cube and estimators.
 2. Preserve validated hierarchical help and the shared catalogue for every recipe:
    `mefpp --help`, `mefpp_recipe CATEGORY --help`, and operation help. Categories
    include `cal` and `sci`; unmigrated entries are pending and refuse execution.
@@ -15,11 +15,12 @@
 3. Align the concise LaTeX/PDF guide and OCAM/WFI recipe TOMLs with that actual
    interface. Begin with an executive summary; show native commands without
    `nice`. Project TOML owns directory roots. Complete actual instrument bindings
-   before describing a template as runnable; WFI linearity inputs remain unverified.
+   before describing a template as runnable.
 4. Qualify the affected native admission, help, ownership and ASDF paths, then
    let the owner execute the agreed observational tests from orchestration.
-   Preserve raw data, accepted bias products and the stopped 32-detector run.
-   Distinguish completed processing, recorded suitability and owner acceptance.
+   Preserve raw data and designated legacy comparison products. Record the
+   comparison summary in the PR and retire temporary test workspaces after
+   verification or diagnosis. Distinguish completion, suitability and acceptance.
 5. Complete the small recipe-based primary acceptance suite and operational
    OCAM/WFI workflows. Continue later recipes with the same readable template;
    add collective operations only where their scientific contracts require them.
@@ -31,9 +32,9 @@
    all additional reductions and request permission before executing the plan.
    MFF uses the same rule independently for its dome and sky components.
 
-Bias and the shared-cube source are owner-accepted; acceptance does not establish
-qualification of the new standalone BPM/linearity interface. Directory reorganization
-remains deferred until BPM/linearity development finishes. CCD68/90 residuals,
+Bias and the shared-cube source are owner-accepted. Fresh-project workflow checks
+passed on Mac. Final configuration migration and scientific acceptance are
+separate milestones. CCD68/90 residuals,
 the viewer Update service, physical linearity correction and cross-talk remain
 deferred. Noise/uncertainty and new fitting policies require scientific review.
 
@@ -50,9 +51,12 @@ issues/PRs, not chronological additions to this roadmap.
    Preserve project composition, existing input formats, and provenance.
    Compare effective requests before changing the file layout.
 2. **Share detector-profile reading.** Read the duplicated bias detector
-   bindings from the agreed instrument profiles. Keep detector selection and
-   calibration bindings with the recipe. Retain support for the existing bias
-   recipe and legacy PAF-style settings during the transition.
+   bindings from `wfi-1x1.toml` and `ocam-1x1.toml`, including explicit disabled
+   detector status. Keep detector selection, detector-specific recipe parameters
+   and calibration bindings with the recipe. Migrate separate native settings and
+   processing profiles into their owning detector or recipe TOML. The native
+   target is project TOML, detector TOML, recipe TOML and a classified `.list`.
+   Retain support for existing formats during the transition.
 3. **Qualify the migration.** Compare detector identities, configuration slots,
    FITS HDUs, calibration bindings, and effective settings against the qualified
    bias and BPM/linearity cases. Verify numerical equivalence. The owner will
@@ -74,7 +78,6 @@ and header exposure times; missing/ambiguous groups are refused. Dependencies
 are reduced products only; reducing dependency lists is deferred. Optional raw
 BIAS rows are diagnostic processing inputs, never a request to construct a master.
 With a flats-only list, bias-pair RON/gain are unavailable; ROI/pair/site measurements
-continue. Rectangular ROIs belong to the processing profile; direct sites are
-named individual pixels. Preserve list/classification/order/bindings in ASDF.
-Old inline recipes and unclassified bias lists are compatibility only. The new
-classified-list interface needs Mac qualification before selection/acceptance.
+continue. Recipe-specific rectangular ROIs and named individual-pixel sites
+belong to the recipe. Preserve list/classification/order/bindings in ASDF.
+Old inline recipes and unclassified bias lists are compatibility only.

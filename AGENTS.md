@@ -26,9 +26,10 @@ robust BPM creation, native ASDF and independent saved readers. The earlier
 cec9626 supplied-mask/QC-off direct CLI CCD65 run matches the retained reference
 in all five decoded measurement groups, with 32 image loads/30 corrections.
 The earlier no-mask CCD65 run passed saved-product checks and owner Viewer inspection.
-The revised classified-list interface, WFI and full-mosaic qualification remain pending. The new command is staged, not selected. Keep the accepted bias
-producer and active controls unchanged. Evidence and exact artifact locations
-are recorded in PR #305.
+The classified-list and fresh-project workflows passed for WFI and OCAM on
+Mac. The four-file configuration migration remains open. Keep the accepted
+bias producer and active controls unchanged until selection. Record comparison
+summaries in PR #305.
 An explicit assembly section selects the reference detector for final MEF/QC.
 Historical calibrations may be bound to byte-identical copies under reduced/cal;
 preserve original ASDF/handoff lineage and verify copied bytes against frozen
@@ -59,12 +60,8 @@ newly admitted samples are reported separately. Do not rewrite archived QC or
 claim unchanged ROI populations after mask omission.
 Full-file preservation hashing still reads shared inputs before and after the
 batch; do not claim total read-once disk I/O. See the detector flow in
-docs/developer/design/common-recipe-coordinator-v1.md. Preserve stopped run
-native-32-wm3xnsso (26 completed detectors; CCD87 preparation saved). Do not relax
-pair-quality criteria or repeat completed detector work to bypass the failure.
-
-Directory reorganization is deferred until BPM/linearity development is finished.
-Keep the current file locations during scientific/processing development.
+docs/developer/design/common-recipe-coordinator-v1.md. Preserve agreed
+pair-quality criteria when diagnosing failures.
 
 ## Before proposing or changing work
 
@@ -155,6 +152,10 @@ for supported instruments. A few full-chain cases check recipe integration.
 Routine changes run affected recipe cases; installation acceptance runs the
 complete primary suite. Compare pixels, FITS structure/mapping/headers, ASDF QC
 and provenance with explicit agreed tolerances and permitted metadata differences.
+Preserve the designated legacy reductions as comparison references. Keep fresh
+test products and logs only through comparison or active diagnosis. Record a
+concise comparison summary in the PR. Remove superseded test workspaces once
+the references are secured and the results recorded.
 
 Do not automatically add a regression test for every small bug. Retain selective,
 cheap checks for important numerical behavior, mapping, ownership or destructive
@@ -197,10 +198,18 @@ Do not alter scientific inputs/results, approved baselines or comparison toleran
 as a way to make a failing test pass. Investigate unexpected numerical differences
 before continuing dependent work. Do not claim unsupported platform/science status.
 
-## Shared processing-list contract
+## Four-file native configuration and shared processing lists
 
-BPM/linearity and bias use an absolute path in recipe `inputs.list`. Each row
-contains an absolute FITS path and `DPR.TYPE`. The list directory is configurable.
+Follow the [four-file architecture](docs/developer/architecture.md#four-file-native-configuration):
+project TOML for identity and roots, detector TOML for shared detector definitions
+and enabled or disabled status, recipe TOML for processing choices, and a
+classified observation list. Use `wfi-1x1.toml` and `ocam-1x1.toml`. Keep disabled
+detectors in the catalogue. Recipe detector sections hold recipe-specific
+parameters and calibration overrides. Migrate separate settings and processing
+profiles into their owning files without changing effective settings.
+
+The recipe references an absolute path in `inputs.list`. Each `.list` row has an
+absolute FITS path, a tab, and `DPR.TYPE`. The list directory is configurable.
 The recipe owns processing policy and explicit
 reduced calibration bindings, not observation filenames or pair assignments.
 Project TOML owns roots. Native admission derives flat pairs from classification
@@ -208,7 +217,6 @@ and header exposure times; missing/ambiguous groups are refused. Dependencies
 are reduced products only; reducing dependency lists is deferred. Optional raw
 BIAS rows are diagnostic processing inputs, never a request to construct a master.
 With a flats-only list, bias-pair RON/gain are unavailable; ROI/pair/site measurements
-continue. Rectangular ROIs belong to the processing profile; direct sites are
-named individual pixels. Preserve list/classification/order/bindings in ASDF.
-Old inline recipes and unclassified bias lists are compatibility only. The new
-classified-list interface needs Mac qualification before selection/acceptance.
+continue. Recipe-specific rectangular ROIs and named individual-pixel sites
+belong to the recipe. Preserve list/classification/order/bindings in ASDF.
+Old inline recipes and unclassified bias lists are compatibility only.

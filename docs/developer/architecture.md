@@ -11,8 +11,9 @@ their own roles. Bundled qfits/Eclipse provide native FITS and image services.
 
 The public recipe executable is `mefpp_recipe`; its command shape is
 `mefpp_recipe CATEGORY OPERATION --config RECIPE.toml [options]`.
-The native command reads the recipe and its referenced project/settings/input
-files. Internally derived requests are owned by the native implementation.
+The native command reads the recipe and its referenced project, detector, and
+classified observation-list files. These four files define the target native
+configuration contract. The implementation owns internally derived requests.
 Help is hierarchical, requires no data/configuration and performs no processing:
 
 ```
@@ -39,10 +40,27 @@ their processing in their own readable entry points.
 Project TOML owns raw, calibration, reduced, work and log roots; its directory is
 orchestration. Recipes reference it without repeating roots. Raw observations
 and input calibrations are read-only; controls belong in orchestration and outputs,
-private work and logs below reduced. Use fresh destinations and retain failures.
+private work and logs below reduced. Use fresh destinations. Retain test
+outputs and logs only through verification or active diagnosis. Preserve the
+designated legacy reductions as comparison references and record a concise
+comparison summary in the PR. Test workspaces have no permanent archive.
 Keep reduction purpose, ordered recipe and product/compliance profile distinct.
 Logical detector ID, input HDU, configuration slot and output ordinal are separate
 explicit bindings; do not infer them from array position.
+
+### Four-file native configuration
+
+| File | Responsibility |
+| --- | --- |
+| Project TOML | Project identity and directory roots. Its directory is orchestration and may have any name. Use a separate orchestration and reduced root for each test project. Recipes for the same project and software version share those roots. |
+| Detector TOML | Shared instrument and readout catalogue, including detector IDs, native slots, default HDUs, geometry, and enabled or disabled status. Use `wfi-1x1.toml` and `ocam-1x1.toml` for the respective profiles. Keep disabled detectors in the catalogue with explicit status. |
+| Recipe TOML | References to the project, detector catalogue and observation list, plus processing policy, detector selection and explicit calibration product references. Detector sections may hold recipe-specific settings, such as measurement ROIs and sites or a calibration HDU override. Shared detector definitions belong in the detector catalogue. |
+| Observation list (`.list`) | Ordered rows of absolute FITS path, tab, and `DPR.TYPE`. The recipe references the list by absolute path. |
+
+Raw observations and explicitly selected calibration FITS products are data inputs.
+The four-file contract requires no separate native settings or processing-profile
+TOML. During migration, move settings according to their ownership and preserve
+effective values. Legacy formats remain compatibility inputs.
 
 ### Dependency checking: later development
 
@@ -93,8 +111,9 @@ Bias is accepted. The BPM/linearity shared-cube processing has focused numerical
 and Mac evidence. Native schema-2 admission and the unified command/help catalogue
 are implemented and passed the complete synthetic Mac gate. A bounded
 supplied-mask/QC-off CCD65 direct CLI run reproduces the saved reference
-measurements. Earlier no-mask CCD65 saved-product and Viewer checks passed. The revised
-classified-list interface, WFI and full-mosaic qualification remain pending; the new command is not selected.
+measurements. Earlier no-mask CCD65 saved-product and Viewer checks passed. The classified-list
+interface and fresh WFI and OCAM workflows passed on the Mac. The four-file
+configuration migration remains open. Scientific QC and selection are separate.
 Historical binding compilation is compatibility only. See the [roadmap](roadmap.md).
 Configuration resources under `docs/architecture/proposed/` retain their existing
 paths; their older designs do not override this architecture or current owner decisions.
@@ -110,7 +129,6 @@ and header exposure times; missing/ambiguous groups are refused. Dependencies
 are reduced products only; reducing dependency lists is deferred. Optional raw
 BIAS rows are diagnostic processing inputs, never a request to construct a master.
 With a flats-only list, bias-pair RON/gain are unavailable; ROI/pair/site measurements
-continue. Rectangular ROIs belong to the processing profile; direct sites are
-named individual pixels. Preserve list/classification/order/bindings in ASDF.
-Old inline recipes and unclassified bias lists are compatibility only. The new
-classified-list interface needs Mac qualification before selection/acceptance.
+continue. Recipe-specific rectangular ROIs and named individual-pixel sites
+belong to the recipe. Preserve list/classification/order/bindings in ASDF.
+Old inline recipes and unclassified bias lists are compatibility only.
