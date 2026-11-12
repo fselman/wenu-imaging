@@ -63,6 +63,11 @@ def native_context(saved, q, texts):
                    'Frozen resolved observation identities differ')
         author['inputs']=tomllib.loads(saved['resolved_inputs_toml'])['inputs']
     row = next(r for r in author['detectors'] if r['detector_id'] == saved['detector'])
+    profile = tomllib.loads(saved['detector_profile'])
+    detector = next(d for d in profile['detector'] if d['id'] == saved['detector'])
+    qc.require(detector.get('enabled', True) is True, 'Saved detector is disabled')
+    raw_hdu = row.get('hdu', detector.get('reference_hdu'))
+    readout_id = row.get('readout_id', profile.get('readout_id'))
     snapshot = json.loads(q['provenance']['configuration']['snapshot'])
     native = tomllib.loads(saved['effective_settings_toml'])['native']
     qc.require(set(native) == set(snapshot), 'Native effective configuration keys differ')
@@ -82,19 +87,19 @@ def native_context(saved, q, texts):
     for i, incoming in enumerate(author['inputs']['flat']):
         path=location(raw,incoming['path'])
         flats.append(dict(path=path,asset=incoming.get('asset',Path(path).name),
-            hdu=row.get('flat_hdus',[row['hdu']]*len(author['inputs']['flat']))[i],
+            hdu=row.get('flat_hdus',[raw_hdu]*len(author['inputs']['flat']))[i],
             index=incoming.get('input_index',len(author['inputs']['bias'])+i),pair=f"pair-{incoming['pair']:03d}"))
     biases=[]
     for i, incoming in enumerate(author['inputs']['bias']):
         path=location(raw,incoming)
         biases.append(dict(path=path,asset=Path(path).name,index=author['inputs'].get('bias_indices',list(range(len(author['inputs']['bias']))))[i],accepted=int(row.get('bias_accepted',[-1]*len(author['inputs']['bias']))[i]),
-            hdu=row.get('bias_hdus',[row['hdu']]*len(author['inputs']['bias']))[i]))
+            hdu=row.get('bias_hdus',[raw_hdu]*len(author['inputs']['bias']))[i]))
     controls=resolved['controls']
     mask=dict(encoding='omitted')
     if row['input_bpm'] != 'omitted':
         mask=dict(encoding=controls['mask_encoding'],path=location(calibration,row['input_bpm']),hdu=row['bpm_hdu'])
     selection=dict(detector=row['detector_id'],flat=flats,bpm=mask,
-        readout_id=row['readout_id'],bin_x=1,bin_y=1)
+        readout_id=readout_id,bin_x=1,bin_y=1)
     master=dict(product=location(calibration,row['master_bias']),hdu=row['master_hdu'])
     qc.require(saved['master_sha256']==row['master_sha256']==saved['input_sha256'][master['product']],
                'Native master fingerprint differs')

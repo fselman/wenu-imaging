@@ -7,6 +7,7 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_bias_config.h"
+#include "mef_detector_catalogue.h"
 #include "mef_toml_file.h"
 #include <ctype.h>
 #include <errno.h>
@@ -17,7 +18,7 @@
 #include <string.h>
 
 struct mef_bias_config {
-    mef_toml_file document;
+    mef_toml_file document, detector_profile;
     char **argv;
     const char *project, *run;
     int argc, capacity;
@@ -44,6 +45,7 @@ void mef_bias_config_destroy(mef_bias_config *recipe)
     }
     free(recipe->argv);
     mef_toml_file_destroy(&recipe->document);
+    mef_toml_file_destroy(&recipe->detector_profile);
     free(recipe);
 }
 
@@ -231,7 +233,8 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     mef_bias_config **owner, char *message, size_t size)
 {
     static const char *root_keys[] = {
-        "bias_recipe_schema_version", "settings", "bias", "detector", "provenance", "inputs", "project", "run"};
+        "bias_recipe_schema_version", "settings", "bias", "detector", "detector_toml",
+        "provenance", "inputs", "project", "run"};
     static const char *bias_keys[] = {"detectors", "reference_detector", "mad", "ron_pair",
         "high_sigma", "readout_id", "bin_x", "bin_y", "input_bpm", "bpm_hdu", "bpm_good_value",
         "bpm_coordinates", "bpm_expected_extname", "amplifier_id", "median_even_handling", "qc"};
@@ -250,7 +253,9 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     toml_datum_t root, bias, entries, selection, provenance;
     char *settings = NULL, *csv = NULL;
     const char *ids[4096], *requested[4096], *reference = NULL;
-    int slots[4096], selected[4096] = {0};
+    int slots[4096], enabled[4096], default_hdus[4096], selected[4096] = {0};
+    const toml_datum_t *overrides[4096] = {0};
+    toml_datum_t catalogue = {0}, binning = {0};
     size_t requested_count = 0, count = 0;
     *outc = argc;
     *outv = argv;
@@ -327,9 +332,29 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     bias = toml_get(root, "bias");
     entries = toml_get(root, "detector");
     provenance = toml_get(root, "provenance");
-    if (!TABLE(bias, bias_keys) || entries.type != TOML_ARRAY || entries.u.arr.size < 1 ||
-        entries.u.arr.size > 4096) {
+    toml_datum_t profile_ref = toml_get(root, "detector_toml");
+    int shared = profile_ref.type != TOML_UNKNOWN;
+    if (!TABLE(bias, bias_keys) ||
+        (entries.type != TOML_ARRAY && !(shared && entries.type == TOML_UNKNOWN)) ||
+        (entries.type == TOML_ARRAY && (entries.u.arr.size < 1 || entries.u.arr.size > 4096))) {
         goto done;
+    }
+    if (shared) {
+        reason = "Invalid shared bias detector profile";
+        char *profile_path = resolve_recipe_path(recipe, toml_string_value(profile_ref));
+        if (!profile_path) {
+            goto done;
+        }
+        recipe->detector_profile = mef_toml_file_read(profile_path, 1024 * 1024);
+        free(profile_path);
+        catalogue = recipe->detector_profile.parsed.toptab;
+        if (!recipe->detector_profile.parsed.ok || !mef_detector_catalogue_valid(catalogue)) {
+            goto done;
+        }
+        binning = toml_get(catalogue, "binning");
+        if (binning.type != TOML_ARRAY || binning.u.arr.size != 2) {
+            goto done;
+        }
     }
     if (provenance.type != TOML_UNKNOWN && (!TABLE(provenance, prov_keys) ||
                                                !read_header_keys(toml_get(provenance, "primary"),
@@ -350,13 +375,30 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
             }
         }
     }
-    count = (size_t)entries.u.arr.size;
+    count = shared ? (size_t)toml_get(catalogue, "detector").u.arr.size
+                   : (size_t)entries.u.arr.size;
     for (size_t i = 0; i < count; ++i) {
-        toml_datum_t e = entries.u.arr.elem[i];
-        ids[i] = toml_string_value(toml_get(e, "id"));
-        if (!TABLE(e, det_keys) || !is_valid_detector_id(ids[i]) ||
-            !toml_nonnegative_integer(toml_get(e, "configuration_detector"), slots + i)) {
-            goto done;
+        enabled[i] = 1;
+        default_hdus[i] = -1;
+        if (shared) {
+            mef_detector_definition definition;
+            if (!mef_detector_catalogue_entry(catalogue, (int)i, &definition) ||
+                !is_valid_detector_id(definition.id) ||
+                (definition.enabled && definition.reference_hdu < 0)) {
+                goto done;
+            }
+            ids[i] = definition.id;
+            slots[i] = definition.slot;
+            enabled[i] = definition.enabled;
+            default_hdus[i] = definition.reference_hdu;
+        } else {
+            toml_datum_t e = entries.u.arr.elem[i];
+            ids[i] = toml_string_value(toml_get(e, "id"));
+            if (!TABLE(e, det_keys) || !is_valid_detector_id(ids[i]) ||
+                !toml_nonnegative_integer(toml_get(e, "configuration_detector"), slots + i)) {
+                goto done;
+            }
+            overrides[i] = &entries.u.arr.elem[i];
         }
         for (size_t j = 0; j < i; ++j) {
             if (!strcmp(ids[i], ids[j]) || slots[i] == slots[j]) {
@@ -365,11 +407,27 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
             }
         }
     }
+    if (shared && entries.type == TOML_ARRAY) {
+        for (int j = 0; j < entries.u.arr.size; ++j) {
+            toml_datum_t entry = entries.u.arr.elem[j];
+            const char *id = toml_string_value(toml_get(entry, "id"));
+            size_t i = 0;
+            while (id && i < count && strcmp(ids[i], id)) {
+                ++i;
+            }
+            if (!id || i == count || overrides[i] || !TABLE(entry, det_keys) ||
+                toml_get(entry, "configuration_detector").type != TOML_UNKNOWN) {
+                reason = "Invalid bias detector override in shared-profile recipe";
+                goto done;
+            }
+            overrides[i] = &entries.u.arr.elem[j];
+        }
+    }
     selection = toml_get(bias, "detectors");
     if (override) {
         if (!strcmp(override, "all")) {
             for (size_t i = 0; i < count; ++i) {
-                selected[i] = 1;
+                selected[i] = enabled[i];
             }
         } else {
             csv = strdup(override);
@@ -392,7 +450,7 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     } else if (selection.type == TOML_UNKNOWN ||
                (toml_string_value(selection) && !strcmp(toml_string_value(selection), "all"))) {
         for (size_t i = 0; i < count; ++i) {
-            selected[i] = 1;
+            selected[i] = enabled[i];
         }
     } else {
         if (selection.type != TOML_ARRAY || selection.u.arr.size < 1 ||
@@ -416,6 +474,10 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
         }
         if (i == count || selected[i]) {
             reason = "Unknown or duplicate selected detector ID";
+            goto done;
+        }
+        if (!enabled[i]) {
+            reason = "Selected detector is disabled in the detector profile";
             goto done;
         }
         selected[i] = 1;
@@ -508,15 +570,20 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
     }
     for (size_t i = 0; i < count; ++i) {
         if (selected[i]) {
-            toml_datum_t e = entries.u.arr.elem[i], hdus = toml_get(e, "hdus");
+            toml_datum_t e = overrides[i] ? *overrides[i] : (toml_datum_t){0};
+            toml_datum_t hdus = toml_get(e, "hdus");
+            toml_datum_t slot = {.type = TOML_INT64, .u.int64 = slots[i]};
+            toml_datum_t default_hdu = {.type = TOML_INT64, .u.int64 = default_hdus[i]};
+            int use_default_hdu = shared && hdus.type == TOML_UNKNOWN;
             if (!append_option_value(recipe, "--detector-id", ids[i]) ||
-                !append_integer_option(
-                    recipe, "--config-detector", toml_get(e, "configuration_detector")) ||
-                hdus.type != TOML_ARRAY || hdus.u.arr.size < 1 || hdus.u.arr.size > 100000) {
+                !append_integer_option(recipe, "--config-detector", slot) ||
+                (!use_default_hdu &&
+                    (hdus.type != TOML_ARRAY || hdus.u.arr.size < 1 || hdus.u.arr.size > 100000))) {
                 goto done;
             }
-            for (int j = 0; j < hdus.u.arr.size; ++j) {
-                if (!append_integer_option(recipe, "--hdu", hdus.u.arr.elem[j])) {
+            int hdu_count = use_default_hdu ? 1 : hdus.u.arr.size;
+            for (int j = 0; j < hdu_count; ++j) {
+                if (!append_integer_option(recipe, "--hdu", use_default_hdu ? default_hdu : hdus.u.arr.elem[j])) {
                     goto done;
                 }
             }
@@ -525,7 +592,7 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
                 goto done;
             }
             if (!append_option_value(recipe, "--raw-expected-extname",
-                    toml_string_value(extname) ? toml_string_value(extname) : "omitted")) {
+                    toml_string_value(extname) ? toml_string_value(extname) : shared ? ids[i] : "omitted")) {
                 goto done;
             }
             const char *mask = toml_string_value(inherited_option(e, bias, "input_bpm"));
@@ -534,6 +601,13 @@ int mef_bias_expand(int argc, char **argv, int *outc, char ***outv,
             }
             for (size_t j = 0; j < sizeof(field_keys) / sizeof(*field_keys); ++j) {
                 toml_datum_t value = inherited_option(e, bias, field_keys[j]);
+                if (shared && value.type == TOML_UNKNOWN) {
+                    if (j == 0) {
+                        value = toml_get(catalogue, "readout_id");
+                    } else if (j == 1 || j == 2) {
+                        value = binning.u.arr.elem[j - 1];
+                    }
+                }
                 if (j >= 4 && j <= 7 && !strcmp(mask, "omitted")) {
                     if (value.type != TOML_UNKNOWN) {
                         reason = "BPM omitted but BPM fields supplied";

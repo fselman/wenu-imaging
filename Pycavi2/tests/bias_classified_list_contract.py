@@ -15,7 +15,7 @@ from linearity_files_contract import plane
 for i,b in enumerate(s['biases']):
     data=[]
     for y in range(4):data += [10+10*y+20*i]+[15+10*y+21*i]*6+[14+10*y+20*i]
-    Path(b['path']).write_bytes(plane(data,8,4,extra=[('EXPTIME','0'),('MJD-OBS','60000.0'),('ORIGFILE',"'bias.fits'")],detector='ESO_CCD_#65',amplifier='L'))
+    Path(b['path']).write_bytes(plane(data,8,4,extra=[('EXPTIME','0'),('MJD-OBS','60000.0'),('ORIGFILE',"'bias.fits'"),('EXTNAME',"'ESO_CCD_#65'")],detector='ESO_CCD_#65',amplifier='L'))
 orch=s['work'];reduced=s['reduced']
 for n in ['work','logs']:(reduced/n).mkdir()
 proj=(root/'docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml').read_text().replace('project_schema_version = 1','project_schema_version = 2',1)
@@ -76,6 +76,43 @@ def image_payloads(path):
 planes=image_payloads(product)
 assert len(planes)==1 and planes[0][0]=='-32'
 assert set(struct.unpack('>'+str(len(planes[0][1])//4)+'f',planes[0][1]))=={7.5}
+# The recipe inherits detector identity and HDU from the shared profile.
+(orch / "detector.toml").write_text("""
+footprint_schema_version = 1
+readout_id = "OMEGACAM:normal:ordered:1x1"
+binning = [1, 1]
+
+[[detector]]
+id = "ESO_CCD_#65"
+native_paf_chip = 1
+reference_hdu = 0
+enabled = true
+
+[[detector]]
+id = "ESO_CCD_#66"
+native_paf_chip = 2
+enabled = false
+""")
+shared = reduced / "cal/bias/shared"
+shared.mkdir()
+shared_config = orch / "shared.toml"
+shared_text = text.split("[[detector]]", 1)[0]
+shared_text = "\n".join(
+    line for line in shared_text.splitlines()
+    if not line.startswith(("readout_id=", "bin_x=", "bin_y="))
+) + "\n"
+shared_config.write_text(
+    shared_text.replace("cal/bias/new", "cal/bias/shared")
+    .replace("[inputs]", 'detector_toml="detector.toml"\n[inputs]')
+    .replace("LIST_PATH", json.dumps(str(listing)))
+)
+result = execute(shared_config)
+assert result.returncode == 0, result.stdout + result.stderr
+assert image_payloads(next(shared.glob("*.fits"))) == planes
+result = execute(shared_config, "--detectors", "ESO_CCD_#66")
+assert result.returncode != 0 and "disabled" in result.stderr, result.stderr
+print("PASS: shared detector defaults preserve pixels and exclude disabled detectors")
+
 legacy=reduced/'cal/bias/legacy';legacy.mkdir()
 (orch/'old.list').write_text(''.join(b['path']+'\n' for b in s['biases']))
 old='\n'.join(line for line in text.splitlines() if not line.startswith(('project=','run=','[inputs]','list=')))+'\n'

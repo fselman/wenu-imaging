@@ -94,7 +94,13 @@ reduced = state['reduced']
 for p in ('work', 'logs'):
     (reduced / p).mkdir()
 for name, item in state['resolved']['sources'].items():
-    (orch / (name + '.toml')).write_text(item['text'])
+    profile_text = item['text']
+    if name == 'detector_toml':
+        profile_text = profile_text.replace(
+            '[[detector]]', 'readout_id = ' + json.dumps(state['selection']['readout_id'])
+            + '\n\n[[detector]]', 1
+        ).replace('native_paf_chip=1', 'native_paf_chip=1\nreference_hdu=0\nenabled=true')
+    (orch / (name + '.toml')).write_text(profile_text)
 project = (repo / 'docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml').read_text().replace('project_schema_version = 1', 'project_schema_version = 2', 1)
 for k, v in dict(raw=state['raw'], calibration=reduced / 'cal', output=reduced, work=reduced / 'work', logs=reduced / 'logs').items():
     project = project.replace('"review locations/' + k + '"', json.dumps(str(v)))
@@ -120,6 +126,9 @@ for qc, supplied, operation, listed, include_bias in cases:
             incoming.pop('input_index')
         text += '\n[[inputs.flat]]\n' + ''.join((k + ' = ' + json.dumps(v) + '\n' for k, v in incoming.items()))
     d = dict(detector_id='ESO_CCD_#65', configuration_detector=0, hdu=0, flat_hdus=[f['hdu'] for f in state['selection']['flat']], readout_id=state['selection']['readout_id'], master_bias=state['master'], master_hdu=1, master_sha256=hashlib.sha256(Path(state['master']).read_bytes()).hexdigest(), input_bpm=state['selection']['bpm']['path'] if supplied else 'omitted', bpm_hdu=1, bias_accepted=[bool(b['accepted']) for b in state['biases']], reference_rois=['CCD65.R0'], sites=[dict(roi=f'CCD65.R{i}', x=i + 1, y=1) for i in range(5)], max_loaded_pixels=10000, max_rows=50)
+    if listed and not supplied:
+        for key in ('configuration_detector', 'hdu', 'readout_id'):
+            del d[key]
     text += '\n[[detectors]]\n'
     for k, v in d.items():
         if k != 'sites':
@@ -240,4 +249,22 @@ for label, members in [('missing-partner',flats[:-1]),('ambiguous-partner',[*fla
     if label == 'relative-fits':
         assert 'observation path must be absolute' in result.stderr, result.stderr
 print('PASS: duplicate entries, incomplete or ambiguous pairs, and relative paths refused before image loads')
+profile_text = (orch / 'detector_toml.toml').read_text()
+(orch / 'disabled-detector.toml').write_text(
+    profile_text.replace('enabled=true', 'enabled=false', 1)
+)
+out = Path(tempfile.mkdtemp(prefix='disabled-', dir=reduced / 'cal'))
+disabled_recipe = orch / (out.name + '.toml')
+disabled_recipe.write_text(text.replace(
+    str(Path(receipt['product_root']).relative_to(reduced)), str(out.relative_to(reduced))
+).replace('detector_toml.toml', 'disabled-detector.toml'))
+result = subprocess.run(
+    [str(command), 'cal', 'bpm-linearity', '--config', str(disabled_recipe)],
+    cwd=orch, capture_output=True, text=True,
+)
+assert result.returncode != 0 and 'Unknown or disabled BPM/linearity detector' in result.stderr, result.stderr
+assert not list(out.rglob('*.fits')) and not list(out.rglob('*.asdf'))
+if args.capture_writer:
+    assert 'loads=0 unique=0' in result.stderr, result.stderr
+print('PASS: a disabled BPM/linearity detector is refused before image loads')
 print('RETAINED', work)

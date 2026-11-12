@@ -5,6 +5,7 @@
 #define _XOPEN_SOURCE 700
 #include "mef_bpm_linearity.h"
 #include "mef_config_toml.h"
+#include "mef_detector_catalogue.h"
 #include "mef_bias_settings.h"
 #include "mef_recipe_inputs.h"
 #include "mef_project.h"
@@ -532,8 +533,17 @@ done:
 
 static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char *settings)
 {
-    const char *id = string(row, "detector_id"), *readout = string(row, "readout_id");
-    toml_datum_t geometry = find(toml_get(c->geometry.toptab, "detector"), "id", id ? id : "");
+    const char *id = string(row, "detector_id");
+    mef_detector_definition definition;
+    if (!mef_detector_catalogue_find(c->geometry.toptab, id, &definition) || !definition.enabled) {
+        fprintf(stderr, "Unknown or disabled BPM/linearity detector: %s\n", id ? id : "(missing)");
+        return 0;
+    }
+    const char *readout = string(row, "readout_id");
+    if (toml_get(row, "readout_id").type == TOML_UNKNOWN) {
+        readout = string(c->geometry.toptab, "readout_id");
+    }
+    toml_datum_t geometry = definition.definition;
     toml_datum_t trim = find(toml_get(c->processing.toptab, "trim"), "detector", id ? id : "");
     toml_datum_t controls = toml_get(c->processing.toptab, "linearity_preparation");
     toml_datum_t policy = toml_get(c->recipe.toptab, "bpm"),
@@ -544,8 +554,11 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
                  identity = toml_get(c->recipe.toptab, "identity");
     const char *amplifier = string(geometry, "amplifier"),
                *encoding = string(controls, "mask_encoding");
-    long slot = integer(row, "configuration_detector", -1), hdu = integer(row, "hdu", -1),
-         mhdu = integer(row, "master_hdu", -1);
+    long slot = toml_get(row, "configuration_detector").type == TOML_UNKNOWN
+                    ? definition.slot : integer(row, "configuration_detector", -1);
+    long hdu = toml_get(row, "hdu").type == TOML_UNKNOWN
+                    ? definition.reference_hdu : integer(row, "hdu", -1);
+    long mhdu = integer(row, "master_hdu", -1);
     long bhdu = integer(row, "bpm_hdu", -1), good = integer(controls, "binary_good_value", -1),
          reject = integer(controls, "reject_bits", -1);
     long pixels = integer(row, "max_loaded_pixels", 0), rows = integer(row, "max_rows", 0);
@@ -569,7 +582,7 @@ static int detector(compilation *c, toml_datum_t row, size_t ordinal, const char
                      "master_bias|master_hdu|master_sha256|input_bpm|bpm_hdu|bias_accepted|"
                      "reference_rois|sites|max_loaded_pixels|max_rows|") ||
         !id || !readout || !amplifier || slot < 0 ||
-        integer(geometry, "native_paf_chip", 0) != slot + 1 || hdu < 0 || hdu > 127 || mhdu < 0 ||
+        definition.slot != slot || hdu < 0 || hdu > 127 || mhdu < 0 ||
         mhdu > 127 || !mask || !mode || !acquisition ||
         (strcmp(mode, "new") && strcmp(mode, "combined")) ||
         (!supplied && !strcmp(mode, "combined")) ||
@@ -1095,7 +1108,7 @@ int mef_bpm_linearity_compile(const char *source, const char *revision, int qc_o
                *processed = string(c.processing.toptab, "instrument");
     toml_datum_t binning = toml_get(c.geometry.toptab, "binning");
     if (!instrument || !processed || strcmp(instrument, processed) ||
-        integer(c.geometry.toptab, "footprint_schema_version", 0) != 1 ||
+        !mef_detector_catalogue_valid(c.geometry.toptab) ||
         integer(c.processing.toptab, "linearity_preparation_schema_version", 0) != 1 ||
         binning.type != TOML_ARRAY || binning.u.arr.size != 2 ||
         binning.u.arr.elem[0].type != TOML_INT64 || binning.u.arr.elem[0].u.int64 != 1 ||
