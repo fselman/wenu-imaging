@@ -63,11 +63,22 @@ as read-only inputs. See the [dependency contract](../architecture.md#dependency
 
 ## Qualification
 
-Start with the retained WFI Trapezium and OmegaCAM CP Pup datasets. Resolve the
-actual component lists, master bias and BPM, detector/filter/readout bindings,
-configuration revision, legacy executable, and available reference products on
-the qualification host. Pin their identities and hashes before the native
-runs. Exact dome, sky, and combined reference paths remain to be established.
+Use the retained WFI Trapezium and OmegaCAM CP Pup reductions recorded in the
+[effective-settings baseline](../../architecture/proposed/m1/effective-settings-baseline.json).
+The partitions below identify the calibration sequences. Timestamps are as recorded
+in that baseline.
+
+| Dataset | Filter | Dome partition | Sky partitions |
+| --- | --- | --- | --- |
+| WFI Trapezium | `BB_B_99_ESO842` | `100123319`, 2001-12-10T19:51:55 | `100123337`, 2001-12-11T00:07:12 and `100123366`, 2001-12-11T09:05:21 |
+| OmegaCAM CP Pup | `r_SDSS` | `574184`, 2017-03-14T09:41:34 | `200253584`, 2017-03-13T23:12:13 |
+
+On the qualification host, record the ordered component lists, master bias and
+BPM where used, detector/filter/readout bindings, effective configuration,
+legacy executable, and retained reference products. Pin the partition and
+SHA-256 of each reference. Match the combined flat staged in each science
+partition to its calibration source by checksum because the WFI partitions
+reuse filenames. The exact on-disk references and checksums are pending.
 
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS
