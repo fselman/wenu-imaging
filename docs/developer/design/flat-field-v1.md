@@ -153,6 +153,31 @@ The matches above identify retained files by checksum. Qualification still
 requires confirming the raw-list members and detector/HDU and readout bindings
 and comparing the numerical outputs.
 
+### Legacy replay with two supplied masters
+
+The Intel Mac replay under
+`/Users/fselman/Software/build/wenu-imaging/flat-two-masters.l0MVKW8m`
+loaded the retained dome and sky FITS, bias and BPM. It used the same legacy
+executable and partition PAFs listed above. The replay command supplied
+`--bias` and omitted `--biassub`. In the legacy engine, `--biassub`
+enables scaled bias subtraction during combination.
+
+| Replay directory | Output FITS SHA-256 | Detector extensions | Exact physical pixels | Built sky first-HDU FRMEDIAN |
+| --- | --- | ---: | ---: | ---: |
+| `wfi-100123337` | `0cbb8afd20fc7b286ef6d6fced08114024f836e7036b3be70ddc5df1452c6353` | 8 | 66,994,144 | 12516.014648 |
+| `wfi-100123366` | `f35b7e1635d3e0580f8a25017d6d699ab3625b6340981958d8da3b822396d6ff` | 8 | 66,994,144 | 15379.883789 |
+| `ocam-200253584` | `30e08e146017e4a499e64a9d04358e61e7c0b3467940976704643da64f41bb23` | 32 | 267,584,128 | 17304.685547 |
+
+The replay filenames are `REPLAY_MFF_BB_B_99_ESO842_1x1.fits` for WFI
+and `REPLAY_MFF_r_SDSS_1x1.fits` for OmegaCAM. Each matched its
+retained sky-list reference in detector order, image shapes and every physical
+pixel after FITS scaling, with zero nonfinite pixels in either product. File
+checksums differ. The logs contain neither loaded medians nor bias-subtraction
+messages. The table gives the built sky's header value. A paired replay with
+`--biassub` on both routes is needed to qualify the scaled-bias path.
+
+### Native checks
+
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS
 geometry and scaling, pixels, and native ASDF lineage. Start with exact
