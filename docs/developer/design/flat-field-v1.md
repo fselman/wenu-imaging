@@ -73,12 +73,76 @@ in that baseline.
 | WFI Trapezium | `BB_B_99_ESO842` | `100123319`, 2001-12-10T19:51:55 | `100123337`, 2001-12-11T00:07:12 and `100123366`, 2001-12-11T09:05:21 |
 | OmegaCAM CP Pup | `r_SDSS` | `574184`, 2017-03-14T09:41:34 | `200253584`, 2017-03-13T23:12:13 |
 
-On the qualification host, record the ordered component lists, master bias and
-BPM where used, detector/filter/readout bindings, effective configuration,
-legacy executable, and retained reference products. Pin the partition and
-SHA-256 of each reference. Match the combined flat staged in each science
-partition to its calibration source by checksum because the WFI partitions
-reuse filenames. The exact on-disk references and checksums are pending.
+### Retained reference products
+
+On the Intel Mac, the validation tree is
+`/Users/fselman/Software/build/wenu-imaging/mac-stage2-1-install-rBleOnWB`.
+The legacy `native/bin/mefpp` under that root has SHA-256
+`5acd03bc33f1413e475c71130af9f4d7bb81e9547092417fbec6f2b1a44e8d01`.
+Paths below are relative to its `pilot-5-per-instrument` directory. Each
+list checksum identifies the original ordered list.
+
+**WFI dome**
+
+`wfi/calib/dome/100123319/BB_B_99_ESO842/2001-12-10T19:51:55`
+
+- `dome.list` — `767211e33a963738e8c357e5c5c5250364e232b9b85f628299fe93af6b1b31e6`
+- `WFI_DOMEFF_BB_B_99_ESO842_1x1.fits` — `cc592e492516131a5e7aa3048269db6f08e0eaefa04859c9c5dfdf97f6757458`
+- `mefpp.paf` — `7d7a7bde5edac6d593727c5eef2a08007b84f48a7e2a7d8bdec811e4b399990c`
+- `WFI_MB_1x1.fits` — `49103e80ae950e02fd6264ad3e82f3d389a4ebe1173842feabf1e2995c593920`
+- `WFI_BPM_1x1.fits` — `b27a5bc40f3239b389835a3964bac88fffc7e61d76ca758d10a43efbe96ac9f2`
+
+**WFI early sky**
+
+`wfi/calib/sky/100123337/BB_B_99_ESO842/2001-12-11T00:07:12`
+
+- `sky.list` — `9f1b3605a396349afa282d05c72609a20f74f39524e7672e92f0775a57a19ba0`
+- `WFI_SKYFF_BB_B_99_ESO842_1x1.fits` — `dab281b9c614603a80aa519a2115c3a2a2c345f994914d64391aa0363861db24`
+- `WFI_MFF_BB_B_99_ESO842_1x1.fits` — `abaa374adcdf502b2a6cf97f7085a00f1624725c29de97ba301cc86e18c7a539`
+
+**WFI late sky**
+
+`wfi/calib/sky/100123366/BB_B_99_ESO842/2001-12-11T09:05:21`
+
+- `sky.list` — `07e707bb1298aee9648c92836f54d5c3d02753e01b75c3931478b2ca1ceb5310`
+- `WFI_SKYFF_BB_B_99_ESO842_1x1.fits` — `a6ba15032d7c2047aca9e24574d54e5e9c8fecfd89efdd691734fbf1eeed7867`
+- `WFI_MFF_BB_B_99_ESO842_1x1.fits` — `a3b359701a07814296ce44aedc3d0983765f2ee8bfead901c91bbc9eef15f025`
+
+**OmegaCAM dome**
+
+`omegacam/calib/dome/574184/r_SDSS/2017-03-14T09:41:34`
+
+- `dome.list` — `71525a00316168cafdb6400638ba24b950d974fc159bb210507777f0d82b752f`
+- `OCAM_DOMEFF_r_SDSS_1x1.fits` — `dcefcbeab6a8670a6d1698570c1ea9184a86261e54c6c54876a40b1d5405369c`
+- `mefpp.paf` — `709d65acdeea6c889ed1468cbb3966d5de93ec654ee030032a096ca12624333f`
+- `OCAM_MB_1x1.fits` — `4297cf8ce8dcc38df7ea134a9ee080a7e640d67563bd27abc6c9b44cc72e8597`
+- `OCAM_BPM_1x1.fits` — `5572b31edd209f1bf99d28ebda403af208e9a1807e9a90d13894f292e2bd912a`
+
+**OmegaCAM sky**
+
+`omegacam/calib/sky/200253584/r_SDSS/2017-03-13T23:12:13`
+
+- `sky.list` — `eef0fa51807b4a341ba20590a28d297a3316ed293bf5eea667b5887b0b1413fc`
+- `OCAM_SKYFF_r_SDSS_1x1.fits` — `a4228d6496cd7f3eaacef920d71e314166b2887313b401abf4458157db83380a`
+- `OCAM_MFF_r_SDSS_1x1.fits` — `05ba46ff9a175039b4d555256d472c28d90ebeac527ea4d08efa417a43798c39`
+
+In each instrument's sky partitions, the staged dome flat, bias, BPM, and
+`mefpp.paf` match the corresponding dome partition by SHA-256. The generic
+`config/mefpp.paf` files have a different checksum. For OmegaCAM the CP Pup
+science master bias also has a different checksum
+(`7b848756732aa017b5ece19f5744baacf317309e913b173b51fee07d75994e1f`).
+Use the calibration-stage bias for the flat comparisons.
+
+| Science partition | Combined flat matches sky partition |
+| --- | --- |
+| WFI Trapezium, 2001-12-11T01:59:14 | `100123337` |
+| WFI Trapezium, 2001-12-11T07:08:55 | `100123366` |
+| WFI Trapezium, 2001-12-11T08:32:20 | `100123366` |
+| OmegaCAM CP Pup, 2017-03-13T01:57:49 | `200253584` |
+
+The matches above identify retained files by checksum. Qualification still
+requires confirming the raw-list members and detector/HDU and readout bindings
+and comparing the numerical outputs.
 
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS
