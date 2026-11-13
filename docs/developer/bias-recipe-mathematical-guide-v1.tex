@@ -17,14 +17,26 @@
 \newcommand{\Var}{\operatorname{Var}}\newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\ind}{\mathbf{1}}
 \title{\vspace{-10mm}Bias recipe\\Mathematics and implementation\\\large Version 1 --- review copy}
-\author{Wenu-imaging}\date{8 November 2026; human source-review edition}
+\author{Wenu-imaging}\date{10 November 2026; human source-review edition}
 \begin{document}\maketitle\vspace{-6mm}
-\section{Purpose and authority}
+\section{Executive summary and authority}
 The recipe estimates a master bias \emph{signal} by correcting the electronic
 scan level separately in every input row, trimming the active rectangle,
 rejecting entire frames by their corrected active-area means, and stacking the
 retained frames with the existing Eclipse pixel median. QC describes the
 inputs, corrections and master; it does not silently modify the result.
+
+\textbf{Shared input contract.} Run \texttt{mefpp\_recipe cal bias --config RECIPE.toml}
+from orchestration. The recipe references \code{project.toml}, a detector TOML,
+an absolute \code{inputs.list} path and a fresh reduced \code{run}. The detector
+TOML owns instrument settings; the recipe owns processing and product settings.
+Each list row
+contains an absolute FITS path under the project raw root and a \code{BIAS}
+classification. The list directory is configurable. Calibration paths use the
+project calibration root.
+Optional BPMs are already reduced products. Dependency-list reduction is deferred.
+The native archive preserves the classified list. Legacy \code{--bias} lists
+remain compatible; new recipes use the same list contract as BPM/linearity.
 
 This guide explains the implemented estimators and their source mapping.
 Sparse source landmarks identify scientific stages without depending on line
@@ -85,19 +97,19 @@ Landmark and purpose & Source file and routine \\
 \endhead
 \code{[BIAS-RECIPE-ADMISSION]}\newline
 Configuration, input identities and all detector bindings &
-\code{recipes/mefpp_bias_recipe.c}\newline
+\code{recipes/mefpp_bias.c}\newline
 \code{main} \\[4pt]
 \code{[BIAS-DETECTOR-LOOP]}\newline
 Independent detector calibration, no mosaic balancing &
-\code{recipes/mefpp_bias_recipe.c}\newline
+\code{recipes/mefpp_bias.c}\newline
 \code{main} \\[4pt]
 \code{[BIAS-PRODUCT-PUBLICATION]}\newline
 Complete-detector barrier, final MEF then ASDF &
-\code{recipes/mefpp_bias_recipe.c}\newline
+\code{recipes/mefpp_bias.c}\newline
 \code{main} \\[4pt]
 \code{[BIAS-DETECTOR-CALIBRATION]}\newline
 One detector's service call and result ownership &
-\code{common/mef_bias_recipe_process.c}\newline
+\code{common/mef_bias_process.c}\newline
 \code{process_bias_detector} \\[4pt]
 \code{[BIAS-INPUT-LOADING]}\newline
 Load explicit bound detector HDUs &
@@ -153,7 +165,7 @@ Staged detector MEF and exclusive publication &
 \normalsize
 
 \paragraph{Supporting routines.}
-\code{common/mef_bias_recipe_config.c}, \code{mef_bias_recipe_expand},
+\code{common/mef_bias_config.c}, \code{mef_bias_expand},
 handles the TOML envelope and detector selection.
 \code{common/mef_bias_product_qc.c}, \code{mef_bias_product_qc_add},
 copies measured values, masks and provenance into the common archive.
@@ -610,8 +622,8 @@ units, state and definitions, not merely collect numeric keyword values.
 
 \subsection*{Version domains}
 The retained native library version 0.3.0, ASDF file/core 1.6, application schema
-2.0.0, mapping identifier \code{bias-scalar/1}, and Python ASDF 6 runtime refer
-to different version domains. They must not be compared as though they were
+2.0.0 and mapping identifier \code{bias-scalar/1} refer to different version
+domains. They must not be compared as though they were
 one software version. The native interface includes the qualified memory-backed
 readback path for the relevant library limitation.
 
@@ -672,7 +684,7 @@ actual source, while names identify the relevant calculation boundary.
 \code{ins/mef/common/mef_operation_template.c} & Operation lifetime and cleanup \\
 \code{ins/mef/common/mef_mef_assemble.c} & Native MEF assembly and header budget \\
 \code{ins/mef/common/mef_product_qc_asdf.c} & Native ASDF writing, readback and explicit recovery \\
-\code{ins/mef/recipes/mefpp_bias_recipe.c} & Standalone serial coordinator \\
+\code{ins/mef/recipes/mefpp_bias.c} & Standalone serial coordinator \\
 \bottomrule
 \end{tabular}\end{center}
 

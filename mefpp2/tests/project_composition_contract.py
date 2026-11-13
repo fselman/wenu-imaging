@@ -298,6 +298,39 @@ def main():
     crlf = service.load_project(valid_entry)
     assert next(s for s in crlf.as_dict()['sources'] if s['path'] == str(shared_path))['text'].encode() == shared_path.read_bytes()
 
+    # Native optional policies preserve historical absence and explicit modern
+    # settings through the same freeze/restore path, without supplying defaults.
+    historical = service.native('paf', root/'Pycavi2/pycavi/config/wfi.paf')['settings']
+    for encoding in ('binary', 'reason8'):
+        policy = {'BPM.ENCODING': {'type': 'string', 'value': encoding},
+                  'BPM.BAD_WHEN': {'type': 'string', 'value': 'zero' if encoding == 'binary' else 'nonzero'},
+                  'MEF.BIAS.MEDIAN.EVEN.HANDLING': {'type': 'string', 'value': 'average'},
+                  'QC.RON.CLIP.ENABLED': {'type': 'int', 'value': 1},
+                  'QC.RON.CLIP.LOW': {'type': 'float64-bits', 'value': '4014000000000000'},
+                  'QC.RON.CLIP.HIGH': {'type': 'float64-bits', 'value': '4014000000000000'},
+                  'QC.RON.CLIP.MAX_ITERATIONS': {'type': 'int', 'value': 10}}
+        if encoding == 'reason8':
+            policy.update({'BPM.REJECT_BITS': {'type': 'int', 'value': 3},
+                           'BPM.REGISTRY': {'type': 'string', 'value': 'WENU_CCD_V1'}})
+        settings = dict(historical, **policy)
+        native = work/(encoding+' optional policies.toml')
+        native.write_text(service.render(settings))
+        explicit = service.load_toml(native)
+        assert values(explicit) == settings
+        saved_policy = work/(encoding+' frozen policies.json')
+        saved_policy.write_bytes(explicit.encoded)
+        assert service.restore(saved_policy) == explicit
+        for missing in ('BPM.BAD_WHEN', 'QC.RON.CLIP.HIGH'):
+            partial = dict(settings)
+            del partial[missing]
+            try:
+                service.freeze(partial, [], {})
+            except module.MigrationError:
+                pass
+            else:
+                raise AssertionError('Accepted incomplete optional policy: '+missing)
+    print('PASS: absent and explicit binary/reason8, median and clipped-RON policies preserved; partial groups refused')
+
     # The complete record survives editing/deleting every private source; restore
     # verifies serialized data without attempting to rediscover those old files.
     frozen = service.load_project(valid_entry)

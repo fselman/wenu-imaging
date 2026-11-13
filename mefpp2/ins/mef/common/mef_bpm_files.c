@@ -14,6 +14,7 @@ struct mef_bpm_files_result {
 };
 typedef struct {
     mef_context *context;
+    const mef_detector_cube *cube;
     const mef_layout_map *const *maps;
     size_t count, config_slot;
     const char *detector;
@@ -170,6 +171,15 @@ static mef_status load(void *opaque,mef_error **error) {
     mef_status status;
     s->frames=calloc(s->count,sizeof(*s->frames)); s->borrowed=calloc(s->count,sizeof(*s->borrowed));
     if(!s->frames || !s->borrowed) return MEF_ERR_MEMORY;
+    if(s->cube) {
+        for(i=0;i<s->count;++i) {
+            const mef_detector_plane *plane=mef_detector_cube_bound(s->cube,s->maps[i],s->detector);
+            if(!plane || !plane->raw || !plane->active) return MEF_ERR_INPUT;
+            s->frames[i]=plane->raw;s->borrowed[i]=plane->raw;
+        }
+        s->bias=s->cube->master;s->binary=s->cube->binary;s->flags=s->cube->flags;
+        return MEF_OK;
+    }
     for(i=0;i<s->count;++i) {
         status=mef_layout_load(s->maps[i],s->detector,s->frames+i,error);
         if(status!=MEF_OK) return status;
@@ -212,6 +222,8 @@ static mef_status calculate(void *opaque,mef_error **error) {
     double *pair_levels=NULL;
     double lo=DBL_MAX,hi=-DBL_MAX;
     mef_status status;
+    q->shared_cube=s->cube!=NULL; q->qc_requested=s->cube?s->cube->qc:1;
+    q->pair_consistency_passed=1; q->coverage_passed=1;
     memset(&o,0,sizeof(o));
     in.frames=s->borrowed; in.count=s->count; in.configuration_detector=s->config_slot; in.master_bias=s->bias;
     o.prior_binary=s->binary; o.prior_flags=s->flags;
@@ -219,7 +231,11 @@ static mef_status calculate(void *opaque,mef_error **error) {
     o.reject_bits=s->options->reject_bits; o.with_mad=s->options->with_mad;
     o.rois=q->rois; o.roi_count=q->roi_count;
     o.saturation_set=1; o.saturation_raw=s->options->saturation_raw; o.upper_fraction=s->options->upper_fraction;
-    status=mef_cal_bpm(s->context,&in,&o,&s->pending->service,error);
+    if(s->cube) {
+        const image_t *processed[MAX_IMAGE_NUMBER];
+        for(i=0;i<s->count;++i) processed[i]=mef_detector_cube_bound(s->cube,s->maps[i],s->detector)->active;
+        status=mef_cal_bpm_processed(s->context,&in,&o,processed,s->cube->qc,&s->pending->service,error);
+    } else status=mef_cal_bpm(s->context,&in,&o,&s->pending->service,error);
     if(status!=MEF_OK) return status;
     service=mef_bpm_result_qc(s->pending->service); response=mef_bpm_result_response(s->pending->service);
     indices=mef_bpm_result_fit_indices(s->pending->service);
@@ -245,7 +261,10 @@ static mef_status calculate(void *opaque,mef_error **error) {
         if(j==(size_t)response->plane_count) continue;
         if(!finite_number(response->reference_levels[j]) || response->reference_levels[j]<=0) goto bad;
         if(fabs(level-response->reference_levels[j])/((level+response->reference_levels[j])/2)>
-            q->maximum_pair_difference) goto bad;
+            q->maximum_pair_difference) {
+            q->pair_consistency_passed=0;
+            if(!s->cube) goto bad;
+        }
         fraction=(fraction+service->frames[indices[j]].reference_fraction_median)/2;
         if(fraction<lo) lo=fraction;
         if(fraction>hi) hi=fraction;
@@ -259,31 +278,53 @@ static mef_status calculate(void *opaque,mef_error **error) {
     if(lo==DBL_MAX || hi==-DBL_MAX) goto bad;
     q->minimum_reference_fraction=lo; q->maximum_reference_fraction=hi; q->span_fraction=hi-lo;
     q->distinct_levels=distinct; q->usable_pairs=pairs; q->distinct_times=distinct_times; q->paired_levels=paired_levels;
-    free(pair_times);
+    if (pair_times) {
+        free(pair_times);
+    }
     if(hi-lo<q->minimum_span_fraction || distinct<(q->mode==MEF_BPM_QUICK?5:2) ||
-        (q->mode==MEF_BPM_QUICK && (pairs<5 || distinct_times<5 || paired_levels<5))) return MEF_ERR_COMPUTATION;
+        (q->mode==MEF_BPM_QUICK && (pairs<5 || distinct_times<5 || paired_levels<5))) {
+        q->coverage_passed=0;
+        if(!s->cube) return MEF_ERR_COMPUTATION;
+    }
     return MEF_OK;
 bad:
-    free(pair_times); return MEF_ERR_COMPUTATION;
+    if (pair_times) {
+        free(pair_times);
+    }
+    return MEF_ERR_COMPUTATION;
 }
 static void cleanup(void *opaque) {
     file_state *s=opaque;
     size_t i;
-    if(s->frames) for(i=0;i<s->count;++i) image_del(s->frames[i]);
-    free(s->frames); free(s->borrowed); image_del(s->bias); free(s->flags); pixelmap_del(s->binary);
+    if(!s->cube) {
+        if(s->frames) for(i=0;i<s->count;++i) image_del(s->frames[i]);
+        image_del(s->bias);free(s->flags);pixelmap_del(s->binary);
+    }
+    free(s->frames);free(s->borrowed);
 }
-mef_status mef_bpm_from_files(mef_context *context,const mef_layout_map *const *maps,size_t count,
+static mef_status from_inputs(mef_context *context,const mef_layout_map *const *maps,size_t count,
     const char *detector,const mef_layout_map *bias,const mef_layout_map *prior,
-    const mef_bpm_files_options *options,mef_bpm_files_result **out,mef_error **error) {
+    const mef_bpm_files_options *options,const mef_detector_cube *cube,
+    mef_bpm_files_result **out,mef_error **error) {
     file_state s;
     mef_status status;
     static const mef_operation_steps steps={validate,load,calculate,NULL,cleanup};
     if(!out || *out || (error && *error)) return MEF_ERR_INPUT;
     memset(&s,0,sizeof(s)); s.context=context; s.maps=maps; s.count=count; s.detector=detector;
-    s.bias_map=bias; s.prior_map=prior; s.options=options;
+    s.bias_map=bias; s.prior_map=prior; s.options=options;s.cube=cube;
     status=mef_operation_run(&steps,&s,error);
     if(status==MEF_OK) { *out=s.pending; return MEF_OK; }
     mef_bpm_files_result_destroy(s.pending);
     if(error && !*error) (void)mef_error_create(status,"BPM file input: incompatible binding, acquisition or signal coverage",NULL,error);
     return status;
 }
+
+mef_status mef_bpm_from_files(mef_context *context,const mef_layout_map *const *maps,size_t count,
+    const char *detector,const mef_layout_map *bias,const mef_layout_map *prior,
+    const mef_bpm_files_options *options,mef_bpm_files_result **out,mef_error **error)
+{ return from_inputs(context,maps,count,detector,bias,prior,options,NULL,out,error); }
+
+mef_status mef_bpm_from_cube(mef_context *context,const mef_layout_map *const *maps,size_t count,
+    const char *detector,const mef_layout_map *bias,const mef_layout_map *prior,
+    const mef_bpm_files_options *options,const mef_detector_cube *cube,mef_bpm_files_result **out,mef_error **error)
+{ return cube?from_inputs(context,maps,count,detector,bias,prior,options,cube,out,error):MEF_ERR_INPUT; }

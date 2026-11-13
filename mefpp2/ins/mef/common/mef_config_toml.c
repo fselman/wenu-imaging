@@ -2,6 +2,7 @@
 #include "mef_config_toml.h"
 #include "mef_processing.h"
 #include "mef_toml_bundle.h"
+#include "mef_toml_file.h"
 #include "mef_config_domains.h"
 #include "mefp_lib.h"
 #include <float.h>
@@ -225,35 +226,82 @@ mef_status mef_config_document_dump_sources(const mef_config_document *doc, FILE
     if (doc == NULL || stream == NULL) return MEF_ERR_CONFIG;
     return fputs(doc->sources, stream) == EOF ? MEF_ERR_IO : MEF_OK;
 }
+/* Bundle construction differs by source format. Construction and provenance
+ * of the effective settings use the same path for both formats. */
+static mef_status document_from_bundle(mef_toml_bundle *bundle, const mef_allocator *allocator,
+    mef_config_document **out, char *diagnostic, size_t capacity)
+{
+    mef_config_document *doc = document_new(allocator);
+    const char *sources = NULL;
+    size_t length;
+    mef_status status = MEF_ERR_MEMORY;
+
+    if (doc == NULL) {
+        detail(diagnostic, capacity, "Cannot allocate configuration document");
+        goto done;
+    }
+    status = config_from_bundle(bundle, allocator, &doc->settings, diagnostic, capacity);
+    if (status != MEF_OK) goto done;
+    status = mef_toml_bundle_sources(bundle, &sources);
+    if (status != MEF_OK) goto done;
+    length = strlen(sources) + 1;
+    doc->sources = doc->allocator.allocate(doc->allocator.user, length);
+    if (doc->sources == NULL) {
+        status = MEF_ERR_MEMORY;
+        detail(diagnostic, capacity, "Cannot copy source record");
+        goto done;
+    }
+    memcpy(doc->sources, sources, length);
+    *out = doc;
+    doc = NULL;
+
+done:
+    mef_toml_bundle_close(bundle);
+    mef_config_document_destroy(doc);
+    return status;
+}
+
 mef_status mef_config_document_from_toml(const char *path, const mef_allocator *allocator,
     mef_config_document **out, char *diagnostic, size_t capacity)
 {
-    mef_config_document *doc;
-    mef_toml_bundle *bundle;
-    const char *sources;
-    size_t length;
+    mef_toml_bundle *bundle = NULL;
     mef_status status;
     detail(diagnostic, capacity, "");
     if (path == NULL || out == NULL || *out != NULL ||
         (allocator != NULL && (allocator->allocate == NULL || allocator->release == NULL))) {
-        detail(diagnostic, capacity, "Invalid configuration document arguments"); return MEF_ERR_CONFIG;
+        detail(diagnostic, capacity, "Invalid configuration document arguments");
+        return MEF_ERR_CONFIG;
     }
-    doc = document_new(allocator); bundle = NULL;
-    if (doc == NULL) { detail(diagnostic, capacity, "Cannot allocate configuration document"); return MEF_ERR_MEMORY; }
     status = mef_toml_bundle_open(path, allocator, setting_valid, &bundle, diagnostic, capacity);
-    if (status != MEF_OK) goto failure;
-    status = config_from_bundle(bundle, allocator, &doc->settings, diagnostic, capacity);
-    if (status != MEF_OK) goto failure;
-    sources = NULL; status = mef_toml_bundle_sources(bundle, &sources);
-    if (status != MEF_OK) goto failure;
-    length = strlen(sources);
-    doc->sources = doc->allocator.allocate(doc->allocator.user, length + 1);
-    if (doc->sources == NULL) { status = MEF_ERR_MEMORY; detail(diagnostic, capacity, "Cannot copy source record"); goto failure; }
-    memcpy(doc->sources, sources, length + 1);
-    mef_toml_bundle_close(bundle); *out = doc; return MEF_OK;
-failure:
-    mef_toml_bundle_close(bundle); mef_config_document_destroy(doc); return status;
+    if (status != MEF_OK) return status;
+    return document_from_bundle(bundle, allocator, out, diagnostic, capacity);
 }
+
+mef_status mef_config_document_from_domains(const mef_toml_file *recipe,
+    const mef_toml_file *detector, mef_config_document **out, char *diagnostic, size_t capacity)
+{
+    mef_toml_document *recipe_view = NULL, *detector_view = NULL;
+    mef_toml_bundle *bundle = NULL;
+    mef_status status;
+
+    detail(diagnostic, capacity, "");
+    if (!recipe || !detector || !recipe->parsed.ok || !detector->parsed.ok || !out || *out) {
+        detail(diagnostic, capacity, "Explicit recipe and detector TOML documents required");
+        return MEF_ERR_CONFIG;
+    }
+    status = mef_toml_embedded_domains(recipe, 0, &recipe_view, diagnostic, capacity);
+    if (status != MEF_OK) return status;
+    status = mef_toml_embedded_domains(detector, 1, &detector_view, diagnostic, capacity);
+    if (status != MEF_OK) {
+        mef_toml_close(recipe_view);
+        return status;
+    }
+    status = mef_toml_bundle_from_domains(recipe_view, recipe->path, detector_view, detector->path,
+        setting_valid, &bundle, diagnostic, capacity);
+    if (status != MEF_OK) return status;
+    return document_from_bundle(bundle, NULL, out, diagnostic, capacity);
+}
+
 mef_status mef_config_document_clone(const mef_config_document *source, const mef_allocator *allocator,
     mef_config_document **out, char *diagnostic, size_t capacity)
 {

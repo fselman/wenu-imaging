@@ -58,6 +58,10 @@ typedef struct {
  * Uses operation template; no I/O, cwd change, discovery or reentrancy claim. */
 mef_status mef_cal_bpm(mef_context *, const mef_bpm_input *, const mef_bpm_options *,
     mef_bpm_result **out, mef_error **error);
+/* Borrowed active planes bypass all input correction; raw buffers remain available
+ * for physical saturation checks. qc=0 omits optional scan/active statistics. */
+mef_status mef_cal_bpm_processed(mef_context *,const mef_bpm_input *,const mef_bpm_options *,
+    const image_t *const *,int,mef_bpm_result **,mef_error **);
 void mef_bpm_result_destroy(mef_bpm_result *);
 const detector_response_result *mef_bpm_result_response(const mef_bpm_result *);
 const unsigned char *mef_bpm_result_prior_flags(const mef_bpm_result *);

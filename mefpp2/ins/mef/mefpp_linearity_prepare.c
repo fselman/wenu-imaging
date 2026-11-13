@@ -1,5 +1,6 @@
-/* Explicit TOML-led native preparation, pair streamed, no fit or ASDF backend. */
+/* Explicit TOML-led preparation. Pair streamed; measurement only, no fit. */
 #include "mef_linearity_files.h"
+#include "mef_linearity_archive.h"
 #include "mef_linearity_pairs_export.h"
 #include "mef_roi_config.h"
 #include "mef_config_toml.h"
@@ -22,14 +23,14 @@ static int bias_list(const char *path,bias_source *items,int *count,char **owner
         char *v[5];if(fields(line,v,5)!=5)return 0;
         bias_source *b=items+*count;
         if(!int_number(v[0],INT_MAX,&b->input.index)||!int_number(v[1],127,&b->input.hdu)||
-           !int_number(v[4],1,&b->accepted)||strlen(v[2])>127||v[3][0]!='/')return 0;
+           (!strcmp(v[4],"-1")?(b->accepted=-1,0):!int_number(v[4],1,&b->accepted))||strlen(v[2])>127||v[3][0]!='/')return 0;
         b->input.asset=v[2];b->input.path=v[3];
         for(int j=0;j<*count;++j)if(b->input.index==items[j].input.index||
             !strcmp(b->input.asset,items[j].input.asset)||
             (!strcmp(b->input.path,items[j].input.path)&&b->input.hdu==items[j].input.hdu))return 0;
         ++*count;line=next;
     }
-    return *count>=3;
+    return *count==0 || *count>=2;
 }
 static int trace(FILE *f,const char *role,int index,int accepted,const pixelvalue *values,size_t rows)
 {
@@ -63,9 +64,17 @@ static int raw_table(const char *dir,const char *name,const mef_linearity_pairs_
 }
 static int same(const source *a,const source *b)
 {return a->hdu==b->hdu&&!strcmp(a->path,b->path)&&!strcmp(a->asset,b->asset);}
-int main(int argc,char **argv)
+int mef_linearity_prepare_from_cube(int argc,char **argv,const mef_detector_cube *cube)
 {
-    if(argc!=10){fprintf(stderr,"Usage: %s CONFIG.toml ROIS.toml SITES.toml PLAN.tsv MASTER.fits MASTER-HDU MASTER-ASSET BIASES.tsv EMPTY-OUTPUT\n",argv[0]);return 2;}
+    int publish=(argc==14 || (argc==16 && !strcmp(argv[14],"--context"))) && !strcmp(argv[10],"--native-asdf");
+#ifndef MEFPP_NATIVE_PRODUCT_QC
+    if(publish) {fputs("Native ASDF publication is unavailable in this build\n",stderr);return 2;}
+#endif
+    if(argc!=10 && !publish){fprintf(stderr,"Usage: %s CONFIG.toml ROIS.toml SITES.toml PLAN.tsv MASTER.fits MASTER-HDU MASTER-ASSET BIASES.tsv EMPTY-OUTPUT [--native-asdf PRODUCT.asdf CREATED-AT LOG [--context CONTEXT.json]]\n",argv[0]);return 2;}
+    mef_linearity_archive *archive=NULL;
+    mef_linearity_archive_source archive_source[2*FLATS];
+    char table_path[4096];
+    mef_image_ref archive_master={0},archive_bpm={0};
     int code=1,nbias=0;plan p;source master;bias_source biases[FLATS];
     memset(&p,0,sizeof p);memset(&master,0,sizeof master);memset(biases,0,sizeof biases);
     char *bias_owner=NULL;mef_config *config=NULL;mef_roi_config *regions[2]={NULL,NULL};
@@ -123,19 +132,52 @@ int main(int argc,char **argv)
         if(!seen){first[pairs]=i;for(int j=i+1;j<p.flats;++j)if(!strcmp(p.flat[i].pair,p.flat[j].pair))second[pairs]=j;++pairs;}}
     if(!bind_master(&master,&p,&g,slot,bx,by))goto done;
     if(p.has_bpm&&!bind_source(&p.bpm,&p,&g,slot,bx,by,1,rw,rh))goto done;
-    for(int j=0;j<2;++j)if(!bind_source(&p.bias[j],&p,&g,slot,bx,by,0,rw,rh))goto done;
+    for(int j=0;j<p.biases;++j)if(!bind_source(&p.bias[j],&p,&g,slot,bx,by,0,rw,rh))goto done;
     int accepted=0;
     for(int i=0;i<nbias;++i){accepted+=biases[i].accepted;
         if(!bind_source(&biases[i].input,&p,&g,slot,bx,by,0,rw,rh))goto done;
         for(int j=0;j<p.flats;++j)if(!strcmp(biases[i].input.asset,p.flat[j].asset)||
             (!strcmp(biases[i].input.path,p.flat[j].path)&&biases[i].input.hdu==p.flat[j].hdu))goto done;
     }
-    if(accepted<g.minimum_frames)goto done;
-    for(int j=0;j<2;++j){int found=0;for(int i=0;i<nbias;++i)if(same(&p.bias[j],&biases[i].input))++found;if(found!=1)goto done;}
+    /* A supplied master is never rebuilt; listed biases are diagnostic evidence. */
+    if(nbias && nbias<2)goto done;
+    if(!strcmp(p.value[21],"raw-pair-plan-v1") && accepted<g.minimum_frames)goto done;
+    (void)accepted;
+    if(cube && !cube->qc) mad=0;
+    for(int j=0;j<p.biases;++j){int found=0;for(int i=0;i<nbias;++i)if(same(&p.bias[j],&biases[i].input))++found;if(found!=1)goto done;}
+    if(publish) {
+        size_t n=strlen(argv[11]);
+        struct stat st;
+        if(n<6 || n>=sizeof(table_path) || argv[11][0]!='/' || strcmp(argv[11]+n-5,".asdf") ||
+            lstat(argv[11],&st)==0 || errno!=ENOENT) goto done;
+        memcpy(table_path,argv[11],n-5);strcpy(table_path+n-5,".tsv");
+        if(lstat(table_path,&st)==0 || errno!=ENOENT) goto done;
+        for(int i=0;i<p.flats+nbias;++i) {
+            source *input=i<p.flats?p.flat+i:&biases[i-p.flats].input;
+            archive_source[i]=(mef_linearity_archive_source){input->path,input->asset,
+                i<p.flats?"flat":"bias",input->index,input->hdu,i<p.flats?-1:biases[i-p.flats].accepted};
+        }
+        archive_master=reference(&master,p.value[0]);
+        if(p.has_bpm) archive_bpm=reference(&p.bpm,p.value[0]);
+        mef_linearity_archive_options options={.table_path=table_path,.log_path=argv[13],
+            .created_at=argv[12],.source_revision=MEFPP_CANDIDATE_REVISION,
+            .detector=p.value[0],.amplifier=p.value[1],.readout=p.value[3],
+            .configuration_detector=slot,.flat_count=(size_t)p.flats,.input_count=(size_t)(p.flats+nbias),
+            .max_roi_rows=(size_t)pairs*bound[0],.bin_x=bx,.bin_y=by,.input=archive_source,
+            .master=&archive_master,.bpm=p.has_bpm?&archive_bpm:NULL,.configuration=config};
+        archive=mef_linearity_archive_new(&options);
+        if(!archive) goto done;
+        if(cube) mef_linearity_archive_qc_mode(archive,cube->qc);
+    }
     /* All geometry/header/time admission precedes raw-plane measurement. */
     f=new_output(argv[9],"bias-traces.tsv");if(!f)goto done;
     fputs("role\tinput_index\tmaster_accepted\traw_row\tcorrection_adu\n",f);
     for(int i=0;i<nbias;++i){
+        if(cube) {
+            const mef_detector_plane *plane=mef_detector_cube_bound(cube,biases[i].input.map,p.value[0]);
+            if(!plane || !trace(f,"bias",biases[i].input.index,biases[i].accepted,plane->trace,plane->rows))goto done;
+            continue;
+        }
         if(mef_layout_load(biases[i].input.map,p.value[0],&bias_plane,NULL)!=MEF_OK)goto done;
         mef_linearity_prepare_frame_input b={bias_plane,NULL,g,MEF_PREPARE_BIAS,budget};
         if(mef_linearity_prepare_frame(&b,NULL,&bias_result)!=MEF_OK||
@@ -157,9 +199,10 @@ int main(int argc,char **argv)
         in.measure_pairs=1;in.pair_with_mad=mad;in.max_pair_rows=rows;
         in.prepare_pairs=1;in.preparation_roi=rois[0];in.preparation_rois=(int)bound[0];in.max_working_pixels=budget;
         if(p.has_bpm){in.bpm_map=p.bpm.map;in.bpm_reference=&bpm_ref;}
-        for(int j=0;j<2;++j){bias_ref[j]=reference(&p.bias[j],p.value[0]);in.raw_bias_map[j]=p.bias[j].map;in.raw_bias_reference[j]=&bias_ref[j];}
-        mef_status status=mef_linearity_from_files(&in,NULL,&result);
+        for(int j=0;j<p.biases;++j){bias_ref[j]=reference(&p.bias[j],p.value[0]);in.raw_bias_map[j]=p.bias[j].map;in.raw_bias_reference[j]=&bias_ref[j];}
+        mef_status status=cube?mef_linearity_from_cube(&in,cube,NULL,&result):mef_linearity_from_files(&in,NULL,&result);
         if(status!=MEF_OK){fprintf(stderr,"Pair %d preparation status %d\n",pair,(int)status);goto done;}
+        if(archive && !mef_linearity_archive_add_pair(archive,result)) goto done;
         char directory[4096];if(snprintf(directory,sizeof directory,"%s/pair-%04d",argv[9],pair)>=(int)sizeof directory||mkdir(directory,0700))goto done;
         if(!raw_table(directory,"pairs.tsv",result->prepared->raw,0)||!raw_table(directory,"bias-ron.tsv",result->prepared->raw,1)||
            !corrected(directory,result->prepared)||!export_samples(directory,result->samples,slot))goto done;
@@ -177,11 +220,42 @@ int main(int argc,char **argv)
     if(fclose(f)){f=NULL;goto done;}f=NULL;
     f=new_output(argv[9],"command.complete");if(!f)goto done;
     if(fputs("linearity_preparation_complete_noise_unavailable\n",f)<0)goto done;
-    if(fclose(f)){f=NULL;goto done;}f=NULL;code=0;
+    if(fclose(f)){f=NULL;goto done;}f=NULL;
+    if(archive) {
+        if(argc==16 && !mef_linearity_archive_add_evidence(archive,"preparation-context.json",
+            "linearity-preparation-context/1",argv[15])) goto done;
+        const char *root_names[]={"configuration.json","master-reference.tsv","bias-traces.tsv","command.complete"};
+        const char *pair_names[]={"pairs.tsv","bias-ron.tsv","corrected.tsv","samples.tsv","population.tsv","flat-traces.tsv"};
+        const char *control_names[]={"native.toml","rois.toml","sites.toml","plan.tsv","biases.tsv"};
+        const char *control_paths[]={argv[1],argv[2],argv[3],argv[4],argv[8]};
+        for(size_t i=0;i<5;++i)
+            if(!mef_linearity_archive_add_evidence(archive,control_names[i],"preparation-control/1",control_paths[i])) goto done;
+        for(size_t i=0;i<4;++i) {
+            char path[4096];
+            if(snprintf(path,sizeof(path),"%s/%s",argv[9],root_names[i])>=(int)sizeof(path) ||
+                !mef_linearity_archive_add_evidence(archive,root_names[i],"native-preparation-transport/1",path)) goto done;
+        }
+        for(int i=0;i<pairs;++i) for(size_t j=0;j<6;++j) {
+            char path[4096],name[128];
+            snprintf(name,sizeof(name),"pair-%04d/%s",i,pair_names[j]);
+            if(snprintf(path,sizeof(path),"%s/%s",argv[9],name)>=(int)sizeof(path) ||
+                !mef_linearity_archive_add_evidence(archive,name,"native-preparation-transport/1",path)) goto done;
+        }
+        if(!mef_linearity_archive_table(archive)) goto done;
+#ifdef MEFPP_NATIVE_PRODUCT_QC
+        char message[512];
+        if(mef_product_qc_write(argv[11],mef_linearity_archive_view(archive),message,sizeof(message))) {
+            fprintf(stderr,"Preparation ASDF: %s\n",message);goto done;
+        }
+#endif
+        printf("LINEARITY_NATIVE_ASDF %s\n",argv[11]);
+    }
+    code=0;
     printf("LINEARITY_PREPARATION_COMPLETE %s pairs=%d rois=%zu sites=%zu biases=%d\n",p.value[0],pairs,bound[0],bound[1],nbias);
 done:
     if(f)fclose(f);
     if(code)fputs("Linearity preparation failed; preserve partial evidence. No completed archive or fit asserted.\n",stderr);
+    mef_linearity_archive_destroy(archive);
     image_del(bias_plane);mef_linearity_prepare_frame_destroy(bias_result);mef_linearity_files_destroy(result);
     for(int i=0;i<p.flats;++i)mef_layout_map_destroy(p.flat[i].map);
     for(int j=0;j<2;++j)mef_layout_map_destroy(p.bias[j].map);
@@ -190,3 +264,13 @@ done:
     for(int k=0;k<2;++k){mef_roi_config_destroy(regions[k]);(free)(rois[k]);}
     (free)(p.text);(free)(bias_owner);return code;
 }
+
+int mef_linearity_prepare_command(int argc,char **argv)
+{ return mef_linearity_prepare_from_cube(argc,argv,NULL); }
+
+#ifndef MEFPP_RECIPE_LIBRARY
+int main(int argc, char **argv)
+{
+    return mef_linearity_prepare_command(argc, argv);
+}
+#endif

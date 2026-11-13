@@ -18,6 +18,7 @@ typedef struct {
     int amplifier_index; /* index in the SAME list used to bind input ROIs */
     int frames;
     const image_t *const *raw;
+    const image_t *const *processed; /* optional borrowed, already corrected active planes */
     const mef_linearity_frame *frame;
     const image_t *master_bias; /* active, scan-corrected, ADU */
     const unsigned char *bpm_flags; /* active unsigned 8-bit, 0 good */

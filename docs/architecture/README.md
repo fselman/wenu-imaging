@@ -1,6 +1,10 @@
 # Configuration and architecture resources
 
-For the current overview read [architecture](../developer/architecture.md).
+Current authority: [architecture](../developer/architecture.md),
+[roadmap](../developer/roadmap.md) and [agent instructions](../../AGENTS.md).
+Read these before proposing or changing implementation. Native recipes are
+standalone Unix commands under `mefpp_recipe cal`; optional clients do not prepare
+mandatory bindings for the user.
 
 The `proposed/` tree contains executable configuration catalogs, schemas and
 examples used by Pycavi and its configuration checks, alongside earlier design

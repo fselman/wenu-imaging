@@ -1,0 +1,22 @@
+# Processing observations: path<TAB>DPR.TYPE. Verify classifications against headers.
+# Replace /absolute/path/to/raw with your project raw directory.
+/absolute/path/to/raw/OMEGA.2017-03-13T11:34:43.759.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:35:30.570.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:37:25.420.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:38:50.390.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:39:40.380.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:40:35.390.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:41:50.391.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:42:55.391.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:44:30.391.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:46:16.391.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:47:08.392.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:48:00.392.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:49:45.392.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:51:20.392.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:52:25.393.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:53:40.483.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:54:35.393.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:55:25.563.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:56:50.383.fits	FLAT,DOME
+/absolute/path/to/raw/OMEGA.2017-03-13T11:58:45.683.fits	FLAT,DOME

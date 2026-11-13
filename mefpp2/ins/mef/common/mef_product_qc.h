@@ -66,6 +66,9 @@ typedef struct {
     int boolean;
 } mef_qc_fits_card;
 typedef struct {
+    const char *name, *format, *text;
+} mef_qc_text_evidence;
+typedef struct {
     const char *id, *fits_path, *sha256, *log_path;
     const char *assessment_id, *recipe_name, *recipe_start;
     unsigned int recipe_version;
@@ -86,12 +89,22 @@ typedef struct {
     const char *recipe_config_path, *recipe_config_snapshot;
     const mef_qc_fits_card *header_cards;
     size_t header_card_count;
+    /* Explicit primary-image product support; zero retains the MEF contract. */
+    int primary_image;
+    /* Optional lossless native operation context, embedded rather than a file.
+     * The numerical service owns its versioned fields; the writer stores text. */
+    const char *operation_context_format, *operation_context_snapshot;
+    /* Table products have no image HDU. NULL retains the FITS contract.
+     * fits_path is the historical field name for the final product path. */
+    const char *table_name;
+    const mef_qc_text_evidence *evidence;
+    size_t evidence_count;
 } mef_product_qc;
 /* Structural validation only. No thresholds, means, RON, plots, hashes or FITS
  * pixels are computed. Caller owns all borrowed values during the call. */
 int mef_product_qc_validate(const mef_product_qc *, char *, size_t);
-/* Requires the final FITS to exist; no FITS/RAW pixel reading or Pycavi calls.
- * ASDF destination must replace final .fits by .asdf in the same directory.
+/* Requires the final product to exist; no FITS/RAW pixel reading or Pycavi calls.
+ * ASDF replaces final .fits (image) or .tsv (table) in the same directory.
  * Creates/reads back a private ASDF then publishes exclusively; no overwrite.
  * Caller reports whole-recipe success only after FITS, ASDF and log completion.
  * A prior complete FITS stays intact if ASDF publication fails. */

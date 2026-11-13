@@ -30,6 +30,52 @@ pixels, MEF structure, detector mapping, important headers and ASDF QC/provenanc
 Compare numerical arrays and scientific metadata rather than whole FITS file bytes,
 which can differ in agreed timestamps or checksums. Report differences explicitly.
 
+File-based recipe tests run with the working directory set to orchestration.
+Keep TOMLs, input lists and requests there; raw observations remain read-only in
+raw. Products, logs, private work and execution receipts belong under reduced;
+existing calibration dependencies remain read-only under reduced/cal. Synthetic
+file-integration fixtures use this same separation. Pure numerical unit checks
+may use in-memory arrays. The native linearity-preparation command case exercises
+this layout with preserved input fingerprints and unchanged analytical expectations.
+
+The public BPM/linearity contract is
+`mefpp_recipe cal bpm-linearity --config RECIPE.toml [--qc true|false]`.
+The native command must admit the recipe/project/settings/ordered inputs directly,
+without a separate preparation command or generated-bindings prerequisite. The
+current feature branch does not yet meet that interface; do not describe the
+OCAM/WFI authoring templates as standalone runnable recipes before it does.
+Project TOML owns roots and relative resolution; its directory is orchestration.
+The recipe's `run` is relative to reduced. Controls remain in orchestration;
+products, receipts, work and logs stay below their declared reduced roots.
+
+Acceptance includes help with no files or processing: `mefpp --help`,
+`mefpp_recipe cal --help`, and operation help for `bias`, `linearity` and
+`bpm-linearity`. Help must identify inputs, options, defaults and outputs. Then
+check direct recipe execution from orchestration, fresh-output refusal, input
+preservation, supplied-mask skip, both QC modes, one ingest/correction per detector
+plane, and independent FITS/ASDF comparison. Reuse passed saved-product evidence;
+repeat numerical reductions only for affected behavior or unresolved differences.
+
+The existing native `cal bpm` adapter can publish through the same C ASDF writer
+as bias when built with the retained libasdf option. `--native-asdf` selects a
+sidecar sharing the final FITS basename without downstream completion;
+`--qc-record` remains available for retained controllers. Its primary BPM image
+and diagnostic HDUs are preserved. Typed common QC retains original input/HDU
+order, participation and available/unavailable statistics; the complete existing
+native BPM context is embedded in ASDF. Primary-image QC is explicit and limited
+to one detector, while the MEF mapping contract remains unchanged.
+
+`native_bpm_product_qc` checks actual native results on generated FITS, including
+excluded frames, reason-bit/binary/omitted priors, MAD off and immutable inputs.
+The optional `bpm_native_asdf_probe` and `bpm_native_qc_contract.py --asdf-python
+... --adapter ...` additionally exercise the existing library writer and production
+CLI with an independent reader. Focused native ASDF and supplied-mask CCD65
+checks have passed on Mac; standalone native admission and new controls still
+require their affected gates. The retained-cache Mac
+qualification helper is `tools/qualify-bpm-native-qc-mac.py`; it refuses unknown
+cached source edits, restores source/cache/adapter before testing private candidates,
+and leaves the selected bias producer and launchers unchanged.
+
 ## When to run
 
 - A recipe change: affected recipe cases and dependent cases when appropriate.
@@ -71,9 +117,11 @@ not an average-median or historical-QC reference. Its older provenance lacks the
 configuration snapshot needed by the current full comparator. Content
 fingerprints and historical WFI QC equivalence remain open.
 
-Use issue/PR summaries for results: what ran, which executable/configuration,
-pass/fail and material differences. Routine build logs, per-attempt receipts and
-historical replay scripts do not belong in permanent documentation.
+Keep the designated legacy reductions as comparison references. Retain fresh
+outputs and logs only through verification or active diagnosis, then remove
+superseded test workspaces. Record a concise comparison summary in the PR with
+what ran, the executable and configuration, the reference, and any material
+differences. Test workspace archives are unnecessary.
 
 New bias recipes default to MAD off. Explicit `mad = true` remains an opt-in;
 the archived acceptance configurations retain their recorded measurement policy.

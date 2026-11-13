@@ -21,4 +21,18 @@ typedef struct {
  */
 int mef_mef_assemble(const char *final_path, const char *reference_detector_id,
     const mef_assembly_detector *, size_t count, char *message, size_t size);
+/* BPM sources contain a primary mask followed by diagnostic image planes.
+ * The final empty primary uses the explicit reference detector's metadata.
+ * Masks occupy HDUs 1..count; diagnostics follow in detector/source-HDU order.
+ * Each extension carries DETID and EXTVER=configuration_detector+1. Main-mask
+ * EXTNAME is the detector ID; diagnostics retain their original plane name.
+ * No scaling/conversion of the stored padded data bytes is performed. */
+typedef struct {
+    const char *path, *detector_id;
+    size_t configuration_detector;
+} mef_bpm_assembly_detector;
+int mef_bpm_mef_assemble(const char *final_path, const char *reference_detector_id,
+    const mef_bpm_assembly_detector *, size_t count, char *message, size_t size);
+/* Header-only final image-plane map. Returned libc text belongs to the caller. */
+char *mef_bpm_assembly_plane_map(const char *, const mef_bpm_assembly_detector *, size_t);
 #endif

@@ -114,7 +114,12 @@ mef_status mef_linearity_prepare_pairs(const mef_linearity_pairs_input *p,
     mask=pixelmap_new(aw,ah);if(!mask)goto done;
     mef_linearity_prepare_frame_input in;
     memset(&in,0,sizeof in);in.settings=*g;in.max_working_pixels=max_working_pixels;
-    for(int b=0;b<2;++b){
+    for(int b=0;b<(p->raw_bias[0]?2:0);++b){
+        if(p->processed) {
+            if(!p->bias_traces[b]) {status=MEF_ERR_INPUT;goto done;}
+            memcpy(r->row_correction+((size_t)p->frames+b)*h,p->bias_traces[b],(size_t)h*sizeof(pixelvalue));
+            continue;
+        }
         in.role=MEF_PREPARE_BIAS;in.raw=p->raw_bias[b];
         status=mef_linearity_prepare_frame(&in,&a,&f[0]);if(status!=MEF_OK)goto done;
         if(!f[0]->rows){status=MEF_ERR_CONFIG;goto done;} /* this corrected-stage API requires scans */
@@ -125,8 +130,18 @@ mef_status mef_linearity_prepare_pairs(const mef_linearity_pairs_input *p,
     for(int pair=0;pair<r->raw->pairs;++pair){
         const mef_linearity_pair_row *first=r->raw->row+(size_t)pair*r->raw->rois;
         int members[2]={first->first,first->second};
-        for(int j=0;j<2;++j){in.raw=p->raw[members[j]];
+        const image_t *active[2];
+        for(int j=0;j<2;++j){
+            if(p->processed) {
+                active[j]=p->processed[members[j]];
+                if(!active[j] || !active[j]->data || active[j]->lx!=aw || active[j]->ly!=ah ||
+                   !p->processed_traces || !p->processed_traces[members[j]]) {status=MEF_ERR_INPUT;goto done;}
+                memcpy(r->row_correction+(size_t)members[j]*h,p->processed_traces[members[j]],(size_t)h*sizeof(pixelvalue));
+                continue;
+            }
+            in.raw=p->raw[members[j]];
             status=mef_linearity_prepare_frame(&in,&a,&f[j]);if(status!=MEF_OK)goto done;
+            active[j]=f[j]->active;
             memcpy(r->row_correction+(size_t)members[j]*h,f[j]->row_correction,(size_t)h*sizeof(pixelvalue));}
         /* Exact common RAW four-plane population. Corrected nonfinite values on
          * this population are errors, never an opportunity to change membership. */
@@ -134,7 +149,7 @@ mef_status mef_linearity_prepare_pairs(const mef_linearity_pairs_input *p,
             size_t k=(size_t)y*aw+x,raw=(size_t)(y+g->trim[2]-1)*w+x+g->trim[0]-1;
             int good=p->bpm_flags?!(p->bpm_flags[k]&p->reject_bits):!p->bpm_binary||p->bpm_binary->data[k]==1;
             const image_t *planes4[]={p->raw[members[0]],p->raw[members[1]],p->raw_bias[0],p->raw_bias[1]};
-            for(int j=0;j<4;++j)if(!isfinite(planes4[j]->data[raw])||planes4[j]->data[raw]>=p->saturation_raw)good=0;
+            for(int j=0;j<(p->raw_bias[0]?4:2);++j)if(!isfinite(planes4[j]->data[raw])||planes4[j]->data[raw]>=p->saturation_raw)good=0;
             mask->data[k]=(binpix)good;
             /* Per-ROI count equality below rejects any corrected nonfinite on
              * an admitted measured site without imposing a new outside-ROI cut. */
@@ -142,9 +157,9 @@ mef_status mef_linearity_prepare_pairs(const mef_linearity_pairs_input *p,
         for(int q=0;q<r->raw->rois;++q){size_t k=(size_t)pair*r->raw->rois+q;
             const detector_roi *roi=&r->raw->bias[q].roi;int zone[]={roi->xmin,roi->xmax,roi->ymin,roi->ymax};
             mef_linearity_prepared_roi *row=r->row+k;
-            if(image_getstats_masked_checked(f[0]->active,mask,zone,p->with_mad,&row->first)||
-               image_getstats_masked_checked(f[1]->active,mask,zone,p->with_mad,&row->second)||
-               image_pair_stats_checked(f[0]->active,f[1]->active,mask,mask,zone,p->with_mad,&row->difference)||
+            if(image_getstats_masked_checked(active[0],mask,zone,p->with_mad,&row->first)||
+               image_getstats_masked_checked(active[1],mask,zone,p->with_mad,&row->second)||
+               image_pair_stats_checked(active[0],active[1],mask,mask,zone,p->with_mad,&row->difference)||
                row->first.valid_pixels!=r->raw->row[k].measurement.valid_pixels||
                row->second.valid_pixels!=row->first.valid_pixels||row->difference.valid_pixels!=row->first.valid_pixels){status=MEF_ERR_COMPUTATION;goto done;}
         }

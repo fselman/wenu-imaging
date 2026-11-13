@@ -17,6 +17,8 @@ struct mef_bpm_result {
 };
 typedef struct {
     mef_context *context;
+    const image_t *const *processed;
+    int qc;
     const mef_bpm_input *input;
     const mef_bpm_options *options;
     const mef_allocator *allocator;
@@ -182,13 +184,20 @@ static mef_status load(void *opaque, mef_error **error) {
     if (!s->cube) return MEF_ERR_COMPUTATION;
     for (i=0;i<in->count;++i) {
         zone[2]=g->trim[2]; zone[3]=g->trim[3];
-        if (g->use_prescan) {
+        if (g->use_prescan && s->qc) {
             zone[0]=g->prescan[0]; zone[1]=g->prescan[1];
             if (image_getstats_masked_checked(in->frames[i],NULL,zone,o->with_mad,&q[i].prescan)!=0) return MEF_ERR_COMPUTATION;
         }
-        if (g->use_overscan) {
+        if (g->use_overscan && s->qc) {
             zone[0]=g->overscan[0]; zone[1]=g->overscan[1];
             if (image_getstats_masked_checked(in->frames[i],NULL,zone,o->with_mad,&q[i].overscan)!=0) return MEF_ERR_COMPUTATION;
+        }
+        if(s->processed) {
+            const image_t *plane=s->processed[i];
+            if(!plane || !plane->data || plane->lx!=in->master_bias->lx || plane->ly!=in->master_bias->ly)
+                return MEF_ERR_INPUT;
+            s->cube->plane[i]=(image_t *)plane;
+            continue;
         }
         copy=image_copy((image_t *)in->frames[i]);
         if (!copy) return MEF_ERR_COMPUTATION;
@@ -200,8 +209,8 @@ static mef_status load(void *opaque, mef_error **error) {
         s->cube->plane[i]=cropped;
     }
     s->cube->lx=in->master_bias->lx; s->cube->ly=in->master_bias->ly;
-    if (cube_sub_im(s->cube,(image_t *)in->master_bias)!=0) return MEF_ERR_COMPUTATION;
-    for (i=0;i<in->count;++i)
+    if (!s->processed && cube_sub_im(s->cube,(image_t *)in->master_bias)!=0) return MEF_ERR_COMPUTATION;
+    for (i=0;s->qc && i<in->count;++i)
         if (image_getstats_masked_checked(s->cube->plane[i],r->prior_selection,NULL,o->with_mad,&q[i].active_corrected)!=0)
             return MEF_ERR_COMPUTATION;
     return MEF_OK;
@@ -221,6 +230,7 @@ static mef_status calculate(void *opaque, mef_error **error) {
     mef_status status=MEF_ERR_MEMORY;
     (void)error;
     memset(&o,0,sizeof(o)); o.proportional=s->settings.proportional;
+    if(s->processed && s->settings.proportional) return MEF_ERR_CONFIG;
     o.low=s->settings.low; o.high=s->settings.high;
     o.reference=r->prior_selection;
     o.rois=s->options->rois; o.roi_count=s->options->roi_count;
@@ -291,18 +301,29 @@ static void cleanup(void *opaque) {
     size_t i;
     if (s->samples) for (i=0;i<s->input->count;++i) pixelmap_del(s->samples[i]);
     free(s->samples); s->samples=NULL;
+    if(s->processed && s->cube) for(size_t i=0;i<s->input->count;++i) s->cube->plane[i]=NULL;
     cube_del(s->cube); s->cube=NULL;
 }
-mef_status mef_cal_bpm(mef_context *context, const mef_bpm_input *input,
-    const mef_bpm_options *options, mef_bpm_result **out, mef_error **error) {
+static mef_status calculate_inputs(mef_context *context, const mef_bpm_input *input,
+    const mef_bpm_options *options,const image_t *const *processed,int qc,
+    mef_bpm_result **out, mef_error **error) {
     operation s;
     mef_status status;
     static const mef_operation_steps steps={validate,load,calculate,NULL,cleanup};
     if (!out || *out || (error && *error)) return MEF_ERR_INPUT;
-    memset(&s,0,sizeof(s)); s.context=context; s.input=input; s.options=options;
+    memset(&s,0,sizeof(s)); s.context=context; s.input=input; s.options=options;s.processed=processed;s.qc=qc;
     status=mef_operation_run(&steps,&s,error);
     if (status==MEF_OK) { *out=s.pending; return MEF_OK; }
     mef_bpm_result_destroy(s.pending);
     if (error && !*error) (void)mef_error_create(status,"BPM numerical service: invalid/unsupported request, geometry or computation",s.allocator,error);
     return status;
 }
+
+mef_status mef_cal_bpm(mef_context *context,const mef_bpm_input *input,
+    const mef_bpm_options *options,mef_bpm_result **out,mef_error **error)
+{ return calculate_inputs(context,input,options,NULL,1,out,error); }
+
+mef_status mef_cal_bpm_processed(mef_context *context,const mef_bpm_input *input,
+    const mef_bpm_options *options,const image_t *const *processed,int qc,
+    mef_bpm_result **out,mef_error **error)
+{ return processed?calculate_inputs(context,input,options,processed,qc,out,error):MEF_ERR_INPUT; }

@@ -16,7 +16,7 @@ int main(int argc,char **argv)
     if(argc!=5){fprintf(stderr,"Usage: %s NATIVE.paf SELECTED-ROIS.toml PLAN.tsv EMPTY-OUTPUT-DIRECTORY\n",argv[0]);return 2;}
     int code=1;plan p;memset(&p,0,sizeof p);mef_config *config=NULL;mef_roi_config *roi_config=NULL;
     detector_roi *rois=NULL;mef_linearity_files_result *result=NULL;mef_bb *bb=NULL;
-    if(!read_plan(argv[3],&p)||!empty_directory(argv[4])){fputs("Invalid explicit plan or nonempty output directory\n",stderr);goto done;}
+    if(!read_plan(argv[3],&p)||p.biases!=2||!empty_directory(argv[4])){fputs("Invalid explicit plan or nonempty output directory\n",stderr);goto done;}
     size_t slot,budget,rows;int bx,by,good,reject,exphdu,mad,rw,rh;
     double saturation,tolerance;
     if(strlen(p.value[0])>63||strlen(p.value[1])>63||

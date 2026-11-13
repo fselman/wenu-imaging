@@ -26,6 +26,10 @@ mef_status mef_config_from_toml(const char *path, const mef_allocator *allocator
 typedef struct mef_config_document mef_config_document;
 mef_status mef_config_document_from_toml(const char *path, const mef_allocator *allocator,
     mef_config_document **out, char *diagnostic, size_t capacity);
+struct mef_toml_file;
+mef_status mef_config_document_from_domains(const struct mef_toml_file *recipe,
+    const struct mef_toml_file *detector, mef_config_document **out,
+    char *diagnostic, size_t capacity);
 mef_status mef_config_document_clone(const mef_config_document *source, const mef_allocator *allocator,
     mef_config_document **out, char *diagnostic, size_t capacity);
 const mef_config *mef_config_document_settings(const mef_config_document *doc);

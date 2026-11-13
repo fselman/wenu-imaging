@@ -1,6 +1,9 @@
 /* Opt-in cal bpm command. Compose qualified services; no new estimator. */
 #include "mef_bpm_publish.h"
 #include "mef_bpm_settings.h"
+#ifdef MEFPP_NATIVE_PRODUCT_QC
+#include "mef_bpm_product_qc.h"
+#endif
 #include "mef_config_toml.h"
 #include "mefp_lib.h"
 #include <errno.h>
@@ -57,16 +60,30 @@ static mef_status bind(const char *path,int hdu,int active,int mask,
     if(status==MEF_OK) status=mef_layout_bind(layout,&b,1,NULL,out,error);
     mef_layout_destroy(layout); return status;
 }
-int mef_bpm_command(int argc,char **argv) {
+#ifdef MEFPP_NATIVE_PRODUCT_QC
+static int publish_native_qc(const mef_bpm_files_result *result, const char *fits,
+    const char *asdf, const mef_bpm_publish_options *options)
+{
+    char message[512]="Cannot construct native BPM QC";
+    mef_bpm_product_qc *archive=mef_bpm_product_qc_new(result,fits,options,message,sizeof(message));
+    int okay=archive && mef_product_qc_write(asdf,mef_bpm_product_qc_view(archive),
+                                            message,sizeof(message))==0;
+    if (!okay) fprintf(stderr,"Native BPM QC: %s\n",message);
+    mef_bpm_product_qc_destroy(archive);
+    return okay;
+}
+#endif
+
+int mef_bpm_command_from_cube(int argc,char **argv,const mef_detector_cube *cube) {
     enum {PAF,CONFIG,FLATS,DET,SLOT,READOUT,BX,BY,BIAS,BIASHDU,PRIOR,PRIORHDU,
         ENCODING,GOOD,COORD,REGISTRY,REJECT,MODE,EXPOSUREKEY,EXPOSUREHDU,SAT,UPPER,
-        SPAN,PAIRDIFF,ROI,MAD,OUTPUTMODE,DATE,OUTPUT,WORK,LOG,CONFIGREC,HANDOFF,NKEYS};
+        SPAN,PAIRDIFF,ROI,MAD,OUTPUTMODE,DATE,OUTPUT,WORK,LOG,CONFIGREC,HANDOFF,NATIVEASDF,NKEYS};
     const char *keys[NKEYS]={"--pafname","--config","--flats","--detector-id","--config-detector",
         "--readout-id","--bin-x","--bin-y","--master-bias","--bias-hdu","--input-bpm","--bpm-hdu",
         "--bpm-encoding","--bpm-good-value","--bpm-coordinates","--bpm-registry","--reject-bits",
         "--acquisition","--exposure-key","--exposure-hdu","--saturation","--upper-fraction",
         "--minimum-span","--maximum-pair-difference","--roi-file","--mad","--output-mode",
-        "--created-at","--output","--work-dir","--log-path","--config-record","--qc-record"};
+        "--created-at","--output","--work-dir","--log-path","--config-record","--qc-record","--native-asdf"};
     const char *v[NKEYS],*diagnostic=NULL;
     int i,j,slot,bx,by,bias_hdu,prior_hdu=0,good=0,reject,exposure_hdu,exit_status=EXIT_FAILURE;
     size_t count=0,nroi=0,k,pairs[MAX_FLATS];
@@ -74,7 +91,7 @@ int mef_bpm_command(int argc,char **argv) {
     char *paths[MAX_FLATS]={0},*line=NULL,*p,*q,*end;
     size_t capacity=0; ssize_t length;
     char output_dir[4096],message[512];
-    FILE *f=NULL,*record=NULL;
+    FILE *f=NULL,*record=NULL,*native_log=NULL;
     mef_bb *legacy=NULL; mef_config *config=NULL; mef_config_document *document=NULL;
     mef_layout_map *maps[MAX_FLATS]={0},*bias=NULL,*prior=NULL;
     mef_image_ref refs[MAX_FLATS],cal[2]; mef_calibration_role roles[2]={MEF_CAL_BIAS,MEF_CAL_BPM};
@@ -92,7 +109,14 @@ int mef_bpm_command(int argc,char **argv) {
     }
     if((v[PAF]==NULL)==(v[CONFIG]==NULL)) goto usage;
     for(i=FLATS;i<NKEYS;++i)
-        if(i!=PRIORHDU && i!=GOOD && i!=COORD && i!=REGISTRY && !v[i]) goto usage;
+        if(i!=PRIORHDU && i!=GOOD && i!=COORD && i!=REGISTRY && i!=NATIVEASDF && i!=HANDOFF && !v[i]) goto usage;
+    if (!v[HANDOFF] && !v[NATIVEASDF]) goto usage;
+#ifndef MEFPP_NATIVE_PRODUCT_QC
+    if (v[NATIVEASDF]) {
+        fputs("Native ASDF support requires the existing qualified libasdf build option\n",stderr);
+        goto done;
+    }
+#endif
     if(!number(v[SLOT],0,&slot) || !number(v[BX],1,&bx) || !number(v[BY],1,&by) ||
        !number(v[BIASHDU],0,&bias_hdu) || !number(v[EXPOSUREHDU],0,&exposure_hdu) ||
        !number(v[REJECT],0,&reject) || reject>255 || !dir(v[WORK])) goto usage;
@@ -130,8 +154,14 @@ int mef_bpm_command(int argc,char **argv) {
     if(p==output_dir) p[1]=0; else *p=0;
     if(!dir(output_dir)) goto usage;
     /* Reject collisions before any computation or attempt-file creation. */
-    for(i=LOG;i<NKEYS;++i) if(!absent(v[i])) goto done;
+    for(i=LOG;i<NKEYS;++i) if(v[i] && !absent(v[i])) goto done;
     if(!absent(v[OUTPUT])) goto done;
+    if (v[NATIVEASDF]) {
+        size_t length=strlen(v[OUTPUT]);
+        if (length<6 || strcmp(v[OUTPUT]+length-5,".fits") ||
+            strlen(v[NATIVEASDF])!=length || strncmp(v[NATIVEASDF],v[OUTPUT],length-5) ||
+            strcmp(v[NATIVEASDF]+length-5,".asdf")) goto usage;
+    }
     f=fopen(v[FLATS],"r"); if(!f) goto done;
     while((length=getline(&line,&capacity,f))>=0) {
         if(count==MAX_FLATS || length>16384 || !length || memchr(line,0,(size_t)length)) goto done;
@@ -195,11 +225,38 @@ int mef_bpm_command(int argc,char **argv) {
     if(mef_request_create_resolved(&spec,NULL,&request,&error)!=MEF_OK ||
        mef_context_create(config,request,NULL,&context,&error)!=MEF_OK) goto done;
     o.pair_ids=pairs; o.rois=(const int (*)[4])rois; o.roi_count=nroi;
-    record=fresh(v[HANDOFF]); if(!record) goto done;
-    if(mef_bpm_from_files(context,(const mef_layout_map *const *)maps,count,v[DET],bias,prior,&o,&result,&error)!=MEF_OK ||
+    if (v[HANDOFF]) {record=fresh(v[HANDOFF]); if(!record) goto done;}
+    if (v[NATIVEASDF]) {
+        /* The adapter already reserved this log before configuration admission. */
+        native_log=fopen(v[LOG],"a");
+        if(!native_log) {
+            fprintf(stderr,"Cannot append native BPM log %s: %s\n",v[LOG],strerror(errno));
+            goto done;
+        }
+        fputs("BPM_NATIVE_START\n",native_log);
+    }
+    if(cube && !cube->qc) o.with_mad=0;
+    status=cube?mef_bpm_from_cube(context,(const mef_layout_map *const *)maps,count,v[DET],bias,prior,&o,cube,&result,&error):
+        mef_bpm_from_files(context,(const mef_layout_map *const *)maps,count,v[DET],bias,prior,&o,&result,&error);
+    if(status!=MEF_OK ||
        mef_bpm_publish(result,v[OUTPUT],&publication,&error)!=MEF_OK) goto done;
-    status=mef_bpm_write_handoff(record,result,v[OUTPUT],&publication,&error);
-    if(!finish(record,status==MEF_OK)) { record=NULL; goto done; } record=NULL;
+    if(cube && native_log) {
+        const mef_bpm_files_qc *assessment=mef_bpm_files_result_qc(result);
+        fprintf(native_log,"BPM_SUITABILITY PAIR_CONSISTENCY %s COVERAGE %s SCIENTIFIC_ACCEPTANCE false\n",
+            assessment->pair_consistency_passed?"pass":"fail",assessment->coverage_passed?"pass":"fail");
+    }
+    if (record) {
+        status=mef_bpm_write_handoff(record,result,v[OUTPUT],&publication,&error);
+        if(!finish(record,status==MEF_OK)) { record=NULL; goto done; } record=NULL;
+    }
+#ifdef MEFPP_NATIVE_PRODUCT_QC
+    if (v[NATIVEASDF]) {
+        fputs("BPM_FITS_WRITTEN\n",native_log);
+        if (!publish_native_qc(result,v[OUTPUT],v[NATIVEASDF],&publication)) goto done;
+        fputs("BPM_ASDF_WRITTEN\n",native_log);
+        if (!finish(native_log,1)) {native_log=NULL; goto done;} native_log=NULL;
+    }
+#endif
     exit_status=EXIT_SUCCESS;
     goto done;
 usage:
@@ -210,15 +267,21 @@ usage:
         "selected prior: --bpm-hdu N --bpm-coordinates (raw|active) and --bpm-registry ID or --bpm-good-value (0|1),\n"
         "--acquisition (quick|provisional) --exposure-key FULL_KEY --exposure-hdu N --saturation ADU --upper-fraction F\n"
         "--minimum-span F --maximum-pair-difference F --mad (yes|no) --output-mode (new|combined) --created-at UTC\n"
-        "--output ABS_FITS --work-dir ABS_DIR --log-path ABS_LOG --config-record ABS_JSON --qc-record ABS_JSON.\n");
+        "--output ABS_FITS --work-dir ABS_DIR --log-path ABS_LOG --config-record ABS_JSON (--qc-record ABS_JSON | --native-asdf ABS_ASDF).\n");
 done:
     if(error) fprintf(stderr,"%s\n",mef_error_message(error));
     if(exit_status) fprintf(stderr,"BPM attempt failed; retain log, records and any completed FITS.\n");
     if(f) fclose(f);
     if(record) fclose(record);
-    free(line); for(k=0;k<MAX_FLATS;++k) { free(paths[k]); mef_layout_map_destroy(maps[k]); }
+    if(native_log) {fputs("BPM_NATIVE_FAILED; retain partial evidence\n",native_log);finish(native_log,1);}
+    /* getline owns a libc buffer; parsed paths use Eclipse's strdup/free pair. */
+    (free)(line);
+    for(k=0;k<count;++k) { free(paths[k]); mef_layout_map_destroy(maps[k]); }
     mef_layout_map_destroy(bias); mef_layout_map_destroy(prior); mef_bpm_files_result_destroy(result);
     mef_context_destroy(context); mef_request_destroy(request); mef_config_destroy(config);
     mef_config_document_destroy(document); mef_bb_del(legacy); mef_error_destroy(error);
     return exit_status;
 }
+
+int mef_bpm_command(int argc,char **argv)
+{ return mef_bpm_command_from_cube(argc,argv,NULL); }

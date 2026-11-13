@@ -142,13 +142,40 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
             if (!isalnum((unsigned char)p->bpm_registry[i]) && p->bpm_registry[i]!='_' && p->bpm_registry[i]!='-')
                 return fail(message,size,"Invalid BPM registry");
     }
+    if ((p->primary_image != 0 && p->primary_image != 1) ||
+        (p->primary_image && p->detector_count != 1) ||
+        (p->table_name && (!text(p->table_name) || p->primary_image ||
+         p->detector_count != 1 || p->header_card_count)) ||
+        ((p->operation_context_format == NULL) != (p->operation_context_snapshot == NULL)) ||
+        (p->operation_context_format && (!text(p->operation_context_format) ||
+         !text(p->operation_context_snapshot))))
+        return fail(message,size,"Invalid product layout or native operation context");
     if(!header_metadata(p))return fail(message,size,"Invalid selected FITS provenance");
     n=strlen(p->fits_path);
-    if(n<=5||strcmp(p->fits_path+n-5,".fits")) return fail(message,size,"Product must retain a .fits basename");
+    if(p->table_name ? (n<=4||strcmp(p->fits_path+n-4,".tsv")) :
+        (n<=5||strcmp(p->fits_path+n-5,".fits")))
+        return fail(message,size,"Product suffix must match its image or table layout");
+    if(p->evidence_count>4096 || (p->evidence_count && !p->evidence))
+        return fail(message,size,"Invalid native evidence count");
+    size_t evidence_bytes=0;
+    for(i=0;i<p->evidence_count;++i) {
+        const mef_qc_text_evidence *e=p->evidence+i;
+        if(!text(e->name)||!text(e->format)||!e->text||!*e->text)
+            return fail(message,size,"Invalid native evidence");
+        size_t length=strlen(e->text);
+        if(length>64u*1024u*1024u || evidence_bytes>256u*1024u*1024u-length)
+            return fail(message,size,"Native evidence exceeds metadata budget");
+        evidence_bytes+=length;
+        for(j=0;j<length;++j)
+            if((unsigned char)e->text[j]<32 && e->text[j]!='\n' && e->text[j]!='\t' && e->text[j]!='\r')
+                return fail(message,size,"Native evidence must be text");
+        for(j=0;j<i;++j) if(!strcmp(e->name,p->evidence[j].name))
+            return fail(message,size,"Duplicate native evidence name");
+    }
     {
         const char *a=strrchr(p->fits_path,'/'), *b=strrchr(p->log_path,'/');
-        if(a==NULL||b==NULL||a-p->fits_path!=b-p->log_path||
-            strncmp(p->fits_path,p->log_path,(size_t)(a-p->fits_path)))
+        if(!p->table_name && (a==NULL||b==NULL||a-p->fits_path!=b-p->log_path||
+            strncmp(p->fits_path,p->log_path,(size_t)(a-p->fits_path))))
             return fail(message,size,"Product log must use the selected product directory");
     }
     for(i=0;i<p->input_count;++i) {
@@ -179,7 +206,7 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
         const mef_qc_detector_record *d=p->detectors+i;
         if(d->median_even_handling && strcmp(d->median_even_handling,"average") && strcmp(d->median_even_handling,"lower"))
             return fail(message,size,"Invalid bias median even handling");
-        if(!text(d->id)||!text(d->amplifier)||!text(d->readout_id)||d->output_hdu<1||(size_t)d->output_hdu>p->detector_count||d->bin_x<1||d->bin_y<1||
+        if(!text(d->id)||!text(d->amplifier)||!text(d->readout_id)||((p->primary_image || p->table_name) ? d->output_hdu!=0 : (d->output_hdu<1||(size_t)d->output_hdu>p->detector_count))||d->bin_x<1||d->bin_y<1||
             d->inputs==NULL||d->input_count!=p->input_count||!measurements(p,d->measurements,d->measurement_count,d->id))
             return fail(message,size,"Invalid product detector coverage or QC");
         for(j=0;j<i;++j) if(!strcmp(d->id,p->detectors[j].id)||d->output_hdu==p->detectors[j].output_hdu)

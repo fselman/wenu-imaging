@@ -20,6 +20,7 @@ int mef_bias_product_qc_add(mef_bias_product_qc *, size_t output_index,
 /* Capture selected final FITS headers after assembly, before ASDF publication. */
 int mef_bias_product_qc_headers(mef_bias_product_qc *, const char *const *, size_t,
     const char *const *, size_t, const char *, const char *, char *, size_t);
+int mef_bias_product_qc_input_list(mef_bias_product_qc *,const char *);
 int mef_bias_product_qc_check(mef_bias_product_qc *, char *, size_t);
 const mef_product_qc *mef_bias_product_qc_view(const mef_bias_product_qc *);
 int mef_bias_product_qc_write(mef_bias_product_qc *, char *, size_t);

@@ -1,6 +1,7 @@
 #ifndef MEF_BPM_FILES_H
 #define MEF_BPM_FILES_H
 #include "mef_cal_bpm.h"
+#include "mef_detector_cube.h"
 #include "mef_layout.h"
 typedef struct mef_bpm_files_result mef_bpm_files_result;
 typedef enum { MEF_BPM_PROVISIONAL=1, MEF_BPM_QUICK } mef_bpm_acquisition;
@@ -36,6 +37,7 @@ typedef struct {
     char mask_registry[33];
     char readout_id[MEF_LAYOUT_TEXT];
     int bin_x, bin_y;
+    int shared_cube, qc_requested, pair_consistency_passed, coverage_passed;
 } mef_bpm_files_qc;
 /* Header-only preflight: every request path/HDU/detector/config slot, selected
  * bias/prior map, readout/binning/unit/active geometry and EXPTIME/pair metadata.
@@ -50,6 +52,9 @@ typedef struct {
 mef_status mef_bpm_from_files(mef_context *, const mef_layout_map *const *, size_t,
     const char *detector, const mef_layout_map *bias, const mef_layout_map *prior,
     const mef_bpm_files_options *, mef_bpm_files_result **, mef_error **);
+mef_status mef_bpm_from_cube(mef_context *,const mef_layout_map *const *,size_t,
+    const char *,const mef_layout_map *,const mef_layout_map *,const mef_bpm_files_options *,
+    const mef_detector_cube *,mef_bpm_files_result **,mef_error **);
 void mef_bpm_files_result_destroy(mef_bpm_files_result *);
 const mef_bpm_result *mef_bpm_files_result_service(const mef_bpm_files_result *);
 const mef_bpm_files_qc *mef_bpm_files_result_qc(const mef_bpm_files_result *);

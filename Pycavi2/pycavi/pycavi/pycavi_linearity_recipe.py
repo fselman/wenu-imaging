@@ -26,6 +26,27 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, allow_nan=False, separators=(',', ':'))
 
 
+def bpm_configuration_snapshot(master_snapshot, limits=None):
+    """Apply current response policy without rewriting the master's lineage."""
+    snapshot = deepcopy(master_snapshot)
+    if limits is not None:
+        require(set(limits) == {'response_low', 'response_high'}, 'Incomplete response limits')
+        low, high = limits['response_low'], limits['response_high']
+        require(all(type(v) in (int, float) and math.isfinite(v) for v in (low, high)) and
+                0 < low < high, 'Response limits require 0 < low < high')
+        for name, value in (('LGAINTHR', low), ('HGAINTHR', high)):
+            # The existing native BPM configuration stores these settings as float32.
+            try:
+                bits = struct.pack('>f', value)
+            except (OverflowError, struct.error):
+                raise ValueError('Response limit exceeds native float32 range') from None
+            snapshot['MEF.BPM.'+name] = dict(type='float32-bits', value=bits.hex())
+        rounded = [struct.unpack('>f', bytes.fromhex(snapshot['MEF.BPM.'+name]['value']))[0]
+                   for name in ('LGAINTHR', 'HGAINTHR')]
+        require(0 < rounded[0] < rounded[1], 'Response limits collapse in native float32')
+    return snapshot
+
+
 def native_configuration(resolved, master_snapshot):
     """Generate the native compatibility TOML from validated, agreeing settings.
 
@@ -51,7 +72,10 @@ def native_configuration(resolved, master_snapshot):
             require(math.isfinite(value), 'Nonfinite native snapshot setting')
         decoded[key] = value
     controls = resolved['controls']; detectors = resolved['detectors']
-    require(decoded.get('MEF.NCHIPS') == len(detectors), 'Master/native detector count differs')
+    # A saved product can describe one slot in a larger native mosaic.
+    detector_count = resolved.get('native_detector_count', len(detectors))
+    require(type(decoded.get('MEF.NCHIPS')) is int and decoded['MEF.NCHIPS'] == detector_count,
+            'Master/native detector count differs')
     # These are the legacy bias service's fixed frame-admission bounds, already
     # used by the preserved masters. A different policy needs a reviewed backend.
     require(controls['bias_mean_min_adu'] == 0 and controls['bias_mean_max_adu'] == 1000,
@@ -95,7 +119,7 @@ def region_toml(regions):
         json.dumps(k)+' = '+json.dumps(v)+'\n' for k,v in region.items()) for region in regions)
 
 
-def native_plan(resolved, selection, sites):
+def native_plan(resolved, selection, sites, *, input_bpm="archived"):
     """Explicit dataset binding -> native transport; no pixel/EXPTIME reads."""
     s = deepcopy(selection); c = resolved['controls']
     ds = [d for d in resolved['detectors'] if d['detector_id'] == s['detector']]
@@ -104,7 +128,10 @@ def native_plan(resolved, selection, sites):
     for old,new in [('raw_saturation_adu','raw_saturation_adu'),('pair_time_tolerance_s','pair_time_tolerance_s'),
                     ('with_mad','with_mad'),('reject_bits','reject_bits')]:
         require(s[old] == c[new], 'Archived selection conflicts with processing TOML: '+old)
-    bpm = s['bpm']; require(bpm['encoding']==c['mask_encoding'], 'BPM encoding conflict')
+    require(input_bpm in ('archived', 'omitted'), 'Unknown recipe input BPM policy')
+    bpm = s['bpm']
+    require(bpm['encoding']=='omitted' if input_bpm=='omitted' else bpm['encoding']==c['mask_encoding'],
+            'BPM encoding conflicts with the explicit input policy')
     if bpm['encoding']=='binary':require(bpm['good_value']==c['binary_good_value'], 'BPM polarity conflict')
     require(len(s['bias'])==2 and 2<=len(s['flat'])<=64 and len(s['flat'])%2==0, 'Explicit flat pairs/two raw RON biases required')
     require(type(s['max_loaded_pixels']) is int and s['max_loaded_pixels']>0 and
@@ -205,7 +232,7 @@ def bias_receipt_fingerprints(handoff_path, bias_paths, master, detector):
     return dict(path=str(path),sha256=hashlib.sha256(payload).hexdigest(),inputs=digests)
 
 
-def preparation_dependencies(source_samples, handoff_path, resolved):
+def preparation_dependencies(source_samples, handoff_path, resolved, *, input_bpm="archived"):
     """Admit preserved inputs without opening FITS or rebuilding a calibration."""
     try:
         from . import pycavi_linearity_preparation_qc as archive
@@ -243,7 +270,7 @@ def preparation_dependencies(source_samples, handoff_path, resolved):
             mt['provenance']['producer'] == handoff['producer'], 'Master QC configuration/producer mismatch')
     members = handoff['inputs']
     require(len(members) >= resolved['controls']['bias_min_frames'] and
-            len(mt['inputs']) == len(members)+1, 'Incomplete master memberships')
+            len(mt['inputs']) == len(members)+(selection['bpm']['encoding'] != 'omitted'), 'Incomplete master memberships')
     biases = []
     baseline = {master['product']: origin['master_fingerprint']['sha256']}
     leaves = {r.digest:r.as_dict() for r in records}
@@ -266,7 +293,7 @@ def preparation_dependencies(source_samples, handoff_path, resolved):
         receipt = bias_receipt_fingerprints(handoff_path,bias_paths,master,entry['detector'])
         frozen[receipt['path']] = receipt['sha256']
         bias_baseline = receipt['inputs']
-    for path in [r['path'] for r in selection['flat']]+[selection['bpm']['path']]+[b['path'] for b in biases]:
+    for path in [r['path'] for r in selection['flat']]+([] if selection['bpm']['encoding']=='omitted' else [selection['bpm']['path']])+[b['path'] for b in biases]:
         matches = [r['file']['sha256'] for r in leaves.values()
                    if r['file']['location']==path and r['file']['sha256'] is not None]
         if path in bias_baseline:matches.append(bias_baseline[path])
@@ -279,7 +306,15 @@ def preparation_dependencies(source_samples, handoff_path, resolved):
     frozen[str(config_path)] = pair.sha(config_bytes)
     require(all(Path(p).is_absolute() and type(d) is str and len(d)==64 for p,d in baseline.items()),
             'Invalid preserved image baseline')
-    return dict(source_samples=str(source_samples), handoff_path=str(handoff_path), selection=selection, biases=biases,
+    require(input_bpm in ('archived', 'omitted'), 'Unknown recipe input BPM policy')
+    if input_bpm == 'omitted':
+        # The original master and archived QC retain their mask lineage. Only
+        # the current run's input selection and payload dependencies change.
+        if selection['bpm']['encoding'] != 'omitted':
+            baseline.pop(selection['bpm']['path'])
+        selection['bpm'] = dict(encoding='omitted')
+        transport = native_plan(resolved, selection, entry['population'], input_bpm=input_bpm)
+    return dict(input_bpm_policy=input_bpm, source_samples=str(source_samples), handoff_path=str(handoff_path), selection=selection, biases=biases,
                 master=master, master_snapshot=snapshot, configuration=native, transport=transport,
                 baseline=baseline, metadata_sha256={str(p):d for p,d in frozen.items()},
                 expected_samples=table, handoff=handoff)
@@ -296,8 +331,54 @@ def image_fingerprint(path):
     return dict(sha256=h.hexdigest(), stat=stat(after))
 
 
+def validate_preparation_inputs(dependencies, layout):
+    """Reuse the directory and immutable-input contract without creating a run."""
+    roots = {name: Path(layout[name]).resolve(strict=True) for name in ('raw', 'orchestration', 'reduced')}
+    require(all(path.is_dir() for path in roots.values()), 'Recipe roots must be directories')
+    for name, path in roots.items():
+        require(all(not path.is_relative_to(other) and not other.is_relative_to(path)
+                    for key, other in roots.items() if key != name),
+                'Raw, orchestration and reduced directories must be separate')
+    for name, default in [('calibration', roots['reduced']/'cal'), ('work', roots['reduced']), ('logs', roots['reduced'])]:
+        roots[name] = Path(layout.get(name) or default).resolve(strict=True)
+        require(roots[name].is_dir() and roots[name].is_relative_to(roots['reduced']),
+                'Project '+name+' root must be under reduced')
+    require(roots['calibration'].is_relative_to(roots['reduced']/'cal'), 'Project calibration root must be under reduced/cal')
+    observations = dependencies['biases'] + dependencies['selection']['flat']
+    for row in observations:
+        require(Path(row['path']).resolve(strict=True).is_relative_to(roots['raw']), 'Observation outside raw: '+row['path'])
+    calibrations = [dependencies['master']['product']]
+    if dependencies['selection']['bpm']['encoding'] != 'omitted':
+        calibrations.append(dependencies['selection']['bpm']['path'])
+    for name in calibrations:
+        require(Path(name).resolve(strict=True).is_relative_to(roots['calibration']), 'Calibration outside reduced/cal: '+name)
+    return roots
+
+
+def preparation_layout(dependencies, directory, *, raw, orchestration, reduced,
+                       calibration=None, work=None, logs=None, run_key=None):
+    """Admit paths before writes; an optional batch key isolates detector stages."""
+    roots = validate_preparation_inputs(dependencies, dict(raw=raw, orchestration=orchestration,
+        reduced=reduced, calibration=calibration, work=work, logs=logs))
+    run = Path(directory).resolve(strict=True)
+    require(run != roots['reduced'] and run.is_relative_to(roots['reduced']), 'Run directory must be below reduced')
+    key = Path(run_key or run.name)
+    require(not key.is_absolute() and all(p not in ('.', '..') for p in key.parts), 'Relative batch key required')
+    controls = (roots['orchestration']/key).resolve()
+    private = (roots['work']/key).resolve() if work is not None else run
+    run_logs = (roots['logs']/key).resolve() if logs is not None else run
+    require(controls.is_relative_to(roots['orchestration']) and not controls.exists(), 'Recipe control directory exists or escapes orchestration')
+    for path, root in ((private, roots['work']), (run_logs, roots['logs'])):
+        require(path.is_relative_to(root), 'Private directory escapes project root')
+        if path != run:
+            require(not path.exists() and not run.is_relative_to(path) and not path.is_relative_to(run),
+                    'Private work/log directory conflicts with product run')
+    return dict(raw=roots['raw'], orchestration=roots['orchestration'], reduced=roots['reduced'],
+                controls=controls, calibration=roots['calibration'], private_work=private, run_logs=run_logs)
+
+
 def prepare_detector(dependencies, executable, directory, *, resolved, source_revision,
-                     assessment_id, created_at):
+                     assessment_id, created_at, layout=None, configuration_sources=None, publication="python", preservation=None):
     """Run the native preparation and publish one immutable ASDF product.
 
     Dependencies are the result of preparation_dependencies. The command reads
@@ -309,54 +390,113 @@ def prepare_detector(dependencies, executable, directory, *, resolved, source_re
         from . import pycavi_linearity_preparation_qc as archive
     except ImportError:
         import pycavi_linearity_preparation_qc as archive
+    require(publication in ('python', 'native'), 'Unknown preparation publication backend')
     directory = Path(directory).resolve(strict=True)
     require(not any(directory.iterdir()), 'Fresh empty preparation directory required')
     executable = Path(executable).resolve(strict=True)
     d = dependencies
     # Re-admit all caller-owned metadata rather than trusting a stale dictionary.
     admitted = preparation_dependencies(d['source_samples'], d['handoff_path'], resolved)
+    if d.get('calibration_bindings'):
+        require(publication == 'native', 'Calibration bindings require native publication')
+        try:
+            from . import pycavi_calibration_bindings as calibrations
+        except ImportError:
+            import pycavi_calibration_bindings as calibrations
+        require(layout is not None and layout.get('calibration'), 'Calibration bindings require project roots')
+        admitted = calibrations.bind(admitted, resolved, d['calibration_bindings'], layout['calibration'])
     require(canonical(d)==canonical(admitted),
             'Preparation dependencies changed after admission')
+    paths = preparation_layout(d, directory, **layout) if layout is not None else None
+    controls = paths['controls'] if paths else directory
     before = {}; report = dict(status='failed', fitted=False, scientific_acceptance=False)
+    if paths:
+        report['directories'] = {name: str(path) for name, path in paths.items()}
+    report['configuration_sources'] = configuration_sources or {}
+    fingerprint = preservation.observe if preservation is not None else image_fingerprint
     binary_digest = archive.pair.sha(executable.read_bytes())
     def metadata_preserved():
         return all(archive.pair.sha(archive.pair.small(Path(p)))==digest
-                   for p,digest in d['metadata_sha256'].items())
+                   for p,digest in {**d['metadata_sha256'], **(configuration_sources or {})}.items())
     try:
         require(metadata_preserved(), 'Preparation metadata changed')
         for path, digest in d['baseline'].items():
-            before[path] = image_fingerprint(path)
+            before[path] = fingerprint(path)
             require(before[path]['sha256']==digest, 'Input differs from preserved archive: '+path)
+        if paths:
+            controls.mkdir(parents=True)
+            for path in {paths['private_work'], paths['run_logs']} - {directory}:
+                path.mkdir(parents=True)
         for name, text in [('native.toml',d['configuration']), ('plan.tsv',d['transport']['plan']),
                            ('rois.toml',d['transport']['rois']), ('sites.toml',d['transport']['sites'])]:
-            (directory/name).write_text(text)
+            (controls/name).write_text(text)
         bias_text='input_index\thdu\tasset\tpath\taccepted\n'
         for b in d['biases']:
             cells=[str(b[k]) for k in ('index','hdu','asset','path','accepted')]
             require(all(not any(c in v for c in '\t\r\n\0') for v in cells), 'Invalid bias transport cell')
             bias_text+='\t'.join(cells)+'\n'
-        (directory/'biases.tsv').write_text(bias_text)
-        native = directory/'native';native.mkdir()
-        argv = [str(executable),*[str(directory/n) for n in ('native.toml','rois.toml','sites.toml','plan.tsv')],
-                d['master']['product'],str(d['master']['hdu']),d['master']['product'],
-                str(directory/'biases.tsv'),str(native)]
+        (controls/'biases.tsv').write_text(bias_text)
+        native = (paths['private_work'] if paths else directory)/'native'
+        native.mkdir()
+        # Keep the complete location separate from the bounded native asset ID.
+        master_asset = 'master-bias:'+hashlib.sha256(d['master']['product'].encode()).hexdigest()
+        argv = [str(executable),*[str(controls/n) for n in ('native.toml','rois.toml','sites.toml','plan.tsv')],
+                d['master']['product'],str(d['master']['hdu']),master_asset,
+                str(controls/'biases.tsv'),str(native)]
+        output = directory/'asdf'
+        if publication == 'native':
+            try:
+                from . import pycavi_linearity_native_archive as native_archive
+            except ImportError:
+                import pycavi_linearity_native_archive as native_archive
+            from datetime import datetime
+            output.mkdir()
+            context = native_archive.prepare_context(d, resolved, output, controls,
+                source_revision=source_revision, evidence=dict(native_directory=str(native),
+                    handoff=d['handoff'], metadata_sha256=d['metadata_sha256'], images=before,
+                    native_binary_sha256=binary_digest, configuration_sources=configuration_sources or {},
+                    batch_preservation=preservation.reference if preservation is not None else None))
+            timestamp = datetime.fromisoformat(created_at.replace('Z', '+00:00')).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+            argv += ['--native-asdf', str(output/'linearity-preparation.asdf'), timestamp,
+                     str((paths['run_logs'] if paths else directory)/'native.log'), '--context', str(context)]
+        report['publication'] = publication
         report['argv']=argv;report['native_binary_sha256']=binary_digest
-        with (directory/'native.log').open('x') as log:
-            subprocess.run(argv,stdout=log,stderr=subprocess.STDOUT,check=True)
-        after = {p:image_fingerprint(p) for p in before}
+        log_path = (paths['run_logs'] if paths else directory)/'native.log'
+        with log_path.open('x') as log:
+            subprocess.run(argv, cwd=paths['orchestration'] if paths else controls,
+                           stdout=log, stderr=subprocess.STDOUT, check=True)
+        after = {p:fingerprint(p) for p in before}
         require(before==after and metadata_preserved() and
                 archive.pair.sha(executable.read_bytes())==binary_digest, 'Preparation source preservation failed')
-        output = directory/'asdf';output.mkdir()
-        product = archive.publish(native,d['source_samples'],output,resolved=resolved,
-            selection=d['selection'],biases=d['biases'],master_snapshot=d['master_snapshot'],
-            assessment_id=assessment_id,created_at=created_at,source_revision=source_revision,
-            dependency_evidence=dict(handoff=d['handoff'],metadata_sha256=d['metadata_sha256'],
-                                     images=before,native_binary_sha256=binary_digest))
+        if publication == 'native':
+            product = verify_native_preparation(native_archive, archive, d, resolved, native, output)
+        else:
+            output.mkdir()
+            product = archive.publish(native,d['source_samples'],output,resolved=resolved,
+                selection=d['selection'],biases=d['biases'],master_snapshot=d['master_snapshot'],
+                assessment_id=assessment_id,created_at=created_at,source_revision=source_revision,
+                dependency_evidence=dict(handoff=d['handoff'],metadata_sha256=d['metadata_sha256'],
+                                         images=before,native_binary_sha256=binary_digest))
         require(metadata_preserved(), 'Metadata changed during publication')
-        report.update(status='complete_for_owner_inspection',product=product,
-                      inputs=before,after_inputs=after,source_preservation=True)
+        report.update(status='complete_for_owner_inspection' if preservation is None else 'complete_pending_batch_preservation',
+                      product=product, inputs=before, after_inputs=after, source_preservation=preservation is None,
+                      batch_preservation=preservation.reference if preservation is not None else None)
         return report
     except Exception as error:
         report['error']=repr(error);raise
     finally:
         (directory/'execution.json').write_text(json.dumps(report,indent=2)+'\n')
+
+
+def verify_native_preparation(native_archive, archive, dependencies, resolved, native, output):
+    """Compare saved native values with unchanged transport decoding, no pixel math."""
+    d = dependencies
+    path = output/'linearity-preparation.asdf'
+    value = native_archive.read_product(path)
+    reference = archive.collect(native, resolved, d['selection'], d['biases'], d['expected_samples'],
+                                d['master_snapshot'], master_reference=d['master'])
+    require(canonical(value) == canonical(reference), 'Native ASDF/transport preparation differs')
+    return dict(path=str(path), sha256=archive.pair.sha(archive.pair.small(path)),
+        container_schema='2.0.0', detector=value['detector'], pairs=len(value['rows']),
+        exposures=len(value['exposure_rows']), sites=len(value['direct_site_replay']),
+        trace_frames=len(value['scan_traces']), noise_state='unavailable')

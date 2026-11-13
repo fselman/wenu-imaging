@@ -113,7 +113,8 @@ target_include_directories(qfits PUBLIC qfits5/include "${CMAKE_CURRENT_BINARY_D
 target_compile_definitions(qfits PRIVATE XMEMORY_MODE=2 XMEMORY_MAXPTRS=2000000)
 option(MEFPP_BUILD_MEF_ASSEMBLER "Build isolated native MEF assembly (no recipe activation)" OFF)
 if(MEFPP_BUILD_MEF_ASSEMBLER)
-  add_library(mefpp_mef_assembly STATIC ins/mef/common/mef_mef_assemble.c)
+  add_library(mefpp_mef_assembly STATIC
+    ins/mef/common/mef_mef_assemble.c ins/mef/common/mef_bpm_assembly_planes.c)
   target_include_directories(mefpp_mef_assembly PUBLIC ins/mef/common)
   target_link_libraries(mefpp_mef_assembly PUBLIC qfits)
   if(NOT APPLE)
@@ -121,6 +122,10 @@ if(MEFPP_BUILD_MEF_ASSEMBLER)
   endif()
   set_target_properties(mefpp_mef_assembly PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_compile_options(mefpp_mef_assembly PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  add_executable(bpm_mef_assembly_probe tests/bpm_mef_assembly_probe.c)
+  target_link_libraries(bpm_mef_assembly_probe PRIVATE mefpp_mef_assembly)
+  set_target_properties(bpm_mef_assembly_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_compile_options(bpm_mef_assembly_probe PRIVATE -Wall -Wextra -Werror -pedantic-errors)
   add_executable(mef_assembly_probe tests/mef_assembly_probe.c)
   target_link_libraries(mef_assembly_probe PRIVATE mefpp_mef_assembly)
   set_target_properties(mef_assembly_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
@@ -134,7 +139,7 @@ add_library(mefpp_common STATIC ins/mef/common/mefp_lib.c
   ins/mef/common/mef_bias_kernel.c ins/mef/common/mef_paths.c)
 target_include_directories(mefpp_common PUBLIC ins/mef/common)
 target_link_libraries(mefpp_common PUBLIC eclipse)
-add_executable(mefpp ins/mef/recipes/mefpp.c)
+add_executable(mefpp ins/mef/recipes/mefpp.c ins/mef/common/mef_recipe_help.c)
 target_link_libraries(mefpp PRIVATE mefpp_common)
 foreach(target IN ITEMS qfits eclipse mefpp_common mefpp)
   target_compile_definitions(${target} PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -237,12 +242,17 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   set_target_properties(linearity_pairs_export_probe PROPERTIES C_STANDARD 17)
   target_link_libraries(linearity_pairs_export_probe PRIVATE mefpp_linearity_pairs)
   target_compile_options(linearity_pairs_export_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
+  add_library(mefpp_detector_cube STATIC ins/mef/common/mef_detector_cube.c)
+  target_link_libraries(mefpp_detector_cube PUBLIC mefpp_linearity_prepare mefpp_config_toml)
+  target_compile_definitions(mefpp_detector_cube PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_compile_options(mefpp_detector_cube PRIVATE -Wall -Wextra -Wno-unused-function -pedantic-errors)
+  set_target_properties(mefpp_detector_cube PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   add_library(mefpp_linearity_files STATIC ins/mef/common/mef_linearity_files.c
     ins/mef/common/mef_linearity_raw_files.c)
   set_target_properties(mefpp_linearity_files PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   target_include_directories(mefpp_linearity_files PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
   target_compile_definitions(mefpp_linearity_files PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
-  target_link_libraries(mefpp_linearity_files PUBLIC mefpp_linearity_samples mefpp_linearity_pairs mefpp_linearity_prepare)
+  target_link_libraries(mefpp_linearity_files PUBLIC mefpp_detector_cube mefpp_linearity_samples mefpp_linearity_pairs mefpp_linearity_prepare)
   target_compile_options(mefpp_linearity_files PRIVATE -Wall -Wextra -pedantic-errors)
   add_executable(mefpp_pair_measure ins/mef/mefpp_pair_measure.c)
   add_executable(mefpp_linearity_prepare_command ins/mef/mefpp_linearity_prepare.c)
@@ -271,15 +281,40 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   target_link_libraries(linearity_files_probe PRIVATE mefpp_linearity_files)
   target_compile_options(linearity_files_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
   add_library(mefpp_config_toml STATIC ins/mef/common/mef_config_toml.c
-    ins/mef/common/mef_toml_bundle.c)
-  target_include_directories(mefpp_config_toml PRIVATE ins/mef/common)
+    ins/mef/common/mef_toml_bundle.c ins/mef/common/mef_toml_file.c
+    ins/mef/common/mef_project.c ins/mef/common/mef_detector_catalogue.c)
+  target_include_directories(mefpp_config_toml PUBLIC ../third_party/tomlc17 PRIVATE ins/mef/common)
   target_link_libraries(mefpp_config_toml PUBLIC mefpp_config_snapshot mefpp_tomlc17)
+  add_library(mefpp_product_qc_records STATIC ins/mef/common/mef_product_qc_validate.c)
+  add_library(mefpp_linearity_archive STATIC ins/mef/common/mef_linearity_archive.c)
+  target_link_libraries(mefpp_linearity_archive PUBLIC mefpp_linearity_files mefpp_product_qc_records)
+  target_compile_options(mefpp_linearity_archive PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(mefpp_linearity_archive PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_link_libraries(mefpp_linearity_prepare_command PRIVATE mefpp_linearity_archive)
+  add_executable(linearity_archive_metadata_probe ins/mef/mefpp_linearity_prepare.c tests/linearity_archive_metadata.c)
+  target_link_libraries(linearity_archive_metadata_probe PRIVATE mefpp_linearity_archive mefpp_roi_config mefpp_config_toml)
+  target_include_directories(linearity_archive_metadata_probe PRIVATE qfits5/include "${CMAKE_CURRENT_BINARY_DIR}/generated")
+  target_compile_definitions(linearity_archive_metadata_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+    MEFPP_NATIVE_PRODUCT_QC=1 MEFPP_CANDIDATE_REVISION="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+  target_compile_options(linearity_archive_metadata_probe PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(linearity_archive_metadata_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  target_compile_definitions(mefpp_linearity_prepare_command PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
+  target_include_directories(mefpp_product_qc_records PUBLIC ins/mef/common)
+  target_compile_options(mefpp_product_qc_records PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(mefpp_product_qc_records PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   add_library(mefpp_recipe_run STATIC ins/mef/common/mef_recipe_run.c
-    ins/mef/common/mef_product_paths.c)
+    ins/mef/common/mef_product_paths.c ins/mef/common/mef_recipe_inputs.c)
   target_link_libraries(mefpp_recipe_run PUBLIC mefpp_config_snapshot)
   target_compile_definitions(mefpp_recipe_run PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   target_compile_options(mefpp_recipe_run PRIVATE -Wall -Wextra -Werror -pedantic-errors)
   set_target_properties(mefpp_recipe_run PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+  add_executable(recipe_file_hash_probe tests/recipe_file_hash_probe.c
+    ins/mef/common/mef_bpm_linearity_hash.c)
+  target_include_directories(recipe_file_hash_probe PRIVATE ../third_party/tomlc17)
+  target_link_libraries(recipe_file_hash_probe PRIVATE mefpp_recipe_run)
+  target_compile_definitions(recipe_file_hash_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
+  target_compile_options(recipe_file_hash_probe PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+  set_target_properties(recipe_file_hash_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   add_executable(recipe_run_probe tests/recipe_run_probe.c)
   target_link_libraries(recipe_run_probe PRIVATE mefpp_recipe_run)
   target_compile_options(recipe_run_probe PRIVATE -UNDEBUG -Wall -Wextra -Werror -pedantic-errors)
@@ -290,11 +325,20 @@ if(MEFPP_BUILD_CONFIG_PROBES)
     target_link_libraries(mefpp_bias_files PUBLIC mefpp_config_snapshot)
     add_library(mefpp_bpm_service STATIC ins/mef/common/mef_cal_bpm.c ins/mef/common/mef_bpm_files.c
       ins/mef/common/mef_bpm_publish.c)
-    target_link_libraries(mefpp_bpm_service PUBLIC mefpp_bias_files)
+    target_link_libraries(mefpp_bpm_service PUBLIC mefpp_bias_files mefpp_detector_cube)
     target_compile_definitions(mefpp_bpm_service PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(mefpp_bpm_service PRIVATE -Wall -Wextra -pedantic-errors)
+    add_library(mefpp_bpm_product_qc STATIC ins/mef/common/mef_bpm_product_qc.c)
+    target_link_libraries(mefpp_bpm_product_qc PUBLIC mefpp_bpm_service mefpp_product_qc_records)
+    target_compile_options(mefpp_bpm_product_qc PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+    set_target_properties(mefpp_bpm_product_qc PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+    add_executable(bpm_native_qc_probe tests/bpm_files_probe.c)
+    target_link_libraries(bpm_native_qc_probe PRIVATE mefpp_bpm_product_qc)
+    target_compile_definitions(bpm_native_qc_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+      BPM_PUBLICATION_CONTRACT=1 BPM_NATIVE_QC_CONTRACT=1)
+    target_compile_options(bpm_native_qc_probe PRIVATE -UNDEBUG -Wall -Wextra -Werror -pedantic-errors)
     add_executable(bpm_service_probe tests/bpm_service_probe.c)
-    target_link_libraries(bpm_service_probe PRIVATE mefpp_bpm_service)
+    target_link_libraries(bpm_service_probe PRIVATE mefpp_linearity_prepare mefpp_bpm_service)
     target_compile_definitions(bpm_service_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
     target_compile_options(bpm_service_probe PRIVATE -UNDEBUG -Wall -Wextra -pedantic-errors)
     add_executable(bpm_files_probe tests/bpm_files_probe.c)
@@ -323,21 +367,37 @@ if(MEFPP_BUILD_CONFIG_PROBES)
         message(FATAL_ERROR "Supply the retained qualified MEFPP_ASDF_PREFIX")
       endif()
       find_library(MEFPP_ASDF_LIBRARY NAMES asdf PATHS "${MEFPP_ASDF_PREFIX}/lib" NO_DEFAULT_PATH REQUIRED)
-      add_library(mefpp_product_qc STATIC ins/mef/common/mef_product_qc_validate.c
-        ins/mef/common/mef_product_qc_asdf.c)
+      add_library(mefpp_product_qc STATIC ins/mef/common/mef_product_qc_asdf.c)
       target_include_directories(mefpp_product_qc PUBLIC ins/mef/common)
       target_include_directories(mefpp_product_qc SYSTEM PRIVATE "${MEFPP_ASDF_PREFIX}/include")
-      target_link_libraries(mefpp_product_qc PUBLIC "${MEFPP_ASDF_LIBRARY}" mefpp_recipe_run)
+      target_link_libraries(mefpp_product_qc PUBLIC "${MEFPP_ASDF_LIBRARY}" mefpp_recipe_run mefpp_product_qc_records)
+      add_executable(mefpp_bpm_assemble ins/mef/mefpp_bpm_assemble.c)
+      target_link_libraries(mefpp_bpm_assemble PRIVATE mefpp_mef_assembly mefpp_product_qc)
+      target_compile_definitions(mefpp_bpm_assemble PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
+      target_compile_options(mefpp_bpm_assemble PRIVATE -Wall -Wextra -Werror -pedantic-errors)
+      set_target_properties(mefpp_bpm_assemble PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO
+        BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
+      target_link_libraries(mefpp_m5 PRIVATE mefpp_bpm_product_qc mefpp_product_qc)
+      target_link_libraries(mefpp_linearity_prepare_command PRIVATE mefpp_product_qc)
+      set_target_properties(mefpp_linearity_prepare_command PROPERTIES BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
+      target_compile_definitions(mefpp_linearity_prepare_command PRIVATE MEFPP_NATIVE_PRODUCT_QC=1)
+      target_compile_definitions(mefpp_m5 PRIVATE MEFPP_NATIVE_PRODUCT_QC=1)
       if(NOT APPLE)
         target_link_libraries(mefpp_product_qc PUBLIC m)
       endif()
+      add_executable(bpm_native_asdf_probe tests/bpm_files_probe.c)
+      target_link_libraries(bpm_native_asdf_probe PRIVATE mefpp_bpm_product_qc mefpp_product_qc)
+      target_compile_definitions(bpm_native_asdf_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+        BPM_PUBLICATION_CONTRACT=1 BPM_NATIVE_QC_CONTRACT=1 BPM_NATIVE_ASDF_CONTRACT=1)
+      target_compile_options(bpm_native_asdf_probe PRIVATE -UNDEBUG -Wall -Wextra -Werror -pedantic-errors)
+      set_target_properties(bpm_native_asdf_probe PROPERTIES BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
       add_library(mefpp_bias_product_qc STATIC ins/mef/common/mef_bias_product_qc.c
         ins/mef/common/mef_bias_qc_fits.c)
       target_link_libraries(mefpp_bias_product_qc PUBLIC mefpp_bias_files mefpp_product_qc)
-      add_executable(mefpp_bias_recipe ins/mef/recipes/mefpp_bias_recipe.c
-        ins/mef/common/mef_bias_recipe_config.c
-        ins/mef/common/mef_bias_recipe_prepare.c ins/mef/common/mef_bias_recipe_inputs.c
-        ins/mef/common/mef_bias_recipe_process.c ins/mef/common/mef_bias_recipe_products.c)
+      add_executable(mefpp_bias_recipe ins/mef/recipes/mefpp_bias.c
+        ins/mef/common/mef_bias_config.c
+        ins/mef/common/mef_bias_prepare.c ins/mef/common/mef_bias_inputs.c
+        ins/mef/common/mef_bias_process.c ins/mef/common/mef_bias_products.c)
       target_include_directories(mefpp_bias_recipe PRIVATE ../third_party/tomlc17)
       target_link_libraries(mefpp_bias_recipe PRIVATE mefpp_bias_product_qc mefpp_config_toml mefpp_mef_assembly)
       target_compile_definitions(mefpp_bias_recipe PRIVATE MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
@@ -367,6 +427,44 @@ if(MEFPP_BUILD_CONFIG_PROBES)
         target_compile_options(native_warning_probe PRIVATE -UNDEBUG -Wall -Wextra -Werror -pedantic-errors)
         set_target_properties(native_warning_probe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
       endif()
+      add_executable(mefpp_bpm_linearity_recipe
+        ins/mef/recipes/mefpp_bpm_linearity.c
+        ins/mef/common/mef_bpm_linearity_config.c
+        ins/mef/common/mef_bpm_linearity_compile.c
+        ins/mef/common/mef_bpm_linearity_inputs.c
+        ins/mef/common/mef_bpm_linearity_bindings.c
+        ins/mef/common/mef_bpm_linearity_hash.c
+        ins/mef/common/mef_bpm_linearity_process.c
+        ins/mef/common/mef_bpm_linearity_products.c
+        ins/mef/mefpp_linearity_prepare.c ins/mef/recipes/mefpp_bpm_adapter.c)
+      target_include_directories(mefpp_bpm_linearity_recipe PRIVATE ../third_party/tomlc17)
+      target_link_libraries(mefpp_bpm_linearity_recipe PRIVATE
+        mefpp_recipe_run mefpp_bpm_product_qc mefpp_product_qc mefpp_config_toml
+        mefpp_mef_assembly mefpp_linearity_files mefpp_linearity_archive mefpp_roi_config)
+      target_compile_definitions(mefpp_bpm_linearity_recipe PRIVATE
+        ${MEFPP_FEATURE_DEFINITIONS} MEFPP_RECIPE_LIBRARY=1 MEFPP_NATIVE_PRODUCT_QC=1
+        MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
+      set_target_properties(mefpp_bpm_linearity_recipe PROPERTIES
+        C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO
+        BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
+      target_compile_options(mefpp_bpm_linearity_recipe PRIVATE -Wall -Wextra -pedantic-errors)
+
+      # One native public executable; compatibility binaries keep their entry points.
+      get_target_property(bias_recipe_sources mefpp_bias_recipe SOURCES)
+      get_target_property(bpm_linearity_sources mefpp_bpm_linearity_recipe SOURCES)
+      add_executable(mefpp_recipe ins/mef/recipes/mefpp_recipe.c ins/mef/recipes/mefpp_project_init.c
+        ins/mef/common/mef_recipe_help.c ${bias_recipe_sources} ${bpm_linearity_sources})
+      target_include_directories(mefpp_recipe PRIVATE ../third_party/tomlc17)
+      target_link_libraries(mefpp_recipe PRIVATE mefpp_bias_product_qc
+        mefpp_recipe_run mefpp_bpm_product_qc mefpp_product_qc mefpp_config_toml
+        mefpp_mef_assembly mefpp_linearity_files mefpp_linearity_archive mefpp_roi_config)
+      target_compile_definitions(mefpp_recipe PRIVATE ${MEFPP_FEATURE_DEFINITIONS}
+        MEFPP_RECIPE_ENTRY_LIBRARY=1 MEFPP_RECIPE_LIBRARY=1 MEFPP_NATIVE_PRODUCT_QC=1
+        MEFPP_CANDIDATE_REVISION="${MEFPP_SOURCE_REVISION}")
+      set_target_properties(mefpp_recipe PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES
+        C_EXTENSIONS NO BUILD_RPATH "${MEFPP_ASDF_PREFIX}/lib")
+      target_compile_options(mefpp_recipe PRIVATE -Wall -Wextra -pedantic-errors)
+
       foreach(recipe_target IN ITEMS mefpp_product_qc mefpp_bias_product_qc mefpp_bias_recipe)
         set_target_properties(${recipe_target} PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
         target_compile_definitions(${recipe_target} PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
@@ -393,7 +491,7 @@ if(MEFPP_BUILD_CONFIG_PROBES)
   add_executable(config_paf_snapshot tests/config_paf_snapshot.c)
   target_link_libraries(config_paf_snapshot PRIVATE mefpp_config_snapshot mefpp_common)
   target_compile_definitions(config_paf_snapshot PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
-  add_executable(cli_capture_probe tests/cli_capture_probe.c)
+  add_executable(cli_capture_probe tests/cli_capture_probe.c ins/mef/common/mef_recipe_help.c)
   target_link_libraries(cli_capture_probe PRIVATE mefpp_config_snapshot mefpp_common)
   target_compile_definitions(cli_capture_probe PRIVATE ${MEFPP_FEATURE_DEFINITIONS})
   add_executable(qfits_discovery_probe tests/qfits_discovery_probe.c)
@@ -600,6 +698,14 @@ endif()
 
 if(BUILD_TESTING)
   find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  if(TARGET recipe_file_hash_probe)
+    add_test(NAME native_recipe_file_identity
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/recipe_file_hash_contract.py"
+        --probe "$<TARGET_FILE:recipe_file_hash_probe>"
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_recipe_file_identity PROPERTIES TIMEOUT 60 LABELS "native;recipe;ownership")
+  endif()
+
   add_test(NAME native_frontend_contract
     COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/frontend_contract.py"
       "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -639,6 +745,12 @@ if(BUILD_TESTING)
           --probe "$<TARGET_FILE:linearity_files_probe>" --bpm-probe "$<TARGET_FILE:bpm_files_probe>"
           --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
       set_tests_properties(native_linearity_files PROPERTIES TIMEOUT 300 LABELS "native;linearity;layout;ownership;mask")
+      add_test(NAME native_bpm_product_qc
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_native_qc_contract.py"
+          --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
+          --probe "$<TARGET_FILE:bpm_native_qc_probe>"
+          --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+      set_tests_properties(native_bpm_product_qc PROPERTIES TIMEOUT 180 LABELS "native;bpm;qc;publication")
       add_test(NAME native_bpm_files
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_files_contract.py"
           --source-root "${CMAKE_CURRENT_SOURCE_DIR}/.."
@@ -664,6 +776,11 @@ if(BUILD_TESTING)
         --command "$<TARGET_FILE:mefpp_linearity_prepare_command>"
         --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
     set_tests_properties(native_linearity_preparation_command PROPERTIES TIMEOUT 180 LABELS "native;linearity;command;overscan")
+    add_test(NAME native_linearity_preparation_archive_metadata
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/linearity_native_archive_contract.py"
+        --command "$<TARGET_FILE:linearity_archive_metadata_probe>" --metadata-only
+        --work-parent "${CMAKE_CURRENT_BINARY_DIR}/test-work")
+    set_tests_properties(native_linearity_preparation_archive_metadata PROPERTIES TIMEOUT 180 LABELS "native;linearity;qc;publication")
     add_test(NAME native_sample_command
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/sample_command_contract.py"
         --command "$<TARGET_FILE:mefpp_sample_extract>"
