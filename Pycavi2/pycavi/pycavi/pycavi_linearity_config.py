@@ -43,6 +43,8 @@ def resolve(detector_text, processing_text, *, detector_id=None):
     d, p = tomllib.loads(detector_text), tomllib.loads(processing_text)
     embedded = 'bpm_linearity_recipe_schema_version' in p and 'detector_toml' in p
     if embedded:
+        native_count = d.get('native', {}).get('instrument', {}).get('detector_count', {}).get('value')
+        require(type(native_count) is int and native_count > 0, 'Invalid native detector count')
         selected = {row['detector_id'] for row in p['detectors']}
         if detector_id is not None:
             require(detector_id in selected, 'Detector missing from the recipe')
@@ -103,7 +105,7 @@ def resolve(detector_text, processing_text, *, detector_id=None):
     by_id = {v['detector']: v for v in trims}
     slots = [v['native_paf_chip'] for v in detectors]
     require(all(type(v) is int and v >= 1 for v in slots) and len(set(slots)) == len(slots)
-            and (embedded or sorted(slots) == list(range(1, len(detectors)+1))),
+            and (max(slots) <= native_count if embedded else sorted(slots) == list(range(1, len(detectors)+1))),
             'Require unique explicit native configuration slots')
     names = set()
     for r in rois:
@@ -152,6 +154,7 @@ def resolve(detector_text, processing_text, *, detector_id=None):
                 minimum_frames=controls['bias_min_frames'], kappa=controls['bias_stack_kappa'])))
     return dict(schema_version=1, operation='linearity.prepare', instrument=d['instrument'],
         binning=[1, 1], controls=deepcopy(controls), detectors=entries,
+        **({'native_detector_count': native_count} if embedded else {}),
         sources={key: dict(text=text, sha256=hashlib.sha256(text.encode('utf-8')).hexdigest())
                  for key, text in [('detector_toml', detector_text), ('processing_toml', processing_text)]})
 

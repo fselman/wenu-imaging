@@ -72,7 +72,10 @@ def native_configuration(resolved, master_snapshot):
             require(math.isfinite(value), 'Nonfinite native snapshot setting')
         decoded[key] = value
     controls = resolved['controls']; detectors = resolved['detectors']
-    require(decoded.get('MEF.NCHIPS') == len(detectors), 'Master/native detector count differs')
+    # A saved product can describe one slot in a larger native mosaic.
+    detector_count = resolved.get('native_detector_count', len(detectors))
+    require(type(decoded.get('MEF.NCHIPS')) is int and decoded['MEF.NCHIPS'] == detector_count,
+            'Master/native detector count differs')
     # These are the legacy bias service's fixed frame-admission bounds, already
     # used by the preserved masters. A different policy needs a reviewed backend.
     require(controls['bias_mean_min_adu'] == 0 and controls['bias_mean_max_adu'] == 1000,
