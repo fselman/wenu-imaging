@@ -55,11 +55,20 @@ as read-only inputs. See the [dependency contract](../architecture.md#dependency
   The output is $D'\,\mathcal{S}(S'/D')$, with $\mathcal{S}$ the existing
   smoothing kernel and mask policy. Preserve the denominator handling, edge
   behavior, and operation order. Use working buffers for the mutable inputs.
-- **Review before implementation.** Trace reference normalization when a
-  component comes from disk, including legacy header or pixel-derived values.
-  Check the effect of detector subsets and order. The near-zero frame-median
-  branch logs an error with its early return commented out. Establish the
-  reference behavior and agree any policy change before changing the port.
+- **Normalization lineage.** The legacy list path stores the mean of the
+  accepted per-frame normalization medians before scaling the stacked flat.
+  The legacy FITS path recomputes a median from the loaded normalized detector
+  plane. With bias subtraction enabled, the combiner uses the reference slot
+  for each component's scale. The retained combined flats exercise a loaded
+  dome and a sky built from a list. A two-master replay needs its own legacy
+  comparison with both components loaded. Record the origin and units of the
+  scale used for each component and test reference detector selection.
+- **Near-zero frame median.** The legacy code logs an error at
+  `fabs(medval) < 1e-4` and leaves the plane unscaled in the temporal stack.
+  It omits that plane from the normalization sum and count. If every plane
+  takes that branch, the subsequent normalization divides by zero. Rejecting
+  such a stack before publication is a proposed behavior change and requires
+  review before implementation.
 
 ## Qualification
 
