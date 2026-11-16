@@ -2965,82 +2965,216 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 
 
 
-image_t * mef_build_cal(mef_bb * bb, char * what)
+/* The active-area cube belongs to this function. The master bias is borrowed. */
+image_t *mef_stack_flat(mef_bb *bb, const char *kind, cube_t *cube,
+                                   const image_t *master_bias, double *normalization_medians)
 {
-	cube_t	 *	i_cube ;
-	image_t *	stacked ;
-	image_t *  	cur_p ;
-	image_t *  	flat ;
-	char	 *	name_i ;
-	double		lo_thr, hi_thr ;
-	int		minframe ;
-	double		avg, kappa1 ;
-    float      zmedian, zstdev;
-	int		i, j, p ;
-	int	 *	valid ;
-	double		*all_means ;
-	int		nval ;
-	double		sigma ;
-	pixelvalue * 	validpix ;
-	pixelvalue	curpix ;
-	double	    medval ;
-    double      stdev_val ;
-    double      *pixval_double;
-	float		frame_median ;
-    float       frame_variance ;
-	int		frame_nplanes ;
-	int		zIndex;
-	char		cmt[5];
-	float		normFactor ;
+    int frame, plane_index, x, y, i;
+    size_t pixel;
 
-	/* Check entries */
-	if (bb==NULL) return NULL ;
-	if (!what || !*what) return NULL;
+    if (cube == NULL)
+        return NULL;
+    if (bb == NULL || kind == NULL ||
+        (strcmp(kind, "dome") != 0 && strcmp(kind, "sky") != 0)) {
+        cube_del(cube);
+        return NULL;
+    }
 
-	/* Set parameters to requested frame type */
-	e_comment(1, "setting input parameters...");
-	if (!strcmp(what, "dome")) {
-		name_i = bb->name_dome ;
-		lo_thr = bb->dome_framethr_lo ;
-		hi_thr = bb->dome_framethr_hi ;
-		minframe = bb->dome_minframe ;
-	} else if (!strcmp(what, "sky")) {
-		name_i = bb->name_sky ;
-		lo_thr = bb->sky_framethr_lo ;
-		hi_thr = bb->sky_framethr_hi ;
-		minframe = bb->sky_minframe ;
-	} else if (!strcmp(what, "bias")) {
-		name_i = bb->name_bias ;
-		minframe = bb->bias_minframe ;
-		kappa1   = bb->bias_kappa1 ;
-	} else {
-		e_error("unknown frame type [%s] should be 'dome' or 'sky'",what);
-		return NULL ;
-	}
+    int dome = strcmp(kind, "dome") == 0;
+    int minimum = dome ? bb->dome_minframe : bb->sky_minframe;
+    double frame_low = dome ? bb->dome_framethr_lo : bb->sky_framethr_lo;
+    double frame_high = dome ? bb->dome_framethr_hi : bb->sky_framethr_hi;
+    const mef_ccd *ccd = &bb->ccd[bb->xtnum - 1];
+    int count = cube->np;
+    int slot = bb->nxts == 1 ? 0 : bb->xtnum - 1;
+    float *reference_medians = dome ? bb->dome_median : bb->sky_median;
+    float median_sum = 0.0f;
+    float variance_sum = 0.0f;
+    int accepted = 0;
+    int normalized = 0;
+    image_t *flat = NULL;
+    int *valid = NULL;
+    pixelvalue *normalization_pixels = NULL;
 
-	/* Load input cube */
-	e_comment(1, "loading input cube [%s]", what);
-	i_cube = mef_cube_load_at(name_i, bb->xtnum, bb->paths) ;
-	if (i_cube==NULL) {
-		e_error("loading input data: [%s]", name_i);
-		return NULL ;
-	}
-	if (i_cube->np < minframe) {
-		e_error("found only [%d] %s frames - need at least %d",
-				i_cube->np,
-				what,
-				minframe);
-		cube_del(i_cube);
-		return NULL ;
-	}
+    if (master_bias != NULL &&
+        (master_bias->data == NULL || master_bias->lx != cube->lx || master_bias->ly != cube->ly)) {
+        e_error("master bias does not match the active flat dimensions");
+        goto done;
+    }
 
-    /* we correct overscan and trim the cube */
-    /* we do it before removing bad planes from
-     * cube so we have the full input list represented.
-     */
+    if (count < minimum)
+        goto done;
+
+    valid = malloc((size_t)count * sizeof(*valid));
+    if (valid == NULL)
+        goto done;
+
+    /* Flat input levels and the normalization median are measured in ADU. */
+    e_comment(1, "frame rejection status:");
+    for (frame = 0; frame < count; ++frame) {
+        image_t *plane = cube->plane[frame];
+        if (master_bias != NULL) {
+            size_t pixels = (size_t)cube->lx * (size_t)cube->ly;
+            for (pixel = 0; pixel < pixels; ++pixel)
+                plane->data[pixel] -= master_bias->data[pixel];
+        }
+
+        /* Dark subtraction belongs here, before measuring frame statistics. */
+
+        double mean = image_getmean(plane);
+        valid[frame] = mean > frame_low && mean < frame_high;
+        accepted += valid[frame];
+        if (normalization_medians != NULL)
+            normalization_medians[frame] = NAN;
+        e_comment(1, "%s %s frame %02d: %g",
+                  valid[frame] ? "[X]" : "[ ]", kind, frame + 1, mean);
+    }
+    if (accepted == 0 || accepted < minimum) {
+        e_error("not enough frames to continue: %d", accepted);
+        goto done;
+    }
+    if (accepted < count && cube_reject_planes(&cube, valid) != 0)
+        goto done;
+
+    normalization_pixels = malloc((size_t)bb->median_surf * sizeof(*normalization_pixels));
+    if (normalization_pixels == NULL)
+        goto done;
+
+    for (frame = 0, plane_index = 0; frame < count; ++frame) {
+        if (!valid[frame])
+            continue;
+        int p = plane_index++;
+        image_t *plane = cube->plane[p];
+        double mean = image_getmean(plane);
+        double sigma = sqrt(pow(ccd->ron / ccd->gain, 2.0) + mean / ccd->gain);
+        double low = mean - bb->pixrej_lo * sigma;
+        double high = mean + bb->pixrej_hi * sigma;
+        int used = 0;
+
+        bb->individual_frame_avg[p] = mean;
+        bb->individual_frame_median[p] = (float)image_getmedian(plane);
+        bb->individual_frame_sigma[p] = (float)image_getstdev(plane);
+        e_comment(1, "frame median: %f -- frame stdev: %f -- frame nplanes: %d",
+                  bb->individual_frame_median[p], bb->individual_frame_sigma[p], cube->np);
+        e_comment(1, "rejection interval");
+        e_comment(1, "[%g - %g]]", low, high);
+
+        for (y = 0; y < plane->ly; ++y) {
+            if (y < bb->median_reg[2] || y > bb->median_reg[3])
+                continue;
+            for (x = 0; x < plane->lx; ++x) {
+                if (x < bb->median_reg[0] || x > bb->median_reg[1])
+                    continue;
+                pixelvalue value = plane->data[x + y * plane->lx];
+                if ((double)value > low && (double)value < high) {
+                    if ((size_t)used >= (size_t)bb->median_surf)
+                        goto done;
+                    normalization_pixels[used++] = value;
+                }
+            }
+        }
+        if (used == 0) {
+            e_error("no valid pixel found in frame %02d: aborting", frame + 1);
+            goto done;
+        }
+
+        double median = (double)median_pixelvalue(normalization_pixels, used);
+        e_comment(1, "medval: %f", median);
+        if (normalization_medians != NULL)
+            normalization_medians[frame] = median;
+
+        /* Retain the legacy treatment of an individual near-zero median. */
+        if (fabs(median) < 1e-4) {
+            e_error("zero value for median: frame left unnormalized");
+            if (normalization_medians != NULL)
+                normalization_medians[frame] = NAN;
+            continue;
+        }
+
+        double *residuals = pixel2double_array(normalization_pixels, used);
+        if (residuals == NULL)
+            goto done;
+        for (i = 0; i < used; ++i)
+            residuals[i] -= median;
+        double rms = double_rms(residuals, used);
+        free(residuals);
+
+        for (i = 0; i < plane->lx * plane->ly; ++i)
+            plane->data[i] /= median;
+        median_sum += median;
+        variance_sum += rms * rms;
+        ++normalized;
+    }
+
+    float frame_median = median_sum / normalized;
+    float frame_variance = variance_sum / normalized;
+    float reference_median = slot == 0 ? frame_median : reference_medians[0];
+    e_comment(1, "frame_median: %f -- frame_variance: %f", frame_median, frame_variance);
+    e_comment(1, "stacking cube to single frame");
+    flat = cube_avg_median(cube);
+    if (flat == NULL) {
+        e_error("in final stacking: aborting");
+        goto done;
+    }
+
+    /* Match the legacy scaling to the reference detector's illumination. */
+    float scale = frame_median / reference_median;
+    image_cst_op_local(flat, scale, '*');
+    reference_medians[slot] = frame_median;
+    if (dome) {
+        bb->dome_stdev[slot] = sqrt(frame_variance);
+        bb->dome_nplanes[slot] = normalized;
+    } else {
+        bb->sky_stdev[slot] = sqrt(frame_variance);
+        bb->sky_nplanes[slot] = normalized;
+    }
+
+done:
+    if (normalization_pixels != NULL)
+        free(normalization_pixels);
+    if (valid != NULL)
+        free(valid);
+    cube_del(cube);
+    return flat;
+}
+
+image_t *mef_build_cal(mef_bb *bb, char *what)
+{
+    char *name_i;
+    int minframe;
+
+    if (bb == NULL || what == NULL)
+        return NULL;
+    if (strcmp(what, "dome") == 0) {
+        name_i = bb->name_dome;
+        minframe = bb->dome_minframe;
+    } else if (strcmp(what, "sky") == 0) {
+        name_i = bb->name_sky;
+        minframe = bb->sky_minframe;
+    } else if (strcmp(what, "bias") == 0) {
+        name_i = bb->name_bias;
+        minframe = bb->bias_minframe;
+    } else {
+        e_error("unknown calibration type [%s]", what);
+        return NULL;
+    }
+
+    e_comment(1, "loading input cube [%s]", what);
+    cube_t *i_cube = mef_cube_load_at(name_i, bb->xtnum, bb->paths);
+    if (i_cube == NULL) {
+        e_error("loading input data: [%s]", name_i);
+        return NULL;
+    }
+    if (i_cube->np < minframe) {
+        e_error("found only [%d] %s frames - need at least %d", i_cube->np, what, minframe);
+        cube_del(i_cube);
+        return NULL;
+    }
+
     e_comment(1, "applying overscan/prescan/trimming correction");
-    if (mef_cube_overscan_correction(i_cube,bb, what) != 0) {
-        cube_del(i_cube); return NULL;
+    if (mef_cube_overscan_correction(i_cube, bb, what) != 0) {
+        cube_del(i_cube);
+        return NULL;
     }
     e_comment(1, "Done.");
 
@@ -3051,9 +3185,9 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
         diagnostic.detector_id = bb->xtname != NULL ? bb->xtname :
             bb->ccd[bb->xtnum - 1].extname;
         diagnostic.input_names = bb->bias_frame_name;
-        stacked = mef_bias_stack_masked_diagnostic(i_cube, minframe, kappa1,
+        image_t *stacked = mef_bias_stack_masked_diagnostic(i_cube, minframe, bb->bias_kappa1,
             &statistics, NULL, NULL, bb->bias_median_even_handling, &diagnostic);
-        zIndex = bb->nxts == 1 ? 0 : bb->xtnum - 1;
+        int zIndex = bb->nxts == 1 ? 0 : bb->xtnum - 1;
         if (statistics.measured) {
             bb->bias_avg1[zIndex] = statistics.average;
             bb->bias_sig1[zIndex] = statistics.sigma;
@@ -3068,182 +3202,7 @@ image_t * mef_build_cal(mef_bb * bb, char * what)
         return stacked;
     }
 
-	/* Compute average value for each frame, keep those in interval */
-	all_means = malloc(i_cube->np*sizeof(double));
-	nval = 0 ;
-	for (i=0 ; i<i_cube->np ; i++) {
-		compute_status("computing averages", i, i_cube->np, 1);
-		all_means[i] = image_getmean(i_cube->plane[i]);
-		/*
-		   if (debug_active()>1) {
-		   printf("\n");
-		   printf("avg/thr: %g [%g - %g]\n", avg, lo_thr, hi_thr);
-		   }
-		   */
-	}
-
-
-	valid = malloc(i_cube->np * sizeof(int));
-	nval = 0 ;
-	e_comment(1, "frame rejection status:");
-	for (i=0 ; i<i_cube->np ; i++) {
-		if ((all_means[i]>lo_thr) && (all_means[i]<hi_thr)) {
-			strcpy(cmt, "[X]");
-			valid[i] = 1 ;
-			nval++ ;
-		} else {
-			strcpy(cmt, "[ ]");
-			valid[i] = 0 ;
-		}
-		e_comment(1, "%s %s frame %02d: %g", cmt, what, i+1, all_means[i]);
-	}
-	free(all_means);
-
-	if (nval<minframe) {
-		e_error("not enough frames to continue: %d", nval);
-		free(valid);
-		cube_del(i_cube);
-		return NULL ;
-	}
-
-	/* Reduce cube to valid frames only */
-	if (nval < i_cube->np) {
-		e_comment(1, "reducing cube to valid planes only");
-		cube_reject_planes(&i_cube, valid);
-	}
-	free(valid);
-
-	/* Apply prescan/overscan/trimming correction 
-
-	e_comment(1, "applying overscan/prescan/trimming correction");
-	mef_cube_overscan_correction(i_cube,bb, what);
-	e_comment(1, "Done.");
-
-    *************************************************/
-
-	/* CCD clip rejection */
-	e_comment(1, "CCD clip rejection");
-	e_comment(1,"gain = %f",((bb->ccd)+(bb->xtnum-1))->gain);
-	e_comment(1,"ron  = %f",((bb->ccd)+(bb->xtnum-1))->ron);
-
-	frame_median = 0.0;
-    frame_variance = 0.0;
-	frame_nplanes = 0;
-    if (bb->nxts == 1) {    /* if we work in only one extension */
-        zIndex = 0;
-    } else {                        /* we are working in all the extensions */
-        zIndex = bb->xtnum-1;
-    }
-	for (p=0 ; p<i_cube->np ; p++) {
-		compute_status("clip rejection on frame", p, i_cube->np, 1);
-		cur_p = i_cube->plane[p] ;
-
-		avg = image_getmean(cur_p);
-        zmedian = image_getmedian(cur_p);
-        zstdev = image_getstdev(cur_p);
-		sigma = sqrt(pow(((bb->ccd)+(bb->xtnum-1))->ron/((bb->ccd)+(bb->xtnum-1))->gain, 2.0) +
-				(avg / ((bb->ccd)+(bb->xtnum-1))->gain));
-
-        /* here we store the average and sigma values for QC */
-        bb->individual_frame_avg[p] = avg;
-        bb->individual_frame_median[p] = zmedian;
-        bb->individual_frame_sigma[p] = zstdev;
-        e_comment(1, "frame median: %f -- frame stdev: %f -- frame nplanes: %d", zmedian, zstdev, i_cube->np);
-        e_comment(1, "frame median: %f -- frame stdev: %f -- frame nplanes: %d", bb->individual_frame_median[p], bb->individual_frame_sigma[p], i_cube->np);
-
-		lo_thr = avg - bb->pixrej_lo * sigma ;
-		hi_thr = avg + bb->pixrej_hi * sigma ;
-		e_comment(1, "rejection interval");
-		e_comment(1, "[%g - %g]]", lo_thr, hi_thr);
-		/*
-		   if (debug_active()>1) {
-		   printf("avg= %g sigma= %g thr= [%g - %g]\n",
-		   avg, sigma, lo_thr, hi_thr);
-		   }
-		   */
-
-		/* Accumulate valid pixels in an array */
-		validpix = malloc(bb->median_surf * sizeof(pixelvalue));
-		nval = 0 ;
-		for (j=0 ; j<cur_p->ly ; j++) {
-			if (j>=bb->median_reg[2] && j<=bb->median_reg[3]) {
-				for (i=0 ; i<cur_p->lx ; i++) {
-					if (i>=bb->median_reg[0] && i<=bb->median_reg[1]) {
-						curpix = cur_p->data[i+j*cur_p->lx];
-						if (((double)curpix > lo_thr) &&
-								((double)curpix < hi_thr)) {
-							validpix[nval] = curpix ;
-							nval ++ ;
-						}
-					}
-				}
-			}
-		}
-		if (nval<1) {
-			e_error("no valid pixel found in frame %02d: aborting", p+1);
-			cube_del(i_cube);
-			free(validpix);
-			return NULL ;
-		}
-		/* Get the median from the list of valid pixels */
-		medval = (double) median_pixelvalue(validpix, nval);
-        e_comment(1, "medval: %f",  medval);
-        pixval_double = pixel2double_array(validpix, nval);
-
-        for (j=0 ; j<nval ; j++) {
-            pixval_double[j] -= medval;
-        }
-
-        stdev_val = double_rms(pixval_double, nval);
-        free(pixval_double); /* Last use of flat statistics scratch (#123). */
-		free(validpix);
-
-		if (fabs(medval)<1e-4) {
-			e_error("zero value for median: aborting");
-			/* cube_del(i_cube); */
-			/* return NULL ; */
-		} else {
-			/* Divide the frame by this value */
-			for (i=0 ; i<(cur_p->lx * cur_p->ly) ; i++) {
-				cur_p->data[i] /= medval ;
-			}
-			frame_median += medval ;
-            frame_variance += stdev_val*stdev_val;
-			frame_nplanes++ ;
-		}
-	}
-	frame_median = frame_median / frame_nplanes ;
-    frame_variance = frame_variance / frame_nplanes ;
-    e_comment(1, "frame_median: %f -- frame_variance: %f", frame_median, frame_variance);
-	if (bb->nxts == 1) {	/* if we work in only one extension */
-		zIndex = 0;
-	} else {			/* we are working in all the extensions */
-		zIndex = bb->xtnum-1;
-	}
-	if (!strcmp(what,"dome")) {
-		bb->dome_median[zIndex] = frame_median;
-        bb->dome_stdev[zIndex] = sqrt(frame_variance);
-		bb->dome_nplanes[zIndex] = frame_nplanes;
-		normFactor = bb->dome_median[zIndex]/bb->dome_median[0];
-	} else { /* Only sky remains: bias returned above and other modes were rejected. */
-		bb->sky_median[zIndex] = frame_median;
-        bb->sky_stdev[zIndex] = sqrt(frame_variance);
-		bb->sky_nplanes[zIndex] = frame_nplanes;
-		normFactor = bb->sky_median[zIndex]/bb->sky_median[0];
-	}
-
-
-	/* Stack frames to single frames using a median */
-	e_comment(1, "stacking cube to single frame");
-	flat = cube_avg_median(i_cube);
-	image_cst_op_local(flat,normFactor,'*');	/* we normalize to the median of first extension */
-	cube_del(i_cube);
-
-	if (flat==NULL) {
-		e_error("in final stacking: aborting");
-		return NULL ;
-	}
-	return flat ;
+    return mef_stack_flat(bb, what, i_cube, NULL, NULL);
 }
 
 image_t * mef_ff_combine(mef_bb * bb, image_t * dome, image_t * sky, image_t *bias, pixelmap *bp_map)

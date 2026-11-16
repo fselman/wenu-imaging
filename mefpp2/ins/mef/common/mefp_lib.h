@@ -406,6 +406,12 @@ qfits_header *mef_get_headers_for_hdu(char *, mef_bb *, image_t *, int);
 int	 	mef_save(mef_bb *bb, image_t *zImage, char *what);
 int	 	mef_hdrpix_dump(image_t *,char *,qfits_header *,int);
 image_t 	*mef_build_cal(mef_bb *, char *);
+/* Takes ownership of the corrected, trimmed cube even on failure.
+ * The optional master bias is borrowed and must match its active dimensions.
+ * Optional normalization medians have one slot per input plane in input order.
+ * A rejected or unnormalized exposure is marked with NaN.
+ */
+image_t *mef_stack_flat(mef_bb *, const char *, cube_t *, const image_t *, double *);
 image_t 	*mef_ff_combine(mef_bb *, image_t *, image_t *, image_t *,pixelmap *);
 image_t		*mef_image_filter_flat(image_t *,int kern_size,pixelmap *);
 pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias);
