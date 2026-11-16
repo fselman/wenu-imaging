@@ -36,6 +36,28 @@ the dome, build the bias and sky master, and then combine. Record each generated
 product as a dependency with its own FITS/ASDF pair and preserve supplied masters
 as read-only inputs. See the [dependency contract](../architecture.md#dependency-checking-later-development).
 
+## Native flat preparation
+
+Apply this sequence to each raw dome or sky exposure:
+
+1. Subtract the overscan and trim to the active detector area.
+2. If requested, subtract the matching overscan-corrected, trimmed master bias
+   in ADU.
+3. Reserved for future dark subtraction in ADU, before measuring the
+   normalization median. This could support CMOS detectors operated near room
+   temperature. The first implementation leaves this step inactive and exposes
+   no dark input or option.
+4. Measure the normalization median on the prepared exposure and divide by it.
+   Median-stack the normalized exposures using the detector reference scaling
+   described below.
+
+Record the per-exposure normalization medians, the final master median, and
+whether bias was applied. When applied, record the master-bias identity. The
+combiner uses dome and sky masters as prepared. If the requested policy requires
+bias-corrected flats, verify that status before accepting a supplied master.
+Use the raw list to rebuild a master whose correction status cannot be
+established.
+
 ## Legacy numerical baseline
 
 - **Dome and sky.** `mef_build_cal` in [mefp_lib.c](../../../mefpp2/ins/mef/common/mefp_lib.c)
@@ -54,7 +76,8 @@ as read-only inputs. See the [dependency contract](../architecture.md#dependency
   $B/m_D$ from the dome and $B/m_S$ from the sky before taking their ratio.
   The output is $D'\,\mathcal{S}(S'/D')$, with $\mathcal{S}$ the existing
   smoothing kernel and mask policy. Preserve the denominator handling, edge
-  behavior, and operation order. Use working buffers for the mutable inputs.
+  behavior, and operation order of the ratio, smoothing and multiplication.
+  Use working buffers for the mutable inputs.
 - **Normalization lineage.** The legacy list path stores the mean of the
   accepted per-frame normalization medians before scaling the stacked flat.
   The legacy FITS path recomputes a median from the loaded normalized detector
@@ -173,15 +196,17 @@ and `REPLAY_MFF_r_SDSS_1x1.fits` for OmegaCAM. Each matched its
 retained sky-list reference in detector order, image shapes and every physical
 pixel after FITS scaling, with zero nonfinite pixels in either product. File
 checksums differ. The logs contain neither loaded medians nor bias-subtraction
-messages. The table gives the built sky's header value. A paired replay with
-`--biassub` on both routes is needed to qualify the scaled-bias path.
+messages. The table gives the built sky's header value. A paired replay with `--biassub` would characterize the legacy scaled-bias
+path separately from native bias-before-normalization.
 
 ### Native checks
 
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS
-geometry and scaling, pixels, and native ASDF lineage. Start with exact
-numerical comparisons against matching legacy inputs. Investigate differences
+geometry and scaling, pixels, and native ASDF lineage. With bias subtraction off, start with exact numerical comparisons against
+matching legacy inputs. With bias subtraction on, first check the arithmetic
+independently using flats with different illumination levels and a spatially
+varying master bias, then run the real datasets. Investigate differences
 before proposing any tolerance. For the planner, exercise both product/list
 directions, two lists sharing one bias request, missing or incompatible sources,
 and approval or refusal. Compare results built from lists with the same
