@@ -239,9 +239,13 @@ The recipe resolves the detector HDU independently in every exposure.
 Its FITS/ASDF product records the admitted files, source HDUs, exposure
 participation and normalization medians. A synthetic CLI check exercised
 scan correction, trimming, reordered HDUs, frame rejection, physical pixels
-and validated QC records through a capture writer. The independent native
-ASDF check and real-data replay are pending. Full mosaics, sky list
-construction and the bias-enabled dome route remain pending.
+and validated QC records through a capture writer. On the Intel Mac using
+the C17 Release build at `af5fcdc`, `native_domeff` passed in 2.69 s
+with the native ASDF writer and independent reader. The real-data replay
+from the five WFI Trapezium exposures in dome partition `100123319` wrote
+FITS, ASDF and log products. All 8,374,268 physical pixels of
+`WIN1.CHIP1.OUT1` matched the retained legacy master exactly. Full mosaics,
+sky list construction and the bias-enabled dome route remain pending.
 
 ### Native checks
 
