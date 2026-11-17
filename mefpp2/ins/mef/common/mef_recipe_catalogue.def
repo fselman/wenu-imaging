@@ -7,7 +7,7 @@ MEF_RECIPE("cal", "linearity", mef_bpm_linearity_command, 1, "Linearity measurem
 MEF_RECIPE("cal", "bpm", 0, 0, "Standalone bad-pixel calibration")
 MEF_RECIPE("cal", "dark", 0, 0, "Dark-current calibration")
 MEF_RECIPE("cal", "fringes", 0, 0, "Fringe calibration")
-MEF_RECIPE("cal", "domeff", 0, 0, "Dome flat field")
+MEF_RECIPE("cal", "domeff", mef_domeff_command, 1, "Single-detector dome flat qualification")
 MEF_RECIPE("cal", "skyff", 0, 0, "Sky flat field")
 MEF_RECIPE("cal", "mff", mef_mff_command, 1, "Combine supplied dome and sky masters")
 MEF_RECIPE("sci", "pp", 0, 0, "Science-frame preprocessing")

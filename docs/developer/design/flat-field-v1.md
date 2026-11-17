@@ -221,8 +221,27 @@ explicit smoothing radius and reference detector. Configuration and each
 input's SHA-256 and source HDU bindings travel with the product. The input files
 are used as prepared. There is no bias operation at this entry point.
 
-This initial route publishes the combined product. The list-driven component
-construction and publication routes described above are pending.
+This route publishes the combined product from supplied masters.
+
+### Single-detector dome qualification
+
+`cal domeff` now accepts the classified dome exposure list, project TOML,
+detector profile and explicit stack settings. The
+[WFI example](../../../config/recipes/wfi-domeff.example.toml) selects
+`WIN1.CHIP1.OUT1` as the normalization reference and sole output.
+WFI screen exposures carry the original `FLAT,SCREEN` classification.
+The legacy dome builder applied scan correction and trimming before
+normalization and did not subtract the supplied master bias at that stage.
+The first native comparison uses the same bias-off policy and compares with
+the corresponding detector in the retained dome product.
+
+The recipe resolves the detector HDU independently in every exposure.
+Its FITS/ASDF product records the admitted files, source HDUs, exposure
+participation and normalization medians. A synthetic CLI check exercised
+scan correction, trimming, reordered HDUs, frame rejection, physical pixels
+and validated QC records through a capture writer. The independent native
+ASDF check and real-data replay are pending. Full mosaics, sky list
+construction and the bias-enabled dome route remain pending.
 
 ### Native checks
 

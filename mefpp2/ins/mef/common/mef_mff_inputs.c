@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
 #include "mef_mff.h"
+#include "mef_flat_product.h"
 #include "mef_detector_catalogue.h"
 #include "mef_project.h"
 #include "mef_bpm_linearity.h" /* Shared streaming file identity. */
@@ -43,7 +44,7 @@ static int only_keys(toml_datum_t table, const char *const *keys, size_t count)
     return 1;
 }
 
-static char *resolve(const char *directory, const char *name)
+char *mef_flat_resolve(const char *directory, const char *name)
 {
     char path[MEF_PRODUCT_PATH_SIZE];
     if (name == NULL || snprintf(path, sizeof(path), "%s%s%s",
@@ -53,16 +54,18 @@ static char *resolve(const char *directory, const char *name)
     return realpath(path, NULL);
 }
 
-static char *relative_to_file(const char *file, const char *name)
+char *mef_flat_relative_to_file(const char *file, const char *name)
 {
     char directory[MEF_PRODUCT_PATH_SIZE];
     size_t length = (size_t)(strrchr(file, '/') - file);
+    if (length >= sizeof(directory))
+        return NULL;
     memcpy(directory, file, length);
     directory[length] = '\0';
-    return resolve(directory, name);
+    return mef_flat_resolve(directory, name);
 }
 
-static int below(const char *root, const char *path)
+int mef_flat_below(const char *root, const char *path)
 {
     size_t length = strlen(root);
     return !strncmp(path, root, length) && path[length] == '/';
@@ -74,8 +77,9 @@ static int directory(const char *path)
     return path && stat(path, &st) == 0 && S_ISDIR(st.st_mode);
 }
 
-static int project_paths(mef_mff *mff, const char *project, const char *run_name,
-                         char **calibration)
+int mef_flat_project_paths(mef_recipe_run *run, const mef_toml_file *recipe,
+    const char *project, const char *run_name, mef_toml_file *evidence,
+    char **output, char **calibration, char **raw_root)
 {
     toml_result_t document = {0};
     char *origin = NULL, *reduced = NULL, *orchestration = NULL, *raw = NULL;
@@ -84,23 +88,27 @@ static int project_paths(mef_mff *mff, const char *project, const char *run_name
     if (!mef_project_read(project, &document, &origin, NULL, NULL))
         goto done;
     toml_datum_t roots = toml_get(toml_get(document.toptab, "project"), "roots");
-    reduced = relative_to_file(origin, string(roots, "output"));
-    orchestration = relative_to_file(project, ".");
-    raw = relative_to_file(origin, string(roots, "raw"));
-    *calibration = relative_to_file(origin, string(roots, "calibration"));
+    reduced = mef_flat_relative_to_file(origin, string(roots, "output"));
+    orchestration = mef_flat_relative_to_file(project, ".");
+    raw = mef_flat_relative_to_file(origin, string(roots, "raw"));
+    *calibration = mef_flat_relative_to_file(origin, string(roots, "calibration"));
     if (!directory(reduced) || !directory(raw) || !directory(orchestration) ||
-        !directory(*calibration) || !below(reduced, *calibration) ||
-        below(raw, reduced) || below(reduced, raw) || !strcmp(raw, reduced) ||
-        below(raw, orchestration) || below(orchestration, raw) || !strcmp(raw, orchestration) ||
-        below(reduced, orchestration) || below(orchestration, reduced) || !strcmp(reduced, orchestration) ||
-        strcmp(orchestration, mff->run->invocation_directory) ||
-        !below(orchestration, mff->recipe.path) || run_name[0] == '/')
+        !directory(*calibration) || !mef_flat_below(reduced, *calibration) ||
+        mef_flat_below(raw, reduced) || mef_flat_below(reduced, raw) || !strcmp(raw, reduced) ||
+        mef_flat_below(raw, orchestration) || mef_flat_below(orchestration, raw) || !strcmp(raw, orchestration) ||
+        mef_flat_below(reduced, orchestration) || mef_flat_below(orchestration, reduced) || !strcmp(reduced, orchestration) ||
+        strcmp(orchestration, run->invocation_directory) ||
+        !mef_flat_below(orchestration, recipe->path) || run_name[0] == '/')
         goto done;
-    mff->output = resolve(reduced, run_name);
-    if (!directory(mff->output) || !below(*calibration, mff->output))
+    *output = mef_flat_resolve(reduced, run_name);
+    if (!directory(*output) || !mef_flat_below(*calibration, *output))
         goto done;
-    mff->project_evidence = mef_toml_file_read(origin, 1024 * 1024);
-    okay = mff->project_evidence.parsed.ok;
+    *evidence = mef_toml_file_read(origin, 1024 * 1024);
+    okay = evidence->parsed.ok;
+    if (okay && raw_root) {
+        *raw_root = raw;
+        raw = NULL;
+    }
 done:
     toml_free(document);
     free(origin);
@@ -155,8 +163,8 @@ static int bind_components(mef_mff *mff, const char *root, toml_datum_t inputs,
         if (role == MFF_BPM && toml_get(inputs, keys[role]).type == TOML_UNKNOWN)
             continue;
         struct stat identity;
-        component->path = resolve(root, name);
-        if (!component->path || !below(root, component->path) ||
+        component->path = mef_flat_resolve(root, name);
+        if (!component->path || !mef_flat_below(root, component->path) ||
             stat(component->path, &identity) || !S_ISREG(identity.st_mode) ||
             !mef_bpm_linearity_hash(component->path, component->sha256) ||
             !primary_matches(mff, role, component->path) ||
@@ -257,9 +265,10 @@ int mef_mff_admit(mef_mff *mff, const char *config)
         goto done;
     }
     const char *run = string(root, "run");
-    project = relative_to_file(recipe_path, string(root, "project"));
-    profile = relative_to_file(recipe_path, string(root, "detector_toml"));
-    if (!run || !project || !profile || !project_paths(mff, project, run, &calibration))
+    project = mef_flat_relative_to_file(recipe_path, string(root, "project"));
+    profile = mef_flat_relative_to_file(recipe_path, string(root, "detector_toml"));
+    if (!run || !project || !profile || !mef_flat_project_paths(mff->run, &mff->recipe, project, run,
+            &mff->project_evidence, &mff->output, &calibration, NULL))
         goto done;
     mff->profile = mef_toml_file_read(profile, 1024 * 1024);
     if (!mff->profile.parsed.ok || !mef_detector_catalogue_valid(mff->profile.parsed.toptab))

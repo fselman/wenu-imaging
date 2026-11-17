@@ -1,5 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #include "mef_mff.h"
+#include "mef_flat_product.h"
 #include "mefp_lib.h"
 #include "mef_bpm_linearity.h" /* Shared streaming file identity. */
 #include <math.h>
@@ -13,26 +14,28 @@ static void number(qfits_header *header, char *key, int integer)
     qfits_header_append(header, key, value, NULL, NULL);
 }
 
-static int stage_detector(mef_mff *mff, mef_mff_detector *detector, image_t *image, int sky_hdu)
+int mef_flat_stage_detector(const char *destination, const char *category,
+    const char *instrument, const char *filter, const char *id, double median,
+    const char *source_path, int source_hdu, image_t *image)
 {
     static const char *const geometry[] = {"DATASEC", "DETSEC", "CCDSEC", "CRPIX1",
         "CRPIX2", "CRVAL1", "CRVAL2", "CTYPE1", "CTYPE2", "CUNIT1", "CUNIT2",
         "CD1_1", "CD1_2", "CD2_1", "CD2_2", "PC1_1", "PC1_2", "PC2_1", "PC2_2",
         "CDELT1", "CDELT2", "RADESYS", "EQUINOX", "LONPOLE", "LATPOLE"};
-    qfits_header *source = qfits_header_readext(mff->components[MFF_SKY].path, sky_hdu);
+    qfits_header *source = source_path ? qfits_header_readext((char *)source_path, source_hdu) : NULL;
     qfits_header *primary = qfits_header_new(), *extension = qfits_header_new();
     char value[80];
     int okay = 0;
-    if (!primary || !extension || !source)
+    if (!primary || !extension || (source_path && !source))
         goto done;
 
     qfits_header_append(primary, "SIMPLE", "T", NULL, NULL);
     qfits_header_append(primary, "BITPIX", "8", NULL, NULL);
     qfits_header_append(primary, "NAXIS", "0", NULL, NULL);
     qfits_header_append(primary, "EXTEND", "T", NULL, NULL);
-    qfits_header_append(primary, "PRODCATG", "'CALIB.MASTER_FLAT'", NULL, NULL);
-    qfits_header_append(primary, "INSTRUME", (char *)mff->instrument, NULL, NULL);
-    qfits_header_append(primary, "FILTER", (char *)mff->filter, NULL, NULL);
+    qfits_header_append(primary, "PRODCATG", (char *)category, NULL, NULL);
+    qfits_header_append(primary, "INSTRUME", (char *)instrument, NULL, NULL);
+    qfits_header_append(primary, "FILTER", (char *)filter, NULL, NULL);
     qfits_header_append(primary, "END", NULL, NULL, NULL);
 
     qfits_header_append(extension, "XTENSION", "'IMAGE   '", NULL, NULL);
@@ -42,23 +45,23 @@ static int stage_detector(mef_mff *mff, mef_mff_detector *detector, image_t *ima
     number(extension, "NAXIS2", image->ly);
     number(extension, "PCOUNT", 0);
     number(extension, "GCOUNT", 1);
-    snprintf(value, sizeof(value), "'%s'", detector->id);
+    snprintf(value, sizeof(value), "'%s'", id);
     qfits_header_append(extension, "EXTNAME", value, NULL, NULL);
-    const char *extver = qfits_header_getstr(source, "EXTVER");
+    const char *extver = source ? qfits_header_getstr(source, "EXTVER") : NULL;
     if (extver)
         qfits_header_append(extension, "EXTVER", (char *)extver, NULL, NULL);
     qfits_header_append(extension, "BUNIT", "'1'", NULL, NULL);
-    snprintf(value, sizeof(value), "%.17g", detector->median);
+    snprintf(value, sizeof(value), "%.17g", median);
     qfits_header_append(extension, "HIERARCH ESO MPP QC FRMEDIAN", value, NULL, NULL);
-    for (size_t i = 0; i < sizeof(geometry) / sizeof(*geometry); ++i) {
+    for (size_t i = 0; source && i < sizeof(geometry) / sizeof(*geometry); ++i) {
         char *card = qfits_header_getstr(source, geometry[i]);
         if (card)
             qfits_header_append(extension, (char *)geometry[i], card, NULL, NULL);
     }
     qfits_header_append(extension, "END", NULL, NULL, NULL);
 
-    okay = mef_hdrpix_dump(NULL, detector->temporary_path, primary, BPP_DEFAULT) == 0 &&
-           mef_hdrpix_dump(image, detector->temporary_path, extension, BPP_DEFAULT) == 0;
+    okay = mef_hdrpix_dump(NULL, (char *)destination, primary, BPP_DEFAULT) == 0 &&
+           mef_hdrpix_dump(image, (char *)destination, extension, BPP_DEFAULT) == 0;
 done:
     qfits_header_destroy(source);
     qfits_header_destroy(primary);
@@ -147,7 +150,9 @@ int mef_mff_process(mef_mff *mff, size_t index)
     detector->median = median;
     const mef_bound_detector *binding = mef_layout_find(mff->components[MFF_SKY].mapping,
         detector->id);
-    if (!stage_detector(mff, detector, combined, binding->image.hdu_index))
+    if (!mef_flat_stage_detector(detector->temporary_path, "'CALIB.MASTER_FLAT'",
+            mff->instrument, mff->filter, detector->id, detector->median,
+            mff->components[MFF_SKY].path, binding->image.hdu_index, combined))
         goto done;
     record_detector(mff, index, combined);
     mff->run->message[0] = '\0';

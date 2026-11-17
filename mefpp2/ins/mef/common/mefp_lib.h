@@ -411,6 +411,8 @@ image_t 	*mef_build_cal(mef_bb *, char *);
  * Optional normalization medians have one slot per input plane in input order.
  * A rejected or unnormalized exposure is marked with NaN.
  */
+image_t *mef_stack_flat_diagnostic(mef_bb *, const char *, cube_t *,
+    const image_t *, double *, int *);
 image_t *mef_stack_flat(mef_bb *, const char *, cube_t *, const image_t *, double *);
 /* Combine already prepared component planes. The optional BPM is 1=good.
  * Neither component nor mask is changed. The caller owns the returned image.

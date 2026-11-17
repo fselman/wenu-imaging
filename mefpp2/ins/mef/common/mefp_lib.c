@@ -2966,8 +2966,8 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 
 
 /* The active-area cube belongs to this function. The master bias is borrowed. */
-image_t *mef_stack_flat(mef_bb *bb, const char *kind, cube_t *cube,
-                                   const image_t *master_bias, double *normalization_medians)
+image_t *mef_stack_flat_diagnostic(mef_bb *bb, const char *kind, cube_t *cube,
+    const image_t *master_bias, double *normalization_medians, int *participation)
 {
     int frame, plane_index, x, y, i;
     size_t pixel;
@@ -3024,6 +3024,8 @@ image_t *mef_stack_flat(mef_bb *bb, const char *kind, cube_t *cube,
         double mean = image_getmean(plane);
         valid[frame] = mean > frame_low && mean < frame_high;
         accepted += valid[frame];
+        if (participation != NULL)
+            participation[frame] = valid[frame];
         if (normalization_medians != NULL)
             normalization_medians[frame] = NAN;
         e_comment(1, "%s %s frame %02d: %g",
@@ -3136,6 +3138,12 @@ done:
         free(valid);
     cube_del(cube);
     return flat;
+}
+
+image_t *mef_stack_flat(mef_bb *bb, const char *kind, cube_t *cube,
+    const image_t *master_bias, double *normalization_medians)
+{
+    return mef_stack_flat_diagnostic(bb, kind, cube, master_bias, normalization_medians, NULL);
 }
 
 image_t *mef_build_cal(mef_bb *bb, char *what)

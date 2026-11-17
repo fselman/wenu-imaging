@@ -92,6 +92,11 @@ void mef_recipe_operation_help(FILE *out, const char *category, const char *oper
               "Set [mff] filter, smoothing radius and reference_detector.\n"
               "Outputs: combined master flat MEF FITS, matching ASDF and log.\n",
             out);
+    } else if (!strcmp(operation, "domeff")) {
+        fputs("Inputs: project and detector TOMLs, and an absolute classified exposure list.\n"
+              "Set [flat] detector, filter, filter_keyword, scan rejection, frame admission,\n"
+              "and normalization settings. Select one reference detector.\n"
+              "Outputs: dome flat MEF FITS, matching ASDF and log.\n", out);
     } else if (!strcmp(operation, "bias")) {
         fputs("Inputs: recipe, project and detector TOMLs, classified processing list and reduced dependencies.\n"
               "  --input ABS_LIST     Processing list: absolute FITS path and DPR.TYPE (BIAS only)\n"

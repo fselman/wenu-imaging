@@ -454,6 +454,8 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       get_target_property(bpm_linearity_sources mefpp_bpm_linearity_recipe SOURCES)
       add_executable(mefpp_recipe ins/mef/recipes/mefpp_recipe.c ins/mef/recipes/mefpp_project_init.c
         ins/mef/recipes/mefpp_mff.c ins/mef/common/mef_mff_inputs.c
+        ins/mef/recipes/mefpp_domeff.c ins/mef/common/mef_flat_stack_inputs.c
+        ins/mef/common/mef_flat_stack_products.c
         ins/mef/common/mef_mff_products.c ins/mef/common/mef_recipe_help.c
         ${bias_recipe_sources} ${bpm_linearity_sources})
       target_include_directories(mefpp_recipe PRIVATE ../third_party/tomlc17)
@@ -909,6 +911,10 @@ if(BUILD_TESTING)
           COMMAND "${MEFPP_QC_PYTHON}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/mff_master_contract.py"
             --command "$<TARGET_FILE:mefpp_recipe>")
         set_tests_properties(native_mff_masters PROPERTIES TIMEOUT 120 LABELS "native;mff;asdf;cli")
+        add_test(NAME native_domeff
+          COMMAND "${MEFPP_QC_PYTHON}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/domeff_contract.py"
+            --command "$<TARGET_FILE:mefpp_recipe>")
+        set_tests_properties(native_domeff PROPERTIES TIMEOUT 120 LABELS "native;domeff;asdf;cli")
       endif()
       if(MEFPP_BUILD_BIAS_ADAPTER)
         add_test(NAME native_bpm_completion
