@@ -241,7 +241,24 @@ On the Intel Mac, `native_mff_masters` passed in 1.29 s using the C17 Release
 binary from `a9ab280` and the independent reader check from `3fcda0e`. The
 test checked exact FITS pixels, input preservation, ASDF product and input
 hashes, calibration roles, and detector-to-source HDU bindings.
-Real-data WFI and OmegaCAM comparisons remain pending.
+### Native two-master results on the Intel Mac
+
+On 2026-11-17, the C17 Release `mefpp_recipe` build from `a9ab280`
+combined the retained dome and sky masters for the two cases below. The
+comparisons used the pinned two-master legacy replays, matched detector
+extensions by identity, and compared physical pixel values after FITS scaling.
+
+| Partition | Detectors | Exact physical pixels | ASDF |
+| --- | ---: | ---: | --- |
+| WFI Trapezium `100123337` | 8 | 66,994,144 | Verified |
+| OmegaCAM CP Pup `200253584` | 32 | 267,584,128 | Verified |
+
+For both cases the independent checks verified the recipe snapshot, output
+FITS SHA-256, and the dome, sky and BPM identities and per-detector source
+HDU bindings. Both runs used BPM copies with structural FITS header repairs
+and verified preservation of the stored mask payloads. The native run for
+WFI's late sky partition `100123366` and qualification of list-driven
+component construction are outside these two results.
 
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS
