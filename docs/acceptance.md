@@ -45,6 +45,14 @@ qualification matrix is not the default acceptance procedure.
 
 ## Current coverage
 
+The [Chapman3 OmegaCAM input fixture](../tests/acceptance/end-to-end/chapman3-omegacam.toml)
+preserves 338 ordered saved observation lists (1,932 raw archive filenames) and
+10 downstream SCAMP catalogue lists. Resolve observation entries against the
+selected raw FITS root and list paths against the reduced root. Catalogue entries
+resolve against the directory of their list. All recorded observation IDs were
+present in the Chapman3 audit. This input fixture leaves full-chain replay and
+output comparison pending.
+
 The native bias recipe has passed the selected Mac synthetic FITS/ASDF gate and
 has a read-only real-product comparator:
 [`tools/compare-bias-products.py`](../tools/compare-bias-products.py). Earlier actual
