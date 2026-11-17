@@ -244,8 +244,12 @@ the C17 Release build at `af5fcdc`, `native_domeff` passed in 2.69 s
 with the native ASDF writer and independent reader. The real-data replay
 from the five WFI Trapezium exposures in dome partition `100123319` wrote
 FITS, ASDF and log products. All 8,374,268 physical pixels of
-`WIN1.CHIP1.OUT1` matched the retained legacy master exactly. Full mosaics,
-sky list construction and the bias-enabled dome route remain pending.
+`WIN1.CHIP1.OUT1` matched the retained legacy master exactly. A second
+replay with the same build used the five OmegaCAM CP Pup `r_SDSS` dome
+exposures in partition `574184` and wrote FITS, ASDF and log products.
+All 8,362,004 physical pixels of `ESO_CCD_#65` matched the retained legacy
+master exactly. Full mosaics, sky list construction and the bias-enabled
+dome route remain pending.
 
 ### Native checks
 
