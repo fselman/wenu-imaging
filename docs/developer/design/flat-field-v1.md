@@ -209,6 +209,21 @@ checksums differ. The logs contain neither loaded medians nor bias-subtraction
 messages. The table gives the built sky's header value. A paired replay with `--biassub` would characterize the legacy scaled-bias
 path separately from native bias-before-normalization.
 
+
+### Supplied-master command
+
+`mefpp_recipe cal mff --config RECIPE.toml` combines two prepared normalized
+master MEFs, with an optional active-area binary BPM. See the
+[example configuration](../../../config/recipes/mff.example.toml). The recipe
+binds enabled detector IDs independently in each master, checks the declared
+instrument, filter, category, and compatible detector geometry, and requires an
+explicit smoothing radius and reference detector. Configuration and each
+input's SHA-256 and source HDU bindings travel with the product. The input files
+are used as prepared. There is no bias operation at this entry point.
+
+This initial route publishes the combined product. The list-driven component
+construction and publication routes described above are pending.
+
 ### Native checks
 
 The `native_flat_stack` analytical test passed on the Intel Mac in a C17 Release
@@ -219,7 +234,10 @@ The expanded `native_flat_stack` test also passed on the Intel Mac (C17 Release,
 smoothing with and without a bad-pixel mask and bytewise preservation of the
 original dome and unsmoothed sky detector planes.
 
-Full CLI and FITS/ASDF validation with WFI and OmegaCAM remains pending.
+A Linux synthetic CLI run verified independently ordered component HDUs, exact
+combined FITS pixels, unchanged master files, and rejected a filter mismatch
+before output. A capture harness validated the ASDF writer's input records.
+The native libasdf round trip and the WFI/OmegaCAM comparisons are pending.
 
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS

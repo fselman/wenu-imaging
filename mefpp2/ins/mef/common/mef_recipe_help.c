@@ -79,23 +79,20 @@ void mef_recipe_operation_help(FILE *out, const char *category, const char *oper
             if (!strcmp(category, catalogue[i].category) && !strcmp(operation, catalogue[i].name) &&
                 !catalogue[i].ready) {
                 fprintf(out, "Status: pending standalone recipe. %s.\n", catalogue[i].purpose);
-                if (!strcmp(category, "cal") && !strcmp(operation, "mff")) {
-                    fputs("Prerequisites: both dome and sky components; each explicitly selects\n"
-                          "a saved flat product or a nonempty raw-flat list. Validate all\n"
-                          "Individual recipes are developed first. A later dependency checker\n"
-                          "will announce all missing-product reductions and request permission.\n"
-                          "Execution is not implemented; final options/defaults remain pending.\n",
-                        out);
-                } else {
-                    fputs("Inputs, defaults and outputs are not yet defined for this public "
-                          "command.\n",
-                        out);
-                }
+                fputs("Inputs, defaults and outputs are not yet defined for this public "
+                      "command.\n", out);
                 return;
             }
         }
     }
-    if (!strcmp(operation, "bias")) {
+    if (!strcmp(operation, "mff")) {
+        fputs("Inputs: project and detector TOMLs, and supplied dome and sky master MEFs.\n"
+              "Set [inputs] dome and sky under the project calibration root.\n"
+              "Optional: supply a binary bpm and bpm_good_value (0 or 1).\n"
+              "Set [mff] filter, smoothing radius and reference_detector.\n"
+              "Outputs: combined master flat MEF FITS, matching ASDF and log.\n",
+            out);
+    } else if (!strcmp(operation, "bias")) {
         fputs("Inputs: recipe, project and detector TOMLs, classified processing list and reduced dependencies.\n"
               "  --input ABS_LIST     Processing list: absolute FITS path and DPR.TYPE (BIAS only)\n"
               "  Recipe inputs.list takes an absolute path; run selects the reduced destination.\n"

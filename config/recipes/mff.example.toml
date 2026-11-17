@@ -1,0 +1,19 @@
+# Combine existing, normalized detector masters. Run from project orchestration.
+mff_recipe_schema_version = 1
+project = "project.toml"
+detector_toml = "ocam-1x1.toml"
+# Existing output subdirectory of the project calibration root.
+run = "cal/mff"
+
+[inputs]
+# Paths relative to the project calibration root, or absolute inside that root.
+dome = "dome/MASTER_DOME.fits"
+sky = "sky/MASTER_SKY.fits"
+# Optional binary active-area mask and its good-pixel value.
+# bpm = "bpm/BPM.fits"
+# bpm_good_value = 1
+
+[mff]
+filter = "r_SDSS"
+radius = 1 # Illustrative only. Use the selected legacy or validated radius.
+reference_detector = "ESO_CCD_#65"

@@ -453,7 +453,9 @@ if(MEFPP_BUILD_CONFIG_PROBES)
       get_target_property(bias_recipe_sources mefpp_bias_recipe SOURCES)
       get_target_property(bpm_linearity_sources mefpp_bpm_linearity_recipe SOURCES)
       add_executable(mefpp_recipe ins/mef/recipes/mefpp_recipe.c ins/mef/recipes/mefpp_project_init.c
-        ins/mef/common/mef_recipe_help.c ${bias_recipe_sources} ${bpm_linearity_sources})
+        ins/mef/recipes/mefpp_mff.c ins/mef/common/mef_mff_inputs.c
+        ins/mef/common/mef_mff_products.c ins/mef/common/mef_recipe_help.c
+        ${bias_recipe_sources} ${bpm_linearity_sources})
       target_include_directories(mefpp_recipe PRIVATE ../third_party/tomlc17)
       target_link_libraries(mefpp_recipe PRIVATE mefpp_bias_product_qc
         mefpp_recipe_run mefpp_bpm_product_qc mefpp_product_qc mefpp_config_toml
@@ -902,6 +904,12 @@ if(BUILD_TESTING)
     # These tests are opt-in; normal native builds need no ASDF installation.
     set(MEFPP_QC_PYTHON "" CACHE FILEPATH "Qualified ASDF QC interpreter (enables handoff tests)")
     if(MEFPP_QC_PYTHON)
+      if(TARGET mefpp_recipe)
+        add_test(NAME native_mff_masters
+          COMMAND "${MEFPP_QC_PYTHON}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/mff_master_contract.py"
+            --command "$<TARGET_FILE:mefpp_recipe>")
+        set_tests_properties(native_mff_masters PROPERTIES TIMEOUT 120 LABELS "native;mff;asdf;cli")
+      endif()
       if(MEFPP_BUILD_BIAS_ADAPTER)
         add_test(NAME native_bpm_completion
           COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/tests/bpm_completion_contract.py"
