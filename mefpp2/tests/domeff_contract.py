@@ -147,7 +147,7 @@ normalization_region = [1, 5, 1, 3]
     print(f"PASS: WFI {kind} admission, scan/trim, exact normalization, FITS and QC bindings")
 
 
-def check_mosaic(args, controls, reduced, config, recipe, hashes, asdf):
+def check_mosaic(args, controls, reduced, config, recipe, hashes, asdf, operation):
     output = reduced / "cal" / f"{operation}-mosaic"
     output.mkdir()
     # A mosaic must identify the sky or dome product independently of its filename.
