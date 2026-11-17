@@ -94,7 +94,7 @@ reference_detector = "CCD-B"
     else:
         import asdf
         with asdf.open(product.with_suffix('.asdf')) as af:
-            tree = af.tree
+            tree = af.tree['qc']
             assert tree['provenance']['operation'] == 'cal.mff'
             assert tree['file']['sha256'] == digest
             assert tree['provenance']['configuration']['format'] == 'mff_recipe_toml_v1'
