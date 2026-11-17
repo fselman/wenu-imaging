@@ -58,6 +58,16 @@ bias-corrected flats, verify that status before accepting a supplied master.
 Use the raw list to rebuild a master whose correction status cannot be
 established.
 
+### Component publication and combination
+
+For each detector, retain the dome and sky master planes in memory until the
+combined plane is complete. Stage each newly built component for publication
+from its original plane. Publish the unsmoothed sky master as its own FITS/ASDF
+product. Give the combiner a working copy of the sky plane for the in-place
+division by the dome, then smooth the sky-to-dome ratio and multiply by the
+dome. Use the resident planes for combination without rereading staged
+products.
+
 ## Legacy numerical baseline
 
 - **Dome and sky.** `mef_build_cal` in [mefp_lib.c](../../../mefpp2/ins/mef/common/mefp_lib.c)
