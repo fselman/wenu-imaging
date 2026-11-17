@@ -337,6 +337,30 @@ and verified preservation of the stored mask payloads. The native run for
 WFI's late sky partition `100123366` and qualification of list-driven
 component construction are outside these two results.
 
+### Bias-off qualification from raw lists to combined flats
+
+On 2026-11-17, the Intel Mac C17 Release build at `983ffb6` ran
+`cal mff` with the native mosaic products from `cal domeff` and
+`cal skyff` above, plus the prepared instrument BPM. Both runs used
+smoothing radius 7 and BPM good value 1.
+
+| Instrument | Dome partition | Sky partition | Detectors | Physical pixels compared | Differences |
+| --- | --- | --- | ---: | ---: | ---: |
+| WFI Trapezium | `100123319` | `100123337` | 8 | 66,994,144 | 0 |
+| OmegaCAM CP Pup | `574184` | `200253584` | 32 | 267,584,128 | 0 |
+
+Astropy `fitsdiff` 6.1.7 reported zero image-data differences against the
+pinned two-master legacy replays at zero absolute and relative tolerance.
+FITS header-card counts differed. The OmegaCAM legacy replay also emitted
+two telemetry-card format warnings. For each native ASDF, an independent
+reader verified the output FITS SHA-256, recipe snapshot and output HDU map,
+plus the paths, SHA-256 values and detector-to-source-HDU bindings for the
+native dome master, native sky master and BPM.
+
+The qualification used three standalone commands. Automatic construction
+of missing products from lists and the bias-enabled recipe path still
+require qualification.
+
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS
 geometry and scaling, pixels, and native ASDF lineage. With bias subtraction off, start with exact numerical comparisons against
