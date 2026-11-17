@@ -237,7 +237,11 @@ original dome and unsmoothed sky detector planes.
 A Linux synthetic CLI run verified independently ordered component HDUs, exact
 combined FITS pixels, unchanged master files, and rejected a filter mismatch
 before output. A capture harness validated the ASDF writer's input records.
-The native libasdf round trip and the WFI/OmegaCAM comparisons are pending.
+On the Intel Mac, `native_mff_masters` passed in 1.29 s using the C17 Release
+binary from `a9ab280` and the independent reader check from `3fcda0e`. The
+test checked exact FITS pixels, input preservation, ASDF product and input
+hashes, calibration roles, and detector-to-source HDU bindings.
+Real-data WFI and OmegaCAM comparisons remain pending.
 
 Compare dome, sky, and combined products separately. Check accepted frame order
 and counts, scan and normalization records, detector/reference mappings, FITS
