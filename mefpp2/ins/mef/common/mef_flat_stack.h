@@ -30,6 +30,7 @@ typedef struct {
 typedef struct {
     mef_recipe_run *run;
     mef_error *error;
+    int sky;
     mef_toml_file recipe, project, detector;
     char list_sha256[65];
     char *output;

@@ -99,18 +99,19 @@ static int detector_settings(toml_datum_t root, const mef_detector_definition *e
         channel->ccd.trimreg[2] < channel->ccd.trimreg[3];
 }
 
-static int stack_settings(mef_flat_detector *channel, toml_datum_t settings)
+static int stack_settings(mef_flat_detector *channel, toml_datum_t settings, int sky)
 {
     mef_bb *stack = &channel->stack;
     int width = channel->ccd.trimreg[1] - channel->ccd.trimreg[0] + 1;
     int height = channel->ccd.trimreg[3] - channel->ccd.trimreg[2] + 1;
     toml_datum_t pre = toml_get(settings, "use_prescan");
     toml_datum_t over = toml_get(settings, "use_overscan");
+    int minimum_frames;
     double low, high, clip_low, clip_high;
     if (pre.type != TOML_BOOLEAN || over.type != TOML_BOOLEAN ||
         !integer(toml_get(settings, "reject_scan_low"), 0, channel->raw_width, stack->scanrej) ||
         !integer(toml_get(settings, "reject_scan_high"), 0, channel->raw_width, stack->scanrej + 1) ||
-        !integer(toml_get(settings, "minimum_frames"), 3, INT_MAX, &stack->dome_minframe) ||
+        !integer(toml_get(settings, "minimum_frames"), 3, INT_MAX, &minimum_frames) ||
         !number(toml_get(settings, "frame_mean_low_adu"), &low) ||
         !number(toml_get(settings, "frame_mean_high_adu"), &high) ||
         !number(toml_get(settings, "clip_low_sigma"), &clip_low) ||
@@ -131,8 +132,15 @@ static int stack_settings(mef_flat_detector *channel, toml_datum_t settings)
         (stack->median_reg[3] - stack->median_reg[2] + 1);
     for (int i = 0; i < 4; ++i)
         --stack->median_reg[i];
-    stack->dome_framethr_lo = low;
-    stack->dome_framethr_hi = high;
+    if (sky) {
+        stack->sky_minframe = minimum_frames;
+        stack->sky_framethr_lo = low;
+        stack->sky_framethr_hi = high;
+    } else {
+        stack->dome_minframe = minimum_frames;
+        stack->dome_framethr_lo = low;
+        stack->dome_framethr_hi = high;
+    }
     stack->pixrej_lo = clip_low;
     stack->pixrej_hi = clip_high;
     return 1;
@@ -174,9 +182,9 @@ static int select_detectors(mef_flat_stack *flat, toml_datum_t settings, const c
         if (!entry.enabled || (!mosaic && strcmp(entry.id, selection)))
             continue;
         mef_flat_detector *channel = flat->detectors + flat->detector_count;
-        if (!detector_settings(root, &entry, channel) || !stack_settings(channel, settings)) {
+        if (!detector_settings(root, &entry, channel) || !stack_settings(channel, settings, flat->sky)) {
             snprintf(flat->run->message, sizeof(flat->run->message),
-                "Invalid dome detector or stack settings: %.390s", entry.id);
+                "Invalid flat detector or stack settings: %.390s", entry.id);
             return 0;
         }
         if (!mosaic || entry.slot == 0) {
@@ -215,7 +223,9 @@ static int bind_detector(const mef_flat_stack *flat, mef_flat_detector *channel,
 
 static int bind_inputs(mef_flat_stack *flat, const char *filter_key)
 {
-    const char *type = !strcasecmp(flat->instrument, "wfi") ? "FLAT,SCREEN" : "FLAT,DOME";
+    const char *type = "FLAT,SKY";
+    if (!flat->sky)
+        type = !strcasecmp(flat->instrument, "wfi") ? "FLAT,SCREEN" : "FLAT,DOME";
     mef_layout_options options = {.max_hdus = 4096,
         .max_header_bytes = MEF_LAYOUT_DEFAULT_HEADER_BYTES,
         .bin_x_key = "HIERARCH ESO DET WIN1 BINX", .bin_y_key = "HIERARCH ESO DET WIN1 BINY"};
@@ -223,7 +233,7 @@ static int bind_inputs(mef_flat_stack *flat, const char *filter_key)
         mef_recipe_input *input = flat->inputs.rows + i;
         mef_flat_input *frame = flat->frames + i;
         snprintf(flat->run->message, sizeof(flat->run->message),
-            "Invalid dome input or detector geometry: %.390s", input->path);
+            "Invalid flat input or detector geometry: %.390s", input->path);
         mef_layout *layout = NULL;
         if (strcmp(input->dpr_type, type) ||
             !primary_matches(input->path, "INSTRUME", flat->instrument, 1) ||
@@ -239,7 +249,7 @@ static int bind_inputs(mef_flat_stack *flat, const char *filter_key)
             mef_flat_detector *channel = flat->detectors + d;
             if (!bind_detector(flat, channel, i, planes, count)) {
                 snprintf(flat->run->message, sizeof(flat->run->message),
-                    "Invalid detector %.68s in dome input %.360s", channel->id, input->path);
+                    "Invalid detector %.68s in flat input %.360s", channel->id, input->path);
                 mef_layout_destroy(layout);
                 return 0;
             }
@@ -252,7 +262,8 @@ static int bind_inputs(mef_flat_stack *flat, const char *filter_key)
 
 int mef_flat_stack_admit(mef_flat_stack *flat, const char *path)
 {
-    static const char *const root_keys[] = {"domeff_recipe_schema_version", "project",
+    const char *const root_keys[] = {flat->sky ? "skyff_recipe_schema_version" :
+        "domeff_recipe_schema_version", "project",
         "detector_toml", "run", "inputs", "flat"};
     static const char *const input_keys[] = {"list"};
     static const char *const flat_keys[] = {"filter", "filter_keyword", "detector",
@@ -262,7 +273,7 @@ int mef_flat_stack_admit(mef_flat_stack *flat, const char *path)
     char *project = NULL, *profile = NULL, *raw = NULL, *calibration = NULL;
     int okay = 0, version;
     snprintf(flat->run->message, sizeof(flat->run->message),
-        "Invalid dome recipe, project roots or detector/stack settings.");
+        "Invalid flat recipe, project roots or detector/stack settings.");
     char *absolute = realpath(path, NULL);
     flat->recipe = mef_toml_file_read(absolute, 1024 * 1024);
     free(absolute);
@@ -293,7 +304,8 @@ int mef_flat_stack_admit(mef_flat_stack *flat, const char *path)
         !mef_bpm_linearity_hash(list, flat->list_sha256) ||
         !mef_recipe_inputs_read(list, raw, 0, &flat->inputs, flat->run->message,
             sizeof(flat->run->message)) ||
-        flat->inputs.count < (size_t)flat->detectors[0].stack.dome_minframe)
+        flat->inputs.count < (size_t)(flat->sky ? flat->detectors[0].stack.sky_minframe :
+            flat->detectors[0].stack.dome_minframe))
         goto done;
     flat->list_path = list;
     flat->frames = calloc(flat->inputs.count, sizeof(*flat->frames));

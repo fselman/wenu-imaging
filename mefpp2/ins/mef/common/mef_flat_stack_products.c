@@ -26,9 +26,15 @@ static int process_detector(mef_flat_stack *flat, size_t index)
         goto done;
     stack->ccd = &channel->ccd;
     stack->xtnum = stack->nxts = 1;
-    stack->dome_median = &channel->illumination;
-    stack->dome_stdev = &variance;
-    stack->dome_nplanes = &channel->normalized;
+    if (flat->sky) {
+        stack->sky_median = &channel->illumination;
+        stack->sky_stdev = &variance;
+        stack->sky_nplanes = &channel->normalized;
+    } else {
+        stack->dome_median = &channel->illumination;
+        stack->dome_stdev = &variance;
+        stack->dome_nplanes = &channel->normalized;
+    }
     stack->individual_frame_avg = stats;
     stack->individual_frame_median = stats + count;
     stack->individual_frame_sigma = stats + 2 * count;
@@ -38,7 +44,7 @@ static int process_detector(mef_flat_stack *flat, size_t index)
         char *path = flat->inputs.rows[i].path;
         int hdu = channel->exposures[i].hdu;
         snprintf(flat->run->message, sizeof(flat->run->message),
-            "Cannot correct and trim dome input %.395s.", path);
+            "Cannot correct and trim flat input %.395s.", path);
         image_t *raw = mef_load_ext(path, hdu);
         if (!raw)
             goto done;
@@ -50,9 +56,9 @@ static int process_detector(mef_flat_stack *flat, size_t index)
     }
 
     snprintf(flat->run->message, sizeof(flat->run->message),
-        "Cannot normalize and stack the selected dome exposures.");
-    image = mef_stack_flat_reference(stack, "dome", cube, NULL, normalization,
-        participation, reference);
+        "Cannot normalize and stack the selected flat exposures.");
+    image = mef_stack_flat_reference(stack, flat->sky ? "sky" : "dome", cube, NULL,
+        normalization, participation, reference);
     cube = NULL;
     if (!image || !isfinite(channel->illumination) || channel->illumination <= 0)
         goto done;
@@ -64,11 +70,12 @@ static int process_detector(mef_flat_stack *flat, size_t index)
         channel->exposures[i].accepted = participation[i];
     }
     snprintf(flat->run->message, sizeof(flat->run->message),
-        "Cannot stage dome detector %.68s.", channel->id);
-    if (snprintf(channel->staged, sizeof(channel->staged), "%s/dome-%04zu.fits",
+        "Cannot stage flat detector %.68s.", channel->id);
+    if (snprintf(channel->staged, sizeof(channel->staged), "%s/flat-%04zu.fits",
             flat->run->private_work_directory, index + 1) >= (int)sizeof(channel->staged) ||
-        !mef_flat_stage_detector(channel->staged, "'CALIB.MASTER_DOME_FLAT'", flat->instrument,
-            flat->filter, channel->id, channel->illumination, NULL, 0, image))
+        !mef_flat_stage_detector(channel->staged,
+            flat->sky ? "'CALIB.MASTER_SKY_FLAT'" : "'CALIB.MASTER_DOME_FLAT'",
+            flat->instrument, flat->filter, channel->id, channel->illumination, NULL, 0, image))
         goto done;
     flat->assembly[index] = (mef_assembly_detector){
         .path = channel->staged, .detector_id = channel->id,
@@ -122,7 +129,7 @@ static void detector_qc(mef_flat_stack *flat, size_t index, const mef_qc_input_r
         mef_flat_exposure *exposure = channel->exposures + i;
         int measured = isfinite(exposure->normalization);
         exposure->measurement = (mef_qc_measurement){
-            .name = "frame_normalization", .unit = "ADU", .stage = "dome_stack",
+            .name = "frame_normalization", .unit = "ADU", .stage = flat->sky ? "sky_stack" : "dome_stack",
             .method = "clipped_median", .state = measured ? MEF_QC_MEASURED : MEF_QC_UNAVAILABLE,
             .reason = measured ? NULL : "Exposure has no usable normalization median.",
             .values = measured ? &exposure->normalization : NULL, .value_count = measured ? 1 : 0,
@@ -138,12 +145,12 @@ static void detector_qc(mef_flat_stack *flat, size_t index, const mef_qc_input_r
             sources[source_count++] = inputs[i].id;
         bindings[i] = (mef_qc_input_binding){
             .input_id = inputs[i].id, .source_hdu = exposure->hdu, .accepted = accepted,
-            .rejection_reason = accepted ? NULL : "Frame mean is outside the dome admission interval.",
+            .rejection_reason = accepted ? NULL : "Frame mean is outside the flat admission interval.",
             .measurements = &exposure->measurement, .measurement_count = 1
         };
     }
     *output = (mef_qc_measurement){
-        .name = "mean_frame_normalization", .unit = "ADU", .stage = "dome_stack",
+        .name = "mean_frame_normalization", .unit = "ADU", .stage = flat->sky ? "sky_stack" : "dome_stack",
         .method = "mean_of_frame_medians", .state = MEF_QC_MEASURED,
         .values = illumination, .value_count = 1, .sample_count = channel->normalized,
         .coordinates = "active_detector", .mask_policy = "not_applicable",
@@ -173,7 +180,7 @@ int mef_flat_stack_publish(mef_flat_stack *flat)
     int okay = 0;
     const char *reference_id = flat->detectors[flat->reference].id;
 
-    snprintf(run->message, sizeof(run->message), "Cannot prepare dome FITS and QC records.");
+    snprintf(run->message, sizeof(run->message), "Cannot prepare flat FITS and QC records.");
     if (!inputs || !bindings || !sources || !records || !measurements || !illumination)
         goto done;
     for (size_t i = 0; i < count; ++i)
@@ -191,11 +198,13 @@ int mef_flat_stack_publish(mef_flat_stack *flat)
     };
     mef_product_qc product = {
         .id = strrchr(run->paths.fits, '/') + 1, .fits_path = run->paths.fits,
-        .log_path = run->paths.log, .assessment_id = "master_dome_flat", .recipe_name = run->operation,
+        .log_path = run->paths.log, .assessment_id = flat->sky ? "master_sky_flat" : "master_dome_flat",
+        .recipe_name = run->operation,
         .recipe_start = run->recipe_start, .recipe_version = 1, .product_sequence = 1,
         .producer_name = "mefpp_recipe", .producer_version = "1", .source_revision = run->revision,
         .configuration_id = flat->recipe.path, .configuration_snapshot = flat->recipe.source,
-        .configuration_format = "domeff_recipe_toml_v1", .inputs = inputs, .input_count = count,
+        .configuration_format = flat->sky ? "skyff_recipe_toml_v1" : "domeff_recipe_toml_v1",
+        .inputs = inputs, .input_count = count,
         .detectors = records, .detector_count = detectors,
         .evidence = evidence, .evidence_count = sizeof(evidence) / sizeof(*evidence)
     };
@@ -203,7 +212,7 @@ int mef_flat_stack_publish(mef_flat_stack *flat)
     if (mef_product_qc_validate(&product, run->message, sizeof(run->message)) != 0)
         goto done;
     if (!inputs_unchanged(flat)) {
-        snprintf(run->message, sizeof(run->message), "Dome observation list or exposure changed during processing.");
+        snprintf(run->message, sizeof(run->message), "Flat observation list or exposure changed during processing.");
         goto done;
     }
     if (mef_mef_assemble(run->paths.fits, reference_id, flat->assembly, detectors,

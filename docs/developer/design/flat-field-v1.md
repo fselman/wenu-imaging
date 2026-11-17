@@ -274,8 +274,20 @@ places the reference second, and swapped raw HDUs.
 | OmegaCAM CP Pup `574184` | 32 | 267,584,128 | 0 |
 
 For both retained comparisons, the ASDF FITS digest, recipe snapshot, and
-detector-to-output-HDU map verified. Sky list construction and the
-bias-enabled dome route remain pending.
+detector-to-output-HDU map verified.
+
+### Native sky flats
+
+Run `mefpp_recipe cal skyff --config RECIPE.toml` with
+`skyff_recipe_schema_version = 1`, an absolute `[inputs].list` of classified
+`FLAT,SKY` exposures, and the corresponding legacy sky admission bounds.
+The command shares dome detector selection, scan correction, normalization,
+stacking and MEF/ASDF publication. It selects the sky stack in the existing
+kernel and writes the unsmoothed master with `PRODCATG = CALIB.MASTER_SKY_FLAT`.
+The native route currently runs with bias subtraction disabled. Both
+single-detector and mosaic sky checks are included in the synthetic contract.
+Mac and retained sky-master comparisons are pending, as is bias-enabled
+component construction.
 
 ### Native checks
 

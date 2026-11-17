@@ -1,4 +1,4 @@
-"""Single-detector and mosaic WFI screen flats through native stacking."""
+"""Single-detector and mosaic WFI dome and sky flats through native stacking."""
 import argparse
 import hashlib
 from pathlib import Path
@@ -57,21 +57,23 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def check(command, work, capture_writer):
+def check(command, work, capture_writer, kind):
+    operation = f"{kind}ff"
+    classification = "FLAT,SCREEN" if kind == "dome" else "FLAT,SKY"
     raw, controls, reduced = (work / name for name in ("raw", "controls", "reduced"))
     raw.mkdir()
-    subprocess.run([command, "project", "init", "--name", "dome",
+    subprocess.run([command, "project", "init", "--name", kind,
                     "--raw", str(raw), "--orchestration", str(controls),
                     "--reduced", str(reduced)], check=True)
-    output = reduced / "cal/domeff"
+    output = reduced / "cal" / operation
     output.mkdir()
     (controls / "wfi-1x1.toml").write_text(PROFILE)
-    listing = controls / "dome.list"
+    listing = controls / f"{kind}.list"
     paths = []
     for index, signal in enumerate((100, 200, 300, 10)):
         primary = fits.PrimaryHDU()
         primary.header["INSTRUME"] = "WFI"
-        primary.header["HIERARCH ESO DPR TYPE"] = "FLAT,SCREEN"
+        primary.header["HIERARCH ESO DPR TYPE"] = classification
         primary.header["FILTER"] = "B"
         image = np.full((3, 6), signal + 22, dtype=np.int16)
         image[:, -1] = 22
@@ -84,13 +86,13 @@ def check(command, work, capture_writer):
             detectors.reverse()
         fits.HDUList([primary, *detectors]).writeto(path)
         paths.append(path)
-    listing.write_text("".join(f"{path}\tFLAT,SCREEN\n" for path in paths))
+    listing.write_text("".join(f"{path}\t{classification}\n" for path in paths))
     hashes = [digest(path) for path in paths]
 
-    recipe = f"""domeff_recipe_schema_version = 1
+    recipe = f"""{operation}_recipe_schema_version = 1
 project = "project.toml"
 detector_toml = "wfi-1x1.toml"
-run = "cal/domeff"
+run = "cal/{operation}"
 [inputs]
 list = "{listing}"
 [flat]
@@ -108,8 +110,8 @@ clip_low_sigma = 3.0
 clip_high_sigma = 3.0
 normalization_region = [1, 5, 1, 3]
 """
-    config = controls / "domeff.toml"
-    args = [command, "cal", "domeff", "--config", config.name]
+    config = controls / f"{operation}.toml"
+    args = [command, "cal", operation, "--config", config.name]
     config.write_text(recipe.replace('filter = "B"', 'filter = "wrong"'))
     invalid = subprocess.run(args, cwd=controls, text=True, capture_output=True)
     assert invalid.returncode != 0 and not list(output.iterdir()), invalid.stderr
@@ -119,7 +121,7 @@ normalization_region = [1, 5, 1, 3]
     assert result.returncode == 0, (result.stdout, result.stderr)
     [product] = output.glob("*.fits")
     with fits.open(product) as hdus:
-        assert hdus[0].header["PRODCATG"] == "CALIB.MASTER_DOME_FLAT"
+        assert hdus[0].header["PRODCATG"] == f"CALIB.MASTER_{kind.upper()}_FLAT"
         assert len(hdus) == 2 and hdus[1].name == "CCD-A"
         assert hdus[1].header["ESO MPP QC FRMEDIAN"] == 200
         np.testing.assert_array_equal(hdus[1].data, np.ones((3, 5)))
@@ -131,7 +133,7 @@ normalization_region = [1, 5, 1, 3]
         import asdf
         with asdf.open(product.with_suffix(".asdf")) as archive:
             qc = archive.tree["qc"]
-            assert qc["provenance"]["operation"] == "cal.domeff"
+            assert qc["provenance"]["operation"] == f"cal.{operation}"
             assert qc["provenance"]["configuration"]["snapshot"] == recipe
             assert qc["file"]["sha256"] == digest(product)
             inputs = qc["embedded_input_records"]
@@ -141,21 +143,24 @@ normalization_region = [1, 5, 1, 3]
             assert [row["participation_by_detector"][0]["status"] for row in statuses] == [
                 "used", "used", "used", "rejected",
             ]
-        check_mosaic(args, controls, reduced, config, recipe, hashes, asdf)
-    print("PASS: WFI dome admission, scan/trim, exact normalization, FITS and QC bindings")
+        check_mosaic(args, controls, reduced, config, recipe, hashes, asdf, operation)
+    print(f"PASS: WFI {kind} admission, scan/trim, exact normalization, FITS and QC bindings")
 
 
 def check_mosaic(args, controls, reduced, config, recipe, hashes, asdf):
-    output = reduced / "cal/domeff-mosaic"
+    output = reduced / "cal" / f"{operation}-mosaic"
     output.mkdir()
+    # A mosaic must identify the sky or dome product independently of its filename.
     mosaic = recipe.replace('detector = "CCD-A"', 'detector = "all"')
-    mosaic = mosaic.replace('run = "cal/domeff"', 'run = "cal/domeff-mosaic"')
+    mosaic = mosaic.replace(f'run = "cal/{operation}"', f'run = "cal/{operation}-mosaic"')
     config.write_text(mosaic)
     result = subprocess.run(args, cwd=controls, text=True, capture_output=True)
     assert result.returncode == 0, (result.stdout, result.stderr)
 
     [product] = output.glob("*.fits")
     with fits.open(product) as hdus:
+        kind = operation.removesuffix("ff")
+        assert hdus[0].header["PRODCATG"] == f"CALIB.MASTER_{kind.upper()}_FLAT"
         assert hdus[0].header["NEXTEND"] == 2
         assert [hdu.name for hdu in hdus[1:]] == ["CCD-B", "CCD-A"]
         np.testing.assert_array_equal(hdus[1].data, np.full((3, 5), 1.3125))
@@ -184,8 +189,10 @@ def main():
     parser.add_argument("--command", type=Path, required=True)
     parser.add_argument("--capture-writer", action="store_true")
     arguments = parser.parse_args()
-    with tempfile.TemporaryDirectory(prefix="native-dome-") as directory:
-        check(str(arguments.command.resolve()), Path(directory).resolve(), arguments.capture_writer)
+    kinds = ("dome",) if arguments.capture_writer else ("dome", "sky")
+    for kind in kinds:
+        with tempfile.TemporaryDirectory(prefix=f"native-{kind}-") as directory:
+            check(str(arguments.command.resolve()), Path(directory).resolve(), arguments.capture_writer, kind)
 
 
 if __name__ == "__main__":
