@@ -2,16 +2,30 @@
 #define MEF_FLAT_STACK_H
 
 #include "mef_flat_product.h"
+#include "mef_mef_assemble.h"
 #include "mef_recipe_inputs.h"
 #include "mef_product_qc.h"
 #include "mefp_lib.h"
 
 typedef struct {
     char id[32], sha256[65];
+} mef_flat_input;
+
+typedef struct {
     int hdu, accepted;
     double normalization;
     mef_qc_measurement measurement;
 } mef_flat_exposure;
+
+typedef struct {
+    const char *id, *amplifier;
+    int normalized, slot, raw_width, raw_height;
+    mef_ccd ccd;
+    mef_bb stack;
+    mef_flat_exposure *exposures;
+    float illumination;
+    char staged[MEF_PRODUCT_PATH_SIZE];
+} mef_flat_detector;
 
 typedef struct {
     mef_recipe_run *run;
@@ -19,16 +33,13 @@ typedef struct {
     mef_toml_file recipe, project, detector;
     char list_sha256[65];
     char *output;
-    const char *list_path, *id, *instrument, *filter, *amplifier, *readout;
-    int normalized;
-    int slot, bin_x, bin_y, raw_width, raw_height;
+    const char *list_path, *instrument, *filter, *readout;
+    int bin_x, bin_y;
     mef_recipe_inputs inputs;
-    mef_flat_exposure *exposures;
-    mef_ccd ccd;
-    mef_bb stack;
-    image_t *image;
-    float illumination;
-    char staged[MEF_PRODUCT_PATH_SIZE];
+    mef_flat_input *frames;
+    mef_flat_detector *detectors;
+    size_t detector_count, reference;
+    mef_assembly_detector *assembly;
 } mef_flat_stack;
 
 int mef_flat_stack_admit(mef_flat_stack *, const char *);

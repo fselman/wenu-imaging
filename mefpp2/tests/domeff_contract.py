@@ -1,4 +1,4 @@
-"""Single-detector WFI screen flats through native admission and stacking."""
+"""Single-detector and mosaic WFI screen flats through native stacking."""
 import argparse
 import hashlib
 from pathlib import Path
@@ -15,6 +15,13 @@ instrument = "wfi"
 readout_id = "WFI:synthetic"
 binning = [1, 1]
 [[detector]]
+id = "CCD-B"
+amplifier = "L"
+native_paf_chip = 2
+reference_hdu = 2
+enabled = true
+raw_size = [6, 3]
+[[detector]]
 id = "CCD-A"
 amplifier = "L"
 native_paf_chip = 1
@@ -22,6 +29,17 @@ reference_hdu = 1
 enabled = true
 raw_size = [6, 3]
 [native.instrument.detectors.CHIP1]
+prescan_x_min = {value = 6}
+prescan_x_max = {value = 6}
+overscan_x_min = {value = 6}
+overscan_x_max = {value = 6}
+trimreg_x_min = {value = 1}
+trimreg_x_max = {value = 5}
+trimreg_y_min = {value = 1}
+trimreg_y_max = {value = 3}
+gain = {value = 2.0}
+ron = {value = 5.1}
+[native.instrument.detectors.CHIP2]
 prescan_x_min = {value = 6}
 prescan_x_max = {value = 6}
 overscan_x_min = {value = 6}
@@ -58,7 +76,10 @@ def check(command, work, capture_writer):
         image = np.full((3, 6), signal + 22, dtype=np.int16)
         image[:, -1] = 22
         path = raw / f"flat-{index}.fits"
-        detectors = [fits.ImageHDU(image, name="CCD-A"), fits.ImageHDU(image, name="CCD-B")]
+        signal_b = 3 * signal // 2 if index < 3 else 150
+        image_b = image.copy()
+        image_b[:, :-1] = signal_b + 22
+        detectors = [fits.ImageHDU(image, name="CCD-A"), fits.ImageHDU(image_b, name="CCD-B")]
         if index == 1:
             detectors.reverse()
         fits.HDUList([primary, *detectors]).writeto(path)
@@ -120,7 +141,42 @@ normalization_region = [1, 5, 1, 3]
             assert [row["participation_by_detector"][0]["status"] for row in statuses] == [
                 "used", "used", "used", "rejected",
             ]
+        check_mosaic(args, controls, reduced, config, recipe, hashes, asdf)
     print("PASS: WFI dome admission, scan/trim, exact normalization, FITS and QC bindings")
+
+
+def check_mosaic(args, controls, reduced, config, recipe, hashes, asdf):
+    output = reduced / "cal/domeff-mosaic"
+    output.mkdir()
+    mosaic = recipe.replace('detector = "CCD-A"', 'detector = "all"')
+    mosaic = mosaic.replace('run = "cal/domeff"', 'run = "cal/domeff-mosaic"')
+    config.write_text(mosaic)
+    result = subprocess.run(args, cwd=controls, text=True, capture_output=True)
+    assert result.returncode == 0, (result.stdout, result.stderr)
+
+    [product] = output.glob("*.fits")
+    with fits.open(product) as hdus:
+        assert hdus[0].header["NEXTEND"] == 2
+        assert [hdu.name for hdu in hdus[1:]] == ["CCD-B", "CCD-A"]
+        np.testing.assert_array_equal(hdus[1].data, np.full((3, 5), 1.3125))
+        np.testing.assert_array_equal(hdus[2].data, np.ones((3, 5)))
+        assert hdus[1].header["ESO MPP QC FRMEDIAN"] == 262.5
+        assert hdus[2].header["ESO MPP QC FRMEDIAN"] == 200
+
+    with asdf.open(product.with_suffix(".asdf")) as archive:
+        qc = archive.tree["qc"]
+        assert qc["provenance"]["configuration"]["snapshot"] == mosaic
+        assert qc["file"]["sha256"] == digest(product)
+        inputs = qc["embedded_input_records"]
+        assert [entry["file"]["sha256"] for entry in inputs] == hashes
+        for frame, source_hdus in zip(inputs, ((2, 1), (1, 2), (2, 1), (2, 1)), strict=True):
+            assert [(d["detector_id"], d["source_hdu"]) for d in frame["detectors"]] == [
+                ("CCD-B", source_hdus[0]), ("CCD-A", source_hdus[1]),
+            ]
+        assert [row["status"] for row in qc["inputs"][-1]["participation_by_detector"]] == [
+            "used", "rejected",
+        ]
+    print("PASS: mosaic uses chip 1 illumination and writes catalogue order with per-detector QC")
 
 
 def main():

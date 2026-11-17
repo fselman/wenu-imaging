@@ -248,8 +248,26 @@ FITS, ASDF and log products. All 8,374,268 physical pixels of
 replay with the same build used the five OmegaCAM CP Pup `r_SDSS` dome
 exposures in partition `574184` and wrote FITS, ASDF and log products.
 All 8,362,004 physical pixels of `ESO_CCD_#65` matched the retained legacy
-master exactly. Full mosaics, sky list construction and the bias-enabled
-dome route remain pending.
+master exactly.
+
+### Full-mosaic dome qualification
+
+Set `[flat].detector = "all"` to stack every enabled detector in the
+profile and publish one MEF and one ASDF. Native slot 1 is the legacy
+illumination reference. Compute it first, retain its mean frame
+normalization in ADU and use it as the denominator of each detector's
+illumination ratio inside the existing stack kernel. Publish in catalogue
+order independently of processing order or raw HDU position. Resolve and
+fingerprint each observation once during admission, verify its fingerprint
+again before publication, and release each corrected cube and master plane
+after staging that detector. The ASDF records the reference ID and preserves
+per-detector exposure participation and source HDUs.
+
+The synthetic mosaic case checks reference scaling with unequal illumination
+and distinct participation, a catalogue that places the reference second,
+and swapped raw HDUs. Qualification requires that test and exact comparisons
+of all eight WFI and 32 OmegaCAM detector planes on the Intel Mac. Sky list
+construction and the bias-enabled dome route remain pending.
 
 ### Native checks
 

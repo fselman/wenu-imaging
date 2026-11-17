@@ -2966,8 +2966,9 @@ pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias)
 
 
 /* The active-area cube belongs to this function. The master bias is borrowed. */
-image_t *mef_stack_flat_diagnostic(mef_bb *bb, const char *kind, cube_t *cube,
-    const image_t *master_bias, double *normalization_medians, int *participation)
+image_t *mef_stack_flat_reference(mef_bb *bb, const char *kind, cube_t *cube,
+    const image_t *master_bias, double *normalization_medians, int *participation,
+    const float *mosaic_reference)
 {
     int frame, plane_index, x, y, i;
     size_t pixel;
@@ -3111,6 +3112,8 @@ image_t *mef_stack_flat_diagnostic(mef_bb *bb, const char *kind, cube_t *cube,
     float frame_median = median_sum / normalized;
     float frame_variance = variance_sum / normalized;
     float reference_median = slot == 0 ? frame_median : reference_medians[0];
+    if (mosaic_reference != NULL)
+        reference_median = *mosaic_reference;
     e_comment(1, "frame_median: %f -- frame_variance: %f", frame_median, frame_variance);
     e_comment(1, "stacking cube to single frame");
     flat = cube_avg_median(cube);
@@ -3138,6 +3141,13 @@ done:
         free(valid);
     cube_del(cube);
     return flat;
+}
+
+image_t *mef_stack_flat_diagnostic(mef_bb *bb, const char *kind, cube_t *cube,
+    const image_t *master_bias, double *normalization_medians, int *participation)
+{
+    return mef_stack_flat_reference(bb, kind, cube, master_bias, normalization_medians,
+        participation, NULL);
 }
 
 image_t *mef_stack_flat(mef_bb *bb, const char *kind, cube_t *cube,
