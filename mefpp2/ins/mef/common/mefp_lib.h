@@ -412,6 +412,11 @@ image_t 	*mef_build_cal(mef_bb *, char *);
  * A rejected or unnormalized exposure is marked with NaN.
  */
 image_t *mef_stack_flat(mef_bb *, const char *, cube_t *, const image_t *, double *);
+/* Combine already prepared component planes. The optional BPM is 1=good.
+ * Neither component nor mask is changed. The caller owns the returned image.
+ */
+image_t *mef_flat_combine(const image_t *dome, const image_t *sky, int radius,
+                          const pixelmap *bpm);
 image_t 	*mef_ff_combine(mef_bb *, image_t *, image_t *, image_t *,pixelmap *);
 image_t		*mef_image_filter_flat(image_t *,int kern_size,pixelmap *);
 pixelmap * mef_build_bpm(mef_bb *bb, image_t * bias);

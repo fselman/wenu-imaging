@@ -754,6 +754,7 @@ image_t * image_filter_flat(image_t * im, int ksize)
 	if (ksize>im->lx || ksize>im->ly) return NULL ;
 
 	filt = image_new(im->lx, im->ly);
+	if (filt == NULL) return NULL;
 
 	/*
 	 * Following is an optimized quadruple loop.

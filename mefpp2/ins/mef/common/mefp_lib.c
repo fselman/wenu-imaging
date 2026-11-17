@@ -3205,6 +3205,65 @@ image_t *mef_build_cal(mef_bb *bb, char *what)
     return mef_stack_flat(bb, what, i_cube, NULL, NULL);
 }
 
+/* Sky is scratch storage. Dome and BPM are borrowed for the legacy arithmetic. */
+static image_t *combine_flat_planes(image_t *dome, image_t *sky, int radius,
+                                    pixelmap *bpm)
+{
+    image_t *smoothed;
+
+    e_comment(1, "mef_ff_combine: dividing sky by dome...");
+    image_div_local(sky, dome);
+    e_comment(1, "mef_ff_combine: Done.");
+
+    e_comment(1, "mef_ff_combine: applying smoothing filter...");
+    if (bpm == NULL) {
+        e_comment(1, "mef_ff_combine: no bp_map case...");
+        smoothed = image_filter_flat(sky, radius);
+    } else {
+        e_comment(1, "mef_ff_combine: with bp_map case...");
+        smoothed = mef_image_filter_flat(sky, radius, bpm);
+    }
+    if (smoothed == NULL)
+        return NULL;
+    e_comment(1, "mef_ff_combine: Done.");
+
+    e_comment(1, "mef_ff_combine: multiplying smoothed sky-over-dome ratio by dome flat...");
+    image_mul_local(smoothed, dome);
+    e_comment(1, "mef_ff_combine: Done.");
+    return smoothed;
+}
+
+image_t *mef_flat_combine(const image_t *dome, const image_t *sky, int radius,
+                          const pixelmap *bpm)
+{
+    image_t dome_view, sky_view, *scratch, *combined;
+    pixelmap mask_view;
+
+    if (dome == NULL || sky == NULL || dome->data == NULL || sky->data == NULL ||
+        dome->lx != sky->lx || dome->ly != sky->ly ||
+        radius < 1 || radius > dome->lx || radius > dome->ly) {
+        return NULL;
+    }
+    if (bpm != NULL &&
+        (bpm->data == NULL || bpm->lx != dome->lx || bpm->ly != dome->ly)) {
+        return NULL;
+    }
+
+    /* The staged masters must still contain their original normalized pixels. */
+    dome_view = *dome;
+    sky_view = *sky;
+    scratch = image_copy(&sky_view);
+    if (scratch == NULL)
+        return NULL;
+    if (bpm != NULL)
+        mask_view = *bpm;
+
+    combined = combine_flat_planes(&dome_view, scratch, radius,
+                                   bpm == NULL ? NULL : &mask_view);
+    image_del(scratch);
+    return combined;
+}
+
 image_t * mef_ff_combine(mef_bb * bb, image_t * dome, image_t * sky, image_t *bias, pixelmap *bp_map)
 {
 	image_t	*	smoothed ;
@@ -3256,26 +3315,9 @@ image_t * mef_ff_combine(mef_bb * bb, image_t * dome, image_t * sky, image_t *bi
 	    e_comment(1, "mef_ff_combine: Done.");
 	}
 
-	/* Divide sky by dome */
-	e_comment(1, "mef_ff_combine: dividing sky by dome...");
-	image_div_local(sky, dome);
-	e_comment(1, "mef_ff_combine: Done.");
-
-	/* Smooth result */
-	e_comment(1, "mef_ff_combine: applying smoothing filter...");
-	if (bp_map == NULL) {
-        e_comment(1, "mef_ff_combine: no bp_map case...");
-	    smoothed = image_filter_flat(sky, bb->kern_hsize);
-	} else {
-        e_comment(1, "mef_ff_combine: with bp_map case...");
-	    smoothed = mef_image_filter_flat(sky, bb->kern_hsize, bp_map);
-	}
-	e_comment(1, "mef_ff_combine: Done.");
-
-	/* Multiply by dome */
-	e_comment(1, "mef_ff_combine: multiplying smoothed sky-over-dome ratio by dome flat...");
-	image_mul_local(smoothed, dome);
-	e_comment(1, "mef_ff_combine: Done.");
+    smoothed = combine_flat_planes(dome, sky, bb->kern_hsize, bp_map);
+    if (smoothed == NULL)
+        return NULL;
 
     /* Now we add some QC values */
     bb->combined_flat_median[zIndex] = image_getmedian(smoothed);
@@ -3299,6 +3341,7 @@ image_t * mef_image_filter_flat(image_t * im, int ksize,pixelmap *bpm)
         if (ksize>im->lx || ksize>im->ly) return NULL ;
 
         filt = image_new(im->lx, im->ly);
+        if (filt == NULL) return NULL;
 
         /*
 	 *          * Following is an optimized quadruple loop.

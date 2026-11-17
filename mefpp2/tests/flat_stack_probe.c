@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "mefp_lib.h"
 
@@ -18,6 +19,38 @@ static cube_t *flat_exposures(const image_t *bias)
             plane->data[pixel] = bias->data[pixel] + illumination[frame] * response[pixel];
     }
     return cube;
+}
+
+static void check_combination(void)
+{
+    const pixelvalue dome_pixels[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+    const pixelvalue sky_pixels[] = {2, 8, 18, 2, 8, 18, 2, 8, 18};
+    const pixelvalue expected[] = {3, 8, 15, 3, 8, 15, 3, 8, 15};
+    const pixelvalue masked_expected[] = {2, 8, 18, 2, 8, 18, 2, 8, 18};
+    image_t *dome = image_new(3, 3);
+    image_t *sky = image_new(3, 3);
+    pixelmap *mask = pixelmap_new(3, 3);
+    assert(dome != NULL && sky != NULL && mask != NULL);
+    memcpy(dome->data, dome_pixels, sizeof(dome_pixels));
+    memcpy(sky->data, sky_pixels, sizeof(sky_pixels));
+    for (int i = 0; i < 9; ++i)
+        mask->data[i] = (i % 3 == 1) ? PIXELMAP_0 : PIXELMAP_1;
+
+    image_t *combined = mef_flat_combine(dome, sky, 1, NULL);
+    assert(combined != NULL && memcmp(combined->data, expected, sizeof(expected)) == 0);
+    image_del(combined);
+
+    combined = mef_flat_combine(dome, sky, 1, mask);
+    assert(combined != NULL &&
+           memcmp(combined->data, masked_expected, sizeof(masked_expected)) == 0);
+    image_del(combined);
+
+    assert(mef_flat_combine(dome, sky, 0, mask) == NULL);
+    assert(memcmp(dome->data, dome_pixels, sizeof(dome_pixels)) == 0);
+    assert(memcmp(sky->data, sky_pixels, sizeof(sky_pixels)) == 0);
+    pixelmap_del(mask);
+    image_del(sky);
+    image_del(dome);
 }
 
 int main(void)
@@ -75,5 +108,7 @@ int main(void)
     assert(bias->data[0] == 20 && bias->data[1] == 4 && bias->data[2] == 12);
     image_del(bias);
     puts("PASS: per-exposure bias, admission, normalization, stacking and input preservation");
+    check_combination();
+    puts("PASS: ratio smoothing, BPM and unsmoothed component preservation");
     return 0;
 }
