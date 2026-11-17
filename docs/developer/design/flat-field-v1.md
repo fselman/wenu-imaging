@@ -263,11 +263,19 @@ again before publication, and release each corrected cube and master plane
 after staging that detector. The ASDF records the reference ID and preserves
 per-detector exposure participation and source HDUs.
 
-The synthetic mosaic case checks reference scaling with unequal illumination
-and distinct participation, a catalogue that places the reference second,
-and swapped raw HDUs. Qualification requires that test and exact comparisons
-of all eight WFI and 32 OmegaCAM detector planes on the Intel Mac. Sky list
-construction and the bias-enabled dome route remain pending.
+On the Intel Mac, the C17 Release build at `f3fab5f` passed
+`native_domeff` in 3.56 s. The synthetic mosaic case checks reference scaling
+with unequal illumination and distinct participation, a catalogue that
+places the reference second, and swapped raw HDUs.
+
+| Bias-off dome replay | Detectors | Physical pixels compared | Differences |
+| --- | ---: | ---: | ---: |
+| WFI Trapezium `100123319` | 8 | 66,994,144 | 0 |
+| OmegaCAM CP Pup `574184` | 32 | 267,584,128 | 0 |
+
+For both retained comparisons, the ASDF FITS digest, recipe snapshot, and
+detector-to-output-HDU map verified. Sky list construction and the
+bias-enabled dome route remain pending.
 
 ### Native checks
 
