@@ -286,8 +286,20 @@ stacking and MEF/ASDF publication. It selects the sky stack in the existing
 kernel and writes the unsmoothed master with `PRODCATG = CALIB.MASTER_SKY_FLAT`.
 The native route currently runs with bias subtraction disabled. Both
 single-detector and mosaic sky checks are included in the synthetic contract.
-Mac and retained sky-master comparisons are pending, as is bias-enabled
-component construction.
+
+The Intel Mac C17 Release build at `983ffb6` produced the two bias-off
+sky mosaics below. Astropy `fitsdiff` 6.1.7 compared the detector extensions
+in order at zero absolute and relative pixel tolerance.
+
+| Retained sky replay | Detectors | Pixel differences reported |
+| --- | ---: | ---: |
+| WFI Trapezium `100123337` | 8 | 0 |
+| OmegaCAM CP Pup `200253584` | 32 | 0 |
+
+The FITS header-card counts differ between native and legacy products.
+Both ASDF sidecars passed the FITS SHA-256, recipe snapshot and
+detector-to-output-HDU mapping checks. Bias-enabled component construction
+remains pending.
 
 ### Native checks
 
