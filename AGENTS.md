@@ -195,6 +195,11 @@ for delivery. PRs and chat must state purpose, changes, checks actually passed,
 limitations and next step. After remote delivery, provide exact guarded user-sync
 commands; when actual-host state is missing, give read-only preflight first.
 
+For GitHub SSH commands on hosts where port 22 is blocked, use GitHub's SSH
+endpoint on port 443. Pass `ssh://git@ssh.github.com:443/OWNER/REPO.git` as a
+one-command remote URL and keep the configured `origin` intact. Verify the
+intended origin and fetched revision before creating or updating a worktree.
+
 Do not alter scientific inputs/results, approved baselines or comparison tolerances
 as a way to make a failing test pass. Investigate unexpected numerical differences
 before continuing dependent work. Do not claim unsupported platform/science status.
