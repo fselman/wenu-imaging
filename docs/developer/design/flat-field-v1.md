@@ -214,6 +214,11 @@ path separately from native bias-before-normalization.
 The `native_flat_stack` analytical test passed on the Intel Mac in a C17 Release
 build of `a55713d5c097083469c7a6d0ba0170ce4e3631a7`. It checks optional master-bias
 subtraction, frame admission, and per-exposure normalization before stacking.
+The expanded `native_flat_stack` test also passed on the Intel Mac (C17 Release,
+`3de15b1d3d7fb334ea1333769fd7d16fdef804ca`, 1.62 s). It verifies ratio
+smoothing with and without a bad-pixel mask and bytewise preservation of the
+original dome and unsmoothed sky detector planes.
+
 Full CLI and FITS/ASDF validation with WFI and OmegaCAM remains pending.
 
 Compare dome, sky, and combined products separately. Check accepted frame order
