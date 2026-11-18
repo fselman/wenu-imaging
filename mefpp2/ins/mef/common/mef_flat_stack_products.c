@@ -18,12 +18,27 @@ static int process_detector(mef_flat_stack *flat, size_t index)
     double *normalization = calloc(count, sizeof(*normalization));
     double *stats = calloc(count, 3 * sizeof(*stats));
     image_t *image = NULL;
+    image_t *bias = NULL;
     float variance;
     int okay = 0;
     mef_bb *stack = &channel->stack;
 
     if (!cube || !participation || !normalization || !stats)
         goto done;
+    if (flat->bias_path) {
+        if (mef_layout_load(flat->bias_mapping, channel->id, &bias, &flat->error) != MEF_OK)
+            goto done;
+        for (size_t pixel = 0; pixel < (size_t)width * (size_t)height; ++pixel)
+            if (!isfinite(bias->data[pixel])) {
+                snprintf(flat->run->message, sizeof(flat->run->message),
+                    "Master bias contains a nonfinite pixel for %.68s.", channel->id);
+                goto done;
+            }
+        if (fprintf(flat->run->log,
+                "BIAS_SUBTRACTION %s HDU %d BEFORE_ADMISSION_AND_NORMALIZATION SHA256 %s\n",
+                channel->id, flat->bias_bindings[index].source_hdu, flat->bias_sha256) < 0)
+            goto done;
+    }
     stack->ccd = &channel->ccd;
     stack->xtnum = stack->nxts = 1;
     if (flat->sky) {
@@ -57,7 +72,7 @@ static int process_detector(mef_flat_stack *flat, size_t index)
 
     snprintf(flat->run->message, sizeof(flat->run->message),
         "Cannot normalize and stack the selected flat exposures.");
-    image = mef_stack_flat_reference(stack, flat->sky ? "sky" : "dome", cube, NULL,
+    image = mef_stack_flat_reference(stack, flat->sky ? "sky" : "dome", cube, bias,
         normalization, participation, reference);
     cube = NULL;
     if (!image || !isfinite(channel->illumination) || channel->illumination <= 0)
@@ -84,6 +99,8 @@ static int process_detector(mef_flat_stack *flat, size_t index)
     };
     okay = 1;
 done:
+    if (bias)
+        image_del(bias);
     if (image)
         image_del(image);
     if (cube)
@@ -108,6 +125,9 @@ int mef_flat_stack_process(mef_flat_stack *flat)
 static int inputs_unchanged(mef_flat_stack *flat)
 {
     char digest[65];
+    if (flat->bias_path && (!mef_bpm_linearity_hash(flat->bias_path, digest) ||
+            strcmp(digest, flat->bias_sha256)))
+        return 0;
     if (!mef_bpm_linearity_hash(flat->list_path, digest) || strcmp(digest, flat->list_sha256))
         return 0;
     for (size_t i = 0; i < flat->inputs.count; ++i)
@@ -194,7 +214,13 @@ int mef_flat_stack_publish(mef_flat_stack *flat)
     mef_qc_text_evidence evidence[] = {
         {"project", "toml", flat->project.source}, {"detector_profile", "toml", flat->detector.source},
         {"observation_list_sha256", "hex", flat->list_sha256},
-        {"normalization_reference", "text", reference_id}
+        {"normalization_reference", "text", reference_id},
+        {"bias_subtraction", "text", flat->bias_path ?
+            "per_exposure_before_admission_and_normalization" : "disabled"}
+    };
+    mef_qc_calibration_record bias = {
+        .id = "master_bias", .path = flat->bias_path, .sha256 = flat->bias_sha256,
+        .role = "master_bias", .bindings = flat->bias_bindings, .binding_count = detectors
     };
     mef_product_qc product = {
         .id = strrchr(run->paths.fits, '/') + 1, .fits_path = run->paths.fits,
@@ -205,6 +231,8 @@ int mef_flat_stack_publish(mef_flat_stack *flat)
         .configuration_id = flat->recipe.path, .configuration_snapshot = flat->recipe.source,
         .configuration_format = flat->sky ? "skyff_recipe_toml_v1" : "domeff_recipe_toml_v1",
         .inputs = inputs, .input_count = count,
+        .calibrations = flat->bias_path ? &bias : NULL,
+        .calibration_count = flat->bias_path ? 1 : 0,
         .detectors = records, .detector_count = detectors,
         .evidence = evidence, .evidence_count = sizeof(evidence) / sizeof(*evidence)
     };
@@ -212,7 +240,7 @@ int mef_flat_stack_publish(mef_flat_stack *flat)
     if (mef_product_qc_validate(&product, run->message, sizeof(run->message)) != 0)
         goto done;
     if (!inputs_unchanged(flat)) {
-        snprintf(run->message, sizeof(run->message), "Flat observation list or exposure changed during processing.");
+        snprintf(run->message, sizeof(run->message), "Flat observation list, exposure or master bias changed during processing.");
         goto done;
     }
     if (mef_mef_assemble(run->paths.fits, reference_id, flat->assembly, detectors,

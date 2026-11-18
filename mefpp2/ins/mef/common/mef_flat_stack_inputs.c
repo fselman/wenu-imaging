@@ -260,12 +260,70 @@ static int bind_inputs(mef_flat_stack *flat, const char *filter_key)
     return 1;
 }
 
+static int bind_master_bias(mef_flat_stack *flat, const char *calibration, const char *name)
+{
+    mef_layout *layout = NULL;
+    mef_detector_binding *bindings = calloc(flat->detector_count, sizeof(*bindings));
+    mef_layout_options options = {
+        .max_hdus = 4096, .max_header_bytes = MEF_LAYOUT_DEFAULT_HEADER_BYTES,
+        .bin_x_key = "HIERARCH ESO DET WIN1 BINX",
+        .bin_y_key = "HIERARCH ESO DET WIN1 BINY"
+    };
+    int okay = 0;
+
+    snprintf(flat->run->message, sizeof(flat->run->message),
+        "Master bias must be a compatible active-area CALIB.MASTER_BIAS under project calibration.");
+    flat->bias_path = mef_flat_resolve(calibration, name);
+    flat->bias_bindings = calloc(flat->detector_count, sizeof(*flat->bias_bindings));
+    if (!bindings || !flat->bias_bindings || !flat->bias_path ||
+        !mef_flat_below(calibration, flat->bias_path) ||
+        !primary_matches(flat->bias_path, "INSTRUME", flat->instrument, 1) ||
+        !primary_matches(flat->bias_path, "PRODCATG", "CALIB.MASTER_BIAS", 0) ||
+        !mef_bpm_linearity_hash(flat->bias_path, flat->bias_sha256) ||
+        mef_layout_read(flat->bias_path, &options, NULL, &layout, &flat->error) != MEF_OK)
+        goto done;
+
+    size_t count;
+    const mef_hdu_layout *planes = mef_layout_hdus(layout, &count);
+    for (size_t d = 0; d < flat->detector_count; ++d) {
+        const mef_flat_detector *channel = flat->detectors + d;
+        const mef_hdu_layout *plane = NULL;
+        int width = channel->ccd.trimreg[1] - channel->ccd.trimreg[0] + 1;
+        int height = channel->ccd.trimreg[3] - channel->ccd.trimreg[2] + 1;
+        for (size_t hdu = 1; hdu < count; ++hdu) {
+            if (planes[hdu].has_extname && !strcmp(planes[hdu].extname, channel->id)) {
+                if (plane)
+                    goto done;
+                plane = planes + hdu;
+            }
+        }
+        if (!plane || plane->kind != MEF_HDU_IMAGE || plane->naxis != 2 ||
+            plane->axes[0] != (size_t)width || plane->axes[1] != (size_t)height)
+            goto done;
+        bindings[d] = (mef_detector_binding){
+            .detector_id = channel->id, .extname = channel->id,
+            .hdu_index = plane->hdu_index, .unit = "ADU", .readout_id = flat->readout,
+            .bin_x = flat->bin_x, .bin_y = flat->bin_y,
+            .active_x = 1, .active_y = 1, .active_width = width, .active_height = height,
+            .configuration_detector = (size_t)channel->slot,
+            .health = MEF_HEALTH_UNKNOWN, .selection = MEF_OUTPUT_SELECTED
+        };
+        flat->bias_bindings[d] = (mef_qc_calibration_binding){channel->id, plane->hdu_index};
+    }
+    okay = mef_layout_bind(layout, bindings, flat->detector_count, NULL,
+        &flat->bias_mapping, &flat->error) == MEF_OK;
+done:
+    mef_layout_destroy(layout);
+    free(bindings);
+    return okay;
+}
+
 int mef_flat_stack_admit(mef_flat_stack *flat, const char *path)
 {
     const char *const root_keys[] = {flat->sky ? "skyff_recipe_schema_version" :
         "domeff_recipe_schema_version", "project",
         "detector_toml", "run", "inputs", "flat"};
-    static const char *const input_keys[] = {"list"};
+    static const char *const input_keys[] = {"list", "master_bias"};
     static const char *const flat_keys[] = {"filter", "filter_keyword", "detector",
         "use_prescan", "use_overscan", "reject_scan_low", "reject_scan_high", "minimum_frames",
         "frame_mean_low_adu", "frame_mean_high_adu", "clip_low_sigma", "clip_high_sigma",
@@ -282,7 +340,8 @@ int mef_flat_stack_admit(mef_flat_stack *flat, const char *path)
     toml_datum_t root = flat->recipe.parsed.toptab;
     toml_datum_t settings = toml_get(root, "flat"), inputs = toml_get(root, "inputs");
     if (!only_keys(root, root_keys, sizeof(root_keys) / sizeof(*root_keys)) ||
-        !only_keys(inputs, input_keys, sizeof(input_keys) / sizeof(*input_keys)) ||
+        !only_keys(inputs, input_keys,
+            toml_get(inputs, "master_bias").type == TOML_UNKNOWN ? 1 : 2) ||
         !only_keys(settings, flat_keys, sizeof(flat_keys) / sizeof(*flat_keys)) ||
         !integer(toml_get(root, root_keys[0]), 1, 1, &version))
         goto done;
@@ -320,6 +379,9 @@ int mef_flat_stack_admit(mef_flat_stack *flat, const char *path)
     }
     if (!bind_inputs(flat, filter_key))
         goto done;
+    if (toml_get(inputs, "master_bias").type != TOML_UNKNOWN &&
+        !bind_master_bias(flat, calibration, string(inputs, "master_bias")))
+        goto done;
     flat->run->message[0] = '\0';
     okay = 1;
 done:
@@ -337,6 +399,9 @@ void mef_flat_stack_destroy(mef_flat_stack *flat)
     free(flat->detectors);
     free(flat->assembly);
     free(flat->frames);
+    mef_layout_map_destroy(flat->bias_mapping);
+    free(flat->bias_bindings);
+    free(flat->bias_path);
     mef_error_destroy(flat->error);
     mef_recipe_inputs_destroy(&flat->inputs);
     mef_toml_file_destroy(&flat->recipe);

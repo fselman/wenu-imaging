@@ -7,6 +7,8 @@ run = "cal/domeff"
 
 [inputs]
 list = "/absolute/path/to/controls/dome.list"
+# Optional reduced bias, relative to the project calibration root.
+# master_bias = "bias/CMDP.<timestamp>.001.fits"
 
 [flat]
 detector = "WIN1.CHIP1.OUT1"

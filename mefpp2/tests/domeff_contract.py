@@ -184,6 +184,164 @@ def check_mosaic(args, controls, reduced, config, recipe, hashes, asdf, operatio
     print("PASS: mosaic uses chip 1 illumination and writes catalogue order with per-detector QC")
 
 
+def check_master_bias(command, work, kind):
+    import asdf
+
+    operation = f"{kind}ff"
+    classification = "FLAT,SCREEN" if kind == "dome" else "FLAT,SKY"
+    raw, controls, reduced = (work / name for name in ("raw", "controls", "reduced"))
+    raw.mkdir()
+    subprocess.run([command, "project", "init", "--name", operation,
+                    "--raw", str(raw), "--orchestration", str(controls),
+                    "--reduced", str(reduced)], check=True)
+    (controls / "wfi-1x1.toml").write_text(PROFILE)
+    output = reduced / "cal" / operation
+    output.mkdir()
+    bias_path = reduced / "cal/master-bias.fits"
+    response = np.array([1, 2, 3, 2, 1], dtype=np.int16)
+    biases = {"CCD-A": np.array([30, 4, 22, 12, 8], dtype=np.int16),
+              "CCD-B": np.array([12, 30, 4, 22, 8], dtype=np.int16)}
+    primary = fits.PrimaryHDU()
+    primary.header["INSTRUME"] = "WFI"
+    primary.header["PRODCATG"] = "CALIB.MASTER_BIAS"
+    master = fits.HDUList([primary, *[
+        fits.ImageHDU(np.tile(biases[name], (3, 1)), name=name)
+        for name in ("CCD-A", "CCD-B")
+    ]])
+    for hdu in master[1:]:
+        hdu.header["BUNIT"] = "ADU"
+    master.writeto(bias_path)
+    bias_hash = digest(bias_path)
+
+    paths = []
+    for index, level in enumerate((100, 200, 300, 20)):
+        header = fits.PrimaryHDU()
+        header.header["INSTRUME"] = "WFI"
+        header.header["FILTER"] = "B"
+        header.header["HIERARCH ESO DPR TYPE"] = classification
+        planes = []
+        for name in ("CCD-B", "CCD-A") if index % 2 else ("CCD-A", "CCD-B"):
+            signal = level if name == "CCD-A" else (2 * level if index < 3 else 100)
+            image = np.full((3, 6), 22, dtype=np.int16)
+            image[:, :5] += biases[name] + signal * response
+            planes.append(fits.ImageHDU(image, name=name))
+        path = raw / f"flat-{index}.fits"
+        fits.HDUList([header, *planes]).writeto(path)
+        paths.append(path)
+    hashes = [digest(path) for path in paths]
+    listing = controls / f"{kind}.list"
+    listing.write_text("".join(f"{path}\t{classification}\n" for path in paths))
+    recipe = f"""{operation}_recipe_schema_version = 1
+project = "project.toml"
+detector_toml = "wfi-1x1.toml"
+run = "cal/{operation}"
+[inputs]
+list = "{listing}"
+master_bias = "master-bias.fits"
+[flat]
+detector = "all"
+filter = "B"
+filter_keyword = "FILTER"
+use_prescan = false
+use_overscan = true
+reject_scan_low = 0
+reject_scan_high = 0
+minimum_frames = 3
+frame_mean_low_adu = 50
+frame_mean_high_adu = 2000
+clip_low_sigma = 100.0
+clip_high_sigma = 100.0
+normalization_region = [1, 5, 1, 3]
+"""
+    config = controls / f"{operation}.toml"
+    args = [command, "cal", operation, "--config", config.name]
+
+    # Each rejected calibration uses a fresh path and must leave output empty.
+    incompatible = []
+    for key, value in (("PRODCATG", "CALIB.BPM"), ("INSTRUME", "OTHER")):
+        copy = fits.HDUList([hdu.copy() for hdu in master])
+        copy[0].header[key] = value
+        incompatible.append(copy)
+    copy = fits.HDUList([hdu.copy() for hdu in master])
+    copy[1].header["EXTNAME"] = "CCD-B"
+    incompatible.append(copy)
+    copy = fits.HDUList([hdu.copy() for hdu in master])
+    copy[1].data = np.zeros((3, 4), dtype=np.int16)
+    incompatible.append(copy)
+    for key, value in (("BUNIT", "electron"), ("HIERARCH ESO DET WIN1 BINX", 2)):
+        copy = fits.HDUList([hdu.copy() for hdu in master])
+        copy[1].header[key] = value
+        incompatible.append(copy)
+    copy = fits.HDUList([hdu.copy() for hdu in master])
+    copy[1].data = copy[1].data.astype(np.float32)
+    copy[1].data[0, 0] = np.nan
+    nonfinite = reduced / "cal/nonfinite-bias.fits"
+    copy.writeto(nonfinite)
+    for index, bad in enumerate(incompatible):
+        path = reduced / "cal" / f"bad-{index}.fits"
+        bad.writeto(path)
+        config.write_text(recipe.replace('"master-bias.fits"', f'"{path.name}"'))
+        result = subprocess.run(args, cwd=controls, text=True, capture_output=True)
+        assert result.returncode != 0 and not list(output.iterdir()), result
+    for replacement in ('"missing.fits"', "23"):
+        config.write_text(recipe.replace('"master-bias.fits"', replacement))
+        result = subprocess.run(args, cwd=controls, text=True, capture_output=True)
+        assert result.returncode != 0 and not list(output.iterdir()), result
+
+    config.write_text(recipe)
+    result = subprocess.run(args, cwd=controls, text=True, capture_output=True)
+    assert result.returncode == 0, (result.stdout, result.stderr)
+    (product,) = output.glob("*.fits")
+    log = product.with_suffix(".log").read_text()
+    assert f"BIAS_SUBTRACTION CCD-A HDU 1 BEFORE_ADMISSION_AND_NORMALIZATION SHA256 {bias_hash}" in log
+    assert f"BIAS_SUBTRACTION CCD-B HDU 2 BEFORE_ADMISSION_AND_NORMALIZATION SHA256 {bias_hash}" in log
+    # Corrected medians are 2L. A uses 3 frames, mean 400. B uses 4,
+    # mean 650. The mosaic ratio is therefore exactly 650/400 = 1.625.
+    expected = np.tile(response.astype(np.float32) / 2, (3, 1))
+    with fits.open(product) as hdus:
+        assert hdus[0].header["PRODCATG"] == f"CALIB.MASTER_{kind.upper()}_FLAT"
+        assert [h.name for h in hdus[1:]] == ["CCD-B", "CCD-A"]
+        np.testing.assert_array_equal(hdus[1].data, expected * 1.625)
+        np.testing.assert_array_equal(hdus[2].data, expected)
+        assert [h.header["ESO MPP QC FRMEDIAN"] for h in hdus[1:]] == [650, 400]
+    with asdf.open(product.with_suffix(".asdf")) as archive:
+        qc = archive.tree["qc"]
+        assert qc["file"]["sha256"] == digest(product)
+        assert qc["provenance"]["configuration"]["snapshot"] == recipe
+        (calibration,) = qc["calibrations"]
+        assert calibration["record_id"] == calibration["role"] == "master_bias"
+        assert calibration["file"]["location"] == str(bias_path)
+        assert calibration["file"]["sha256"] == bias_hash
+        assert [(row["detector_id"], row["source_hdu"])
+                for row in calibration["detector_bindings"]] == [("CCD-B", 2), ("CCD-A", 1)]
+        evidence = {row["name"]: row["text"] for row in qc["extensions"]["native_evidence"]}
+        assert evidence["bias_subtraction"] == "per_exposure_before_admission_and_normalization"
+        for index, frame in enumerate(qc["embedded_input_records"]):
+            assert frame["file"]["location"] == str(paths[index])
+            assert frame["file"]["sha256"] == hashes[index]
+            expected_hdus = [("CCD-B", 1), ("CCD-A", 2)] if index % 2 else [
+                ("CCD-B", 2), ("CCD-A", 1)]
+            assert [(row["detector_id"], row["source_hdu"]) for row in frame["detectors"]] == expected_hdus
+            for row in frame["detectors"]:
+                measurement = row["measurements"][0]
+                name = row["detector_id"]
+                if index == 3 and name == "CCD-A":
+                    assert measurement["status"] == "unavailable"
+                else:
+                    medians = (200, 400, 600) if name == "CCD-A" else (400, 800, 1200, 200)
+                    assert measurement["value"] == medians[index]
+    assert digest(bias_path) == bias_hash
+    assert [digest(path) for path in paths] == hashes
+    rejected_output = reduced / "cal/nonfinite"
+    rejected_output.mkdir()
+    config.write_text(recipe.replace('"master-bias.fits"', '"nonfinite-bias.fits"')
+                      .replace(f'run = "cal/{operation}"', 'run = "cal/nonfinite"'))
+    result = subprocess.run(args, cwd=controls, text=True, capture_output=True)
+    assert result.returncode != 0, result
+    assert not list(rejected_output.glob("*.fits")) and not list(rejected_output.glob("*.asdf"))
+    print(f"PASS: {operation} bias before normalization, exact mosaic, calibration admission and provenance")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--command", type=Path, required=True)
@@ -193,6 +351,9 @@ def main():
     for kind in kinds:
         with tempfile.TemporaryDirectory(prefix=f"native-{kind}-") as directory:
             check(str(arguments.command.resolve()), Path(directory).resolve(), arguments.capture_writer, kind)
+        if not arguments.capture_writer:
+            with tempfile.TemporaryDirectory(prefix=f"native-{kind}-bias-") as directory:
+                check_master_bias(str(arguments.command.resolve()), Path(directory).resolve(), kind)
 
 
 if __name__ == "__main__":

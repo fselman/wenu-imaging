@@ -6,6 +6,7 @@
 #include "mef_recipe_inputs.h"
 #include "mef_product_qc.h"
 #include "mefp_lib.h"
+#include "mef_layout.h"
 
 typedef struct {
     char id[32], sha256[65];
@@ -33,6 +34,10 @@ typedef struct {
     int sky;
     mef_toml_file recipe, project, detector;
     char list_sha256[65];
+    char *bias_path;
+    char bias_sha256[65];
+    mef_layout_map *bias_mapping;
+    mef_qc_calibration_binding *bias_bindings;
     char *output;
     const char *list_path, *instrument, *filter, *readout;
     int bin_x, bin_y;

@@ -58,6 +58,39 @@ bias-corrected flats, verify that status before accepting a supplied master.
 Use the raw list to rebuild a master whose correction status cannot be
 established.
 
+### Master bias in dome and sky commands
+
+For either `cal domeff` or `cal skyff`, add `master_bias` under `[inputs]`
+to subtract a supplied master from every corrected exposure before frame
+admission and normalization. Omission preserves the bias-off default.
+
+```toml
+[inputs]
+list = "/absolute/path/to/controls/dome.list"
+master_bias = "bias/CMDP.<timestamp>.001.fits"
+```
+
+Resolve the bias path under the project calibration root. Require matching
+instrument, `PRODCATG = CALIB.MASTER_BIAS`, unique selected detector identities,
+active-area dimensions, ADU units and compatible declared binning. The shared
+layout reader supplies FITS scaling and detector bindings. Read each selected
+bias plane once, retain it for that detector's exposure stack, and release it
+after stacking. Reject nonfinite bias pixels before normalization. Recheck the
+master checksum before publication.
+
+The ASDF stores the master path, SHA-256 and source HDU for every selected
+detector under the `master_bias` calibration record. Text evidence declares
+`per_exposure_before_admission_and_normalization` or `disabled`. Normalization
+measurements describe the corrected exposures. The command log identifies the
+supplied calibration. This entry takes an existing reduced bias product.
+
+The analytical kernel check covers dome and sky with unequal illumination and
+a spatially varying bias. The CLI contract additionally exercises scan removal,
+trimming, independently reordered raw/master HDUs, detector-specific admission,
+exact normalization and mosaic pixels, incompatible calibration rejection and
+metadata bindings. Linux C17 checks passed with captured writer records.
+Native ASDF serialization and the Intel Mac gate remain pending for this path.
+
 ### Component publication and combination
 
 For each detector, retain the dome and sky master planes in memory until the
@@ -284,8 +317,8 @@ Run `mefpp_recipe cal skyff --config RECIPE.toml` with
 The command shares dome detector selection, scan correction, normalization,
 stacking and MEF/ASDF publication. It selects the sky stack in the existing
 kernel and writes the unsmoothed master with `PRODCATG = CALIB.MASTER_SKY_FLAT`.
-The native route currently runs with bias subtraction disabled. Both
-single-detector and mosaic sky checks are included in the synthetic contract.
+Omitting `inputs.master_bias` disables bias subtraction. Both single-detector
+and mosaic sky checks are included in the synthetic contract.
 
 The Intel Mac C17 Release build at `983ffb6` produced the two bias-off
 sky mosaics below. Astropy `fitsdiff` 6.1.7 compared the detector extensions

@@ -22,7 +22,9 @@ static int flat_command(int argc, char **argv, int sky)
         !mef_recipe_run_paths(&run, flat.output, NULL, "CMDP"))
         goto done;
 
-    if (!mef_recipe_run_begin(&run, flat.recipe.path, flat.list_path, NULL, 0))
+    const char *calibrations[] = {flat.bias_path};
+    if (!mef_recipe_run_begin(&run, flat.recipe.path, flat.list_path,
+            calibrations, flat.bias_path ? 1 : 0))
         goto done;
     okay = mef_flat_stack_process(&flat) && mef_flat_stack_publish(&flat) &&
         mef_recipe_run_complete(&run);
