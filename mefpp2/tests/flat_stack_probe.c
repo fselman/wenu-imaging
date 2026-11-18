@@ -53,17 +53,25 @@ static void check_combination(void)
     image_del(dome);
 }
 
-int main(void)
+static void check_bias_before_normalization(const char *kind)
 {
     mef_bb settings = {0};
     mef_ccd detector = {.gain = 1.0f, .ron = 100.0f};
     float mean_normalization = 0.0f, stdev = 0.0f;
     int normalized = 0;
+    int participation[4];
+    const int expected_participation[] = {1, 0, 1, 1};
     double means[4], medians[4], sigmas[4], normalization[4];
 
     settings.xtnum = 1;
     settings.nxts = 1;
     settings.ccd = &detector;
+    settings.dome_minframe = 3;
+    settings.dome_framethr_lo = 10;
+    settings.dome_framethr_hi = 200;
+    settings.dome_median = &mean_normalization;
+    settings.dome_stdev = &stdev;
+    settings.dome_nplanes = &normalized;
     settings.sky_minframe = 3;
     settings.sky_framethr_lo = 10;
     settings.sky_framethr_hi = 200;
@@ -84,9 +92,13 @@ int main(void)
     bias->data[1] = 4;
     bias->data[2] = 12;
 
-    /* The 2-ADU exposure falls below the frame bound only after bias removal. */
-    image_t *flat = mef_stack_flat(&settings, "sky", flat_exposures(bias), bias, normalization);
+    /* After subtraction each row is L × [1, 2, 3] with median and mean 2L.
+       The L=2 exposure then fails the lower bound. The admitted rows all
+       normalize to [0.5, 1, 1.5], which is also their pixelwise median. */
+    image_t *flat = mef_stack_flat_diagnostic(&settings, kind, flat_exposures(bias),
+        bias, normalization, participation);
     assert(flat != NULL);
+    assert(memcmp(participation, expected_participation, sizeof(participation)) == 0);
     assert(normalization[0] == 40 && isnan(normalization[1]));
     assert(normalization[2] == 80 && normalization[3] == 160);
     assert(normalized == 3 && mean_normalization == 280.0f / 3.0f);
@@ -94,9 +106,12 @@ int main(void)
     image_del(flat);
 
     /* Use the same stack with correction disabled and a fixed three-frame sample. */
+    settings.dome_framethr_lo = 30;
     settings.sky_framethr_lo = 30;
-    flat = mef_stack_flat(&settings, "sky", flat_exposures(bias), NULL, normalization);
+    flat = mef_stack_flat_diagnostic(&settings, kind, flat_exposures(bias),
+        NULL, normalization, participation);
     assert(flat != NULL);
+    assert(memcmp(participation, expected_participation, sizeof(participation)) == 0);
     assert(normalization[0] == 44 && isnan(normalization[1]));
     assert(normalization[2] == 84 && normalization[3] == 164);
     assert(normalized == 3 && mean_normalization == 292.0f / 3.0f);
@@ -107,7 +122,14 @@ int main(void)
 
     assert(bias->data[0] == 20 && bias->data[1] == 4 && bias->data[2] == 12);
     image_del(bias);
-    puts("PASS: per-exposure bias, admission, normalization, stacking and input preservation");
+    printf("PASS: %s bias before admission and normalization, exact stack and input preservation\n",
+        kind);
+}
+
+int main(void)
+{
+    check_bias_before_normalization("dome");
+    check_bias_before_normalization("sky");
     check_combination();
     puts("PASS: ratio smoothing, BPM and unsmoothed component preservation");
     return 0;
