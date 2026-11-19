@@ -111,7 +111,18 @@ frame participation and detector normalization headers also matched. Each
 product contains 66,994,144 physical pixels. The report is retained in the
 WFI project's `reduced/logs/wfi-flat-numerics.zAFonf8f/comparison.json`.
 This qualifies the WFI workflow with the supplied retained master bias.
-OmegaCAM qualification with bias subtraction enabled remains pending.
+On the same date, the owner ran the OmegaCAM dome, sky and MFF commands
+with the supplied calibration-stage bias whose SHA-256 is
+`4297cf8ce8dcc38df7ea134a9ee080a7e640d67563bd27abc6c9b44cc72e8597`.
+All three commands completed. The independent numerical verifier from
+`5a95249` passed at zero pixel tolerance for all 32 detectors in each
+product, including normalization medians, frame participation and detector
+normalization headers. Each product contains 267,584,128 physical pixels.
+The report is retained under the OmegaCAM project in
+`reduced/logs/ocam-flat-numerics.l8WQSvyp/comparison.json`.
+These results qualify the numerical dome, sky and MFF workflows for both
+instruments with supplied master biases. The separate saved-product provenance
+checks for the OmegaCAM bias-enabled products remain to be completed.
 
 `tools/verify-flat-numerics.py` provides an independent NumPy reconstruction
 for that check. It reads the raw exposure lists, resolves detectors by EXTNAME,
