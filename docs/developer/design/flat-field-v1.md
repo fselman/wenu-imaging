@@ -89,7 +89,11 @@ a spatially varying bias. The CLI contract additionally exercises scan removal,
 trimming, independently reordered raw/master HDUs, detector-specific admission,
 exact normalization and mosaic pixels, incompatible calibration rejection and
 metadata bindings. Linux C17 checks passed with captured writer records.
-Native ASDF serialization and the Intel Mac gate remain pending for this path.
+On the Intel Mac, the C17 Release build at `156aae5` passed
+`native_flat_stack` in 1.48 s and `native_domeff` in 7.68 s on 2026-11-19.
+The command test covered both dome and sky paths with bias subtraction enabled
+and disabled, using native ASDF serialization and an independent saved reader.
+Real-data qualification with bias subtraction enabled remains pending.
 
 ### Component publication and combination
 
