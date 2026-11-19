@@ -103,8 +103,15 @@ the bias checksum and detector/HDU bindings, and the logged correction stage.
 The subsequent `cal mff` run completed using those two native masters and the
 prepared WFI BPM. Its saved-product check verified all eight detector mappings,
 `CALIB.MASTER_FLAT`, geometry, output digest and all three input bindings.
-These checks establish execution and provenance. Independent real-data
-numerical validation of bias subtraction and the combined result remains pending.
+These checks establish execution and provenance. The owner subsequently ran
+`verify-flat-numerics.py` from `5a95249` on the same WFI products. The independent
+reconstruction passed at zero pixel tolerance for all eight detectors in each
+of the dome, sky and MFF products. Per-exposure normalization medians,
+frame participation and detector normalization headers also matched. Each
+product contains 66,994,144 physical pixels. The report is retained in the
+WFI project's `reduced/logs/wfi-flat-numerics.zAFonf8f/comparison.json`.
+This qualifies the WFI workflow with the supplied retained master bias.
+OmegaCAM qualification with bias subtraction enabled remains pending.
 
 `tools/verify-flat-numerics.py` provides an independent NumPy reconstruction
 for that check. It reads the raw exposure lists, resolves detectors by EXTNAME,
