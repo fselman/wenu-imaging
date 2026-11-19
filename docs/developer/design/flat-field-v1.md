@@ -106,6 +106,18 @@ prepared WFI BPM. Its saved-product check verified all eight detector mappings,
 These checks establish execution and provenance. Independent real-data
 numerical validation of bias subtraction and the combined result remains pending.
 
+`tools/verify-flat-numerics.py` provides an independent NumPy reconstruction
+for that check. It reads the raw exposure lists, resolves detectors by EXTNAME,
+reconstructs rejected-scan row means, trimming, bias subtraction, clipped
+normalization medians, lower-median stacking and reference-detector scaling.
+It then checks the MFF with an independent masked box sum of sky/dome and
+multiplication by the dome. Pixel comparisons use zero tolerance. The JSON
+report includes per-exposure medians and participation, per-detector pixel
+differences and maximum differences. It executes no native commands and opens
+all FITS inputs read-only. The verifier passed analytical dome/sky fixtures,
+masked edge smoothing and detection of an intentionally changed output pixel.
+The real-data verification is a separate owner-executed command.
+
 ### Component publication and combination
 
 For each detector, retain the dome and sky master planes in memory until the
