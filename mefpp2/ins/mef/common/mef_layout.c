@@ -235,7 +235,8 @@ mef_status mef_layout_read(const char *path, const mef_layout_options *options,
     if (out == NULL || *out != NULL || (error != NULL && *error != NULL)) return MEF_ERR_INPUT;
     if (!allocator_for(allocator, &a)) return MEF_ERR_INPUT;
     if (path == NULL || path[0] != '/') return failure(MEF_ERR_INPUT, "Layout requires an absolute input path", &a, error);
-    memset(&defaults, 0, sizeof(defaults)); defaults.max_hdus = 4096; defaults.max_header_bytes = 16 * 1024 * 1024;
+    memset(&defaults, 0, sizeof(defaults)); defaults.max_hdus = 4096;
+    defaults.max_header_bytes = MEF_LAYOUT_DEFAULT_HEADER_BYTES;
     if (options == NULL) options = &defaults;
     if (options->max_hdus == 0 || options->max_hdus > INT_MAX || options->max_header_bytes < 2880 ||
         options->max_hdus > (size_t)-1 / sizeof(hdu)) return failure(MEF_ERR_INPUT, "Invalid layout limits", &a, error);

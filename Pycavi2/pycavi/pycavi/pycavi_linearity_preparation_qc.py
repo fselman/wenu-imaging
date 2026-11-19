@@ -68,11 +68,11 @@ def traces(data, frames, height, role):
         groups[index].append(value)
     qc.require(all(len(v)==height for v in groups.values()),'Incomplete scan trace')
     return [dict(role=role,input_index=r['index'],asset=r['asset'],hdu=r['hdu'],
-                 master_accepted=None if role=='flat' else r['accepted'],
+                 master_accepted=None if role=='flat' or r['accepted']<0 else r['accepted'],
                  raw_row_start=1,correction_adu=groups[r['index']]) for r in frames]
 
 
-def collect(native, resolved, selection, biases, expected_samples, master_snapshot, *, master_reference, transports=None):
+def collect(native, resolved, selection, biases, expected_samples, master_snapshot, *, master_reference, transports=None, input_bpm_policy="archived", bpm_response_limits=None):
     """Read native transport only. No raw FITS or source remeasurement."""
     native=Path(native);frozen={};texts={}
     def read(path):
@@ -90,7 +90,7 @@ def collect(native, resolved, selection, biases, expected_samples, master_snapsh
     qc.require(len(master_rows)==1 and pair.unescape(master_rows[0]['path'])==master_reference['product'] and
                natural(master_rows[0]['hdu'])==master_reference['hdu'],'Native master path/HDU differs from frozen dependency')
     snapshot=json.loads(read(native/'configuration.json'))
-    qc.require(snapshot==master_snapshot,'Native configuration differs from verified master/TOML transport')
+    qc.require(snapshot==recipe.bpm_configuration_snapshot(master_snapshot, bpm_response_limits),'Native configuration differs from verified master/TOML transport')
     recipe.native_configuration(resolved, snapshot)
     detector=next(d for d in resolved['detectors'] if d['detector_id']==selection['detector'])
     height=detector['raw_size'][1];groups=traces(read(native/'bias-traces.tsv'),biases,height,'bias')
@@ -113,8 +113,12 @@ def collect(native, resolved, selection, biases, expected_samples, master_snapsh
         # Preserve counters as evidence without pretending singleton and pair
         # populations are identical. Their selections have different definitions.
         population=sample.parse_population(read(group/'population.tsv'))
-        bias=pair.parse_table(read(group/'bias-ron.tsv'),'bias-ron')
-        raw_bias.append(dict(pair_directory=group.name,table=bias,population=population))
+        bias_data=read(group/'bias-ron.tsv')
+        if biases:
+            bias=pair.parse_table(bias_data,'bias-ron')
+            raw_bias.append(dict(pair_directory=group.name,table=bias,population=population))
+        else:
+            qc.require(not table(bias_data,pair.BIAS_COLUMNS),'Unexpected bias measurements without input evidence')
         for index,(r,v) in enumerate(zip(raw,c)):
             qc.require(r['detector']==detector['detector_id'] and r['amplifier']==detector['amplifier_id'] and
                        r['configuration_detector']==detector['configuration_detector'],'Native detector mismatch')
@@ -130,20 +134,51 @@ def collect(native, resolved, selection, biases, expected_samples, master_snapsh
                     source_pair_directory=group.name,source_pair_row=index))
     qc.require(len(seen)==len(selection['flat']),'Flat coverage differs')
     def key(r):return (r['asset'],r['input_index'],r['hdu'],r['source_roi'],r['active_x'],r['active_y'])
-    expected=expected_samples['rows'];saved={key(r):r for r in samples}
-    qc.require(len(saved)==len(samples)==len(expected),'Duplicate/incomplete direct-site replay')
-    qc.require(all(saved.get(key(r))==r for r in expected),'Corrected direct-site replay differs from preserved archive')
+    saved={key(r):r for r in samples}
+    qc.require(len(saved)==len(samples),'Duplicate direct-site samples')
+    comparison=None
+    if expected_samples is None:
+        replayed=deepcopy(samples)
+    else:
+        expected=expected_samples['rows'];saved={key(r):r for r in samples}
+        qc.require(len(saved)==len(samples)==len(expected),'Duplicate/incomplete direct-site replay')
+        qc.require(input_bpm_policy in ('archived', 'omitted'), 'Unknown input BPM comparison policy')
+        replayed=deepcopy(expected)
+        if input_bpm_policy=='archived':
+            qc.require(all(saved.get(key(r))==r for r in expected),'Corrected direct-site replay differs from preserved archive')
+        else:
+            qc.require(selection['bpm']['encoding']=='omitted' and set(saved)=={key(r) for r in expected},
+                       'Omitted-mask direct-site identity cohort differs')
+            newly_admitted=0
+            for old in expected:
+                current=saved[key(old)]
+                if old['signal_adu'] is not None:
+                    qc.require(current==old, 'Previously admitted direct-site value changed')
+                else:
+                    qc.require(set(current)==set(old) and all(current[k]==old[k] for k in old
+                               if k not in ('signal_adu', 'admission_state')),
+                               'Omitted-mask direct-site metadata changed')
+                    newly_admitted+=current['signal_adu'] is not None
+            replayed=[deepcopy(saved[key(r)]) for r in expected]
+            comparison=dict(input_bpm_policy='omitted', exact_replay=replayed==expected,
+                previously_admitted=sum(r['signal_adu'] is not None for r in expected),
+                newly_admitted=newly_admitted, historical_archive_changed=False)
+
+
     # Stable acquisition/ROI order, independent of the native pair processing order.
     order={r['index']:i for i,r in enumerate(selection['flat'])};roi_order={r['id']:i for i,r in enumerate(detector['rois'])}
     exposures.sort(key=lambda r:(order[r['input_index']],roi_order[r['roi']]))
     if transports is None:
         qc.require(all(pair.sha(pair.small(Path(p)))==digest for p,digest in frozen.items()),'Native evidence changed during reading')
     else:qc.require(set(texts)==set(transports),'Unexpected frozen native transport')
-    return dict(schema_version=1,measurement_stage=STAGE,detector=detector['detector_id'],
-        rows=rows,exposure_rows=exposures,scan_traces=groups,direct_site_replay=deepcopy(expected),
+    result=dict(schema_version=1,measurement_stage=STAGE,detector=detector['detector_id'],
+        rows=rows,exposure_rows=exposures,scan_traces=groups,direct_site_replay=replayed,
         raw_bias_diagnostics=raw_bias,native_sha256=frozen,native_transports=texts,noise_state='unavailable',
         covariance=None,fit_state='not_performed',scientific_acceptance=False,
         units=dict(signal='ADU',variance='ADU2',trace='ADU',exposure='s',coordinates='FITS-1-based-inclusive'))
+    if comparison is not None:
+        result['historical_sample_comparison']=comparison
+    return result
 
 
 def graph(path):

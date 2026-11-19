@@ -42,7 +42,7 @@ Source anchors (repository root):
 
 | Boundary | Implementation |
 |---|---|
-| Admission, serial loop and final publication | [mefpp_bias_recipe.c](../../../../mefpp2/ins/mef/recipes/mefpp_bias_recipe.c) |
+| Admission, serial loop and final publication | [mefpp_bias.c](../../../../mefpp2/ins/mef/recipes/mefpp_bias.c) |
 | Detector calculation and QC populations | [mef_cal_bias.c](../../../../mefpp2/ins/mef/common/mef_cal_bias.c) |
 | Frame selection and median stack | [mef_bias_kernel.c](../../../../mefpp2/ins/mef/common/mef_bias_kernel.c) |
 | Common QC and FITS mapping | [mef_bias_product_qc.c](../../../../mefpp2/ins/mef/common/mef_bias_product_qc.c), [mef_bias_qc_fits.def](../../../../mefpp2/ins/mef/common/mef_bias_qc_fits.def) |

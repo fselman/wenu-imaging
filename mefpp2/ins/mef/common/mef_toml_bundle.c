@@ -208,6 +208,65 @@ mef_status mef_toml_bundle_open(const char *path, const mef_allocator *allocator
     if (status != MEF_OK) { mef_toml_bundle_close(b); return status; }
     *out = b; return MEF_OK;
 }
+mef_status mef_toml_bundle_from_domains(mef_toml_document *recipe, const char *recipe_path,
+    mef_toml_document *detector, const char *detector_path, mef_toml_check check,
+    mef_toml_bundle **out, char *diagnostic, size_t capacity)
+{
+    const char *paths[] = {recipe_path, detector_path};
+    mef_toml_document *documents[] = {recipe, detector};
+    mef_toml_bundle *bundle;
+    mef_status status = MEF_ERR_MEMORY;
+    size_t i, j;
+
+    bundle = calloc(1, sizeof(*bundle));
+    if (bundle == NULL) {
+        mef_toml_close(recipe);
+        mef_toml_close(detector);
+        return status;
+    }
+    bundle->allocator.allocate = allocate;
+    bundle->allocator.release = release;
+    bundle->diagnostic = diagnostic;
+    bundle->diagnostic_capacity = capacity;
+    bundle->count = 2;
+    for (i = 0; i < bundle->count; ++i) {
+        bundle->files[i].document = documents[i];
+    }
+    for (i = 0; i < bundle->count; ++i) {
+        subset *source = bundle->files + i;
+        if (strlen(paths[i]) >= sizeof(source->path)) {
+            status = fail(bundle, MEF_ERR_CONFIG, "Configuration path limit", NULL, paths[i], NULL);
+            goto failed;
+        }
+        strcpy(source->path, paths[i]);
+        for (j = 0; j < mef_toml_count(source->document); ++j) {
+            binding item;
+            item.key = mef_toml_key(source->document, j);
+            item.source = source->path;
+            item.source_key = mef_toml_source_key(source->document, item.key);
+            item.line = mef_toml_source_line(source->document, item.key);
+            item.version = mef_toml_version(source->document);
+            item.overridden = 0;
+            if (mef_toml_get(source->document, item.key, &item.value) != MEF_OK ||
+                !check(item.key, &item.value, 0) || find(bundle->files, item.key)) {
+                status = fail(bundle, MEF_ERR_CONFIG, "Invalid or duplicate native setting",
+                    item.key, source->path, NULL);
+                goto failed;
+            }
+            status = insert(bundle, bundle->files, &item, 1);
+            if (status != MEF_OK) {
+                goto failed;
+            }
+        }
+    }
+    *out = bundle;
+    return MEF_OK;
+
+failed:
+    mef_toml_bundle_close(bundle);
+    return status;
+}
+
 size_t mef_toml_bundle_count(const mef_toml_bundle *b) { return b->files[0].count; }
 mef_status mef_toml_bundle_get(const mef_toml_bundle *b, const char *key, mef_toml_value *out)
 {

@@ -1,6 +1,7 @@
-# Visualization/reference schema; not a replacement for the native reduction configuration.
+# Explicit WFI preparation candidate; validate selected acquisition before execution.
 # Rectangles are FITS 1-based inclusive [xmin, xmax, ymin, ymax].
 processing_footprint_schema_version = 1
+linearity_preparation_schema_version = 1
 instrument = "wfi"
 roi_schema_version = 1
 roi_coordinates = "retained-active"
@@ -11,6 +12,19 @@ use_prescan = 0
 use_overscan = 1
 scan_reject_low = 10
 scan_reject_high = 10
+
+[linearity_preparation]
+raw_saturation_adu = 65534.0
+reject_bits = 255
+mask_encoding = "binary"
+binary_good_value = 1
+pair_time_tolerance_s = 0.0
+with_mad = false
+bias_mean_min_adu = 0.0
+bias_mean_max_adu = 1000.0
+bias_stack_kappa = 2.0
+bias_min_frames = 3
+high_offset_sigma = 5.0
 
 [[trim]]
 detector = "WIN1.CHIP1.OUT1"

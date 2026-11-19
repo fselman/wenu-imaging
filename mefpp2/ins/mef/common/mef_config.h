@@ -41,5 +41,8 @@ void mef_config_destroy(mef_config *config);
  * Snapshot is read-only; use separate streams for concurrent inspection.
  */
 mef_status mef_config_dump(const mef_config *config, FILE *stream);
+/* Complete native TOML transport of an admitted snapshot; only current response
+ * bounds are replaced. Source configuration remains immutable. */
+mef_status mef_config_response_toml(const mef_config *,FILE *,double,double);
 
 #endif

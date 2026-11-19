@@ -3,10 +3,12 @@ from copy import deepcopy
 import json
 from pathlib import Path
 import sys
+import struct
 import unittest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'Pycavi2/pycavi/pycavi'))
 import pycavi_linearity_config as config
+import pycavi_linearity_recipe as recipe
 
 
 class ConfigurationTests(unittest.TestCase):
@@ -28,6 +30,36 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual((first['scan_kept'],upper['scan_kept']), (23,24))
         self.assertEqual(value['sources']['processing_toml']['text'], self.processing)
         self.assertEqual(value, json.loads(json.dumps(value, allow_nan=False)))
+
+    def test_single_saved_slot_keeps_full_native_detector_count(self):
+        detector = (ROOT/'config/detectors/wfi-1x1.toml').read_text()
+        authored = (ROOT/'config/recipes/wfi-bpm-linearity.example.toml').read_text()
+        # Use slot 8, with only its ROIs present in the saved recipe.
+        authored = authored.replace('WIN1.CHIP1.OUT1', 'WIN1.CHIP5.OUT2')
+        authored = authored.replace('amplifier = "L"', 'amplifier = "R"')
+        profile = config.resolve(detector, authored, detector_id='WIN1.CHIP5.OUT2')
+        [entry] = profile['detectors']
+        self.assertEqual(entry['configuration_detector'], 7)
+        self.assertEqual(profile['native_detector_count'], 8)
+        geometry = entry['native_settings']
+        integers = {'MEF.NCHIPS': 8, 'MEF.USE.PRESCAN': geometry['use_prescan'],
+                    'MEF.USE.OVERSCAN': geometry['use_overscan'],
+                    'MEF.SCANREJ.MIN': geometry['rejection'][0],
+                    'MEF.SCANREJ.MAX': geometry['rejection'][1],
+                    'MEF.BIAS.FRAMENUM.MIN': geometry['minimum_frames']}
+        for band in ('prescan', 'overscan'):
+            for part, value in zip(('MIN', 'MAX'), geometry[band]):
+                integers[f'MEF.{band.upper()}.X.{part}.CHIP8'] = value
+        for part, value in zip(('X.MIN', 'X.MAX', 'Y.MIN', 'Y.MAX'), geometry['trim']):
+            integers[f'MEF.CROP.{part}.CHIP8'] = value
+        snapshot = {key: {'type': 'int', 'value': value} for key, value in integers.items()}
+        snapshot['MEF.BIAS.KAPPA1'] = {
+            'type': 'float64-bits', 'value': struct.pack('>d', geometry['kappa']).hex(),
+        }
+        self.assertIn('"MEF.NCHIPS" = 8', recipe.native_configuration(profile, snapshot))
+        snapshot['MEF.NCHIPS']['value'] = 1
+        with self.assertRaisesRegex(ValueError, 'Master/native detector count differs'):
+            recipe.native_configuration(profile, snapshot)
 
     def test_missing_controls_and_no_paf_fallback(self):
         for old in ('linearity_preparation_schema_version = 1\n', 'raw_saturation_adu = 65534.0\n'):

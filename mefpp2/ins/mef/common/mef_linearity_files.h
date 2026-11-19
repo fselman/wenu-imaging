@@ -3,6 +3,7 @@
 #include "mef_linearity_pairs.h"
 #include "mef_linearity_prepare.h"
 #include "mef_layout.h"
+#include "mef_detector_cube.h"
 typedef struct {
     const mef_layout_map *map;
     mef_image_ref reference;
@@ -71,5 +72,7 @@ typedef struct {
  * or dependency-OOM claim. Allocator covers adapter and sample/snapshot owners. */
 mef_status mef_linearity_from_files(const mef_linearity_files_input *,
     const mef_allocator *,mef_linearity_files_result **out);
+mef_status mef_linearity_from_cube(const mef_linearity_files_input *, const mef_detector_cube *,
+    const mef_allocator *,mef_linearity_files_result **);
 void mef_linearity_files_destroy(mef_linearity_files_result *);
 #endif

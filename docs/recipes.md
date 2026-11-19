@@ -16,7 +16,7 @@ mefpp_bias_recipe cal bias --config /path/to/bias-recipe.toml \
 
 The TOML must explicitly define settings, detector/configuration/HDU bindings,
 readout/binning/amplifier identity, BPM selection and measurement choices. See
-[the recipe configuration reader](../mefpp2/ins/mef/common/mef_bias_recipe_config.c)
+[the recipe configuration reader](../mefpp2/ins/mef/common/mef_bias_config.c)
 and [scientific guide](developer/bias-recipe-mathematical-guide-v1.pdf) for the
 supported contract. A complete `--output FITS` may replace `--output-dir`; supplying
 both is refused. Input lists, configuration and outputs resolve explicitly; the
@@ -37,10 +37,27 @@ For read-only product comparisons use
 [`compare-bias-products.py`](../tools/compare-bias-products.py) with its `--help`.
 The QC viewer reads saved ASDF; plotting does not recompute scientific results.
 
+## BPM / linearity
+
+The single [BPM/linearity guide](developer/bpm-linearity-guide.pdf)
+([source](developer/bpm-linearity-guide.tex)) covers the recipe's command,
+settings/defaults, detector flow, robust response BPM, measurements, FITS/ASDF
+products and QC. The public command contract is:
+
+```sh
+mefpp_recipe cal bpm-linearity --config RECIPE.toml --qc false
+```
+
+The unified command and direct native recipe admission are unfinished on the
+feature branch; this is the agreed interface, not a qualified execution example.
+OCAM/WFI TOMLs remain authoring templates until actual bindings and the native
+interface are qualified. Project TOML owns roots. The recipe shares one processed
+cube per detector, skips BPM creation when a mask is supplied, and records
+measurement-only linearity diagnostics. It applies no physical linearity correction.
+
 ## Other processing
 
-The legacy mefpp command and Pycavi workflows remain available. BPM, flat and
-science processing must retain their own calibration dependencies and collective
-operations. Their standalone interfaces and real-data acceptance cases must be
-qualified before being advertised as completed refactored recipes. Linearity
-work is currently paused; existing measurements/products remain the starting point.
+The legacy mefpp command and Pycavi workflows remain available. Flat and science
+processing retain their own dependencies and collective operations. Their
+standalone interfaces and real-data acceptance cases must be qualified before
+being advertised as completed refactored recipes. Cross-talk remains deferred.

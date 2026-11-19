@@ -120,11 +120,11 @@ static int write_header(FILE *out, qfits_header *h, const char *basename, size_t
     qfits_header_destroy(copy);
     return okay;
 }
-static int copy_data(FILE *out, const mef_assembly_detector *d, const source_span *span)
+static int copy_span(FILE *out, const char *path, const source_span *span)
 {
     unsigned char buffer[65536];
     struct stat before, after;
-    FILE *in = fopen(d->path, "rb");
+    FILE *in = fopen(path, "rb");
     off_t remaining = span->data_size;
     int okay = 0;
     if (in == NULL) return 0;
@@ -199,7 +199,7 @@ int mef_mef_assemble(const char *final_path, const char *reference_id,
     for (i = 0; i < count; ++i) {
         h = qfits_header_readext((char *)detectors[i].path, 1);
         if (h == NULL || !write_header(out, h, basename, count, 0, &header_bytes) ||
-            !copy_data(out, detectors + i, spans + i)) goto done;
+            !copy_span(out, detectors[i].path, spans + i)) goto done;
         qfits_header_destroy(h); h = NULL;
     }
     if (fclose(out)) { out = NULL; goto done; }
@@ -241,4 +241,208 @@ done:
     if (!committed) return fail(message, size, detail);
     if (message != NULL && size) message[0] = '\0';
     return 0;
+}
+
+/* BPM layout admission is separate from the bias one-extension contract. */
+#define BPM_PLANES 7
+static const char *const bpm_names[BPM_PLANES] = {
+    "BPM", "COVERAGE", "NSAMPLE", "NEWFLAGS", "SELECTION", "PRIORFLAGS", "PRIORSEL"
+};
+typedef struct {
+    source_span planes[BPM_PLANES];
+    int count, width, height;
+    const char *names[BPM_PLANES];
+} bpm_source;
+
+static int inspect_bpm(const mef_bpm_assembly_detector *d, bpm_source *source)
+{
+    struct stat st;
+    qfits_header *h = NULL;
+    int i, count, okay = 0;
+    off_t start, length, previous = 0;
+    if (lstat(d->path, &st) || !S_ISREG(st.st_mode) || st.st_size <= 0 ||
+        st.st_size % 2880 || qfits_cache_prime_bounded((char *)d->path, BPM_PLANES, 1048576)) return 0;
+    count = qfits_query_n_ext((char *)d->path) + 1;
+    if (count < 5 || count > 6) return 0;
+    source->count = count;
+    for (i = 0; i < count; ++i) {
+        uint64_t bytes;
+        h = i ? qfits_header_readext((char *)d->path, i) : qfits_header_read((char *)d->path);
+        source->names[i] = i == 5 && h && header_string(h, "EXTNAME", "PRIORSEL") ? "PRIORSEL" : bpm_names[i];
+        if (!h || !header_string(h, "EXTNAME", source->names[i]) ||
+            qfits_header_getint(h, "NAXIS", -1) != 2 ||
+            qfits_header_getint(h, "BITPIX", 0) != (i == 2 ? 16 : 8) ||
+            qfits_header_getdouble(h, "BSCALE", 1.0) != 1.0 ||
+            qfits_header_getdouble(h, "BZERO", 0.0) != 0.0) goto done;
+        if (i == 0) {
+            source->width = qfits_header_getint(h, "NAXIS1", 0);
+            source->height = qfits_header_getint(h, "NAXIS2", 0);
+            if (!header_string(h, "SIMPLE", "T") || !header_string(h, "DETID", d->detector_id) ||
+                !header_string(h, "MASKENC", "REASON8") || !header_string(h, "MASKREG", "WENU_BPM_V1") ||
+                source->width < 1 || source->height < 1) goto done;
+        } else if (!header_string(h, "XTENSION", "IMAGE") ||
+            qfits_header_getint(h, "PCOUNT", -1) != 0 || qfits_header_getint(h, "GCOUNT", -1) != 1) goto done;
+        if (qfits_header_getint(h, "NAXIS1", 0) != source->width ||
+            qfits_header_getint(h, "NAXIS2", 0) != source->height ||
+            qfits_get_hdrinfo_wide((char *)d->path, i, &start, &length) || start != previous ||
+            qfits_get_datinfo_wide((char *)d->path, i, &source->planes[i].data_start, &source->planes[i].data_size)) goto done;
+        bytes = (uint64_t)source->width * (uint64_t)source->height * (i == 2 ? 2u : 1u);
+        if (bytes > INT64_MAX - 2879 || length < 2880 || length % 2880 ||
+            start > st.st_size - length || source->planes[i].data_start != start + length ||
+            source->planes[i].data_size != (off_t)((bytes + 2879) / 2880 * 2880) ||
+            source->planes[i].data_size > st.st_size - source->planes[i].data_start) goto done;
+        source->planes[i].identity = st;
+        previous = source->planes[i].data_start + source->planes[i].data_size;
+        qfits_header_destroy(h); h = NULL;
+    }
+    okay = previous == st.st_size;
+done:
+    qfits_header_destroy(h);
+    return okay;
+}
+
+static qfits_header *bpm_header(qfits_header *source, const mef_bpm_assembly_detector *d,
+    int plane, const char *plane_name, size_t total)
+{
+    qfits_header *h = qfits_header_new();
+    char key[81], value[81], comment[81], line[81], number[32], quoted[81];
+    int i;
+    if (!h) return NULL;
+    if (plane < 0) {
+        qfits_header_append(h, "SIMPLE", "T", NULL, NULL);
+        qfits_header_append(h, "BITPIX", "8", NULL, NULL);
+        qfits_header_append(h, "NAXIS", "0", NULL, NULL);
+        qfits_header_append(h, "EXTEND", "T", NULL, NULL);
+    } else {
+        qfits_header_append(h, "XTENSION", "'IMAGE'", NULL, NULL);
+        snprintf(number, sizeof(number), "%d", plane == 2 ? 16 : 8);
+        qfits_header_append(h, "BITPIX", number, NULL, NULL);
+        qfits_header_append(h, "NAXIS", "2", NULL, NULL);
+        for (i = 1; i <= 2; ++i) {
+            snprintf(key, sizeof(key), "NAXIS%d", i);
+            snprintf(number, sizeof(number), "%d", qfits_header_getint(source, key, 0));
+            qfits_header_append(h, key, number, NULL, NULL);
+        }
+        qfits_header_append(h, "PCOUNT", "0", NULL, NULL);
+        qfits_header_append(h, "GCOUNT", "1", NULL, NULL);
+    }
+    for (i = 0; i < source->n; ++i) {
+        if (qfits_header_getitem(source, i, key, value, comment, line)) goto failed;
+        if (!strcmp(key, "SIMPLE") || !strcmp(key, "XTENSION") || !strcmp(key, "BITPIX") ||
+            !strncmp(key, "NAXIS", 5) || !strcmp(key, "PCOUNT") || !strcmp(key, "GCOUNT") ||
+            !strcmp(key, "EXTEND") || !strcmp(key, "NEXTEND") || !strcmp(key, "EXTNAME") ||
+            !strcmp(key, "EXTVER") || !strcmp(key, "DETID") || !strcmp(key, "END") ||
+            !strcmp(key, "CHECKSUM") || (plane < 0 && !strcmp(key, "DATASUM"))) continue;
+        qfits_header_append(h, key, *value ? value : NULL, *comment ? comment : NULL, *line ? line : NULL);
+    }
+    snprintf(quoted, sizeof(quoted), "'%s'", d->detector_id);
+    qfits_header_append(h, "DETID", quoted, NULL, NULL);
+    if (plane >= 0) {
+        snprintf(quoted, sizeof(quoted), "'%s'", plane == 0 ? d->detector_id : plane_name);
+        qfits_header_append(h, "EXTNAME", quoted, NULL, NULL);
+        snprintf(number, sizeof(number), "%lu", (unsigned long)d->configuration_detector + 1);
+        qfits_header_append(h, "EXTVER", number, NULL, NULL);
+    } else {
+        snprintf(number, sizeof(number), "%lu", (unsigned long)total);
+        qfits_header_append(h, "NEXTEND", number, NULL, NULL);
+    }
+    qfits_header_append(h, "END", NULL, NULL, NULL);
+    return h;
+failed:
+    qfits_header_destroy(h);
+    return NULL;
+}
+
+int mef_bpm_mef_assemble(const char *path, const char *reference,
+    const mef_bpm_assembly_detector *detectors, size_t count, char *message, size_t size)
+{
+    bpm_source *sources = NULL;
+    qfits_header *original = NULL, *h = NULL;
+    FILE *out = NULL;
+    struct stat st;
+    char *temporary = NULL;
+    const char *name, *detail = "Invalid BPM assembly request";
+    size_t i, j, ref = SIZE_MAX, total = 0, bytes = 0, output_hdu = 0;
+    int plane, pass, fd = -1, owned = 0, status = -1;
+    if (!path || path[0] != '/' || !reference || !detectors || !count || count > 4096) goto done;
+    name = strrchr(path, '/') + 1;
+    if (strlen(name) < 6 || strlen(name) > 68 || strcmp(name + strlen(name) - 5, ".fits") ||
+        strchr(name, '\'') || strspn(name, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._:-") != strlen(name)) goto done;
+    for (i = 0; i < count; ++i) {
+        const mef_bpm_assembly_detector *d = detectors + i;
+        if (!d->path || d->path[0] != '/' || !d->detector_id || !*d->detector_id ||
+            strlen(d->detector_id) > 64 || strchr(d->detector_id, '\'') ||
+            d->configuration_detector > INT_MAX - 1) goto done;
+        for (j = 0; j < i; ++j)
+            if (!strcmp(d->path, detectors[j].path) || !strcmp(d->detector_id, detectors[j].detector_id) ||
+                d->configuration_detector == detectors[j].configuration_detector) goto done;
+        if (!strcmp(d->detector_id, reference)) ref = i;
+    }
+    if (ref == SIZE_MAX || lstat(path, &st) == 0 || errno != ENOENT) goto done;
+    sources = calloc(count, sizeof(*sources));
+    if (!sources) goto done;
+    qfits_cache_purge();
+    detail = "BPM detector identity, diagnostic layout or padded data span differs";
+    for (i = 0; i < count; ++i) {
+        if (!inspect_bpm(detectors + i, sources + i)) goto done;
+        total += (size_t)sources[i].count;
+    }
+    temporary = malloc(strlen(path) + 32);
+    if (!temporary) goto done;
+    snprintf(temporary, strlen(path) + 32, "%s.assembling-XXXXXX", path);
+    fd = mkstemp(temporary);
+    if (fd < 0) goto done;
+    owned = 1; out = fdopen(fd, "wb");
+    if (!out) goto done;
+    fd = -1;
+    original = qfits_header_read((char *)detectors[ref].path);
+    if (!original || !(h = bpm_header(original, detectors + ref, -1, NULL, total)) ||
+        !write_header(out, h, name, total, 1, &bytes)) goto done;
+    qfits_header_destroy(original); original = NULL;
+    qfits_header_destroy(h); h = NULL;
+    /* Masks form a contiguous catalogue-ordered group, then diagnostic planes. */
+    for (pass = 0; pass < 2; ++pass) for (i = 0; i < count; ++i) {
+        for (plane = pass ? 1 : 0; plane < (pass ? sources[i].count : 1); ++plane) {
+            original = plane ? qfits_header_readext((char *)detectors[i].path, plane) : qfits_header_read((char *)detectors[i].path);
+            h = original ? bpm_header(original, detectors + i, plane, sources[i].names[plane], total) : NULL;
+            if (!h || !write_header(out, h, name, total, 0, &bytes) ||
+                !copy_span(out, detectors[i].path, sources[i].planes + plane)) goto done;
+            qfits_header_destroy(original); original = NULL;
+            qfits_header_destroy(h); h = NULL;
+        }
+    }
+    if (fflush(out) || fsync(fileno(out))) goto done;
+    if (fclose(out)) { out = NULL; goto done; }
+    out = NULL;
+    detail = "Assembled BPM MEF native readback failed";
+    qfits_cache_purge();
+    if (qfits_cache_prime_bounded(temporary, total + 1, bytes) || qfits_query_n_ext(temporary) != (int)total) goto done;
+    for (pass = 0; pass < 2; ++pass) for (i = 0; i < count; ++i) {
+        for (plane = pass ? 1 : 0; plane < (pass ? sources[i].count : 1); ++plane) {
+            off_t start, length;
+            h = qfits_header_readext(temporary, (int)++output_hdu);
+            if (!h || !header_string(h, "DETID", detectors[i].detector_id) ||
+                !header_string(h, "EXTNAME", plane ? sources[i].names[plane] : detectors[i].detector_id) ||
+                !header_string(h, "ORIGFILE", name) ||
+                qfits_header_getint(h, "EXTVER", 0) != (int)detectors[i].configuration_detector + 1 ||
+                qfits_header_getint(h, "BITPIX", 0) != (plane == 2 ? 16 : 8) ||
+                qfits_header_getint(h, "NAXIS1", 0) != sources[i].width ||
+                qfits_header_getint(h, "NAXIS2", 0) != sources[i].height ||
+                qfits_get_datinfo_wide(temporary, (int)output_hdu, &start, &length) ||
+                length != sources[i].planes[plane].data_size) goto done;
+            qfits_header_destroy(h); h = NULL;
+        }
+        if (lstat(detectors[i].path, &st) || !same_file(&st, &sources[i].planes[0].identity)) goto done;
+    }
+    detail = "Cannot exclusively publish BPM MEF";
+    if (link(temporary, path)) goto done;
+    status = 0;
+done:
+    qfits_header_destroy(original); qfits_header_destroy(h);
+    if (out) fclose(out);
+    if (fd >= 0) close(fd);
+    if (owned) unlink(temporary);
+    free(temporary); free(sources); qfits_cache_purge();
+    if (message && size) snprintf(message, size, "%s", status ? detail : "");
+    return status;
 }

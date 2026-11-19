@@ -62,7 +62,7 @@ mef_status mef_linearity_pairs_write_tsv(FILE *stream,const mef_linearity_pairs_
     if(!stream||!valid(r))return MEF_ERR_INPUT;
     writer w={stream,1,0};
     fputs(COMMON "\tpair_id\tfirst_asset\tfirst_input_index\tfirst_hdu\tfirst_seconds\tsecond_asset\tsecond_input_index\tsecond_hdu\tsecond_seconds\tregion_pixels\tbpm_excluded\tnonfinite_excluded\tsaturated\tvalid_pixels\tlevels_available\tflat1_mean_adu\tflat2_mean_adu\tbias1_mean_adu\tbias2_mean_adu\tsignal_available\tsignal1_adu\tsignal2_adu\tmean_signal_adu\tvariance_available\tflat_difference_variance_adu2\tbias_difference_variance_adu2\tsingle_flat_variance_adu2\tsingle_bias_variance_adu2\tmismatch_available\tfractional_mismatch\tmatched_ron_available\tmatched_ron_adu\tmatched_ron_mad_available\tmatched_ron_mad_adu\tgain_state\tpoint_gain_e_per_adu\n",stream);
-    static const char *states[]={"arithmetic_available","too_few_pixels","nonpositive_signal","nonpositive_variance"};
+    static const char *states[]={"arithmetic_available","too_few_pixels","nonpositive_signal","nonpositive_variance","bias_evidence_unavailable"};
     for(size_t i=0;i<r->rows;++i){const mef_linearity_pair_row *row=r->row+i;
         const detector_gain_pair_result *m=&row->measurement;
         common(&w,r,row->roi);text(&w,r->frame[row->first].pair_id);
@@ -71,8 +71,8 @@ mef_status mef_linearity_pairs_write_tsv(FILE *stream,const mef_linearity_pairs_
             text(&w,f->asset_id);integer(&w,f->input_index);integer(&w,f->hdu);number(&w,1,f->seconds);}
         count(&w,m->region_pixels);count(&w,row->bpm_excluded);count(&w,m->nonfinite_excluded);
         count(&w,row->saturated);count(&w,m->valid_pixels);
-        integer(&w,m->levels[0].level_available);
-        for(int j=0;j<4;++j)number(&w,m->levels[j].level_available,m->levels[j].mean);
+        integer(&w,m->gain_state!=DETECTOR_GAIN_PAIR_MISSING_BIAS && m->levels[0].level_available);
+        for(int j=0;j<4;++j)number(&w,m->gain_state!=DETECTOR_GAIN_PAIR_MISSING_BIAS && m->levels[j].level_available,m->levels[j].mean);
         integer(&w,row->signal_available);number(&w,m->signals_available,m->signal_first);
         number(&w,m->signals_available,m->signal_second);number(&w,row->signal_available,row->mean_signal);
         integer(&w,row->variance_available);number(&w,row->variance_available,m->flat_variance);
@@ -82,8 +82,8 @@ mef_status mef_linearity_pairs_write_tsv(FILE *stream,const mef_linearity_pairs_
         integer(&w,m->ron_available);number(&w,m->ron_available,m->ron_adu);
         integer(&w,m->ron_mad_available);number(&w,m->ron_mad_available,m->ron_mad_adu);
         int state=(int)m->gain_state;
-        text(&w,state>=0&&state<4?states[state]:"invalid_state");
-        if(state<0||state>=4)w.bad_value=1;
+        text(&w,state>=0&&state<5?states[state]:"invalid_state");
+        if(state<0||state>=5)w.bad_value=1;
         number(&w,m->gain_state==DETECTOR_GAIN_PAIR_AVAILABLE,m->gain_e_per_adu);end(&w);
     }
     return finish(&w);
@@ -93,7 +93,7 @@ mef_status mef_linearity_bias_write_tsv(FILE *stream,const mef_linearity_pairs_r
     if(!stream||!valid(r))return MEF_ERR_INPUT;
     writer w={stream,1,0};
     fputs(COMMON "\tregion_pixels\tbpm_excluded\tnonfinite_excluded\tsaturated\tvalid_pixels\tlevel_available\tdifference_mean_adu\tdifference_median_adu\tstdev_available\tdifference_stdev_adu\tmad_available\tdifference_mad_adu\tron_available\tron_adu\tron_mad_available\tron_mad_adu\n",stream);
-    for(int i=0;i<r->rois;++i){const mef_linearity_bias_roi *b=r->bias+i;const image_sample_stats *s=&b->difference;
+    for(int i=0;i<(r->raw_bias_asset[0][0]?r->rois:0);++i){const mef_linearity_bias_roi *b=r->bias+i;const image_sample_stats *s=&b->difference;
         common(&w,r,i);count(&w,s->region_pixels);count(&w,b->bpm_excluded);count(&w,s->nonfinite_excluded);
         count(&w,b->saturated);count(&w,s->valid_pixels);integer(&w,s->level_available);
         number(&w,s->level_available,s->mean);number(&w,s->level_available,s->median);

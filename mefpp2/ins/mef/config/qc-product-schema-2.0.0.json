@@ -38,7 +38,10 @@
           "type": "object",
           "properties": {
             "qc_profile": {
-              "enum": ["full", "legacy"]
+              "enum": [
+                "full",
+                "legacy"
+              ]
             },
             "producer": {
               "type": "object",
@@ -116,7 +119,8 @@
                 },
                 "format": {
                   "enum": [
-                    "bias-recipe-toml/1"
+                    "bias-recipe-toml/1",
+                    "bpm-linearity-recipe-toml/1"
                   ]
                 },
                 "snapshot": {
@@ -270,7 +274,9 @@
           "properties": {
             "record_scope": {
               "enum": [
-                "one_final_MEF_product"
+                "one_final_MEF_product",
+                "one_final_primary_image_product",
+                "one_final_table_product"
               ]
             },
             "input_reference_policy": {
@@ -283,11 +289,61 @@
                 "caller_supplied_values_only"
               ]
             },
+            "operation_context": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "snapshot": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "format",
+                "snapshot"
+              ],
+              "additionalProperties": false
+            },
             "bpm_registry": {
               "type": "string",
               "minLength": 1,
               "maxLength": 32,
               "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "table_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "native_evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4096,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "format": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "name",
+                  "format",
+                  "text"
+                ],
+                "additionalProperties": false
+              }
             }
           },
           "required": [
@@ -368,7 +424,116 @@
         "extensions",
         "calibrations"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "extensions": {
+                  "properties": {
+                    "record_scope": {
+                      "enum": [
+                        "one_final_MEF_product"
+                      ]
+                    }
+                  },
+                  "not": {
+                    "required": [
+                      "table_name"
+                    ]
+                  }
+                },
+                "characterization": {
+                  "properties": {
+                    "detectors": {
+                      "items": {
+                        "properties": {
+                          "output_hdu": {
+                            "minimum": 1
+                          }
+                        },
+                        "required": [
+                          "output_hdu"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "extensions": {
+                  "properties": {
+                    "record_scope": {
+                      "enum": [
+                        "one_final_primary_image_product"
+                      ]
+                    }
+                  },
+                  "not": {
+                    "required": [
+                      "table_name"
+                    ]
+                  }
+                },
+                "characterization": {
+                  "properties": {
+                    "detectors": {
+                      "items": {
+                        "properties": {
+                          "output_hdu": {
+                            "enum": [
+                              0
+                            ]
+                          }
+                        },
+                        "required": [
+                          "output_hdu"
+                        ]
+                      },
+                      "minItems": 1,
+                      "maxItems": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "extensions": {
+                  "properties": {
+                    "record_scope": {
+                      "enum": [
+                        "one_final_table_product"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "table_name"
+                  ]
+                },
+                "characterization": {
+                  "properties": {
+                    "detectors": {
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": {
+                        "not": {
+                          "required": [
+                            "output_hdu"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   },
   "required": [
@@ -597,7 +762,7 @@
         },
         "output_hdu": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         },
         "bin_x": {
           "type": "integer",
@@ -626,7 +791,6 @@
         "amplifier",
         "readout_id",
         "configuration_detector",
-        "output_hdu",
         "bin_x",
         "bin_y",
         "measurements"

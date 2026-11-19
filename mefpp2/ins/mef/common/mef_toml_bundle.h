@@ -6,6 +6,10 @@ typedef struct mef_toml_bundle mef_toml_bundle;
 typedef int (*mef_toml_check)(const char *, const mef_toml_value *, int);
 mef_status mef_toml_bundle_open(const char *path, const mef_allocator *allocator,
     mef_toml_check check, mef_toml_bundle **out, char *diagnostic, size_t capacity);
+/* Takes ownership of both views, including on failure. Source trees remain borrowed. */
+mef_status mef_toml_bundle_from_domains(mef_toml_document *recipe, const char *recipe_path,
+    mef_toml_document *detector, const char *detector_path, mef_toml_check check,
+    mef_toml_bundle **out, char *diagnostic, size_t capacity);
 mef_status mef_toml_bundle_sources(mef_toml_bundle *bundle, const char **out);
 void mef_toml_bundle_close(mef_toml_bundle *bundle);
 size_t mef_toml_bundle_count(const mef_toml_bundle *bundle);

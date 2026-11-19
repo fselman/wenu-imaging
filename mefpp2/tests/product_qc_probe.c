@@ -74,6 +74,14 @@ int main(int argc,char **argv)
     p.configuration_id="fixture-effective-settings";
     p.configuration_snapshot="{\"MEF.NCHIPS\":{\"type\":\"int\",\"value\":2}}";
     p.inputs=inputs;p.input_count=3;p.detectors=detectors;p.detector_count=2;
+    mef_qc_text_evidence evidence[2]={{"plan.tsv","plan/1","source\tA\n"},{"traces.tsv","trace/1","1\t2.5\n"}};
+    if(!strcmp(mode,"table") || !strcmp(mode,"table-hdu") || !strcmp(mode,"duplicate-evidence") || !strcmp(mode,"missing-evidence")) {
+        strcpy(fits+strlen(fits)-5,".tsv");p.table_name="roi_measurements";p.detector_count=1;
+        detectors[0].output_hdu=!strcmp(mode,"table-hdu")?1:0;
+        p.evidence=evidence;p.evidence_count=2;
+        if(!strcmp(mode,"duplicate-evidence")) evidence[1].name=evidence[0].name;
+        if(!strcmp(mode,"missing-evidence")) evidence[1].text=NULL;
+    }
     if(!strcmp(mode,"with-bpm")) {
         memset(&calibration,0,sizeof(calibration));snprintf(bpm,sizeof(bpm),"%s/bpm.fits",base);
         calibration.id="bpm-0000";calibration.path=bpm;calibration.role="bpm";calibration.bindings=cb;calibration.binding_count=2;
@@ -106,7 +114,8 @@ int main(int argc,char **argv)
     else if(!strcmp(mode,"outside-log"))p.log_path="/elsewhere/log";
     else if(!strcmp(mode,"bad-sha"))inputs[0].sha256="not-a-sha256";
     else if(!strcmp(mode,"invalid-region"))product[0][0].bounds[0]=0;
-    else if(strcmp(mode,"good"))return 2;
+    else if(strcmp(mode,"good") && strcmp(mode,"table") && strcmp(mode,"table-hdu") &&
+            strcmp(mode,"duplicate-evidence") && strcmp(mode,"missing-evidence"))return 2;
     original=p;
     if(!strcmp(argv[1],"validate"))code=mef_product_qc_validate(&p,message,sizeof(message));
     else if(!strcmp(argv[1],"write") && argc==5){

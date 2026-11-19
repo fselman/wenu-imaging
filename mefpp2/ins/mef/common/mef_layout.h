@@ -6,6 +6,7 @@
 #include "image_handling.h"
 
 #define MEF_LAYOUT_TEXT 81
+#define MEF_LAYOUT_DEFAULT_HEADER_BYTES (16 * 1024 * 1024)
 typedef struct mef_layout mef_layout;
 typedef struct mef_layout_map mef_layout_map;
 typedef enum { MEF_HDU_EMPTY = 1, MEF_HDU_IMAGE, MEF_HDU_TABLE } mef_hdu_kind;

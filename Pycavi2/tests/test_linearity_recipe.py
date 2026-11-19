@@ -83,6 +83,68 @@ class RecipeTests(unittest.TestCase):
         run=subprocess.run(argv,capture_output=True)
         self.assertNotEqual(run.returncode,0);self.assertFalse((target/'command.complete').exists())
 
+    def test_recipe_file_directory_contract(self):
+        from linearity_preparation_fixture import fixture, source_archive
+        state = fixture(self.work/'separated', separated=True)
+        controls, reduced, raw = state['work'], state['reduced'], state['raw']
+        source = source_archive(state)
+        for name, item in state['resolved']['sources'].items():
+            (controls/(name+'.toml')).write_text(item['text'])
+        inputs = [*raw.glob('*.fits'), Path(state['master']), Path(state['selection']['bpm']['path'])]
+        before = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
+        for path in inputs:
+            path.chmod(0o444)
+        raw.chmod(0o555)
+        run = reduced/'cal/bpm-linearity/run-001'
+        run.mkdir(parents=True)
+        for folder in ('work', 'logs'):
+            (reduced/folder).mkdir()
+        project = (ROOT/'docs/architecture/proposed/m2/project-contracts/examples/omegacam.toml').read_text()
+        project = project.replace('project_schema_version = 1', 'project_schema_version = 2', 1)
+        replacements = {'raw': raw, 'calibration': reduced/'cal', 'output': reduced,
+                        'work': reduced/'work', 'logs': reduced/'logs'}
+        for key, value in replacements.items():
+            project = project.replace('"review locations/'+key+'"', json.dumps(str(value)))
+        project = project.replace('"../../examples/omegacam/full.toml"', json.dumps(str(controls/'native.toml')))
+        header, domains = project.split('[association]', 1)
+        (controls/'project.toml').write_text(header.replace('project_schema_version = 2',
+            'project_schema_version = 2\ninclude = ["domains.toml"]', 1))
+        (controls/'domains.toml').write_text('project_schema_version = 2\n[association]'+domains)
+        envelope = dict(linearity_recipe_schema_version=1, project='project.toml',
+            preparation=dict(detector_toml='detector_toml.toml', processing_toml='processing_toml.toml',
+                source_samples=str(source), handoff=str(state['handoff_path']),
+                native=str(Path(os.environ['LINEARITY_PREPARE_BINARY']).resolve()),
+                run='cal/bpm-linearity/run-001', source_revision='b'*40))
+        text = 'linearity_recipe_schema_version = 1\nproject = "project.toml"\n'
+        for table in ('preparation',):
+            text += '\n['+table+']\n'
+            text += ''.join(key+' = '+json.dumps(value)+'\n' for key, value in envelope[table].items())
+        path = controls/'bpm-linearity.toml'
+        path.write_text(text)
+        command = [sys.executable, str(ROOT/'tools/prepare-linearity.py'), '--config', str(path), '--execute']
+        result = subprocess.run(command, cwd=controls, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
+        receipt = json.loads((run/'execution.json').read_text())
+        self.assertEqual(receipt['status'], 'complete_for_owner_inspection')
+        self.assertEqual(receipt['directories']['orchestration'], str(controls))
+        self.assertTrue((controls/'run-001/native.toml').is_file())
+        self.assertFalse((run/'native.toml').exists())
+        self.assertTrue((reduced/'logs/run-001/native.log').is_file())
+        self.assertTrue((reduced/'work/run-001/native/command.complete').is_file())
+        self.assertEqual(set(receipt['configuration_sources']),
+                         {str(path), str(controls/'project.toml'), str(controls/'domains.toml')})
+        product = archive.read_product(receipt['product']['path'])
+        self.assertEqual(len(product['exposure_rows']), 100)
+        self.assertEqual(product['exposure_rows'][0]['signal_adu'], 205.5)
+        repeated = subprocess.run(command, cwd=controls, capture_output=True, text=True)
+        self.assertNotEqual(repeated.returncode, 0)
+        self.assertEqual(before, {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs})
+        dependencies = recipe.preparation_dependencies(source, state['handoff_path'], state['resolved'])
+        with self.assertRaises(ValueError):
+            recipe.preparation_layout(dependencies, run, raw=raw, orchestration=controls, reduced=raw)
+        self.assertEqual(len(list(raw.iterdir())), 30)
+        self.assertFalse(list(controls.glob('*.fits')))
+
     def test_dependency_admission_and_complete_recipe(self):
         dependencies=recipe.preparation_dependencies(self.source,self.work/'handoff.json',self.resolved)
         self.assertEqual(len(dependencies['biases']),10)

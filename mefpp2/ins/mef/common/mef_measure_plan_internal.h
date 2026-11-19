@@ -59,7 +59,9 @@ static int read_plan(const char *path,plan *p)
         line=next;
     }
     for(int k=0;k<KEYS;++k)if(!p->value[k])return 0;
-    return !strcmp(p->value[21],"raw-pair-plan-v1")&&p->flats>=2&&!(p->flats%2)&&p->biases==2;
+    return p->flats>=2 && !(p->flats%2) &&
+        ((!strcmp(p->value[21],"raw-pair-plan-v1") && p->biases==2) ||
+         (!strcmp(p->value[21],"raw-pair-plan-v2") && (p->biases==0||p->biases==2)));
 }
 static int empty_directory(const char *path)
 {

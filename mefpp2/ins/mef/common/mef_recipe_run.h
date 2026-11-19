@@ -17,7 +17,7 @@ typedef struct {
     char message[512];
     const char *operation, *progress_tag, *workspace_tag, *display_name, *revision;
     FILE *log;
-    int log_descriptor;
+    int log_descriptor, has_final_mef;
 } mef_recipe_run;
 
 void mef_recipe_run_initialize(

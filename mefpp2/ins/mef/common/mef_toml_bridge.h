@@ -16,6 +16,9 @@ void mef_config_toml_initialize(void);
 int mef_toml_is_initialized(void);
 mef_status mef_toml_open(const char *path, mef_toml_document **out,
     char *diagnostic, size_t capacity);
+struct mef_toml_file;
+mef_status mef_toml_embedded_domains(const struct mef_toml_file *file, int detector_profile,
+    mef_toml_document **out, char *diagnostic, size_t capacity);
 void mef_toml_close(mef_toml_document *document);
 const char *mef_toml_source_text(const mef_toml_document *document);
 const char *mef_toml_source_key(const mef_toml_document *document, const char *key);

@@ -124,9 +124,12 @@ def admit_batch(batch):
 
 def sources(row,entry):
     s=entry['selection'];m=entry['master']
-    return [dict(file_id=row['asset'],detector_id=row['detector'],hdu_index=row['hdu']),
-            dict(file_id=m['product'],detector_id=row['detector'],hdu_index=m['hdu']),
-            dict(file_id=s['bpm']['asset'],detector_id=row['detector'],hdu_index=s['bpm']['hdu'])]
+    result = [dict(file_id=row['asset'],detector_id=row['detector'],hdu_index=row['hdu']),
+              dict(file_id=m['product'],detector_id=row['detector'],hdu_index=m['hdu'])]
+    if s['bpm'].get('encoding') != 'omitted':
+        result.append(dict(file_id=s['bpm']['asset'],detector_id=row['detector'],hdu_index=s['bpm']['hdu']))
+    return result
+
 
 
 def signal_definition(row,index):
@@ -176,7 +179,9 @@ def publish_entry(state,directory,*,assessment_id,created_at,serializer_revision
     producer=dict(name='mefpp_sample_extract',version='singleton-native-v1',source_revision=origin['native_revision'])
     config_id='sha256:'+sha(canonical(state['native_configuration']).encode())
     inputsdir=directory/'inputs';inputsdir.mkdir();leaves=[]
-    bindings=[dict(frame,role='raw_flat') for frame in selection['flat']]+[dict(selection['bpm'],role='bpm')]
+    bindings=[dict(frame,role='raw_flat') for frame in selection['flat']]
+    if selection['bpm'].get('encoding') != 'omitted':
+        bindings.append(dict(selection['bpm'],role='bpm'))
     for i,binding in enumerate(bindings):
         builder=qc.QcRecipe(file=dict(id=binding['asset'],filename=Path(binding['path']).name,location=binding['path'],
             kind='raw' if binding['role']=='raw_flat' else 'product',sha256=origin['image_fingerprints'][binding['path']]['sha256'],
@@ -217,14 +222,18 @@ def publish_entry(state,directory,*,assessment_id,created_at,serializer_revision
     stored=qc.read_record(destination);qc.require(stored.digest==record.digest,'Product roundtrip differs')
     qc.require(canonical(table_from_record(stored))==canonical(table),'Typed table roundtrip differs')
     count=len(list(qc.traverse_records(destination,qc_root=directory,max_records=34)))
-    qc.require(count==34,'Incomplete sample/master QC tree')
+    qc.require(count==len(bindings)+len(state['master_records'])+1,'Incomplete sample/master QC tree')
     return dict(path=str(destination),digest=stored.digest,rows=len(table['rows']),records=count)
 
 
 def read_product(path):
     path=Path(path).resolve(strict=True)
     records=list(qc.traverse_records(path,qc_root=path.parent,max_records=34))
-    qc.require(len(records)==34,'Incomplete corrected sample QC graph')
+    tree = records[0].as_dict()
+    origin = tree['extensions']['corrected_sample_origin']
+    masters = [r for r in records if r.digest == origin['master_qc_digest']]
+    qc.require(len(masters)==1 and len(records)==1+len(tree['inputs'])+len(masters[0].as_dict()['inputs']),
+               'Incomplete corrected sample QC graph')
     return table_from_record(records[0])
 
 

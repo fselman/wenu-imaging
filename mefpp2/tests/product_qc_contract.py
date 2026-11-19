@@ -19,11 +19,11 @@ BASENAME='CMDP.2026-11-06T15:00:00.123Z.001'
 NEGATIVES=['duplicate-input','duplicate-index','duplicate-detector','duplicate-output-hdu','missing-binding',
  'reordered-binding','negative-source-hdu','bad-acceptance','missing-rejection-reason','nonfinite-value',
  'applied-without-bpm','unknown-mask','unknown-source','wrong-input-origin','unavailable-has-value','measured-no-samples','invalid-time',
- 'duplicate-measurement','fractional-count','outside-log','bad-sha','invalid-region']
+ 'duplicate-measurement','fractional-count','outside-log','bad-sha','invalid-region','table-hdu','duplicate-evidence','missing-evidence']
 
 class ValidationTests(unittest.TestCase):
     def test_valid_and_integer_count_metadata(self):
-        for mode in ('good','integer-count','with-bpm'):
+        for mode in ('good','integer-count','with-bpm','table'):
             r=subprocess.run([str(PROBE),'validate',mode,str(WORK)],capture_output=True,text=True)
             self.assertEqual(r.returncode,0,r.stderr)
     def test_invalid_identities_bindings_states_values_and_references(self):

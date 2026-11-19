@@ -2,6 +2,9 @@
 #include "mef_bpm_files.h"
 #include "mefp_lib.h"
 #include <assert.h>
+#ifdef BPM_NATIVE_QC_CONTRACT
+#include "bpm_native_qc_probe.inc"
+#endif
 #ifdef BPM_PUBLICATION_CONTRACT
 #include "mef_bpm_publish.h"
 #include <unistd.h>
@@ -64,6 +67,9 @@ static void publish_outputs(const mef_bpm_files_result *result,const char *direc
     snprintf(other,sizeof(other),"%s/configuration.json",directory); f=fopen(other,"wx"); assert(f);
     assert(mef_config_dump(mef_bpm_result_configuration(mef_bpm_files_result_service(result)),f)==MEF_OK);
     assert(fclose(f)==0); integer_outputs(directory);
+#ifdef BPM_NATIVE_QC_CONTRACT
+    native_product_qc(result,path,&o);
+#endif
 }
 #endif
 static mef_layout_map *bind_file(const char *path,int hdu,int active,int mask,int wrong_readout) {
@@ -104,7 +110,14 @@ int main(int argc,char **argv) {
     char paths[12][4096],bias_path[4096],prior_path[4096];
     int rois[2][4]={{1,4,1,4},{3,6,1,4}};
     int i,count,kind,expected,mode;
-    assert(argc==8); count=atoi(argv[3]); kind=atoi(argv[4]); expected=atoi(argv[5]); mode=atoi(argv[6]);
+#ifdef BPM_NATIVE_QC_CONTRACT
+    char native_log[4096];
+    assert(argc==10);
+    assert(snprintf(native_log,sizeof(native_log),"%s/native.log",argv[8])<(int)sizeof(native_log));
+#else
+    assert(argc==8);
+#endif
+    count=atoi(argv[3]); kind=atoi(argv[4]); expected=atoi(argv[5]); mode=atoi(argv[6]);
     assert(count>=2 && count<=12 && kind>=0 && kind<=4);
     bb=mef_bb_new_from_paf(argv[1]); assert(bb && bb->nchips>2);
     bb->bpm_proportional_flag=mode; bb->bpm_gainthr_lo=.5; bb->bpm_gainthr_hi=1.5;
@@ -122,11 +135,11 @@ int main(int argc,char **argv) {
         refs[i].hdu_index=i%2?2:0;
         pairs[i]=(size_t)i/2;
     }
-    snprintf(bias_path,sizeof(bias_path),"%s/bias.fits",argv[2]);
+    snprintf(bias_path,sizeof(bias_path),"%s/bias.fits",argc==10?argv[9]:argv[2]);
     bias=bind_file(bias_path,0,1,0,!strcmp(argv[7],"readout"));
     cal[0].asset_record_id=bias_path; cal[0].resolved_path=bias_path; cal[0].detector_id="D";
     if(kind) {
-        snprintf(prior_path,sizeof(prior_path),"%s/prior.fits",argv[2]);
+        snprintf(prior_path,sizeof(prior_path),"%s/prior.fits",argc==10?argv[9]:argv[2]);
         prior=bind_file(prior_path,0,kind==1 || kind==3,1,0);
         cal[1].asset_record_id=prior_path; cal[1].resolved_path=prior_path; cal[1].detector_id="D";
     }
@@ -135,6 +148,9 @@ int main(int argc,char **argv) {
     spec.request.inputs=refs; spec.request.input_count=(size_t)count;
     spec.request.calibrations=cal; spec.request.calibration_count=kind?2:1;
     spec.request.work_dir=argv[2]; spec.request.output_dir=argv[2]; spec.request.log_path="/synthetic/native.log";
+#ifdef BPM_NATIVE_QC_CONTRACT
+    spec.request.work_dir=argv[8]; spec.request.output_dir=argv[8]; spec.request.log_path=native_log;
+#endif
     spec.calibration_roles=roles; spec.calibration_role_count=kind?2:1;
     spec.bpm_selections=&selection; spec.bpm_selection_count=1;
     assert(mef_request_create_resolved(&spec,NULL,&request,NULL)==MEF_OK);
@@ -145,7 +161,7 @@ int main(int argc,char **argv) {
     o.saturation_raw=1000; o.upper_fraction=.85; o.minimum_span_fraction=.15; o.maximum_pair_difference=.02;
     o.mask_encoding=!kind?MEF_BPM_MASK_OMITTED:kind<=2?MEF_BPM_MASK_FLAGS8:MEF_BPM_MASK_BINARY;
     o.prior_active_only=kind==1 || kind==3; o.binary_good_value=kind==4?1:0;
-    o.mask_registry="WENU_BPM_V1"; o.reject_bits=255; o.with_mad=1;
+    o.mask_registry="WENU_BPM_V1"; o.reject_bits=255; o.with_mad=strcmp(argv[7],"no_mad")!=0;
     o.rois=(const int (*)[4])rois; o.roi_count=2;
     if(!strcmp(argv[7],"pair_ids")) pairs[0]=11;
     status=mef_bpm_from_files(context,(const mef_layout_map *const *)maps,(size_t)count,"D",bias,prior,&o,&result,&error);
@@ -178,7 +194,7 @@ int main(int argc,char **argv) {
     mef_layout_map_destroy(bias); mef_layout_map_destroy(prior);
     memset(pairs,0,sizeof(pairs)); memset(rois,0,sizeof(rois));
 #ifdef BPM_PUBLICATION_CONTRACT
-    if(result) publish_outputs(result,argv[2],paths[0],kind);
+    if(result) publish_outputs(result,argc==10?argv[8]:argv[2],paths[0],kind);
 #endif
     if(result) { assert(mef_bpm_files_result_qc(result)->rois[0][0]==1); mef_bpm_files_result_destroy(result); }
     puts("PASS: bound file acquisition, signal coverage, priors and detached ownership");

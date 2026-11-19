@@ -21,6 +21,7 @@
 #undef calloc
 #undef realloc
 #undef free
+#undef strdup
 
 #define QC_CAPACITY 64
 
@@ -43,6 +44,8 @@ struct mef_bias_product_qc {
     mef_processing_policy processing;
     const mef_product_paths *paths;
     char *snapshot;
+    char *list_path, *list_text;
+    mef_qc_text_evidence list_evidence;
     mef_qc_input_record *inputs;
     char (*input_ids)[40], (*calibration_ids)[40];
     mef_qc_detector_record *detectors;
@@ -578,8 +581,37 @@ int mef_bias_product_qc_add(mef_bias_product_qc *archive, size_t index, const ch
     return 1;
 }
 
+static char *list_snapshot(const char *path)
+{
+    FILE *f=fopen(path,"rb");
+    if(!f) return NULL;
+    char *text=malloc(16*1024*1024+1);
+    if(!text) { fclose(f); return NULL; }
+    size_t n=fread(text,1,16*1024*1024+1,f);
+    int okay=!ferror(f) && n<=16*1024*1024 && !memchr(text,0,n);
+    fclose(f);
+    if(!okay) { free(text); return NULL; }
+    text[n]=0; return text;
+}
+
+int mef_bias_product_qc_input_list(mef_bias_product_qc *archive,const char *path)
+{
+    if(!archive || archive->list_path) return 0;
+    archive->list_path=strdup(path); archive->list_text=list_snapshot(path);
+    if(!archive->list_path || !archive->list_text) return 0;
+    archive->list_evidence=(mef_qc_text_evidence){"processing-input-list","classified-observation-list/1",archive->list_text};
+    archive->product.evidence=&archive->list_evidence; archive->product.evidence_count=1;
+    return 1;
+}
+
 int mef_bias_product_qc_check(mef_bias_product_qc *archive, char *message, size_t size)
 {
+    if(archive && archive->list_path) {
+        char *current=list_snapshot(archive->list_path);
+        int same=current && !strcmp(current,archive->list_text);
+        free(current);
+        if(!same) { snprintf(message,size,"Processing input list changed during reduction"); return -1; }
+    }
     return archive == NULL ? -1 : mef_product_qc_validate(&archive->product, message, size);
 }
 
@@ -630,6 +662,7 @@ void mef_bias_product_qc_destroy(mef_bias_product_qc *archive)
     free(archive->storage);
     free(archive->calibrations);
     free(archive->calibration_ids);
+    free(archive->list_path); free(archive->list_text);
     free(archive);
 }
 

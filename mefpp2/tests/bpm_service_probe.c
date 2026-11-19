@@ -3,6 +3,7 @@
  * No files reduced, no publication, no acquisition/scientific acceptance. */
 #include "mef_cal_bpm.h"
 #include "mefp_lib.h"
+#include "mef_linearity_prepare.h"
 #include <assert.h>
 
 typedef struct { size_t calls, fail, owners; } allocations;
@@ -127,6 +128,34 @@ static void controls(mef_bb *bb, int proportional, int scan_mode) {
             assert(qc->frames[i].prescan.level_available==bb->use_prescan);
             assert(qc->frames[i].overscan.level_available==bb->use_overscan);
             assert(qc->frames[i].active_corrected.valid_pixels==(mode?22:24));
+        }
+        /* A processed cube must give the same robust fit without owning or
+         * changing borrowed pixels. QC-off changes diagnostics, never the fit. */
+        if (!proportional) {
+            mef_linearity_prepare_frame_result *prepared[5]={0};
+            const image_t *processed[5];
+            mef_bias_settings scan;
+            assert(mef_config_bias_settings(mef_context_config(context),slot,&scan)==MEF_OK);
+            for (i=0;i<5;++i) {
+                mef_linearity_prepare_frame_input request={frames[i],bias,scan,MEF_PREPARE_FLAT,4096};
+                assert(mef_linearity_prepare_frame(&request,NULL,prepared+i)==MEF_OK);
+                processed[i]=prepared[i]->active;
+            }
+            for (int enabled=0;enabled<2;++enabled) {
+                mef_bpm_result *shared=NULL;
+                assert(mef_cal_bpm_processed(context,&input,&options,processed,enabled,&shared,NULL)==MEF_OK);
+                const detector_response_result *actual=mef_bpm_result_response(shared);
+                assert(!memcmp(actual->reasons,response->reasons,24));
+                assert(!memcmp(actual->normalized->data,response->normalized->data,24*sizeof(pixelvalue)));
+                assert(!memcmp(actual->sample_count,response->sample_count,24*sizeof(*actual->sample_count)));
+                assert(mef_bpm_result_qc(shared)->frames[0].active_corrected.level_available==enabled);
+                mef_bpm_result_destroy(shared);
+                for (i=0;i<5;++i) {
+                    assert(processed[i]->data && !memcmp(frames[i]->data,saved[i],sizeof(saved[i])));
+                    for (p=0;p<24;++p) assert(processed[i]->data[p]==(i+1)*16*(p==0?.25:p==23?2:1));
+                }
+            }
+            for (i=0;i<5;++i) mef_linearity_prepare_frame_destroy(prepared[i]);
         }
         alias=r; assert(mef_cal_bpm(context,&input,&options,&r,NULL)==MEF_ERR_INPUT && r==alias);
         mef_context_destroy(context);

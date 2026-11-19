@@ -3,7 +3,11 @@
 #define MEF_LINEARITY_COMMAND_INTERNAL_H
 static int bind_master(source *s,const plan *p,const mef_bias_settings *g,size_t slot,int bx,int by)
 {
-    mef_layout_options o;memset(&o,0,sizeof o);o.max_hdus=128;o.max_header_bytes=1048576;
+    mef_layout_options o = {0};
+    o.max_hdus = 128;
+    /* The limit covers all HDUs. Master biases can retain per-frame QC cards
+     * in every detector extension, even when binding just one detector. */
+    o.max_header_bytes = MEF_LAYOUT_DEFAULT_HEADER_BYTES;
     o.identity_key=p->value[4];o.amplifier_key=p->value[5];o.bin_x_key=p->value[6];o.bin_y_key=p->value[7];
     mef_detector_binding b;memset(&b,0,sizeof b);
     b.detector_id=p->value[0];b.expected_header_id=p->value[0];b.hdu_index=s->hdu;b.unit="ADU";

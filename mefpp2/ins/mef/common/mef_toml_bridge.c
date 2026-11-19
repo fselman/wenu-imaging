@@ -2,19 +2,19 @@
  * Only built in the opt-in configuration probe lane; no installed engine link.
  * tomlc17 is unmodified and owns its tree until mef_toml_close. */
 #include "mef_toml_bridge.h"
-#include "tomlc17.h"
+#include "mef_toml_file.h"
 #include "mef_config_domains.h"
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct { char key[96], path[192]; toml_datum_t value; } domain_entry;
+typedef struct { char key[96], path[199]; toml_datum_t value; } domain_entry;
 struct mef_toml_document {
     toml_result_t parsed;
     char *source_text;
     toml_datum_t native, includes, overrides;
-    int version;
+    int version, borrowed;
     domain_entry *entries;
     size_t count, capacity;
     char override_native[64][96];
@@ -61,7 +61,14 @@ int mef_toml_is_initialized(void) { return initialized; }
 
 void mef_toml_close(mef_toml_document *document)
 {
-    if (document != NULL) { toml_free(document->parsed); free(document->entries); free(document->source_text); free(document); }
+    if (document != NULL) {
+        if (!document->borrowed) {
+            toml_free(document->parsed);
+            free(document->source_text);
+        }
+        free(document->entries);
+        free(document);
+    }
 }
 
 /* Translation of the versioned parsed tree only; merge policy remains C90. */
@@ -88,7 +95,10 @@ static mef_status domain_walk(mef_toml_document *doc, const char *path,
             doc->entries = grown; doc->capacity = n;
         }
         domain_entry *entry = doc->entries + doc->count++;
-        strcpy(entry->key, field.native_key); strcpy(entry->path, field.path); entry->value = value;
+        strcpy(entry->key, field.native_key);
+        snprintf(entry->path, sizeof(entry->path), "%s%s",
+            doc->borrowed ? "native." : "", field.path);
+        entry->value = value;
         return MEF_OK;
     }
     if (!mef_domain_container(path) || node.type != TOML_TABLE) {
@@ -148,6 +158,7 @@ mef_status mef_toml_open(const char *path, mef_toml_document **out,
     }
     document = malloc(sizeof(*document));
     if (document == NULL) { free(bytes); detail(diagnostic, capacity, "Cannot allocate TOML owner"); return MEF_ERR_MEMORY; }
+    document->borrowed = 0;
     document->entries = NULL; document->count = 0; document->capacity = 0;
     bytes[length] = '\0';
     document->source_text = bytes;
@@ -237,6 +248,47 @@ mef_status mef_toml_open(const char *path, mef_toml_document **out,
         }
     }
     document->native = native;
+    *out = document;
+    return MEF_OK;
+}
+
+/* Interpret native domains only after recipe admission selects their owner. */
+mef_status mef_toml_embedded_domains(const mef_toml_file *file, int detector_profile,
+    mef_toml_document **out, char *diagnostic, size_t capacity)
+{
+    const char *domains[] = {"instrument", "processing", "product"};
+    toml_datum_t native = toml_get(file->parsed.toptab, "native");
+    int first = detector_profile ? 0 : 1;
+    int end = detector_profile ? 1 : 3;
+    if (native.type != TOML_TABLE || native.u.tab.size != end - first) {
+        detail(diagnostic, capacity, detector_profile ?
+            "Detector profile requires [native.instrument]" :
+            "Recipe requires [native.processing] and [native.product]");
+        return MEF_ERR_CONFIG;
+    }
+
+    mef_toml_document *document = calloc(1, sizeof(*document));
+    if (!document) {
+        detail(diagnostic, capacity, "Cannot allocate native domain view");
+        return MEF_ERR_MEMORY;
+    }
+    document->version = 3;
+    document->borrowed = 1;
+    document->source_text = file->source;
+    for (int i = first; i < end; ++i) {
+        toml_datum_t table = toml_get(native, domains[i]);
+        toml_datum_t version = toml_get(table, "schema_version");
+        if (table.type != TOML_TABLE || version.type != TOML_INT64 || version.u.int64 != 1) {
+            detail(diagnostic, capacity, "Each owned native domain requires schema_version=1");
+            mef_toml_close(document);
+            return MEF_ERR_CONFIG;
+        }
+        mef_status status = domain_walk(document, domains[i], table, 1, diagnostic, capacity);
+        if (status != MEF_OK) {
+            mef_toml_close(document);
+            return status;
+        }
+    }
     *out = document;
     return MEF_OK;
 }

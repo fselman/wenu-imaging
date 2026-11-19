@@ -1,0 +1,6 @@
+# Processing observations: path<TAB>DPR.TYPE. Verify classifications against headers.
+# Replace /absolute/path/to/raw with your project raw directory.
+/absolute/path/to/raw/WFI.2003-05-30T20:29:31.182.fits	FLAT,SCREEN
+/absolute/path/to/raw/WFI.2003-05-30T20:30:38.833.fits	FLAT,SCREEN
+/absolute/path/to/raw/WFI.2003-05-30T20:39:52.692.fits	FLAT,SCREEN
+/absolute/path/to/raw/WFI.2003-05-30T20:42:00.041.fits	FLAT,SCREEN

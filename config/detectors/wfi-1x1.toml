@@ -1,13 +1,15 @@
-# Visualization/reference schema; not a replacement for the native reduction configuration.
+# Shared 1x1 detector geometry and native instrument settings.
 # Rectangles are FITS 1-based inclusive [xmin, xmax, ymin, ymax].
 footprint_schema_version = 1
 instrument = "wfi"
 binning = [1, 1]
+readout_id = "WFI:normal:1x1"
 source_manual = "https://www.eso.org/sci/facilities/lasilla/instruments/wfi/doc/2P2-MAN-ESO-90100-0001.pdf"
 geometry_status = "reference geometry; validate against each selected raw header"
 amplifier_marker = "schematic corner, not a measured package coordinate"
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP1.OUT1"
 amplifier = "L"
 native_paf_chip = 1
@@ -23,6 +25,7 @@ readout_sign = [1, -1]
 
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP2.OUT1"
 amplifier = "L"
 native_paf_chip = 2
@@ -38,6 +41,7 @@ readout_sign = [1, -1]
 
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP3.OUT1"
 amplifier = "L"
 native_paf_chip = 3
@@ -53,6 +57,7 @@ readout_sign = [1, -1]
 
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP4.OUT1"
 amplifier = "L"
 native_paf_chip = 4
@@ -68,6 +73,7 @@ readout_sign = [1, -1]
 
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP8.OUT1"
 amplifier = "L"
 native_paf_chip = 5
@@ -83,6 +89,7 @@ readout_sign = [-1, 1]
 
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP7.OUT1"
 amplifier = "L"
 native_paf_chip = 6
@@ -98,6 +105,7 @@ readout_sign = [-1, 1]
 
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP6.OUT1"
 amplifier = "L"
 native_paf_chip = 7
@@ -113,6 +121,7 @@ readout_sign = [-1, 1]
 
 
 [[detector]]
+enabled = true
 id = "WIN1.CHIP5.OUT2"
 amplifier = "R"
 native_paf_chip = 8
@@ -125,3 +134,199 @@ prescan = [1, 48, 1, 4128]
 overscan = [2095, 2142, 1, 4128]
 amplifier_corner = "lower-left"
 readout_sign = [1, 1]
+
+# Applied trim and scan-sample rectangles.
+[[trim]]
+detector = "WIN1.CHIP1.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP2.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP3.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP4.OUT1"
+retained = [51, 2094, 31, 4127]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP8.OUT1"
+retained = [49, 2092, 2, 4098]
+prescan_sample = [2100, 2142, 1, 4128]
+overscan_sample = [5, 48, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP7.OUT1"
+retained = [49, 2092, 2, 4098]
+prescan_sample = [2100, 2142, 1, 4128]
+overscan_sample = [5, 48, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP6.OUT1"
+retained = [49, 2092, 2, 4098]
+prescan_sample = [2100, 2142, 1, 4128]
+overscan_sample = [5, 48, 1, 4128]
+
+
+[[trim]]
+detector = "WIN1.CHIP5.OUT2"
+retained = [51, 2094, 2, 4098]
+prescan_sample = [5, 48, 1, 4128]
+overscan_sample = [2100, 2142, 1, 4128]
+
+[native.instrument]
+schema_version = 1
+detector_count = { value = 8, unit = "count" }
+origin = { value = "ESO-LASILLA", unit = "none" }
+telescope = { value = "MPI 2.2-m", unit = "none" }
+name = { value = "WFI", unit = "none" }
+correct_ref_pix = { value = 1, unit = "1" }
+refpix_x = { value = 4101.0, unit = "pixel" }
+refpix_y = { value = 3950.0, unit = "pixel" }
+
+[native.instrument.detectors]
+
+[native.instrument.detectors.CHIP1]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 31, unit = "pixel" }
+trimreg_y_max = { value = 4127, unit = "pixel" }
+ron = { value = 5.099999904632568, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = 4184.0, unit = "pixel" }
+crpix2 = { value = -150.0, unit = "pixel" }
+
+[native.instrument.detectors.CHIP2]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 31, unit = "pixel" }
+trimreg_y_max = { value = 4127, unit = "pixel" }
+ron = { value = 5.400000095367432, unit = "electron" }
+gain = { value = 2.0999999046325684, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = 2049.0, unit = "pixel" }
+crpix2 = { value = -150.0, unit = "pixel" }
+
+[native.instrument.detectors.CHIP3]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 31, unit = "pixel" }
+trimreg_y_max = { value = 4127, unit = "pixel" }
+ron = { value = 5.300000190734863, unit = "electron" }
+gain = { value = 2.299999952316284, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = -90.0, unit = "pixel" }
+crpix2 = { value = -144.0, unit = "pixel" }
+
+[native.instrument.detectors.CHIP4]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 31, unit = "pixel" }
+trimreg_y_max = { value = 4127, unit = "pixel" }
+ron = { value = 4.800000190734863, unit = "electron" }
+gain = { value = 2.0, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = -2233.0, unit = "pixel" }
+crpix2 = { value = -146.0, unit = "pixel" }
+
+[native.instrument.detectors.CHIP5]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 49, unit = "pixel" }
+trimreg_x_max = { value = 2092, unit = "pixel" }
+trimreg_y_min = { value = 2, unit = "pixel" }
+trimreg_y_max = { value = 4098, unit = "pixel" }
+ron = { value = 5.199999809265137, unit = "electron" }
+gain = { value = 2.0999999046325684, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = -2225.0, unit = "pixel" }
+crpix2 = { value = 3973.0, unit = "pixel" }
+
+[native.instrument.detectors.CHIP6]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 49, unit = "pixel" }
+trimreg_x_max = { value = 2092, unit = "pixel" }
+trimreg_y_min = { value = 2, unit = "pixel" }
+trimreg_y_max = { value = 4098, unit = "pixel" }
+ron = { value = 5.400000095367432, unit = "electron" }
+gain = { value = 2.0999999046325684, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = -86.0, unit = "pixel" }
+crpix2 = { value = 3969.0, unit = "pixel" }
+
+[native.instrument.detectors.CHIP7]
+prescan_x_min = { value = 2100, unit = "pixel" }
+overscan_x_min = { value = 5, unit = "pixel" }
+prescan_x_max = { value = 2142, unit = "pixel" }
+overscan_x_max = { value = 48, unit = "pixel" }
+trimreg_x_min = { value = 49, unit = "pixel" }
+trimreg_x_max = { value = 2092, unit = "pixel" }
+trimreg_y_min = { value = 2, unit = "pixel" }
+trimreg_y_max = { value = 4098, unit = "pixel" }
+ron = { value = 5.0, unit = "electron" }
+gain = { value = 2.200000047683716, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = 2049.0, unit = "pixel" }
+crpix2 = { value = 3965.0, unit = "pixel" }
+
+[native.instrument.detectors.CHIP8]
+prescan_x_min = { value = 5, unit = "pixel" }
+overscan_x_min = { value = 2100, unit = "pixel" }
+prescan_x_max = { value = 48, unit = "pixel" }
+overscan_x_max = { value = 2142, unit = "pixel" }
+trimreg_x_min = { value = 51, unit = "pixel" }
+trimreg_x_max = { value = 2094, unit = "pixel" }
+trimreg_y_min = { value = 2, unit = "pixel" }
+trimreg_y_max = { value = 4098, unit = "pixel" }
+ron = { value = 4.900000095367432, unit = "electron" }
+gain = { value = 2.200000047683716, unit = "electron/adu" }
+crval1 = { value = 4101.0, unit = "degree" }
+crval2 = { value = 3950.0, unit = "degree" }
+crpix1 = { value = 4188.0, unit = "pixel" }
+crpix2 = { value = 3967.0, unit = "pixel" }

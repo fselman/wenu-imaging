@@ -111,11 +111,16 @@ mef_status mef_linearity_samples(const mef_linearity_sample_input *p,
         memcpy(detector.prescan_x,g.prescan,sizeof g.prescan);memcpy(detector.overscan_x,g.overscan,sizeof g.overscan);
         memcpy(detector.trimreg,g.trim,sizeof g.trim);work.ccd=&detector;work.xtnum=1;work.nxts=1;
         work.use_prescan=g.use_prescan;work.use_overscan=g.use_overscan;memcpy(work.scanrej,g.rejection,sizeof g.rejection);
+        if(p->processed) {
+            active=(image_t *)p->processed[f];
+            if(!active || !active->data || active->lx!=aw || active->ly!=ah) {status=MEF_ERR_INPUT;goto done;}
+        } else {
         copy=image_copy((image_t *)p->raw[f]);if(!copy)goto done;
         active=scan?mef_overscan_correction(copy,&work,f,"linearity"):
             image_getvig(copy,g.trim[0],g.trim[2],g.trim[1],g.trim[3]);
         image_del(copy);copy=NULL;if(!active)goto done;
         if(image_sub_local(active,(image_t *)p->master_bias)){status=MEF_ERR_COMPUTATION;goto done;}
+        }
         mef_linearity_population *q=r->population+f;
         for(int y=1;y<=ah;++y)for(int x=1;x<=aw;++x){size_t k=(size_t)(y-1)*aw+x-1;
             size_t raw=(size_t)(y+g.trim[2]-2)*width+x+g.trim[0]-2;
@@ -130,11 +135,13 @@ mef_status mef_linearity_samples(const mef_linearity_sample_input *p,
             v->site=site_map[k];v->input_index=p->frame[f].input_index;v->seconds=p->frame[f].seconds;v->signal=value;
             remap[v->site]=0;++q->admitted;
         }
-        image_del(active);active=NULL;
+        if(!p->processed) image_del(active);
+        active=NULL;
     }
     for(int i=0;i<sites;++i)if(remap[i]==0){remap[i]=r->sites;r->site[r->sites++]=r->site[i];}
     for(int i=0;i<r->observations;++i)r->observation[i].site=remap[r->observation[i].site];
     *out=r;r=NULL;status=MEF_OK;
 done:
-    image_del(active);image_del(copy);release(&a,site_map);release(&a,remap);mef_linearity_samples_destroy(r);return status;
+    if(!p || !p->processed) image_del(active);
+    image_del(copy);release(&a,site_map);release(&a,remap);mef_linearity_samples_destroy(r);return status;
 }

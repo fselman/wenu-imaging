@@ -1,100 +1,135 @@
-# Common recipe coordinator: conditionally approved structural amendment
+# Common native recipe coordinator
 
-Owner direction, 8 November 2026, within issue #292: the short bias recipe must
-come from the common recipe template so that subsequent recipes share its
-structure. The high-level file should normally occupy two readable pages and
-at most three. Comments need visible blank lines around them. This is the design
-amendment for the next structural pass, conditionally approved implementation scope; final source acceptance is pending.
+## Public command and admission
 
-## Build on both existing template layers
+The entry point is `mefpp_recipe cal bpm-linearity --config RECIPE.toml`, following
+the bias template. The native command reads the recipe, referenced project and
+settings, ordered observations, calibration bindings and detector mappings itself.
+No external preparation command or generated-bindings prerequisite is exposed to
+the user. Historical sample archives are comparison/provenance evidence; the
+historical archive-to-bindings compiler remains compatibility only. Native schema 2
+admits ordinary explicit inputs without requiring that compiler.
 
-`mefpp2/ins/mef/common/mef_operation_template.h/.c` already implements the shared
-operation lifecycle: validate, load, calculate, optionally publish, always clean
-up temporary owners. `docs/developer/native-operation-recipe-template.md` is its
-current companion scaffold. The historical M1 typed service scaffold lives under
-`docs/architecture/proposed/m1/mef_operation_template.*.txt`; it explicitly
-separates result validation and scientific QC before ownership transfer.
+Help follows `mefpp --help`, `mefpp_recipe cal --help`, and operation-specific
+`mefpp_recipe cal OPERATION --help` for `bias`, `linearity` and `bpm-linearity`.
+Help performs no data processing, requires no files and reports inputs, options,
+defaults and outputs. Guides contain concise native Unix commands without `nice`.
+Project TOML owns directory roots. Recipes reference it and select operations,
+controls and inputs without redeclaring raw/reduced roots.
 
-The 864-line bias command is an outer coordinator around those services. Its
-argument handling, resource management, binding and publication mechanics have
-accumulated outside the small operation template. Improving only the inner
-callback runner cannot make that outer command short. Amend the common scaffold
-at both levels and make bias the first implementation of the resulting pattern;
-do not create an unrelated bias-only coordinator architecture.
+## Shared observation/dependency input contract
 
-## Common high-level structure
+All recipes process an ordered external observation list. Each non-comment row is
+`path<TAB>DPR.TYPE` (whitespace separation also allowed for paths without spaces).
+Use an absolute path for the list and for every observation in it. Observations
+reside under the project raw root. The list may live in any directory.
+The recipe contains list references and processing policy, never inline observation
+filenames or pair assignments. Preserve the list bytes, classification, order and
+resolved identities in provenance. Duplicate/malformed/unsupported rows fail admission.
 
-| Phase | Shared responsibility | Recipe-specific authority |
-|---|---|---|
-| Prepare run | Capture invocation, load settings, establish paths/log/provenance, initialize safely destructible owners | Operation identity and explicit required settings |
-| Admit inputs | Resolve ordered catalogue and detector/HDU bindings; enforce no-clobber and declared dependencies | Scientific applicability, minimum inputs and calibration requirements |
-| Execute declared processing | Coordinate the existing operation services and bounded resource lifetime | Typed calculation and processing order, including any required collective step |
-| Verify results and QC | Check declared coverage, structural completeness and stored QC availability | Estimators, populations, scientific decisions and any already approved acceptance cuts |
-| Publish products | Reuse header, assembly and QC-writing services with truthful declared commit boundaries | Product profile, metadata authority and operation-specific outputs |
-| Finish or fail | Report status and release owners once; retain required evidence/private work on failure | Operation-specific retained results and diagnostics |
+Dependencies are explicit already reduced products (bias, BPM, dark, flat, etc.).
+No dependency list starts another reduction. Dependency planning remains deferred.
+BPM/linearity pairs flat inputs by classification and header exposure time within
+the configured tolerance; every group must have exactly two unambiguous members.
+Optional BIAS observations in the same list are raw diagnostic evidence only,
+never a request to rebuild the supplied master. With no raw bias pair, RON/gain
+and bias-pair diagnostics are unavailable; flat ROI/pair/site measurements remain.
+The generated BPM never changes the measurement mask/population in the same run.
+The four-file architecture places recipe-specific rectangular ROIs and named
+single-pixel sites in the recipe TOML. Shared detector geometry and disabled
+status belong in the detector catalogue. Existing inline-input recipes and unclassified bias lists remain
+legacy compatibility only; new examples use the shared classified-list contract.
 
-These are common responsibilities, not six newly added runtime callbacks. The conditionally approved C interfaces and module boundaries appear below. Reuse the
-existing configuration/request/context/result separation, status/error machinery,
-operation runner, product-path services, detector binding and MEF/QC services.
-Use small shared run-resource state and operation-specific typed payloads; do not
-recreate a giant universal state object or a new dispatch framework.
+## Required BPM/linearity detector flow
 
-The visible recipe file selects and orders these phases, checks statuses and
-contains only the needed recipe-specific orchestration. Supporting implementations
-live in appropriately scoped modules, with names that make the calls intelligible.
-Moving the entire long command into one opaque function does not satisfy the goal.
-The initial target is roughly 100–150 normally formatted lines for that file,
-including useful comments and error handling, not a universal C module limit.
+The shared-cube source is owner-accepted. The complete synthetic Mac gate covers
+native admission/default indices, both QC modes, supplied-mask reuse and
+omitted-mask creation/publication. A bounded supplied-mask/QC-off CCD65 direct
+CLI run reproduces all five saved measurement groups. Earlier no-mask CCD65 saved-product and Viewer checks passed. The classified-list
+and fresh-project workflows passed for WFI and OCAM on Mac. The four-file
+configuration migration and command selection remain open.
 
-## Preserve scientific differences
+1. Admit ordered input identities, geometry, fixed calibrations and requested steps.
+2. Read each required detector image plane once. Capture requested raw-only QC,
+   scan traces and saturation/nonfinite validity during ingestion. Apply row scan
+   correction, bias subtraction when applicable and trimming exactly once, with
+   the existing arithmetic and rounding. Store the active images in one owned
+   processed cube, retaining original frame/pair/HDU mappings.
+3. If an input BPM is supplied, skip BPM creation and log `input_bpm_supplied`.
+   Otherwise borrow the cube for robust response fitting and candidate BPM
+   creation. Publish the detector BPM FITS and measured QC ASDF.
+4. Borrow that same unmodified cube for linearity curves, ROI, pair-difference
+   and direct-site measurements. Publish their native ASDF and provenance.
+5. Release the cube after all requested detector steps; continue to the next
+   detector. Final MEFs are assembled from saved detector products.
 
-A common shape does not require all recipes to calculate independent detector
-products. The execution phase must preserve shared mosaic flat normalization,
-collective fits, calibration dependencies and explicit uncertainty/QC contracts
-when those operations are implemented. Bias presently has no cross-detector
-balancing; do not infer that other recipes share this property. No linearity
-model or collective numerical implementation is authorized by this amendment.
+The detector coordinator owns the cube; calculation services borrow it. Neither
+service reopens input images or repeats correction. Corrected-image disk staging
+is not a substitute for sharing the cube. Load calibrations once per detector;
+do not reload reference biases per flat pair. Reusing the existing file adapters
+unchanged cannot satisfy this contract.
 
-In the existing operation runner, the calculation callback may already populate
-QC in its typed result. Result/QC verification must not silently recompute those
-measurements, change their populations or invent quality cuts. Publication and
-ownership rules remain explicit; no multi-file transaction, automatic retry,
-implicit input discovery or new scientific default is introduced.
+Raw-only evidence must be retained before it is lost. The implementation keeps raw
+flats and two reference biases until pair measurements finish; other bias planes
+are released after their traces are captured. Preserve the established
+common raw four-plane population for pair statistics and the distinct direct-site
+population. Do not silently drop raw QC or change its membership. Fingerprinting should eventually share ingestion reads. Currently one full-file
+SHA256 pass before and after the batch remains for content-preservation evidence.
+Therefore only numerical image ingestion/correction is read-once qualified;
+total disk I/O is not. Do not remove preservation checks or claim otherwise.
 
-## Source presentation
+Pair consistency, signal span and scientific suitability are recorded analysis
+assessments. They must not erase measured evidence or stop the remaining detector
+measurements. Structural/I/O failures remain processing errors. The 2% criterion
+is unchanged; no automatic new fitting population is introduced. A candidate
+failing suitability criteria is not an accepted calibration.
 
-Put a blank line before and after a stand-alone explanatory block comment,
-including a source-guide landmark. The file boundary needs no preceding blank
-line. Short inline ownership annotations may remain inline where clearer.
-Comments and spacing mark paragraphs; ordinary statements do not each need labels.
+The new BPM is an output. Preserve the admitted prior mask for measurement
+populations until an explicit alternative ROI mask policy is selected. BPM
+creation is optional and does not control availability of linearity measurements.
 
-Keep a few stable scientific-stage labels in the appropriate service. A shared
-landmark occurs once in the shared implementation and may be referenced by
-several guides; recipe-specific landmarks use their operation prefix. Keep the
-LaTeX/PDF guide's file/routine/identifier references synchronized during extraction.
+Qualification must count actual selected-plane loads and corrections, prove one
+ingest/correction per input, compare cube values and measurements with references,
+and cover BPM requested/omitted and unsuitable-pair cases. Preserve the 26 completed
+detector products and CCD87 preparation from the stopped 32-detector run.
 
-## Implementation/review boundary
+Recipe `[preparation] input_bpm` explicitly selects `archived` (default) or
+`omitted`. The latter omits only the current input mask and triggers candidate
+creation, without modifying the archived samples, master or its historical mask
+lineage. The processing TOML's mask encoding describes supplied masks; explicit
+recipe omission does not alter other processing settings. Drop unused mask-copy
+bindings from that recipe. Exclude the omitted mask from current payload loads
+and integrity dependencies, while retaining the frozen historical QC graph.
 
-The outer bias command now implements these phases in 60 readable lines, with
-support in `mef_bias_recipe_prepare.c`, `mef_bias_recipe_inputs.c`,
-`mef_bias_recipe_process.c` and `mef_bias_recipe_products.c`. Shared run mechanics
-live in `mef_recipe_run.h/.c`. Final owner source review and bounded selected-Mac
-qualification remain pending. Preserve b833aca7 and existing products/evidence.
-No observational rerun, installation or resumption of linearity is authorized.
+Saved reading validates the effective selection against that graph and declared
+policy. With omission, ROI populations can change; do not claim exact historical
+ROI replay. Previously admitted direct-site values must remain exact. Newly
+admitted sites are decoded from current native transports and reported separately,
+never replaced with old unavailable values. Source archives remain unchanged.
 
-## Conditional implementation contract — 8 November 2026
+The `qc` recipe boolean defaults to true; trailing `--qc true/false` overrides it.
+False disables optional BPM full-frame diagnostics and MAD, while preserving
+requested ROI means/variances, pair/direct-site measurements and provenance.
+Supplied calibrations remain fixed. The historical archive admission currently
+requires a verified master bias; absence is not replaced with an invented zero
+calibration. All-supplied-mask runs publish measurement ASDFs and no BPM MEF.
 
-The owner conditionally approved proceeding and requires seeing the finished
-source before final acceptance. The outer coordinator calls prepare, admit,
-begin, per-detector processing, verify, publish, complete, and finish directly.
-`mef_recipe_run` owns only shared paths, start time, log and private workspace;
-`mef_bias_recipe` owns bias configuration, input bindings, assembly and QC.
-Focused prepare/input/process/product modules implement those phases. The inner
-operation runner and scientific service remain unchanged. No new dispatcher or
-scientific policy is introduced. The draft stays unmerged.
+## Shared structure and implementation boundary
 
-After this refactor, consolidate superseded documentation and entry points in a
-separate cleanup. Shipped source comments must describe behavior or reference an
-immutable design revision or GitHub issue, never a temporary development stage.
-Legacy executable and stored producer identifiers need an explicit compatibility
-migration before renaming; retain them during this behavior-preserving extraction.
+Use the [common template](../native-operation-recipe-template.md) and accepted
+bias entry point: initialize/start, prepare/admit/begin, detector loop,
+verify/publish/complete, finish/destroy. Keep the recipe readable in two pages,
+at most three, with meaningful calls and spaced comments. Supporting modules
+expose mechanics rather than hiding the whole processing flow in one helper.
+`mef_recipe_run` owns shared run resources; typed operation state owns inputs
+and results. Services retain validate/load/calculate/optional-publish/cleanup.
+
+The public command dispatcher only selects an operation. It must not replace
+scientific services with a generic callback framework or route detector steps
+through external commands. The inner calculations, fixed prior populations,
+rounding, masks and native ASDF writer remain unchanged during interface work.
+Bias needs no cross-detector balancing; later collective recipes may need it.
+
+Keep accepted installations and compatibility identities intact during the
+four-file configuration migration. Source review, focused numerical, ownership
+and ASDF checks, and the owner's terminal-run acceptance are distinct gates.

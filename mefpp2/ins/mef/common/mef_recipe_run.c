@@ -10,6 +10,7 @@ void mef_recipe_run_initialize(mef_recipe_run *run, const char *operation, const
 {
     memset(run, 0, sizeof(*run));
     run->log_descriptor = -1;
+    run->has_final_mef = 1;
     run->operation = operation;
     run->progress_tag = progress_tag;
     run->workspace_tag = workspace_tag;
@@ -62,6 +63,7 @@ int mef_recipe_run_begin(mef_recipe_run *run, const char *config_path, const cha
         return 0;
     }
     run->log_descriptor = -1;
+    run->has_final_mef = 1;
     fprintf(run->log,
         "RECIPE %s\nSTART %s\nSOURCE %s\nINVOCATION %s\nCONFIG %s\nINPUT_LIST %s\nFITS "
         "%s\nASDF %s\n",
@@ -107,8 +109,9 @@ int mef_recipe_run_complete(mef_recipe_run *run)
         return 0;
     }
     run->log = NULL;
-    printf("%s_RECIPE_COMPLETE\nFITS %s\nASDF %s\nLOG %s\n", run->progress_tag, run->paths.fits,
-        run->paths.asdf, run->paths.log);
+    printf("%s_RECIPE_COMPLETE\n",run->progress_tag);
+    if(run->has_final_mef) printf("FITS %s\nASDF %s\n",run->paths.fits,run->paths.asdf);
+    printf("LOG %s\n",run->paths.log);
     return 1;
 }
 

@@ -27,6 +27,7 @@ Description	:	MEF flat-field creation recipe, from WFI by
 #include <float.h>
 #include "eclipse.h"
 #include "mefp_lib.h"
+#include "mef_recipe_help.h"
 
 /*---------------------------------------------------------------------------
   Defines
@@ -1495,6 +1496,11 @@ int main(int argc, char *argv[])
 	mef_bb*	bb ;
     int load_status;
     int engine_status;
+
+    if (argc == 2 && !strcmp(argv[1], "--help")) {
+        mef_recipe_top_help(stdout, "mefpp");
+        return EXIT_SUCCESS;
+    }
 
 	/*printf("argc = %d\n\n",argc);*/
 	printf("\n\n\n ----------> MEFPP REDUCTION ENGINE. VERSION: %s <----------\n\n\n", recipe_version);

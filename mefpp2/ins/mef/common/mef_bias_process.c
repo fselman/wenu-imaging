@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #define _XOPEN_SOURCE 700
-#include "mef_bias_recipe.h"
+#include "mef_bias.h"
 #include "mef_bias_qc_fits.h"
 #include <errno.h>
 #include <limits.h>
@@ -159,7 +159,7 @@ done:
     return succeeded;
 }
 
-int mef_bias_recipe_process(mef_bias_recipe *recipe, size_t i)
+int mef_bias_process(mef_bias *recipe, size_t i)
 {
     fprintf(recipe->run->log, "DETECTOR_START %lu %s CONFIGURATION %lu\n", (unsigned long)i,
         recipe->arguments.detectors[i].detector_id,
