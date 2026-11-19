@@ -93,7 +93,18 @@ On the Intel Mac, the C17 Release build at `156aae5` passed
 `native_flat_stack` in 1.48 s and `native_domeff` in 7.68 s on 2026-11-19.
 The command test covered both dome and sky paths with bias subtraction enabled
 and disabled, using native ASDF serialization and an independent saved reader.
-Real-data qualification with bias subtraction enabled remains pending.
+On 2026-11-19, the owner ran the full WFI dome and sky mosaics with
+`156aae5`, supplying the retained `100123319` dome calibration's
+`WFI_MB_1x1.fits` with SHA-256
+`49103e80ae950e02fd6264ad3e82f3d389a4ebe1173842feabf1e2995c593920`.
+Both commands completed. Independent saved-product checks verified all eight
+detectors, FITS categories and geometry, output digests, recipe snapshots,
+the bias checksum and detector/HDU bindings, and the logged correction stage.
+The subsequent `cal mff` run completed using those two native masters and the
+prepared WFI BPM. Its saved-product check verified all eight detector mappings,
+`CALIB.MASTER_FLAT`, geometry, output digest and all three input bindings.
+These checks establish execution and provenance. Independent real-data
+numerical validation of bias subtraction and the combined result remains pending.
 
 ### Component publication and combination
 
