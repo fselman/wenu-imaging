@@ -121,8 +121,12 @@ normalization headers. Each product contains 267,584,128 physical pixels.
 The report is retained under the OmegaCAM project in
 `reduced/logs/ocam-flat-numerics.l8WQSvyp/comparison.json`.
 These results qualify the numerical dome, sky and MFF workflows for both
-instruments with supplied master biases. The separate saved-product provenance
-checks for the OmegaCAM bias-enabled products remain to be completed.
+instruments with supplied master biases. The OmegaCAM saved-product checks
+also passed for all three products and all 32 detectors. They verified the
+FITS categories, FITS/ASDF output identity and SHA-256, exact recipe snapshots,
+geometry, output HDU mappings, master-bias bindings and correction-stage logs
+for dome and sky, and the dome/sky/BPM bindings for the MFF.
+The supplied-master-bias qualification is complete for WFI and OmegaCAM.
 
 `tools/verify-flat-numerics.py` provides an independent NumPy reconstruction
 for that check. It reads the raw exposure lists, resolves detectors by EXTNAME,
