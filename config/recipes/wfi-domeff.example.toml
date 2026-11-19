@@ -1,0 +1,27 @@
+# Single-detector parity check against the retained WFI 100123319 dome flat.
+# Run from the project orchestration directory. Bias subtraction is disabled.
+domeff_recipe_schema_version = 1
+project = "project.toml"
+detector_toml = "wfi-1x1.toml"
+run = "cal/domeff"
+
+[inputs]
+list = "/absolute/path/to/controls/dome.list"
+# Optional reduced bias, relative to the project calibration root.
+# master_bias = "bias/CMDP.<timestamp>.001.fits"
+
+[flat]
+detector = "WIN1.CHIP1.OUT1"
+filter = "BB#B/99_ESO842"
+filter_keyword = "HIERARCH ESO INS FILT1 NAME"
+use_prescan = false
+use_overscan = true
+reject_scan_low = 10
+reject_scan_high = 10
+minimum_frames = 3
+frame_mean_low_adu = 10000
+frame_mean_high_adu = 45000
+clip_low_sigma = 3.0
+clip_high_sigma = 3.0
+# FITS 1-based inclusive coordinates in the trimmed detector.
+normalization_region = [501, 1501, 1501, 2501]

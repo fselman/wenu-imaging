@@ -26,7 +26,17 @@
    add collective operations only where their scientific contracts require them.
    Each individual recipe validates its direct inputs without automatically
    launching another recipe.
-6. After the individual recipes are developed and validated, implement the
+6. Qualify master-bias subtraction in `cal domeff` and `cal skyff`. Keep the
+   [WFI and OmegaCAM bias-off pixel parity](design/flat-field-v1.md#bias-off-qualification-from-raw-lists-to-combined-flats)
+   as the regression baseline. First use synthetic exposures at different
+   illumination levels and a spatially varying master bias. Verify against
+   independently calculated values that overscan correction and trimming precede
+   bias subtraction in ADU, and that subtraction precedes measurement of each
+   exposure's normalization median, normalization and stacking. Check the
+   medians, final pixels and master-bias identity in ASDF. Then validate on
+   real WFI data followed by OmegaCAM, inspecting both component masters before
+   combining them with `cal mff`.
+7. After the individual recipes are developed and validated, implement the
    shared dependency checker. For every required calibration, resolve a saved
    product or explicit input list. Report missing sources together; announce
    all additional reductions and request permission before executing the plan.

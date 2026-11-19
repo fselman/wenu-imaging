@@ -132,6 +132,8 @@ int mef_product_qc_validate(const mef_product_qc *p,char *message,size_t size)
         !timestamp(p->recipe_start)||p->recipe_version==0||p->product_sequence==0||
         !text(p->producer_name)||!text(p->producer_version)||!digest(p->source_revision,40)||
         !text(p->configuration_id)||!text(p->configuration_snapshot)||
+        (p->input_file_kind && strcmp(p->input_file_kind, "calibration"))||
+        (p->configuration_format && !text(p->configuration_format))||
         p->inputs==NULL||p->input_count==0||p->input_count>100000||
         p->detectors==NULL||p->detector_count==0||p->detector_count>4096||
         (p->sha256!=NULL && !digest(p->sha256,64))||p->calibration_count>4096||

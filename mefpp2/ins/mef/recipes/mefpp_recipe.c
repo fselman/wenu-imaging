@@ -6,6 +6,9 @@
 #include <sys/resource.h>
 
 int mef_bias_command(int, char **);
+int mef_mff_command(int, char **);
+int mef_domeff_command(int, char **);
+int mef_skyff_command(int, char **);
 int mef_bpm_linearity_command(int, char **);
 int mef_project_init_command(int, char **);
 typedef int (*recipe_entry)(int, char **);

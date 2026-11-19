@@ -99,6 +99,8 @@ typedef struct {
     const char *table_name;
     const mef_qc_text_evidence *evidence;
     size_t evidence_count;
+    const char *input_file_kind; /* NULL preserves the raw-input file kind. */
+    const char *configuration_format; /* NULL preserves the typed-bits snapshot format. */
 } mef_product_qc;
 /* Structural validation only. No thresholds, means, RON, plots, hashes or FITS
  * pixels are computed. Caller owns all borrowed values during the call. */

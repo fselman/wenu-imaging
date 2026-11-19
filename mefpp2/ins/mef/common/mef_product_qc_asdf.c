@@ -123,7 +123,7 @@ static asdf_mapping_t *input_record(asdf_file_t *f,const mef_product_qc *p,size_
     asdf_sequence_t *detectors=asdf_sequence_create(f);
     size_t i;int okay=m!=NULL && detectors!=NULL;
     if(okay)okay=string(m,"record_id",input->id)&&count(m,"original_index",input->original_index)&&
-        map(m,"file",file_record(f,input->id,input->path,input->sha256,"raw"));
+        map(m,"file",file_record(f,input->id,input->path,input->sha256,p->input_file_kind ? p->input_file_kind : "raw"));
     for(i=0;okay && i<p->detector_count;++i) {
         const mef_qc_detector_record *source=p->detectors+i;
         const mef_qc_input_binding *b=source->inputs+index;
@@ -228,7 +228,7 @@ static asdf_mapping_t *container(asdf_file_t *f,const mef_product_qc *p)
         string(producer,"source_revision",p->source_revision);
     if(okay){okay=map(provenance,"producer",producer);producer=NULL;}
     if(okay)okay=string(configuration,"id",p->configuration_id)&&
-        string(configuration,"format","mef_config_dump_typed_bits_json")&&string(configuration,"snapshot",p->configuration_snapshot);
+        string(configuration,"format",p->configuration_format ? p->configuration_format : "mef_config_dump_typed_bits_json")&&string(configuration,"snapshot",p->configuration_snapshot);
     if(okay){okay=map(provenance,"configuration",configuration);configuration=NULL;}
     if(okay)okay=string(provenance,"operation",p->recipe_name)&&count(provenance,"operation_version",p->recipe_version)&&
         string(provenance,"recipe_start",p->recipe_start)&&count(provenance,"product_sequence",p->product_sequence)&&
